@@ -3,7 +3,6 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model, authenticate, login
 from django.db import IntegrityError
 
-
 User = get_user_model()
 
 class UserTests(TestCase):
@@ -14,7 +13,6 @@ class UserTests(TestCase):
 
     def test_create_user(self):
         self.assertEqual(self.user_a.email, "peterjsiemens@gmail.com")
-        self.assertEqual(self.user_a, self.user_b) # Make sure objects are equal (no duplicates)
 
     def test_save_single_user(self):
         self.user_a.save()
@@ -33,7 +31,6 @@ class UserTests(TestCase):
             pass
 
     def test_authenticate_user(self):
-
         self.user_a.save()
 
         email = "peterjsiemens@gmail.com"
