@@ -1,5 +1,5 @@
 """
-Django settings for cms project.
+Django settings for Dispatch project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -48,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'cms.urls'
+ROOT_URLCONF = 'dispatch.urls'
 
-WSGI_APPLICATION = 'cms.wsgi.application'
+WSGI_APPLICATION = 'dispatch.wsgi.application'
 
 
 # Database
