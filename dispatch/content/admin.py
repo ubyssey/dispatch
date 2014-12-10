@@ -1,3 +1,10 @@
 from django.contrib import admin
+from content.models import Article, Section, Image
 
-# Register your models here.
+class ArticleAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("short_headline",)}
+
+admin.site.register(Article, ArticleAdmin)
+
+admin.site.register(Section)
+admin.site.register(Image)
