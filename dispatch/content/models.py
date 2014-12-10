@@ -14,7 +14,7 @@ class Resource(Model):
 
 
 class Section(Model):
-    name = CharField(max_length=100)
+    name = CharField(max_length=100, unique=True)
 
 
 class Article(Resource):
