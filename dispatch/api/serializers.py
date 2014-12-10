@@ -9,12 +9,11 @@ from rest_framework import serializers
 #        fields = ('headline')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    model = get_user_model()
     class Meta:
-        User = get_user_model()
-        model = User
         fields = ('url', 'username', 'email', 'groups')
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    model = Group
     class Meta:
-        model = Group
         fields = ('url', 'name')
