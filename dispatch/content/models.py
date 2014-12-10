@@ -1,6 +1,6 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField,
-    ImageField, BooleanField, ForeignKey)
+    ImageField, BooleanField, ForeignKey, SlugField)
 
 # TODO remove once user-management is merged
 #from core.models import User
@@ -19,11 +19,13 @@ class Section(Model):
 
 class Article(Resource):
     long_headline = CharField(max_length=200)
+    short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
 #   author = ForeignKey('User')     # TODO
 
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
+    slug = SlugField(unique=True)
 
     content = TextField()
 
