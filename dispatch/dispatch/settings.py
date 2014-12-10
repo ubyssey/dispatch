@@ -25,6 +25,7 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1']
+<<<<<<< HEAD
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
@@ -36,7 +37,13 @@ AUTH_USER_MODEL = 'core.User'
 
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+=======
+>>>>>>> FETCH_HEAD
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGINATE_BY': 10
+}
 
 # Application definition
 
@@ -48,8 +55,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+<<<<<<< HEAD
     'content',
     'core'
+=======
+    'content'
+>>>>>>> FETCH_HEAD
 )
 
 MIDDLEWARE_CLASSES = (
