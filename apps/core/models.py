@@ -35,7 +35,7 @@ class Person(Model):
     first_name = CharField(max_length=255)
     last_name = CharField(max_length=255)
     user = ForeignKey('User', blank=True, null=True, related_name='user')
-    roles = ManyToManyField(ContributorRole)
+    roles = ManyToManyField(ContributorRole, blank=True, null=True)
 
     def __str__(self):
         return u'%s %s' % (self.first_name, self.last_name)
