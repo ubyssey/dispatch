@@ -18,10 +18,5 @@ class ThemeHelper():
 
     @staticmethod
     def fetch_theme_urls(theme_name):
-        theme = ThemeHelper.import_theme(theme_name)
-        return theme.urls.theme_urls
-
-    @staticmethod
-    def import_theme(theme_name):
-        return importlib.import_module("assets.themes."+theme_name)
-
+        urls = importlib.import_module("themes."+theme_name+".urls")
+        return urls.theme_urls
