@@ -31,5 +31,6 @@ class Article(Resource):
 
 
 class Image(Resource):
+# TODO remove once images are supported
 #    img = ImageField()
     caption = CharField(max_length=500)
