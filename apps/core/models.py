@@ -1,5 +1,5 @@
 from django.db.models import Model, CharField, BooleanField, ForeignKey, OneToOneField, ManyToManyField
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 
 class UserManager(BaseUserManager):
 
@@ -25,32 +25,37 @@ class UserManager(BaseUserManager):
     def is_valid_password(self, password):
         return len(password) >= 8
 
-class Person(Model):
-    first_name = CharField(max_length=255)
-    last_name = CharField(max_length=255)
-
-    def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
-
-class ContributorType(Model):
+class ContributorRole(Model):
     title = CharField(max_length=255)
 
     def __str__(self):
         return u'%s' % (self.title)
 
-class Contributor(Model):
-    person = OneToOneField(Person)
-    type = ManyToManyField(ContributorType)
+class Person(Model):
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    user = ForeignKey('User', blank=True, null=True, related_name='user')
+    roles = ManyToManyField(ContributorRole, blank=True, null=True)
 
     def __str__(self):
-        return self.person.__str__()
+        return u'%s %s' % (self.first_name, self.last_name)
+
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
     is_admin = BooleanField()
     is_active = BooleanField()
     is_superuser = BooleanField()
-    person = OneToOneField(Person, blank=True, null=True)
+    person = OneToOneField(Person, blank=True, null=True, related_name='person')
+    groups = ManyToManyField(Group, verbose_name=('groups'),
+        blank=True, help_text=('The groups this user belongs to. A user will '
+                                'get all permissions granted to each of '
+                                'their groups.'),
+        related_name="user_set", related_query_name="user")
+    user_permissions = ManyToManyField(Permission,
+        verbose_name=('user permissions'), blank=True,
+        help_text=('Specific permissions for this user.'),
+        related_name="user_set", related_query_name="user")
 
     USERNAME_FIELD = 'email'
 
