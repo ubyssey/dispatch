@@ -18,7 +18,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-class ResourceSerializer(viewsets.ModelViewSet):
+class ResourceViewSet(viewsets.ModelViewSet):
     queryset = Resource.object.all()
     serializer_class = ResourceSerializer
 
