@@ -2,8 +2,7 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField,
     ImageField, BooleanField, ForeignKey, SlugField)
 
-# TODO remove once user-management is merged
-#from core.models import User
+from core.models import User
 
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
@@ -11,7 +10,6 @@ class Resource(Model):
 
     class Meta:
         abstract = True
-
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
@@ -21,7 +19,7 @@ class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
-#   author = ForeignKey('User')     # TODO
+    author = ForeignKey(User)
 
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
