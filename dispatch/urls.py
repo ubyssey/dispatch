@@ -4,8 +4,6 @@ from rest_framework import routers
 from api import views
 from dispatch.helpers import ThemeHelper
 
-from assets.themes.default.urls import theme_urls
-
 admin.autodiscover()
 
 router = routers.DefaultRouter()
