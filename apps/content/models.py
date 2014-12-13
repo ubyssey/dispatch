@@ -7,7 +7,6 @@ from core.models import Person
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
-
     class Meta:
         abstract = True
 
@@ -20,11 +19,9 @@ class Article(Resource):
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
     author = ForeignKey(Person)
-
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField(unique=True)
-
     content = TextField()
 
 
