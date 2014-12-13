@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from passlib.apps import custom_app_context as pwd_context
 from .models import User, Person, ContributorRole
 
 class PersonInline(admin.StackedInline):
@@ -10,8 +11,9 @@ class PersonInline(admin.StackedInline):
     extra = 1
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    #Don't take the plaintext password in, hash it upon entry
+    password_hash1 = pwd_context.encrypt(forms.CharField(label='Password', widget=forms.PasswordInput))
+    password_hash2 = pwd_context.encrypt(forms.CharField(label='Password confirmation', widget=forms.PasswordInput))
 
     class Meta:
         model = User
@@ -19,11 +21,11 @@ class UserCreationForm(forms.ModelForm):
 
     def clean_password2(self):
         # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
+        password_hash1 = self.cleaned_data.get("password1")
+        password_hash2 = self.cleaned_data.get("password2")
+        if password_hash1 and password_hash2 and password_hash1 != password_hash2:
             raise forms.ValidationError("Passwords don't match")
-        return password2
+        return password_hash2
 
     def save(self, commit=True):
         # Save the provided password in hashed format
