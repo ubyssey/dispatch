@@ -43,8 +43,8 @@ class Person(Model):
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
-    is_admin = BooleanField()
-    is_active = BooleanField()
+    is_admin = BooleanField(default=False)
+    is_active = BooleanField(default=True)
     is_superuser = BooleanField()
     person = OneToOneField(Person, blank=True, null=True, related_name='person')
     groups = ManyToManyField(Group, verbose_name=('groups'),
