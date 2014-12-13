@@ -1,8 +1,8 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article
-from dispatch.apps.core.models import Person
+from apps.content.models import Article
+from apps.core.models import Person
 from rest_framework import serializers
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
