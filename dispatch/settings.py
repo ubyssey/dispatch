@@ -40,6 +40,12 @@ AUTH_USER_MODEL = 'core.User'
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
+TEMPLATE_LOADERS = (
+    'dispatch.loaders.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGINATE_BY': 10
