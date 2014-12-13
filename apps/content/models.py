@@ -2,7 +2,7 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField,
     ImageField, BooleanField, ForeignKey, SlugField)
 
-from core.models import Person
+from apps.core.models import Person
 
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
