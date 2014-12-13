@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from rest_framework import routers
-from dispatch.apps.api import views
+from apps.api import views
 
 admin.autodiscover()
 
