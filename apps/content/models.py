@@ -13,7 +13,6 @@ class Resource(Model):
 class Section(Model):
     name = CharField(max_length=100, unique=True)
 
-
 class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
