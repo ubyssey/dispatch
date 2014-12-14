@@ -11,7 +11,7 @@ class Resource(Model):
         abstract = True
 
 class Section(Model):
-    name = CharField(max_length=100, unique=True, primary_key=True)
+    name = CharField(max_length=100, unique=True)
 
 class Article(Resource):
     long_headline = CharField(max_length=200)
