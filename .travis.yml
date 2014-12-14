@@ -7,6 +7,6 @@ env:
 install: "pip install -r requirements.txt"
 before_script:
  - mysql -e 'create database dispatch;'
- - python manage.py syncdb
+ - python manage.py --noinput syncdb
 script: python manage.py test core
 script: python manage.py test content
