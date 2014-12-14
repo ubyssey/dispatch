@@ -8,4 +8,3 @@ before_script:
  - mysql -e 'create database dispatch;'
  - python manage.py syncdb --noinput
 script: python manage.py test core --settings=dispatch.settings
-script: python manage.py test content --settings=dispatch.settings
