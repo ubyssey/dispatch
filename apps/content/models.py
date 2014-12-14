@@ -2,10 +2,10 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField,
     ImageField, BooleanField, ForeignKey, SlugField)
 
-from apps.core.models import Person
+from dispatch.apps.core.models import Person
 
 class Resource(Model):
-    id = ForeignKey('resource')
+    id = ForeignKey('Resource')
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
     class Meta:
