@@ -5,6 +5,7 @@ from django.db.models import (
 from apps.core.models import Person
 
 class Resource(Model):
+    id = ForeignKey('resource')
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
     class Meta:
