@@ -11,12 +11,12 @@ class Resource(Model):
         abstract = True
 
 class Section(Model):
-    name = CharField(max_length=100, unique=True)
+    name = CharField(max_length=100, unique=True, primary_key=True)
 
 class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
-    section = ForeignKey(Section, primary_key=True)
+    section = ForeignKey(Section)
     author = ForeignKey(Person)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
