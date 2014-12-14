@@ -2,10 +2,10 @@ language: python
 python:
   - "2.7"
 env:
-  - DJANGO=django==1.7.1 DB_ENGINE="django.db.backends.mysql" DB_NAME="dispatch" DB_USER="root"
+  - DJANGO=django==1.7.1 DB_ENGINE="django.db.backends.mysql" DB_NAME="test_dispatch" DB_USER="root"
 install: "pip install -r requirements.txt"
 before_script:
  - mysql -e 'create database dispatch;'
- - python manage.py syncdb --noinput 
+ - python manage.py syncdb --noinput
 script: python manage.py test core --settings=dispatch.settings
 script: python manage.py test content --settings=dispatch.settings
