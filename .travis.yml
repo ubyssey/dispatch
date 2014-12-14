@@ -6,7 +6,6 @@ env:
   - DJANGO=1.7.1 DB=mysql
 install: "pip install -r requirements.txt"
 before_script:
- - mysql -e 'create database test_dispatch;'
  - python manage.py syncdb --noinput --database=test_dispatch
 script: python manage.py test core --settings=dispatch.settings
 script: python manage.py test content --settings=dispatch.settings
