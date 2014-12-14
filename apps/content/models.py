@@ -11,7 +11,7 @@ class Resource(Model):
         abstract = True
 
 class Section(Model):
-    id = ForeignKey('Article')
+    id = ForeignKey('Article', primary_key=True)
     name = CharField(max_length=100, unique=True)
 
 class Article(Resource):
