@@ -5,13 +5,13 @@ from django.db.models import (
 from apps.core.models import Person
 
 class Resource(Model):
-    object = ForeignKey('Article')
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
     class Meta:
         abstract = True
 
 class Section(Model):
+    id = ForeignKey('Article')
     name = CharField(max_length=100, unique=True)
 
 class Article(Resource):
