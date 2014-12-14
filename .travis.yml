@@ -3,10 +3,10 @@ python:
   - "2.7"
   # command to install dependencies
 env:
-  - DJANGO=1.7 DB=mysql
+  - DJANGO=1.7.1 DB=mysql
 install: "pip install -r requirements.txt"
 before_script:
- - python manage.py syncdb
  - mysql -e 'create database dispatch;'
+ - python manage.py syncdb
 script: python manage.py test core
 script: python manage.py test content
