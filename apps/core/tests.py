@@ -9,7 +9,6 @@ class UserTests(TestCase):
 
     EMAIL = "peterjsiemens@gmail.com"
     PASS = "password1"
-
     ADMIN_EMAIL = "webmaster@ubyssey.ca"
 
     def setUp(self):
