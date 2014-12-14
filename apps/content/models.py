@@ -2,7 +2,7 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField,
     ImageField, BooleanField, ForeignKey, SlugField)
 
-from dispatch.apps.core.models import Person
+from apps.core.models import Person
 
 class Resource(Model):
     id = ForeignKey('Resource')
