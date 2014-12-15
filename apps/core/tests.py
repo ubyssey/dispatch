@@ -6,10 +6,18 @@ from django.db import IntegrityError
 User = get_user_model()
 
 class UserTests(TestCase):
-
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dispatch',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}
     EMAIL = "peterjsiemens@gmail.com"
     PASS = "password1"
-
     ADMIN_EMAIL = "webmaster@ubyssey.ca"
 
     def setUp(self):

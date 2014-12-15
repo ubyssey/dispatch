@@ -2,7 +2,7 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField,
     ImageField, BooleanField, ForeignKey, SlugField)
 
-from apps.core.models import Person
+#from apps.core.models import Person
 
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
@@ -16,8 +16,8 @@ class Section(Model):
 class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
-    section = ForeignKey('Section')
-    author = ForeignKey(Person)
+    section = ForeignKey(Section)
+    #author = ForeignKey(Person)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField(unique=True)

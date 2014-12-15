@@ -36,10 +36,8 @@ class Person(Model):
     last_name = CharField(max_length=255)
     user = ForeignKey('User', blank=True, null=True, related_name='user')
     roles = ManyToManyField(ContributorRole, blank=True, null=True)
-
     def __str__(self):
         return u'%s %s' % (self.first_name, self.last_name)
-
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)

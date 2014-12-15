@@ -5,7 +5,16 @@ from apps.content.models import Section, Article, Image
 
 class SectionTests(TestCase):
     NAME = "News"
-
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dispatch',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    }
+}
     def setUp(self):
         self.s1 = Section.objects.create(name=self.NAME)
 

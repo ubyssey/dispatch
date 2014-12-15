@@ -1,3 +1,4 @@
+configparser
 mysql-python
 django
 djangorestframework

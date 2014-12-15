@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import User, Person, ContributorRole
+from models import User, Person, ContributorRole
 
 class PersonInline(admin.StackedInline):
     model = Person
