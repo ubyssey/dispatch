@@ -17,7 +17,7 @@ class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
-    aauthor = ForeignKey(Person)
+    author = ForeignKey(Person)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField(unique=True)
