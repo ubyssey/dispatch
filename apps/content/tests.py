@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
 from apps.content.models import Section, Article, Image
+from apps.core.models import Person
 
 class SectionTests(TestCase):
     NAME = "News"
@@ -17,11 +18,15 @@ class SectionTests(TestCase):
 class ArticleTests(TestCase):
     def setUp(self):
         sCulture = Section.objects.create(name="Culture")
+        author = Person.objects.create(
+            first_name="John",
+            last_name="Doe")
 
         self.A1 = {
             "long_headline": "Buchanan Tower Rated Uglier Than One Yonge Street",
             "short_headline": "BuTo Strikes Fear",
             "section": sCulture,
+            "author": author,
             "published_at": timezone.now(),
             "slug": "buto-strikes-fear",
             "content": "Refer to headline."
