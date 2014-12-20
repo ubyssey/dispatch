@@ -1,5 +1,7 @@
 import importlib
 from apps.core.models import Setting
+from django.conf import settings
+import os
 
 class ThemeHelper():
 
@@ -30,7 +32,7 @@ class ThemeHelper():
     def get_static_dir(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        return 'themes/' + theme_name + '/static/'
+        return '/themes/' + theme_name + '/static/'
 
     @staticmethod
     def get_template_dir(theme_name=False):
