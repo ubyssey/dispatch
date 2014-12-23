@@ -3,6 +3,7 @@ from django.contrib import admin
 from rest_framework import routers
 from api import views
 from dispatch.helpers import ThemeHelper
+from apps.content import views as content_views
 
 admin.autodiscover()
 
