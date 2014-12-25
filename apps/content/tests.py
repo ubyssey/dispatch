@@ -26,12 +26,12 @@ class ArticleTests(TestCase):
             "long_headline": "Buchanan Tower Rated Uglier Than One Yonge Street",
             "short_headline": "BuTo Strikes Fear",
             "section": sCulture,
-            "author": author,
             "published_at": timezone.now(),
             "slug": "buto-strikes-fear",
             "content": "Refer to headline."
         }
         self.article1 = Article.objects.create(**self.A1)
+        self.article1.authors.add(author)
 
     def test_no_duplicate_slugs(self):
         with self.assertRaises(IntegrityError):
