@@ -1,0 +1,6 @@
+{% include 'header.html' %}
+<h1>{{ article.long_headline }}</h1>
+<p>By {{ article.author.full_name }}</p>
+<p>Published at {{ article.published_at }}</p>
+<p>{{ article.content }}</p>
+{% include 'footer.html' %}
