@@ -9,7 +9,8 @@ admin.autodiscover()
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'persons', views.PersonViewSet)
+router.register(r'articles', views.ArticleViewSet)
 
 urlpatterns = patterns('',
     url(r'^admin', include(admin.site.urls)),

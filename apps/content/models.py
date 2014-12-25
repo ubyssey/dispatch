@@ -3,7 +3,7 @@ from django.db.models import (
     ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField)
 from django.core.validators import MaxValueValidator
 
-from core.models import Person
+from apps.core.models import Person
 
 class Tag(Model):
     name = CharField(max_length=255)
@@ -22,7 +22,6 @@ class Resource(Model):
 class Section(Model):
     name = CharField(max_length=100, unique=True)
 
-
 class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
@@ -38,7 +37,6 @@ class Article(Resource):
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)])
 
     content = TextField()
-
 
 class Image(Resource):
     img = ImageField(upload_to='images')
