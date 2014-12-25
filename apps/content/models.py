@@ -14,7 +14,7 @@ class Topic(Model):
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
-    author = ManyToManyField(Person)
+    authors = ManyToManyField(Person)
 
     class Meta:
         abstract = True
@@ -33,8 +33,8 @@ class Article(Resource):
 
     topics = ManyToManyField('Topic')
     tags = ManyToManyField('Tag')
-    shares = PositiveIntegerField()
-    importance = PositiveIntegerField(validators=[MaxValueValidator(5)])
+    shares = PositiveIntegerField(default=0, blank=True, null=True)
+    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
 
     content = TextField()
 
