@@ -1,6 +1,14 @@
+{% load dispatch_filters %}
 {% include 'header.html' %}
 <h1>{{ article.long_headline }}</h1>
 <p>By {{ article.author.full_name }}</p>
 <p>Published at {{ article.published_at }}</p>
-<p>{{ article.content }}</p>
+
+{{ article.content|safe|linebreaks|shortcodes|safe }}
+
+<!-- Article-specific scripts -->
+{% for s in article.scripts.all %}
+<script src="http://dispatch.dev:8888/resources/js/{{ s.filename }}"></script>
+{% endfor %}
+
 {% include 'footer.html' %}

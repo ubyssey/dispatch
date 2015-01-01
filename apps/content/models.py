@@ -4,6 +4,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 
 from apps.core.models import Person
+from apps.frontend.models import FileResource
 
 class Tag(Model):
     name = CharField(max_length=255)
@@ -36,7 +37,17 @@ class Article(Resource):
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
 
+    images = ManyToManyField('Image')
+    videos = ManyToManyField('Video', blank=True, null=True)
+
+    scripts = ManyToManyField(FileResource, related_name='scripts')
+    stylesheets = ManyToManyField(FileResource, related_name='stylesheets')
+    snippets = ManyToManyField(FileResource, related_name='snippets')
+
     content = TextField()
+
+class Video(Resource):
+    url = CharField(max_length=500)
 
 class Image(Resource):
     img = ImageField(upload_to='images')

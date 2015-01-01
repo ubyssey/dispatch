@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'apps.content',
     'apps.core',
+    'apps.frontend',
 )
 
 MIDDLEWARE_CLASSES = (
