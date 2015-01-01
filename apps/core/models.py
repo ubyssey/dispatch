@@ -43,7 +43,6 @@ class Person(Model):
     def __str__(self):
         return u'%s %s' % (self.first_name, self.last_name)
 
-
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
     is_admin = BooleanField(default=False)
