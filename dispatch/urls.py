@@ -3,7 +3,7 @@ from rest_framework import routers
 from dispatch.apps.api import views
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.content import views as content_views
-from dispatch.apps.admin import urls as adminurls
+from dispatch.apps.manager import urls as adminurls
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)

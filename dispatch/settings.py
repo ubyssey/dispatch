@@ -67,7 +67,7 @@ INSTALLED_APPS = (
     'dispatch.apps.content',
     'dispatch.apps.core',
     'dispatch.apps.frontend',
-    'dispatch.apps.admin',
+    'dispatch.apps.manager',
 )
 
 MIDDLEWARE_CLASSES = (

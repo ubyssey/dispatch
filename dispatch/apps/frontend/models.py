@@ -1,6 +1,5 @@
 from django.db.models import Model, CharField, FileField
 
-
 class FileResource(Model):
     name = CharField(max_length=255, blank=True, null=True)
 
