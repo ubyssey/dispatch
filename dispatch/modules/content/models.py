@@ -3,14 +3,20 @@ from django.db.models import (
     ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField)
 from django.core.validators import MaxValueValidator
 
-from apps.core.models import Person
-from apps.frontend.models import FileResource
+from dispatch.apps.core.models import Person
+from dispatch.apps.frontend.models import FileResource
 
 class Tag(Model):
     name = CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class Topic(Model):
     name = CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
@@ -22,6 +28,9 @@ class Resource(Model):
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Article(Resource):
     long_headline = CharField(max_length=200)
@@ -47,6 +56,7 @@ class Article(Resource):
     content = TextField()
 
 class Video(Resource):
+    title = CharField(max_length=255)
     url = CharField(max_length=500)
 
 class Image(Resource):

@@ -7,10 +7,7 @@ def load_template_source(template_name, template_dirs=None):
         return open(ThemeHelper.get_template_dir() + template_name).read(), template_name
     except IOError:
         try:
-            return open(ThemeHelper.get_template_dir("default") + template_name).read(), template_name
+            return open('resources/snippets/' + template_name).read(), template_name
         except IOError:
-            try:
-                return open('resources/snippets/' + template_name).read(), template_name
-            except IOError:
-                raise TemplateDoesNotExist, template_name
+            raise TemplateDoesNotExist, template_name
 load_template_source.is_usable = True

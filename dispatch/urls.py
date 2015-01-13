@@ -1,11 +1,9 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from rest_framework import routers
-from api import views
+from dispatch.apps.api import views
 from dispatch.helpers import ThemeHelper
-from apps.content import views as content_views
-
-admin.autodiscover()
+from dispatch.apps.content import views as content_views
+from dispatch.apps.admin import urls as adminurls
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -13,7 +11,7 @@ router.register(r'persons', views.PersonViewSet)
 router.register(r'articles', views.ArticleViewSet)
 
 urlpatterns = patterns('',
-    url(r'^admin', include(admin.site.urls)),
+    url(r'^admin/', include(adminurls)),
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include(ThemeHelper.get_theme_urls())),
