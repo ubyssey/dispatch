@@ -1,9 +1,9 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
-from apps.content.models import Resource, Article
-from apps.core.models import Person
+from dispatch.apps.content.models import Resource, Article
+from dispatch.apps.core.models import Person
 from rest_framework import viewsets
-from apps.api.serializers import UserSerializer, ArticleSerializer, PersonSerializer
+from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, PersonSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     """

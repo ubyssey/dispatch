@@ -2,8 +2,8 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import RequestContext
-from apps.content.models import Article
-from themes.default.views import DefaultTheme
+from dispatch.apps.content.models import Article
+from dispatch.apps.frontend.themes.default import DefaultTheme
 
 class UbysseyTheme(DefaultTheme):
 
