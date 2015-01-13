@@ -38,7 +38,10 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'core.User'
 
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'templates'),
+    os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
+    ]
 
 TEMPLATE_LOADERS = (
     'dispatch.loaders.load_template_source',
@@ -61,8 +64,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'apps.content',
-    'apps.core',
+    'dispatch.apps.content',
+    'dispatch.apps.core',
+    'dispatch.apps.frontend',
+    'dispatch.apps.manager',
 )
 
 MIDDLEWARE_CLASSES = (

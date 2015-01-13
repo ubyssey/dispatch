@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from apps.content.models import Article
+from dispatch.apps.content.models import Article
 
 
 class DefaultTheme():
