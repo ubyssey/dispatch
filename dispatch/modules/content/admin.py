@@ -26,7 +26,6 @@ class ArticleAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Article, ArticleAdmin)
-
 admin.site.register(Section)
 admin.site.register(Image)
 admin.site.register(Video)
