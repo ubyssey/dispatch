@@ -4,7 +4,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 
 from dispatch.apps.core.models import Person
-from dispatch.apps.frontend.models import FileResource
+from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 
 class Tag(Model):
     name = CharField(max_length=255)
@@ -49,9 +49,9 @@ class Article(Resource):
     images = ManyToManyField('Image')
     videos = ManyToManyField('Video', blank=True, null=True)
 
-    scripts = ManyToManyField(FileResource, related_name='scripts')
-    stylesheets = ManyToManyField(FileResource, related_name='stylesheets')
-    snippets = ManyToManyField(FileResource, related_name='snippets')
+    scripts = ManyToManyField(Script, related_name='scripts')
+    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
+    snippets = ManyToManyField(Snippet, related_name='snippets')
 
     content = TextField()
 
