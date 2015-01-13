@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model, authenticate, login
 from django.db import IntegrityError
-from apps.core.models import Person, ContributorRole
+from dispatch.apps.core.models import Person, ContributorRole
 
 User = get_user_model()
 
