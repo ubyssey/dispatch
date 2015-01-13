@@ -14,11 +14,11 @@ class ArticleAdmin(admin.ModelAdmin):
     form = ArticleForm
 
     fieldsets = (
-        ('Basic', {
-            'fields': ('published_at', 'section', 'importance', 'slug',)
-        }),
         ('Content', {
             'fields': ('long_headline', 'short_headline', 'content',)
+        }),
+        ('Basic', {
+            'fields': ('published_at', 'section', 'importance', 'slug',)
         }),
         ('Developer', {
             'fields': ('snippets', 'scripts', 'stylesheets',)
