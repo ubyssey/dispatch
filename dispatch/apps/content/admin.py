@@ -20,6 +20,12 @@ class ArticleAdmin(admin.ModelAdmin):
         ('Basic', {
             'fields': ('published_at', 'section', 'importance', 'slug',)
         }),
+        ('', {
+            'fields': ('topics', 'tags', 'shares',)
+        }),
+        ('Media', {
+            'fields': ('images', 'videos',)
+        }),
         ('Developer', {
             'fields': ('snippets', 'scripts', 'stylesheets',)
         }),
