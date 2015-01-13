@@ -33,7 +33,6 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(label= ("Password"),
         help_text= ("Raw passwords are not stored, so there is no way to see "

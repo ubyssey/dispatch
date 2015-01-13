@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.db import IntegrityError
-from apps.content.models import Section, Article, Image
-from apps.core.models import Person
+from dispatch.apps.content.models import Section, Article, Image
+from dispatch.apps.core.models import Person
 
 class SectionTests(TestCase):
     NAME = "News"
