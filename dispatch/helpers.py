@@ -25,7 +25,10 @@ class ThemeHelper():
 
     @staticmethod
     def fetch_theme_urls(theme_name):
-        urls = importlib.import_module("themes." + theme_name + ".urls")
+        try:
+            urls = importlib.import_module("themes." + theme_name + ".urls")
+        except ImportError:
+            urls = importlib.import_module("dispatch.apps.frontend.themes.default.urls")
         return urls.theme_urls
 
     @staticmethod
