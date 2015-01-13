@@ -41,17 +41,17 @@ class Article(Resource):
     published_at = DateTimeField()
     slug = SlugField(unique=True)
 
-    topics = ManyToManyField('Topic')
-    tags = ManyToManyField('Tag')
+    topics = ManyToManyField('Topic', blank=True, null=True)
+    tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
 
-    images = ManyToManyField('Image')
+    images = ManyToManyField('Image', blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
-    scripts = ManyToManyField(Script, related_name='scripts')
-    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
-    snippets = ManyToManyField(Snippet, related_name='snippets')
+    scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
+    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True, null=True)
+    snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
 
     content = TextField()
 
