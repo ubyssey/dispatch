@@ -1,0 +1,82 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="content panel">
+            <div class="field-row headline">
+                {{ form.long_headline.errors }}
+                {{ form.long_headline }}
+            </div>
+            <div class="field-row content">
+                {{ form.content.errors }}
+                {{ form.content }}
+            </div>
+        </div>
+        <div class="options panel">
+            <div class="fieldset basic row">
+                <div class="col">
+                    <div class="field">
+                        {{ form.published_at.errors }}
+                        <label for="{{ form.published_at.id_for_label }}">Publish on:</label>
+                        {{ form.published_at }}
+                    </div>
+                    <div class="field">
+                        {{ form.section.errors }}
+                        <label for="{{ form.section.id_for_label }}">Section:</label>
+                        {{ form.section }}
+                    </div>
+                    {{ form.slug.errors }}
+                    <label for="{{ form.slug.id_for_label }}">Slug:</label>
+                    {{ form.slug }}<br/>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <input class="input-tags" type="hidden" name="tags" value="{{ tags }}" />
+                    </div>
+                    <div class="field">
+                        <input class="input-topics" type="hidden" name="topics" value="{{ topics }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="fieldset media">
+                <input class="images-field" type="hidden" name="images" value="{{ image_ids }}" />
+                <ul class="images-list">
+                    {% for image in images %}
+                        <li>{{ image.img }}</li>
+                    {% endfor %}
+                </ul>
+                <button class="modal-trigger" data-modal="image-manager">Add images</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <input type="submit" value="Submit" />
+</form>
+<div class="modal image-manager">
+    <div class="body">
+        <div id="image-manager" class="content">
+            <ul>
+                <li><a href="#image-catalog">Catalog</a></li>
+                <li><a href="#image-upload">Upload</a></li>
+            </ul>
+            <button class="insert-image">Insert</button>
+            <div id="image-catalog">
+                <div class="header">
+                    <input type="text" class="image-search" />
+                </div>
+                <ul class="image-results">
+                </ul>
+            </div>
+            <div id="image-upload">
+                <form class="image-form" action="http://localhost:8000/api/image/" method="POST" enctype="multipart/form-data">
+                     {% csrf_token %}
+                     <input name="caption" type="text" />
+                     <input class="image-field" name="img" type="file" />
+                     <button class="upload-image">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
