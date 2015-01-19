@@ -9,10 +9,13 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'persons', views.PersonViewSet)
 router.register(r'articles', views.ArticleViewSet)
+router.register(r'tag', views.TagViewSet)
+router.register(r'image', views.ImageViewSet)
 
 urlpatterns = patterns('',
     url(r'^admin/', include(adminurls)),
     url(r'^api/', include(router.urls)),
+    url(r'^api/frontpage/?', 'dispatch.apps.content.views.api_frontpage'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include(ThemeHelper.get_theme_urls())),
 )
