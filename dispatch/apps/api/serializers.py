@@ -1,9 +1,22 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article
+from dispatch.apps.content.models import Article, Tag, Image
 from dispatch.apps.core.models import Person
 from rest_framework import serializers
+
+class ImageSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
+    class Meta:
+        model = Image
+        fields = ('id', 'img', 'caption', 'url')
+
+class TagSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('name',)
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -11,7 +24,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('long_headline',
                   'short_headline',
                   'section',
-                  'author',
                   'is_published',
                   'published_at',
                   'slug',
