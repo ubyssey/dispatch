@@ -8,10 +8,11 @@ from rest_framework import serializers
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
+    thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'caption', 'url')
+        fields = ('id', 'img', 'caption', 'url', 'thumb')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
