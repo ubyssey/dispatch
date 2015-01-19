@@ -55,7 +55,7 @@ class Article(Resource):
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
 
-    images = ManyToManyField('Image', blank=True, null=True)
+    images = ManyToManyField('Image', through="Attachment", blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -84,15 +84,6 @@ class Video(Resource):
     url = CharField(max_length=500)
 
 
-def save_thumbnail(image, size, name, label):
-    width, height = size
-    (imw, imh) = image.size
-    if (imw > width) or (imh > height) :
-        image.thumbnail(size, Img.ANTIALIAS)
-    name = "%s-%s.jpg" % (name, label)
-    output = os.path.join(settings.MEDIA_ROOT, name)
-    image.save(output, format='JPEG', quality=60)
-
 class Image(Resource):
     img = ImageField(upload_to='images')
     caption = CharField(max_length=500)
@@ -103,8 +94,14 @@ class Image(Resource):
         'square': (100,100)
     }
 
+    THUMBNAIL_SIZE = 'square'
+
     def get_absolute_url(self):
         return self.img
+
+    def get_thumbnail_url(self):
+        name = self.img.name.split('.')[0]
+        return "%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
 
     #Overriding
     def save(self, *args, **kwargs):
@@ -114,7 +111,17 @@ class Image(Resource):
             name = self.img.name.split('.')[0]
 
             for size in self.SIZES.keys():
-                save_thumbnail(image, self.SIZES[size], name, size)
+                self.save_thumbnail(image, self.SIZES[size], name, size)
+
+    def save_thumbnail(self, image, size, name, label):
+        width, height = size
+        (imw, imh) = image.size
+        if (imw > width) or (imh > height) :
+            image.thumbnail(size, Img.ANTIALIAS)
+        name = "%s-%s.jpg" % (name, label)
+        output = os.path.join(settings.MEDIA_ROOT, name)
+        image.save(output, format='JPEG', quality=60)
+
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):
@@ -131,3 +138,16 @@ class Image(Resource):
                 path = os.path.join(settings.MEDIA_ROOT, filename)
                 os.remove(path)
 
+class Attachment(Model):
+    NORMAL = 'normal'
+    FILE = 'file'
+    COURTESY = 'courtesy'
+    TYPE_CHOICES = (
+        (NORMAL, 'Normal'),
+        (FILE, 'File photo'),
+        (COURTESY, 'Courtesy photo'),
+    )
+    article = ForeignKey(Article)
+    image = ForeignKey(Image)
+    caption = CharField(max_length=255)
+    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL)
