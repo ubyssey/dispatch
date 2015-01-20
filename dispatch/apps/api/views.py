@@ -1,9 +1,9 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article, Tag, Image
+from dispatch.apps.content.models import Article, Tag, Image, Attachment
 from dispatch.apps.core.models import Person
 from rest_framework import viewsets
-from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, TagSerializer, PersonSerializer
+from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, TagSerializer, PersonSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -24,6 +24,10 @@ class ArticleViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+class AttachmentViewSet(viewsets.ModelViewSet):
+    queryset = Attachment.objects.all()
+    serializer_class = AttachmentSerializer
 
 class ImageViewSet(viewsets.ModelViewSet):
     model = Image
