@@ -1,7 +1,9 @@
-from dispatch.apps.content.models import Article
+from dispatch.apps.content.models import Article, Tag, Topic
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from .forms import ArticleForm
 
 @staff_member_required
 def articles(request):
@@ -10,3 +12,38 @@ def articles(request):
         {'article_list' : Article.objects.all()},
         RequestContext(request, {}),
     )
+
+
+@login_required
+def article_edit(request, id):
+    a = Article.objects.get(pk=id)
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=a)
+        if form.is_valid():
+            form.save()
+            tags = request.POST.get("tags-list", False)
+            if tags:
+                a.add_tags(tags)
+        else:
+            print form.errors
+
+
+
+    else:
+        form = ArticleForm(instance=a)
+
+    tags = ",".join(a.tags.values_list('name', flat=True))
+
+    # Images
+    images = a.images.all()
+    image_ids = ",".join([str(i) for i in a.images.values_list('id', flat=True)])
+
+    context = {
+        'article': a,
+        'form': form,
+        'tags': tags,
+        'images': images,
+        'image_ids': image_ids,
+    }
+
+    return render(request, 'admin/article/edit.html', context)
