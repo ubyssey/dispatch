@@ -86,7 +86,6 @@ class Video(Resource):
 
 class Image(Resource):
     img = ImageField(upload_to='images')
-    caption = CharField(max_length=500)
 
     SIZES = {
         'large': (1600,900),
@@ -149,5 +148,5 @@ class Attachment(Model):
     )
     article = ForeignKey(Article)
     image = ForeignKey(Image)
-    caption = CharField(max_length=255)
-    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL)
+    caption = CharField(max_length=255, blank=True, null=True)
+    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, blank=True, null=True)
