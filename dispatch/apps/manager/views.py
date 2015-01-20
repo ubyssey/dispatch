@@ -20,15 +20,14 @@ def article_edit(request, id):
     if request.method == 'POST':
         form = ArticleForm(request.POST, instance=a)
         if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
+            form.save()
+            tags = request.POST.get("tags-list", False)
+            if tags:
+                a.add_tags(tags)
+        else:
+            print form.errors
 
 
-        tags = request.POST.get("tags")
-        a.add_tags(tags)
-
-        images = request.POST.get("images", False)
-        if(images):
-            a.add_images(images)
 
     else:
         form = ArticleForm(instance=a)
@@ -40,6 +39,7 @@ def article_edit(request, id):
     image_ids = ",".join([str(i) for i in a.images.values_list('id', flat=True)])
 
     context = {
+        'article': a,
         'form': form,
         'tags': tags,
         'images': images,

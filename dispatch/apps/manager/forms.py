@@ -6,6 +6,8 @@ class ArticleForm(ModelForm):
         model = Article
         fields = '__all__'
 
+        exclude = ('images', )
+
         widgets = {
             'long_headline': Textarea(attrs={
                 'placeholder': 'Enter a headline',
