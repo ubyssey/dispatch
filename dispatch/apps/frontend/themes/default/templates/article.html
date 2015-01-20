@@ -1,9 +1,16 @@
+{% load dispatch_filters %}
 <!DOCTYPE html>
 <html>
 <head>
     <title></title>
 </head>
 <body>
-{{ article.long_headline }}
+<h1>{{ article.long_headline }}</h1>
+<p>Published at {{ article.published_at }}</p>
+
+<div class="content">
+{{ article.content|safe|linebreaks|shortcodes|safe }}
+</div>
+
 </body>
 </html>
