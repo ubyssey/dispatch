@@ -5,10 +5,17 @@
     <title></title>
     <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/chosen.css' %}" type="text/css">
+	<link rel="stylesheet" href="{% static 'js/quill2/quill.base.css' %}">
+	<link rel="stylesheet" href="{% static 'js/quill2/quill.snow.css' %}">
+    <script src="//use.typekit.net/qjp6bnp.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
     <header>
-        <div class="brand">D</div>
+        <div class="brand">D</div><div class="header-main">
+            {% block header %}
+            {% endblock %}
+        </div>
     </header>
     <div class="main clearfix">
         <div class="sidebar">
@@ -23,6 +30,8 @@
     <script src="{% static 'js/jquery-ui/jquery-ui.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/chosen/chosen.jquery.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/dispatch.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/quill2/quill.js' %}"></script>
     <script src="{% static 'js/admin/article.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/admin/editor.js' %}" type="text/javascript"></script>
 </body>
 </html>

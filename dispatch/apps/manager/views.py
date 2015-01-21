@@ -27,14 +27,11 @@ def article_edit(request, id):
         else:
             print form.errors
 
-
-
     else:
         form = ArticleForm(instance=a)
 
     tags = ",".join(a.tags.values_list('name', flat=True))
 
-    # Images
     images = a.images.all()
     image_ids = ",".join([str(i) for i in a.images.values_list('id', flat=True)])
 
@@ -42,8 +39,6 @@ def article_edit(request, id):
         'article': a,
         'form': form,
         'tags': tags,
-        'images': images,
-        'image_ids': image_ids,
     }
 
     return render(request, 'admin/article/edit.html', context)
