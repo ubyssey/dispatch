@@ -7,24 +7,27 @@
     <link rel="stylesheet" href="{% static 'css/chosen.css' %}" type="text/css">
 	<link rel="stylesheet" href="{% static 'js/quill2/quill.base.css' %}">
 	<link rel="stylesheet" href="{% static 'js/quill2/quill.snow.css' %}">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="//use.typekit.net/qjp6bnp.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
-    <header>
-        <div class="brand">D</div><div class="header-main">
-            {% block header %}
-            {% endblock %}
-        </div>
-    </header>
-    <div class="main clearfix">
+    <div class="wrapper">
         <div class="sidebar">
 
         </div>
-        <div class="content">
-        {% block content %}
-        {% endblock %}
-        </div>
+        <main>
+            <header>
+                <div class="header-main">
+                    {% block header %}
+                    {% endblock %}
+                </div>
+            </header>
+            <div class="main clearfix">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
     </div>
     <script src="{% static 'js/jquery.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/jquery-ui/jquery-ui.js' %}" type="text/javascript"></script>
