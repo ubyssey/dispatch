@@ -90,7 +90,7 @@ class Image(Resource):
     SIZES = {
         'large': (1600,900),
         'medium': (800, 600),
-        'square': (100,100)
+        'square': (250,250)
     }
 
     THUMBNAIL_SIZE = 'square'
