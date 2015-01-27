@@ -22,8 +22,14 @@ def sc_snippet(*args):
     return template.render(c)
 
 def sc_image(*args):
-    id = int(args[0][0])
-    attach = Attachment.objects.get(id=id)
+    try:
+        id = int(args[0][0])
+    except IndexError:
+        return ""
+    try:
+        attach = Attachment.objects.get(id=id)
+    except Attachment.DoesNotExist:
+        return ""
     template = loader.get_template("image.html")
     c = Context({
         'src': "http://dispatch.dev:8888/media/" + str(attach.image.img),
