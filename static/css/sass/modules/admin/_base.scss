@@ -1,0 +1,141 @@
+$toolbar-width: 55px;
+@import "compass/css3/box-shadow";
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: Helvetica;
+}
+
+div.sidebar {
+  width: $toolbar-width;
+  height: 100%;
+  background: #1D1D1D;
+  position: absolute;
+  left: 0;
+  top: 0;
+  @include box-shadow(rgba(0, 0, 0, 0.2) 3px 0px 5px);
+}
+
+div.wrapper {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+main {
+  margin-left: 55px;
+  height: 100%;
+}
+
+header {
+  width: 100%;
+  background: #4A90E2;
+  height: $toolbar-width;
+  line-height: 40px;
+  position: fixed;
+  top: 0;
+  z-index: 50;
+  @include box-shadow(rgba(0, 0, 0, 0.2) 0px 1px 1px);
+  div.header-main {
+    line-height: $toolbar-width;
+    height: 100%;
+  }
+  div.brand {
+    width: $toolbar-width;
+    background: #353535;
+    text-align: center;
+    font-family: LFTEtica-Bold;
+    font-size: 24px;
+    color: #FFFFFF;
+  }
+}
+
+
+div.main {
+  padding-top: 55px;
+  height: 100%;
+  overflow: hidden;
+  > div.content {
+    overflow: hidden;
+    float: left;
+    height: 100%;
+  }
+  form, form > .row {
+    overflow: hidden;
+    height: 100%;
+  }
+}
+
+// Modal
+
+.modal {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 500;
+  .body {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .content {
+    width: 75%;
+    height: 90%;
+    max-width: 1440px;
+    min-height: 400px;
+    background: white;
+    margin: 0 auto;
+    position: relative;
+    @include box-shadow(rgba(0, 0, 0, 0.5) 0px 0px 5px);
+  }
+  .tab {
+    margin-top: 58px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+  }
+  .header {
+    height: 58px;
+    position: absolute;
+    width: 100%;
+    z-index: 50;
+    @include box-shadow(rgba(0, 0, 0, 0.05) 0px 1px 1px);
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+  }
+
+  input {
+    border: 1px solid black;
+  }
+}
+
+
+// Dropzone
+
+.dropzone {
+  height: 100%;
+}
+
+.dz-preview {
+  display: inline-block;
+}
+
+// Inputs
+
+input, textarea {
+  //border: none;
+  &:focus {
+    outline: none;
+  }
+}

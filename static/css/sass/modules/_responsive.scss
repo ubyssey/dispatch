@@ -1,0 +1,22 @@
+div.col {
+  float: left;
+}
+
+div.col-8 {
+  width: 75%;
+  float: left;
+}
+
+div.col-4 {
+  width: 25%;
+  float: left;
+}
+
+div.col-6 {
+  width: 50%;
+  float: left;
+}
+
+div.row, .clearfix {
+  overflow: auto;
+}
