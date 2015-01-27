@@ -11,7 +11,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'url', 'thumb')
+        fields = ('id', 'img', 'url', 'thumb', 'created_at')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
