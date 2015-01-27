@@ -73,11 +73,9 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def add_images(self, images):
-        self.images.clear()
-        for id in images.split(","):
-            ins = Image.objects.get(id=id)
-            self.images.add(ins)
+    def add_attachments(self, attachments):
+        print attachments
+        Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments.split(",")).delete()
 
 class Video(Resource):
     title = CharField(max_length=255)
