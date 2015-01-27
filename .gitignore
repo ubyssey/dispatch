@@ -1,5 +1,7 @@
 *.pyc
 .idea/
-static/
 media/
 resources/
+.sass-cache/
+static/js/vendor/
+npm-debug.log
