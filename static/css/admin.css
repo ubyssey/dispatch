@@ -1,0 +1,620 @@
+/* line 1, sass/modules/_responsive.scss */
+div.col {
+  float: left;
+}
+
+/* line 5, sass/modules/_responsive.scss */
+div.col-8 {
+  width: 75%;
+  float: left;
+}
+
+/* line 10, sass/modules/_responsive.scss */
+div.col-4 {
+  width: 25%;
+  float: left;
+}
+
+/* line 15, sass/modules/_responsive.scss */
+div.col-6 {
+  width: 50%;
+  float: left;
+}
+
+/* line 20, sass/modules/_responsive.scss */
+div.row, .clearfix {
+  overflow: auto;
+}
+
+/* line 4, sass/modules/admin/_base.scss */
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* line 11, sass/modules/admin/_base.scss */
+body {
+  font-family: Helvetica;
+}
+
+/* line 15, sass/modules/admin/_base.scss */
+div.sidebar {
+  width: 55px;
+  height: 100%;
+  background: #1D1D1D;
+  position: absolute;
+  left: 0;
+  top: 0;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 3px 0px 5px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 3px 0px 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 3px 0px 5px;
+}
+
+/* line 25, sass/modules/admin/_base.scss */
+div.wrapper {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 31, sass/modules/admin/_base.scss */
+main {
+  margin-left: 55px;
+  height: 100%;
+}
+
+/* line 36, sass/modules/admin/_base.scss */
+header {
+  width: 100%;
+  background: #4A90E2;
+  height: 55px;
+  line-height: 40px;
+  position: fixed;
+  top: 0;
+  z-index: 50;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 1px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 1px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 1px;
+}
+/* line 45, sass/modules/admin/_base.scss */
+header div.header-main {
+  line-height: 55px;
+  height: 100%;
+}
+/* line 49, sass/modules/admin/_base.scss */
+header div.brand {
+  width: 55px;
+  background: #353535;
+  text-align: center;
+  font-family: LFTEtica-Bold;
+  font-size: 24px;
+  color: #FFFFFF;
+}
+
+/* line 60, sass/modules/admin/_base.scss */
+div.main {
+  padding-top: 55px;
+  height: 100%;
+  overflow: hidden;
+}
+/* line 64, sass/modules/admin/_base.scss */
+div.main > div.content {
+  overflow: hidden;
+  float: left;
+  height: 100%;
+}
+/* line 69, sass/modules/admin/_base.scss */
+div.main form, div.main form > .row {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* line 77, sass/modules/admin/_base.scss */
+.modal {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 500;
+}
+/* line 85, sass/modules/admin/_base.scss */
+.modal .body {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* line 89, sass/modules/admin/_base.scss */
+.modal .content {
+  width: 75%;
+  height: 90%;
+  max-width: 1440px;
+  min-height: 400px;
+  background: white;
+  margin: 0 auto;
+  position: relative;
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+}
+/* line 99, sass/modules/admin/_base.scss */
+.modal .tab {
+  margin-top: 58px;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+}
+/* line 106, sass/modules/admin/_base.scss */
+.modal .header {
+  height: 58px;
+  position: absolute;
+  width: 100%;
+  z-index: 50;
+  -moz-box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+}
+/* line 113, sass/modules/admin/_base.scss */
+.modal .footer {
+  position: absolute;
+  bottom: 0;
+}
+/* line 118, sass/modules/admin/_base.scss */
+.modal input {
+  border: 1px solid black;
+}
+
+/* line 126, sass/modules/admin/_base.scss */
+.dropzone {
+  height: 100%;
+}
+
+/* line 130, sass/modules/admin/_base.scss */
+.dz-preview {
+  display: inline-block;
+}
+
+/* line 138, sass/modules/admin/_base.scss */
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* line 5, sass/modules/admin/_article.scss */
+div.panel {
+  float: left;
+}
+
+/* line 9, sass/modules/admin/_article.scss */
+textarea.headline {
+  font-weight: 600;
+  font-size: 28px;
+  color: #000000;
+  line-height: 40px;
+  height: 40px;
+  border: none;
+  font-family: "LFT Etica";
+  font-weight: 600;
+  width: 100%;
+  resize: none;
+}
+
+/* line 23, sass/modules/admin/_article.scss */
+div.field-row.headline {
+  margin-bottom: 15px;
+}
+
+/* line 28, sass/modules/admin/_article.scss */
+div.fieldset label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-family: "LFT Etica";
+}
+
+/* line 35, sass/modules/admin/_article.scss */
+input, select {
+  font-size: 14px;
+}
+
+/* line 39, sass/modules/admin/_article.scss */
+div.field {
+  margin-bottom: 10px;
+}
+
+/* line 43, sass/modules/admin/_article.scss */
+div.col {
+  min-width: 175px;
+}
+
+/* line 47, sass/modules/admin/_article.scss */
+select {
+  width: 100%;
+}
+
+/* line 54, sass/modules/admin/_article.scss */
+div.panel.content {
+  width: 730px;
+  background: white;
+  height: 100%;
+  overflow: scroll;
+  border-right: 1px solid #DEDEDE;
+  -moz-box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
+  box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
+}
+/* line 64, sass/modules/admin/_article.scss */
+div.panel.content > div.inner {
+  padding-top: 35px;
+  padding-right: 60px;
+  padding-bottom: 95px;
+}
+
+/* line 71, sass/modules/admin/_article.scss */
+div.fieldset.tab {
+  padding: 30px 40px;
+}
+
+/* line 75, sass/modules/admin/_article.scss */
+nav.edit-tabs {
+  border-bottom: 1px solid #D9D9D9;
+}
+/* line 77, sass/modules/admin/_article.scss */
+nav.edit-tabs ul {
+  padding-left: 20px;
+  margin: 0;
+  list-style-type: none;
+}
+/* line 81, sass/modules/admin/_article.scss */
+nav.edit-tabs ul li {
+  display: inline-block;
+}
+/* line 84, sass/modules/admin/_article.scss */
+nav.edit-tabs ul li a {
+  display: block;
+  padding: 20px 20px;
+  font-family: "Lucida Grande";
+  font-size: 14px;
+  color: #A2A2A2;
+  line-height: 17px;
+  text-decoration: none;
+}
+/* line 90, sass/modules/admin/_article.scss */
+nav.edit-tabs ul li a:visited {
+  color: #A2A2A2;
+}
+/* line 93, sass/modules/admin/_article.scss */
+nav.edit-tabs ul li a:hover {
+  color: #272727;
+}
+/* line 104, sass/modules/admin/_article.scss */
+nav.edit-tabs div.fieldset {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: solid 1px #C6C6C6;
+}
+/* line 108, sass/modules/admin/_article.scss */
+nav.edit-tabs div.fieldset div.col:first-child {
+  margin-right: 15px;
+}
+
+/* line 115, sass/modules/admin/_article.scss */
+div.field-row.content textarea.content {
+  width: 100%;
+  display: none;
+}
+
+/* line 121, sass/modules/admin/_article.scss */
+button.dis-button {
+  border: 1px solid #c8c8c8;
+  background: none;
+  border-radius: 25px;
+  color: #898989;
+  font-size: 10px;
+  padding: 0 9px;
+  height: 28px;
+  vertical-align: middle;
+}
+/* line 130, sass/modules/admin/_article.scss */
+button.dis-button:hover {
+  cursor: pointer;
+  border-color: grey;
+  color: grey;
+}
+/* line 135, sass/modules/admin/_article.scss */
+button.dis-button:active {
+  outline: none;
+}
+
+/* line 140, sass/modules/admin/_article.scss */
+div.field-row.headline {
+  margin-left: 60px;
+  border-bottom: 1px solid #e2e2e2;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
+/* line 145, sass/modules/admin/_article.scss */
+div.field-row.headline div.authors {
+  padding: 10px 0;
+  font-family: LFTEtica-SemiBold;
+  font-size: 16px;
+  color: #7E7E7E;
+  line-height: 28px;
+  height: 28px;
+}
+/* line 153, sass/modules/admin/_article.scss */
+div.field-row.headline div.authors:hover button {
+  display: inline-block;
+}
+/* line 157, sass/modules/admin/_article.scss */
+div.field-row.headline div.authors button {
+  display: none;
+}
+
+/* line 163, sass/modules/admin/_article.scss */
+input.add-box {
+  display: none;
+}
+
+/* line 167, sass/modules/admin/_article.scss */
+ul.tags {
+  list-style-type: none;
+  padding: 0;
+}
+/* line 170, sass/modules/admin/_article.scss */
+ul.tags li {
+  display: inline-block;
+  border: 1px solid black;
+  background: white;
+  padding: 4px;
+  margin-right: 5px;
+}
+
+/* line 179, sass/modules/admin/_article.scss */
+ul.tagList {
+  list-style-type: none;
+  padding: 0;
+}
+/* line 182, sass/modules/admin/_article.scss */
+ul.tagList li {
+  display: inline-block;
+  border: 1px solid black;
+  background: white;
+  padding: 4px;
+  margin-right: 5px;
+}
+
+/* line 190, sass/modules/admin/_article.scss */
+.image-manager img {
+  height: auto;
+}
+
+/* line 194, sass/modules/admin/_article.scss */
+.images-list {
+  list-style-type: none;
+  padding: 0;
+}
+/* line 197, sass/modules/admin/_article.scss */
+.images-list li {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin: 0 5px 5px 0;
+}
+/* line 202, sass/modules/admin/_article.scss */
+.images-list li:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+/* line 210, sass/modules/admin/_article.scss */
+.image-manager .image-results {
+  overflow-y: scroll;
+  list-style-type: none;
+  padding: 15px;
+  margin: 0 360px 0 0;
+}
+/* line 215, sass/modules/admin/_article.scss */
+.image-manager .image-results li {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  background-size: auto 100%;
+  margin: 8px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* line 223, sass/modules/admin/_article.scss */
+.image-manager .image-results li:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+/* line 227, sass/modules/admin/_article.scss */
+.image-manager .image-results li.selected {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 4px #e14d43;
+}
+/* line 232, sass/modules/admin/_article.scss */
+.image-manager .image-meta {
+  position: absolute;
+  width: 360px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid #e5e5e5;
+}
+
+/* line 244, sass/modules/admin/_article.scss */
+#editor {
+  min-height: 200px;
+  padding: 0;
+}
+
+/* line 249, sass/modules/admin/_article.scss */
+#full-toolbar {
+  padding: 0;
+  margin-left: 60px;
+}
+
+/* line 254, sass/modules/admin/_article.scss */
+.ql-editor {
+  margin-left: 60px;
+}
+/* line 256, sass/modules/admin/_article.scss */
+.ql-editor img {
+  width: 100%;
+}
+
+/* line 261, sass/modules/admin/_article.scss */
+#editor p {
+  font-family: Georgia;
+  font-size: 16px;
+  color: #2F2F2F;
+  line-height: 26px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* line 270, sass/modules/admin/_article.scss */
+#editor p.no-bottom-margin {
+  margin-bottom: 0;
+}
+
+/* line 274, sass/modules/admin/_article.scss */
+.drop-area {
+  height: 20px;
+}
+
+/* line 278, sass/modules/admin/_article.scss */
+.drop-area.hover {
+  border: 1px solid grey;
+  border-radius: 20px;
+  padding: 10px 0;
+  margin: 8px 0;
+}
+
+/* line 285, sass/modules/admin/_article.scss */
+span.format-shortcode {
+  color: red;
+}
+
+/* line 288, sass/modules/admin/_article.scss */
+img.drag-image {
+  width: 150px;
+  height: auto;
+}
+
+/* line 293, sass/modules/admin/_article.scss */
+#editor img.drag-image {
+  width: 50%;
+}
+
+/* line 297, sass/modules/admin/_article.scss */
+button.dark-button {
+  border: 1px solid #fff;
+  background: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 10px;
+  padding: 0 13px;
+  height: 36px;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+/* line 307, sass/modules/admin/_article.scss */
+button.dark-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  color: white;
+}
+/* line 312, sass/modules/admin/_article.scss */
+button.dark-button:active {
+  outline: none;
+}
+
+/* line 317, sass/modules/admin/_article.scss */
+.image-tools {
+  display: none;
+  position: absolute;
+  left: 60px;
+  background: rgba(0, 0, 0, 0.5);
+}
+/* line 322, sass/modules/admin/_article.scss */
+.image-tools:hover {
+  cursor: pointer;
+}
+/* line 325, sass/modules/admin/_article.scss */
+.image-tools > .inner {
+  display: table;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+/* line 330, sass/modules/admin/_article.scss */
+.image-tools > .inner .tools {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* line 337, sass/modules/admin/_article.scss */
+.inline-toolbar {
+  position: absolute;
+  z-index: 500;
+  display: none;
+  height: 22px;
+  line-height: 22px;
+}
+
+/* line 345, sass/modules/admin/_article.scss */
+.inline-toolbar .side-button {
+  width: 45px;
+  float: left;
+}
+
+/* line 350, sass/modules/admin/_article.scss */
+.inline-toolbar .toolbar {
+  float: left;
+  display: none;
+  margin-left: 15px;
+}
+
+/* line 356, sass/modules/admin/_article.scss */
+.tb-toolbar {
+  float: right;
+  background: none;
+  border: 1px solid #c8c8c8;
+  color: #969696;
+  border-radius: 40px;
+  width: 28px;
+  padding: 0;
+  height: 28px;
+}
+/* line 365, sass/modules/admin/_article.scss */
+.tb-toolbar span {
+  line-height: 100%;
+  font-size: 18px;
+  font-weight: 100;
+  font-family: LFT Etica;
+}
+/* line 371, sass/modules/admin/_article.scss */
+.tb-toolbar:hover {
+  border-color: grey;
+  color: grey;
+  cursor: pointer;
+}
+/* line 376, sass/modules/admin/_article.scss */
+.tb-toolbar:focus {
+  outline: none;
+}
+
+/* line 381, sass/modules/admin/_article.scss */
+.ql-format-button {
+  color: #fff;
+  width: 32px;
+  margin-right: 15px;
+}
+/* line 385, sass/modules/admin/_article.scss */
+.ql-format-button:hover, .ql-format-button.ql-active {
+  color: rgba(0, 0, 0, 0.5);
+}

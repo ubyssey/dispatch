@@ -23,7 +23,8 @@
             </div>
             {{ form.content.errors }}
             {{ form.content }}
-            <script id="inline-toolbar">
+            <input type="hidden" name="attachment-list" class="attachment-field" />
+            <script id="inline-toolbar" type="text/html-template">
                 <div class="side-button">
                     <button class="tb-toolbar"><span>+</span></button>
                 </div>
@@ -33,12 +34,25 @@
                     <button class="tb-shortcode dis-button">Shortcode</button>
                 </div>
             </script>
-            <script id="image-tools">
+            <script id="image-tools" type="text/html-template">
                 <div class="inner">
                     <div class="tools">
                         <button class="dark-button">Add caption</button>
-                        <button class="dark-button">Remove from article</button>
+                        <button id="remove-image" class="dark-button">Remove from article</button>
                     </div>
+                </div>
+            </script>
+            <script id="image-preview" type="text/html-template">
+                <div class="dz-preview dz-file-preview">
+                  <div class="dz-details">
+                    <div class="dz-filename"><span data-dz-name></span></div>
+                    <div class="dz-size" data-dz-size></div>
+                    <img data-dz-thumbnail />
+                  </div>
+                  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                  <div class="dz-success-mark"><span>✔</span></div>
+                  <div class="dz-error-mark"><span>✘</span></div>
+                  <div class="dz-error-message"><span data-dz-errormessage></span></div>
                 </div>
             </script>
         </div>
@@ -83,7 +97,7 @@
                 <input class="input-topics" type="hidden" name="topics-list" value="{{ topics }}" />
             </div>
         </div>
-        <button type="submit">Save</button>
+        <button class="submit-article" type="submit">Save</button>
         <div class="fieldset media" style="display: none;">
             <ul class="images-list">
                 {% for a in article.attachment_set.all %}<li data-id="{{ a.id }}" style="background-image: url('http://dispatch.dev:8888/media/{{ a.image.get_thumbnail_url }}');"></li>{% endfor %}
@@ -93,38 +107,31 @@
     </div>
 </div>
 </form>
+{% endblock %}
+{% block modals %}
 <div class="modal image-manager">
     <div class="body">
         <div id="image-manager" class="content">
-            <ul>
-                <li><a href="#image-catalog">Catalog</a></li>
-                <li><a href="#image-upload">Upload</a></li>
-            </ul>
-            <button class="insert-image">Insert</button>
-            <div id="image-catalog">
-                <div class="header">
-                    <input type="text" class="image-search" />
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <ul class="image-results"></ul>
-                    </div>
-                    <div class="col-4 image-detail">
-                        <input class="image-caption" type="text" placeholder="Caption"/>
-                    </div>
-                </div>
+            <div class="header">
+                <nav class="edit-tabs">
+                    <ul>
+                        <li><a href="#image-catalog">Catalog</a></li>
+                        <li><a class="upload-images">Upload</a></li>
+                    </ul>
+                </nav>
             </div>
-            <div id="image-upload">
-                <form class="image-form" action="http://localhost:8000/api/image/" method="POST" enctype="multipart/form-data">
-                     {% csrf_token %}
-                     <input class="image-field" name="img" type="file" />
-                     <button class="upload-image">Upload</button>
-                </form>
+            <div id="image-catalog" class="tab">
+                <ul id="image-dropzone" class="image-results dropzone">
+                </ul>
+                {% csrf_token %}
+                <div class="image-meta">
+                    test
+                </div>
+                <div class="footer">
+                    <button class="insert-image">Insert</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-<script>
-
-</script>
