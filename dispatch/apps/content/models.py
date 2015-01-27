@@ -119,7 +119,7 @@ class Image(Resource):
             image.thumbnail(size, Img.ANTIALIAS)
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
-        image.save(output, format='JPEG', quality=60)
+        image.save(output, format='JPEG', quality=75)
 
 
     @receiver(post_delete)
