@@ -26,6 +26,8 @@ class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
         model = Attachment
         fields = ('id', 'article', 'image', 'caption')
 
+class AttachmentImageSerializer(AttachmentSerializer):
+    image = ImageSerializer(read_only=True)
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
