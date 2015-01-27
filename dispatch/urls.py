@@ -12,7 +12,7 @@ router.register(r'articles', views.ArticleViewSet)
 router.register(r'tag', views.TagViewSet)
 router.register(r'image', views.ImageViewSet)
 router.register(r'attachment', views.AttachmentViewSet)
-
+router.register(r'article/attachments', views.AttachmentImageViewSet)
 
 urlpatterns = patterns('',
     url(r'^admin/', include(adminurls)),
