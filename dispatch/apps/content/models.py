@@ -30,10 +30,18 @@ class Topic(Model):
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
-    authors = ManyToManyField(Person)
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
-    class Meta:
-        abstract = True
+    def add_authors(self, authors):
+        Author.objects.filter(resource_id=self.id).delete()
+        n=0
+        for author in authors.split(","):
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(resource=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
@@ -76,6 +84,11 @@ class Article(Resource):
     def add_attachments(self, attachments):
         print attachments
         Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments.split(",")).delete()
+
+class Author(Model):
+    resource = ForeignKey(Resource)
+    person = ForeignKey(Person)
+    order = PositiveIntegerField()
 
 class Video(Resource):
     title = CharField(max_length=255)

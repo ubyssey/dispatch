@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^', include(admin.site.urls)),
     url(r'articles/?', views.articles),
     url(r'article/(\d*)/?$', views.article_edit),
-    url(r'article', views.article_add),
+    url(r'article/add/?$', views.article_add),
 )

@@ -21,7 +21,7 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('long_headline', 'short_headline', 'content',)
         }),
         ('Basic', {
-            'fields': ('published_at', 'section', 'importance', 'slug', 'authors',)
+            'fields': ('published_at', 'section', 'importance', 'slug')
         }),
         ('', {
             'fields': ('topics', 'tags', 'shares',)

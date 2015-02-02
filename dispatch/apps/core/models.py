@@ -32,16 +32,14 @@ class ContributorRole(Model):
         return u'%s' % (self.title)
 
 class Person(Model):
-    first_name = CharField(max_length=255)
-    last_name = CharField(max_length=255)
+    first_name = CharField(max_length=255, blank=True, null=True)
+    last_name = CharField(max_length=255, blank=True, null=True)
+    full_name = CharField(max_length=255, blank=True, null=True)
     user = ForeignKey('User', blank=True, null=True, related_name='user')
     roles = ManyToManyField(ContributorRole, blank=True, null=True)
 
-    def full_name(self):
-        return self.__str__()
-
     def __str__(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return self.full_name
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
