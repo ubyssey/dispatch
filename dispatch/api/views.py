@@ -4,6 +4,7 @@ from dispatch.apps.content.models import Article, Tag, Image, Attachment
 from dispatch.apps.core.models import Person
 from rest_framework import viewsets, filters
 from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
+from django.db.models import Q
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -16,6 +17,12 @@ class UserViewSet(viewsets.ModelViewSet):
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+
+    def get_queryset(self):
+        queryset = Person.objects.all()
+        q = self.request.QUERY_PARAMS.get('q', None)
+        queryset = queryset.filter(full_name__icontains=q)
+        return queryset
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
