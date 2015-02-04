@@ -32,7 +32,7 @@ class Resource(Model):
     updated_at = DateTimeField(auto_now=True)
     authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
-    def add_authors(self, authors):
+    def save_authors(self, authors):
         Author.objects.filter(resource_id=self.id).delete()
         n=0
         for author in authors.split(","):
@@ -62,6 +62,7 @@ class Article(Resource):
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+    featured_image = ForeignKey('Image', related_name="featured_image", blank=True, null=True)
 
     images = ManyToManyField('Image', through="Attachment", blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
@@ -72,7 +73,18 @@ class Article(Resource):
 
     content = TextField()
 
-    def add_tags(self, tags):
+    def save_related(self, request):
+        tags = request.POST.get("tags-list", False)
+        attachments = request.POST.get("attachment-list", False)
+        authors = request.POST.get("authors-list", False)
+        if tags:
+            self.save_tags(tags)
+        if attachments:
+            self.save_attachments(attachments)
+        if authors:
+            self.save_authors(authors)
+
+    def save_tags(self, tags):
         self.tags.clear()
         for tag in tags.split(","):
             try:
@@ -81,9 +93,24 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def add_attachments(self, attachments):
-        print attachments
-        Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments.split(",")).delete()
+    def save_attachments(self, attachments):
+        attachments = attachments.split(",")
+        Attachment.objects.filter(id__in=attachments).update(article=self) # set article FK to current article
+        Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+
+    def get_author_string(self):
+        author_str = ""
+        authors = self.authors.order_by('author__order')
+        n = 1
+        for author in authors:
+            if n + 1 == len(authors) and len(authors) > 0:
+                author_str = author_str + author.full_name + " and "
+            elif n == len(authors):
+                author_str = author_str + author.full_name
+            else:
+                author_str = author_str + author.full_name + ", "
+            n = n + 1
+        return author_str
 
 class Author(Model):
     resource = ForeignKey(Resource)
@@ -157,7 +184,7 @@ class Attachment(Model):
         (FILE, 'File photo'),
         (COURTESY, 'Courtesy photo'),
     )
-    article = ForeignKey(Article)
+    article = ForeignKey('Article')
     image = ForeignKey(Image)
     caption = CharField(max_length=255, blank=True, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, blank=True, null=True)
