@@ -19,7 +19,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name',)
 
 class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
+    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all(), required=False)
     image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
 
     class Meta:
