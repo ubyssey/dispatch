@@ -1,0 +1,27 @@
+{% extends 'manager/base.html' %}
+
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+    <div class="save-buttons">
+        <a href="{% url 'apps.manager.views.article_add' %}">New article</a>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="article-list">
+    {% for article in article_list %}
+        <div class="article">
+            <div class="cell">
+                <a href="{% url 'apps.manager.views.article_edit' article.id %}">{{ article.long_headline }}</a>
+            </div>
+            <div class="cell">
+                <span>{{ article.get_author_string }}</span>
+            </div>
+            <div class="cell">
+                <span>{{ article.published_at }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
