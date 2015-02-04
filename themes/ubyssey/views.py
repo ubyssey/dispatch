@@ -7,6 +7,14 @@ from dispatch.apps.frontend.themes.default import DefaultTheme
 
 class UbysseyTheme(DefaultTheme):
 
+    def home(self, request):
+        context = {
+            'articles': Article.objects.all().order_by('-importance', 'published_at')
+        }
+        t = get_template('index.html')
+        c = RequestContext(request, context)
+        return HttpResponse(t.render(c))
+
     def article(self, request, section=False, slug=False):
         if slug and section:
             article = Article.objects.get(slug=slug, section__name=section)
@@ -18,6 +26,3 @@ class UbysseyTheme(DefaultTheme):
         c = RequestContext(request, context)
         return HttpResponse(t.render(c))
         #return render_to_response('article.html', context)
-
-    def test(self, request):
-        return "test"
