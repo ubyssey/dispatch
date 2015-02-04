@@ -6,7 +6,7 @@ class ArticleForm(ModelForm):
         model = Article
         fields = '__all__'
 
-        exclude = ('images', 'authors', )
+        exclude = ('images', 'authors')
 
         widgets = {
             'long_headline': Textarea(attrs={
@@ -18,4 +18,5 @@ class ArticleForm(ModelForm):
                 'placeholder': 'Write a story...',
                 'class': 'content',
             }),
+            'featured_image': TextInput(),
         }
