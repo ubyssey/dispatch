@@ -1,10 +1,23 @@
 from dispatch.apps.content.models import Article, Tag, Topic, Author
 from django.template import RequestContext
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
+from datetime import datetime
 from .forms import ArticleForm
+
+@staff_member_required
+def section(request, section):
+    return render_to_response(
+        "admin/article/list.html",
+        {
+            'article_list' : Article.objects.filter(section__name__iexact=section).order_by('-published_at'),
+            'section': section,
+            'list_title': section,
+        },
+        RequestContext(request, {}),
+    )
 
 @staff_member_required
 def articles(request):
@@ -14,19 +27,14 @@ def articles(request):
         RequestContext(request, {}),
     )
 
-
 @login_required
 def article_add(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
-            form.save()
-            #tags = request.POST.get("tags-list", False)
-            #if tags:
-            #    a.add_tags(tags)
-        else:
-            print form.errors
-
+            article = form.save()
+            article.save_related(request)
+            return redirect(article_edit, article.id)
     else:
         form = ArticleForm()
 
@@ -45,11 +53,17 @@ def article_add(request):
 
     #print a
 
+    author_str = p.full_name
+
     context = {
         #'article': a,
         'person': p,
         'form': form,
         'authors': authors,
+        'authors_list': p.id,
+        'author_string': author_str,
+        'date': request.POST.get('published_at_date', False),
+        'time': request.POST.get('published_at_time', False),
         #'tags': tags,
     }
 
@@ -60,17 +74,10 @@ def article_edit(request, id):
     a = Article.objects.get(pk=id)
     if request.method == 'POST':
         form = ArticleForm(request.POST, instance=a)
+
         if form.is_valid():
-            tags = request.POST.get("tags-list", False)
-            attachments = request.POST.get("attachment-list", False)
-            authors = request.POST.get("authors-list", False)
-            if tags:
-                a.add_tags(tags)
-            if attachments:
-                a.add_attachments(attachments)
-            if authors:
-                a.add_authors(authors)
             form.save()
+            a.save_related(request)
         else:
             print form.errors
     else:
@@ -84,16 +91,12 @@ def article_edit(request, id):
     authors = a.authors.order_by('author__order')
     author_ids = ",".join([str(i) for i in authors.values_list('id', flat=True)])
 
-    author_str = ""
-    n = 1
-    for author in authors:
-        if n + 1 == len(authors) and len(authors) > 0:
-            author_str = author_str + author.full_name + " and "
-        elif n == len(authors):
-            author_str = author_str + author.full_name
-        else:
-            author_str = author_str + author.full_name + ", "
-        n = n + 1
+    #a.published_at = datetime.strptime(a.published_at, )
+
+    date = a.published_at.strftime("%Y-%m-%d")
+    time = a.published_at.strftime("%H:%M")
+
+    author_str = a.get_author_string()
 
     context = {
         'article': a,
@@ -102,6 +105,8 @@ def article_edit(request, id):
         'authors': authors,
         'authors_list': author_ids,
         'author_string': author_str,
+        'date': date,
+        'time': time,
     }
 
     return render(request, 'admin/article/edit.html', context)
