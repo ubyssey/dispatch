@@ -110,3 +110,11 @@ def article_edit(request, id):
     }
 
     return render(request, 'admin/article/edit.html', context)
+
+@staff_member_required
+def article_delete(request, id):
+    article = Article.objects.get(pk=id)
+    section_slug = article.section.slug
+    article.is_active = False
+    article.save(update_fields=['is_active'])
+    return redirect(section, section_slug)
