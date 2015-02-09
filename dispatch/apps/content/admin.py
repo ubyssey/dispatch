@@ -27,7 +27,7 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('topics', 'tags', 'shares',)
         }),
         ('Media', {
-            'fields': ('videos',)
+            'fields': ('featured_image', 'videos',)
         }),
         ('Developer', {
             'fields': ('snippets', 'scripts', 'stylesheets',)
