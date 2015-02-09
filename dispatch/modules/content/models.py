@@ -45,15 +45,20 @@ class Resource(Model):
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
 
     def __str__(self):
         return self.name
 
-class Article(Resource):
+class ImagesMixin(Model):
+    images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
+
+class Article(Resource, ImagesMixin):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
 
+    is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField(unique=True)
@@ -62,9 +67,8 @@ class Article(Resource):
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
-    featured_image = ForeignKey('Image', related_name="featured_image", blank=True, null=True)
+    featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField('Image', through="Attachment", blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -95,6 +99,7 @@ class Article(Resource):
 
     def save_attachments(self, attachments):
         attachments = attachments.split(",")
+        attachments.append(self.featured_image.id) # add featured image to exclude list
         Attachment.objects.filter(id__in=attachments).update(article=self) # set article FK to current article
         Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
 
@@ -124,6 +129,7 @@ class Video(Resource):
 
 class Image(Resource):
     img = ImageField(upload_to='images')
+    caption = CharField(max_length=255, blank=True, null=True)
 
     SIZES = {
         'large': (1600,900),
@@ -175,7 +181,14 @@ class Image(Resource):
                 path = os.path.join(settings.MEDIA_ROOT, filename)
                 os.remove(path)
 
+class Gallery(Resource, ImagesMixin):
+    pass
+
 class Attachment(Model):
+    #resource = ForeignKey('Resource', blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
+
+class ImageAttachment(Attachment):
     NORMAL = 'normal'
     FILE = 'file'
     COURTESY = 'courtesy'
@@ -184,7 +197,10 @@ class Attachment(Model):
         (FILE, 'File photo'),
         (COURTESY, 'Courtesy photo'),
     )
-    article = ForeignKey('Article')
+
+    resource = ForeignKey('ImagesMixin', blank=True, null=True)
     image = ForeignKey(Image)
-    caption = CharField(max_length=255, blank=True, null=True)
-    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, blank=True, null=True)
+    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+
+class GalleryAttachment(Attachment):
+    gallery = ForeignKey(Gallery)
