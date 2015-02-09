@@ -5,7 +5,7 @@
 </head>
 <body>
 {% for article in articles %}
-    <img src="http://dispatch.dev:8888/media/{{ article.featured_image.get_thumbnail_url }}"/><br/>
+    <img src="http://dispatch.dev:8888/media/{{ article.featured_image.image.get_thumbnail_url }}"/><br/>
     {{ article.long_headline }}
     {{ article.importance }}<br/>
 {% endfor %}
