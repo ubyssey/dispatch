@@ -32,6 +32,7 @@ def sc_image(*args):
         return ""
     template = loader.get_template("image.html")
     c = Context({
+        'id': attach.id,
         'src': "http://dispatch.dev:8888/media/" + str(attach.image.img),
         'caption': attach.caption,
         'credit': ""
