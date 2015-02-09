@@ -1,12 +1,13 @@
 from django.forms import ModelForm, TextInput, Textarea
-from dispatch.apps.content.models import Article
+from django.forms.models import inlineformset_factory
+from dispatch.apps.content.models import Article, Attachment, ImageAttachment
 
 class ArticleForm(ModelForm):
     class Meta:
         model = Article
         fields = '__all__'
 
-        exclude = ('images', 'authors')
+        exclude = ('images', 'authors', 'featured_image')
 
         widgets = {
             'long_headline': Textarea(attrs={
@@ -19,4 +20,15 @@ class ArticleForm(ModelForm):
                 'class': 'content',
             }),
             'featured_image': TextInput(),
+        }
+
+class FeaturedImageForm(ModelForm):
+    class Meta:
+        model = ImageAttachment
+        fields = '__all__'
+
+        exclude = ('article',)
+
+        widgets = {
+            'image': TextInput()
         }
