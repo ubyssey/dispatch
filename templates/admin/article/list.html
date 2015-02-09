@@ -12,7 +12,7 @@
     <div class="article-list">
     {% for article in article_list %}
         <div class="article">
-            <div class="cell">
+            <div class="title cell">
                 <a href="{% url 'apps.manager.views.article_edit' article.id %}">{{ article.long_headline }}</a>
             </div>
             <div class="cell">

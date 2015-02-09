@@ -1,6 +1,12 @@
 {% extends 'manager/base.html' %}
 {% block header %}
 {% include 'admin/article/toolbar.html' %}
+    <div class="save-buttons">
+        <button class="submit-article" type="submit">Save</button>
+        <button class="publish-article" type="submit">Publish</button>
+        <button class="delete-article" type="submit">Delete</button>
+        <a href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview" target="_blank">Preview</a>
+    </div>
 {% endblock %}
 {% block content %}
 <form class="article-form" data-id="{{ article.id }}" action="" method="post">
@@ -11,11 +17,22 @@
             {{ form.long_headline.errors }}
             {{ form.long_headline }}
             <div class="authors field-authors">
-            {% if article.authors.all %}
-                <span>By {{ article.authors.all.0.full_name}}</span>
-                <button class="dis-button" style="margin-left: 10px;">Change author</button>
-                <button class="dis-button">Add author</button>
+            {% if authors %}
+                <span>By {{ author_string }}</span>
+            {% else %}
+                <span>By {{ person.full_name}}</span>
             {% endif %}
+                <button class="dis-button edit-authors" style="margin-left: 10px;">Edit authors</button>
+            </div>
+            <div class="manage-authors">
+                <ul class="author-list">
+                {% for person in authors %}
+                    <li data-id="{{ person.id }}"><span>{{ person.full_name }}<a href="#" class="delete-author"><i class="fa fa-close"></i></a></span></li>
+                {% endfor %}
+                </ul>
+                <input type="text" class="add-author" />
+                <div class="author-dropdown"></div>
+                <input class="input-authors" type="hidden" name="authors-list" value="{{ authors_list }}" />
             </div>
         </div>
         <div class="field-row content">
@@ -39,6 +56,7 @@
                     <div class="tools">
                         <button class="dark-button">Add caption</button>
                         <button id="remove-image" class="dark-button">Remove from article</button>
+                        <span class="caption"></span>
                     </div>
                 </div>
             </script>
@@ -61,48 +79,66 @@
     <div class="options panel">
         <nav class="edit-tabs">
             <ul>
-                <li><a href="#">Basic</a></li>
-                <li><a href="#">Media</a></li>
-                <li><a href="#">Assets</a></li>
-                <li><a href="#">Social</a></li>
-                <li><a href="#">Developer</a></li>
+                <li><a href="#basic-fields">Basic</a></li>
+                <li><a href="#media-fields">Featured Image</a></li>
+                <li><a href="#tags-fields">Tags & Topics</a></li>
+                <li><a href="#developer-fields">Developer</a></li>
             </ul>
         </nav>
-        <div class="fieldset tab basic">
+        <div id="basic-fields" class="fieldset tab basic">
             <div class="field">
                 {{ form.published_at.errors }}
                 <label for="{{ form.published_at.id_for_label }}">Publish on:</label>
-                {{ form.published_at }}
-            </div>
-            <div class="field">
-                {{ form.authors.errors }}
-                <label for="{{ form.authors.id_for_label }}">Authors:</label>
-                {{ form.authors }}
+                {{ form.published_at.as_hidden }}
+                <input type="text" name="published_at_date" data-value=""/>
+                <input type="text" name="published_at_time" data-value=""/>
             </div>
             <div class="field">
                 {{ form.section.errors }}
                 <label for="{{ form.section.id_for_label }}">Section:</label>
                 {{ form.section }}
             </div>
+            <div class="field">
+                <label for="{{ form.importance.id_for_label }}">Importance:</label>
+                {{ form.importance}}
+            </div>
             {{ form.slug.errors }}
-            <label for="{{ form.slug.id_for_label }}">Slug:</label>
-            {{ form.slug }}<br/>
-            {{ form.short_headline.errors }}
-            {{ form.short_headline }}
-            <a href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/" target="_blank">{{ article.slug }}</a>
+            <div class="field">
+                <label for="{{ form.slug.id_for_label }}">Slug:</label>
+                {{ form.slug }}
+            </div>
+            <div class="field">
+                <label for="{{ form.short_headline.id_for_label }}">Short headline:</label>
+                {{ form.short_headline.errors }}
+                {{ form.short_headline }}
+            </div>
+        </div>
+        <div id="media-fields" class="fieldset tab media">
+            <div class="field">
+                {{ form.featured_image.errors }}
+                {{ form.featured_image.as_hidden }}
+                <a class="set-featured-image" data-modal="image-manager">
+                    <img class="featured-image" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
+                </a>
+                {{ featured_form.image.as_hidden }}
+                <br/>
+                <div class="field">
+                    <label for="{{ featured_form.caption.id_for_label }}">Caption:</label>
+                    {{ featured_form.caption }}
+                </div>
+                <div class="field">
+                    <label for="{{ featured_form.type.id_for_label }}">Type:</label>
+                    {{ featured_form.type }}
+                </div>
+            </div>
+        </div>
+        <div id="tags-fields" class="fieldset tab tags">
             <div class="field">
                 <input class="input-tags" type="hidden" name="tags-list" value="{{ tags }}" />
             </div>
             <div class="field">
                 <input class="input-topics" type="hidden" name="topics-list" value="{{ topics }}" />
             </div>
-        </div>
-        <button class="submit-article" type="submit">Save</button>
-        <div class="fieldset media" style="display: none;">
-            <ul class="images-list">
-                {% for a in article.attachment_set.all %}<li data-id="{{ a.id }}" style="background-image: url('http://dispatch.dev:8888/media/{{ a.image.get_thumbnail_url }}');"></li>{% endfor %}
-            </ul>
-            <button class="modal-trigger" data-modal="image-manager">Add images</button>
         </div>
     </div>
 </div>
@@ -113,23 +149,29 @@
     <div class="body">
         <div id="image-manager" class="content">
             <div class="header">
-                <nav class="edit-tabs">
-                    <ul>
-                        <li><a href="#image-catalog">Catalog</a></li>
-                        <li><a class="upload-images">Upload</a></li>
-                    </ul>
+                <nav>
+                    <a class="upload-images">Upload</a>
                 </nav>
             </div>
-            <div id="image-catalog" class="tab">
+            <div id="image-catalog" class="content-area">
                 <ul id="image-dropzone" class="image-results dropzone">
                 </ul>
                 {% csrf_token %}
                 <div class="image-meta">
-                    test
+                    <img class="image-meta-preview" src="" />
+                    Caption:
+                    <input class="image-caption" value="" />
+                    <br/>
+                    <label>Photographer:</label>
+                    <select>
+                        {% for author in all_authors %}
+                            <option value="{{ author.id }}">{{ author.full_name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="footer">
-                    <button class="insert-image">Insert</button>
-                </div>
+            </div>
+            <div class="footer">
+                <button class="insert-image">Insert</button>
             </div>
         </div>
     </div>
