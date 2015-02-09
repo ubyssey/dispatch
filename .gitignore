@@ -3,5 +3,5 @@
 media/
 resources/
 .sass-cache/
-static/js/vendor/
+static/*
 npm-debug.log
