@@ -129,44 +129,6 @@ $(function(){
       }
     });
 
-    $("select.add-author").select2({
-      tags: true,
-      createTag: function(data){
-          return {id: data.term, text: data.term };
-      },
-      placeholder: "Add author",
-      ajax: {
-        url: "http://localhost:8000/api/person/",
-        dataType: 'json',
-        delay: 0,
-        data: function (params) {
-          return {
-            q: params.term, // search term
-          };
-        },
-        processResults: function (data, page) {
-          return {
-            results: data.results
-          };
-        },
-        cache: true
-      },
-      minimumInputLength: 1,
-      templateResult: function (person) {
-          console.log(person);
-          if (person.loading)
-              return;
-          if (person.text)
-            return person.text;
-          var markup = '<div>' + person.full_name + '</div>';
-
-          return markup;
-        },
-        templateSelection: function (repo) {
-          return repo.full_name || repo.text;
-        }
-    });
-
     $( "input.add-author" ).autocomplete({
       minLength: 3,
       appendTo: '.author-dropdown',
