@@ -211,8 +211,12 @@ div.slideshow {
   left: 0;
   background: rgba(0, 0, 0, 0.9);
 }
+/* line 189, sass/main.scss */
+div.slideshow.visible {
+  display: block;
+}
 
-/* line 191, sass/main.scss */
+/* line 194, sass/main.scss */
 div.image-container {
   height: 100%;
   display: table;
@@ -220,13 +224,13 @@ div.image-container {
   max-width: 90%;
 }
 
-/* line 198, sass/main.scss */
+/* line 201, sass/main.scss */
 div.image-inner {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 203, sass/main.scss */
+/* line 206, sass/main.scss */
 p.slide-caption {
   font-family: MinionPro-Regular;
   font-size: 15px;
@@ -234,17 +238,17 @@ p.slide-caption {
   line-height: 19px;
 }
 
-/* line 213, sass/main.scss */
+/* line 216, sass/main.scss */
 img.article-attachment:hover {
   cursor: pointer;
 }
 
-/* line 217, sass/main.scss */
+/* line 220, sass/main.scss */
 img.slide-image {
   max-width: 100%;
 }
 
-/* line 221, sass/main.scss */
+/* line 224, sass/main.scss */
 div.navigation {
   color: white;
   font-family: "LFT Etica";
@@ -252,7 +256,7 @@ div.navigation {
   text-align: center;
 }
 
-/* line 228, sass/main.scss */
+/* line 231, sass/main.scss */
 div.navigation a {
   display: inline-block;
   padding: 6px 9px;
@@ -262,13 +266,13 @@ div.navigation a {
   font-size: 12px;
 }
 
-/* line 237, sass/main.scss */
+/* line 240, sass/main.scss */
 div.navigation a:hover {
   color: black;
   background: #fff;
 }
 
-/* line 242, sass/main.scss */
+/* line 245, sass/main.scss */
 .no-scroll {
   overflow: hidden;
 }
