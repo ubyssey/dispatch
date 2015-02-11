@@ -4,6 +4,10 @@
     <title></title>
 </head>
 <body>
-this is the homepage3
+{% for article in articles %}
+    <img src="http://dispatch.dev:8888/media/{{ article.featured_image.image.get_thumbnail_url }}"/><br/>
+    {{ article.long_headline }}
+    {{ article.importance }}<br/>
+{% endfor %}
 </body>
 </html>

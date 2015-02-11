@@ -5,24 +5,55 @@
     <title></title>
     <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/chosen.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/dropzone.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'js/vendor/pickadate/themes/classic.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'js/vendor/pickadate/themes/classic.date.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'js/vendor/pickadate/themes/classic.time.css' %}" type="text/css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="//use.typekit.net/qjp6bnp.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
-    <header>
-        <div class="brand">D</div>
-    </header>
-    <div class="main clearfix">
+    <div class="wrapper">
         <div class="sidebar">
-
+            <div class="dispatch-logo">
+                D
+            </div>
+            <nav class="side-nav">
+                <ul>
+                    <li><a href="{% url 'apps.manager.views.section' 'news' %}"><i class="fa fa-newspaper-o"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}"><i class="fa fa-soccer-ball-o"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}"><i class="fa fa-paint-brush"></i></a></li>
+                </ul>
+            </nav>
         </div>
-        <div class="content">
-        {% block content %}
-        {% endblock %}
-        </div>
+        <main>
+            <header>
+                <div class="header-main">
+                    {% block header %}
+                    {% endblock %}
+                </div>
+            </header>
+            <div class="main clearfix">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
     </div>
-    <script src="{% static 'js/jquery.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/jquery-ui/jquery-ui.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/chosen/chosen.jquery.js' %}" type="text/javascript"></script>
+    {% block modals %}
+    {% endblock %}
+    <script src="{% static 'js/vendor/jquery.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jquery-ui/jquery-ui.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/autosize/jquery.autosize.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/pickadate/picker.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/pickadate/picker.date.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/pickadate/picker.time.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/moment.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/dist/dropzone.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/dist/dispatch.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/dispatch.js' %}" type="text/javascript"></script>
+    <script src="http://localhost:8888/ubyssey/quill/dist/quill.js"></script>
+    <script src="{% static 'js/admin/editor.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/admin/article.js' %}" type="text/javascript"></script>
 </body>
 </html>
