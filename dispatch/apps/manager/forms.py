@@ -7,7 +7,7 @@ class ArticleForm(ModelForm):
         model = Article
         fields = '__all__'
 
-        exclude = ('images', 'authors', 'featured_image')
+        exclude = ('is_active', 'images', 'authors', 'featured_image')
 
         widgets = {
             'long_headline': Textarea(attrs={

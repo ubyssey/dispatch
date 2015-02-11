@@ -4,7 +4,7 @@
     <div class="save-buttons">
         <button class="submit-article" type="submit">Save</button>
         <button class="publish-article" type="submit">Publish</button>
-        <button class="delete-article" type="submit">Delete</button>
+        <a href="{% url 'apps.manager.views.article_delete' article.id %}">Delete</a>
         <a href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview" target="_blank">Preview</a>
     </div>
 {% endblock %}
