@@ -191,7 +191,7 @@
 					}
 				}
 
-				height += boxOffset;
+				height += boxOffset - minHeight;
 
 				if (Math.abs(originalHeight - height) > 1/100) {
 					ta.style.height = height + 'px';
