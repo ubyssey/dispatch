@@ -1,14 +1,218 @@
+{% extends 'base.html' %}
 {% load dispatch_filters %}
-{% include 'header.html' %}
-<h1>{{ article.long_headline }}</h1>
-<p>By {{ article.author.full_name }}</p>
-<p>Published at {{ article.published_at }}</p>
+{% block content %}
+<header class="topbar">
+    <div class="container">
+        <div class="header-site">
+            <img class="logo" src="{{ STATIC_DIR }}img/ubyssey_logo.png" type="text/css"/>
+            <nav>
+                <ul>
+                    <li>News</li>
+                    <li>Culture</li>
+                    <li>Opinion</li>
+                    <li>Features</li>
+                    <li>Sports</li>
+                    <li>Blog</li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-article">
+            <div class="section-name">
+                <img class="logo" src="{{ STATIC_DIR }}img/ubyssey_icon.png" type="text/css"/>
+                <span>{{ article.section.name }}</span>
+            </div>
+            |
+            <h1 class="nav-headline">
+                {{ article.long_headline }}</li>
+            </h1>
+        </div>
+    </div>
+</header>
+<main class="article">
+    <div class="advertisement leaderboard">
+        <img src="{{ STATIC_DIR }}img/sample-leaderboard-ad.png" />
+    </div>
+    <article data-id="{{ article.id }}">
+        <h1 class="headline">{{ article.long_headline }}</h1>
+        <div class="article-info">
+            <div class="author-published">
+                <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+            </div>
+        </div>
+        <div class="right-column">
+            {% if article.featured_image %}
+            <div class="featured-image">
+                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
+                <div class="caption">
+                    {{ article.featured_image.caption }} <span class="credit">Photo Geoff Lister / The Ubyssey</span>
+                </div>
+            </div>
+            <div class="sidebar offset">
+            {% else %}
+            <div class="sidebar">
+            {% endif %}
+                <img src="http://ujaalatv.com/wp-content/uploads/2014/11/Pizza-Hut-San-Antonio.gif"/>
+            </div>
+        </div>
+        <div class="article-content">
+            {{ article.content|safe|shortcodes|safe }}
+        </div>
+    </article>
+</main>
 
-{{ article.content|safe|linebreaks|shortcodes|safe }}
+<div class="slideshow">
+    <div class="image-container">
+        <div class="image-inner">
+            <div class="slide">
+                <img class="slide-image" />
+                <p class="slide-caption"></p>
+                <div class="navigation">
+                    <a class="prev-slide" href="#"><i class="fa fa-chevron-left"></i></a>
+                    <span class="curr-slide"></span> &nbsp; of &nbsp; <span class="total-slide"></span>
+                    <a class="next-slide" href="#"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="gallery">
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+
+    var articleHeader = false;
+
+    $(function(){
+        if($(document).scrollTop() > 50){
+            articleHeader = true;
+            $('.header-site').hide();
+            $('.header-article').show();
+        }
+    });
+
+    $(document).scroll(function() {
+        var top = $(document).scrollTop();
+        if (top > 50 && !articleHeader){
+            articleHeader = true;
+            $('.header-site').hide();
+            $('.header-article').fadeIn();
+        } else if (top < 50 && articleHeader){
+            articleHeader = false;
+            $('.header-article').hide();
+            $('.header-site').show();
+        }
+    });
+
+    function showArticleHeader(){
+
+    }
+
+    function showArticleHeader(){
+
+    }
+
+    var dispatch = new Dispatch();
+
+    var Slideshow = function(){
+
+        this.initialized = false;
+        this.image_list = [];
+        this.images = {};
+        this.current_image;
+        this.current_image_index;
+
+        var self = this;
+
+        this.init = function(callback){
+            var article_id = $('article').data("id");
+            dispatch.articleAttachments(article_id, function(data){
+                self.image_list = data.results;
+                $.each(self.image_list, function(key, image){
+                    self.images[image.id] = key;
+                });
+                $('.total-slide').text(self.image_list.length);
+                $('.slide-image').css('max-height', $(window).height() - 200);
+                callback();
+            });
+        }
+
+        this.open = function(image_id){
+            if(!this.initialized){
+                this.init(function(){
+                    self.initialized = true;
+                    self.loadSlide(image_id);
+                    $('body').addClass('no-scroll');
+                    $('.slideshow').fadeIn(100);
+                });
+            } else {
+                this.loadSlide(image_id);
+                $('body').addClass('no-scroll');
+                $('.slideshow').fadeIn(100);
+            }
+        }
+
+
+        this.loadSlide = function(image_id){
+            this.current_image_index = this.images[image_id];
+            this.current_image = this.image_list[this.current_image_index];
+            this.updateSlide();
+        }
+
+        this.updateSlide = function(){
+            $('.curr-slide').text(this.current_image_index + 1);
+            $('.slide-image').attr("src", "http://dispatch.dev:8888/media/"+this.current_image.image.url);
+            $('.slide-caption').text(this.current_image.caption);
+        }
+
+        this.prevSlide = function(e){
+            if(self.current_image_index - 1 < 0){
+                return null;
+            }
+            self.current_image_index = self.current_image_index - 1;
+            self.current_image = self.image_list[self.current_image_index];
+            self.updateSlide();
+        }
+
+        this.nextSlide = function(){
+            if(self.current_image_index + 1 >= self.image_list.length){
+                return null;
+            }
+            self.current_image_index = self.current_image_index + 1;
+            self.current_image = self.image_list[self.current_image_index];
+            self.updateSlide();
+        }
+
+        $('.prev-slide').click(function(e){
+            e.preventDefault();
+            self.prevSlide();
+        });
+        $('.next-slide').click(function(e){
+            e.preventDefault();
+            self.nextSlide();
+        });
+
+        $('.slideshow').mouseup(function (e)
+        {
+            var container = $(this).find(".image-container");
+            if (!container.is(e.target) && container.has(e.target).length === 0)
+            {
+                $('.slideshow').hide();
+                $('body').removeClass('no-scroll');
+            }
+        });
+
+    };
+
+    slideshow = new Slideshow();
+
+
+</script>
+<script src="{{ STATIC_DIR }}js/article.js" type="text/javascript"></script>
+{% endblock %}
 
 <!-- Article-specific scripts -->
 {% for s in article.scripts.all %}
 <script src="http://dispatch.dev:8888/resources/js/{{ s.filename }}"></script>
 {% endfor %}
-
-{% include 'footer.html' %}

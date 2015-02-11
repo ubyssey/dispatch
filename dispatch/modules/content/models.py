@@ -30,13 +30,22 @@ class Topic(Model):
 class Resource(Model):
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
-    authors = ManyToManyField(Person)
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
-    class Meta:
-        abstract = True
+    def save_authors(self, authors):
+        Author.objects.filter(resource_id=self.id).delete()
+        n=0
+        for author in authors.split(","):
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(resource=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
 
     def __str__(self):
         return self.name
@@ -46,6 +55,7 @@ class Article(Resource):
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
 
+    is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField(unique=True)
@@ -54,8 +64,9 @@ class Article(Resource):
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+    featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField('Image', through="Attachment", blank=True, null=True)
+    images = ManyToManyField("ImageAttachment", blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -64,7 +75,18 @@ class Article(Resource):
 
     content = TextField()
 
-    def add_tags(self, tags):
+    def save_related(self, request):
+        tags = request.POST.get("tags-list", False)
+        attachments = request.POST.get("attachment-list", False)
+        authors = request.POST.get("authors-list", False)
+        if tags:
+            self.save_tags(tags)
+        if attachments:
+            self.save_attachments(attachments)
+        if authors:
+            self.save_authors(authors)
+
+    def save_tags(self, tags):
         self.tags.clear()
         for tag in tags.split(","):
             try:
@@ -73,11 +95,30 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def add_images(self, images):
-        self.images.clear()
-        for id in images.split(","):
-            ins = Image.objects.get(id=id)
-            self.images.add(ins)
+    def save_attachments(self, attachments):
+        attachments = attachments.split(",")
+        attachments.append(self.featured_image.id) # add featured image to exclude list
+        ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
+        ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+
+    def get_author_string(self):
+        author_str = ""
+        authors = self.authors.order_by('author__order')
+        n = 1
+        for author in authors:
+            if n + 1 == len(authors) and len(authors) > 0:
+                author_str = author_str + author.full_name + " and "
+            elif n == len(authors):
+                author_str = author_str + author.full_name
+            else:
+                author_str = author_str + author.full_name + ", "
+            n = n + 1
+        return author_str
+
+class Author(Model):
+    resource = ForeignKey(Resource)
+    person = ForeignKey(Person)
+    order = PositiveIntegerField()
 
 class Video(Resource):
     title = CharField(max_length=255)
@@ -86,11 +127,12 @@ class Video(Resource):
 
 class Image(Resource):
     img = ImageField(upload_to='images')
+    caption = CharField(max_length=255, blank=True, null=True)
 
     SIZES = {
         'large': (1600,900),
         'medium': (800, 600),
-        'square': (100,100)
+        'square': (250,250)
     }
 
     THUMBNAIL_SIZE = 'square'
@@ -119,7 +161,7 @@ class Image(Resource):
             image.thumbnail(size, Img.ANTIALIAS)
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
-        image.save(output, format='JPEG', quality=60)
+        image.save(output, format='JPEG', quality=75)
 
 
     @receiver(post_delete)
@@ -137,7 +179,15 @@ class Image(Resource):
                 path = os.path.join(settings.MEDIA_ROOT, filename)
                 os.remove(path)
 
+class Gallery(Resource):
+    #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
+    pass
+
 class Attachment(Model):
+    #resource = ForeignKey('Resource', blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
+
+class ImageAttachment(Attachment):
     NORMAL = 'normal'
     FILE = 'file'
     COURTESY = 'courtesy'
@@ -146,7 +196,10 @@ class Attachment(Model):
         (FILE, 'File photo'),
         (COURTESY, 'Courtesy photo'),
     )
-    article = ForeignKey(Article)
-    image = ForeignKey(Image)
-    caption = CharField(max_length=255, blank=True, null=True)
-    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, blank=True, null=True)
+
+    resource = ForeignKey(Resource, blank=True, null=True)
+    image = ForeignKey(Image, related_name='image')
+    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+
+class GalleryAttachment(Attachment):
+    gallery = ForeignKey(Gallery)

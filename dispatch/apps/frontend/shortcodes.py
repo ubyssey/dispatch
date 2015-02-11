@@ -1,5 +1,5 @@
 from django.template import loader, Context
-from dispatch.apps.content.models import Attachment
+from dispatch.apps.content.models import ImageAttachment
 
 class ShortcodeLibrary():
 
@@ -22,10 +22,17 @@ def sc_snippet(*args):
     return template.render(c)
 
 def sc_image(*args):
-    id = int(args[0][0])
-    attach = Attachment.objects.get(id=id)
+    try:
+        id = int(args[0][0])
+    except IndexError:
+        return ""
+    try:
+        attach = ImageAttachment.objects.get(id=id)
+    except Attachment.DoesNotExist:
+        return ""
     template = loader.get_template("image.html")
     c = Context({
+        'id': attach.id,
         'src': "http://dispatch.dev:8888/media/" + str(attach.image.img),
         'caption': attach.caption,
         'credit': ""

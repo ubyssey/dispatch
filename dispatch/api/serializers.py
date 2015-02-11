@@ -1,7 +1,7 @@
-__author__ = 'Steven Richards'
+__author__ = "Steven Richards doesn't do anything"
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article, Tag, Image, Attachment
+from dispatch.apps.content.models import Resource, Article, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
 from rest_framework import serializers
 
@@ -11,7 +11,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'url', 'thumb')
+        fields = ('id', 'img', 'caption', 'url', 'thumb', 'created_at')
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -19,13 +19,15 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name',)
 
 class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
+    resource = serializers.PrimaryKeyRelatedField(queryset=Resource.objects.all(), required=False)
     image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
 
     class Meta:
-        model = Attachment
-        fields = ('id', 'article', 'image', 'caption')
+        model = ImageAttachment
+        fields = ('id', 'resource', 'image', 'caption')
 
+class AttachmentImageSerializer(AttachmentSerializer):
+    image = ImageSerializer(read_only=True)
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -46,4 +48,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Person
-        fields = ('first_name','last_name','user','roles')
+        fields = ('id','full_name','first_name','last_name','user','roles')

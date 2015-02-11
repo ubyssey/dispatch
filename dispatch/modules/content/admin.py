@@ -8,8 +8,8 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
 
-class ImageInlineAdmin(admin.TabularInline):
-    model = Article.images.through
+#class ImageInlineAdmin(admin.TabularInline):
+#    model = Article.images.through
 
 class ArticleAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("short_headline",)}
@@ -21,20 +21,20 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('long_headline', 'short_headline', 'content',)
         }),
         ('Basic', {
-            'fields': ('published_at', 'section', 'importance', 'slug', 'authors',)
+            'fields': ('published_at', 'section', 'importance', 'slug')
         }),
         ('', {
             'fields': ('topics', 'tags', 'shares',)
         }),
         ('Media', {
-            'fields': ('videos',)
+            'fields': ('featured_image', 'videos',)
         }),
         ('Developer', {
             'fields': ('snippets', 'scripts', 'stylesheets',)
         }),
     )
 
-    inlines = (ImageInlineAdmin,)
+    #inlines = (ImageInlineAdmin,)
 
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Section)
