@@ -3,5 +3,6 @@
 media/
 resources/
 .sass-cache/
-static/*
+static/admin
+static/rest_framework
 npm-debug.log
