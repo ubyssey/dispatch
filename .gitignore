@@ -6,3 +6,4 @@ resources/
 static/admin
 static/rest_framework
 npm-debug.log
+*.module-cache/
