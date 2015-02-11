@@ -24,7 +24,8 @@ var Gallery = React.createClass({displayName: "Gallery",
         return {
             images: {},
             images_list: [],
-            current_image: false,
+            currentIndex: false,
+            currentImage: false,
             image: false,
             image_height: false,
         }
@@ -64,12 +65,19 @@ var Gallery = React.createClass({displayName: "Gallery",
     },
     setCurrentImage: function(image_id){
         this.setState({
-            current_image: image_id,
+            currentImage: image_id,
+        });
+    },
+    setCurrentIndex: function(currentIndex){
+        this.setState({
+            currentIndex: currentIndex,
         });
     },
     displayCurrentImage: function(){
-        var attachment = this.state.images_list[this.state.images[this.state.current_image]];
+        var currentIndex = this.state.images[this.state.currentImage];
+        var attachment = this.state.images_list[currentIndex];
         this.setState({
+            currentIndex: currentIndex,
             image: attachment.image.url,
             caption: attachment.caption,
         });
@@ -89,13 +97,16 @@ var Gallery = React.createClass({displayName: "Gallery",
         });
     },
     previous: function(){
-        if(this.state.images[this.state.current_image] == 0) return;
-        this.setCurrentImage(this.state.current_image - 1);
+        if(this.state.currentIndex == 0) return;
+        this.setCurrentIndex(this.state.currentIndex - 1);
+        this.setCurrentImage(this.state.images_list[this.state.currentIndex].id);
         this.displayCurrentImage();
     },
     next: function(){
-        if(this.state.images[this.state.current_image] == this.state.images_list.length - 1) return;
-        this.setCurrentImage(this.state.current_image + 1);
+        if(this.state.currentIndex + 1 >= this.state.images_list.length) return;
+        this.setCurrentIndex(this.state.currentIndex + 1);
+        this.setCurrentImage(this.state.images_list[this.state.currentIndex].id);
+
         this.displayCurrentImage();
     },
     renderImage: function(){
