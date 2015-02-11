@@ -39,9 +39,9 @@ class AttachmentImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ImageAttachment.objects.all()
-        article = self.request.QUERY_PARAMS.get('article', None)
+        article = self.request.QUERY_PARAMS.get('resource', None)
         if article is not None:
-            queryset = queryset.filter(article__id=article)
+            queryset = queryset.filter(resource__id=article)
         return queryset
 
 class AttachmentViewSet(viewsets.ModelViewSet):
