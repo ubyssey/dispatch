@@ -50,13 +50,7 @@ class Section(Model):
     def __str__(self):
         return self.name
 
-class ImagesMixin(Model):
-    images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
-
-    class Meta:
-        abstract = True
-
-class Article(Resource, ImagesMixin):
+class Article(Resource):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
@@ -72,6 +66,7 @@ class Article(Resource, ImagesMixin):
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
+    images = ManyToManyField("ImageAttachment", blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -103,8 +98,8 @@ class Article(Resource, ImagesMixin):
     def save_attachments(self, attachments):
         attachments = attachments.split(",")
         attachments.append(self.featured_image.id) # add featured image to exclude list
-        Attachment.objects.filter(id__in=attachments).update(article=self) # set article FK to current article
-        Attachment.objects.filter(article_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+        ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
+        ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
 
     def get_author_string(self):
         author_str = ""
@@ -184,7 +179,8 @@ class Image(Resource):
                 path = os.path.join(settings.MEDIA_ROOT, filename)
                 os.remove(path)
 
-class Gallery(Resource, ImagesMixin):
+class Gallery(Resource):
+    #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
     pass
 
 class Attachment(Model):
@@ -202,7 +198,7 @@ class ImageAttachment(Attachment):
     )
 
     resource = ForeignKey(Resource, blank=True, null=True)
-    image = ForeignKey(Image)
+    image = ForeignKey(Image, related_name='image')
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
 
 class GalleryAttachment(Attachment):

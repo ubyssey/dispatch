@@ -1,5 +1,5 @@
 from django.template import loader, Context
-from dispatch.apps.content.models import Attachment
+from dispatch.apps.content.models import ImageAttachment
 
 class ShortcodeLibrary():
 
@@ -27,7 +27,7 @@ def sc_image(*args):
     except IndexError:
         return ""
     try:
-        attach = Attachment.objects.get(id=id)
+        attach = ImageAttachment.objects.get(id=id)
     except Attachment.DoesNotExist:
         return ""
     template = loader.get_template("image.html")
