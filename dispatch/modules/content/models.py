@@ -201,7 +201,7 @@ class ImageAttachment(Attachment):
         (COURTESY, 'Courtesy photo'),
     )
 
-    resource = ForeignKey('ImagesMixin', blank=True, null=True)
+    resource = ForeignKey(Resource, blank=True, null=True)
     image = ForeignKey(Image)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
 
