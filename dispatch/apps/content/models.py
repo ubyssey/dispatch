@@ -53,6 +53,9 @@ class Section(Model):
 class ImagesMixin(Model):
     images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
 class Article(Resource, ImagesMixin):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
