@@ -37,3 +37,4 @@ class ArticleTests(TestCase):
     # def test_no_duplicate_slugs(self):
     #     with self.assertRaises(IntegrityError):
     #         article2 = Article.objects.create(**self.A1)
+    pass
