@@ -20,6 +20,35 @@ div.sidebar {
   left: 0;
   top: 0;
   @include box-shadow(rgba(0, 0, 0, 0.2) 3px 0px 5px);
+  div.dispatch-logo {
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+    background: black;
+  }
+  nav {
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      li {
+        a {
+          height: $toolbar-width;
+          line-height: $toolbar-width;
+          text-align: center;
+          display: block;
+          width: 100%;
+          color: white;
+          &:hover {
+            color: #4A90E2;
+          }
+        }
+      }
+    }
+  }
 }
 
 div.wrapper {
@@ -34,17 +63,37 @@ main {
 }
 
 header {
-  width: 100%;
   background: #4A90E2;
   height: $toolbar-width;
   line-height: 40px;
   position: fixed;
+  left: $toolbar-width;
+  right: 0;
   top: 0;
   z-index: 50;
   @include box-shadow(rgba(0, 0, 0, 0.2) 0px 1px 1px);
   div.header-main {
     line-height: $toolbar-width;
     height: 100%;
+    .toolbar{
+      float: left;
+    }
+    .save-buttons {
+      float: right;
+    }
+  }
+  div.title {
+    float: left;
+    margin-left: 60px;
+    h1 {
+      color: white;
+      margin: 0;
+      font-size: 18px;
+      font-family: "LFT Etica";
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
   }
   div.brand {
     width: $toolbar-width;
@@ -96,23 +145,44 @@ div.main {
     position: relative;
     @include box-shadow(rgba(0, 0, 0, 0.5) 0px 0px 5px);
   }
-  .tab {
-    margin-top: 58px;
+  .content-area {
     position: absolute;
     width: 100%;
-    top: 0;
-    bottom: 0;
+    top: 60px;
+    bottom: 60px;
   }
   .header {
-    height: 58px;
+    height: 60px;
+    line-height: 60px;
     position: absolute;
     width: 100%;
-    z-index: 50;
+    z-index: 550;
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px 1px 1px);
+    nav {
+      padding: 0 20px;
+      a {
+        padding: 0 15px;
+        font-family: "Lucida Grande";
+        font-size: 14px;
+        color: #A2A2A2;
+        &:visited {
+          color: #A2A2A2;
+        }
+        &:hover {
+          color: #272727;
+        }
+        line-height: 17px;
+        text-decoration: none;
+      }
+    }
   }
   .footer {
+    height: 60px;
+    line-height: 60px;
     position: absolute;
+    width: 100%;
     bottom: 0;
+    @include box-shadow(rgba(0, 0, 0, 0.05) 0px -1px 1px);
   }
 
   input {
@@ -120,6 +190,33 @@ div.main {
   }
 }
 
+div.article-list {
+  display: table;
+  width: 100%;
+  div.article {
+    display: table-row;
+    &:nth-child(even){
+      background: rgb(240, 240, 240)
+    }
+    div.cell {
+      display: table-cell;
+      border-bottom: 1px solid rgb(210, 210, 210);
+      a, span {
+        padding: 20px 60px;
+        font-family: "LFT Etica";
+        font-size: 14px;
+        display: block;
+        text-decoration: none;
+        color: rgb(100, 100, 100);
+        font-weight: 300;
+      }
+      &.title a {
+        font-weight: 600;
+        color: black;
+      }
+    }
+  }
+}
 
 // Dropzone
 
