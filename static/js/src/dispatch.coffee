@@ -6,7 +6,8 @@ class Dispatch
       "tag",
       "topic",
       "image",
-      "attachment"
+      "attachment",
+      "person",
     ]
 
   constructor: ->
@@ -17,6 +18,11 @@ class Dispatch
     if(@._hasModel(model))
       url = model + "/"
       this.post(url, values, callback)
+
+  update: (model, id, values, callback) ->
+    if(@._hasModel(model))
+      url = model + "/" + id + "/"
+      this.patch(url, values, callback)
 
   remove: (model, id, callback) ->
     if(@._hasModel(model))
@@ -44,6 +50,14 @@ class Dispatch
       success: callback,
     })
 
+  patch: (url, values, callback) ->
+    $.ajax({
+      type: "PATCH",
+      data: values,
+      url: @api+url+"?format="+@api_format,
+      success: callback,
+    })
+
   delete: (url, callback) ->
     $.ajax({
       type: "DELETE",
@@ -65,7 +79,7 @@ class Dispatch
 
   articleAttachments: (article_id, callback) ->
     @get('article/attachments/', {
-        'article': article_id,
+        'resource': article_id,
       },
       callback
     )

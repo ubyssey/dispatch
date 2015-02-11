@@ -19,22 +19,32 @@ function Image(id, url, thumb) {
     this.setCaption = function(value){
         this.caption = value;
     }
+
+    this.setAuthor = function(id){
+
+    }
 }
 
 function Attachment(article_id, image) {
     this.id;
-    this.article_id = article_id;
+    if(article_id){
+        this.article_id = article_id;
+    } else {
+        this.article_id = false;
+    }
     this.image_id = image.id;
     this.caption = image.caption;
     var self = this;
 }
 
 Attachment.prototype.save = function(callback){
-    dispatch.add("attachment", {
-        'article': this.article_id,
+    var data = {
         'image': this.image_id,
         'caption': this.caption,
-    }, callback);
+    };
+    if (this.article_id)
+        data.article = this.article_id;
+    dispatch.add("attachment", data, callback);
 }
 
 function ImageCache(images) {
@@ -60,27 +70,37 @@ ImageCache.prototype.getAll = function() {
 
 // jQuery plugins
 
-$.fn.imageModal = function(callback){
 
+function ImageManager(){
     var active;
     var selected = [];
-    var target = "."+$(this).data("modal");
+    var target = ".image-manager";
     var initialized = false;
+    var callbacks = {};
+    var curTrigger = false;
 
-    $(this).click(function(e){
-        e.preventDefault();
-        if(!initialized){
-            dispatch.search("image", {'ordering': '-created_at'}, function(data){
-                imageCache = new ImageCache(data.results);
+    var addTriggerEvent = function(trigger){
+        $(trigger).click(function(e){
+            curTrigger = trigger;
+            e.preventDefault();
+            if(!initialized){
+                dispatch.search("image", {'ordering': '-created_at'}, function(data){
+                    imageCache = new ImageCache(data.results);
+                    updateLibrary(imageCache);
+                    initialized = true;
+                });
+            } else {
+                clearSelected();
                 updateLibrary(imageCache);
-                initialized = true;
-            });
-        } else {
-            clearSelected();
-            updateLibrary(imageCache);
-        }
-        $(target).css("display", "table");
-    });
+            }
+            $(target).css("display", "table");
+        });
+    }
+
+    this.addTrigger = function(trigger, callback){
+        callbacks[trigger.selector] = callback;
+        addTriggerEvent(trigger);
+    }
 
     var clearSelected = function(){
         selected = [];
@@ -136,15 +156,25 @@ $.fn.imageModal = function(callback){
         });
     });
 
+    var updateMeta = function(){
+        var image = imageCache.get(active);
+        $('.image-meta-preview').attr("src", "http://dispatch.dev:8888/media/"+image.url).show();
+        $('.image-caption').val(image.caption);
+    }
+
     $(document).on("click", ".image-results .catalog-image", function(){
         active = $(this).data("id");
-        console.log(active);
         $(".image-results li").removeClass("selected");
         $(this).addClass("selected");
+        updateMeta();
     });
 
     $(".image-caption").change(function(){
         imageCache.get(active).setCaption($(this).val());
+    });
+
+    $(".image-author").change(function(){
+        imageCache.get(active).setAuthor($(this.val())).update();
     });
 
     $(target).find(".body").mouseup(function (e)
@@ -160,9 +190,14 @@ $.fn.imageModal = function(callback){
         if (active)
             selected.push(imageCache.get(active));
         $(target).hide();
-        callback(selected);
+        callbacks[curTrigger.selector](selected);
     });
+}
 
+var IM = new ImageManager();
+
+$.fn.imageModal = function(callback){
+   IM.addTrigger(this, callback);
 }
 
 $.fn.tagList = function(model) {

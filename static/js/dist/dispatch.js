@@ -8,7 +8,7 @@
 
     Dispatch.prototype.api_format = "json";
 
-    Dispatch.prototype.models = ["tag", "topic", "image", "attachment"];
+    Dispatch.prototype.models = ["tag", "topic", "image", "attachment", "person"];
 
     function Dispatch() {
       this.csrfSetup = __bind(this.csrfSetup, this);
@@ -20,6 +20,14 @@
       if (this._hasModel(model)) {
         url = model + "/";
         return this.post(url, values, callback);
+      }
+    };
+
+    Dispatch.prototype.update = function(model, id, values, callback) {
+      var url;
+      if (this._hasModel(model)) {
+        url = model + "/" + id + "/";
+        return this.patch(url, values, callback);
       }
     };
 
@@ -57,6 +65,15 @@
       });
     };
 
+    Dispatch.prototype.patch = function(url, values, callback) {
+      return $.ajax({
+        type: "PATCH",
+        data: values,
+        url: this.api + url + "?format=" + this.api_format,
+        success: callback
+      });
+    };
+
     Dispatch.prototype["delete"] = function(url, callback) {
       return $.ajax({
         type: "DELETE",
@@ -80,7 +97,7 @@
 
     Dispatch.prototype.articleAttachments = function(article_id, callback) {
       return this.get('article/attachments/', {
-        'article': article_id
+        'resource': article_id
       }, callback);
     };
 

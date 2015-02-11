@@ -44,8 +44,30 @@ div.col {
   min-width: 175px;
 }
 
-select {
-  width: 100%;
+ul.author-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0;
+  li {
+    padding: 8px 0;
+    span {
+      cursor: move;
+      background: white;
+      padding: 6px 9px;
+      border: solid 1px grey;
+      border-radius: 2px;
+      font-size: 12px;
+      a {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+.ui-state-highlight { height: 1em; line-height: 1em; }
+
+div.manage-authors {
+  display: none;
 }
 
 div.main {
@@ -69,7 +91,7 @@ div.panel.content {
 }
 
 div.fieldset.tab {
-  padding: 30px 40px;
+  padding: 20px 40px;
 }
 
 nav.edit-tabs {
@@ -98,11 +120,15 @@ nav.edit-tabs {
       }
     }
   }
+}
 
 div.panel.options {
-  }
+  position: absolute;
+  float: none;
+  right: 0;
+  left: 785px;
   div.fieldset {
-    padding-bottom: 15px;
+    padding-bottom: 30px;
     margin-bottom: 15px;
     border-bottom: solid 1px #C6C6C6;
     div.col:first-child {
@@ -231,11 +257,16 @@ ul.tagList {
   }
   .image-meta {
     position: absolute;
-    width: 360px;
+    width: 330px;
     right: 0;
     top: 0;
     bottom: 0;
+    padding: 15px;
     border-left: 1px solid rgb(229, 229, 229);
+    img {
+      width: 100%;
+      display: none;
+    }
   }
 }
 
@@ -384,5 +415,71 @@ button.dark-button {
   margin-right: 15px;
   &:hover, &.ql-active {
     color: rgba(0,0,0,0.5);
+  }
+}
+
+.field {
+  margin: 15px 0;
+  input, select {
+    border: 1px solid rgb(185,185,185);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 12px;
+    margin-right: 4px;
+  }
+  select {
+     background: transparent;
+     font-size: 12px;
+     height: 33px;
+  }
+}
+
+#id_section {
+  width: 100%;
+  max-width: 250px;
+}
+
+#id_slug, #id_short_headline {
+  width: 100%;
+  max-width: 350px;
+}
+
+img.featured-image {
+  width: 100%;
+  max-width: 300px;
+}
+
+div.tab {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+div.save-buttons {
+  padding: 0 40px;
+  button, a {
+    border: 1px solid #FFFFFF;
+    background: none;
+    border-radius: 25px;
+    color: #FFFFFF;
+    font-size: 10px;
+    padding: 0 9px;
+    height: 32px;
+
+    min-width: 70px;
+    vertical-align: middle;
+    margin-right: 6px;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.75;
+    }
+  }
+  a {
+    line-height: 32px;
+    display: inline-block;
+    text-align: center;
+    min-width: 50px;
+    text-decoration: none;
   }
 }

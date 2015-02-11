@@ -31,6 +31,12 @@ var Shortcode = function(quill, options) {
         self.quill.setSelection();
     });
 
+    $('.set-featured-image').imageModal(function(items){
+        var image = items[0];
+        $('#id_image').val(image.id);
+        $('img.featured-image').attr("src", "http://dispatch.dev:8888/media/"+image.url);
+    });
+
     $('.tb-image').imageModal(function(items){
         $.each(items, function(key, image){
         if(images.indexOf(image) == -1){
@@ -162,9 +168,12 @@ function Editor() {
 
     $(document).on("mouseover", ".ql-line img", function(){
         selected_image = this;
+        var image_id = $(this).data("id");
+        var image = self.images[image_id];
         var offset = $(this).position().top;
         $('.image-tools').width($(this).width()).height($(this).height());
         $('.image-tools').css('top', offset).show();
+        $('.image-tools .caption').text(image.caption);
     });
 
     $(document).on("mouseleave", ".image-tools", function(){
@@ -174,14 +183,22 @@ function Editor() {
     this.init = function(article, source) {
         this.article = article;
         this.source = source;
-        this.fetchImages(function(){
-            self.quill = new Quill('#editor');
-            self.quill.addModule('shortcode', { button: '#add_shortcode', article: self.article });
-            self.quill.addModule('toolbar', { container: '#full-toolbar' });
-            self.quill.addModule('link-tooltip', true);
-            var processed = self.processShortcodes($(self.source).text());
-            self.quill.setHTML(processed);
-        });
+        if(article){
+            this.fetchImages(function(){
+                self.setupEditor();
+            });
+        } else {
+            self.setupEditor();
+        }
+    }
+
+    this.setupEditor = function(){
+        self.quill = new Quill('#editor');
+        self.quill.addModule('shortcode', { button: '#add_shortcode', article: self.article });
+        self.quill.addModule('toolbar', { container: '#full-toolbar' });
+        self.quill.addModule('link-tooltip', true);
+        var processed = self.processShortcodes($(self.source).text());
+        self.quill.setHTML(processed);
     }
 
     this.validCode = function(func){
