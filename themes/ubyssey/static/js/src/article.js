@@ -106,7 +106,6 @@ var Gallery = React.createClass({
         if(this.state.currentIndex + 1 >= this.state.images_list.length) return;
         this.setCurrentIndex(this.state.currentIndex + 1);
         this.setCurrentImage(this.state.images_list[this.state.currentIndex].id);
-
         this.displayCurrentImage();
     },
     renderImage: function(){

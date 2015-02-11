@@ -39,7 +39,10 @@ class Person(Model):
     roles = ManyToManyField(ContributorRole, blank=True, null=True)
 
     def __str__(self):
-        return self.full_name
+        if self.full_name:
+            return self.full_name
+        else:
+            return self.first_name + ' ' + self.last_name
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
