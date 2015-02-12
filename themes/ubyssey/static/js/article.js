@@ -1,24 +1,3 @@
-var Timer = React.createClass({displayName: "Timer",
-    getInitialState: function() {
-        return {secondsElapsed: 0};
-    },
-    tick: function() {
-        this.setState({secondsElapsed: this.state.secondsElapsed + 1});
-    },
-    componentDidMount: function() {
-        this.interval = setInterval(this.tick, 1000);
-    },
-    componentWillUnmount: function() {
-        clearInterval(this.interval);
-    },
-    render: function() {
-        return (
-          React.createElement("div", null, "Seconds Elapsed: ", this.state.secondsElapsed)
-        );
-    }
-});
-
-
 var Gallery = React.createClass({displayName: "Gallery",
     getInitialState: function(){
         return {
@@ -38,7 +17,7 @@ var Gallery = React.createClass({displayName: "Gallery",
             });
 
             this.setState({
-                'images': images,
+                images: images,
                 images_list: data.results,
                 image_height: $(window).height() - 200,
             });
@@ -145,12 +124,13 @@ var Gallery = React.createClass({displayName: "Gallery",
 });
 
 var article = $('article').data("id");
-var gallery = React.createElement(Gallery, { 'article': article });
+var gallery;
+
 $('.article-attachment').click(function(){
 
-    if(!gallery.isMounted){
+    if(!gallery){
         gallery = React.render(
-            gallery,
+            React.createElement(Gallery, {article: article}),
             document.getElementById('gallery')
         );
     }
