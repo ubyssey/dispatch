@@ -141,11 +141,11 @@ class Image(Resource):
     THUMBNAIL_SIZE = 'square'
 
     def get_absolute_url(self):
-        return self.img
+        return "http://dispatch.dev:8888/media/" + str(self.img)
 
     def get_thumbnail_url(self):
         name = self.img.name.split('.')[0]
-        return "%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
+        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
 
     #Overriding
     def save(self, *args, **kwargs):
