@@ -28,7 +28,7 @@ def sc_image(*args):
         return ""
     try:
         attach = ImageAttachment.objects.get(id=id)
-    except Attachment.DoesNotExist:
+    except ImageAttachment.DoesNotExist:
         return ""
     template = loader.get_template("image.html")
     c = Context({
