@@ -35,7 +35,9 @@ class Resource(Model):
     def save_authors(self, authors):
         Author.objects.filter(resource_id=self.id).delete()
         n=0
-        for author in authors.split(","):
+        if type(authors) is str:
+            authors = authors.split(",")
+        for author in authors:
             try:
                 person = Person.objects.get(id=author)
                 Author.objects.create(resource=self,person=person,order=n)
@@ -150,6 +152,8 @@ class Image(Resource):
     #Overriding
     def save(self, *args, **kwargs):
         super(Image, self).save(*args, **kwargs)
+#        if not self.authors.all():
+#            self.authors.
         if self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             name = self.img.name.split('.')[0]
