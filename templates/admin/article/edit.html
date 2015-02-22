@@ -9,7 +9,7 @@
     </div>
 {% endblock %}
 {% block content %}
-<form class="article-form" data-id="{{ article.id }}" action="" method="post">
+<form class="article-form" data-id="{{ article.id }}" data-csrf="{{ csrf_token }}" action="" method="post">
     {% csrf_token %}
     <div class="content panel">
         <div class="inner">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </script>
-            <script id="image-preview" type="text/html-template">
+            <script id="image-previewa" type="text/html-template">
                 <div class="dz-preview dz-file-preview">
                   <div class="dz-details">
                     <div class="dz-filename"><span data-dz-name></span></div>
@@ -145,35 +145,7 @@
 </form>
 {% endblock %}
 {% block modals %}
-<div class="modal image-manager">
-    <div class="body">
-        <div id="image-manager" class="content">
-            <div class="header">
-                <nav>
-                    <a class="upload-images">Upload</a>
-                </nav>
-            </div>
-            <div id="image-catalog" class="content-area">
-                <ul id="image-dropzone" class="image-results dropzone">
-                </ul>
-                {% csrf_token %}
-                <div class="image-meta">
-                    <img class="image-meta-preview" src="" />
-                    Caption:
-                    <input class="image-caption" value="" />
-                    <br/>
-                    <label>Photographer:</label>
-                    <select>
-                        {% for author in all_authors %}
-                            <option value="{{ author.id }}">{{ author.full_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="footer">
-                <button class="insert-image">Insert</button>
-            </div>
-        </div>
-    </div>
+<div id="modals">
+
 </div>
 {% endblock %}
