@@ -194,11 +194,11 @@ function ImageManager(){
     });
 }
 
-var IM = new ImageManager();
-
-$.fn.imageModal = function(callback){
-   IM.addTrigger(this, callback);
-}
+//var IM = new ImageManager();
+//
+//$.fn.imageModal = function(callback){
+//   IM.addTrigger(this, callback);
+//}
 
 $.fn.tagList = function(model) {
     self = this;

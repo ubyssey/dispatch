@@ -29,7 +29,7 @@ var ImageStore = {
     }
 }
 
-var ImageManager = React.createClass({displayName: "ImageManager",
+var ImageManager = React.createClass({
     getInitialState: function(){
         return {
             visible: false,
@@ -120,7 +120,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         console.log(this.state.selected);
         if ( this.state.activeImage ){
             var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {url: image.url}) );
+            return ( <ImageMeta url={image.url} /> );
         }
     },
     render: function() {
@@ -136,41 +136,41 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         }
 
         return (
-            React.createElement("div", {className: 'modal image-manager ' + visible}, 
-                React.createElement("div", {className: "body"}, 
-                    React.createElement("div", {id: "image-manager", className: "content"}, 
-                        React.createElement("div", {className: "header"}, 
-                            React.createElement("nav", null, 
-                                React.createElement("a", {className: "upload-images"}, "Upload")
-                            )
-                        ), 
-                        React.createElement("div", {id: "image-catalog", className: "content-area"}, 
-                            React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()}), 
-                            this.renderImageMeta()
-                        ), 
-                        React.createElement("div", {className: "footer"}, 
-                            React.createElement("button", {className: "insert-image"}, "Insert")
-                        )
-                    )
-                )
-            )
+            <div className={'modal image-manager ' + visible}>
+                <div className="body">
+                    <div id="image-manager" className="content">
+                        <div className="header">
+                            <nav>
+                                <a className="upload-images">Upload</a>
+                            </nav>
+                        </div>
+                        <div id="image-catalog" className="content-area">
+                            <ImageDropzone url={'http://localhost:8000/api/image/'} paramName={'img'} params={params} addFile={this.addFile} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                            {this.renderImageMeta()}
+                        </div>
+                        <div className="footer">
+                            <button className="insert-image">Insert</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 });
 
-var ImageMeta = React.createClass({displayName: "ImageMeta",
+var ImageMeta = React.createClass({
     render: function(){
         return (
-            React.createElement("div", {className: "image-meta"}, 
-                React.createElement("img", {className: "image-meta-preview", src: this.props.url}), 
-                React.createElement("label", null, "Photographer:"), 
-                this.props.author
-            )
+            <div className="image-meta">
+                <img className="image-meta-preview" src={this.props.url} />
+                <label>Photographer:</label>
+                {this.props.author}
+            </div>
         );
     }
 })
 
-var ImageDropzone = React.createClass({displayName: "ImageDropzone",
+var ImageDropzone = React.createClass({
   componentDidMount: function() {
     var options = {};
     for (var opt in Dropzone.prototype.defaultOptions) {
@@ -201,31 +201,31 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
     var children = this.props.children;
     var imageNodes = this.props.images.map(function (image) {
       return (
-        React.createElement(Image, {id: image.id, thumb: image.thumb, url: image.url, progress: image.progress})
+        <Image id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} />
       );
     });
     return (
-        React.createElement("ul", {id: "image-dropzone", className: "image-results"}, 
-        imageNodes
-        )
+        <ul id="image-dropzone" className="image-results">
+        {imageNodes}
+        </ul>
     );
   }
 });
 
-var Image = React.createClass({displayName: "Image",
+var Image = React.createClass({
     render: function(){
         var styles = {backgroundImage: "url('" + this.props.thumb + "')"};
         if(this.props.progress){
         //    styles.opacity = 100 / this.props.progress;
         }
         return (
-            React.createElement("li", {className: 'catalog-image', style: styles, "data-id": this.props.id, "data-url": this.props.url})
+            <li className={'catalog-image'} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
         );
     }
 })
 
 var imageManager = React.render(
-    React.createElement(ImageManager, null),
+    <ImageManager />,
     document.getElementById('modals')
 );
 
