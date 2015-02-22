@@ -1,7 +1,7 @@
 __author__ = "Steven Richards doesn't do anything"
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Resource, Article, Tag, Image, ImageAttachment
+from dispatch.apps.content.models import Resource, Author, Article, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
 from rest_framework import serializers
 
@@ -9,9 +9,29 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
 
+    authors = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='id',
+     )
+
     class Meta:
         model = Image
-        fields = ('id', 'img', 'caption', 'url', 'thumb', 'created_at')
+        fields = ('id', 'img', 'caption', 'authors', 'url', 'thumb', 'created_at',)
+
+class CommentSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    content = serializers.CharField(max_length=200)
+    created = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        return Comment(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.content = validated_data.get('content', instance.content)
+        instance.created = validated_data.get('created', instance.created)
+        return instance
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

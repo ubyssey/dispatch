@@ -2,7 +2,8 @@ __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
 from dispatch.apps.content.models import Article, Tag, Image, Attachment, ImageAttachment
 from dispatch.apps.core.models import Person
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
+from rest_framework.response import Response
 from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
 from django.db.models import Q
 
@@ -54,6 +55,17 @@ class ImageViewSet(viewsets.ModelViewSet):
     paginate_by = 30
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at')
+
+    def create(self, request, *args, **kwargs):
+        authors = request.POST.get('authors', False)
+        if not authors:
+            authors = [request.user.id]
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        resource = serializer.save()
+        resource.save_authors(authors)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         queryset = Image.objects.all()
