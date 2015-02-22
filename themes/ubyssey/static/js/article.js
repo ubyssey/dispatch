@@ -1,3 +1,28 @@
+var articleHeader = false;
+var dispatch = new Dispatch();
+
+$(function(){
+    if($(document).scrollTop() > 50){
+        articleHeader = true;
+        $('.header-site').hide();
+        $('.header-article').show();
+    }
+});
+
+$(document).scroll(function() {
+    var top = $(document).scrollTop();
+    if (top > 50 && !articleHeader){
+        articleHeader = true;
+        $('.header-site').hide();
+        $('.header-article').fadeIn();
+    } else if (top < 50 && articleHeader){
+        articleHeader = false;
+        $('.header-article').hide();
+        $('.header-site').show();
+    }
+});
+
+
 var Gallery = React.createClass({displayName: "Gallery",
     getInitialState: function(){
         return {
