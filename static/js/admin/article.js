@@ -41,7 +41,6 @@ $('input.add-author').keydown(function(e){
     }
 });
 
-
 function updateAuthorField(){
     var authors = $('ul.author-list').sortable( "toArray", { "attribute": "data-id"});
     $('.input-authors').val(authors.join(","));
@@ -103,9 +102,9 @@ $(function(){
       }
     });
 
-    $( "input.add-author" ).autocomplete({
+    $( ".manage-authors input.add-author" ).autocomplete({
       minLength: 3,
-      appendTo: '.author-dropdown',
+      appendTo: '.manage-authors .author-dropdown',
       focus: function (event, ui) {
         event.preventDefault();
         authorSelected = true;

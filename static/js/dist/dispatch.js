@@ -39,6 +39,14 @@
       }
     };
 
+    Dispatch.prototype.find = function(model, id, callback) {
+      var url;
+      if (this._hasModel(model)) {
+        url = model + "/" + id + "/";
+        return this.get(url, {}, callback);
+      }
+    };
+
     Dispatch.prototype.search = function(model, values, callback) {
       var url;
       if (this._hasModel(model)) {
