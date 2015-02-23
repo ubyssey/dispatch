@@ -29,6 +29,11 @@ class Dispatch
       url = model + "/" + id + "/"
       this.delete(url, callback)
 
+  find: (model, id, callback) ->
+    if(@._hasModel(model))
+      url = model + "/" + id + "/"
+      this.get(url, {}, callback)
+
   search: (model, values, callback) ->
     if(@._hasModel(model))
       url = model + "/"

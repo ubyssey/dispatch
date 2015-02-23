@@ -16,6 +16,18 @@ var ImageStore = {
         var i = _.findIndex(this.images, {tempName: name})
         this.images[i].progress = progress;
     },
+    updateImage: function(id, callback){
+        dispatch.find('image', id, function(data){
+            var i = _.findIndex(this.images, {id: id});
+            this.images[i] = data;
+            callback();
+        }.bind(this))
+
+    },
+    updateImageWithData: function(data){
+        var i = _.findIndex(this.images, {id: data.id});
+        this.images[i] = data;
+    },
     replaceTemp: function(name, image){
         var i = _.findIndex(this.images, {tempName: name});
         this.images[i] = image;
@@ -38,6 +50,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             initialized: false,
             currentTrigger: false,
             images: ImageStore,
+            query: "",
         }
     },
     componentDidMount: function() {
@@ -47,6 +60,17 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         $('#image-manager').on('click', 'button.insert-image', function(e){
            e.preventDefault();
            this.insertImage();
+        }.bind(this));
+
+        // Clicking outside container
+        $(this.getDOMNode()).mouseup(function (e)
+        {
+            var container = $(this.getDOMNode()).find(".content");
+            if (!container.is(e.target) && container.has(e.target).length === 0)
+            {
+                this.close();
+                $('body').removeClass('no-scroll');
+            }
         }.bind(this));
 
         // Initalize callbacks object
@@ -116,12 +140,27 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             images: ImageStore,
         });
     },
+    updateImage: function(data){
+        ImageStore.updateImageWithData(data);
+        this.reloadStore();
+    },
     renderImageMeta: function(){
-        console.log(this.state.selected);
         if ( this.state.activeImage ){
             var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {url: image.url}) );
+            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
         }
+    },
+    searchImages: function(event){
+        this.setState({
+            activeImage: false,
+            query: event.target.value,
+        });
+        dispatch.search("image", {'q': event.target.value, 'ordering': '-created_at'}, function(data){
+            ImageStore.dump(data.results);
+            this.setState({
+                images: ImageStore,
+            });
+        }.bind(this));
     },
     render: function() {
 
@@ -141,7 +180,8 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     React.createElement("div", {id: "image-manager", className: "content"}, 
                         React.createElement("div", {className: "header"}, 
                             React.createElement("nav", null, 
-                                React.createElement("a", {className: "upload-images"}, "Upload")
+                                React.createElement("a", {className: "upload-images"}, "Upload"), 
+                                React.createElement("input", {type: "text", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
                             )
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
@@ -159,12 +199,89 @@ var ImageManager = React.createClass({displayName: "ImageManager",
 });
 
 var ImageMeta = React.createClass({displayName: "ImageMeta",
+    getInitialState: function(){
+        return this.getState();
+    },
+    getState: function(){
+        return {
+            authorName: this.props.authors[0] ? this.props.authors[0].full_name : "",
+            author: this.props.authors[0] ? this.props.authors[0] : false,
+            title: this.props.title,
+        }
+    },
+    componentDidMount: function(){
+        $( ".image-meta input.add-author" ).autocomplete({
+            minLength: 3,
+            appendTo: '.image-meta .author-dropdown',
+            focus: function (event, ui) {
+                event.preventDefault();
+                this.changeAuthor({id: ui.item.id, full_name: ui.item.full_name});
+                $(event.target).val(ui.item.full_name);
+            }.bind(this),
+            source: function( request, response ) {
+                var term = request.term;
+                if ( term in authorCache ) {
+                    response( authorCache[ term ] );
+                    return;
+                }
+                $.getJSON( "http://localhost:8000/api/person/", {q: request.term}, function( data, status, xhr ) {
+                    authorCache[ term ] = data.results;
+                    response( data.results );
+                });
+            }
+        }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+            .append( "<a>" + item.id + "<br>" + item.full_name + "</a>" )
+            .appendTo( ul );
+        };
+    },
+    componentWillReceiveProps: function(nextProps){
+        this.props = nextProps;
+        this.setState(this.getState());
+    },
+    changeAuthor: function(author){
+        this.setState({
+            authorName: author.full_name,
+            author: author,
+        });
+    },
+    handleChangeAuthor: function(event){
+        this.setState({
+            authorName: event.target.value,
+            author: false,
+        });
+    },
+    handleChangeTitle: function(event){
+        this.setState({
+            title: event.target.value,
+        });
+    },
+    handleUpdate: function(event){
+        if(this.state.author){
+            this.updateAuthor(this.state.author.id);
+        } else {
+            dispatch.add("person", {
+                'full_name': this.state.authorName,
+            }, function(data){
+                this.updateAuthor(data.id);
+            }.bind(this));
+        }
+    },
+    updateAuthor: function(authorId){
+        dispatch.update('image', this.props.id, {authors: authorId, title: this.state.title}, function(data){
+            this.props.onUpdate(data);
+        }.bind(this));
+    },
     render: function(){
         return (
             React.createElement("div", {className: "image-meta"}, 
-                React.createElement("img", {className: "image-meta-preview", src: this.props.url}), 
+                React.createElement("img", {className: "image-meta-preview", src:  this.props.url}), 
+                React.createElement("label", null, "Title:"), 
+                React.createElement("input", {type: "text", onChange:  this.handleChangeTitle, value:  this.state.title}), React.createElement("br", null), 
                 React.createElement("label", null, "Photographer:"), 
-                this.props.author
+                React.createElement("input", {type: "text", className: "add-author", onChange:  this.handleChangeAuthor, value:  this.state.authorName}), 
+                React.createElement("div", {className: "author-dropdown"}), 
+                React.createElement("button", {onClick: this.handleUpdate, className: "update-image"}, "Update")
             )
         );
     }

@@ -5,19 +5,19 @@ from dispatch.apps.content.models import Resource, Author, Article, Tag, Image, 
 from dispatch.apps.core.models import Person
 from rest_framework import serializers
 
+class PersonSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('id','full_name','first_name','last_name','user','roles')
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
-
-    authors = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='id',
-     )
+    authors = PersonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'caption', 'authors', 'url', 'thumb', 'created_at',)
+        fields = ('id', 'img', 'title', 'authors', 'url', 'thumb', 'created_at',)
 
 class CommentSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -64,8 +64,3 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('url', 'email')
-
-class PersonSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id','full_name','first_name','last_name','user','roles')

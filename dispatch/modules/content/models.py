@@ -35,7 +35,7 @@ class Resource(Model):
     def save_authors(self, authors):
         Author.objects.filter(resource_id=self.id).delete()
         n=0
-        if type(authors) is str:
+        if type(authors) is not list:
             authors = authors.split(",")
         for author in authors:
             try:
@@ -132,7 +132,7 @@ class Video(Resource):
 
 class Image(Resource):
     img = ImageField(upload_to='images')
-    caption = CharField(max_length=255, blank=True, null=True)
+    title = CharField(max_length=255, blank=True, null=True)
 
     SIZES = {
         'large': (1600,900),
