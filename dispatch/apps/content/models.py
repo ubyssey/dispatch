@@ -35,7 +35,9 @@ class Resource(Model):
     def save_authors(self, authors):
         Author.objects.filter(resource_id=self.id).delete()
         n=0
-        for author in authors.split(","):
+        if type(authors) is not list:
+            authors = authors.split(",")
+        for author in authors:
             try:
                 person = Person.objects.get(id=author)
                 Author.objects.create(resource=self,person=person,order=n)
@@ -81,10 +83,9 @@ class Article(Resource):
         authors = request.POST.get("authors-list", False)
         if tags:
             self.save_tags(tags)
-        if attachments:
-            self.save_attachments(attachments)
         if authors:
             self.save_authors(authors)
+        self.save_attachments(attachments) # save attachments regardless to clear out those removed from article
 
     def save_tags(self, tags):
         self.tags.clear()
@@ -95,8 +96,12 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def save_attachments(self, attachments):
-        attachments = attachments.split(",")
+    def save_attachments(self, attachments=False):
+        if(attachments):
+            attachments = attachments.split(",")
+            attachments = [ int(x) for x in attachments ]
+        else:
+            attachments = []
         attachments.append(self.featured_image.id) # add featured image to exclude list
         ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
         ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
@@ -127,22 +132,22 @@ class Video(Resource):
 
 class Image(Resource):
     img = ImageField(upload_to='images')
-    caption = CharField(max_length=255, blank=True, null=True)
+    title = CharField(max_length=255, blank=True, null=True)
 
     SIZES = {
-        'large': (1600,900),
+        'large': (1600, 900),
         'medium': (800, 600),
-        'square': (250,250)
+        'square': (250, 250)
     }
 
     THUMBNAIL_SIZE = 'square'
 
     def get_absolute_url(self):
-        return self.img
+        return "http://dispatch.dev:8888/media/" + str(self.img)
 
     def get_thumbnail_url(self):
         name = self.img.name.split('.')[0]
-        return "%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
+        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
 
     #Overriding
     def save(self, *args, **kwargs):
@@ -162,7 +167,6 @@ class Image(Resource):
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
         image.save(output, format='JPEG', quality=75)
-
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):

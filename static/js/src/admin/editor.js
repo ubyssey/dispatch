@@ -41,7 +41,7 @@ var ImageStore = {
     }
 }
 
-var ImageManager = React.createClass({displayName: "ImageManager",
+var ImageManager = React.createClass({
     getInitialState: function(){
         return {
             visible: false,
@@ -142,7 +142,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
     renderImageMeta: function(){
         if ( this.state.activeImage ){
             var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
+            return ( <ImageMeta id={image.id} url={image.url} authors={image.authors} title={image.title} onUpdate={this.updateImage} /> );
         }
     },
     searchImages: function(event){
@@ -170,36 +170,36 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         }
 
         return (
-            React.createElement("div", {className: 'modal image-manager ' + visible}, 
-                React.createElement("div", {className: "body"}, 
-                    React.createElement("div", {id: "image-manager", className: "content"}, 
-                        React.createElement("div", {className: "header"}, 
-                            React.createElement("nav", null, 
-                                React.createElement("button", {className: "sq-button upload-images"}, "Upload"), 
-                                React.createElement("input", {type: "text", className: "dis-input image-search", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
-                            )
-                        ), 
-                        React.createElement("div", {id: "image-catalog", className: "content-area"}, 
-                            React.createElement("div", {className: "image-catalog-container"}, 
-                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
-                            ), 
-                            this.renderImageMeta()
-                        ), 
-                        React.createElement("div", {className: "footer"}, 
-                            React.createElement("nav", null, 
-                                React.createElement("div", {className: "pull-right"}, 
-                                    React.createElement("button", {className: "sq-button insert-image", onClick: this.insertImage}, "Insert")
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+            <div className={'modal image-manager ' + visible}>
+                <div className="body">
+                    <div id="image-manager" className="content">
+                        <div className="header">
+                            <nav>
+                                <button className="sq-button upload-images">Upload</button>
+                                <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
+                            </nav>
+                        </div>
+                        <div id="image-catalog" className="content-area">
+                            <div className="image-catalog-container">
+                                <ImageDropzone url={'http://localhost:8000/api/image/'} paramName={'img'} params={params} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                            </div>
+                            {this.renderImageMeta()}
+                        </div>
+                        <div className="footer">
+                            <nav>
+                                <div className="pull-right">
+                                    <button className="sq-button insert-image" onClick={this.insertImage}>Insert</button>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 });
 
-var ImageMeta = React.createClass({displayName: "ImageMeta",
+var ImageMeta = React.createClass({
     getInitialState: function(){
         return this.getState();
     },
@@ -297,42 +297,42 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
     renderLoader: function(){
         if(this.state.saving){
             return (
-                React.createElement("div", {className: "loader"})
+                <div className="loader"></div>
             )
         } else if (this.state.saved){
             return (
-                React.createElement("i", {className: "fa fa-check"})
+                <i className="fa fa-check"></i>
             );
         }
     },
     render: function(){
         return (
-            React.createElement("div", {className: "image-meta"}, 
-                React.createElement("img", {className: "image-meta-preview", src:  this.props.url}), 
-                React.createElement("div", {className: "field"}, 
-                    React.createElement("label", null, "Title:"), 
-                    React.createElement("input", {type: "text", className: "full", onChange:  this.handleChangeTitle, value:  this.state.title})
-                ), 
-                React.createElement("div", {className: "field"}, 
-                    React.createElement("label", null, "Photographer:"), 
-                    React.createElement("input", {type: "text", className: "dis-input add-author", onChange:  this.handleChangeAuthor, value:  this.state.authorName}), 
-                    React.createElement("div", {className: "author-dropdown"})
-                ), 
-                React.createElement("div", {className: "field"}, 
-                    React.createElement("div", {className: "pull-left"}, 
-                        React.createElement("button", {onClick: this.handleUpdate, className: "sq-button green update-image", disabled: !this.state.edited}, "Update"), 
-                        this.renderLoader()
-                    ), 
-                    React.createElement("div", {className: "pull-right"}, 
-                        React.createElement("button", {onClick: this.handleDelete, className: "sq-button red"}, "Delete")
-                    )
-                )
-            )
+            <div className="image-meta">
+                <img className="image-meta-preview" src={ this.props.url } />
+                <div className="field">
+                    <label>Title:</label>
+                    <input type="text" className="full" onChange={ this.handleChangeTitle } value={ this.state.title }/>
+                </div>
+                <div className="field">
+                    <label>Photographer:</label>
+                    <input type="text" className="dis-input add-author" onChange={ this.handleChangeAuthor } value={ this.state.authorName }/>
+                    <div className="author-dropdown"></div>
+                </div>
+                <div className="field">
+                    <div className="pull-left">
+                        <button onClick={this.handleUpdate} className="sq-button green update-image" disabled={!this.state.edited}>Update</button>
+                        {this.renderLoader()}
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.handleDelete} className="sq-button red" >Delete</button>
+                    </div>
+                </div>
+            </div>
         );
     }
 })
 
-var ImageDropzone = React.createClass({displayName: "ImageDropzone",
+var ImageDropzone = React.createClass({
   componentDidMount: function() {
     var options = {};
     for (var opt in Dropzone.prototype.defaultOptions) {
@@ -363,18 +363,18 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
     var children = this.props.children;
     var imageNodes = this.props.images.map(function (image) {
       return (
-        React.createElement(Image, {id: image.id, thumb: image.thumb, url: image.url, progress: image.progress, onClickHandler: this.props.onClickHandler})
+        <Image id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} onClickHandler={this.props.onClickHandler}/>
       );
     }.bind(this));
     return (
-        React.createElement("ul", {id: "image-dropzone", className: "image-results"}, 
-        imageNodes
-        )
+        <ul id="image-dropzone" className="image-results">
+        {imageNodes}
+        </ul>
     );
   }
 });
 
-var Image = React.createClass({displayName: "Image",
+var Image = React.createClass({
     onClick: function(){
         this.props.onClickHandler(this.props.id);
     },
@@ -384,13 +384,13 @@ var Image = React.createClass({displayName: "Image",
         //    styles.opacity = 100 / this.props.progress;
         }
         return (
-            React.createElement("li", {className: 'catalog-image', onClick: this.onClick, style: styles, "data-id": this.props.id, "data-url": this.props.url})
+            <li className={'catalog-image'} onClick={this.onClick} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
         );
     }
 })
 
 var imageManager = React.render(
-    React.createElement(ImageManager, null),
+    <ImageManager />,
     document.getElementById('modals')
 );
 

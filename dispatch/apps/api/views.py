@@ -2,7 +2,8 @@ __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
 from dispatch.apps.content.models import Article, Tag, Image, Attachment, ImageAttachment
 from dispatch.apps.core.models import Person
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
+from rest_framework.response import Response
 from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
 from django.db.models import Q
 
@@ -55,9 +56,40 @@ class ImageViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at')
 
+    def create(self, request, *args, **kwargs):
+        # set author to current user if no authors are passed
+        authors = request.POST.get('authors', False)
+        if not authors:
+            authors = [request.user.id]
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        resource = serializer.save()
+        resource.save_authors(authors) # handle author saving
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+
+        authors = request.data.get('authors', False)
+
+        partial = kwargs.pop('partial', False)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        resource = serializer.save()
+
+        if authors:
+            print "saving authors"
+            print authors
+            resource.save_authors(authors)
+
+        return Response(serializer.data)
+
     def get_queryset(self):
         queryset = Image.objects.all()
         q = self.request.QUERY_PARAMS.get('q', None)
         if q is not None:
-            queryset = queryset.filter(caption__icontains=q)
+            queryset = queryset.filter(title__icontains=q)
         return queryset
