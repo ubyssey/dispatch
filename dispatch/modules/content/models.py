@@ -180,13 +180,19 @@ class Image(Resource):
 
             # Delete original
             path = os.path.join(settings.MEDIA_ROOT, instance.img.name)
-            os.remove(path)
+            try:
+                os.remove(path)
+            except OSError:
+                pass
 
             # Delete other sizes
             for size in sender.SIZES.keys():
                 filename = name + "-%s.jpg" % size
                 path = os.path.join(settings.MEDIA_ROOT, filename)
-                os.remove(path)
+                try:
+                    os.remove(path)
+                except OSError:
+                    pass
 
 class Gallery(Resource):
     #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
