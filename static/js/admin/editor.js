@@ -5,6 +5,9 @@ var ImageStore = {
     dump: function(images){
         this.images = images;
     },
+    append: function(images){
+        this.images = this.images.concat(images);
+    },
     addTemp: function(name, thumb){
         var tempImage = {
             tempName: name,
@@ -49,6 +52,8 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             selected: [],
             initialized: false,
             currentTrigger: false,
+            nextImages: false,
+            loadingMore: false,
             images: ImageStore,
             query: "",
         }
@@ -90,6 +95,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     images: ImageStore,
                     initialized: true,
                     visible: true,
+                    nextImages: data.next,
                 })
             }.bind(this));
         } else {
@@ -139,10 +145,27 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         ImageStore.updateImageWithData(data);
         this.reloadStore();
     },
-    renderImageMeta: function(){
-        if ( this.state.activeImage ){
-            var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
+    onScroll: function(scroll){
+        var scrollable = $(this.refs.scrollable.getDOMNode());
+        var end = scrollable.children().first().innerHeight();
+        var pos = scrollable.scrollTop() + scrollable.height();
+        console.log(end);
+        console.log(pos);
+        if(pos > end - 100 && !this.state.loadingMore){
+            this.loadMore();
+        }
+    },
+    loadMore: function(){
+        if(this.state.nextImages){
+            this.setState({ loadingMore: true });
+            dispatch.getNext(this.state.nextImages, function(data){
+                ImageStore.append(data.results);
+                this.setState({
+                    images: ImageStore,
+                    loadingMore: false,
+                    nextImages: data.next,
+                });
+            }.bind(this));
         }
     },
     searchImages: function(event){
@@ -156,6 +179,12 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                 images: ImageStore,
             });
         }.bind(this));
+    },
+    renderImageMeta: function(){
+        if ( this.state.activeImage ){
+            var image = ImageStore.getImage(this.state.activeImage);
+            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
+        }
     },
     render: function() {
 
@@ -175,13 +204,13 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     React.createElement("div", {id: "image-manager", className: "content"}, 
                         React.createElement("div", {className: "header"}, 
                             React.createElement("nav", null, 
-                                React.createElement("button", {className: "sq-button upload-images"}, "Upload"), 
+                                React.createElement("button", {className: "sq-button upload-images"}, "Upload  ", React.createElement("i", {className: "fa fa-upload"})), 
                                 React.createElement("input", {type: "text", className: "dis-input image-search", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
                             )
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
-                            React.createElement("div", {className: "image-catalog-container"}, 
-                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
+                            React.createElement("div", {className: "image-catalog-container", ref: "scrollable", onScroll: this.onScroll}, 
+                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
                             ), 
                             this.renderImageMeta()
                         ), 
@@ -367,7 +396,7 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
       );
     }.bind(this));
     return (
-        React.createElement("ul", {id: "image-dropzone", className: "image-results"}, 
+        React.createElement("ul", {id: "image-dropzone", ref: "imageContents", className: "image-results"}, 
         imageNodes
         )
     );

@@ -64,6 +64,14 @@
       });
     };
 
+    Dispatch.prototype.getNext = function(nextUrl, callback) {
+      return $.ajax({
+        type: "GET",
+        url: nextUrl,
+        success: callback
+      });
+    };
+
     Dispatch.prototype.post = function(url, values, callback) {
       return $.ajax({
         type: "POST",
