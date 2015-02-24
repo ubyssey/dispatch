@@ -54,13 +54,8 @@ var ImageManager = React.createClass({
         }
     },
     componentDidMount: function() {
-        $('#image-catalog').on('click', 'li.catalog-image', function(e){
-           this.selectImage($(e.target).data('id'));
-        }.bind(this));
-        $('#image-manager').on('click', 'button.insert-image', function(e){
-           e.preventDefault();
-           this.insertImage();
-        }.bind(this));
+
+        var func = this.selectImage;
 
         // Clicking outside container
         $(this.getDOMNode()).mouseup(function (e)
@@ -180,16 +175,22 @@ var ImageManager = React.createClass({
                     <div id="image-manager" className="content">
                         <div className="header">
                             <nav>
-                                <a className="upload-images">Upload</a>
-                                <input type="text" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
+                                <button className="sq-button upload-images">Upload</button>
+                                <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
                             </nav>
                         </div>
                         <div id="image-catalog" className="content-area">
-                            <ImageDropzone url={'http://localhost:8000/api/image/'} paramName={'img'} params={params} addFile={this.addFile} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                            <div className="image-catalog-container">
+                                <ImageDropzone url={'http://localhost:8000/api/image/'} paramName={'img'} params={params} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                            </div>
                             {this.renderImageMeta()}
                         </div>
                         <div className="footer">
-                            <button className="insert-image">Insert</button>
+                            <nav>
+                                <div className="pull-right">
+                                    <button className="sq-button insert-image" onClick={this.insertImage}>Insert</button>
+                                </div>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -207,6 +208,9 @@ var ImageMeta = React.createClass({
             authorName: this.props.authors[0] ? this.props.authors[0].full_name : "",
             author: this.props.authors[0] ? this.props.authors[0] : false,
             title: this.props.title,
+            edited: false,
+            saving: false,
+            saved: false,
         }
     },
     componentDidMount: function(){
@@ -249,11 +253,13 @@ var ImageMeta = React.createClass({
         this.setState({
             authorName: event.target.value,
             author: false,
+            edited: true,
         });
     },
     handleChangeTitle: function(event){
         this.setState({
             title: event.target.value,
+            edited: true,
         });
     },
     handleUpdate: function(event){
@@ -268,20 +274,59 @@ var ImageMeta = React.createClass({
         }
     },
     updateAuthor: function(authorId){
+        this.setState({
+            saving: true,
+        });
         dispatch.update('image', this.props.id, {authors: authorId, title: this.state.title}, function(data){
             this.props.onUpdate(data);
+            this.setState({
+                saving: false,
+                saved: true,
+            });
+            $('.image-meta .fa-check').fadeIn(500, function(){
+                setTimeout(function(){
+                    $('.image-meta .fa-check').fadeOut(500, function(){
+                        this.setState({
+                            saved: false,
+                        });
+                    }.bind(this));
+                }.bind(this), 1000);
+            }.bind(this));
         }.bind(this));
+    },
+    renderLoader: function(){
+        if(this.state.saving){
+            return (
+                <div className="loader"></div>
+            )
+        } else if (this.state.saved){
+            return (
+                <i className="fa fa-check"></i>
+            );
+        }
     },
     render: function(){
         return (
             <div className="image-meta">
                 <img className="image-meta-preview" src={ this.props.url } />
-                <label>Title:</label>
-                <input type="text" onChange={ this.handleChangeTitle } value={ this.state.title }/><br/>
-                <label>Photographer:</label>
-                <input type="text" className="add-author" onChange={ this.handleChangeAuthor } value={ this.state.authorName }/>
-                <div className="author-dropdown"></div>
-                <button onClick={this.handleUpdate} className="update-image">Update</button>
+                <div className="field">
+                    <label>Title:</label>
+                    <input type="text" className="full" onChange={ this.handleChangeTitle } value={ this.state.title }/>
+                </div>
+                <div className="field">
+                    <label>Photographer:</label>
+                    <input type="text" className="dis-input add-author" onChange={ this.handleChangeAuthor } value={ this.state.authorName }/>
+                    <div className="author-dropdown"></div>
+                </div>
+                <div className="field">
+                    <div className="pull-left">
+                        <button onClick={this.handleUpdate} className="sq-button green update-image" disabled={!this.state.edited}>Update</button>
+                        {this.renderLoader()}
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.handleDelete} className="sq-button red" >Delete</button>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -318,9 +363,9 @@ var ImageDropzone = React.createClass({
     var children = this.props.children;
     var imageNodes = this.props.images.map(function (image) {
       return (
-        <Image id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} />
+        <Image id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} onClickHandler={this.props.onClickHandler}/>
       );
-    });
+    }.bind(this));
     return (
         <ul id="image-dropzone" className="image-results">
         {imageNodes}
@@ -330,13 +375,16 @@ var ImageDropzone = React.createClass({
 });
 
 var Image = React.createClass({
+    onClick: function(){
+        this.props.onClickHandler(this.props.id);
+    },
     render: function(){
         var styles = {backgroundImage: "url('" + this.props.thumb + "')"};
         if(this.props.progress){
         //    styles.opacity = 100 / this.props.progress;
         }
         return (
-            <li className={'catalog-image'} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
+            <li className={'catalog-image'} onClick={this.onClick} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
         );
     }
 })
@@ -514,7 +562,6 @@ function Editor() {
     var selected_image;
 
     $(document).on("click", "#remove-image", function(e){
-        console.log(selected_image);
         e.preventDefault();
         $('.image-tools').hide();
         $(selected_image).remove();

@@ -54,13 +54,8 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         }
     },
     componentDidMount: function() {
-        $('#image-catalog').on('click', 'li.catalog-image', function(e){
-           this.selectImage($(e.target).data('id'));
-        }.bind(this));
-        $('#image-manager').on('click', 'button.insert-image', function(e){
-           e.preventDefault();
-           this.insertImage();
-        }.bind(this));
+
+        var func = this.selectImage;
 
         // Clicking outside container
         $(this.getDOMNode()).mouseup(function (e)
@@ -180,16 +175,22 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     React.createElement("div", {id: "image-manager", className: "content"}, 
                         React.createElement("div", {className: "header"}, 
                             React.createElement("nav", null, 
-                                React.createElement("a", {className: "upload-images"}, "Upload"), 
-                                React.createElement("input", {type: "text", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
+                                React.createElement("button", {className: "sq-button upload-images"}, "Upload"), 
+                                React.createElement("input", {type: "text", className: "dis-input image-search", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
                             )
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
-                            React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()}), 
+                            React.createElement("div", {className: "image-catalog-container"}, 
+                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
+                            ), 
                             this.renderImageMeta()
                         ), 
                         React.createElement("div", {className: "footer"}, 
-                            React.createElement("button", {className: "insert-image"}, "Insert")
+                            React.createElement("nav", null, 
+                                React.createElement("div", {className: "pull-right"}, 
+                                    React.createElement("button", {className: "sq-button insert-image", onClick: this.insertImage}, "Insert")
+                                )
+                            )
                         )
                     )
                 )
@@ -207,6 +208,9 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
             authorName: this.props.authors[0] ? this.props.authors[0].full_name : "",
             author: this.props.authors[0] ? this.props.authors[0] : false,
             title: this.props.title,
+            edited: false,
+            saving: false,
+            saved: false,
         }
     },
     componentDidMount: function(){
@@ -249,11 +253,13 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
         this.setState({
             authorName: event.target.value,
             author: false,
+            edited: true,
         });
     },
     handleChangeTitle: function(event){
         this.setState({
             title: event.target.value,
+            edited: true,
         });
     },
     handleUpdate: function(event){
@@ -268,20 +274,59 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
         }
     },
     updateAuthor: function(authorId){
+        this.setState({
+            saving: true,
+        });
         dispatch.update('image', this.props.id, {authors: authorId, title: this.state.title}, function(data){
             this.props.onUpdate(data);
+            this.setState({
+                saving: false,
+                saved: true,
+            });
+            $('.image-meta .fa-check').fadeIn(500, function(){
+                setTimeout(function(){
+                    $('.image-meta .fa-check').fadeOut(500, function(){
+                        this.setState({
+                            saved: false,
+                        });
+                    }.bind(this));
+                }.bind(this), 1000);
+            }.bind(this));
         }.bind(this));
+    },
+    renderLoader: function(){
+        if(this.state.saving){
+            return (
+                React.createElement("div", {className: "loader"})
+            )
+        } else if (this.state.saved){
+            return (
+                React.createElement("i", {className: "fa fa-check"})
+            );
+        }
     },
     render: function(){
         return (
             React.createElement("div", {className: "image-meta"}, 
                 React.createElement("img", {className: "image-meta-preview", src:  this.props.url}), 
-                React.createElement("label", null, "Title:"), 
-                React.createElement("input", {type: "text", onChange:  this.handleChangeTitle, value:  this.state.title}), React.createElement("br", null), 
-                React.createElement("label", null, "Photographer:"), 
-                React.createElement("input", {type: "text", className: "add-author", onChange:  this.handleChangeAuthor, value:  this.state.authorName}), 
-                React.createElement("div", {className: "author-dropdown"}), 
-                React.createElement("button", {onClick: this.handleUpdate, className: "update-image"}, "Update")
+                React.createElement("div", {className: "field"}, 
+                    React.createElement("label", null, "Title:"), 
+                    React.createElement("input", {type: "text", className: "full", onChange:  this.handleChangeTitle, value:  this.state.title})
+                ), 
+                React.createElement("div", {className: "field"}, 
+                    React.createElement("label", null, "Photographer:"), 
+                    React.createElement("input", {type: "text", className: "dis-input add-author", onChange:  this.handleChangeAuthor, value:  this.state.authorName}), 
+                    React.createElement("div", {className: "author-dropdown"})
+                ), 
+                React.createElement("div", {className: "field"}, 
+                    React.createElement("div", {className: "pull-left"}, 
+                        React.createElement("button", {onClick: this.handleUpdate, className: "sq-button green update-image", disabled: !this.state.edited}, "Update"), 
+                        this.renderLoader()
+                    ), 
+                    React.createElement("div", {className: "pull-right"}, 
+                        React.createElement("button", {onClick: this.handleDelete, className: "sq-button red"}, "Delete")
+                    )
+                )
             )
         );
     }
@@ -318,9 +363,9 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
     var children = this.props.children;
     var imageNodes = this.props.images.map(function (image) {
       return (
-        React.createElement(Image, {id: image.id, thumb: image.thumb, url: image.url, progress: image.progress})
+        React.createElement(Image, {id: image.id, thumb: image.thumb, url: image.url, progress: image.progress, onClickHandler: this.props.onClickHandler})
       );
-    });
+    }.bind(this));
     return (
         React.createElement("ul", {id: "image-dropzone", className: "image-results"}, 
         imageNodes
@@ -330,13 +375,16 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
 });
 
 var Image = React.createClass({displayName: "Image",
+    onClick: function(){
+        this.props.onClickHandler(this.props.id);
+    },
     render: function(){
         var styles = {backgroundImage: "url('" + this.props.thumb + "')"};
         if(this.props.progress){
         //    styles.opacity = 100 / this.props.progress;
         }
         return (
-            React.createElement("li", {className: 'catalog-image', style: styles, "data-id": this.props.id, "data-url": this.props.url})
+            React.createElement("li", {className: 'catalog-image', onClick: this.onClick, style: styles, "data-id": this.props.id, "data-url": this.props.url})
         );
     }
 })
@@ -514,7 +562,6 @@ function Editor() {
     var selected_image;
 
     $(document).on("click", "#remove-image", function(e){
-        console.log(selected_image);
         e.preventDefault();
         $('.image-tools').hide();
         $(selected_image).remove();
