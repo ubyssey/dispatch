@@ -135,9 +135,9 @@ class Image(Resource):
     title = CharField(max_length=255, blank=True, null=True)
 
     SIZES = {
-        'large': (1600,900),
+        'large': (1600, 900),
         'medium': (800, 600),
-        'square': (250,250)
+        'square': (250, 250)
     }
 
     THUMBNAIL_SIZE = 'square'
@@ -152,8 +152,6 @@ class Image(Resource):
     #Overriding
     def save(self, *args, **kwargs):
         super(Image, self).save(*args, **kwargs)
-#        if not self.authors.all():
-#            self.authors.
         if self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             name = self.img.name.split('.')[0]
@@ -169,7 +167,6 @@ class Image(Resource):
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
         image.save(output, format='JPEG', quality=75)
-
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):
