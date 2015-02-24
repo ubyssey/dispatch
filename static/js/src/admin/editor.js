@@ -39,6 +39,11 @@ var ImageStore = {
         var i = _.findIndex(this.images, {id: id});
         return this.images[i];
     },
+    removeImage: function(id){
+        _.remove(this.images, function(n) {
+            return n.id == id;
+        });
+    },
     all: function(){
         return this.images;
     }
@@ -96,7 +101,7 @@ var ImageManager = React.createClass({
                     initialized: true,
                     visible: true,
                     nextImages: data.next,
-                })
+                });
             }.bind(this));
         } else {
             this.setState({
@@ -123,6 +128,15 @@ var ImageManager = React.createClass({
             activeImage: id,
             selected: selected,
         });
+    },
+    deleteImage: function(id){
+        dispatch.remove('image', id, function(){
+            ImageStore.removeImage(id);
+            this.setState({
+                activeImage: false,
+                images: ImageStore,
+            });
+        }.bind(this));
     },
     addFile: function(file, dataUrl){
         ImageStore.addTemp(file.name, dataUrl);
@@ -183,7 +197,7 @@ var ImageManager = React.createClass({
     renderImageMeta: function(){
         if ( this.state.activeImage ){
             var image = ImageStore.getImage(this.state.activeImage);
-            return ( <ImageMeta id={image.id} url={image.url} authors={image.authors} title={image.title} onUpdate={this.updateImage} /> );
+            return ( <ImageMeta id={image.id} url={image.url} authors={image.authors} filename={image.filename} title={image.title} onDelete={this.deleteImage} onUpdate={this.updateImage} /> );
         }
     },
     render: function() {
@@ -302,6 +316,9 @@ var ImageMeta = React.createClass({
             }.bind(this));
         }
     },
+    handleDelete: function(){
+        this.props.onDelete(this.props.id);
+    },
     updateAuthor: function(authorId){
         this.setState({
             saving: true,
@@ -338,6 +355,7 @@ var ImageMeta = React.createClass({
         return (
             <div className="image-meta">
                 <img className="image-meta-preview" src={ this.props.url } />
+                <h3>{this.props.filename}</h3>
                 <div className="field">
                     <label>Title:</label>
                     <input type="text" className="full" onChange={ this.handleChangeTitle } value={ this.state.title }/>

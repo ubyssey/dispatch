@@ -14,10 +14,11 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
+    filename = serializers.CharField(read_only=True)
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'title', 'authors', 'url', 'thumb', 'created_at',)
+        fields = ('id', 'img', 'filename', 'title', 'authors', 'url', 'thumb', 'created_at',)
 
 class CommentSerializer(serializers.Serializer):
     email = serializers.EmailField()

@@ -39,6 +39,11 @@ var ImageStore = {
         var i = _.findIndex(this.images, {id: id});
         return this.images[i];
     },
+    removeImage: function(id){
+        _.remove(this.images, function(n) {
+            return n.id == id;
+        });
+    },
     all: function(){
         return this.images;
     }
@@ -96,7 +101,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     initialized: true,
                     visible: true,
                     nextImages: data.next,
-                })
+                });
             }.bind(this));
         } else {
             this.setState({
@@ -123,6 +128,15 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             activeImage: id,
             selected: selected,
         });
+    },
+    deleteImage: function(id){
+        dispatch.remove('image', id, function(){
+            ImageStore.removeImage(id);
+            this.setState({
+                activeImage: false,
+                images: ImageStore,
+            });
+        }.bind(this));
     },
     addFile: function(file, dataUrl){
         ImageStore.addTemp(file.name, dataUrl);
@@ -183,7 +197,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
     renderImageMeta: function(){
         if ( this.state.activeImage ){
             var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
+            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, filename: image.filename, title: image.title, onDelete: this.deleteImage, onUpdate: this.updateImage}) );
         }
     },
     render: function() {
@@ -302,6 +316,9 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
             }.bind(this));
         }
     },
+    handleDelete: function(){
+        this.props.onDelete(this.props.id);
+    },
     updateAuthor: function(authorId){
         this.setState({
             saving: true,
@@ -338,6 +355,7 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
         return (
             React.createElement("div", {className: "image-meta"}, 
                 React.createElement("img", {className: "image-meta-preview", src:  this.props.url}), 
+                React.createElement("h3", null, this.props.filename), 
                 React.createElement("div", {className: "field"}, 
                     React.createElement("label", null, "Title:"), 
                     React.createElement("input", {type: "text", className: "full", onChange:  this.handleChangeTitle, value:  this.state.title})

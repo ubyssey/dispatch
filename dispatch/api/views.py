@@ -91,5 +91,5 @@ class ImageViewSet(viewsets.ModelViewSet):
         queryset = Image.objects.all()
         q = self.request.QUERY_PARAMS.get('q', None)
         if q is not None:
-            queryset = queryset.filter(title__icontains=q)
+            queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset

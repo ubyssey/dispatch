@@ -731,34 +731,38 @@ ul.tagList li {
   padding: 15px;
 }
 /* line 276, sass/modules/admin/_article.scss */
+.image-manager .image-meta h3 {
+  font-size: 12px;
+}
+/* line 279, sass/modules/admin/_article.scss */
 .image-manager .image-meta img {
   max-width: 100%;
   width: auto;
   max-height: 150px;
 }
 
-/* line 286, sass/modules/admin/_article.scss */
+/* line 289, sass/modules/admin/_article.scss */
 #editor {
   min-height: 200px;
   padding: 0;
 }
 
-/* line 291, sass/modules/admin/_article.scss */
+/* line 294, sass/modules/admin/_article.scss */
 #full-toolbar {
   padding: 0;
   margin-left: 60px;
 }
 
-/* line 296, sass/modules/admin/_article.scss */
+/* line 299, sass/modules/admin/_article.scss */
 .ql-editor {
   margin-left: 60px;
 }
-/* line 298, sass/modules/admin/_article.scss */
+/* line 301, sass/modules/admin/_article.scss */
 .ql-editor img {
   width: 100%;
 }
 
-/* line 303, sass/modules/admin/_article.scss */
+/* line 306, sass/modules/admin/_article.scss */
 #editor p {
   font-family: Georgia;
   font-size: 16px;
@@ -768,17 +772,17 @@ ul.tagList li {
   margin-bottom: 20px;
 }
 
-/* line 312, sass/modules/admin/_article.scss */
+/* line 315, sass/modules/admin/_article.scss */
 #editor p.no-bottom-margin {
   margin-bottom: 0;
 }
 
-/* line 316, sass/modules/admin/_article.scss */
+/* line 319, sass/modules/admin/_article.scss */
 .drop-area {
   height: 20px;
 }
 
-/* line 320, sass/modules/admin/_article.scss */
+/* line 323, sass/modules/admin/_article.scss */
 .drop-area.hover {
   border: 1px solid grey;
   border-radius: 20px;
@@ -786,23 +790,23 @@ ul.tagList li {
   margin: 8px 0;
 }
 
-/* line 327, sass/modules/admin/_article.scss */
+/* line 330, sass/modules/admin/_article.scss */
 span.format-shortcode {
   color: red;
 }
 
-/* line 330, sass/modules/admin/_article.scss */
+/* line 333, sass/modules/admin/_article.scss */
 img.drag-image {
   width: 150px;
   height: auto;
 }
 
-/* line 335, sass/modules/admin/_article.scss */
+/* line 338, sass/modules/admin/_article.scss */
 #editor img.drag-image {
   width: 50%;
 }
 
-/* line 339, sass/modules/admin/_article.scss */
+/* line 342, sass/modules/admin/_article.scss */
 button.dark-button {
   border: 1px solid #fff;
   background: none;
@@ -814,42 +818,42 @@ button.dark-button {
   vertical-align: middle;
   margin: 0 5px;
 }
-/* line 349, sass/modules/admin/_article.scss */
+/* line 352, sass/modules/admin/_article.scss */
 button.dark-button:hover {
   background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   color: white;
 }
-/* line 354, sass/modules/admin/_article.scss */
+/* line 357, sass/modules/admin/_article.scss */
 button.dark-button:active {
   outline: none;
 }
 
-/* line 359, sass/modules/admin/_article.scss */
+/* line 362, sass/modules/admin/_article.scss */
 .image-tools {
   display: none;
   position: absolute;
   left: 60px;
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 364, sass/modules/admin/_article.scss */
+/* line 367, sass/modules/admin/_article.scss */
 .image-tools:hover {
   cursor: pointer;
 }
-/* line 367, sass/modules/admin/_article.scss */
+/* line 370, sass/modules/admin/_article.scss */
 .image-tools > .inner {
   display: table;
   height: 100%;
   width: 100%;
   text-align: center;
 }
-/* line 372, sass/modules/admin/_article.scss */
+/* line 375, sass/modules/admin/_article.scss */
 .image-tools > .inner .tools {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 379, sass/modules/admin/_article.scss */
+/* line 382, sass/modules/admin/_article.scss */
 .inline-toolbar {
   position: absolute;
   z-index: 500;
@@ -858,20 +862,20 @@ button.dark-button:active {
   line-height: 22px;
 }
 
-/* line 387, sass/modules/admin/_article.scss */
+/* line 390, sass/modules/admin/_article.scss */
 .inline-toolbar .side-button {
   width: 45px;
   float: left;
 }
 
-/* line 392, sass/modules/admin/_article.scss */
+/* line 395, sass/modules/admin/_article.scss */
 .inline-toolbar .toolbar {
   float: left;
   display: none;
   margin-left: 15px;
 }
 
-/* line 398, sass/modules/admin/_article.scss */
+/* line 401, sass/modules/admin/_article.scss */
 .tb-toolbar {
   float: right;
   background: none;
@@ -882,54 +886,54 @@ button.dark-button:active {
   padding: 0;
   height: 28px;
 }
-/* line 407, sass/modules/admin/_article.scss */
+/* line 410, sass/modules/admin/_article.scss */
 .tb-toolbar span {
   line-height: 100%;
   font-size: 18px;
   font-weight: 100;
   font-family: LFT Etica;
 }
-/* line 413, sass/modules/admin/_article.scss */
+/* line 416, sass/modules/admin/_article.scss */
 .tb-toolbar:hover {
   border-color: grey;
   color: grey;
   cursor: pointer;
 }
-/* line 418, sass/modules/admin/_article.scss */
+/* line 421, sass/modules/admin/_article.scss */
 .tb-toolbar:focus {
   outline: none;
 }
 
-/* line 423, sass/modules/admin/_article.scss */
+/* line 426, sass/modules/admin/_article.scss */
 .ql-format-button {
   color: #fff;
   width: 32px;
   margin-right: 15px;
 }
-/* line 427, sass/modules/admin/_article.scss */
+/* line 430, sass/modules/admin/_article.scss */
 .ql-format-button:hover, .ql-format-button.ql-active {
   color: rgba(0, 0, 0, 0.5);
 }
 
-/* line 432, sass/modules/admin/_article.scss */
+/* line 435, sass/modules/admin/_article.scss */
 .field {
   margin: 15px 0;
 }
-/* line 434, sass/modules/admin/_article.scss */
+/* line 437, sass/modules/admin/_article.scss */
 .field input, .field select {
   border: 1px solid #b9b9b9;
   border-radius: 2px;
   padding: 9px 8px;
   font-size: 12px;
 }
-/* line 440, sass/modules/admin/_article.scss */
+/* line 443, sass/modules/admin/_article.scss */
 .field select {
   background: transparent;
   font-size: 12px;
   height: 33px;
 }
 
-/* line 447, sass/modules/admin/_article.scss */
+/* line 450, sass/modules/admin/_article.scss */
 input.dis-input, select.dis-input {
   border: 1px solid #b9b9b9;
   border-radius: 2px;
@@ -938,38 +942,38 @@ input.dis-input, select.dis-input {
   margin-right: 4px;
 }
 
-/* line 455, sass/modules/admin/_article.scss */
+/* line 458, sass/modules/admin/_article.scss */
 #id_section {
   width: 100%;
   max-width: 250px;
 }
 
-/* line 460, sass/modules/admin/_article.scss */
+/* line 463, sass/modules/admin/_article.scss */
 #id_slug, #id_short_headline {
   width: 100%;
   max-width: 350px;
 }
 
-/* line 465, sass/modules/admin/_article.scss */
+/* line 468, sass/modules/admin/_article.scss */
 img.featured-image {
   width: 100%;
   max-width: 300px;
 }
 
-/* line 470, sass/modules/admin/_article.scss */
+/* line 473, sass/modules/admin/_article.scss */
 div.tab {
   display: none;
 }
-/* line 472, sass/modules/admin/_article.scss */
+/* line 475, sass/modules/admin/_article.scss */
 div.tab.active {
   display: block;
 }
 
-/* line 477, sass/modules/admin/_article.scss */
+/* line 480, sass/modules/admin/_article.scss */
 div.save-buttons {
   padding: 0 40px;
 }
-/* line 479, sass/modules/admin/_article.scss */
+/* line 482, sass/modules/admin/_article.scss */
 div.save-buttons button, div.save-buttons a {
   border: 1px solid #FFFFFF;
   background: none;
@@ -982,12 +986,12 @@ div.save-buttons button, div.save-buttons a {
   vertical-align: middle;
   margin-right: 6px;
 }
-/* line 491, sass/modules/admin/_article.scss */
+/* line 494, sass/modules/admin/_article.scss */
 div.save-buttons button:hover, div.save-buttons a:hover {
   cursor: pointer;
   opacity: 0.75;
 }
-/* line 496, sass/modules/admin/_article.scss */
+/* line 499, sass/modules/admin/_article.scss */
 div.save-buttons a {
   line-height: 32px;
   display: inline-block;
@@ -996,7 +1000,7 @@ div.save-buttons a {
   text-decoration: none;
 }
 
-/* line 505, sass/modules/admin/_article.scss */
+/* line 508, sass/modules/admin/_article.scss */
 input.full {
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -1006,12 +1010,12 @@ input.full {
   box-sizing: border-box;
 }
 
-/* line 512, sass/modules/admin/_article.scss */
+/* line 515, sass/modules/admin/_article.scss */
 input.image-search {
   width: 250px;
 }
 
-/* line 517, sass/modules/admin/_article.scss */
+/* line 520, sass/modules/admin/_article.scss */
 .image-meta .fa-check {
   display: none;
   width: 25px;
