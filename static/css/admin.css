@@ -210,16 +210,20 @@ div.main form, div.main form > .row {
   position: absolute;
   width: 100%;
   z-index: 550;
-  padding: 0 15px;
+  border-bottom: 1px solid #d5d5d5;
   -moz-box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
 }
-/* line 166, sass/modules/admin/_base.scss */
+/* line 165, sass/modules/admin/_base.scss */
+.modal .header nav {
+  padding: 0 15px;
+}
+/* line 167, sass/modules/admin/_base.scss */
 .modal .header nav button {
   margin-right: 15px;
 }
-/* line 169, sass/modules/admin/_base.scss */
+/* line 170, sass/modules/admin/_base.scss */
 .modal .header nav a {
   padding: 0 15px;
   font-family: "Lucida Grande";
@@ -228,53 +232,54 @@ div.main form, div.main form > .row {
   line-height: 17px;
   text-decoration: none;
 }
-/* line 174, sass/modules/admin/_base.scss */
+/* line 175, sass/modules/admin/_base.scss */
 .modal .header nav a:visited {
   color: #A2A2A2;
 }
-/* line 177, sass/modules/admin/_base.scss */
+/* line 178, sass/modules/admin/_base.scss */
 .modal .header nav a:hover {
   color: #272727;
 }
-/* line 185, sass/modules/admin/_base.scss */
+/* line 186, sass/modules/admin/_base.scss */
 .modal .footer {
   height: 70px;
   line-height: 70px;
   position: absolute;
   width: 100%;
   bottom: 0;
+  border-top: 1px solid #d5d5d5;
   -moz-box-shadow: rgba(0, 0, 0, 0.05) 0px -1px 1px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.05) 0px -1px 1px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px -1px 1px;
 }
-/* line 186, sass/modules/admin/_base.scss */
+/* line 187, sass/modules/admin/_base.scss */
 .modal .footer nav {
   padding: 0 15px;
 }
-/* line 197, sass/modules/admin/_base.scss */
+/* line 199, sass/modules/admin/_base.scss */
 .modal input {
   border: 1px solid black;
 }
 
-/* line 202, sass/modules/admin/_base.scss */
+/* line 204, sass/modules/admin/_base.scss */
 div.article-list {
   display: table;
   width: 100%;
 }
-/* line 205, sass/modules/admin/_base.scss */
+/* line 207, sass/modules/admin/_base.scss */
 div.article-list div.article {
   display: table-row;
 }
-/* line 207, sass/modules/admin/_base.scss */
+/* line 209, sass/modules/admin/_base.scss */
 div.article-list div.article:nth-child(even) {
   background: #f0f0f0;
 }
-/* line 210, sass/modules/admin/_base.scss */
+/* line 212, sass/modules/admin/_base.scss */
 div.article-list div.article div.cell {
   display: table-cell;
   border-bottom: 1px solid #d2d2d2;
 }
-/* line 213, sass/modules/admin/_base.scss */
+/* line 215, sass/modules/admin/_base.scss */
 div.article-list div.article div.cell a, div.article-list div.article div.cell span {
   padding: 20px 60px;
   font-family: "LFT Etica";
@@ -284,33 +289,33 @@ div.article-list div.article div.cell a, div.article-list div.article div.cell s
   color: #646464;
   font-weight: 300;
 }
-/* line 222, sass/modules/admin/_base.scss */
+/* line 224, sass/modules/admin/_base.scss */
 div.article-list div.article div.cell.title a {
   font-weight: 600;
   color: black;
 }
 
-/* line 232, sass/modules/admin/_base.scss */
+/* line 234, sass/modules/admin/_base.scss */
 .dropzone {
   height: 100%;
 }
 
-/* line 236, sass/modules/admin/_base.scss */
+/* line 238, sass/modules/admin/_base.scss */
 .dz-preview {
   display: inline-block;
 }
 
-/* line 244, sass/modules/admin/_base.scss */
+/* line 246, sass/modules/admin/_base.scss */
 input:focus, textarea:focus {
   outline: none;
 }
 
-/* line 249, sass/modules/admin/_base.scss */
+/* line 251, sass/modules/admin/_base.scss */
 input {
   font-family: LFT Etica;
 }
 
-/* line 253, sass/modules/admin/_base.scss */
+/* line 255, sass/modules/admin/_base.scss */
 button.sq-button {
   border-radius: 2px;
   font-family: LFT Etica;
@@ -327,38 +332,38 @@ button.sq-button {
   border-color: #4A90E2;
   background: #4A90E2;
 }
-/* line 270, sass/modules/admin/_base.scss */
+/* line 272, sass/modules/admin/_base.scss */
 button.sq-button.green {
   background: #4FD74B;
   border-color: #4FD74B;
 }
-/* line 274, sass/modules/admin/_base.scss */
+/* line 276, sass/modules/admin/_base.scss */
 button.sq-button.red {
   background: #E24A4A;
   border-color: #E24A4A;
 }
-/* line 278, sass/modules/admin/_base.scss */
+/* line 280, sass/modules/admin/_base.scss */
 button.sq-button:hover {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   background: #437FC5;
   border-color: #437FC5;
 }
-/* line 285, sass/modules/admin/_base.scss */
+/* line 287, sass/modules/admin/_base.scss */
 button.sq-button:hover.green {
   background: #48BB45;
   border-color: #48BB45;
 }
-/* line 290, sass/modules/admin/_base.scss */
+/* line 292, sass/modules/admin/_base.scss */
 button.sq-button:hover.red {
   background: #BD4141;
   border-color: #BD4141;
 }
-/* line 295, sass/modules/admin/_base.scss */
+/* line 297, sass/modules/admin/_base.scss */
 button.sq-button:active, button.sq-button:focus {
   outline: none;
 }
-/* line 299, sass/modules/admin/_base.scss */
+/* line 301, sass/modules/admin/_base.scss */
 button.sq-button:disabled, button.sq-button:disabled:hover {
   cursor: default;
   background: gray;
@@ -366,7 +371,7 @@ button.sq-button:disabled, button.sq-button:disabled:hover {
   opacity: 0.5;
 }
 
-/* line 309, sass/modules/admin/_base.scss */
+/* line 311, sass/modules/admin/_base.scss */
 .loader {
   display: inline-block;
   font-size: 10px;
@@ -380,7 +385,7 @@ button.sq-button:disabled, button.sq-button:disabled:hover {
   animation: load8 1.1s infinite linear;
 }
 
-/* line 321, sass/modules/admin/_base.scss */
+/* line 323, sass/modules/admin/_base.scss */
 .loader,
 .loader:after {
   border-radius: 50%;
@@ -690,6 +695,14 @@ ul.tagList li {
   list-style-type: none;
 }
 /* line 246, sass/modules/admin/_article.scss */
+.image-manager .image-results.dz-drag-hover {
+  background: #f0f0f0;
+}
+/* line 248, sass/modules/admin/_article.scss */
+.image-manager .image-results.dz-drag-hover li {
+  opacity: 0.2;
+}
+/* line 252, sass/modules/admin/_article.scss */
 .image-manager .image-results li {
   display: inline-block;
   width: 120px;
@@ -699,16 +712,16 @@ ul.tagList li {
   background-position: center;
   background-repeat: no-repeat;
 }
-/* line 254, sass/modules/admin/_article.scss */
+/* line 260, sass/modules/admin/_article.scss */
 .image-manager .image-results li:hover {
   cursor: pointer;
   opacity: 0.8;
 }
-/* line 258, sass/modules/admin/_article.scss */
+/* line 264, sass/modules/admin/_article.scss */
 .image-manager .image-results li.selected {
   box-shadow: 0 0 0 1px #fff, 0 0 0 4px #e14d43;
 }
-/* line 263, sass/modules/admin/_article.scss */
+/* line 269, sass/modules/admin/_article.scss */
 .image-manager .image-meta {
   position: absolute;
   width: 330px;
@@ -717,33 +730,35 @@ ul.tagList li {
   bottom: 0;
   padding: 15px;
 }
-/* line 270, sass/modules/admin/_article.scss */
+/* line 276, sass/modules/admin/_article.scss */
 .image-manager .image-meta img {
-  width: 100%;
+  max-width: 100%;
+  width: auto;
+  max-height: 150px;
 }
 
-/* line 278, sass/modules/admin/_article.scss */
+/* line 286, sass/modules/admin/_article.scss */
 #editor {
   min-height: 200px;
   padding: 0;
 }
 
-/* line 283, sass/modules/admin/_article.scss */
+/* line 291, sass/modules/admin/_article.scss */
 #full-toolbar {
   padding: 0;
   margin-left: 60px;
 }
 
-/* line 288, sass/modules/admin/_article.scss */
+/* line 296, sass/modules/admin/_article.scss */
 .ql-editor {
   margin-left: 60px;
 }
-/* line 290, sass/modules/admin/_article.scss */
+/* line 298, sass/modules/admin/_article.scss */
 .ql-editor img {
   width: 100%;
 }
 
-/* line 295, sass/modules/admin/_article.scss */
+/* line 303, sass/modules/admin/_article.scss */
 #editor p {
   font-family: Georgia;
   font-size: 16px;
@@ -753,17 +768,17 @@ ul.tagList li {
   margin-bottom: 20px;
 }
 
-/* line 304, sass/modules/admin/_article.scss */
+/* line 312, sass/modules/admin/_article.scss */
 #editor p.no-bottom-margin {
   margin-bottom: 0;
 }
 
-/* line 308, sass/modules/admin/_article.scss */
+/* line 316, sass/modules/admin/_article.scss */
 .drop-area {
   height: 20px;
 }
 
-/* line 312, sass/modules/admin/_article.scss */
+/* line 320, sass/modules/admin/_article.scss */
 .drop-area.hover {
   border: 1px solid grey;
   border-radius: 20px;
@@ -771,23 +786,23 @@ ul.tagList li {
   margin: 8px 0;
 }
 
-/* line 319, sass/modules/admin/_article.scss */
+/* line 327, sass/modules/admin/_article.scss */
 span.format-shortcode {
   color: red;
 }
 
-/* line 322, sass/modules/admin/_article.scss */
+/* line 330, sass/modules/admin/_article.scss */
 img.drag-image {
   width: 150px;
   height: auto;
 }
 
-/* line 327, sass/modules/admin/_article.scss */
+/* line 335, sass/modules/admin/_article.scss */
 #editor img.drag-image {
   width: 50%;
 }
 
-/* line 331, sass/modules/admin/_article.scss */
+/* line 339, sass/modules/admin/_article.scss */
 button.dark-button {
   border: 1px solid #fff;
   background: none;
@@ -799,42 +814,42 @@ button.dark-button {
   vertical-align: middle;
   margin: 0 5px;
 }
-/* line 341, sass/modules/admin/_article.scss */
+/* line 349, sass/modules/admin/_article.scss */
 button.dark-button:hover {
   background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   color: white;
 }
-/* line 346, sass/modules/admin/_article.scss */
+/* line 354, sass/modules/admin/_article.scss */
 button.dark-button:active {
   outline: none;
 }
 
-/* line 351, sass/modules/admin/_article.scss */
+/* line 359, sass/modules/admin/_article.scss */
 .image-tools {
   display: none;
   position: absolute;
   left: 60px;
   background: rgba(0, 0, 0, 0.5);
 }
-/* line 356, sass/modules/admin/_article.scss */
+/* line 364, sass/modules/admin/_article.scss */
 .image-tools:hover {
   cursor: pointer;
 }
-/* line 359, sass/modules/admin/_article.scss */
+/* line 367, sass/modules/admin/_article.scss */
 .image-tools > .inner {
   display: table;
   height: 100%;
   width: 100%;
   text-align: center;
 }
-/* line 364, sass/modules/admin/_article.scss */
+/* line 372, sass/modules/admin/_article.scss */
 .image-tools > .inner .tools {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 371, sass/modules/admin/_article.scss */
+/* line 379, sass/modules/admin/_article.scss */
 .inline-toolbar {
   position: absolute;
   z-index: 500;
@@ -843,20 +858,20 @@ button.dark-button:active {
   line-height: 22px;
 }
 
-/* line 379, sass/modules/admin/_article.scss */
+/* line 387, sass/modules/admin/_article.scss */
 .inline-toolbar .side-button {
   width: 45px;
   float: left;
 }
 
-/* line 384, sass/modules/admin/_article.scss */
+/* line 392, sass/modules/admin/_article.scss */
 .inline-toolbar .toolbar {
   float: left;
   display: none;
   margin-left: 15px;
 }
 
-/* line 390, sass/modules/admin/_article.scss */
+/* line 398, sass/modules/admin/_article.scss */
 .tb-toolbar {
   float: right;
   background: none;
@@ -867,54 +882,54 @@ button.dark-button:active {
   padding: 0;
   height: 28px;
 }
-/* line 399, sass/modules/admin/_article.scss */
+/* line 407, sass/modules/admin/_article.scss */
 .tb-toolbar span {
   line-height: 100%;
   font-size: 18px;
   font-weight: 100;
   font-family: LFT Etica;
 }
-/* line 405, sass/modules/admin/_article.scss */
+/* line 413, sass/modules/admin/_article.scss */
 .tb-toolbar:hover {
   border-color: grey;
   color: grey;
   cursor: pointer;
 }
-/* line 410, sass/modules/admin/_article.scss */
+/* line 418, sass/modules/admin/_article.scss */
 .tb-toolbar:focus {
   outline: none;
 }
 
-/* line 415, sass/modules/admin/_article.scss */
+/* line 423, sass/modules/admin/_article.scss */
 .ql-format-button {
   color: #fff;
   width: 32px;
   margin-right: 15px;
 }
-/* line 419, sass/modules/admin/_article.scss */
+/* line 427, sass/modules/admin/_article.scss */
 .ql-format-button:hover, .ql-format-button.ql-active {
   color: rgba(0, 0, 0, 0.5);
 }
 
-/* line 424, sass/modules/admin/_article.scss */
+/* line 432, sass/modules/admin/_article.scss */
 .field {
   margin: 15px 0;
 }
-/* line 426, sass/modules/admin/_article.scss */
+/* line 434, sass/modules/admin/_article.scss */
 .field input, .field select {
   border: 1px solid #b9b9b9;
   border-radius: 2px;
   padding: 9px 8px;
   font-size: 12px;
 }
-/* line 432, sass/modules/admin/_article.scss */
+/* line 440, sass/modules/admin/_article.scss */
 .field select {
   background: transparent;
   font-size: 12px;
   height: 33px;
 }
 
-/* line 439, sass/modules/admin/_article.scss */
+/* line 447, sass/modules/admin/_article.scss */
 input.dis-input, select.dis-input {
   border: 1px solid #b9b9b9;
   border-radius: 2px;
@@ -923,38 +938,38 @@ input.dis-input, select.dis-input {
   margin-right: 4px;
 }
 
-/* line 447, sass/modules/admin/_article.scss */
+/* line 455, sass/modules/admin/_article.scss */
 #id_section {
   width: 100%;
   max-width: 250px;
 }
 
-/* line 452, sass/modules/admin/_article.scss */
+/* line 460, sass/modules/admin/_article.scss */
 #id_slug, #id_short_headline {
   width: 100%;
   max-width: 350px;
 }
 
-/* line 457, sass/modules/admin/_article.scss */
+/* line 465, sass/modules/admin/_article.scss */
 img.featured-image {
   width: 100%;
   max-width: 300px;
 }
 
-/* line 462, sass/modules/admin/_article.scss */
+/* line 470, sass/modules/admin/_article.scss */
 div.tab {
   display: none;
 }
-/* line 464, sass/modules/admin/_article.scss */
+/* line 472, sass/modules/admin/_article.scss */
 div.tab.active {
   display: block;
 }
 
-/* line 469, sass/modules/admin/_article.scss */
+/* line 477, sass/modules/admin/_article.scss */
 div.save-buttons {
   padding: 0 40px;
 }
-/* line 471, sass/modules/admin/_article.scss */
+/* line 479, sass/modules/admin/_article.scss */
 div.save-buttons button, div.save-buttons a {
   border: 1px solid #FFFFFF;
   background: none;
@@ -967,12 +982,12 @@ div.save-buttons button, div.save-buttons a {
   vertical-align: middle;
   margin-right: 6px;
 }
-/* line 483, sass/modules/admin/_article.scss */
+/* line 491, sass/modules/admin/_article.scss */
 div.save-buttons button:hover, div.save-buttons a:hover {
   cursor: pointer;
   opacity: 0.75;
 }
-/* line 488, sass/modules/admin/_article.scss */
+/* line 496, sass/modules/admin/_article.scss */
 div.save-buttons a {
   line-height: 32px;
   display: inline-block;
@@ -981,7 +996,7 @@ div.save-buttons a {
   text-decoration: none;
 }
 
-/* line 497, sass/modules/admin/_article.scss */
+/* line 505, sass/modules/admin/_article.scss */
 input.full {
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -991,12 +1006,12 @@ input.full {
   box-sizing: border-box;
 }
 
-/* line 504, sass/modules/admin/_article.scss */
+/* line 512, sass/modules/admin/_article.scss */
 input.image-search {
   width: 250px;
 }
 
-/* line 509, sass/modules/admin/_article.scss */
+/* line 517, sass/modules/admin/_article.scss */
 .image-meta .fa-check {
   display: none;
   width: 25px;

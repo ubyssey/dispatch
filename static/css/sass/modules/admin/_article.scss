@@ -243,6 +243,12 @@ ul.tagList {
     padding: 7px;
     margin: 0;
     list-style-type: none;
+    &.dz-drag-hover {
+      background: rgb(240, 240, 240);
+      li {
+        opacity: 0.2;
+      }
+    }
     li {
       display: inline-block;
       width: 120px;
@@ -268,7 +274,9 @@ ul.tagList {
     bottom: 0;
     padding: 15px;
     img {
-      width: 100%;
+      max-width: 100%;
+      width: auto;
+      max-height: 150px;
     }
   }
 }

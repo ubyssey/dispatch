@@ -47,6 +47,13 @@ class Dispatch
           success: callback,
         })
 
+  getNext: (nextUrl, callback) ->
+    $.ajax({
+      type: "GET",
+      url: nextUrl,
+      success: callback,
+    })
+
   post: (url, values, callback) ->
     $.ajax({
       type: "POST",

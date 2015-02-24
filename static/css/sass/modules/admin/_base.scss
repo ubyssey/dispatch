@@ -160,9 +160,10 @@ div.main {
     position: absolute;
     width: 100%;
     z-index: 550;
-    padding: 0 15px;
+    border-bottom: 1px solid rgb(213, 213, 213);
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px 1px 1px);
     nav {
+      padding: 0 15px;
       button {
         margin-right: 15px;
       }
@@ -191,6 +192,7 @@ div.main {
     position: absolute;
     width: 100%;
     bottom: 0;
+    border-top: 1px solid rgb(213, 213, 213);
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px -1px 1px);
   }
 
