@@ -37,6 +37,7 @@ def article_add(request):
             article.save_related(request)
         else:
             print featured_image_formset.errors
+
         if featured_image_formset.is_valid():
             featured_image = featured_image_formset.save()
             featured_image.resource = article
@@ -45,7 +46,9 @@ def article_add(request):
             featured_image.save()
         else:
             print form.errors
-        return redirect(article_edit, article.id)
+
+        if form.is_valid():
+            return redirect(article_edit, article.id)
     else:
         form = ArticleForm()
         featured_image_formset = FeaturedImageForm()
