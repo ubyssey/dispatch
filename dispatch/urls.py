@@ -10,7 +10,7 @@ router.register(r'users', views.UserViewSet)
 router.register(r'person', views.PersonViewSet)
 router.register(r'articles', views.ArticleViewSet)
 router.register(r'tag', views.TagViewSet)
-router.register(r'image', views.ImageViewSet)
+router.register(r'image/?', views.ImageViewSet)
 router.register(r'attachment', views.AttachmentViewSet)
 router.register(r'article/attachments', views.AttachmentImageViewSet)
 
@@ -21,3 +21,4 @@ urlpatterns = patterns('',
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include(ThemeHelper.get_theme_urls())),
 )
+

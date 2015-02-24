@@ -1,20 +1,24 @@
-var Timer = React.createClass({
-    getInitialState: function() {
-        return {secondsElapsed: 0};
-    },
-    tick: function() {
-        this.setState({secondsElapsed: this.state.secondsElapsed + 1});
-    },
-    componentDidMount: function() {
-        this.interval = setInterval(this.tick, 1000);
-    },
-    componentWillUnmount: function() {
-        clearInterval(this.interval);
-    },
-    render: function() {
-        return (
-          <div>Seconds Elapsed: {this.state.secondsElapsed}</div>
-        );
+var articleHeader = false;
+var dispatch = new Dispatch();
+
+$(function(){
+    if($(document).scrollTop() > 50){
+        articleHeader = true;
+        $('.header-site').hide();
+        $('.header-article').show();
+    }
+});
+
+$(document).scroll(function() {
+    var top = $(document).scrollTop();
+    if (top > 50 && !articleHeader){
+        articleHeader = true;
+        $('.header-site').hide();
+        $('.header-article').fadeIn();
+    } else if (top < 50 && articleHeader){
+        articleHeader = false;
+        $('.header-article').hide();
+        $('.header-site').show();
     }
 });
 
@@ -38,7 +42,7 @@ var Gallery = React.createClass({
             });
 
             this.setState({
-                'images': images,
+                images: images,
                 images_list: data.results,
                 image_height: $(window).height() - 200,
             });
@@ -49,10 +53,23 @@ var Gallery = React.createClass({
         }.bind(this));
     },
     setupEventListeners: function(){
+
+        // Keyboard controls
         key('left', this.previous);
         key('right', this.next);
         key('esc', this.close);
 
+        // Arrow buttons
+        $(document).on('click', '.prev-slide', function(e){
+            e.preventDefault();
+            this.previous();
+        }.bind(this));
+        $(document).on('click', '.next-slide', function(e){
+            e.preventDefault();
+            this.next();
+        }.bind(this));
+
+        // Clicking outside container
         $(this.getDOMNode()).mouseup(function (e)
         {
             var container = $(this.getDOMNode()).find(".image-container");
@@ -62,6 +79,7 @@ var Gallery = React.createClass({
                 $('body').removeClass('no-scroll');
             }
         }.bind(this));
+
     },
     setCurrentImage: function(image_id){
         this.setState({
@@ -117,11 +135,18 @@ var Gallery = React.createClass({
                 <div className="slide">
                     <img className="slide-image" style={imageStyle} src={'http://dispatch.dev:8888/media/' + this.state.image } />
                     <p className="slide-caption">{this.state.caption}</p>
-                    <div className="navigation">
-                        <a className="prev-slide" href="#"><i className="fa fa-chevron-left"></i></a>
-                        <span className="curr-slide"></span> &nbsp; of &nbsp; <span className="total-slide"></span>
-                        <a className="next-slide" href="#"><i className="fa fa-chevron-right"></i></a>
-                    </div>
+                    {this.renderControls()}
+                </div>
+            );
+        }
+    },
+    renderControls: function(){
+        if(this.state.images_list.length > 1){
+            return (
+                <div className="navigation">
+                    <a className="prev-slide" href="#"><i className="fa fa-chevron-left"></i></a>
+                    <span className="curr-slide">{this.state.currentIndex + 1}</span> &nbsp; of &nbsp; <span className="total-slide">{this.state.images_list.length}</span>
+                    <a className="next-slide" href="#"><i className="fa fa-chevron-right"></i></a>
                 </div>
             );
         }
@@ -145,12 +170,13 @@ var Gallery = React.createClass({
 });
 
 var article = $('article').data("id");
-var gallery = React.createElement(Gallery, { 'article': article });
+var gallery;
+
 $('.article-attachment').click(function(){
 
-    if(!gallery.isMounted){
+    if(!gallery){
         gallery = React.render(
-            gallery,
+            <Gallery article={article} />,
             document.getElementById('gallery')
         );
     }

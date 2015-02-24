@@ -1,5 +1,4 @@
 var ARTICLE_ID = $(".article-form").data("id");
-var imageCache; // cache default image results
 
 $('.input-tags').tagList("tag");
 $('.input-topics').tagList("topics");
@@ -42,29 +41,6 @@ $('input.add-author').keydown(function(e){
     }
 });
 
-Dropzone.options.imageForm = {
-    paramName: 'img',
-}
-
-Dropzone.options.imageDropzone = {
-    url: 'http://localhost:8000/api/image/',
-    paramName: 'img',
-    params: {
-        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
-    },
-    addedfile: function(file) {
-        file.previewElement = Dropzone.createElement(this.options.previewTemplate);
-        $('.image-results').prepend(file.previewElement);
-    },
-    success: function(file, image){
-        $(file.previewElement).addClass("catalog-image");
-        $(file.previewElement).data("id", image.id);
-        $(file.previewElement).data("url", image.url);
-        imageCache.append(image);
-    },
-    clickable: '.upload-images',
-}
-
 function updateAuthorField(){
     var authors = $('ul.author-list').sortable( "toArray", { "attribute": "data-id"});
     $('.input-authors').val(authors.join(","));
@@ -73,7 +49,6 @@ function updateAuthorField(){
 function updateDate(date, time){
     published_at = moment(date.get() + " " + time.get('view', 'HH:i'), 'DD MMMM, YYYY HH:mm');
     $('#id_published_at').val(published_at.format('YYYY-MM-DD HH:mm:ss'));
-    console.log(published_at.format('YYYY-MM-DD HH:mm:ss'));
 }
 
 var tabs;
@@ -86,8 +61,6 @@ $(function(){
     $('.options.panel').tabs();
 
     var published_at = moment($('#id_published_at').val(), 'YYYY-MM-DD HH:mm:ss');
-
-    console.log(published_at.format('YYYY-MM-DD'));
 
     var pickdate = $('*[name=published_at_date]').data("value", published_at.format('YYYY-MM-DD')).pickadate({
         formatSubmit: 'yyyy-mm-dd',
@@ -129,9 +102,9 @@ $(function(){
       }
     });
 
-    $( "input.add-author" ).autocomplete({
+    $( ".manage-authors input.add-author" ).autocomplete({
       minLength: 3,
-      appendTo: '.author-dropdown',
+      appendTo: '.manage-authors .author-dropdown',
       focus: function (event, ui) {
         event.preventDefault();
         authorSelected = true;
