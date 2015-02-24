@@ -143,11 +143,14 @@ class Image(Resource):
 
     THUMBNAIL_SIZE = 'square'
 
+    def filename(self):
+        return os.path.basename(self.img.name)
+
     def get_absolute_url(self):
         return "http://dispatch.dev:8888/media/" + str(self.img)
 
     def get_thumbnail_url(self):
-        name = self.img.name.split('.')[0]
+        name = re.split('.(jpg|gif|png)', self.img.name)[0]
         return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
 
     #Overriding
@@ -155,7 +158,8 @@ class Image(Resource):
         super(Image, self).save(*args, **kwargs)
         if self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
-            name = self.img.name.split('.')[0]
+            name = re.split('.(jpg|gif|png)', self.img.name)[0]
+            # self.img.name.split('.(jpg|gif|png)')[0]
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size)
