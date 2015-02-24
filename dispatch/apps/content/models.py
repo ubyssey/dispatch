@@ -102,7 +102,8 @@ class Article(Resource):
             attachments = [ int(x) for x in attachments ]
         else:
             attachments = []
-        attachments.append(self.featured_image.id) # add featured image to exclude list
+        if(self.featured_image):
+            attachments.append(self.featured_image.id) # add featured image to exclude list
         ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
         ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
 
