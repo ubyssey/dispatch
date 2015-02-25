@@ -316,7 +316,7 @@ input {
 }
 
 /* line 255, sass/modules/admin/_base.scss */
-button.sq-button {
+button.sq-button, a.sq-button {
   border-radius: 2px;
   font-family: LFT Etica;
   text-transform: uppercase;
@@ -333,38 +333,38 @@ button.sq-button {
   background: #4A90E2;
 }
 /* line 272, sass/modules/admin/_base.scss */
-button.sq-button.green {
+button.sq-button.green, a.sq-button.green {
   background: #4FD74B;
   border-color: #4FD74B;
 }
 /* line 276, sass/modules/admin/_base.scss */
-button.sq-button.red {
+button.sq-button.red, a.sq-button.red {
   background: #E24A4A;
   border-color: #E24A4A;
 }
 /* line 280, sass/modules/admin/_base.scss */
-button.sq-button:hover {
+button.sq-button:hover, a.sq-button:hover {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   background: #437FC5;
   border-color: #437FC5;
 }
 /* line 287, sass/modules/admin/_base.scss */
-button.sq-button:hover.green {
+button.sq-button:hover.green, a.sq-button:hover.green {
   background: #48BB45;
   border-color: #48BB45;
 }
 /* line 292, sass/modules/admin/_base.scss */
-button.sq-button:hover.red {
+button.sq-button:hover.red, a.sq-button:hover.red {
   background: #BD4141;
   border-color: #BD4141;
 }
 /* line 297, sass/modules/admin/_base.scss */
-button.sq-button:active, button.sq-button:focus {
+button.sq-button:active, button.sq-button:focus, a.sq-button:active, a.sq-button:focus {
   outline: none;
 }
 /* line 301, sass/modules/admin/_base.scss */
-button.sq-button:disabled, button.sq-button:disabled:hover {
+button.sq-button:disabled, button.sq-button:disabled:hover, a.sq-button:disabled, a.sq-button:disabled:hover {
   cursor: default;
   background: gray;
   border-color: gray;
@@ -538,9 +538,9 @@ nav.edit-tabs ul li {
 /* line 106, sass/modules/admin/_article.scss */
 nav.edit-tabs ul li a {
   display: block;
-  padding: 20px 20px;
-  font-family: "Lucida Grande";
-  font-size: 14px;
+  padding: 20px 15px;
+  font-family: LFT Etica;
+  font-size: 12px;
   color: #A2A2A2;
   line-height: 17px;
   text-decoration: none;
@@ -974,33 +974,13 @@ div.save-buttons {
   padding: 0 40px;
 }
 /* line 482, sass/modules/admin/_article.scss */
-div.save-buttons button, div.save-buttons a {
-  border: 1px solid #FFFFFF;
-  background: none;
-  border-radius: 25px;
-  color: #FFFFFF;
-  font-size: 10px;
-  padding: 0 9px;
-  height: 32px;
-  min-width: 70px;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-/* line 494, sass/modules/admin/_article.scss */
-div.save-buttons button:hover, div.save-buttons a:hover {
-  cursor: pointer;
-  opacity: 0.75;
-}
-/* line 499, sass/modules/admin/_article.scss */
 div.save-buttons a {
-  line-height: 32px;
   display: inline-block;
   text-align: center;
-  min-width: 50px;
   text-decoration: none;
 }
 
-/* line 508, sass/modules/admin/_article.scss */
+/* line 489, sass/modules/admin/_article.scss */
 input.full {
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -1010,12 +990,12 @@ input.full {
   box-sizing: border-box;
 }
 
-/* line 515, sass/modules/admin/_article.scss */
+/* line 496, sass/modules/admin/_article.scss */
 input.image-search {
   width: 250px;
 }
 
-/* line 520, sass/modules/admin/_article.scss */
+/* line 501, sass/modules/admin/_article.scss */
 .image-meta .fa-check {
   display: none;
   width: 25px;

@@ -117,8 +117,6 @@ def article_edit(request, id):
                 a.save()
             a = Article.objects.get(pk=a.id)
 
-
-
     else:
         form = ArticleForm(instance=a)
         images_formset = ImageAttachmentFormSet(instance=a)
