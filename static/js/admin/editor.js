@@ -452,6 +452,12 @@ $('.set-featured-image').imageModal(function(items){
     $('img.featured-image').attr("src", image.url);
 });
 
+function cloneAttachmentForm(){
+    var form_idx = $('#id_imageattachment_set-TOTAL_FORMS').val();
+    $('#attachments-form').append($('#attachment-template').html().replace(/__prefix__/g, form_idx));
+    $('#id_imageattachment_set-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+}
+
 var Shortcode = function(quill, options) {
     var self = this;
     this.quill = quill;
@@ -473,18 +479,27 @@ var Shortcode = function(quill, options) {
         class: 'format-',
     });
 
+    this.attachmentCount = 0;
+
     $('.tb-image').imageModal(function(items){
         var id = items[0];
         var image = ImageStore.getImage(id);
-        if(images.indexOf(image) == -1){
-            var attachment = new Attachment(self.article, image);
-            attachment.save(function(data){
-                self.addImage(image.url, data.id);
-                self.updateSource();
-                images.push(attachment);
-            });
-        }
-    });
+
+        cloneAttachmentForm();
+
+        self.addImage(image.url, this.attachmentCount);
+
+        this.attachmentCount = this.attachmentCount + 1;
+
+        //if(images.indexOf(image) == -1){
+        //    var attachment = new Attachment(self.article, image);
+        //    attachment.save(function(data){
+        //        self.addImage(image.url, data.id);
+        //        self.updateSource();
+        //        images.push(attachment);
+        //    });
+        //}
+    }.bind(this));
 
 
     this.quill.addFormat('pull_quote', {
@@ -579,7 +594,7 @@ Shortcode.prototype.addImage = function(src, id) {
     var lastLine = this.quill.getLength() - 1 == this.lastIndex;
     var options = {
         'src': src,
-        'data-id': id,
+        'data-temp-id': id,
         'class': 'dis-image',
     }
     this.quill.insertEmbed(this.lastIndex, 'image', options);
@@ -598,6 +613,7 @@ function Editor() {
     this.CODES = {
         'image': this.processImage,
     }
+
     this.images = {};
     this.quill;
     this.article;
@@ -702,9 +718,12 @@ function Editor() {
         var attachments = [];
         temp.html(input);
         temp.find('.dis-image').each(function(){
-            var id = $(this).data('id');
-            attachments.push(id);
-            $(this).replaceWith("[image " + id + "]");
+            if(typeof $(this).data('id') !== 'undefined'){
+                attachments.push(id);
+                $(this).replaceWith("[image " + $(this).data('id') + "]");
+            } else if (typeof $(this).data('temp-id') !== 'undefined') {
+                $(this).replaceWith("[temp_image " + $(this).data('temp-id') + "]");
+            }
         });
         return {
             'html': temp.html(),
@@ -713,7 +732,6 @@ function Editor() {
     }
 
     this.processImage = function(id) {
-
         var image = this.images[id].image;
         return '<img class="dis-image" data-id="' + id + '" src="' + image.url + '" />';
     }
