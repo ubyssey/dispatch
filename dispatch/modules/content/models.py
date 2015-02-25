@@ -66,9 +66,10 @@ class Article(Resource):
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField("ImageAttachment", blank=True, null=True)
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -104,8 +105,15 @@ class Article(Resource):
             attachments = []
         if(self.featured_image):
             attachments.append(self.featured_image.id) # add featured image to exclude list
-        ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
-        ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+        ImageAttachment.objects.filter(id__in=attachments).update(article=self) # set article FK to current article
+        ImageAttachment.objects.filter(article_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+
+    def save_new_attachments(self, attachments):
+        def save_new_attachment(code):
+            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
+            temp_id = int(args[0])
+            return  "[image %s]" % str(attachments[temp_id].id)
+        return re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
 
     def get_author_string(self):
         author_str = ""
@@ -198,11 +206,7 @@ class Gallery(Resource):
     #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
     pass
 
-class Attachment(Model):
-    #resource = ForeignKey('Resource', blank=True, null=True)
-    caption = CharField(max_length=255, blank=True, null=True)
-
-class ImageAttachment(Attachment):
+class ImageAttachment(Model):
     NORMAL = 'normal'
     FILE = 'file'
     COURTESY = 'courtesy'
@@ -212,9 +216,7 @@ class ImageAttachment(Attachment):
         (COURTESY, 'Courtesy photo'),
     )
 
-    resource = ForeignKey(Resource, blank=True, null=True)
+    article = ForeignKey(Article, blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image')
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
-
-class GalleryAttachment(Attachment):
-    gallery = ForeignKey(Gallery)
