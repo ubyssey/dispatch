@@ -9,7 +9,15 @@ class BaseImageAttachmentFormSet(BaseInlineFormSet):
         if self.instance:
             self.queryset = ImageAttachment.objects.filter(article=self.instance).exclude(id=self.instance.featured_image.id)
 
-ImageAttachmentFormSet = inlineformset_factory(Article, ImageAttachment, formset=BaseImageAttachmentFormSet, extra=0)
+
+class ImageAttachmentForm(ModelForm):
+    class Meta:
+        model = ImageAttachment
+        fields = '__all__'
+
+        widgets = {
+            'image': TextInput()
+        }
 
 
 class ArticleForm(ModelForm):
@@ -42,3 +50,6 @@ class FeaturedImageForm(ModelForm):
         widgets = {
             'image': TextInput()
         }
+
+
+ImageAttachmentFormSet = inlineformset_factory(Article, ImageAttachment, form=ImageAttachmentForm, formset=BaseImageAttachmentFormSet, extra=0)

@@ -2,10 +2,10 @@
 {% block header %}
 {% include 'admin/article/toolbar.html' %}
     <div class="save-buttons">
-        <button class="submit-article" type="submit">Save</button>
-        <button class="publish-article" type="submit">Publish</button>
-        <a href="{% url 'apps.manager.views.article_delete' article.id %}">Delete</a>
-        <a href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview" target="_blank">Preview</a>
+        <button class="submit-article sq-button green" type="submit">Save</button>
+        <button class="publish-article sq-button" type="submit">Publish</button>
+        <a class="sq-button red" href="{% url 'apps.manager.views.article_delete' article.id %}">Delete</a>
+        <a class="sq-button" href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview" target="_blank">Preview</a>
     </div>
 {% endblock %}
 {% block content %}
@@ -144,21 +144,23 @@
         <div id="images-fields" class="fieldset tab images">
             <div id="attachments-form">
                 {% for field in images_form %}
+                    <img id="attachment-thumb-" class="attachment-thumb" data-id="{{ field.id.value }}" src="" />
                     {{ field.label_tag }}
                     {{ field.id }}
                     {{ field.caption }}
                     {{ field.type }}
-                    {{ field.image }}
+                    {{ field.image.as_hidden }}
                     {{ field.DELETE }}
                     <br/>
                 {% endfor %}
             </div>
 
             <script id="attachment-template" type="text/html-template">
+                <img id="attachment-thumb-__prefix__" src="" />
                 {{ images_form.empty_form.id }}
                 {{ images_form.empty_form.caption}}
                 {{ images_form.empty_form.type }}
-                {{ images_form.empty_form.image }}
+                {{ images_form.empty_form.image.as_hidden }}
                 {{ images_form.empty_form.DELETE }}
             </script>
 
