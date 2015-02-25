@@ -1,6 +1,16 @@
 from django.forms import ModelForm, TextInput, Textarea
-from django.forms.models import inlineformset_factory
-from dispatch.apps.content.models import Article, Attachment, ImageAttachment
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
+from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
+
+
+class BaseImageAttachmentFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super(BaseImageAttachmentFormSet, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.queryset = ImageAttachment.objects.filter(article=self.instance).exclude(id=self.instance.featured_image.id)
+
+ImageAttachmentFormSet = inlineformset_factory(Article, ImageAttachment, formset=BaseImageAttachmentFormSet, extra=0)
+
 
 class ArticleForm(ModelForm):
     class Meta:
