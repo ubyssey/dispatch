@@ -83,6 +83,7 @@
                 <li><a href="#media-fields">Featured Image</a></li>
                 <li><a href="#tags-fields">Tags & Topics</a></li>
                 <li><a href="#developer-fields">Developer</a></li>
+                <li><a href="#images-fields">Images</a></li>
             </ul>
         </nav>
         <div id="basic-fields" class="fieldset tab basic">
@@ -139,6 +140,29 @@
             <div class="field">
                 <input class="input-topics" type="hidden" name="topics-list" value="{{ topics }}" />
             </div>
+        </div>
+        <div id="images-fields" class="fieldset tab images">
+            <div id="attachments-form">
+                {% for field in images_form %}
+                    {{ field.label_tag }}
+                    {{ field.id }}
+                    {{ field.caption }}
+                    {{ field.type }}
+                    {{ field.image }}
+                    {{ field.DELETE }}
+                    <br/>
+                {% endfor %}
+            </div>
+
+            <script id="attachment-template" type="text/html-template">
+                {{ images_form.empty_form.id }}
+                {{ images_form.empty_form.caption}}
+                {{ images_form.empty_form.type }}
+                {{ images_form.empty_form.image }}
+                {{ images_form.empty_form.DELETE }}
+            </script>
+
+            {{ images_form.management_form }}
         </div>
     </div>
 </div>
