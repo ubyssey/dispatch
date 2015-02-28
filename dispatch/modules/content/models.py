@@ -101,9 +101,12 @@ class Article(Resource):
 
     def save_related(self, data):
         tags = data["tags-list"]
+        topics = data["topics-list"]
         authors = data["authors-list"]
         if tags:
             self.save_tags(tags)
+        if topics:
+            self.save_topics(topics)
         if authors:
             self.save_authors(authors)
 
@@ -115,6 +118,15 @@ class Article(Resource):
             except Tag.DoesNotExist:
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
+
+    def save_topics(self, topics):
+        self.topics.clear()
+        for topic in topics.split(","):
+            try:
+                ins = Topic.objects.get(name=topic)
+            except Topic.DoesNotExist:
+                ins = Topic.objects.create(name=topic)
+            self.topics.add(ins)
 
     def save_new_attachments(self, attachments):
         def save_new_attachment(code):
