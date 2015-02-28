@@ -1,4 +1,7 @@
 var ARTICLE_ID = $(".article-form").data("id");
+var ARTICLE_SAVEATTEMPT = $(".article-form").data("saveattempt");
+var ARTICLE_SAVED = $(".article-form").data("saved");
+var ARTICLE_SAVEID = $(".article-form").data("saveid");
 
 $('.input-tags').tagList("tag");
 $('.input-topics').tagList("topics");
@@ -179,7 +182,7 @@ $(document).on("click", "ul.tags li", function(){
 });
 
 var editor = new Editor();
-editor.init(ARTICLE_ID, "textarea.content");
+editor.init(ARTICLE_ID, "textarea.content", ARTICLE_SAVEATTEMPT, ARTICLE_SAVED, ARTICLE_SAVEID);
 
 $(".submit-article").click(function(e){
     e.preventDefault();

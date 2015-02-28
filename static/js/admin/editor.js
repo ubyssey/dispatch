@@ -514,9 +514,9 @@ var Shortcode = function(quill, options) {
         self.quill.setSelection();
     });
 
-    $(document).on("click", ".ql-line img", function(){
-        $(this).parent().remove();
-    });
+//    $(document).on("click", ".ql-line img", function(){
+//        $(this).parent().remove();
+//    });
 
     self.button.click(function(){
         self.update();
@@ -619,26 +619,28 @@ function Editor() {
     this.article;
     this.source;
     this.attachment_field = ".attachment-field";
+    this.saved;
+    this.saveid;
 
     var self = this;
 
     var selected_image;
 
-    $(document).on("click", "#remove-image", function(e){
-        e.preventDefault();
-        $('.image-tools').hide();
+//    $(document).on("click", "#remove-image", function(e){
+//        e.preventDefault();
+//        $('.image-tools').hide();
+//
+//        $(selected_image).remove();
+//    });
 
-        $(selected_image).remove();
-    });
-
-    $(document).on("mouseover", ".ql-line img", function(){
-        selected_image = this;
-        var image_id = $(this).data("id");
-        var image = self.images[image_id];
-        var offset = $(this).position().top;
-        $('.image-tools').width($(this).width()).height($(this).height());
-        $('.image-tools').css('top', offset).show();
-    });
+//    $(document).on("mouseover", ".ql-line img", function(){
+//        selected_image = this;
+//        var image_id = $(this).data("id");
+//        var image = self.images[image_id];
+//        var offset = $(this).position().top;
+//        $('.image-tools').width($(this).width()).height($(this).height());
+//        $('.image-tools').css('top', offset).show();
+//    });
 
     $(document).on("mouseleave", ".image-tools", function(){
         $(this).hide();
@@ -651,9 +653,13 @@ function Editor() {
         $('#id_imageattachment_set-'+index+'-DELETE').val(1);
     });
 
-    this.init = function(article, source) {
+    this.init = function(article, source, saveAttempt, saved, saveid) {
         this.article = article;
         this.source = source;
+        this.saved = saved;
+        this.saveid = saveid;
+        this.saveAttempt = saveAttempt;
+
         if(article){
             this.fetchImages(function(){
                 self.setupEditor();
@@ -663,8 +669,6 @@ function Editor() {
             self.setupEditor();
         }
     }
-
-    this.remove
 
     this.loadAttachmentThumbs = function(){
         $('.attachment-thumb').each(function(){
@@ -679,8 +683,12 @@ function Editor() {
         self.quill.addModule('shortcode', { button: '#add_shortcode', article: self.article });
         self.quill.addModule('toolbar', { container: '#full-toolbar' });
         self.quill.addModule('link-tooltip', true);
-        var processed = self.processShortcodes($(self.source).text());
-        self.quill.setHTML(processed);
+
+        if(self.saveAttempt && !self.saved){
+            self.quill.setHTML(sessionStorage['articleContent_'+self.saveid]);
+        } else {
+            self.quill.setHTML(self.processShortcodes($(self.source).text()));
+        }
     }
 
     this.validCode = function(func){
@@ -689,9 +697,17 @@ function Editor() {
 
     this.prepareSave = function(){
         var html = self.quill.getHTML();
+
+        // Store old HTML in browser cache
+        sessionStorage['articleContent_'+self.saveid] = html;
+
+        // Store attachments list in browser cache
+        // sessionStorage['articleAttachemnts_'+self.saveid] = attachm
+
         var output = self.generateShortcodes(html);
-        $(self.attachment_field).val(output.attachments.join(","));
-        $(self.source).text(output.html);
+        $(self.source).text(output);
+
+
     }
 
     this.fetchImages = function(callback){
@@ -740,20 +756,16 @@ function Editor() {
 
     this.generateShortcodes = function(input) {
         var temp = $("<div>");
-        var attachments = [];
         temp.html(input);
         temp.find('.dis-image').each(function(){
             if(typeof $(this).data('id') !== 'undefined'){
-                attachments.push(id);
                 $(this).replaceWith("[image " + $(this).data('id') + "]");
             } else if (typeof $(this).data('temp-id') !== 'undefined') {
                 $(this).replaceWith("[temp_image " + $(this).data('temp-id') + "]");
             }
         });
-        return {
-            'html': temp.html(),
-            'attachments': attachments,
-        }
+
+        return temp.html();
     }
 
     this.processImage = function(id) {
