@@ -107,9 +107,11 @@ header {
 
 
 div.main {
-  padding-top: 55px;
-  height: 100%;
+  top: 55px;
+  position: absolute;
   overflow: hidden;
+  bottom: 0;
+  width: 100%;
   > div.content {
     overflow: hidden;
     float: left;
@@ -137,6 +139,7 @@ div.main {
   .body {
     display: table-cell;
     vertical-align: middle;
+    height: 100%;
   }
   .content {
     width: 75%;
@@ -195,7 +198,6 @@ div.main {
     border-top: 1px solid rgb(213, 213, 213);
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px -1px 1px);
   }
-
   input {
     border: 1px solid black;
   }

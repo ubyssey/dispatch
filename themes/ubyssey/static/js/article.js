@@ -133,7 +133,7 @@ var Gallery = React.createClass({displayName: "Gallery",
             };
             return (
                 React.createElement("div", {className: "slide"}, 
-                    React.createElement("img", {className: "slide-image", style: imageStyle, src: 'http://dispatch.dev:8888/media/' + this.state.image}), 
+                    React.createElement("img", {className: "slide-image", style: imageStyle, src:  this.state.image}), 
                     React.createElement("p", {className: "slide-caption"}, this.state.caption), 
                     this.renderControls()
                 )
