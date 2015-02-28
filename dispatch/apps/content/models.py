@@ -78,10 +78,30 @@ class Article(Resource):
 
     content = TextField()
 
-    def save_related(self, request):
-        tags = request.POST.get("tags-list", False)
-        attachments = request.POST.get("attachment-list", False)
-        authors = request.POST.get("authors-list", False)
+    def tags_list(self):
+        return ",".join(self.tags.values_list('name', flat=True))
+
+    def topics_list(self):
+        return ",".join(self.topics.values_list('name', flat=True))
+
+    def images_list(self):
+        return ",".join([str(i) for i in self.images.values_list('id', flat=True)])
+
+    def get_authors(self):
+        return self.authors.order_by('author__order')
+
+    def authors_list(self):
+        return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
+
+    def get_date(self):
+        return self.published_at.strftime("%Y-%m-%d")
+
+    def get_time(self):
+        return self.published_at.strftime("%H:%M")
+
+    def save_related(self, data):
+        tags = data["tags-list"]
+        authors = data["authors-list"]
         if tags:
             self.save_tags(tags)
         if authors:
