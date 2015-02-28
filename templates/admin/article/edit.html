@@ -9,8 +9,9 @@
     </div>
 {% endblock %}
 {% block content %}
-<form class="article-form" data-id="{{ article.id }}" data-csrf="{{ csrf_token }}" action="" method="post">
+<form class="article-form" data-id="{{ article.id }}" data-csrf="{{ csrf_token }}" data-saveattempt="{{ save_attempt }}" data-saved="{{ saved }}" data-saveid="{{ form.save_id }}" action="" method="post">
     {% csrf_token %}
+    <input type="hidden" name="saveid" value="{{ form.save_id }}" />
     <div class="content panel">
         <div class="inner">
         <div class="field-row headline">
@@ -26,13 +27,17 @@
             </div>
             <div class="manage-authors">
                 <ul class="author-list">
-                {% for person in article.get_authors %}
+                {% if article.authors %}
+                    {% for person in article.get_authors %}
+                        <li data-id="{{ person.id }}"><span>{{ person.full_name }}<a href="#" class="delete-author"><i class="fa fa-close"></i></a></span></li>
+                    {% endfor %}
+                {% else %}
                     <li data-id="{{ person.id }}"><span>{{ person.full_name }}<a href="#" class="delete-author"><i class="fa fa-close"></i></a></span></li>
-                {% endfor %}
+                {% endif %}
                 </ul>
                 <input type="text" class="add-author" />
                 <div class="author-dropdown"></div>
-                <input class="input-authors" type="hidden" name="authors-list" value="{{ article.authors_list }}" />
+                <input class="input-authors" type="hidden" name="authors-list" value="{{ authors_list }}" />
             </div>
         </div>
         <div class="field-row content">
@@ -40,7 +45,6 @@
             </div>
             {{ form.content.errors }}
             {{ form.content }}
-            <input type="hidden" name="attachment-list" class="attachment-field" />
             <script id="inline-toolbar" type="text/html-template">
                 <div class="side-button">
                     <button class="tb-toolbar"><span>+</span></button>
@@ -118,6 +122,7 @@
                 <a class="set-featured-image" data-modal="image-manager">
                     <img class="featured-image" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
                 </a>
+                {{ form.featured_image_form.id.as_hidden }}
                 {{ form.featured_image_form.image.as_hidden }}
                 <br/>
                 <div class="field">
