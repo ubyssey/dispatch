@@ -163,8 +163,6 @@ var ImageManager = React.createClass({
         var scrollable = $(this.refs.scrollable.getDOMNode());
         var end = scrollable.children().first().innerHeight();
         var pos = scrollable.scrollTop() + scrollable.height();
-        console.log(end);
-        console.log(pos);
         if(pos > end - 100 && !this.state.loadingMore){
             this.loadMore();
         }
@@ -452,10 +450,11 @@ $('.set-featured-image').imageModal(function(items){
     $('img.featured-image').attr("src", image.url);
 });
 
-function cloneAttachmentForm(image_id){
+function cloneAttachmentForm(image){
     var form_idx = $('#id_imageattachment_set-TOTAL_FORMS').val();
     $('#attachments-form').append($('#attachment-template').html().replace(/__prefix__/g, form_idx));
-    $('#id_imageattachment_set-'+form_idx+'-image').val(image_id);
+    $('#id_imageattachment_set-'+form_idx+'-image').val(image.id);
+    $('#attachment-thumb-'+form_idx).css('background-image', "url('"+image.thumb+"')");
     $('#id_imageattachment_set-TOTAL_FORMS').val(parseInt(form_idx) + 1);
 }
 
@@ -486,7 +485,7 @@ var Shortcode = function(quill, options) {
         var id = items[0];
         var image = ImageStore.getImage(id);
 
-        cloneAttachmentForm(image.id);
+        cloneAttachmentForm(image);
 
         self.addImage(image.url, this.attachmentCount);
 
@@ -628,6 +627,7 @@ function Editor() {
     $(document).on("click", "#remove-image", function(e){
         e.preventDefault();
         $('.image-tools').hide();
+
         $(selected_image).remove();
     });
 
@@ -638,11 +638,17 @@ function Editor() {
         var offset = $(this).position().top;
         $('.image-tools').width($(this).width()).height($(this).height());
         $('.image-tools').css('top', offset).show();
-        $('.image-tools .caption').text(image.caption);
     });
 
     $(document).on("mouseleave", ".image-tools", function(){
         $(this).hide();
+    });
+
+    $(document).on('click', '.attachment-delete', function(e){
+        e.preventDefault();
+        var index = $(this).data('index');
+        $('#attachment-form-'+index).hide();
+        $('#id_imageattachment_set-'+index+'-DELETE').val(1);
     });
 
     this.init = function(article, source) {
@@ -658,11 +664,13 @@ function Editor() {
         }
     }
 
+    this.remove
+
     this.loadAttachmentThumbs = function(){
         $('.attachment-thumb').each(function(){
             var id = $(this).data('id');
             var a = self.images[id];
-            $(this).attr('src', a.image.thumb);
+            $(this).css('background-image', "url('"+a.image.thumb+"')");
         });
     }
 
@@ -688,9 +696,11 @@ function Editor() {
 
     this.fetchImages = function(callback){
         dispatch.articleAttachments(this.article, function(data){
+            console.log(data);
             $.each(data.results, function(key, obj){
                 self.images[obj.id] = obj;
             });
+            console.log(self.images);
             callback();
         });
     }
@@ -720,7 +730,12 @@ function Editor() {
 
         id = parseInt(params[0]);
 
-        return this.processImage(id);
+        var replacement = this.processImage(id);
+        if(replacement){
+            return replacement;
+        } else {
+            return shortcode;
+        }
     }
 
     this.generateShortcodes = function(input) {
@@ -742,8 +757,12 @@ function Editor() {
     }
 
     this.processImage = function(id) {
-        var image = this.images[id].image;
-        return '<img class="dis-image" data-id="' + id + '" src="' + image.url + '" />';
+        var attachment = this.images[id];
+        if(typeof attachment !== 'undefined'){
+            return '<img class="dis-image" data-id="' + id + '" src="' + attachment.image.url + '" />';
+        } else {
+            return false;
+        }
     }
 
 }
