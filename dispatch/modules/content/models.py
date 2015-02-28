@@ -136,7 +136,13 @@ class Article(Resource):
         return re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
 
     def clear_old_attachments(self):
-        to_delete = list(ImageAttachment.objects.filter(article=self).exclude(id=self.featured_image.id).values_list('id', flat=True))
+        to_delete = ImageAttachment.objects.filter(article=self)
+
+        if self.featured_image:
+            to_delete = to_delete.exclude(id=self.featured_image.id)
+
+        to_delete = list(to_delete.values_list('id', flat=True))
+
         attachments = re.findall(r'\[image [^\[\]]*\]', self.content)
 
         for attachment in attachments:
