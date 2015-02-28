@@ -29,58 +29,29 @@ def articles(request):
 
 @staff_member_required
 def article_add(request):
+    saved = 0
+    save_attempt = 0
     if request.method == 'POST':
+        save_attempt = 1
         form = ArticleForm(request.POST)
-        featured_image_formset = FeaturedImageForm(request.POST)
         if form.is_valid():
             article = form.save()
-            article.save_related(request)
-        else:
-            print featured_image_formset.errors
-
-        if featured_image_formset.is_valid():
-            featured_image = featured_image_formset.save()
-            featured_image.resource = article
-            article.featured_image = featured_image
-            article.save(update_fields=['featured_image'])
-            featured_image.save()
+            return redirect(article_edit, article.id)
         else:
             print form.errors
-
-        if form.is_valid():
-            return redirect(article_edit, article.id)
     else:
         form = ArticleForm()
-        featured_image_formset = FeaturedImageForm()
-
-    #tags = ",".join(a.tags.values_list('name', flat=True))
-
-    #images = a.images.all()
-    #image_ids = ",".join([str(i) for i in a.images.values_list('id', flat=True)])
 
     user = User.objects.get(email=request.user)
 
-    #a = Article()
-
-    p = Person.objects.get(id=1)
-    authors = [p]
-    #a.authors.add(p)
-
-    #print a
-
-    author_str = p.full_name
+    p = Person.objects.get(user=user)
 
     context = {
-        #'article': a,
         'person': p,
         'form': form,
-        'featured_form': featured_image_formset,
-        'authors': authors,
-        'authors_list': p.id,
-        'author_string': author_str,
-        'date': request.POST.get('published_at_date', False),
-        'time': request.POST.get('published_at_time', False),
-        #'tags': tags,
+        'authors_list': int(p.id),
+        'saved': saved,
+        'save_attempt': save_attempt,
     }
 
     return render(request, 'admin/article/edit.html', context)
@@ -88,21 +59,26 @@ def article_add(request):
 @staff_member_required
 def article_edit(request, id):
     a = Article.objects.get(pk=id)
+    saved = 0
+    save_attempt = 0
     if request.method == 'POST':
+        save_attempt = 1
         form = ArticleForm(request.POST, instance=a)
         if form.is_valid():
             a = form.save()
+            saved = 1
             form = ArticleForm(instance=a)
         else:
             print form.errors
     else:
         form = ArticleForm(instance=a)
 
-    all_authors = Person.objects.all()
-
     context = {
         'article': a,
         'form': form,
+        'authors_list': a.authors_list(),
+        'saved': saved,
+        'save_attempt': save_attempt,
     }
 
     return render(request, 'admin/article/edit.html', context)
