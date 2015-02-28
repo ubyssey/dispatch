@@ -90,65 +90,19 @@ def article_edit(request, id):
     a = Article.objects.get(pk=id)
     if request.method == 'POST':
         form = ArticleForm(request.POST, instance=a)
-
-        images_formset = ImageAttachmentFormSet(request.POST, instance=a)
-
-        if a.featured_image:
-            a.featured_image.resource = a
-            featured_image_formset = FeaturedImageForm(request.POST, instance=a.featured_image)
-        else:
-            featured_image_formset = FeaturedImageForm(request.POST)
-
-        if featured_image_formset.has_changed() and featured_image_formset.is_valid():
-            a.featured_image = featured_image_formset.save()
-        else:
-            print featured_image_formset.errors
-
         if form.is_valid():
-            form.save()
-            #a.save_related(request)
+            a = form.save()
+            form = ArticleForm(instance=a)
         else:
             print form.errors
-
-        if images_formset.has_changed() and images_formset.is_valid():
-            attachments = images_formset.save()
-            if attachments:
-                a.content = a.save_new_attachments(attachments)
-                a.save()
-            a = Article.objects.get(pk=a.id)
-
     else:
         form = ArticleForm(instance=a)
-        images_formset = ImageAttachmentFormSet(instance=a)
-        featured_image_formset = FeaturedImageForm(instance=a.featured_image)
-
-    tags = ",".join(a.tags.values_list('name', flat=True))
-
-    images = a.images.all()
-    image_ids = ",".join([str(i) for i in a.images.values_list('id', flat=True)])
-
-    authors = a.authors.order_by('author__order')
-    author_ids = ",".join([str(i) for i in authors.values_list('id', flat=True)])
-
-    date = a.published_at.strftime("%Y-%m-%d")
-    time = a.published_at.strftime("%H:%M")
-
-    author_str = a.get_author_string()
 
     all_authors = Person.objects.all()
 
     context = {
         'article': a,
         'form': form,
-        'featured_form': featured_image_formset,
-        'images_form': images_formset,
-        'tags': tags,
-        'authors': authors,
-        'authors_list': author_ids,
-        'author_string': author_str,
-        'all_authors': all_authors,
-        'date': date,
-        'time': time,
     }
 
     return render(request, 'admin/article/edit.html', context)
