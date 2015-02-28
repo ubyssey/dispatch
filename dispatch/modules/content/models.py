@@ -86,7 +86,6 @@ class Article(Resource):
             self.save_tags(tags)
         if authors:
             self.save_authors(authors)
-        self.save_attachments(attachments) # save attachments regardless to clear out those removed from article
 
     def save_tags(self, tags):
         self.tags.clear()
@@ -97,23 +96,26 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def save_attachments(self, attachments=False):
-        if(attachments):
-            attachments = attachments.split(",")
-            attachments = [ int(x) for x in attachments ]
-        else:
-            attachments = []
-        if(self.featured_image):
-            attachments.append(self.featured_image.id) # add featured image to exclude list
-        ImageAttachment.objects.filter(id__in=attachments).update(article=self) # set article FK to current article
-        ImageAttachment.objects.filter(article_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
-
     def save_new_attachments(self, attachments):
         def save_new_attachment(code):
             args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
             temp_id = int(args[0])
-            return  "[image %s]" % str(attachments[temp_id].id)
+            return "[image %s]" % str(attachments[temp_id].id)
         return re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
+
+    def clear_old_attachments(self):
+        to_delete = list(ImageAttachment.objects.filter(article=self).exclude(id=self.featured_image.id).values_list('id', flat=True))
+        attachments = re.findall(r'\[image [^\[\]]*\]', self.content)
+
+        for attachment in attachments:
+            args = re.findall(r'(\".+\"|[0-9]+)+', attachment)
+            id = int(args[0])
+            try:
+                to_delete.remove(id)
+            except ValueError:
+                pass
+
+        ImageAttachment.objects.filter(id__in=to_delete).delete()
 
     def get_author_string(self):
         author_str = ""
