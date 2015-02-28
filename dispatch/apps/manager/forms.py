@@ -1,12 +1,12 @@
 from django.forms import ModelForm, TextInput, Textarea
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
-
+import uuid
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         super(BaseImageAttachmentFormSet, self).__init__(*args, **kwargs)
-        if self.instance:
+        if self.instance.featured_image:
             self.queryset = ImageAttachment.objects.filter(article=self.instance).exclude(id=self.instance.featured_image.id)
 
 class ImageAttachmentForm(ModelForm):
@@ -59,12 +59,23 @@ class ArticleForm(ModelForm):
         super(ArticleForm, self).__init__(*args, **kwargs)
 
         # Pass POST data into subforms if available
-        if self.data:
+        if self.data and 'instance' in kwargs:
             self.attachments_form = ImageAttachmentFormSet(self.data, instance=self.instance)
             self.featured_image_form = FeaturedImageForm(self.data, instance=self.instance.featured_image)
-        else:
+        elif 'instance' in kwargs:
             self.attachments_form = ImageAttachmentFormSet(instance=self.instance)
             self.featured_image_form = FeaturedImageForm(instance=self.instance.featured_image)
+        elif self.data:
+            self.attachments_form = ImageAttachmentFormSet(self.data)
+            self.featured_image_form = FeaturedImageForm(self.data)
+        else:
+            self.attachments_form = ImageAttachmentFormSet()
+            self.featured_image_form = FeaturedImageForm()
+
+        if self.data:
+            self.save_id = self.data.get('saveid')
+        else:
+            self.save_id = str(uuid.uuid4())[:8]
 
     def is_valid(self):
         """
@@ -80,6 +91,7 @@ class ArticleForm(ModelForm):
 
     # Override
     def save(self):
+        super(ArticleForm, self).save()
 
         # Save related data (tags, topics, etc)
         self.instance.save_related(self.data)
@@ -90,13 +102,21 @@ class ArticleForm(ModelForm):
         # Handle image attachments saving
         self.save_attachments()
 
-        return super(ArticleForm, self).save()
+        # Save instance again to commit changes
+        self.instance.save(update_fields=['featured_image'])
 
+        return self.instance
 
     def save_featured_image(self):
-        self.featured_image_form = FeaturedImageForm(self.data)
-        if self.featured_image_form.has_changed() and self.featured_image_form.is_valid():
-            self.instance.featured_image = self.featured_image_form.save()
+        if self.instance.featured_image:
+            self.featured_image_form.data = self.data
+        else:
+            self.featured_image_form = FeaturedImageForm(self.data)
+        if self.featured_image_form.is_valid():
+            saved = self.featured_image_form.save()
+            saved.article = self.instance
+            saved.save()
+            self.instance.featured_image = saved
 
     def save_attachments(self):
         if self.attachments_form.has_changed() and self.attachments_form.is_valid():
@@ -104,5 +124,6 @@ class ArticleForm(ModelForm):
             if attachments:
                 self.instance.content = self.instance.save_new_attachments(attachments)
         self.instance.clear_old_attachments()
+
 
 ImageAttachmentFormSet = inlineformset_factory(Article, ImageAttachment, form=ImageAttachmentForm, formset=BaseImageAttachmentFormSet, extra=0)
