@@ -5,6 +5,9 @@ var ImageStore = {
     dump: function(images){
         this.images = images;
     },
+    append: function(images){
+        this.images = this.images.concat(images);
+    },
     addTemp: function(name, thumb){
         var tempImage = {
             tempName: name,
@@ -36,6 +39,11 @@ var ImageStore = {
         var i = _.findIndex(this.images, {id: id});
         return this.images[i];
     },
+    removeImage: function(id){
+        _.remove(this.images, function(n) {
+            return n.id == id;
+        });
+    },
     all: function(){
         return this.images;
     }
@@ -49,6 +57,8 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             selected: [],
             initialized: false,
             currentTrigger: false,
+            nextImages: false,
+            loadingMore: false,
             images: ImageStore,
             query: "",
         }
@@ -90,7 +100,8 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     images: ImageStore,
                     initialized: true,
                     visible: true,
-                })
+                    nextImages: data.next,
+                });
             }.bind(this));
         } else {
             this.setState({
@@ -118,6 +129,15 @@ var ImageManager = React.createClass({displayName: "ImageManager",
             selected: selected,
         });
     },
+    deleteImage: function(id){
+        dispatch.remove('image', id, function(){
+            ImageStore.removeImage(id);
+            this.setState({
+                activeImage: false,
+                images: ImageStore,
+            });
+        }.bind(this));
+    },
     addFile: function(file, dataUrl){
         ImageStore.addTemp(file.name, dataUrl);
         this.reloadStore();
@@ -139,10 +159,25 @@ var ImageManager = React.createClass({displayName: "ImageManager",
         ImageStore.updateImageWithData(data);
         this.reloadStore();
     },
-    renderImageMeta: function(){
-        if ( this.state.activeImage ){
-            var image = ImageStore.getImage(this.state.activeImage);
-            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, title: image.title, onUpdate: this.updateImage}) );
+    onScroll: function(scroll){
+        var scrollable = $(this.refs.scrollable.getDOMNode());
+        var end = scrollable.children().first().innerHeight();
+        var pos = scrollable.scrollTop() + scrollable.height();
+        if(pos > end - 100 && !this.state.loadingMore){
+            this.loadMore();
+        }
+    },
+    loadMore: function(){
+        if(this.state.nextImages){
+            this.setState({ loadingMore: true });
+            dispatch.getNext(this.state.nextImages, function(data){
+                ImageStore.append(data.results);
+                this.setState({
+                    images: ImageStore,
+                    loadingMore: false,
+                    nextImages: data.next,
+                });
+            }.bind(this));
         }
     },
     searchImages: function(event){
@@ -156,6 +191,12 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                 images: ImageStore,
             });
         }.bind(this));
+    },
+    renderImageMeta: function(){
+        if ( this.state.activeImage ){
+            var image = ImageStore.getImage(this.state.activeImage);
+            return ( React.createElement(ImageMeta, {id: image.id, url: image.url, authors: image.authors, filename: image.filename, title: image.title, onDelete: this.deleteImage, onUpdate: this.updateImage}) );
+        }
     },
     render: function() {
 
@@ -175,13 +216,13 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                     React.createElement("div", {id: "image-manager", className: "content"}, 
                         React.createElement("div", {className: "header"}, 
                             React.createElement("nav", null, 
-                                React.createElement("button", {className: "sq-button upload-images"}, "Upload"), 
+                                React.createElement("button", {className: "sq-button upload-images"}, "Upload  ", React.createElement("i", {className: "fa fa-upload"})), 
                                 React.createElement("input", {type: "text", className: "dis-input image-search", placeholder: "Search", onChange: this.searchImages, value: this.state.query})
                             )
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
-                            React.createElement("div", {className: "image-catalog-container"}, 
-                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
+                            React.createElement("div", {className: "image-catalog-container", ref: "scrollable", onScroll: this.onScroll}, 
+                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/image/', paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
                             ), 
                             this.renderImageMeta()
                         ), 
@@ -273,6 +314,9 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
             }.bind(this));
         }
     },
+    handleDelete: function(){
+        this.props.onDelete(this.props.id);
+    },
     updateAuthor: function(authorId){
         this.setState({
             saving: true,
@@ -309,6 +353,7 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
         return (
             React.createElement("div", {className: "image-meta"}, 
                 React.createElement("img", {className: "image-meta-preview", src:  this.props.url}), 
+                React.createElement("h3", null, this.props.filename), 
                 React.createElement("div", {className: "field"}, 
                     React.createElement("label", null, "Title:"), 
                     React.createElement("input", {type: "text", className: "full", onChange:  this.handleChangeTitle, value:  this.state.title})
@@ -367,7 +412,7 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
       );
     }.bind(this));
     return (
-        React.createElement("ul", {id: "image-dropzone", className: "image-results"}, 
+        React.createElement("ul", {id: "image-dropzone", ref: "imageContents", className: "image-results"}, 
         imageNodes
         )
     );
@@ -405,6 +450,14 @@ $('.set-featured-image').imageModal(function(items){
     $('img.featured-image').attr("src", image.url);
 });
 
+function cloneAttachmentForm(image){
+    var form_idx = $('#id_imageattachment_set-TOTAL_FORMS').val();
+    $('#attachments-form').append($('#attachment-template').html().replace(/__prefix__/g, form_idx));
+    $('#id_imageattachment_set-'+form_idx+'-image').val(image.id);
+    $('#attachment-thumb-'+form_idx).css('background-image', "url('"+image.thumb+"')");
+    $('#id_imageattachment_set-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+}
+
 var Shortcode = function(quill, options) {
     var self = this;
     this.quill = quill;
@@ -426,18 +479,27 @@ var Shortcode = function(quill, options) {
         class: 'format-',
     });
 
+    this.attachmentCount = 0;
+
     $('.tb-image').imageModal(function(items){
         var id = items[0];
         var image = ImageStore.getImage(id);
-        if(images.indexOf(image) == -1){
-            var attachment = new Attachment(self.article, image);
-            attachment.save(function(data){
-                self.addImage(image.url, data.id);
-                self.updateSource();
-                images.push(attachment);
-            });
-        }
-    });
+
+        cloneAttachmentForm(image);
+
+        self.addImage(image.url, this.attachmentCount);
+
+        this.attachmentCount = this.attachmentCount + 1;
+
+        //if(images.indexOf(image) == -1){
+        //    var attachment = new Attachment(self.article, image);
+        //    attachment.save(function(data){
+        //        self.addImage(image.url, data.id);
+        //        self.updateSource();
+        //        images.push(attachment);
+        //    });
+        //}
+    }.bind(this));
 
 
     this.quill.addFormat('pull_quote', {
@@ -452,9 +514,9 @@ var Shortcode = function(quill, options) {
         self.quill.setSelection();
     });
 
-    $(document).on("click", ".ql-line img", function(){
-        $(this).parent().remove();
-    });
+//    $(document).on("click", ".ql-line img", function(){
+//        $(this).parent().remove();
+//    });
 
     self.button.click(function(){
         self.update();
@@ -532,7 +594,7 @@ Shortcode.prototype.addImage = function(src, id) {
     var lastLine = this.quill.getLength() - 1 == this.lastIndex;
     var options = {
         'src': src,
-        'data-id': id,
+        'data-temp-id': id,
         'class': 'dis-image',
     }
     this.quill.insertEmbed(this.lastIndex, 'image', options);
@@ -551,46 +613,69 @@ function Editor() {
     this.CODES = {
         'image': this.processImage,
     }
+
     this.images = {};
     this.quill;
     this.article;
     this.source;
     this.attachment_field = ".attachment-field";
+    this.saved;
+    this.saveid;
 
     var self = this;
 
     var selected_image;
 
-    $(document).on("click", "#remove-image", function(e){
-        e.preventDefault();
-        $('.image-tools').hide();
-        $(selected_image).remove();
-    });
+//    $(document).on("click", "#remove-image", function(e){
+//        e.preventDefault();
+//        $('.image-tools').hide();
+//
+//        $(selected_image).remove();
+//    });
 
-    $(document).on("mouseover", ".ql-line img", function(){
-        selected_image = this;
-        var image_id = $(this).data("id");
-        var image = self.images[image_id];
-        var offset = $(this).position().top;
-        $('.image-tools').width($(this).width()).height($(this).height());
-        $('.image-tools').css('top', offset).show();
-        $('.image-tools .caption').text(image.caption);
-    });
+//    $(document).on("mouseover", ".ql-line img", function(){
+//        selected_image = this;
+//        var image_id = $(this).data("id");
+//        var image = self.images[image_id];
+//        var offset = $(this).position().top;
+//        $('.image-tools').width($(this).width()).height($(this).height());
+//        $('.image-tools').css('top', offset).show();
+//    });
 
     $(document).on("mouseleave", ".image-tools", function(){
         $(this).hide();
     });
 
-    this.init = function(article, source) {
+    $(document).on('click', '.attachment-delete', function(e){
+        e.preventDefault();
+        var index = $(this).data('index');
+        $('#attachment-form-'+index).hide();
+        $('#id_imageattachment_set-'+index+'-DELETE').val(1);
+    });
+
+    this.init = function(article, source, saveAttempt, saved, saveid) {
         this.article = article;
         this.source = source;
+        this.saved = saved;
+        this.saveid = saveid;
+        this.saveAttempt = saveAttempt;
+
         if(article){
             this.fetchImages(function(){
                 self.setupEditor();
+                self.loadAttachmentThumbs();
             });
         } else {
             self.setupEditor();
         }
+    }
+
+    this.loadAttachmentThumbs = function(){
+        $('.attachment-thumb').each(function(){
+            var id = $(this).data('id');
+            var a = self.images[id];
+            $(this).css('background-image', "url('"+a.image.thumb+"')");
+        });
     }
 
     this.setupEditor = function(){
@@ -598,8 +683,12 @@ function Editor() {
         self.quill.addModule('shortcode', { button: '#add_shortcode', article: self.article });
         self.quill.addModule('toolbar', { container: '#full-toolbar' });
         self.quill.addModule('link-tooltip', true);
-        var processed = self.processShortcodes($(self.source).text());
-        self.quill.setHTML(processed);
+
+        if(self.saveAttempt && !self.saved){
+            self.quill.setHTML(sessionStorage['articleContent_'+self.saveid]);
+        } else {
+            self.quill.setHTML(self.processShortcodes($(self.source).text()));
+        }
     }
 
     this.validCode = function(func){
@@ -608,16 +697,26 @@ function Editor() {
 
     this.prepareSave = function(){
         var html = self.quill.getHTML();
+
+        // Store old HTML in browser cache
+        sessionStorage['articleContent_'+self.saveid] = html;
+
+        // Store attachments list in browser cache
+        // sessionStorage['articleAttachemnts_'+self.saveid] = attachm
+
         var output = self.generateShortcodes(html);
-        $(self.attachment_field).val(output.attachments.join(","));
-        $(self.source).text(output.html);
+        $(self.source).text(output);
+
+
     }
 
     this.fetchImages = function(callback){
         dispatch.articleAttachments(this.article, function(data){
+            console.log(data);
             $.each(data.results, function(key, obj){
                 self.images[obj.id] = obj;
             });
+            console.log(self.images);
             callback();
         });
     }
@@ -647,28 +746,35 @@ function Editor() {
 
         id = parseInt(params[0]);
 
-        return this.processImage(id);
+        var replacement = this.processImage(id);
+        if(replacement){
+            return replacement;
+        } else {
+            return shortcode;
+        }
     }
 
     this.generateShortcodes = function(input) {
         var temp = $("<div>");
-        var attachments = [];
         temp.html(input);
         temp.find('.dis-image').each(function(){
-            var id = $(this).data('id');
-            attachments.push(id);
-            $(this).replaceWith("[image " + id + "]");
+            if(typeof $(this).data('id') !== 'undefined'){
+                $(this).replaceWith("[image " + $(this).data('id') + "]");
+            } else if (typeof $(this).data('temp-id') !== 'undefined') {
+                $(this).replaceWith("[temp_image " + $(this).data('temp-id') + "]");
+            }
         });
-        return {
-            'html': temp.html(),
-            'attachments': attachments,
-        }
+
+        return temp.html();
     }
 
     this.processImage = function(id) {
-
-        var image = this.images[id].image;
-        return '<img class="dis-image" data-id="' + id + '" src="' + image.url + '" />';
+        var attachment = this.images[id];
+        if(typeof attachment !== 'undefined'){
+            return '<img class="dis-image" data-id="' + id + '" src="' + attachment.image.url + '" />';
+        } else {
+            return false;
+        }
     }
 
 }

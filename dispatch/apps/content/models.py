@@ -52,7 +52,40 @@ class Section(Model):
     def __str__(self):
         return self.name
 
-class Article(Resource):
+class Publishable(Model):
+
+    parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
+    preview = BooleanField(default=False)
+    head = BooleanField(default=False)
+
+    # Overriding
+    def save(self, revision=True, *args, **kwargs):
+
+        if self.parent and revision:
+            Article.objects.filter(parent=self.parent,head=True).update(head=False)
+            # Both fields required for this to work -- something to do with model inheritance.
+            self.pk = None
+            self.id = None
+            self.head = True
+
+        super(Publishable, self).save(*args, **kwargs)
+
+        if not self.parent:
+            self.parent = self
+            super(Publishable, self).save(update_fields=['parent'])
+
+        return self
+
+    def get_previous_revision(self):
+        if self.parent == self:
+            return self
+        revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
+        return revision
+
+    class Meta:
+        abstract = True
+
+class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
@@ -60,15 +93,16 @@ class Article(Resource):
     is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
-    slug = SlugField(unique=True)
+    slug = SlugField()
 
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField("ImageAttachment", blank=True, null=True)
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
@@ -77,15 +111,37 @@ class Article(Resource):
 
     content = TextField()
 
-    def save_related(self, request):
-        tags = request.POST.get("tags-list", False)
-        attachments = request.POST.get("attachment-list", False)
-        authors = request.POST.get("authors-list", False)
+    def tags_list(self):
+        return ",".join(self.tags.values_list('name', flat=True))
+
+    def topics_list(self):
+        return ",".join(self.topics.values_list('name', flat=True))
+
+    def images_list(self):
+        return ",".join([str(i) for i in self.images.values_list('id', flat=True)])
+
+    def get_authors(self):
+        return self.authors.order_by('author__order')
+
+    def authors_list(self):
+        return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
+
+    def get_date(self):
+        return self.published_at.strftime("%Y-%m-%d")
+
+    def get_time(self):
+        return self.published_at.strftime("%H:%M")
+
+    def save_related(self, data):
+        tags = data["tags-list"]
+        topics = data["topics-list"]
+        authors = data["authors-list"]
         if tags:
             self.save_tags(tags)
+        if topics:
+            self.save_topics(topics)
         if authors:
             self.save_authors(authors)
-        self.save_attachments(attachments) # save attachments regardless to clear out those removed from article
 
     def save_tags(self, tags):
         self.tags.clear()
@@ -96,15 +152,38 @@ class Article(Resource):
                 ins = Tag.objects.create(name=tag)
             self.tags.add(ins)
 
-    def save_attachments(self, attachments=False):
-        if(attachments):
-            attachments = attachments.split(",")
-            attachments = [ int(x) for x in attachments ]
-        else:
-            attachments = []
-        attachments.append(self.featured_image.id) # add featured image to exclude list
-        ImageAttachment.objects.filter(id__in=attachments).update(resource=self) # set article FK to current article
-        ImageAttachment.objects.filter(resource_id=self.id).exclude(id__in=attachments).delete() # flush out old attachments
+    def save_topics(self, topics):
+        self.topics.clear()
+        for topic in topics.split(","):
+            try:
+                ins = Topic.objects.get(name=topic)
+            except Topic.DoesNotExist:
+                ins = Topic.objects.create(name=topic)
+            self.topics.add(ins)
+
+    def save_new_attachments(self, attachments):
+        def save_new_attachment(code):
+            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
+            temp_id = int(args[0])
+            return "[image %s]" % str(attachments[temp_id].id)
+        self.content = re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
+
+    def clear_old_attachments(self):
+
+        previous_attachments = ImageAttachment.objects.filter(article=self.get_previous_revision())
+
+        def keep_attachment(code):
+            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
+            id = int(args[0])
+            try:
+                ins = previous_attachments.get(pk=id)
+                ins.article = self
+                ins.pk = None
+                ins.save()
+                return "[image %s]" % str(ins.id)
+            except ImageAttachment.DoesNotExist:
+                return code.group(0)
+        self.content = re.sub(r'\[image[^\[\]]*\]', keep_attachment, self.content)
 
     def get_author_string(self):
         author_str = ""
@@ -142,11 +221,14 @@ class Image(Resource):
 
     THUMBNAIL_SIZE = 'square'
 
+    def filename(self):
+        return os.path.basename(self.img.name)
+
     def get_absolute_url(self):
         return "http://dispatch.dev:8888/media/" + str(self.img)
 
     def get_thumbnail_url(self):
-        name = self.img.name.split('.')[0]
+        name = re.split('.(jpg|gif|png)', self.img.name)[0]
         return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
 
     #Overriding
@@ -154,7 +236,8 @@ class Image(Resource):
         super(Image, self).save(*args, **kwargs)
         if self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
-            name = self.img.name.split('.')[0]
+            name = re.split('.(jpg|gif|png)', self.img.name)[0]
+            # self.img.name.split('.(jpg|gif|png)')[0]
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size)
@@ -175,23 +258,25 @@ class Image(Resource):
 
             # Delete original
             path = os.path.join(settings.MEDIA_ROOT, instance.img.name)
-            os.remove(path)
+            try:
+                os.remove(path)
+            except OSError:
+                pass
 
             # Delete other sizes
             for size in sender.SIZES.keys():
                 filename = name + "-%s.jpg" % size
                 path = os.path.join(settings.MEDIA_ROOT, filename)
-                os.remove(path)
+                try:
+                    os.remove(path)
+                except OSError:
+                    pass
 
 class Gallery(Resource):
     #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
     pass
 
-class Attachment(Model):
-    #resource = ForeignKey('Resource', blank=True, null=True)
-    caption = CharField(max_length=255, blank=True, null=True)
-
-class ImageAttachment(Attachment):
+class ImageAttachment(Model):
     NORMAL = 'normal'
     FILE = 'file'
     COURTESY = 'courtesy'
@@ -201,9 +286,7 @@ class ImageAttachment(Attachment):
         (COURTESY, 'Courtesy photo'),
     )
 
-    resource = ForeignKey(Resource, blank=True, null=True)
+    article = ForeignKey(Article, blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image')
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
-
-class GalleryAttachment(Attachment):
-    gallery = ForeignKey(Gallery)
