@@ -35,7 +35,6 @@ class Person(Model):
     first_name = CharField(max_length=255, blank=True, null=True)
     last_name = CharField(max_length=255, blank=True, null=True)
     full_name = CharField(max_length=255, blank=True, null=True)
-    user = ForeignKey('User', blank=True, null=True, related_name='user')
     roles = ManyToManyField(ContributorRole, blank=True, null=True)
 
     def __str__(self):
@@ -49,7 +48,7 @@ class User(AbstractBaseUser):
     is_admin = BooleanField(default=False)
     is_active = BooleanField(default=True)
     is_superuser = BooleanField()
-    person = OneToOneField(Person, blank=True, null=True, related_name='person')
+    person = OneToOneField('Person', blank=True, null=True, related_name='person')
     groups = ManyToManyField(Group, verbose_name=('groups'),
         blank=True, help_text=('The groups this user belongs to. A user will '
                                 'get all permissions granted to each of '
