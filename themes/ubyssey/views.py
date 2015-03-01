@@ -8,8 +8,17 @@ from dispatch.apps.frontend.themes.default import DefaultTheme
 class UbysseyTheme(DefaultTheme):
 
     def home(self, request):
+
+        all = Article.objects.filter(head=True).order_by('-importance', 'published_at')
+
+        articles = {
+            'primary': all[0],
+            'secondary': all[1],
+            'thumbs': all[2:],
+        }
+
         context = {
-            'articles': Article.objects.all().order_by('-importance', 'published_at')
+            'articles': articles,
         }
         t = get_template('index.html')
         c = RequestContext(request, context)

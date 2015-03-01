@@ -2,12 +2,45 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" href="{{ STATIC_DIR }}css/main.css" type="text/css"/>
 </head>
 <body>
-{% for article in articles %}
-    <img src="http://dispatch.dev:8888/media/{{ article.featured_image.image.get_thumbnail_url }}"/><br/>
-    {{ article.long_headline }}
-    {{ article.importance }}<br/>
-{% endfor %}
+
+
+<div class="container large">
+    <div class="frontpage row">
+        <div class="col left">
+            {% with articles.secondary as article %}
+                <article class="secondary">
+                    <h2>{{ article.long_headline }}</h2>
+                    <p class="snippet">{{ article.snippet }}</p>
+                </article>
+            {% endwith %}
+            {% for article in articles.thumbs %}
+                <article class="thumb clearfix">
+                    <div class="left">
+                        <img src="{{ article.featured_image.image.get_thumbnail_url }}"/>
+                    </div>
+                    <div class="right">
+                        <h2>{{ article.long_headline }}</h2>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        <div class="col middle">
+            {% with articles.primary as article %}
+            <article class="primary">
+                <img src="{{ article.featured_image.image.get_absolute_url }}"/><br/>
+                <h1>{{ article.long_headline }}</h1>
+                <p class="snippet">{{ article.snippet }}</p>
+            </article>
+            {% endwith %}
+        </div>
+        <div class="col right">
+
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

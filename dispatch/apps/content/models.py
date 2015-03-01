@@ -98,7 +98,10 @@ class Article(Resource, Publishable):
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
-    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+
+    IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
+
+    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=1)
 
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
@@ -110,6 +113,7 @@ class Article(Resource, Publishable):
     snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
 
     content = TextField()
+    snippet = TextField()
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))
