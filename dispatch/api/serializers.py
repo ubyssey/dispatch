@@ -8,7 +8,7 @@ from rest_framework import serializers
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Person
-        fields = ('id','full_name','first_name','last_name','user','roles')
+        fields = ('id','full_name','first_name','last_name','roles')
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
