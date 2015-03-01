@@ -16,12 +16,8 @@ class UbysseyTheme(DefaultTheme):
         return HttpResponse(t.render(c))
 
     def article(self, request, section=False, slug=False):
-        if slug and section:
-            article = Article.objects.get(slug=slug, section__name=section)
-            if not article.is_published:
-                preview = request.GET.get("preview", False)
-                if not request.user.is_staff or preview == False:
-                    raise Http404("This article does not exist.")
+
+        article = self.find_article(request, section, slug)
 
         context = {
             'article': article
