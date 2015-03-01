@@ -1,6 +1,6 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField)
+    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField, SET_NULL)
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from dispatch.apps.core.models import Person
@@ -61,12 +61,13 @@ class Publishable(Model):
     # Overriding
     def save(self, revision=True, *args, **kwargs):
 
-        if self.parent and revision:
-            Article.objects.filter(parent=self.parent,head=True).update(head=False)
-            # Both fields required for this to work -- something to do with model inheritance.
-            self.pk = None
-            self.id = None
+        if revision:
             self.head = True
+            if self.parent:
+                Article.objects.filter(parent=self.parent,head=True).update(head=False)
+                # Both fields required for this to work -- something to do with model inheritance.
+                self.pk = None
+                self.id = None
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -292,5 +293,5 @@ class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
-    image = ForeignKey(Image, related_name='image')
+    image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
