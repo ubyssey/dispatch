@@ -88,7 +88,7 @@ class Publishable(Model):
 
 class ArticleManager(Manager):
 
-    def frontpage(self, reading_times=False):
+    def get_frontpage(self, reading_times=False):
         if not reading_times:
             reading_times = {
                 'morning': '11:00:00',
@@ -101,15 +101,28 @@ class ArticleManager(Manager):
                 (1 / importance) as importance_factor,
                 TIME(published_at) as time,
                 CASE reading_time
-                     WHEN 'morning' THEN IF(TIME(published_at)<'%s',1,0)
-                     WHEN 'midday' THEN IF(TIME(published_at)>='%s' AND TIME(published_at)<'%s',1,0)
-                     WHEN 'evening' THEN IF(TIME(published_at)>='%s',1,0)
+                     WHEN 'morning' THEN IF(CURTIME()<'%s',1,0)
+                     WHEN 'midday' THEN IF(CURTIME()>='%s' AND CURTIME()<'%s',1,0)
+                     WHEN 'evening' THEN IF(CURTIME()>='%s',1,0)
                      ELSE 0.5
                 END as reading
                 FROM content_article
                 WHERE head = 1
-                ORDER BY (age * importance_factor ), reading DESC
+                ORDER BY reading DESC, (age * importance_factor )
             """ % (reading_times['morning'], reading_times['midday'][0], reading_times['midday'][1], reading_times['evening']))
+
+    def get_sections(self, exclude=False):
+
+        results = {}
+
+        sections = Section.objects.all()
+
+        for section in sections:
+            results[section.slug] = Article.objects.filter(section=section,head=True)[:3]
+
+        return results
+
+
 
 class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)

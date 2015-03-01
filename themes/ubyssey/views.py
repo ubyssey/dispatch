@@ -9,7 +9,17 @@ class UbysseyTheme(DefaultTheme):
 
     def home(self, request):
 
-        frontpage = Article.objects.frontpage()
+        frontpage = Article.objects.get_frontpage()
+
+        sections = Article.objects.get_sections(exclude=('blog',))
+
+        for article in frontpage:
+            print article.long_headline
+            print article.age * article.importance_factor
+            print article.reading
+            print article.time
+            print article.reading_time
+            print "------"
 
         articles = {
              'primary': frontpage[0],
@@ -19,7 +29,10 @@ class UbysseyTheme(DefaultTheme):
 
         context = {
             'articles': articles,
+            'sections': sections,
         }
+
+        print sections
 
         t = get_template('index.html')
         c = RequestContext(request, context)
