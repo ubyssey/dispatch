@@ -6,6 +6,31 @@ var ARTICLE_SAVEID = $(".article-form").data("saveid");
 $('.input-tags').tagList("tag");
 $('.input-topics').tagList("topics");
 
+var confirmOnPageExit = function (e)
+{
+    // If we haven't been passed the event get the window.event
+    e = e || window.event;
+
+    var message = 'You have made changes to the article.';
+
+    // For IE6-8 and Firefox prior to version 4
+    if (e)
+    {
+        e.returnValue = message;
+    }
+
+    // For Chrome, Safari, IE8+ and Opera 12+
+    return message;
+};
+
+function setChanged(){
+    window.onbeforeunload = confirmOnPageExit;
+};
+
+$(".article-form").change(function(){
+    setChanged();
+});
+
 function addAuthor(author){
     if (typeof author === 'object'){
         appendAuthor(author);
@@ -187,6 +212,7 @@ editor.init(ARTICLE_ID, "textarea.content", ARTICLE_SAVEATTEMPT, ARTICLE_SAVED, 
 $(".submit-article").click(function(e){
     e.preventDefault();
     editor.prepareSave();
+    window.onbeforeunload = null;
     $('.article-form').submit();
 });
 
