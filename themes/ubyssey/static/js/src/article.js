@@ -133,7 +133,7 @@ var Gallery = React.createClass({
             };
             return (
                 <div className="slide">
-                    <img className="slide-image" style={imageStyle} src={'http://dispatch.dev:8888/media/' + this.state.image } />
+                    <img className="slide-image" style={imageStyle} src={ this.state.image } />
                     <p className="slide-caption">{this.state.caption}</p>
                     {this.renderControls()}
                 </div>

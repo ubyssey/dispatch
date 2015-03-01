@@ -40,10 +40,6 @@ div.field {
   margin-bottom: 10px;
 }
 
-div.col {
-  min-width: 175px;
-}
-
 ul.author-list {
   list-style-type: none;
   padding: 0;
@@ -91,32 +87,61 @@ div.panel.content {
 }
 
 div.fieldset.tab {
-  padding: 20px 40px;
+  padding: 20px 35px;
+  &.list {
+    padding: 0;
+    .row {
+      padding: 20px 35px;
+      border-bottom: 1px solid #C6C6C6;
+      &.active {
+        background: rgba(74, 144, 226, 0.05);
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
 }
 
 nav.edit-tabs {
   border-bottom: 1px solid #D9D9D9;
   ul {
-    padding-left: 20px;
+    padding-left: 0;
     margin: 0;
     list-style-type: none;
     li {
       display: inline-block;
-
       a {
+
         display: block;
-        padding: 20px 20px;
-        font-family: "Lucida Grande";
-        font-size: 14px;
+        padding: 17px 15px;
+        font-family: LFT Etica;
+        font-size: 12px;
         color: #A2A2A2;
+
+        min-width: 60px;
+        text-align: center;
+
+        border-width: 0 1px;
+        border-style: solid;
+        border-color: transparent;
+
         &:visited {
           color: #A2A2A2;
         }
         &:hover {
-          color: #272727;
+          color: rgb(110, 110, 110);
+        }
+        &:active, &:focus {
+          outline: none;
         }
         line-height: 17px;
         text-decoration: none;
+      }
+      &.ui-state-active a {
+        background: rgb(245, 245, 245);
+        border-color: rgb(217, 217, 217);
+        color: rgb(110, 110, 110);
       }
     }
   }
@@ -126,9 +151,8 @@ div.panel.options {
   position: absolute;
   float: none;
   right: 0;
-  left: 785px;
+  left: 730px;
   div.fieldset {
-    padding-bottom: 30px;
     margin-bottom: 15px;
     border-bottom: solid 1px #C6C6C6;
     div.col:first-child {
@@ -243,6 +267,12 @@ ul.tagList {
     padding: 7px;
     margin: 0;
     list-style-type: none;
+    &.dz-drag-hover {
+      background: rgb(240, 240, 240);
+      li {
+        opacity: 0.2;
+      }
+    }
     li {
       display: inline-block;
       width: 120px;
@@ -267,8 +297,13 @@ ul.tagList {
     top: 0;
     bottom: 0;
     padding: 15px;
+    h3 {
+      font-size: 12px;
+    }
     img {
-      width: 100%;
+      max-width: 100%;
+      width: auto;
+      max-height: 150px;
     }
   }
 }
@@ -288,7 +323,7 @@ ul.tagList {
 .ql-editor {
     margin-left: $text-padding;
     img {
-      width: 100%;
+      width: 50%;
     }
 }
 
@@ -423,16 +458,21 @@ button.dark-button {
 
 .field {
   margin: 15px 0;
-  input, select {
+  &:first-child {
+    margin-top: 0;
+  }
+  input {
     border: 1px solid rgb(185,185,185);
     border-radius: 2px;
     padding: 9px 8px;
     font-size: 12px;
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
   select {
-     background: transparent;
      font-size: 12px;
-     height: 33px;
   }
 }
 
@@ -468,28 +508,9 @@ div.tab {
 
 div.save-buttons {
   padding: 0 40px;
-  button, a {
-    border: 1px solid #FFFFFF;
-    background: none;
-    border-radius: 25px;
-    color: #FFFFFF;
-    font-size: 10px;
-    padding: 0 9px;
-    height: 32px;
-
-    min-width: 70px;
-    vertical-align: middle;
-    margin-right: 6px;
-    &:hover {
-      cursor: pointer;
-      opacity: 0.75;
-    }
-  }
   a {
-    line-height: 32px;
     display: inline-block;
     text-align: center;
-    min-width: 50px;
     text-decoration: none;
   }
 }
@@ -513,5 +534,18 @@ input.image-search {
     margin-left: 10px;
     text-align: center;
     color: rgba(128, 128, 128, 0.5);
+  }
+}
+
+div.attachment-thumb {
+  width: 110px;
+  height: 110px;
+  background-size: auto 100%;
+  background-position: center;
+}
+
+#attachments-form {
+  input {
+    min-width: 300px;
   }
 }

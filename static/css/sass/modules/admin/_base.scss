@@ -107,9 +107,11 @@ header {
 
 
 div.main {
-  padding-top: 55px;
-  height: 100%;
+  top: 55px;
+  position: absolute;
   overflow: hidden;
+  bottom: 0;
+  width: 100%;
   > div.content {
     overflow: hidden;
     float: left;
@@ -137,6 +139,7 @@ div.main {
   .body {
     display: table-cell;
     vertical-align: middle;
+    height: 100%;
   }
   .content {
     width: 75%;
@@ -160,9 +163,10 @@ div.main {
     position: absolute;
     width: 100%;
     z-index: 550;
-    padding: 0 15px;
+    border-bottom: 1px solid rgb(213, 213, 213);
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px 1px 1px);
     nav {
+      padding: 0 15px;
       button {
         margin-right: 15px;
       }
@@ -191,9 +195,9 @@ div.main {
     position: absolute;
     width: 100%;
     bottom: 0;
+    border-top: 1px solid rgb(213, 213, 213);
     @include box-shadow(rgba(0, 0, 0, 0.05) 0px -1px 1px);
   }
-
   input {
     border: 1px solid black;
   }
@@ -250,7 +254,7 @@ input {
   font-family: LFT Etica;
 }
 
-button.sq-button {
+button.sq-button, a.sq-button {
   border-radius: 2px;
   font-family: LFT Etica;
   text-transform: uppercase;

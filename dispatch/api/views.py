@@ -1,6 +1,6 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article, Tag, Image, Attachment, ImageAttachment
+from dispatch.apps.content.models import Article, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
 from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
@@ -42,11 +42,11 @@ class AttachmentImageViewSet(viewsets.ModelViewSet):
         queryset = ImageAttachment.objects.all()
         article = self.request.QUERY_PARAMS.get('resource', None)
         if article is not None:
-            queryset = queryset.filter(resource__id=article)
+            queryset = queryset.filter(article__id=article)
         return queryset
 
 class AttachmentViewSet(viewsets.ModelViewSet):
-    queryset = Attachment.objects.all()
+    queryset = ImageAttachment.objects.all()
     serializer_class = AttachmentSerializer
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -91,5 +91,5 @@ class ImageViewSet(viewsets.ModelViewSet):
         queryset = Image.objects.all()
         q = self.request.QUERY_PARAMS.get('q', None)
         if q is not None:
-            queryset = queryset.filter(title__icontains=q)
+            queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset

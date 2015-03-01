@@ -14,10 +14,11 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
+    filename = serializers.CharField(read_only=True)
 
     class Meta:
         model = Image
-        fields = ('id', 'img', 'title', 'authors', 'url', 'thumb', 'created_at',)
+        fields = ('id', 'img', 'filename', 'title', 'authors', 'url', 'thumb', 'created_at',)
 
 class CommentSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -39,12 +40,12 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name',)
 
 class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    resource = serializers.PrimaryKeyRelatedField(queryset=Resource.objects.all(), required=False)
+    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all(), required=False)
     image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
 
     class Meta:
         model = ImageAttachment
-        fields = ('id', 'resource', 'image', 'caption')
+        fields = ('id', 'article', 'image', 'caption')
 
 class AttachmentImageSerializer(AttachmentSerializer):
     image = ImageSerializer(read_only=True)
