@@ -1,0 +1,93 @@
+/* line 2, ../sass/modules/homepage.scss */
+.left {
+  float: left;
+}
+
+/* line 6, ../sass/modules/homepage.scss */
+.right {
+  float: right;
+}
+
+/* line 10, ../sass/modules/homepage.scss */
+.clearfix {
+  overflow: auto;
+}
+
+/* line 14, ../sass/modules/homepage.scss */
+div.frontpage {
+  margin: 50px 0;
+}
+/* line 16, ../sass/modules/homepage.scss */
+div.frontpage div.col {
+  float: left;
+}
+/* line 18, ../sass/modules/homepage.scss */
+div.frontpage div.col.left {
+  width: 340px;
+  padding-right: 15px;
+}
+/* line 21, ../sass/modules/homepage.scss */
+div.frontpage div.col.left article {
+  border-bottom: 1px dotted #C8C8C8;
+  padding: 15px 0;
+}
+/* line 24, ../sass/modules/homepage.scss */
+div.frontpage div.col.left article:first-child {
+  padding-top: 0;
+}
+/* line 29, ../sass/modules/homepage.scss */
+div.frontpage div.col.middle {
+  width: 500px;
+  padding: 0 15px;
+  border-left: 1px solid #E6E6E6;
+  border-right: 1px solid #E6E6E6;
+}
+/* line 38, ../sass/modules/homepage.scss */
+div.frontpage article h1, div.frontpage article h2 {
+  font-family: TisaPro-Bold;
+  margin: 3px 0;
+}
+/* line 43, ../sass/modules/homepage.scss */
+div.frontpage article p.snippet {
+  font-family: Georgia;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+  line-height: 20px;
+  color: #363636;
+}
+/* line 52, ../sass/modules/homepage.scss */
+div.frontpage article img {
+  width: 100%;
+}
+/* line 56, ../sass/modules/homepage.scss */
+div.frontpage article.primary h1 {
+  font-size: 20px;
+  line-height: 29px;
+}
+/* line 62, ../sass/modules/homepage.scss */
+div.frontpage article.secondary h2 {
+  font-size: 21px;
+  line-height: 27px;
+}
+/* line 69, ../sass/modules/homepage.scss */
+div.frontpage article.thumb .left {
+  width: 125px;
+}
+/* line 72, ../sass/modules/homepage.scss */
+div.frontpage article.thumb .right {
+  width: 200px;
+}
+/* line 75, ../sass/modules/homepage.scss */
+div.frontpage article.thumb h2 {
+  font-size: 15px;
+  line-height: 22px;
+  margin: 0;
+}
+
+/* line 84, ../sass/modules/homepage.scss */
+div.container.large {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+}
