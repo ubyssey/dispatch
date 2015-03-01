@@ -13,7 +13,7 @@
     {% for article in article_list %}
         <div class="article">
             <div class="title cell">
-                <a href="{% url 'apps.manager.views.article_edit' article.id %}">{{ article.long_headline }}</a>
+                <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline }}</a>
             </div>
             <div class="cell">
                 <span>{{ article.get_author_string }}</span>

@@ -52,7 +52,40 @@ class Section(Model):
     def __str__(self):
         return self.name
 
-class Article(Resource):
+class Publishable(Model):
+
+    parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
+    preview = BooleanField(default=False)
+    head = BooleanField(default=False)
+
+    # Overriding
+    def save(self, revision=True, *args, **kwargs):
+
+        if self.parent and revision:
+            Article.objects.filter(parent=self.parent,head=True).update(head=False)
+            # Both fields required for this to work -- something to do with model inheritance.
+            self.pk = None
+            self.id = None
+            self.head = True
+
+        super(Publishable, self).save(*args, **kwargs)
+
+        if not self.parent:
+            self.parent = self
+            super(Publishable, self).save(update_fields=['parent'])
+
+        return self
+
+    def get_previous_revision(self):
+        if self.parent == self:
+            return self
+        revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
+        return revision
+
+    class Meta:
+        abstract = True
+
+class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
@@ -60,7 +93,7 @@ class Article(Resource):
     is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
-    slug = SlugField(unique=True)
+    slug = SlugField()
 
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
@@ -133,27 +166,24 @@ class Article(Resource):
             args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
             temp_id = int(args[0])
             return "[image %s]" % str(attachments[temp_id].id)
-        return re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
+        self.content = re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
 
     def clear_old_attachments(self):
-        to_delete = ImageAttachment.objects.filter(article=self)
 
-        if self.featured_image:
-            to_delete = to_delete.exclude(id=self.featured_image.id)
+        previous_attachments = ImageAttachment.objects.filter(article=self.get_previous_revision())
 
-        to_delete = list(to_delete.values_list('id', flat=True))
-
-        attachments = re.findall(r'\[image [^\[\]]*\]', self.content)
-
-        for attachment in attachments:
-            args = re.findall(r'(\".+\"|[0-9]+)+', attachment)
+        def keep_attachment(code):
+            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
             id = int(args[0])
             try:
-                to_delete.remove(id)
-            except ValueError:
-                pass
-
-        ImageAttachment.objects.filter(id__in=to_delete).delete()
+                ins = previous_attachments.get(pk=id)
+                ins.article = self
+                ins.pk = None
+                ins.save()
+                return "[image %s]" % str(ins.id)
+            except ImageAttachment.DoesNotExist:
+                return code.group(0)
+        self.content = re.sub(r'\[image[^\[\]]*\]', keep_attachment, self.content)
 
     def get_author_string(self):
         author_str = ""

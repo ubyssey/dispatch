@@ -4,7 +4,7 @@
     <div class="save-buttons">
         <button class="publish-article sq-button" type="submit">Publish</button>
         <a class="sq-button" href="{% url 'apps.manager.views.article_delete' article.id %}">Delete</a>
-        <a class="sq-button" href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview" target="_blank">Preview</a>
+        <a class="sq-button" href="http://localhost:8000/{{ article.section.name|lower }}/{{ article.slug }}/?preview={{ article.id }}" target="_blank">Preview</a>
         <button class="submit-article sq-button green" type="submit">Save</button>
     </div>
 {% endblock %}
