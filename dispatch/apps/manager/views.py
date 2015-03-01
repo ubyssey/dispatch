@@ -12,7 +12,7 @@ def section(request, section):
     return render_to_response(
         "admin/article/list.html",
         {
-            'article_list' : Article.objects.filter(section__name__iexact=section,is_active=True).order_by('-published_at'),
+            'article_list' : Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at'),
             'section': section,
             'list_title': section,
         },
@@ -58,7 +58,7 @@ def article_add(request):
 
 @staff_member_required
 def article_edit(request, id):
-    a = Article.objects.get(pk=id)
+    a = Article.objects.filter(parent=id,preview=False).order_by('-pk')[0]
     saved = 0
     save_attempt = 0
     if request.method == 'POST':
