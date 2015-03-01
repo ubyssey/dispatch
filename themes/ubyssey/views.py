@@ -9,17 +9,18 @@ class UbysseyTheme(DefaultTheme):
 
     def home(self, request):
 
-        all = Article.objects.filter(head=True).order_by('-importance', 'published_at')
+        frontpage = Article.objects.frontpage()
 
         articles = {
-            'primary': all[0],
-            'secondary': all[1],
-            'thumbs': all[2:],
+             'primary': frontpage[0],
+             'secondary': frontpage[1],
+             'thumbs': frontpage[2:],
         }
 
         context = {
             'articles': articles,
         }
+
         t = get_template('index.html')
         c = RequestContext(request, context)
         return HttpResponse(t.render(c))

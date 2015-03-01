@@ -1,6 +1,6 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField, SET_NULL)
+    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField, SET_NULL, Manager)
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from dispatch.apps.core.models import Person
@@ -86,6 +86,31 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
+class ArticleManager(Manager):
+
+    def frontpage(self, reading_times=False):
+        if not reading_times:
+            reading_times = {
+                'morning': '11:00:00',
+                'midday': ('11:00:00', '16:00:00',),
+                'evening': '16:00:00',
+            }
+        return self.raw("""
+            SELECT *,
+                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+                (1 / importance) as importance_factor,
+                TIME(published_at) as time,
+                CASE reading_time
+                     WHEN 'morning' THEN IF(TIME(published_at)<'%s',1,0)
+                     WHEN 'midday' THEN IF(TIME(published_at)>='%s' AND TIME(published_at)<'%s',1,0)
+                     WHEN 'evening' THEN IF(TIME(published_at)>='%s',1,0)
+                     ELSE 0.5
+                END as reading
+                FROM content_article
+                WHERE head = 1
+                ORDER BY (age * importance_factor ), reading DESC
+            """ % (reading_times['morning'], reading_times['midday'][0], reading_times['midday'][1], reading_times['evening']))
+
 class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
@@ -104,6 +129,15 @@ class Article(Resource, Publishable):
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=1)
 
+    READING_CHOICES = (
+        ('anytime', 'Anytime'),
+        ('morning', 'Morning'),
+        ('midday', 'Midday'),
+        ('evening', 'Evening'),
+    )
+
+    reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
+
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
     images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
@@ -115,6 +149,8 @@ class Article(Resource, Publishable):
 
     content = TextField()
     snippet = TextField()
+
+    objects = ArticleManager()
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))

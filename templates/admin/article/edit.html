@@ -103,8 +103,12 @@
                 {{ form.section }}
             </div>
             <div class="field">
+                <label for="{{ form.reading_time.id_for_label }}">Optimal reading time:</label>
+                {{ form.reading_time }}
+            </div>
+            <div class="field">
                 <label for="{{ form.importance.id_for_label }}">Importance:</label>
-                {{ form.importance}}
+                {{ form.importance }}
             </div>
             {{ form.slug.errors }}
             <div class="field">
