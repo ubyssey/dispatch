@@ -24,7 +24,8 @@ class UbysseyTheme(DefaultTheme):
         articles = {
              'primary': frontpage[0],
              'secondary': frontpage[1],
-             'thumbs': frontpage[2:],
+             'thumbs': frontpage[2:4],
+             'bullets': frontpage[4:7]
         }
 
         context = {

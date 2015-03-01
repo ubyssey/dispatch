@@ -122,8 +122,6 @@ class ArticleManager(Manager):
 
         return results
 
-
-
 class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
@@ -280,6 +278,10 @@ class Image(Resource):
 
     def get_absolute_url(self):
         return "http://dispatch.dev:8888/media/" + str(self.img)
+
+    def get_medium_url(self):
+        name = re.split('.(jpg|gif|png)', self.img.name)[0]
+        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, 'medium')
 
     def get_thumbnail_url(self):
         name = re.split('.(jpg|gif|png)', self.img.name)[0]

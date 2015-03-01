@@ -18,22 +18,37 @@ div.frontpage {
     &.left {
       width: 340px;
       padding-right: 15px;
-      article {
+      border-right: 1px solid #E6E6E6;
+
+      article, ul.article-headlines {
         border-bottom: 1px dotted #C8C8C8;
         padding: 15px 0;
         &:first-child {
           padding-top: 0;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+      ul.article-headlines {
+        padding-left: 24px;
+        margin: 0;
+        li {
+          font-size: 24px;
+          h2 {
+            font-size: 14px;
+            margin: 0;
+          }
         }
       }
     }
     &.middle {
       width: 500px;
       padding: 0 15px;
-      border-left: 1px solid #E6E6E6;
       border-right: 1px solid #E6E6E6;
     }
   }
-  article {
+  article, li {
 
     h1, h2 {
       font-family: TisaPro-Bold;
