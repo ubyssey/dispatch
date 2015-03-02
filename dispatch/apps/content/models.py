@@ -99,17 +99,15 @@ class ArticleManager(Manager):
         return self.raw("""
             SELECT *,
                 TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
-                (1 / importance) as importance_factor,
-                TIME(published_at) as time,
                 CASE reading_time
-                     WHEN 'morning' THEN IF(CURTIME()<%(morning_start)s,1,0)
-                     WHEN 'midday' THEN IF(CURTIME()>=%(midday_start)s AND CURTIME()<%(midday_end)s,1,0)
-                     WHEN 'evening' THEN IF(CURTIME()>=%(evening_start)s,1,0)
+                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                     WHEN 'midday' THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
                      ELSE 0.5
                 END as reading
                 FROM content_article
                 WHERE head = 1
-                ORDER BY reading DESC, (age * importance_factor )
+                ORDER BY reading DESC, ( age * ( 1 / importance ) )
             """, reading_times)
 
     def get_sections(self, exclude=False):
