@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
 from django.template import RequestContext
-from dispatch.apps.content.models import Article
+from dispatch.apps.content.models import Article, Block, Module
 from dispatch.apps.frontend.themes.default import DefaultTheme
 
 class UbysseyTheme(DefaultTheme):
@@ -13,27 +13,24 @@ class UbysseyTheme(DefaultTheme):
 
         sections = Article.objects.get_sections(exclude=('blog',))
 
-        for article in frontpage:
-            print article.long_headline
-            print article.age * article.importance_factor
-            print article.reading
-            print article.time
-            print article.reading_time
-            print "------"
+        block = Block.objects.all()[0]
 
         articles = {
-             'primary': frontpage[0],
-             'secondary': frontpage[1],
-             'thumbs': frontpage[2:4],
-             'bullets': frontpage[4:7]
-        }
+              'primary': frontpage[0],
+              'secondary': frontpage[1],
+              'thumbs': frontpage[2:4],
+              'bullets': frontpage[4:7]
+         }
+
+        for module in block.modules.all():
+            print module.render()
+
 
         context = {
             'articles': articles,
             'sections': sections,
+            'side_block': block,
         }
-
-        print sections
 
         t = get_template('index.html')
         c = RequestContext(request, context)

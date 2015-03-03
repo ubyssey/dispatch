@@ -42,9 +42,12 @@
             {% endwith %}
         </div>
         <div class="col right">
-
+            {% for module in side_block.modules.all %}
+                {{ module.render }}
+            {% endfor %}
         </div>
     </div>
+    {% include 'homepage/section.html' with section="news" articles=sections.news %}
 </div>
 
 </body>
