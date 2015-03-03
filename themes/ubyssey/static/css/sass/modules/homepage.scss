@@ -1,14 +1,5 @@
-
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
-
-.clearfix {
-  overflow: auto;
+img.featured {
+  width: 100%;
 }
 
 div.frontpage {
@@ -55,15 +46,6 @@ div.frontpage {
       margin: 3px 0;
     }
 
-    p.snippet {
-      font-family: Georgia;
-      font-size: 14px;
-      margin-top: 5px;
-      margin-bottom: 0;
-      line-height: 20px;
-      color: #363636;
-    }
-
     img {
       width: 100%;
     }
@@ -96,10 +78,57 @@ div.frontpage {
   }
 }
 
+section.homepage {
+  width: 887px;
+  border-right: 1px solid #E6E6E6;
+  div.inner {
+    padding: 0 15px;
+  }
+  .left {
+    border-right: 1px solid #E6E6E6;
+    div.inner {
+      padding-left: 0;
+    }
+  }
+}
+
 div.container.large {
   max-width: 1340px;
   width: 100%;
   margin: 0 auto;
 
+}
+
+// article
+
+p.snippet {
+  font-family: Georgia;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+  line-height: 20px;
+  color: #363636;
+}
+
+//headlines
+
+h1, h2, h3, h4, h5 {
+  &.headline {
+      margin: 7px 0;
+      font-family: TisaPro-Bold;
+      &:first-child {
+        margin-top: 0;
+      }
+  }
+}
+
+h3.headline {
+  font-size: 24px;
+  line-height: 35px;
+}
+
+h4.headline {
+  font-size: 17px;
+  line-height: 25px;
 }
 

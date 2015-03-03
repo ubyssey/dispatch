@@ -1,72 +1,116 @@
-/* line 2, ../sass/modules/homepage.scss */
-.left {
-  float: left;
+/* line 1, ../sass/modules/homepage.scss */
+img.featured {
+  width: 100%;
 }
 
-/* line 6, ../sass/modules/homepage.scss */
-.right {
-  float: right;
-}
-
-/* line 10, ../sass/modules/homepage.scss */
-.clearfix {
-  overflow: auto;
-}
-
-/* line 14, ../sass/modules/homepage.scss */
+/* line 5, ../sass/modules/homepage.scss */
 div.frontpage {
   margin: 50px 0;
 }
-/* line 16, ../sass/modules/homepage.scss */
+/* line 7, ../sass/modules/homepage.scss */
 div.frontpage div.col {
   float: left;
 }
-/* line 18, ../sass/modules/homepage.scss */
+/* line 9, ../sass/modules/homepage.scss */
 div.frontpage div.col.left {
   width: 340px;
   padding-right: 15px;
   border-right: 1px solid #E6E6E6;
 }
-/* line 23, ../sass/modules/homepage.scss */
+/* line 14, ../sass/modules/homepage.scss */
 div.frontpage div.col.left article, div.frontpage div.col.left ul.article-headlines {
   border-bottom: 1px dotted #C8C8C8;
   padding: 15px 0;
 }
-/* line 26, ../sass/modules/homepage.scss */
+/* line 17, ../sass/modules/homepage.scss */
 div.frontpage div.col.left article:first-child, div.frontpage div.col.left ul.article-headlines:first-child {
   padding-top: 0;
 }
-/* line 29, ../sass/modules/homepage.scss */
+/* line 20, ../sass/modules/homepage.scss */
 div.frontpage div.col.left article:last-child, div.frontpage div.col.left ul.article-headlines:last-child {
   border-bottom: none;
 }
-/* line 33, ../sass/modules/homepage.scss */
+/* line 24, ../sass/modules/homepage.scss */
 div.frontpage div.col.left ul.article-headlines {
   padding-left: 24px;
   margin: 0;
 }
-/* line 36, ../sass/modules/homepage.scss */
+/* line 27, ../sass/modules/homepage.scss */
 div.frontpage div.col.left ul.article-headlines li {
   font-size: 24px;
 }
-/* line 38, ../sass/modules/homepage.scss */
+/* line 29, ../sass/modules/homepage.scss */
 div.frontpage div.col.left ul.article-headlines li h2 {
   font-size: 14px;
   margin: 0;
 }
-/* line 45, ../sass/modules/homepage.scss */
+/* line 36, ../sass/modules/homepage.scss */
 div.frontpage div.col.middle {
   width: 500px;
   padding: 0 15px;
   border-right: 1px solid #E6E6E6;
 }
-/* line 53, ../sass/modules/homepage.scss */
+/* line 44, ../sass/modules/homepage.scss */
 div.frontpage article h1, div.frontpage article h2, div.frontpage li h1, div.frontpage li h2 {
   font-family: TisaPro-Bold;
   margin: 3px 0;
 }
-/* line 58, ../sass/modules/homepage.scss */
-div.frontpage article p.snippet, div.frontpage li p.snippet {
+/* line 49, ../sass/modules/homepage.scss */
+div.frontpage article img, div.frontpage li img {
+  width: 100%;
+}
+/* line 53, ../sass/modules/homepage.scss */
+div.frontpage article.primary h1, div.frontpage li.primary h1 {
+  font-size: 20px;
+  line-height: 29px;
+}
+/* line 59, ../sass/modules/homepage.scss */
+div.frontpage article.secondary h2, div.frontpage li.secondary h2 {
+  font-size: 21px;
+  line-height: 27px;
+}
+/* line 66, ../sass/modules/homepage.scss */
+div.frontpage article.thumb .left, div.frontpage li.thumb .left {
+  width: 125px;
+}
+/* line 69, ../sass/modules/homepage.scss */
+div.frontpage article.thumb .right, div.frontpage li.thumb .right {
+  width: 200px;
+}
+/* line 72, ../sass/modules/homepage.scss */
+div.frontpage article.thumb h2, div.frontpage li.thumb h2 {
+  font-size: 15px;
+  line-height: 22px;
+  margin: 0;
+}
+
+/* line 81, ../sass/modules/homepage.scss */
+section.homepage {
+  width: 887px;
+  border-right: 1px solid #E6E6E6;
+}
+/* line 84, ../sass/modules/homepage.scss */
+section.homepage div.inner {
+  padding: 0 15px;
+}
+/* line 87, ../sass/modules/homepage.scss */
+section.homepage .left {
+  border-right: 1px solid #E6E6E6;
+}
+/* line 89, ../sass/modules/homepage.scss */
+section.homepage .left div.inner {
+  padding-left: 0;
+}
+
+/* line 95, ../sass/modules/homepage.scss */
+div.container.large {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* line 104, ../sass/modules/homepage.scss */
+p.snippet {
   font-family: Georgia;
   font-size: 14px;
   margin-top: 5px;
@@ -74,38 +118,25 @@ div.frontpage article p.snippet, div.frontpage li p.snippet {
   line-height: 20px;
   color: #363636;
 }
-/* line 67, ../sass/modules/homepage.scss */
-div.frontpage article img, div.frontpage li img {
-  width: 100%;
+
+/* line 116, ../sass/modules/homepage.scss */
+h1.headline, h2.headline, h3.headline, h4.headline, h5.headline {
+  margin: 7px 0;
+  font-family: TisaPro-Bold;
 }
-/* line 71, ../sass/modules/homepage.scss */
-div.frontpage article.primary h1, div.frontpage li.primary h1 {
-  font-size: 20px;
-  line-height: 29px;
-}
-/* line 77, ../sass/modules/homepage.scss */
-div.frontpage article.secondary h2, div.frontpage li.secondary h2 {
-  font-size: 21px;
-  line-height: 27px;
-}
-/* line 84, ../sass/modules/homepage.scss */
-div.frontpage article.thumb .left, div.frontpage li.thumb .left {
-  width: 125px;
-}
-/* line 87, ../sass/modules/homepage.scss */
-div.frontpage article.thumb .right, div.frontpage li.thumb .right {
-  width: 200px;
-}
-/* line 90, ../sass/modules/homepage.scss */
-div.frontpage article.thumb h2, div.frontpage li.thumb h2 {
-  font-size: 15px;
-  line-height: 22px;
-  margin: 0;
+/* line 119, ../sass/modules/homepage.scss */
+h1.headline:first-child, h2.headline:first-child, h3.headline:first-child, h4.headline:first-child, h5.headline:first-child {
+  margin-top: 0;
 }
 
-/* line 99, ../sass/modules/homepage.scss */
-div.container.large {
-  max-width: 1340px;
-  width: 100%;
-  margin: 0 auto;
+/* line 125, ../sass/modules/homepage.scss */
+h3.headline {
+  font-size: 24px;
+  line-height: 35px;
+}
+
+/* line 130, ../sass/modules/homepage.scss */
+h4.headline {
+  font-size: 17px;
+  line-height: 25px;
 }
