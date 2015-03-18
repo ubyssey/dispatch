@@ -1,0 +1,34 @@
+/* line 3, ../sass/modules/core.scss */
+.row {
+  overflow: auto;
+}
+
+/* line 7, ../sass/modules/core.scss */
+.left {
+  float: left;
+}
+
+/* line 11, ../sass/modules/core.scss */
+.right {
+  float: right;
+}
+
+/* line 15, ../sass/modules/core.scss */
+.col, .col-4, .col-8 {
+  float: left;
+}
+
+/* line 19, ../sass/modules/core.scss */
+.col-4 {
+  width: 33.3%;
+}
+
+/* line 23, ../sass/modules/core.scss */
+.col-8 {
+  width: 66.3%;
+}
+
+/* line 29, ../sass/modules/core.scss */
+.clearfix {
+  overflow: auto;
+}

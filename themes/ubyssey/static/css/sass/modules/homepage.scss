@@ -1,0 +1,134 @@
+img.featured {
+  width: 100%;
+}
+
+div.frontpage {
+  margin: 50px 0;
+  div.col {
+    float: left;
+    &.left {
+      width: 340px;
+      padding-right: 15px;
+      border-right: 1px solid #E6E6E6;
+
+      article, ul.article-headlines {
+        border-bottom: 1px dotted #C8C8C8;
+        padding: 15px 0;
+        &:first-child {
+          padding-top: 0;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+      ul.article-headlines {
+        padding-left: 24px;
+        margin: 0;
+        li {
+          font-size: 24px;
+          h2 {
+            font-size: 14px;
+            margin: 0;
+          }
+        }
+      }
+    }
+    &.middle {
+      width: 500px;
+      padding: 0 15px;
+      border-right: 1px solid #E6E6E6;
+    }
+  }
+  article, li {
+
+    h1, h2 {
+      font-family: TisaPro-Bold;
+      margin: 3px 0;
+    }
+
+    img {
+      width: 100%;
+    }
+    &.primary {
+      h1 {
+        font-size: 20px;
+        line-height: 29px;
+      }
+    }
+    &.secondary {
+      h2 {
+        font-size: 21px;
+        line-height: 27px;
+      }
+    }
+
+    &.thumb {
+      .left {
+        width: 125px;
+      }
+      .right {
+        width: 200px;
+      }
+      h2 {
+        font-size: 15px;
+        line-height: 22px;
+        margin: 0;
+      }
+    }
+  }
+}
+
+section.homepage {
+  width: 887px;
+  border-right: 1px solid #E6E6E6;
+  div.inner {
+    padding: 0 15px;
+  }
+  .left {
+    border-right: 1px solid #E6E6E6;
+    div.inner {
+      padding-left: 0;
+    }
+  }
+}
+
+div.container.large {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+
+}
+
+// article
+
+p.snippet {
+  font-family: Georgia;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+  line-height: 20px;
+  color: #363636;
+}
+
+//headlines
+
+h1, h2, h3, h4, h5 {
+  &.headline {
+      margin: 7px 0;
+      font-family: TisaPro-Bold;
+      &:first-child {
+        margin-top: 0;
+      }
+  }
+}
+
+h3.headline {
+  font-size: 24px;
+  line-height: 35px;
+}
+
+h4.headline {
+  font-size: 17px;
+  line-height: 25px;
+}
+

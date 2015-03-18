@@ -4,11 +4,6 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .models import User, Person, ContributorRole, Setting
 
-class PersonInline(admin.StackedInline):
-    model = Person
-    max_num = 1
-    extra = 1
-
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
@@ -54,6 +49,7 @@ class UserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('person',)}),
     )
     add_fieldsets = (
         (None, {
@@ -62,7 +58,7 @@ class UserAdmin(UserAdmin):
         }),
     )
 
-    inlines = [ PersonInline, ]
+    #inlines = [ PersonInline, ]
 
     list_display = ['email']
     list_filter = ['is_admin']

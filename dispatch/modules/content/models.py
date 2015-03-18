@@ -1,6 +1,6 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField)
+    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField, SET_NULL, Manager)
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from dispatch.apps.core.models import Person
@@ -61,12 +61,13 @@ class Publishable(Model):
     # Overriding
     def save(self, revision=True, *args, **kwargs):
 
-        if self.parent and revision:
-            Article.objects.filter(parent=self.parent,head=True).update(head=False)
-            # Both fields required for this to work -- something to do with model inheritance.
-            self.pk = None
-            self.id = None
+        if revision:
             self.head = True
+            if self.parent:
+                Article.objects.filter(parent=self.parent,head=True).update(head=False)
+                # Both fields required for this to work -- something to do with model inheritance.
+                self.pk = None
+                self.id = None
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -85,6 +86,41 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
+class ArticleManager(Manager):
+
+    def get_frontpage(self, reading_times=False):
+        if not reading_times:
+            reading_times = {
+                'morning_start': '11:00:00',
+                'midday_start': '11:00:00',
+                'midday_end': '16:00:00',
+                'evening_start': '16:00:00',
+            }
+        return self.raw("""
+            SELECT *,
+                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+                CASE reading_time
+                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                     WHEN 'midday' THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
+                     ELSE 0.5
+                END as reading
+                FROM content_article
+                WHERE head = 1
+                ORDER BY reading DESC, ( age * ( 1 / importance ) )
+            """, reading_times)
+
+    def get_sections(self, exclude=False):
+
+        results = {}
+
+        sections = Section.objects.all()
+
+        for section in sections:
+            results[section.slug] = Article.objects.filter(section=section,head=True)[:3]
+
+        return results
+
 class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
@@ -98,7 +134,19 @@ class Article(Resource, Publishable):
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
-    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], default=1, blank=True, null=True)
+
+    IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
+
+    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=1)
+
+    READING_CHOICES = (
+        ('anytime', 'Anytime'),
+        ('morning', 'Morning'),
+        ('midday', 'Midday'),
+        ('evening', 'Evening'),
+    )
+
+    reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
 
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
@@ -110,6 +158,9 @@ class Article(Resource, Publishable):
     snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
 
     content = TextField()
+    snippet = TextField()
+
+    objects = ArticleManager()
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))
@@ -227,6 +278,10 @@ class Image(Resource):
     def get_absolute_url(self):
         return "http://dispatch.dev:8888/media/" + str(self.img)
 
+    def get_medium_url(self):
+        name = re.split('.(jpg|gif|png)', self.img.name)[0]
+        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, 'medium')
+
     def get_thumbnail_url(self):
         name = re.split('.(jpg|gif|png)', self.img.name)[0]
         return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
@@ -288,5 +343,5 @@ class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
-    image = ForeignKey(Image, related_name='image')
+    image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
