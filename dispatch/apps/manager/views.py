@@ -5,7 +5,48 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, UserFormSet
+
+
+@staff_member_required
+def users(request):
+    return render_to_response(
+        "manager/person/list.html",
+        {'persons' : Person.objects.all()},
+        RequestContext(request, {}),
+    )
+
+
+@staff_member_required
+def user_edit(request, id):
+
+    p = Person.objects.get(pk=id)
+
+    if request.method == 'POST':
+        form = PersonForm(request.POST, instance=p)
+        user_form = UserFormSet(request.POST, instance=p)
+        if form.is_valid():
+            form.save()
+        else:
+            print form.errors
+
+        if user_form.is_valid():
+            user_form.save()
+        else:
+            print user_form.errors
+    else:
+        form = PersonForm(instance=p)
+        user_form = UserFormSet(instance=p)
+
+    context = {
+        'person': p,
+        'form': form,
+        'user_form': user_form,
+    }
+
+    return render(request, "manager/person/edit.html", context)
+
+
 
 @staff_member_required
 def section(request, section):
@@ -44,12 +85,10 @@ def article_add(request):
 
     user = User.objects.get(email=request.user)
 
-    p = Person.objects.get(user=user)
-
     context = {
-        'person': p,
+        'person': user.person,
         'form': form,
-        'authors_list': int(p.id),
+        'authors_list': int(user.person.id),
         'saved': saved,
         'save_attempt': save_attempt,
     }

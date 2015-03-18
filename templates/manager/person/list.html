@@ -1,0 +1,6 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+{% for person in persons %}
+    <a href="{% url 'apps.manager.views.user_edit' person.id %}">{{ person.full_name }}</a><br/>
+{% endfor %}
+{% endblock %}

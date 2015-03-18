@@ -1,7 +1,44 @@
-from django.forms import ModelForm, TextInput, Textarea
+from django.forms import ModelForm, TextInput, Textarea, CharField, PasswordInput, ValidationError
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
+from dispatch.apps.core.models import User, Person
 import uuid
+
+class PersonForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = '__all__'
+
+        exclude = ('roles', 'user')
+
+class UserForm(ModelForm):
+
+    password1 = CharField(label='Password', widget=PasswordInput)
+    password2 = CharField(label='Password confirmation', widget=PasswordInput)
+
+    def clean_password2(self):
+        # Check that the two password entries match
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Passwords don't match")
+        return password2
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super(UserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
+        exclude = ('password',)
+
+UserFormSet = inlineformset_factory(Person, User, form=UserForm, extra=0)
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -80,7 +117,6 @@ class ArticleForm(ModelForm):
     def is_valid(self):
         """
         Performs validation checks on self, attachments and featured image.
-
         Returns True if all three are valid, False otherwise.
         """
         article_is_valid = super(ArticleForm, self).is_valid()

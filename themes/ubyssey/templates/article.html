@@ -44,7 +44,7 @@
             <div class="featured-image">
                 <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
                 <div class="caption">
-                    {{ article.featured_image.caption }} <span class="credit">Photo Geoff Lister / The Ubyssey</span>
+                    {{ article.featured_image.caption }} <span class="credit">Photo {{ article.featured_image.image.authors.all.0 }} / The Ubyssey</span>
                 </div>
             </div>
             <div class="sidebar offset">
