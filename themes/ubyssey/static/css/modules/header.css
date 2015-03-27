@@ -1,0 +1,60 @@
+/* line 1, ../sass/modules/header.scss */
+div.branding {
+  text-align: center;
+  margin: 15px 0;
+}
+/* line 5, ../sass/modules/header.scss */
+div.branding img.top-logo {
+  width: 285px;
+}
+
+/* line 11, ../sass/modules/header.scss */
+nav.main {
+  border-top: 2px solid #33331E;
+  border-bottom: 1px solid #B3B3B3;
+}
+/* line 14, ../sass/modules/header.scss */
+nav.main .inner {
+  padding: 17px 0px 15px 0;
+}
+/* line 18, ../sass/modules/header.scss */
+nav.main .left, nav.main .middle, nav.main .right {
+  float: left;
+}
+/* line 22, ../sass/modules/header.scss */
+nav.main .left, nav.main .right {
+  width: 27%;
+}
+/* line 26, ../sass/modules/header.scss */
+nav.main .right {
+  text-align: right;
+}
+/* line 30, ../sass/modules/header.scss */
+nav.main .middle {
+  width: 46%;
+  text-align: center;
+}
+/* line 35, ../sass/modules/header.scss */
+nav.main ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+/* line 39, ../sass/modules/header.scss */
+nav.main ul li {
+  display: inline-block;
+}
+/* line 44, ../sass/modules/header.scss */
+nav.main ul.sections li {
+  font-family: FranklinGothicURW-Med;
+  font-size: 16px;
+  color: #2B2B2B;
+  margin: 0 10px;
+}
+/* line 53, ../sass/modules/header.scss */
+nav.main ul.meta li {
+  font-family: FranklinGothicURW-Boo;
+  font-size: 14px;
+  color: #33331E;
+  margin: 0 20px;
+}

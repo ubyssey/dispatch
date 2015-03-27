@@ -1,4 +1,5 @@
 @import 'modules/core';
+@import 'modules/header';
 @import 'modules/homepage';
 
 body {
@@ -84,7 +85,8 @@ div.advertisement.leaderboard {
 
 div.container {
     width: 960px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 article {
@@ -107,7 +109,8 @@ article {
       font-family: Georgia;
       font-size: 16px;
       color: #333333;
-      line-height: 24px;
+      line-height: 26px;
+      margin-top: 20px;
       &:first-child {
           margin-top: 5px;
       }
@@ -154,7 +157,7 @@ div.sidebar {
     right: 0;
     width: 300px;
     &.offset {
-      margin-top: 200px;
+      margin-top: 4em;
     }
 }
 
