@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="{{ STATIC_DIR }}css/mobile.css" type="text/css"/>
+    <script src="{{ STATIC_DIR }}js/iscroll.js"></script>
+
+    <script type="text/javascript">
+
+    var myScroll;
+
+
+    myScroll = new IScroll('#main');
+    myScroll.on('scrollEnd', doSomething);
+
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+    </script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <img src="{{ STATIC_DIR }}img/ubyssey_logo_white.png" alt="The Ubyssey" />
+        <a class="menu" href="#"><i class="fa fa-bars"></i></a>
+    </header>
+    <div id="main" class="main">
+             <div class="front-image" style="background-image: url({{ articles.0.featured_image.image.get_absolute_url }});"></div>
+        {% for article in articles %}
+            <article id="article-{{ forloop.counter }}" style="z-index: -{{ forloop.counter }}; top: {{ article.top }}px;">
+                <div class="meta">
+                    <h1>{{ article.short_headline }}</h1>
+                    <p class="reading-time">8 minute read</p>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</body>
+</html>
