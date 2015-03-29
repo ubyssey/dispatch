@@ -19,6 +19,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
         fields = ('id', 'img', 'filename', 'title', 'authors', 'url', 'thumb', 'created_at',)
+        write_only_fields = ('img',)
 
 class CommentSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -61,16 +62,18 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('long_headline',
-                  'short_headline',
-                  'featured_image',
-                  'content',
-                  'authors',
-                  'section',
-                  'published_at',
-                  'importance',
-                  'slug',
-                  )
+        fields = (
+            'id',
+            'long_headline',
+            'short_headline',
+            'featured_image',
+            'content',
+            'authors',
+            'section',
+            'published_at',
+            'importance',
+            'slug',
+        )
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
