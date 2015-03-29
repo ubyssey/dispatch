@@ -25,7 +25,6 @@ var ImageStore = {
             this.images[i] = data;
             callback();
         }.bind(this))
-
     },
     updateImageWithData: function(data){
         var i = _.findIndex(this.images, {id: data.id});
@@ -222,7 +221,7 @@ var ImageManager = React.createClass({
                         </div>
                         <div id="image-catalog" className="content-area">
                             <div className="image-catalog-container" ref="scrollable" onScroll={this.onScroll}>
-                                <ImageDropzone url={'http://localhost:8000/api/image/'} paramName={'img'} params={params} loadMode={this.loadMore} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                                <ImageDropzone url={'http://localhost:8000/api/images/'} paramName={'img'} params={params} loadMode={this.loadMore} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
                             </div>
                             {this.renderImageMeta()}
                         </div>
