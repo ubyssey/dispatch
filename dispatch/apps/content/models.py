@@ -1,9 +1,10 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, ManyToManyField, SlugField, SET_NULL, Manager)
+    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager)
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from dispatch.apps.core.models import Person
+
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -14,6 +15,7 @@ import re
 
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -88,6 +90,16 @@ class Publishable(Model):
 
 class ArticleManager(Manager):
 
+    def get(self, *args, **kwargs):
+        if 'pk' in kwargs:
+            kwargs['parent'] = kwargs['pk']
+            kwargs['head'] = True
+            del kwargs['pk']
+        return super(ArticleManager, self).get(*args, **kwargs)
+
+    def get_revision(self, *args, **kwargs):
+        return super(ArticleManager, self).get(*args, **kwargs)
+
     def get_frontpage(self, reading_times=False):
         if not reading_times:
             reading_times = {
@@ -107,19 +119,30 @@ class ArticleManager(Manager):
                 END as reading
                 FROM content_article
                 WHERE head = 1
-                ORDER BY reading DESC, ( age * ( 1 / importance ) )
+                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
+                LIMIT 7
             """, reading_times)
 
-    def get_sections(self, exclude=False):
+    def get_sections(self, exclude=False, frontpage=[]):
 
         results = {}
 
         sections = Section.objects.all()
 
         for section in sections:
-            results[section.slug] = Article.objects.filter(section=section,head=True)[:3]
+            articles = self.exclude(id__in=frontpage).filter(section=section,head=True)[:5]
+            if len(articles) > 0:
+                results[section.slug] = {
+                    'first': articles[0],
+                    'stacked': articles[1:3],
+                    'bullets': articles[3:],
+                    'rest': articles[1:4],
+                }
 
         return results
+
+    def get_most_popular(self, count=10):
+        return self.filter(head=True).order_by('-importance')[:count]
 
 class Article(Resource, Publishable):
     long_headline = CharField(max_length=200)
@@ -137,7 +160,7 @@ class Article(Resource, Publishable):
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
-    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=1)
+    importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
 
     READING_CHOICES = (
         ('anytime', 'Anytime'),
@@ -161,6 +184,9 @@ class Article(Resource, Publishable):
     snippet = TextField()
 
     objects = ArticleManager()
+
+    def __str__(self):
+        return self.long_headline
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))
@@ -250,6 +276,9 @@ class Article(Resource, Publishable):
             n = n + 1
         return author_str
 
+    def get_absolute_url(self):
+        return "http://localhost:8000/%s/%s/" % (self.section.name.lower(), self.slug)
+
 class Author(Model):
     resource = ForeignKey(Resource)
     person = ForeignKey(Person)
@@ -259,10 +288,12 @@ class Video(Resource):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-
 class Image(Resource):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
+
+    ROOT_URL = "http://dispatch.dev:8888/media/"
+    #ROOT_URL = "http://petersiemens.com/dispatch/media/"
 
     SIZES = {
         'large': (1600, 900),
@@ -275,16 +306,20 @@ class Image(Resource):
     def filename(self):
         return os.path.basename(self.img.name)
 
+    def get_name(self):
+        return re.split('.(jpg|gif|png)', self.img.name)[0]
+
     def get_absolute_url(self):
-        return "http://dispatch.dev:8888/media/" + str(self.img)
+        return self.ROOT_URL + str(self.img)
 
     def get_medium_url(self):
-        name = re.split('.(jpg|gif|png)', self.img.name)[0]
-        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, 'medium')
+        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'medium')
 
     def get_thumbnail_url(self):
-        name = re.split('.(jpg|gif|png)', self.img.name)[0]
-        return "http://dispatch.dev:8888/media/%s-%s.jpg" % (name, self.THUMBNAIL_SIZE)
+        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), self.THUMBNAIL_SIZE)
+
+    def get_wide_url(self):
+        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'wide')
 
     #Overriding
     def save(self, *args, **kwargs):
@@ -292,10 +327,10 @@ class Image(Resource):
         if self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             name = re.split('.(jpg|gif|png)', self.img.name)[0]
-            # self.img.name.split('.(jpg|gif|png)')[0]
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size)
+
 
     def save_thumbnail(self, image, size, name, label):
         width, height = size

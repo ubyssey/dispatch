@@ -1,19 +1,37 @@
+@import 'fonts';
+
 img.featured {
   width: 100%;
 }
 
+div.frontpage-container{
+  display: table;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #E6E6E6;
+  padding-bottom: 25px;
+}
+
 div.frontpage {
-  margin: 50px 0;
-  div.col {
-    float: left;
+
+  display: table-row;
+
+  div.cell {
+    //float: left;
+    display: table-cell;
+    vertical-align: top;
+    box-sizing: border-box;
+    &.left, &.right {
+      //width: 340px;
+      width: 29%;
+    }
     &.left {
-      width: 340px;
       padding-right: 15px;
       border-right: 1px solid #E6E6E6;
-
       article, ul.article-headlines {
         border-bottom: 1px dotted #C8C8C8;
-        padding: 15px 0;
+        padding-top: 15px;
+        padding-bottom: 15px;
         &:first-child {
           padding-top: 0;
         }
@@ -21,20 +39,10 @@ div.frontpage {
           border-bottom: none;
         }
       }
-      ul.article-headlines {
-        padding-left: 24px;
-        margin: 0;
-        li {
-          font-size: 24px;
-          h2 {
-            font-size: 14px;
-            margin: 0;
-          }
-        }
-      }
     }
     &.middle {
-      width: 500px;
+      //width: 500px;
+      width: 42%;
       padding: 0 15px;
       border-right: 1px solid #E6E6E6;
     }
@@ -51,12 +59,20 @@ div.frontpage {
     }
     &.primary {
       h1 {
-        font-size: 20px;
+        margin: 8px 0;
+        font-size: 24px;
         line-height: 29px;
+      }
+      &.feature {
+        text-align: center;
+        h1 {
+          margin: 15px 0;
+        }
       }
     }
     &.secondary {
       h2 {
+        margin-top: 0;
         font-size: 21px;
         line-height: 27px;
       }
@@ -64,10 +80,9 @@ div.frontpage {
 
     &.thumb {
       .left {
-        width: 125px;
-      }
-      .right {
-        width: 200px;
+        //width: 125px;
+        width: 35%;
+        margin-right: 15px;
       }
       h2 {
         font-size: 15px;
@@ -78,28 +93,138 @@ div.frontpage {
   }
 }
 
-section.homepage {
-  width: 887px;
+div.container.large {
+  //max-width: 1340px;
+  max-width: 1260px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Homepage sections
+
+div.sections {
+  float: left;
+  width: 71%;
   border-right: 1px solid #E6E6E6;
-  div.inner {
-    padding: 0 15px;
+  box-sizing: border-box;
+  padding-right: 20px;
+
+  section {
+    box-sizing: border-box;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #E0E0E0;
   }
+  section.homepage {
+    width: 100%;
+
+    .left, .right {
+      box-sizing: border-box;
+    }
+    &.section-1 {
+      .left {
+        padding-right: 15px;
+      }
+      .right {
+        border-left: 1px solid #E6E6E6;
+        padding-left: 15px;
+      }
+    }
+
+
+  }
+
+}
+
+// Section header
+
+h1.section {
+  font-family: $LFT-ETICA;
+  font-size: 26px;
+  color: #242424;
+  line-height: 28px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 25px 0;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// Section articles
+
+article.section-top {
   .left {
-    border-right: 1px solid #E6E6E6;
-    div.inner {
-      padding-left: 0;
+    float: left;
+    width: 40%;
+    margin-right: 20px;
+  }
+  padding-bottom: 25px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+// Stacked articles (used in .section-1)
+article.stacked {
+  border-bottom: 1px dotted #C8C8C8;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  &:last-child {
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
+}
+
+
+// Headline bullets
+ul.article-headlines {
+  padding-left: 24px;
+  margin: 0;
+  li {
+    font-size: 24px;
+    h2 {
+      font-size: 14px;
+      margin: 0;
     }
   }
 }
 
-div.container.large {
-  max-width: 1340px;
-  width: 100%;
-  margin: 0 auto;
-
+article.column {
+  box-sizing: border-box;
+  float: left;
+  width: 33.3%;
+  padding: 0 10px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    padding-right: 0;
+  }
+  h4.headline {
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+  }
 }
 
 // article
+
+
+// Featured image
+
+div.featured-image-container {
+  overflow: hidden;
+  float: left;
+  width: 72px;
+  height: 72px;
+  margin-right: 12px;
+  margin-bottom: 5px;
+  img {
+    width: auto;
+    height: 100%;
+  }
+}
 
 p.snippet {
   font-family: Georgia;
@@ -119,6 +244,13 @@ h1, h2, h3, h4, h5 {
       &:first-child {
         margin-top: 0;
       }
+      a {
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+          color: rgb(0, 113, 201);
+        }
+      }
   }
 }
 
@@ -132,3 +264,115 @@ h4.headline {
   line-height: 25px;
 }
 
+span.author.small {
+  font-family: $LFT-ETICA;
+  font-weight: 600;
+  font-size: 11px;
+  color: #414040;
+  line-height: 16px;
+  display: block;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+// Sidebar
+
+div.sidebar-home {
+  padding-left: 20px;
+  padding-right: 20px;
+  float: left;
+  box-sizing: border-box;
+  width: 29%;
+
+  .sidebar-block {
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 1px solid #E6E6E6;
+    &:first-child {
+      padding-top: 0;
+      border-top: none;
+    }
+    h2.block-title {
+      margin-top: 0;
+      margin-bottom: 25px;
+      text-align: center;
+      font-family: $LFT-ETICA;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+  }
+}
+
+div.advert {
+  &.box {
+    text-align: center;
+  }
+}
+
+div.article-list {
+  ul, ol {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    > li {
+      border-bottom: 1px dotted #C8C8C8;
+      h2.headline {
+        font-family: TisaPro;
+        font-size: 14px;
+        margin: 2px 0;
+      }
+      a {
+        display: block;
+      }
+
+    }
+  }
+  ul {
+    > li {
+      display: block;
+      overflow: auto;
+      font-weight: bold;
+      margin-top: 12px;
+      padding-bottom: 12px;
+      div.featured-image-container {
+        margin-bottom: 0;
+      }
+    }
+  }
+  ol {
+    counter-reset: ol-counter;
+    > li {
+      h2.headline {
+        font-weight: normal;
+      }
+      margin: 18px 0;
+      position: relative;
+      padding-bottom: 15px;
+      padding-left: 40px;
+      a {
+        display: inline-block;
+      }
+      &:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      &:before {
+        font-family: $LFT-ETICA;
+        font-weight: 600;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40px;
+        font-size: 18px;
+        line-height: 20px;
+        text-align: center;
+        color: rgb(50,50,50);
+        content: counter(ol-counter);
+        counter-increment: ol-counter;
+      }
+
+    }
+  }
+}

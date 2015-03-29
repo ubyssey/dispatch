@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
 from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, UserFormSet
-
+from dispatch.helpers import ThemeHelper
 
 @staff_member_required
 def users(request):
@@ -116,6 +116,7 @@ def article_edit(request, id):
         'article': a,
         'form': form,
         'authors_list': a.authors_list(),
+        'templates': ThemeHelper.get_theme_templates(),
         'saved': saved,
         'save_attempt': save_attempt,
     }

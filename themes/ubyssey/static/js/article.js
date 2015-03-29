@@ -32,9 +32,11 @@ var Gallery = React.createClass({displayName: "Gallery",
             currentImage: false,
             image: false,
             image_height: false,
+            initialized: false,
+            visible: false,
         }
     },
-    componentWillMount: function() {
+    initializeImages: function(callback) {
         dispatch.articleAttachments(this.props.article, function(data){
             var images = {};
             $.each(data.results, function(key, image){
@@ -45,10 +47,12 @@ var Gallery = React.createClass({displayName: "Gallery",
                 images: images,
                 images_list: data.results,
                 image_height: $(window).height() - 200,
+                initialized: true,
             });
 
             this.setupEventListeners();
-            this.displayCurrentImage();
+
+            callback();
 
         }.bind(this));
     },
@@ -81,6 +85,25 @@ var Gallery = React.createClass({displayName: "Gallery",
         }.bind(this));
 
     },
+    addSlideTrigger: function(target, action, id_key){
+        $(target).on(action, function(e){
+            e.preventDefault();
+            var image_id = $(e.target).data("id");
+
+            if(gallery.state.visible){
+                this.close();
+            } else {
+                if(!this.state.initialized){
+                    this.initializeImages(function(){
+                        this.open(image_id);
+                    }.bind(this));
+                } else {
+                    this.open(image_id);
+                }
+            }
+
+        }.bind(this));
+    },
     setCurrentImage: function(image_id){
         this.setState({
             currentImage: image_id,
@@ -102,17 +125,19 @@ var Gallery = React.createClass({displayName: "Gallery",
     },
     open: function(image_id){
         this.setCurrentImage(image_id);
-        if(this.state.images_list.length != 0){
-            this.displayCurrentImage();
-        }
+        //if(this.state.images_list.length != 0){
+        this.displayCurrentImage();
+        //}
         this.setState({
             visible: true,
         });
+        $('body').addClass('no-scroll');
     },
     close: function(){
         this.setState({
             visible: false,
         });
+        $('body').removeClass('no-scroll');
     },
     previous: function(){
         if(this.state.currentIndex == 0) return;
@@ -170,22 +195,9 @@ var Gallery = React.createClass({displayName: "Gallery",
 });
 
 var article = $('article').data("id");
-var gallery;
+var gallery = React.render(
+    React.createElement(Gallery, {article: article}),
+    document.getElementById('gallery')
+);
 
-$('.article-attachment').click(function(){
-
-    if(!gallery){
-        gallery = React.render(
-            React.createElement(Gallery, {article: article}),
-            document.getElementById('gallery')
-        );
-    }
-
-    if(gallery.state.visible){
-        gallery.close();
-    } else {
-        var image_id = $(this).data("id");
-        gallery.open(image_id);
-    }
-
-});
+gallery.addSlideTrigger('.article-attachment', 'click', 'id');
