@@ -16,12 +16,12 @@ class DefaultTheme():
                     if preview == 'latest':
                         article = Article.objects.filter(slug=slug, section__name=section).order_by('-pk')[0]
                     else:
-                        article = Article.objects.get(pk=int(preview))
+                        article = Article.objects.get_revision(pk=int(preview))
                 except Article.DoesNotExist:
                     raise Http404("Invalid preview ID.")
             else:
                 try:
-                    article = Article.objects.get(slug=slug, section__name=section,is_published=True)
+                    article = Article.objects.get(slug=slug, section__name=section, head=True)#is_published=True)
                 except Article.DoesNotExist:
                     raise Http404("This article does not exist.")
         return article
