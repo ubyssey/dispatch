@@ -1,0 +1,88 @@
+{% include 'header.html' %}
+
+<div class="container large">
+    <div class="frontpage-container">
+        <div class="frontpage">
+            <div class="cell left">
+            {% with articles.secondary as article %}
+                <article class="secondary">
+                    <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                    <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+                    <p class="snippet">{{ article.snippet }}</p>
+                </article>
+            {% endwith %}
+            {% for article in articles.thumbs %}
+                <article class="thumb row">
+                    <div class="left">
+                        <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
+                    </div>
+                    <div>
+                        <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                    </div>
+                </article>
+            {% endfor %}
+               <ul class="article-headlines">
+            {% for article in articles.bullets %}
+                <li><h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2></li>
+            {% endfor %}
+                </ul>
+            </div>
+            <div class="cell middle">
+                {% with articles.primary as article %}
+                <article class="primary feature">
+                    <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
+                    <h1>{{ article.long_headline }}</h1>
+                    <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+                    <p class="snippet">{{ article.snippet }}</p>
+                </article>
+                {% endwith %}
+            </div>
+            <div class="cell right">
+                {% comment %}{% for module in side_block.modules.all %}
+                    {{ module.render }}
+                {% endfor %}{% endcomment %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="sections">
+            {% include 'homepage/blocks/section_1.html' with section="news" articles=sections.news %}
+            {% include 'homepage/blocks/section_2.html' with section="culture" articles=sections.culture %}
+            {% include 'homepage/blocks/section_2.html' with section="sports" articles=sections.sports %}
+        </div>
+        <div class="sidebar-home">
+            <div class="advert box sidebar-block">
+                <img src="{{ STATIC_DIR }}img/sample-box-ad.png" />
+            </div>
+            <div class="article-list popular sidebar-block">
+                <h2 class="block-title">Most popular this week</h2>
+                <ol>
+                    {% for article in popular %}
+                    <li><h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2></li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="advert box sidebar-block">
+                <img src="{{ STATIC_DIR }}img/sample-box-ad.png" />
+            </div>
+            <div class="article-list blog sidebar-block">
+                <h2 class="block-title">From the blog</h2>
+                <ul>
+                    {% for article in popular %}
+                    <li>
+                        <a class="clearfix" href="{{ article.get_absolute_url }}">
+                            <div class="featured-image-container">
+                                <img class="featured" src="{{ article.featured_image.image.get_medium_url }}" />
+                            </div>
+                            <h2 class="headline">{{ article.long_headline }}</h2>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

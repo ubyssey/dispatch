@@ -15,6 +15,17 @@ class ThemeHelper():
         return theme_name
 
     @staticmethod
+    def get_theme_templates(theme_name=False):
+        if not theme_name:
+            theme_name = ThemeHelper.get_current_theme()
+        try:
+            templates = importlib.import_module("themes." + theme_name + ".templates")
+            templates = templates.templates.all()
+        except:
+            templates = []
+        return templates
+
+    @staticmethod
     def get_theme_urls(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
@@ -42,3 +53,5 @@ class ThemeHelper():
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         return 'themes/' + theme_name + '/templates/'
+
+

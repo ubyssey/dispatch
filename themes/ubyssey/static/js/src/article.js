@@ -23,7 +23,7 @@ $(document).scroll(function() {
 });
 
 
-var Gallery = React.createClass({
+var Gallery = React.createClass({displayName: "Gallery",
     getInitialState: function(){
         return {
             images: {},
@@ -32,9 +32,11 @@ var Gallery = React.createClass({
             currentImage: false,
             image: false,
             image_height: false,
+            initialized: false,
+            visible: false,
         }
     },
-    componentWillMount: function() {
+    initializeImages: function(callback) {
         dispatch.articleAttachments(this.props.article, function(data){
             var images = {};
             $.each(data.results, function(key, image){
@@ -45,10 +47,12 @@ var Gallery = React.createClass({
                 images: images,
                 images_list: data.results,
                 image_height: $(window).height() - 200,
+                initialized: true,
             });
 
             this.setupEventListeners();
-            this.displayCurrentImage();
+
+            callback();
 
         }.bind(this));
     },
@@ -81,6 +85,25 @@ var Gallery = React.createClass({
         }.bind(this));
 
     },
+    addSlideTrigger: function(target, action, id_key){
+        $(target).on(action, function(e){
+            e.preventDefault();
+            var image_id = $(e.target).data("id");
+
+            if(gallery.state.visible){
+                this.close();
+            } else {
+                if(!this.state.initialized){
+                    this.initializeImages(function(){
+                        this.open(image_id);
+                    }.bind(this));
+                } else {
+                    this.open(image_id);
+                }
+            }
+
+        }.bind(this));
+    },
     setCurrentImage: function(image_id){
         this.setState({
             currentImage: image_id,
@@ -102,17 +125,19 @@ var Gallery = React.createClass({
     },
     open: function(image_id){
         this.setCurrentImage(image_id);
-        if(this.state.images_list.length != 0){
-            this.displayCurrentImage();
-        }
+        //if(this.state.images_list.length != 0){
+        this.displayCurrentImage();
+        //}
         this.setState({
             visible: true,
         });
+        $('body').addClass('no-scroll');
     },
     close: function(){
         this.setState({
             visible: false,
         });
+        $('body').removeClass('no-scroll');
     },
     previous: function(){
         if(this.state.currentIndex == 0) return;
@@ -132,22 +157,22 @@ var Gallery = React.createClass({
                 maxHeight: this.state.image_height,
             };
             return (
-                <div className="slide">
-                    <img className="slide-image" style={imageStyle} src={ this.state.image } />
-                    <p className="slide-caption">{this.state.caption}</p>
-                    {this.renderControls()}
-                </div>
+                React.createElement("div", {className: "slide"}, 
+                    React.createElement("img", {className: "slide-image", style: imageStyle, src:  this.state.image}), 
+                    React.createElement("p", {className: "slide-caption"}, this.state.caption), 
+                    this.renderControls()
+                )
             );
         }
     },
     renderControls: function(){
         if(this.state.images_list.length > 1){
             return (
-                <div className="navigation">
-                    <a className="prev-slide" href="#"><i className="fa fa-chevron-left"></i></a>
-                    <span className="curr-slide">{this.state.currentIndex + 1}</span> &nbsp; of &nbsp; <span className="total-slide">{this.state.images_list.length}</span>
-                    <a className="next-slide" href="#"><i className="fa fa-chevron-right"></i></a>
-                </div>
+                React.createElement("div", {className: "navigation"}, 
+                    React.createElement("a", {className: "prev-slide", href: "#"}, React.createElement("i", {className: "fa fa-chevron-left"})), 
+                    React.createElement("span", {className: "curr-slide"}, this.state.currentIndex + 1), "   of   ", React.createElement("span", {className: "total-slide"}, this.state.images_list.length), 
+                    React.createElement("a", {className: "next-slide", href: "#"}, React.createElement("i", {className: "fa fa-chevron-right"}))
+                )
             );
         }
     },
@@ -158,34 +183,21 @@ var Gallery = React.createClass({
             var visible = "";
         }
         return (
-            <div className={'slideshow ' + visible}>
-                <div className="image-container">
-                    <div className="image-inner">
-                    {this.renderImage()}
-                    </div>
-                </div>
-            </div>
+            React.createElement("div", {className: 'slideshow ' + visible}, 
+                React.createElement("div", {className: "image-container"}, 
+                    React.createElement("div", {className: "image-inner"}, 
+                    this.renderImage()
+                    )
+                )
+            )
         );
     }
 });
 
 var article = $('article').data("id");
-var gallery;
+var gallery = React.render(
+    React.createElement(Gallery, {article: article}),
+    document.getElementById('gallery')
+);
 
-$('.article-attachment').click(function(){
-
-    if(!gallery){
-        gallery = React.render(
-            <Gallery article={article} />,
-            document.getElementById('gallery')
-        );
-    }
-
-    if(gallery.state.visible){
-        gallery.close();
-    } else {
-        var image_id = $(this).data("id");
-        gallery.open(image_id);
-    }
-
-});
+gallery.addSlideTrigger('.article-attachment', 'click', 'id');

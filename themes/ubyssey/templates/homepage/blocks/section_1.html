@@ -1,0 +1,27 @@
+<h1 class="section">{{ section|title }}</h1>
+<section class="{{ section }} homepage section-1 row">
+    <div class="left col-8">
+        <article class="section-xl">
+        {% with articles.first as article %}
+            <a href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
+            <h3 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h3>
+            <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+            <p class="snippet">{{ article.snippet }}</p>
+        {% endwith %}
+        </article>
+    </div>
+    <div class="right col-4">
+        {% for article in articles.stacked %}
+        <article class="stacked">
+            <h4 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h4>
+            <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+            <p class="snippet">{{ article.snippet }}</p>
+        </article>
+        {% endfor %}
+        <ul class="article-headlines">
+        {% for article in articles.bullets %}
+            <li><h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2></li>
+        {% endfor %}
+        </ul>
+    </div>
+</section>

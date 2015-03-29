@@ -4,6 +4,7 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from dispatch.apps.content.models import Article, Block, Module
 from dispatch.apps.frontend.themes.default import DefaultTheme
+from dispatch.apps.frontend.helpers import templates
 
 class UbysseyTheme(DefaultTheme):
 
@@ -11,7 +12,9 @@ class UbysseyTheme(DefaultTheme):
 
         frontpage = Article.objects.get_frontpage()
 
-        sections = Article.objects.get_sections(exclude=('blog',))
+        frontpage_ids = [int(a.id) for a in frontpage[:2]]
+
+        sections = Article.objects.get_sections(exclude=('blog',),frontpage=frontpage_ids)
 
         block = Block.objects.all()[0]
 
@@ -19,20 +22,29 @@ class UbysseyTheme(DefaultTheme):
               'primary': frontpage[0],
               'secondary': frontpage[1],
               'thumbs': frontpage[2:4],
-              'bullets': frontpage[4:7]
+              'bullets': frontpage[4:6],
          }
 
-        for module in block.modules.all():
-            print module.render()
+        #articles = Article.objects.filter(head=True)
 
+        #n = 0
+        #for article in articles:
+        #    article.top = n * 105
+        #    n += 1
+
+        #for module in block.modules.all():
+        #    print module.render()
+
+        popular = Article.objects.get_most_popular(5)
 
         context = {
             'articles': articles,
             'sections': sections,
             'side_block': block,
+            'popular': popular,
         }
 
-        t = get_template('index.html')
+        t = get_template('homepage/base.html')
         c = RequestContext(request, context)
         return HttpResponse(t.render(c))
 
