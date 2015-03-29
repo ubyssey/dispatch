@@ -26,7 +26,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         return queryset
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all()
+    queryset = Article.objects.filter(head=True).order_by('-importance')
     serializer_class = ArticleSerializer
 
 class TagViewSet(viewsets.ModelViewSet):
