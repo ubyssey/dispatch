@@ -2,7 +2,6 @@ from django.contrib import admin
 from django import forms
 from dispatch.apps.content.models import Tag, Topic, Article, Section, Image, Video
 
-
 class ArticleForm(forms.ModelForm):
 
     class Meta:
