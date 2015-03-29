@@ -27,7 +27,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['dispatch.dev', 'localhost','127.0.0.1']
+ALLOWED_HOSTS = ['dispatch.dev', 'localhost', '127.0.0.1',]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
@@ -51,7 +51,7 @@ TEMPLATE_LOADERS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10
+    'PAGINATE_BY': 10,
 }
 
 # Application definition
