@@ -1,5 +1,4 @@
 var articleHeader = false;
-var dispatch = new Dispatch();
 
 $(function(){
     if($(document).scrollTop() > 50){
@@ -76,7 +75,7 @@ var Gallery = React.createClass({displayName: "Gallery",
         // Clicking outside container
         $(this.getDOMNode()).mouseup(function (e)
         {
-            var container = $(this.getDOMNode()).find(".image-container");
+            var container = $(this.getDOMNode()).find(".slide");
             if (!container.is(e.target) && container.has(e.target).length === 0)
             {
                 this.close();

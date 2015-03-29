@@ -100,20 +100,61 @@ class ArticleManager(Manager):
     def get_revision(self, *args, **kwargs):
         return super(ArticleManager, self).get(*args, **kwargs)
 
-    def get_frontpage(self, reading_times=False):
-        if not reading_times:
+    def get_frontpage(self, reading_times=None, section=None, section_id=None):
+
+        if reading_times is None:
             reading_times = {
                 'morning_start': '11:00:00',
                 'midday_start': '11:00:00',
                 'midday_end': '16:00:00',
                 'evening_start': '16:00:00',
             }
-        return self.raw("""
+
+        context = {
+            'section': section,
+            'section_id': section_id,
+        }
+
+        context.update(reading_times)
+
+        if section is not None:
+            query = """
             SELECT *,
                 TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
                 CASE reading_time
                      WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
-                     WHEN 'midday' THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
+                     ELSE 0.5
+                END as reading
+                FROM content_article
+                INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
+                WHERE head = 1
+                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
+                LIMIT 7
+            """
+        elif section_id is not None:
+            query = """
+            SELECT *,
+                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+                CASE reading_time
+                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
+                     ELSE 0.5
+                END as reading
+                FROM content_article
+                WHERE head = 1 AND section_id = %(section_id)s
+                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
+                LIMIT 7
+            """
+        else:
+            query = """
+            SELECT *,
+                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+                CASE reading_time
+                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
                      WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
                      ELSE 0.5
                 END as reading
@@ -121,7 +162,9 @@ class ArticleManager(Manager):
                 WHERE head = 1
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
-            """, reading_times)
+            """
+
+        return self.raw(query, context)
 
     def get_sections(self, exclude=False, frontpage=[]):
 

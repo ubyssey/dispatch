@@ -2,10 +2,87 @@ __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
 from dispatch.apps.content.models import Article, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
-from rest_framework import viewsets, filters, status
+from rest_framework import viewsets, generics, mixins, filters, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.decorators import detail_route, list_route
 from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
 from django.db.models import Q
+
+class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    serializer_class = ArticleSerializer
+
+    def fetch_frontpage(self, section=False):
+        """
+        Return serialized frontpage listing, optionally filtered by section.
+        """
+        if section:
+            # Check to see if section is an integer. If so, pass as section_id
+            try:
+                queryset = Article.objects.get_frontpage(section_id=int(section))
+            except ValueError:
+                queryset = Article.objects.get_frontpage(section=section)
+        else:
+            queryset = Article.objects.get_frontpage()
+
+        # Cast RawQuerySet as list for pagination to work
+        return list(queryset)
+
+    def list(self, request):
+        """
+        Return resource listing representing the most recent and
+        relevant articles, photos, and videos for the given timestamp.
+
+        TODO: implement timestamp parameter
+        """
+        self.queryset = self.fetch_frontpage()
+        return super(FrontpageViewSet, self).list(self, request)
+
+    @list_route()
+    def section(self, request, section=None):
+        """
+        Return resource listing representing the most recent and
+        relevant articles, photos, and videos in the given section
+        for the given timestamp.
+
+        TODO: implement timestamp parameter
+        """
+        self.queryset = self.fetch_frontpage(section)
+        return super(FrontpageViewSet, self).list(self, request)
+
+
+class ImageAttachmentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    model = ImageAttachment
+    serializer_class = AttachmentImageSerializer
+    paginate_by = 50
+    queryset = ImageAttachment.objects.all()
+
+    def article(self, request, pk=None):
+        if pk is not None:
+            self.queryset = self.queryset.filter(article__id=pk)
+        return super(ImageAttachmentViewSet, self).list(self, request)
+
+class ArticleViewSet(viewsets.ModelViewSet):
+    serializer_class = ArticleSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned articles by filtering
+        against a `topic` query parameter in the URL.
+        """
+        queryset = Article.objects.filter(head=True).order_by('-published_at')
+        topic = self.request.QUERY_PARAMS.get('topic', None)
+        if topic is not None:
+            queryset = queryset.filter(topics__name=topic)
+        return queryset
+
+    @detail_route(methods=['get'],)
+    def attachments(self, request, pk=None):
+        """
+        Returns a list of the aricle's attachments.
+        """
+        view = ImageAttachmentViewSet.as_view({'get': 'article'})
+        return view(request, pk)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -16,34 +93,20 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
     serializer_class = PersonSerializer
 
     def get_queryset(self):
         queryset = Person.objects.all()
         q = self.request.QUERY_PARAMS.get('q', None)
-        queryset = queryset.filter(full_name__icontains=q)
+        if q is not None:
+            queryset = queryset.filter(full_name__icontains=q)
         return queryset
 
-class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.filter(head=True).order_by('-importance')
-    serializer_class = ArticleSerializer
+
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-
-class AttachmentImageViewSet(viewsets.ModelViewSet):
-    model = ImageAttachment
-    serializer_class = AttachmentImageSerializer
-    paginate_by = 100
-
-    def get_queryset(self):
-        queryset = ImageAttachment.objects.all()
-        article = self.request.QUERY_PARAMS.get('resource', None)
-        if article is not None:
-            queryset = queryset.filter(article__id=article)
-        return queryset
 
 class AttachmentViewSet(viewsets.ModelViewSet):
     queryset = ImageAttachment.objects.all()

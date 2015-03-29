@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
 from django.template import RequestContext
-from dispatch.apps.content.models import Article, Block, Module
+from dispatch.apps.content.models import Article
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
 
@@ -15,8 +15,6 @@ class UbysseyTheme(DefaultTheme):
         frontpage_ids = [int(a.id) for a in frontpage[:2]]
 
         sections = Article.objects.get_sections(exclude=('blog',),frontpage=frontpage_ids)
-
-        block = Block.objects.all()[0]
 
         articles = {
               'primary': frontpage[0],
@@ -40,7 +38,6 @@ class UbysseyTheme(DefaultTheme):
         context = {
             'articles': articles,
             'sections': sections,
-            'side_block': block,
             'popular': popular,
         }
 
