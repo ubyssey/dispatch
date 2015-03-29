@@ -84,6 +84,7 @@
             <ul>
                 <li><a href="#basic-fields">Basic</a></li>
                 <li><a href="#media-fields">Featured Image</a></li>
+                <li><a href="#template">Template</a></li>
                 <li><a href="#tags-fields">Tags & Topics</a></li>
                 <li><a href="#developer-fields">Developer</a></li>
                 <li><a href="#images-fields">Images</a></li>
@@ -142,6 +143,16 @@
                     <label for="{{ form.featured_image_form.type.id_for_label }}">Type:</label>
                     {{ form.featured_image_form.type }}
                 </div>
+            </div>
+        </div>
+        <div id="template" class="fieldset tab template">
+            <div class="field">
+                <label>Template:</label>
+                <select>
+                    {% for template in templates %}
+                        <option>{{ template.NAME }}</option>
+                    {% endfor %}
+                </select>
             </div>
         </div>
         <div id="tags-fields" class="fieldset tab tags">
