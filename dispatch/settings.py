@@ -29,11 +29,6 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['dispatch.dev', 'localhost', '127.0.0.1',]
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10
-}
-
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
@@ -50,8 +45,12 @@ TEMPLATE_LOADERS = (
 )
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10,
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+    'UNICODE_JSON': True,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'PAGINATE_BY': 10
 }
 
 # Application definition
