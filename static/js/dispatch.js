@@ -1,5 +1,3 @@
-dispatch = new Dispatch();
-
 function Image(id, url, thumb) {
     this.id;
     this.url;

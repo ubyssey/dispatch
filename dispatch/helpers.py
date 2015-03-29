@@ -37,7 +37,7 @@ class ThemeHelper():
     @staticmethod
     def fetch_theme_urls(theme_name):
         try:
-            urls = importlib.import_module("themes." + theme_name + ".urls")
+            urls = importlib.import_module("dispatch.themes." + theme_name + ".urls")
         except ImportError:
             urls = importlib.import_module("dispatch.apps.frontend.themes.default.urls")
         return urls.theme_urls
@@ -46,12 +46,12 @@ class ThemeHelper():
     def get_static_dir(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        return '/themes/' + theme_name + '/static/'
+        return 'dispatch/themes/' + theme_name + '/static/'
 
     @staticmethod
     def get_template_dir(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        return 'themes/' + theme_name + '/templates/'
+        return 'dispatch/themes/' + theme_name + '/templates/'
 
 
