@@ -89,6 +89,8 @@ class Publishable(Model):
         return revision
 
     def check_stale(self):
+        if self.revision_id == 0:
+            return (False, self)
         head = Article.objects.get(parent=self.parent, head=True)
         return (head.revision_id != self.revision_id, head)
 
