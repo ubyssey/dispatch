@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, CharField, PasswordInput, ValidationError
+from django.forms import ModelForm, TextInput, Textarea, CharField, PasswordInput, ValidationError, HiddenInput
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
@@ -80,6 +80,7 @@ class ArticleForm(ModelForm):
         exclude = ('parent', 'is_active', 'images', 'authors', 'featured_image')
 
         widgets = {
+            'revision_id': HiddenInput(),
             'long_headline': Textarea(attrs={
                 'placeholder': 'Enter a headline',
                 'class': 'headline',
@@ -128,6 +129,10 @@ class ArticleForm(ModelForm):
     # Override
     def save(self, revision=True):
 
+        is_stale, head = self.instance.check_stale()
+        if is_stale:
+            return head
+
         super(ArticleForm, self).save()
 
         # Save related data (tags, topics, etc)
@@ -159,7 +164,7 @@ class ArticleForm(ModelForm):
             self.instance.featured_image = saved
 
     def save_attachments(self, revision=True):
-        if self.attachments_form.has_changed() and self.attachments_form.is_valid():
+        if self.attachments_form.is_valid():
             attachments = self.attachments_form.save()
             if attachments:
                 self.instance.save_new_attachments(attachments)

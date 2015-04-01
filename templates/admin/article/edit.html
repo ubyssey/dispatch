@@ -12,6 +12,7 @@
 <form class="article-form" data-id="{{ article.id }}" data-csrf="{{ csrf_token }}" data-saveattempt="{{ save_attempt }}" data-saved="{{ saved }}" data-saveid="{{ form.save_id }}" action="" method="post">
     {% csrf_token %}
     <input type="hidden" name="saveid" value="{{ form.save_id }}" />
+    {{ form.revision_id }}
     <div class="content panel">
         <div class="inner">
         <div class="field-row headline">
