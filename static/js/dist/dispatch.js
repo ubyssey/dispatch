@@ -48,12 +48,14 @@
         },
         'person': {
             'route': 'persons',
+            'actions': ['GET', 'POST', 'DELETE'],
         }
     }
 
     // Default Settings
     SETTINGS = {
-        'api_url': 'http://localhost:8000/api/',
+        //'api_url': 'http://localhost:8000/api/',
+        'api_url': 'http://dev.ubyssey.ca/api/',
         'api_format': 'json',
     }
 
