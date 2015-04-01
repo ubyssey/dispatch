@@ -221,7 +221,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
                             React.createElement("div", {className: "image-catalog-container", ref: "scrollable", onScroll: this.onScroll}, 
-                                React.createElement(ImageDropzone, {url: 'http://localhost:8000/api/images/', paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
+                                React.createElement(ImageDropzone, {url: 'http://dev.ubyssey.ca/api/images/', paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
                             ), 
                             this.renderImageMeta()
                         ), 

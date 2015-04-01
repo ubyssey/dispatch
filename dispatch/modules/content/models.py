@@ -335,7 +335,7 @@ class Image(Resource):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
 
-    ROOT_URL = "http://dispatch.dev:8888/media/"
+    ROOT_URL = settings.MEDIA_URL
     #ROOT_URL = "http://petersiemens.com/dispatch/media/"
 
     SIZES = {
