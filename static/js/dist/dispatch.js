@@ -52,14 +52,18 @@
         }
     }
 
-    // Default Settings
-    SETTINGS = {
-        //'api_url': 'http://localhost:8000/api/',
+    // Local Settings
+    LOCAL_SETTINGS = {
+        'api_url': 'http://localhost:8000/api/',
+        'api_format': 'json',
+    }
+
+    PRODUCTION_SETTINGS = {
         'api_url': 'http://dev.ubyssey.ca/api/',
         'api_format': 'json',
     }
 
-    dispatch.settings = SETTINGS;
+    dispatch.settings = LOCAL_SETTINGS;
     dispatch.version = '0.0.1';
 
     // Errors
@@ -179,6 +183,14 @@
         return dispatch.find('article.attachments', id, callback);
     }
 
+
+    // Handy functions
+    // --------------------
+    dispatch.getModelURL = function(model){
+        if (!validModel(model)) throw InvalidModelError(model);
+        return dispatch.settings.api_url + getModelRoute(model) + '/';
+    }
+
     // API Functions
     // --------------------
 
@@ -219,14 +231,14 @@
     // --------------------
 
     // Helper function to build AJAX URL
-    var generateAjaxUrl = function(url){
+    var generateAjaxURL = function(url){
         return dispatch.settings.api_url + url + "/?format=" + dispatch.settings.api_format;
     }
 
     dispatch.post = function(url, values, callback) {
       return $.ajax({
         type: "POST",
-        url: generateAjaxUrl(url),
+        url: generateAjaxURL(url),
         data: values,
         success: callback
       });
@@ -235,7 +247,7 @@
     dispatch.get = function(url, values, callback) {
       return $.ajax({
         type: "GET",
-        url: generateAjaxUrl(url),
+        url: generateAjaxURL(url),
         data: values,
         success: callback
       });
@@ -245,7 +257,7 @@
       return $.ajax({
         type: "PATCH",
         data: values,
-        url: generateAjaxUrl(url),
+        url: generateAjaxURL(url),
         success: callback
       });
     };
@@ -260,7 +272,7 @@
 
     dispatch.upload = function(url, data, callback) {
         return $.ajax({
-            url: generateAjaxUrl(url),
+            url: generateAjaxURL(url),
             type: 'POST',
             data: data,
             cache: false,

@@ -221,7 +221,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
                         ), 
                         React.createElement("div", {id: "image-catalog", className: "content-area"}, 
                             React.createElement("div", {className: "image-catalog-container", ref: "scrollable", onScroll: this.onScroll}, 
-                                React.createElement(ImageDropzone, {url: 'http://dev.ubyssey.ca/api/images/', paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
+                                React.createElement(ImageDropzone, {url: dispatch.getModelURL('image'), paramName: 'img', params: params, loadMode: this.loadMore, addFile: this.addFile, onClickHandler: this.selectImage, onUpload: this.onUpload, updateProgress: this.updateProgress, clickable: '.upload-images', images: this.state.images.all()})
                             ), 
                             this.renderImageMeta()
                         ), 
@@ -268,6 +268,7 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
                     response( authorCache[ term ] );
                     return;
                 }
+                // TODO: make use of the Dispatch API library
                 $.getJSON( "http://localhost:8000/api/person/", {q: request.term}, function( data, status, xhr ) {
                     authorCache[ term ] = data.results;
                     response( data.results );
@@ -391,7 +392,7 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
     options.success = function(file, image){
         $(file.previewElement).addClass("catalog-image");
         $(file.previewElement).data("id", image.id);
-        $(file.previewElement).data("url", "http://dispatch.dev:8888/media/" + image.url);
+        $(file.previewElement).data("url", image.url);
         this.props.onUpload(file, image);
     }.bind(this);
 
@@ -457,7 +458,8 @@ function cloneAttachmentForm(image){
     $('#id_imageattachment_set-TOTAL_FORMS').val(parseInt(form_idx) + 1);
 }
 
-var Shortcode = function(quill, options) {
+var DispatchTextEditor = function(quill, options) {
+
     var self = this;
     this.quill = quill;
     this.options = options;
@@ -465,9 +467,6 @@ var Shortcode = function(quill, options) {
     this.article = options.article;
     this.inlineEditorOpen = false;
     this.lastIndex;
-
-    // set text
-    //this.quill.setHTML($('textarea.content').text());
 
     var inlineToolbar = this.quill.addContainer('inline-toolbar');
     var imageTools = this.quill.addContainer('image-tools');
@@ -481,6 +480,7 @@ var Shortcode = function(quill, options) {
     this.attachmentCount = 0;
 
     $('.tb-image').imageModal(function(items){
+
         var id = items[0];
         var image = ImageStore.getImage(id);
 
@@ -490,14 +490,6 @@ var Shortcode = function(quill, options) {
 
         this.attachmentCount = this.attachmentCount + 1;
 
-        //if(images.indexOf(image) == -1){
-        //    var attachment = new Attachment(self.article, image);
-        //    attachment.save(function(data){
-        //        self.addImage(image.url, data.id);
-        //        self.updateSource();
-        //        images.push(attachment);
-        //    });
-        //}
     }.bind(this));
 
 
@@ -512,10 +504,6 @@ var Shortcode = function(quill, options) {
         $('.inline-toolbar .toolbar').show();
         self.quill.setSelection();
     });
-
-//    $(document).on("click", ".ql-line img", function(){
-//        $(this).parent().remove();
-//    });
 
     self.button.click(function(){
         self.update();
@@ -533,7 +521,7 @@ var Shortcode = function(quill, options) {
     });
 }
 
-Shortcode.prototype.update = function(){
+DispatchTextEditor.prototype.update = function(){
     this.quill.focus();
     var range = this.quill.getSelection();
     var code = '[snippet "test_snippet"]';
@@ -545,25 +533,17 @@ Shortcode.prototype.update = function(){
     }
 }
 
-Shortcode.prototype.highlightText = function () {
-    //var text = this.quill.getText(),
-    //    hashRegex = /(\[.*\])/ig,
-    //    match;
-
-    //this.quill.formatText(0, this.quill.getLength(), 'cssClass', false);
+DispatchTextEditor.prototype.highlightText = function () {
 
     $('textarea.content').html(this.quill.getHTML());
 
-    //while (match = hashRegex.exec(text)) {
-    //    this.quill.formatText(match.index, match.index + match[0].length, 'pull_quote', true);
-    //}
 }
 
-Shortcode.prototype.updateSource = function() {
+DispatchTextEditor.prototype.updateSource = function() {
     $('textarea.content').html(this.quill.getHTML());
 }
 
-Shortcode.prototype.inlineToolbar = function() {
+DispatchTextEditor.prototype.inlineToolbar = function() {
 
     var range = this.quill.getSelection();
 
@@ -584,12 +564,12 @@ Shortcode.prototype.inlineToolbar = function() {
     }
 }
 
-Shortcode.prototype.closeInlineToolbar = function() {
+DispatchTextEditor.prototype.closeInlineToolbar = function() {
     $('.inline-toolbar .toolbar').hide();
     $('.inline-toolbar').hide();
 }
 
-Shortcode.prototype.addImage = function(src, id) {
+DispatchTextEditor.prototype.addImage = function(src, id) {
     var lastLine = this.quill.getLength() - 1 == this.lastIndex;
     var options = {
         'src': src,
@@ -597,14 +577,14 @@ Shortcode.prototype.addImage = function(src, id) {
         'class': 'dis-image',
     }
     this.quill.insertEmbed(this.lastIndex, 'image', options);
-    //this.quill.insertText(this.lastIndex, '<img class="dis-image" data-id="' + id + '" src="' + src + '" />');
+
     $("#editor").find()
     this.closeInlineToolbar();
     if(lastLine)
         this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
-Quill.registerModule('shortcode', Shortcode);
+Quill.registerModule('shortcode', DispatchTextEditor);
 
 
 function Editor() {
@@ -624,22 +604,6 @@ function Editor() {
     var self = this;
 
     var selected_image;
-
-//    $(document).on("click", "#remove-image", function(e){
-//        e.preventDefault();
-//        $('.image-tools').hide();
-//
-//        $(selected_image).remove();
-//    });
-
-//    $(document).on("mouseover", ".ql-line img", function(){
-//        selected_image = this;
-//        var image_id = $(this).data("id");
-//        var image = self.images[image_id];
-//        var offset = $(this).position().top;
-//        $('.image-tools').width($(this).width()).height($(this).height());
-//        $('.image-tools').css('top', offset).show();
-//    });
 
     $(document).on("mouseleave", ".image-tools", function(){
         $(this).hide();
@@ -679,6 +643,7 @@ function Editor() {
 
     this.setupEditor = function(){
         self.quill = new Quill('#editor');
+
         self.quill.addModule('shortcode', { button: '#add_shortcode', article: self.article });
         self.quill.addModule('toolbar', { container: '#full-toolbar' });
         self.quill.addModule('link-tooltip', true);
@@ -704,9 +669,8 @@ function Editor() {
         // sessionStorage['articleAttachemnts_'+self.saveid] = attachm
 
         var output = self.generateShortcodes(html);
+
         $(self.source).text(output);
-
-
     }
 
     this.fetchImages = function(callback){
@@ -715,7 +679,6 @@ function Editor() {
             $.each(data.results, function(key, obj){
                 self.images[obj.id] = obj;
             });
-            console.log(self.images);
             callback();
         });
     }
@@ -788,27 +751,4 @@ var Shortcodes = function(quill, options) {
     var processed = processShortcodes($('.source-content').text());
     quill.setHTML(processed);
 
-}
-
-//var quill = new Quill('#editor');
-
-var startImageDrop = function(){
-    $('#editor .ql-line').each(function(){
-        $(this).after('<div class="drop-area"></div>');
-    })
-    $( ".drop-area" ).droppable({
-        hoverClass: 'hover',
-        drop: function( event, ui ) {
-            $( this ).before('<img src="http://dispatch.dev:8888/media/images/IMG_4369_9VKSVRm.jpg"/>');
-        }
-    });
-    $('#editor .ql-line').addClass('no-bottom-margin');
-}
-
-var editorImageDrop = function(){
-}
-
-var stopImageDrop = function(){
-    $('#editor .drop-area').remove();
-    $('#editor .ql-line').removeClass('no-bottom-margin');
 }
