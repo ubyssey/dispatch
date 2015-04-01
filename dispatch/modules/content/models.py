@@ -58,6 +58,7 @@ class Publishable(Model):
 
     parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
     preview = BooleanField(default=False)
+    revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
     # Overriding
@@ -65,6 +66,8 @@ class Publishable(Model):
 
         if revision:
             self.head = True
+            self.revision_id += 1
+
             if self.parent:
                 Article.objects.filter(parent=self.parent,head=True).update(head=False)
                 # Both fields required for this to work -- something to do with model inheritance.
@@ -84,6 +87,10 @@ class Publishable(Model):
             return self
         revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
         return revision
+
+    def check_stale(self):
+        head = Article.objects.get(parent=self.parent, head=True)
+        return (head.revision_id != self.revision_id, head)
 
     class Meta:
         abstract = True
