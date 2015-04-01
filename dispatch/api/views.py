@@ -1,27 +1,25 @@
 __author__ = 'Steven Richards'
 from django.contrib.auth import get_user_model
-from dispatch.apps.content.models import Article, Tag, Image, ImageAttachment
+from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
 from rest_framework import viewsets, generics, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import detail_route, list_route
-from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
+from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, SectionSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
 from django.db.models import Q
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = ArticleSerializer
 
-    def fetch_frontpage(self, section=False):
+    def fetch_frontpage(self, section_id=None, section_slug=None):
         """
         Return serialized frontpage listing, optionally filtered by section.
         """
-        if section:
-            # Check to see if section is an integer. If so, pass as section_id
-            try:
-                queryset = Article.objects.get_frontpage(section_id=int(section))
-            except ValueError:
-                queryset = Article.objects.get_frontpage(section=section)
+        if section_id is not None:
+            queryset = Article.objects.get_frontpage(section_id=int(section_id))
+        elif section_slug is not None:
+            queryset = Article.objects.get_frontpage(section=section_slug)
         else:
             queryset = Article.objects.get_frontpage()
 
@@ -38,8 +36,7 @@ class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         self.queryset = self.fetch_frontpage()
         return super(FrontpageViewSet, self).list(self, request)
 
-    @list_route()
-    def section(self, request, section=None):
+    def section(self, request, pk=None, slug=None):
         """
         Return resource listing representing the most recent and
         relevant articles, photos, and videos in the given section
@@ -47,9 +44,17 @@ class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
         TODO: implement timestamp parameter
         """
-        self.queryset = self.fetch_frontpage(section)
+        self.queryset = self.fetch_frontpage(section_id=pk, section_slug=slug)
         return super(FrontpageViewSet, self).list(self, request)
 
+class SectionViewSet(viewsets.ModelViewSet):
+    serializer_class = SectionSerializer
+
+    queryset = Section.objects.all()
+
+    def frontpage(self, request, pk=None, slug=None):
+        view = FrontpageViewSet.as_view({'get': 'section'})
+        return view(request, pk=pk, slug=slug)
 
 class ImageAttachmentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     model = ImageAttachment

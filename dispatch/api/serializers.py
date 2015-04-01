@@ -75,6 +75,16 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'slug',
         )
 
+class SectionSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'slug',
+        )
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = get_user_model()
