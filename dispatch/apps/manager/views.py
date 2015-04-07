@@ -36,12 +36,22 @@ def login(request):
 
 @staff_member_required
 def users(request):
+    users = Person.objects.all()
+    q = request.GET.get('q', False)
+    if q:
+        users = users.filter(full_name__icontains=q)
+    else:
+        q = ""
+
     return render_to_response(
         "manager/person/list.html",
-        {'persons' : Person.objects.all()},
+        {
+            'persons' : users,
+            'list_title': 'People',
+            'query': q,
+        },
         RequestContext(request, {}),
     )
-
 
 @staff_member_required
 def user_edit(request, id):
@@ -76,21 +86,36 @@ def user_edit(request, id):
 
 @staff_member_required
 def section(request, section):
+    articles = Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at')
+    q = request.GET.get('q', False)
+    if q:
+        articles = articles.filter(long_headline__icontains=q)
+    else:
+        q = ""
+
     return render_to_response(
-        "admin/article/list.html",
+        "manager/article/list.html",
         {
-            'article_list' : Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at'),
+            'article_list' : articles,
+            'unpublished': articles.filter(is_published=False).count(),
             'section': section,
             'list_title': section,
+            'query': q,
         },
         RequestContext(request, {}),
     )
 
 @staff_member_required
 def articles(request):
+    q = request.POST.get('q', False)
+    articles = Article.objects.all()
+
+    if q:
+        articles = articles.filter(title__icontains=q)
+
     return render_to_response(
-        "admin/article/list.html",
-        {'article_list' : Article.objects.all()},
+        "manager/article/list.html",
+        {'article_list' : articles},
         RequestContext(request, {}),
     )
 
@@ -119,7 +144,7 @@ def article_add(request):
         'save_attempt': save_attempt,
     }
 
-    return render(request, 'admin/article/edit.html', context)
+    return render(request, 'manager/article/edit.html', context)
 
 @staff_member_required
 def article_edit(request, id):
@@ -147,7 +172,7 @@ def article_edit(request, id):
         'save_attempt': save_attempt,
     }
 
-    return render(request, 'admin/article/edit.html', context)
+    return render(request, 'manager/article/edit.html', context)
 
 @staff_member_required
 def article_delete(request, id):
