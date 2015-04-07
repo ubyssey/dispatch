@@ -238,6 +238,7 @@
     dispatch.post = function(url, values, callback) {
       return $.ajax({
         type: "POST",
+        beforeSend: defaultBeforeSend,
         url: generateAjaxURL(url),
         data: values,
         success: callback
@@ -247,6 +248,7 @@
     dispatch.get = function(url, values, callback) {
       return $.ajax({
         type: "GET",
+        beforeSend: defaultBeforeSend,
         url: generateAjaxURL(url),
         data: values,
         success: callback
@@ -256,6 +258,7 @@
     dispatch.patch = function(url, values, callback) {
       return $.ajax({
         type: "PATCH",
+        beforeSend: defaultBeforeSend,
         data: values,
         url: generateAjaxURL(url),
         success: callback
@@ -265,6 +268,7 @@
     dispatch.getNext = function(nextUrl, callback) {
       return $.ajax({
         type: "GET",
+        beforeSend: defaultBeforeSend,
         url: nextUrl,
         success: callback
       });
@@ -274,6 +278,7 @@
         return $.ajax({
             url: generateAjaxURL(url),
             type: 'POST',
+            beforeSend: defaultBeforeSend,
             data: data,
             cache: false,
             dataType: 'json',
@@ -291,7 +296,7 @@
       if (document.cookie && document.cookie !== '') {
         cookies = document.cookie.split(';');
         findCookie = function(cookie) {
-          cookie = jQuery.trim(cookie);
+          cookie = $.trim(cookie);
           if (cookie.substring(0, name.length + 1) === (name + '=')) {
             return cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           }
@@ -304,18 +309,18 @@
       return cookieValue;
     };
 
+    dispatch.getCSRFToken = function(){
+        return getCookie('csrftoken');
+    }
+
     var csrfSafeMethod = function(method) {
       return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
     };
 
-    var csrfSetup = function() {
-        return $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                var csrftoken = getCookie('csrftoken');
-                if (!csrfSafeMethod(settings.type))
-                    return xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
-    }.call(this);
+    var defaultBeforeSend = function(xhr, settings) {
+        var csrftoken = getCookie('csrftoken');
+        if (!csrfSafeMethod(settings.type))
+            return xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
 
 }).call(this);
