@@ -34,6 +34,7 @@ class UserChangeForm(forms.ModelForm):
                     "this user's password, but you can change the password "
                     "using <a href=\"password/\">this form</a>."))
     class Meta:
+        fields = ('password',)
         model = User
 
     def clean_password(self):
@@ -48,8 +49,9 @@ class UserAdmin(UserAdmin):
     add_form = UserCreationForm
 
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password',)}),
         (None, {'fields': ('person',)}),
+        (None, {'fields': ('is_admin',)}),
     )
     add_fieldsets = (
         (None, {
