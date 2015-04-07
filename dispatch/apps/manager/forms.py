@@ -81,6 +81,7 @@ class ArticleForm(ModelForm):
 
         widgets = {
             'revision_id': HiddenInput(),
+            'is_published': HiddenInput(),
             'long_headline': Textarea(attrs={
                 'placeholder': 'Enter a headline',
                 'class': 'headline',
@@ -98,16 +99,12 @@ class ArticleForm(ModelForm):
 
         # Pass POST data into subforms if available
         if self.data and 'instance' in kwargs:
-            self.attachments_form = ImageAttachmentFormSet(self.data, instance=self.instance)
             self.featured_image_form = FeaturedImageForm(self.data, instance=self.instance.featured_image)
         elif 'instance' in kwargs:
-            self.attachments_form = ImageAttachmentFormSet(instance=self.instance)
             self.featured_image_form = FeaturedImageForm(instance=self.instance.featured_image)
         elif self.data:
-            self.attachments_form = ImageAttachmentFormSet(self.data)
             self.featured_image_form = FeaturedImageForm(self.data)
         else:
-            self.attachments_form = ImageAttachmentFormSet()
             self.featured_image_form = FeaturedImageForm()
 
         if self.data:
@@ -117,14 +114,13 @@ class ArticleForm(ModelForm):
 
     def is_valid(self):
         """
-        Performs validation checks on self, attachments and featured image.
-        Returns True if all three are valid, False otherwise.
+        Performs validation checks on self and featured image.
+        Returns True if both are valid, False otherwise.
         """
         article_is_valid = super(ArticleForm, self).is_valid()
-        attachments_is_valid = self.attachments_form.is_valid() or not self.attachments_form.has_changed()
         featured_image_is_valid = self.featured_image_form.is_valid() or not self.featured_image_form.has_changed()
 
-        return article_is_valid and attachments_is_valid and featured_image_is_valid
+        return article_is_valid and featured_image_is_valid
 
     # Override
     def save(self, revision=True):
@@ -135,14 +131,14 @@ class ArticleForm(ModelForm):
 
         super(ArticleForm, self).save()
 
+        # Save attachments
+        self.instance.save_attachments()
+
         # Save related data (tags, topics, etc)
         self.instance.save_related(self.data)
 
         # Handle featured image saving
         self.save_featured_image(revision)
-
-        # Handle image attachments saving
-        self.save_attachments(revision)
 
         # Save instance again to commit changes
         self.instance.save(update_fields=['content', 'featured_image'], revision=False)
@@ -162,13 +158,5 @@ class ArticleForm(ModelForm):
             saved.article = self.instance
             saved.save()
             self.instance.featured_image = saved
-
-    def save_attachments(self, revision=True):
-        if self.attachments_form.is_valid():
-            attachments = self.attachments_form.save()
-            if attachments:
-                self.instance.save_new_attachments(attachments)
-        self.instance.clear_old_attachments()
-
 
 ImageAttachmentFormSet = inlineformset_factory(Article, ImageAttachment, form=ImageAttachmentForm, formset=BaseImageAttachmentFormSet, extra=0)
