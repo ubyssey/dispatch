@@ -1,5 +1,8 @@
-$toolbar-width: 55px;
 @import "compass/css3/box-shadow";
+@import "utilities/fonts";
+@import "utilities/colors";
+
+$toolbar-width: 55px;
 
 html, body {
   padding: 0;
@@ -19,7 +22,6 @@ div.sidebar {
   position: absolute;
   left: 0;
   top: 0;
-  @include box-shadow(rgba(0, 0, 0, 0.2) 3px 0px 5px);
   div.dispatch-logo {
     height: 55px;
     line-height: 55px;
@@ -71,7 +73,6 @@ header {
   right: 0;
   top: 0;
   z-index: 50;
-  @include box-shadow(rgba(0, 0, 0, 0.2) 0px 1px 1px);
   div.header-main {
     line-height: $toolbar-width;
     height: 100%;
@@ -84,12 +85,12 @@ header {
   }
   div.title {
     float: left;
-    margin-left: 60px;
+    margin-left: 20px;
     h1 {
       color: white;
       margin: 0;
-      font-size: 18px;
-      font-family: "LFT Etica";
+      font-size: 16px;
+      font-family: $ui-font-lft-etica;
       text-transform: uppercase;
       font-weight: 600;
       letter-spacing: 1px;
@@ -111,11 +112,15 @@ div.main {
   position: absolute;
   overflow: hidden;
   bottom: 0;
-  width: 100%;
+  right: 0;
+  left: 55px;
   > div.content {
     overflow: hidden;
     float: left;
     height: 100%;
+  }
+  > div.inner {
+    padding: 0 20px;
   }
   form, form > .row {
     overflow: hidden;
@@ -203,29 +208,93 @@ div.main {
   }
 }
 
-div.article-list {
+form.search-bar {
+  display: inline;
+  input {
+    border: 1px solid #E2E2E2;
+    border-radius: 2px;
+    padding: 0 8px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+    min-width: 250px;
+    margin: 0 10px;
+  }
+}
+
+div.list-header {
+  padding: 12px 0 12px 20px;
+  border-bottom: thin solid #E2E2E2;
+  background: #f9f9f9;
+  div.cell {
+    height: 34px;
+    line-height: 34px;
+    float: left;
+    span {
+      color: gray;
+      font-size: 14px;
+      .fa {
+        font-size: 15px;
+      }
+    }
+    a {
+      font-size: 14px;
+      color: #4A90E2;
+    }
+    &.checkbox {
+      text-align: center;
+      width: 12px;
+    }
+    &.actions {
+      margin-left: 20px;
+
+    }
+    &.search {
+      padding-right: 20px;
+      float: right;
+    }
+  }
+}
+
+div.item-list {
   display: table;
   width: 100%;
-  div.article {
+  div.item {
     display: table-row;
-    &:nth-child(even){
-      background: rgb(240, 240, 240)
+    &:hover {
+      background: #f9f9f9;
     }
     div.cell {
       display: table-cell;
-      border-bottom: 1px solid rgb(210, 210, 210);
+      padding: 20px 0 20px 15px;
+      border-bottom: thin solid #E2E2E2;
       a, span {
-        padding: 20px 60px;
-        font-family: "LFT Etica";
-        font-size: 14px;
-        display: block;
+        font-family: $ui-font-helvetica;
+        font-size: 13px;
         text-decoration: none;
         color: rgb(100, 100, 100);
-        font-weight: 300;
       }
-      &.title a {
-        font-weight: 600;
-        color: black;
+      &.checkbox, &.status {
+        text-align: center;
+        width: 12px;
+        padding-left: 20px;
+        padding-right: 0px;
+      }
+      &.status {
+        padding-left: 15px;
+        .fa-check-circle {
+          color: #4FD74B;
+        }
+      }
+      &.title {
+        a {
+          font-weight: 600;
+          color: black;
+          font-size: 14px;
+          &:hover {
+            color: $steel-blue;
+          }
+        }
       }
     }
   }
@@ -251,12 +320,12 @@ input, textarea {
 }
 
 input {
-  font-family: LFT Etica;
+  font-family: $ui-font-helvetica;
 }
 
 button.sq-button, a.sq-button {
   border-radius: 2px;
-  font-family: LFT Etica;
+  font-family: $ui-font-lft-etica;
   text-transform: uppercase;
   color: white;
   letter-spacing: 1px;
