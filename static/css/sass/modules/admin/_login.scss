@@ -1,0 +1,54 @@
+@import "utilities/fonts";
+
+div.login-box input[type='text'], div.login-box input[type='password'] {
+  border: 1px solid #E2E2E2;
+  border-radius: 2px;
+  padding: 0 8px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+div.login-box {
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 350px;
+  h1 {
+    font-family: $ui-font-lft-etica;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  input[type='text'], input[type='password'] {
+    width: 100%;
+    margin: 5px 0 15px 0;
+  }
+  input[type='submit'] {
+    font-family: $ui-font-lft-etica;
+    text-transform: uppercase;
+    color: white;
+    letter-spacing: 1px;
+    font-size: 11px;
+    line-height: 35px;
+    height: 35px;
+    padding: 0 15px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #4A90E2;
+    background: #4A90E2;
+    &:hover {
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.9);
+        background: #437FC5;
+        border-color: #437FC5;
+    }
+  }
+  label {
+    font-size: 14px;
+    font-family: $ui-font-helvetica;
+  }
+}

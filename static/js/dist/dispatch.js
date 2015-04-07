@@ -48,16 +48,22 @@
         },
         'person': {
             'route': 'persons',
+            'actions': ['GET', 'POST', 'DELETE'],
         }
     }
 
-    // Default Settings
-    SETTINGS = {
+    // Local Settings
+    LOCAL_SETTINGS = {
         'api_url': 'http://localhost:8000/api/',
         'api_format': 'json',
     }
 
-    dispatch.settings = SETTINGS;
+    PRODUCTION_SETTINGS = {
+        'api_url': 'http://dev.ubyssey.ca/api/',
+        'api_format': 'json',
+    }
+
+    dispatch.settings = LOCAL_SETTINGS;
     dispatch.version = '0.0.1';
 
     // Errors
@@ -177,6 +183,14 @@
         return dispatch.find('article.attachments', id, callback);
     }
 
+
+    // Handy functions
+    // --------------------
+    dispatch.getModelURL = function(model){
+        if (!validModel(model)) throw InvalidModelError(model);
+        return dispatch.settings.api_url + getModelRoute(model) + '/';
+    }
+
     // API Functions
     // --------------------
 
@@ -217,14 +231,15 @@
     // --------------------
 
     // Helper function to build AJAX URL
-    var generateAjaxUrl = function(url){
+    var generateAjaxURL = function(url){
         return dispatch.settings.api_url + url + "/?format=" + dispatch.settings.api_format;
     }
 
     dispatch.post = function(url, values, callback) {
       return $.ajax({
         type: "POST",
-        url: generateAjaxUrl(url),
+        beforeSend: defaultBeforeSend,
+        url: generateAjaxURL(url),
         data: values,
         success: callback
       });
@@ -233,7 +248,8 @@
     dispatch.get = function(url, values, callback) {
       return $.ajax({
         type: "GET",
-        url: generateAjaxUrl(url),
+        beforeSend: defaultBeforeSend,
+        url: generateAjaxURL(url),
         data: values,
         success: callback
       });
@@ -242,8 +258,9 @@
     dispatch.patch = function(url, values, callback) {
       return $.ajax({
         type: "PATCH",
+        beforeSend: defaultBeforeSend,
         data: values,
-        url: generateAjaxUrl(url),
+        url: generateAjaxURL(url),
         success: callback
       });
     };
@@ -251,6 +268,7 @@
     dispatch.getNext = function(nextUrl, callback) {
       return $.ajax({
         type: "GET",
+        beforeSend: defaultBeforeSend,
         url: nextUrl,
         success: callback
       });
@@ -258,8 +276,9 @@
 
     dispatch.upload = function(url, data, callback) {
         return $.ajax({
-            url: generateAjaxUrl(url),
+            url: generateAjaxURL(url),
             type: 'POST',
+            beforeSend: defaultBeforeSend,
             data: data,
             cache: false,
             dataType: 'json',
@@ -277,7 +296,7 @@
       if (document.cookie && document.cookie !== '') {
         cookies = document.cookie.split(';');
         findCookie = function(cookie) {
-          cookie = jQuery.trim(cookie);
+          cookie = $.trim(cookie);
           if (cookie.substring(0, name.length + 1) === (name + '=')) {
             return cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           }
@@ -290,18 +309,18 @@
       return cookieValue;
     };
 
+    dispatch.getCSRFToken = function(){
+        return getCookie('csrftoken');
+    }
+
     var csrfSafeMethod = function(method) {
       return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
     };
 
-    var csrfSetup = function() {
-        return $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                var csrftoken = getCookie('csrftoken');
-                if (!csrfSafeMethod(settings.type))
-                    return xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        });
-    }.call(this);
+    var defaultBeforeSend = function(xhr, settings) {
+        var csrftoken = getCookie('csrftoken');
+        if (!csrfSafeMethod(settings.type))
+            return xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    }
 
 }).call(this);

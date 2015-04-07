@@ -7,3 +7,5 @@ static/admin
 static/rest_framework
 npm-debug.log
 *.module-cache/
+node_modules/
+dispatch/production_settings/

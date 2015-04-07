@@ -1,21 +1,57 @@
 from dispatch.apps.content.models import Article, Tag, Topic, Author
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
-from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
 from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, UserFormSet
 from dispatch.helpers import ThemeHelper
+from django.contrib.auth.forms import AuthenticationForm
 
 @staff_member_required
-def users(request):
+def home(request):
+    users = Person.objects.all()
+    q = request.GET.get('q', False)
+    if q:
+        users = users.filter(full_name__icontains=q)
+    else:
+        q = ""
+
     return render_to_response(
-        "manager/person/list.html",
-        {'persons' : Person.objects.all()},
+        "manager/base.html",
+        {
+            'persons' : users,
+        },
         RequestContext(request, {}),
     )
 
+def logout(request):
+    from django.contrib.auth.views import logout
+    return logout(request, template_name='registration/logged_out.html')
+
+def login(request):
+    from django.contrib.auth.views import login
+    return login(request, template_name='manager/login.html')
+
+@staff_member_required
+def users(request):
+    users = Person.objects.all()
+    q = request.GET.get('q', False)
+    if q:
+        users = users.filter(full_name__icontains=q)
+    else:
+        q = ""
+
+    return render_to_response(
+        "manager/person/list.html",
+        {
+            'persons' : users,
+            'list_title': 'People',
+            'query': q,
+        },
+        RequestContext(request, {}),
+    )
 
 @staff_member_required
 def user_edit(request, id):
@@ -50,21 +86,36 @@ def user_edit(request, id):
 
 @staff_member_required
 def section(request, section):
+    articles = Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at')
+    q = request.GET.get('q', False)
+    if q:
+        articles = articles.filter(long_headline__icontains=q)
+    else:
+        q = ""
+
     return render_to_response(
-        "admin/article/list.html",
+        "manager/article/list.html",
         {
-            'article_list' : Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at'),
+            'article_list' : articles,
+            'unpublished': articles.filter(is_published=False).count(),
             'section': section,
             'list_title': section,
+            'query': q,
         },
         RequestContext(request, {}),
     )
 
 @staff_member_required
 def articles(request):
+    q = request.POST.get('q', False)
+    articles = Article.objects.all()
+
+    if q:
+        articles = articles.filter(title__icontains=q)
+
     return render_to_response(
-        "admin/article/list.html",
-        {'article_list' : Article.objects.all()},
+        "manager/article/list.html",
+        {'article_list' : articles},
         RequestContext(request, {}),
     )
 
@@ -93,7 +144,7 @@ def article_add(request):
         'save_attempt': save_attempt,
     }
 
-    return render(request, 'admin/article/edit.html', context)
+    return render(request, 'manager/article/edit.html', context)
 
 @staff_member_required
 def article_edit(request, id):
@@ -121,7 +172,7 @@ def article_edit(request, id):
         'save_attempt': save_attempt,
     }
 
-    return render(request, 'admin/article/edit.html', context)
+    return render(request, 'manager/article/edit.html', context)
 
 @staff_member_required
 def article_delete(request, id):
