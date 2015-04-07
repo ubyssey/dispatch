@@ -336,30 +336,6 @@ class Article(Resource, Publishable):
                 }
         self.content = json.dumps(nodes)
 
-    def save_new_attachments(self, attachments):
-        def save_new_attachment(code):
-            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
-            temp_id = int(args[0])
-            return "[image %s]" % str(attachments[temp_id].id)
-        self.content = re.sub(r'\[temp_image[^\[\]]*\]', save_new_attachment, self.content)
-
-    def clear_old_attachments(self):
-
-        previous_attachments = ImageAttachment.objects.filter(article=self.get_previous_revision())
-
-        def keep_attachment(code):
-            args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
-            id = int(args[0])
-            try:
-                ins = previous_attachments.get(pk=id)
-                ins.article = self
-                ins.pk = None
-                ins.save()
-                return "[image %s]" % str(ins.id)
-            except ImageAttachment.DoesNotExist:
-                return code.group(0)
-        self.content = re.sub(r'\[image[^\[\]]*\]', keep_attachment, self.content)
-
     def get_author_string(self):
         author_str = ""
         authors = self.authors.order_by('author__order')
