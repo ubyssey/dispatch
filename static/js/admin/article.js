@@ -220,8 +220,9 @@ $(document).on("click", "ul.tags li", function(){
 });
 
 var editor = Editor(ARTICLE_ID, "textarea.content", ARTICLE_SAVEATTEMPT, ARTICLE_SAVED, ARTICLE_SAVEID);
-editor.init();
 editor.setImageManager(imageManager);
+editor.setupEmbeds();
+editor.init();
 
 $(".submit-article").click(function(e){
     e.preventDefault();
@@ -248,14 +249,13 @@ $(".unpublish-article").click(function(e){
 
 $('.set-featured-image').imageModal(function(items){
     var image = items[0];
-    //var image = ImageStore.getImage(id);
     $('#id_image').val(image.id);
     $('img.featured-image').attr("src", image.url);
 });
 
 window.editor = editor;
 
-},{"./components/ImageManager.jsx":5,"./editor.js":9}],2:[function(require,module,exports){
+},{"./components/ImageManager.jsx":5,"./editor.js":10}],2:[function(require,module,exports){
 var EditorImage = require('./embeds/EditorImage.jsx');
 
 var DispatchTextEditor = function(quill, options) {
@@ -275,9 +275,22 @@ var DispatchTextEditor = function(quill, options) {
     $(imageTools).html($('#image-tools').html());
     $(inlineToolbar).html($('#inline-toolbar').html());
 
-    $('.tb-image').imageModal(function(items){
-        var image = items[0];
-        self.addImage(image.url, image.id);
+    $.each(this.quill.getEmbeds(), function(key, item){
+        $('.inline-toolbar .toolbar').append(
+            $('<button class="tb-'+key+' dis-button">').text(key)
+        );
+        $('.tb-'+key).click(function(e){
+            e.preventDefault();
+            if (typeof item.trigger !== 'undefined'){
+                item.trigger(function(data){
+                    if (typeof data === 'undefined')
+                        data = {}
+                    this.addEmbed(key, data);
+                }.bind(this));
+            } else {
+                this.addEmbed(key, {});
+            }
+        }.bind(this));
     }.bind(this));
 
     $('.inline-toolbar .tb-toolbar').click(function(e){
@@ -295,6 +308,17 @@ var DispatchTextEditor = function(quill, options) {
         self.inlineToolbar();
     });
 
+}
+
+DispatchTextEditor.prototype.addEmbed = function(type, data) {
+    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
+
+    this.quill.insertEmbed(type, data, this.lastIndex);
+
+    $("#editor").find()
+    this.closeInlineToolbar();
+    if(lastLine)
+        this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
 DispatchTextEditor.prototype.inlineToolbar = function() {
@@ -323,31 +347,12 @@ DispatchTextEditor.prototype.closeInlineToolbar = function() {
     $('.inline-toolbar').hide();
 }
 
-DispatchTextEditor.prototype.addImage = function(src, id) {
-
-    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
-
-    var images = [
-        {
-            id: id,
-            src: src,
-        }
-    ]
-
-    var inserted = this.quill.insertEmbed('image', {images:images}, this.lastIndex);
-
-    $("#editor").find()
-    this.closeInlineToolbar();
-    if(lastLine)
-        this.quill.editor.doc.appendLine(document.createElement('P'));
-}
-
 // Register DispatchTextEditor with Quill
 Quill.registerModule('dispatch', DispatchTextEditor);
 
 module.exports = DispatchTextEditor;
 
-},{"./embeds/EditorImage.jsx":8}],3:[function(require,module,exports){
+},{"./embeds/EditorImage.jsx":9}],3:[function(require,module,exports){
 var Image = React.createClass({displayName: "Image",
     onClick: function(){
         this.props.onClickHandler(this.props.id);
@@ -457,7 +462,6 @@ var ImageManager = React.createClass({displayName: "ImageManager",
     },
     addTrigger: function(trigger, callback){
         this.callbacks[trigger.selector] = callback;
-        console.log(this.callbacks);
         this.addTriggerEvent(trigger);
     },
     addTriggerEvent: function(trigger){
@@ -822,6 +826,47 @@ var ImageStore = {
 module.exports = ImageStore;
 
 },{}],8:[function(require,module,exports){
+var EditorCode = React.createClass({displayName: "EditorCode",
+    getInitialState: function(){
+        return {
+            content: this.props.data.content ? this.props.data.content : '',
+        };
+    },
+    handleContentChange: function(event){
+        this.setState({
+            content: event.target.value,
+        });
+    },
+    getJSON: function(){
+        return {
+            type: 'code',
+            data: {
+                content: this.state.content,
+            }
+        }
+    },
+    render: function(){
+        return (
+            React.createElement("div", {className: "embed-code"}, 
+                React.createElement("textarea", {placeholder: "Write some code", onChange: this.handleContentChange}, this.state.content)
+            )
+            );
+    }
+});
+
+
+var factory = {
+    controller: function(node, embed){
+        return React.render(
+            React.createElement(EditorCode, {data: embed.data}),
+            node
+        );
+    },
+}
+
+module.exports = factory;
+
+},{}],9:[function(require,module,exports){
 var EditorImage = React.createClass({displayName: "EditorImage",
     getInitialState: function(){
         return {
@@ -867,17 +912,6 @@ var EditorImage = React.createClass({displayName: "EditorImage",
             caption: event.target.value,
         });
     },
-    onMouseDown: function(){
-        this.mouseIsDownOnCalendar = true;
-    },
-    asShortcode: function(){
-        var tag_name;
-        if(this.props.temp)
-            tag_name = "temp_image";
-        else
-            tag_name = "image";
-        return "["+tag_name+" " + this.state.images[0].id + "]";
-    },
     getJSON: function(){
         return {
             type: 'image',
@@ -897,7 +931,7 @@ var EditorImage = React.createClass({displayName: "EditorImage",
         });
         var showAddButton = this.state.images.length == 1 && this.state.type == 'double' ? 'show-add-button' : '';
         return (
-            React.createElement("div", {className: "image", onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp}, 
+            React.createElement("div", {className: "image"}, 
                 React.createElement("div", {className: "image-toolbar-container"}, 
                     React.createElement("div", {className: "image-toolbar"}, 
                         React.createElement("a", {href: "#", onClick: this.toggleType}, "Type")
@@ -917,31 +951,9 @@ var EditorImage = React.createClass({displayName: "EditorImage",
     }
 });
 
-module.exports = EditorImage;
 
-},{}],9:[function(require,module,exports){
-var CSRF_TOKEN = $(".article-form").data('csrf');
-
-var DispatchTextEditor = require('./components/DispatchTextEditor.js');
-var EditorImage = require('./components/embeds/EditorImage.jsx');
-
-var Editor = function(article, source, saveAttempt, saved, saveid) {
-
-    var editor;
-    var quill;
-    var attachment_field = ".attachment-field";
-    var selected_image;
-
-    var images = [];
-    var embeds = {};
-
-    var CODES = {
-        'image': this.processImage,
-    }
-
-    var imageManager;
-
-    var testEmbed = function(node, embed){
+var factory = function(manager, images){
+    var controller = function(node, embed){
         if(typeof embed.data.images === 'undefined'){
             var id = embed.data.attachment_id;
             var attachment = images[id];
@@ -951,48 +963,70 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
             }];
             embed.data.caption = attachment.caption;
         }
-        var controller = React.render(
-            React.createElement(EditorImage, {data: embed.data, manager: imageManager}),
+        var component = React.render(
+            React.createElement(EditorImage, {data: embed.data, manager: manager}),
             node
         );
-        return controller;
+        return component;
     }
+    return {
+        controller: controller,
+        trigger: function(callback){
+            manager.openWithCallback(function(items){
+                var image = items[0];
+                var data = {
+                    'images': [{
+                        id: image.id,
+                        src: image.url,
+                    }]
+                }
+                callback(data);
+            });
+        }
+    };
+}
 
-    Quill.registerEmbed('image', testEmbed);
+module.exports = factory;
+
+},{}],10:[function(require,module,exports){
+var CSRF_TOKEN = $(".article-form").data('csrf');
+
+var DispatchTextEditor = require('./components/DispatchTextEditor.js');
+var EditorImage = require('./components/embeds/EditorImage.jsx');
+var EditorCode = require('./components/embeds/EditorCode.jsx');
+
+var Editor = function(article, source, saveAttempt, saved, saveid) {
+
+    var quill;
+
+    var images = [];
+    var embeds = {};
+
+    var imageManager;
 
     return {
         init: function(){
             if(article){
                 this.fetchImages(function(){
                     this.setupEditor();
-                    this.loadAttachmentThumbs();
                 }.bind(this));
             } else {
                 this.setupEditor();
             }
         },
-        loadAttachmentThumbs: function(){
-            $('.attachment-thumb').each(function(){
-                var id = $(this).data('id');
-                var a = images[id];
-                $(this).css('background-image', "url('"+a.image.thumb+"')");
-            });
-        },
         setupEditor: function(){
             quill = new Quill('#editor');
+
+            quill.addEmbed('image');
+            quill.addEmbed('code');
 
             quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
             quill.addModule('toolbar', { container: '#full-toolbar' });
             quill.addModule('link-tooltip', true);
 
-            var testCon = quill.addEmbed('image');
-
             if(saveAttempt && !saved){
-                //quill.setHTML(sessionStorage['articleContent_'+saveid]);
-                quill.setJSON(sessionStorage['articleContent_'+saveid]);
-            } else {
-                //quill.setHTML(this.processShortcodes($(source).text()));
-
+                quill.setJSON(JSON.parse(sessionStorage['articleContent_'+saveid]));
+            } else if (article) {
                 quill.setJSON(JSON.parse($(source).text()));
                 $.each(embeds, function(key, embed){
                     var node = $('div[data-id='+key+']');
@@ -1003,21 +1037,11 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
                 });
             }
         },
-        validCode: function(){
-            return CODES.hasOwnProperty(func);
-        },
         prepareSave: function(){
-            var html = quill.getJSON();
-
-            // Store old HTML in browser cache
-            sessionStorage['articleContent_'+saveid] = html;
-
-            // Store attachments list in browser cache
-            // sessionStorage['articleAttachemnts_'+self.saveid] = attachm
-
-            //var output = this.generateShortcodes(html);
-            var output = JSON.stringify(html);
-
+            var data = quill.getJSON();
+            var output = JSON.stringify(data);
+            // Store old content in browser cache
+            sessionStorage['articleContent_'+saveid] = output;
             $(source).text(output);
         },
         fetchImages: function(callback){
@@ -1028,54 +1052,12 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
                 callback();
             });
         },
-        processShortcodes: function(input) {
-            var matches = [];
-            var pattern = /\[[^\[\]]*\]/g;
-            var n = 1;
-            while (matches = pattern.exec(input)) {
-                var shortcode = matches[0];
-                input = input.replace(shortcode, this.processShortcode(shortcode, n));
-                n += 1;
-            }
-            return input;
-        },
-        processShortcode: function(shortcode, count) {
-            var pattern_func = /\[[a-z]+/g;
-            var pattern_id = /[0-9]+/g;
-            funcs = pattern_func.exec(shortcode)
-            if (!funcs)
-                return shortcode
-            func = funcs[0].substring(1);
-            if (!this.validCode(func))
-                return shortcode
-            var params = pattern_id.exec(shortcode);
-            if (! params)
-                return shortcode
-
-            id = parseInt(params[0]);
-
-            var node = '<div class="ql-embed" data-id="'+count+'"></div>';
-            var replacement = this.processImage(count, id);
-
-            if(replacement){
-                return node;
-            } else {
-                return shortcode;
-            }
-        },
         setImageManager: function(manager){
             imageManager = manager;
         },
-        getEmbed: function(id){
-            return embeds[id];
-        },
-        generateShortcodes: function(input) {
-            var temp = $('<div>').html(input);
-            temp.find('.ql-embed').each(function(){
-                var controller = embeds[$(this).attr('id')];
-                $(this).replaceWith(controller.asShortcode);
-            });
-            return temp.html();
+        setupEmbeds: function(){
+            Quill.registerEmbed('image', EditorImage(imageManager, images));
+            Quill.registerEmbed('code', EditorCode);
         },
         processImage: function(embedId, id) {
             var attachment = images[id];
@@ -1114,4 +1096,4 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 module.exports = Editor;
 
 
-},{"./components/DispatchTextEditor.js":2,"./components/embeds/EditorImage.jsx":8}]},{},[1]);
+},{"./components/DispatchTextEditor.js":2,"./components/embeds/EditorCode.jsx":8,"./components/embeds/EditorImage.jsx":9}]},{},[1]);
