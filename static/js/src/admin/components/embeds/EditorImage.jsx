@@ -43,17 +43,6 @@ var EditorImage = React.createClass({
             caption: event.target.value,
         });
     },
-    onMouseDown: function(){
-        this.mouseIsDownOnCalendar = true;
-    },
-    asShortcode: function(){
-        var tag_name;
-        if(this.props.temp)
-            tag_name = "temp_image";
-        else
-            tag_name = "image";
-        return "["+tag_name+" " + this.state.images[0].id + "]";
-    },
     getJSON: function(){
         return {
             type: 'image',
@@ -73,7 +62,7 @@ var EditorImage = React.createClass({
         });
         var showAddButton = this.state.images.length == 1 && this.state.type == 'double' ? 'show-add-button' : '';
         return (
-            <div className="image" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
+            <div className="image">
                 <div className="image-toolbar-container">
                     <div className="image-toolbar">
                         <a href="#" onClick={this.toggleType}>Type</a>
@@ -93,4 +82,39 @@ var EditorImage = React.createClass({
     }
 });
 
-module.exports = EditorImage;
+
+var factory = function(manager, images){
+    var controller = function(node, embed){
+        if(typeof embed.data.images === 'undefined'){
+            var id = embed.data.attachment_id;
+            var attachment = images[id];
+            embed.data.images = [{
+                id: attachment.image.id,
+                src: attachment.image.url
+            }];
+            embed.data.caption = attachment.caption;
+        }
+        var component = React.render(
+            <EditorImage data={embed.data} manager={manager} />,
+            node
+        );
+        return component;
+    }
+    return {
+        controller: controller,
+        trigger: function(callback){
+            manager.openWithCallback(function(items){
+                var image = items[0];
+                var data = {
+                    'images': [{
+                        id: image.id,
+                        src: image.url,
+                    }]
+                }
+                callback(data);
+            });
+        }
+    };
+}
+
+module.exports = factory;
