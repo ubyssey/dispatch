@@ -6,7 +6,7 @@ env:
 install: "pip install -r requirements.txt"
 before_script:
   - mysql -uroot -e 'create database dispatch;'
-  - python manage.py makemigrations --settings=dispatch.settings
+  #- python manage.py makemigrations --settings=dispatch.settings
   - python manage.py syncdb --noinput
   - python manage.py inspectdb
 script: python manage.py test --pattern="tests*.py"
