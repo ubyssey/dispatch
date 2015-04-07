@@ -59,7 +59,6 @@
                 <div class="toolbar">
                     <button class="tb-image dis-button" data-modal="image-manager">Image</button>
                     <button class="tb-ad dis-button">Ad block</button>
-                    <button class="tb-shortcode dis-button">Shortcode</button>
                 </div>
             </script>
             <script id="image-tools" type="text/html-template">
@@ -169,52 +168,6 @@
             <div class="field">
                 <input class="input-topics" type="hidden" name="topics-list" value="{{ article.topics_list }}" />
             </div>
-        </div>
-        <div id="images-fields" class="fieldset tab list images">
-            <div id="attachments-form">
-            {% with form.attachments_form as images_form %}
-                {% for field in images_form %}
-                    <div id="attachment-form-{{ forloop.counter0 }}" class="row">
-                        <div class="col">
-                            <div class="attachment-thumb" data-id="{{ field.id.value }}"></div>
-                        </div>
-                        <div class="col">
-                            <div class="field">
-                                {{ field.caption }}
-                            </div>
-                            <div class="field">
-                                {{ field.type }}
-                            </div>
-                            <button class="attachment-delete" data-index="{{ forloop.counter0 }}">Remove</button>
-                            {{ field.image.as_hidden }}
-                            {{ field.id }}
-                            {{ field.DELETE.as_hidden }}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <script id="attachment-template" type="text/html-template">
-                <div id="attachment-form-__prefix__" class="row">
-                    <div class="col">
-                        <div id="attachment-thumb-__prefix__" class="attachment-thumb"></div>
-                    </div>
-                    <div class="col">
-                        <div class="field">
-                            {{ images_form.empty_form.caption}}
-                        </div>
-                        <div class="field">
-                            {{ images_form.empty_form.type }}
-                        </div>
-                        <button class="attachment-delete" data-index="__prefix__">Remove</button>
-                        {{ images_form.empty_form.image.as_hidden }}
-                        {{ images_form.empty_form.id }}
-                        {{ images_form.empty_form.DELETE.as_hidden }}
-                    </div>
-                </div>
-            </script>
-            {{ images_form.management_form }}
-            {% endwith %}
         </div>
     </div>
 </div>
