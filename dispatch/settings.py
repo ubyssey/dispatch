@@ -12,11 +12,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import sys
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -54,6 +52,8 @@ REST_FRAMEWORK = {
     ),
     'PAGINATE_BY': 10
 }
+
+LOGIN_REDIRECT_URL = 'dispatch.apps.manager.views.home'
 
 # Application definition
 
