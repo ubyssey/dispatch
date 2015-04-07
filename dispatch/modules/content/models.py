@@ -9,9 +9,8 @@ from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
-import StringIO
-import os
 import re
+import StringIO, json, os, re
 
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -289,6 +288,31 @@ class Article(Resource, Publishable):
             except Topic.DoesNotExist:
                 ins = Topic.objects.create(name=topic)
             self.topics.add(ins)
+
+    def get_json(self):
+        try:
+            return json.loads(self.content)
+        except ValueError:
+            return self.content
+
+    def get_html(self):
+        nodes = json.loads(self.content)
+        html = ""
+        for node in nodes:
+            if type(node) is dict:
+                template = loader.get_template("image.html")
+                id = node['data']['attachment_id']
+                attach = ImageAttachment.objects.get(id=id)
+                c = Context({
+                    'id': attach.id,
+                    'src': attach.image.get_absolute_url(),
+                    'caption': attach.caption,
+                    'credit': ""
+                })
+                html += template.render(c)
+            else:
+                html += "<p>%s</p>" % node
+        return html
 
     def save_new_attachments(self, attachments):
         def save_new_attachment(code):
