@@ -59,7 +59,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
         setupEditor: function(){
             quill = new Quill('#editor');
 
-            quill.addModule('dispatch', { button: '#add_shortcode', article: article, embeds: embeds, editor: this });
+            quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
             quill.addModule('toolbar', { container: '#full-toolbar' });
             quill.addModule('link-tooltip', true);
 
