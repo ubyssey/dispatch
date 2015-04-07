@@ -37,7 +37,6 @@ var ImageManager = React.createClass({
     },
     addTrigger: function(trigger, callback){
         this.callbacks[trigger.selector] = callback;
-        console.log(this.callbacks);
         this.addTriggerEvent(trigger);
     },
     addTriggerEvent: function(trigger){
