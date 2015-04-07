@@ -1,15 +1,17 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager)
+    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
+
 from django.core.validators import MaxValueValidator
 from django.conf import settings
+from django.template import loader, Context
+
 from dispatch.apps.core.models import Person
 
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
-import re
 import StringIO, json, os, re
 
 from django.db.models.signals import post_delete
@@ -313,6 +315,26 @@ class Article(Resource, Publishable):
             else:
                 html += "<p>%s</p>" % node
         return html
+
+    def save_attachments(self):
+        nodes = json.loads(self.content)
+        for node in nodes:
+            if type(node) is dict and node['type'] == 'image':
+                image_id = node['data']['images'][0]['id']
+                image = Image.objects.get(id=image_id)
+                if node['data']['attachment_id']:
+                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
+                else:
+                    attachment = ImageAttachment()
+                attachment.caption = node['data']['caption']
+                attachment.image = image
+                attachment.article = self
+                attachment.save()
+                del node['data']
+                node['data'] = {
+                    'attachment_id': attachment.id
+                }
+        self.content = json.dumps(nodes)
 
     def save_new_attachments(self, attachments):
         def save_new_attachment(code):
