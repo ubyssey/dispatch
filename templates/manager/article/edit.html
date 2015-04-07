@@ -56,10 +56,7 @@
                 <div class="side-button">
                     <button class="tb-toolbar"><span>+</span></button>
                 </div>
-                <div class="toolbar">
-                    <button class="tb-image dis-button" data-modal="image-manager">Image</button>
-                    <button class="tb-ad dis-button">Ad block</button>
-                </div>
+                <div class="toolbar"></div>
             </script>
             <script id="image-tools" type="text/html-template">
                 <div class="inner">
@@ -93,7 +90,6 @@
                 <li><a href="#template">Template</a></li>
                 <li><a href="#tags-fields">Tags & Topics</a></li>
                 <li><a href="#developer-fields">Developer</a></li>
-                <li><a href="#images-fields">Images</a></li>
             </ul>
         </nav>
         <div id="basic-fields" class="fieldset tab basic">
@@ -135,9 +131,11 @@
         </div>
         <div id="media-fields" class="fieldset tab media">
             <div class="field">
-                <a class="set-featured-image" data-modal="image-manager">
-                    <img class="featured-image" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
-                </a>
+                {% if article.featured_image %}
+                    <img class="set-featured-image featured-image" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
+                {% else %}
+                    <a href="#" class="set-featured-image">Set featured image</a>
+                {% endif %}
                 {{ form.featured_image_form.id.as_hidden }}
                 {{ form.featured_image_form.image.as_hidden }}
                 <br/>

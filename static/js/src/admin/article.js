@@ -219,8 +219,9 @@ $(document).on("click", "ul.tags li", function(){
 });
 
 var editor = Editor(ARTICLE_ID, "textarea.content", ARTICLE_SAVEATTEMPT, ARTICLE_SAVED, ARTICLE_SAVEID);
-editor.init();
 editor.setImageManager(imageManager);
+editor.setupEmbeds();
+editor.init();
 
 $(".submit-article").click(function(e){
     e.preventDefault();
@@ -247,7 +248,6 @@ $(".unpublish-article").click(function(e){
 
 $('.set-featured-image').imageModal(function(items){
     var image = items[0];
-    //var image = ImageStore.getImage(id);
     $('#id_image').val(image.id);
     $('img.featured-image').attr("src", image.url);
 });

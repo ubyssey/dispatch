@@ -2,75 +2,40 @@ var CSRF_TOKEN = $(".article-form").data('csrf');
 
 var DispatchTextEditor = require('./components/DispatchTextEditor.js');
 var EditorImage = require('./components/embeds/EditorImage.jsx');
+var EditorCode = require('./components/embeds/EditorCode.jsx');
 
 var Editor = function(article, source, saveAttempt, saved, saveid) {
 
-    var editor;
     var quill;
-    var attachment_field = ".attachment-field";
-    var selected_image;
 
     var images = [];
     var embeds = {};
 
-    var CODES = {
-        'image': this.processImage,
-    }
-
     var imageManager;
-
-    var testEmbed = function(node, embed){
-        if(typeof embed.data.images === 'undefined'){
-            var id = embed.data.attachment_id;
-            var attachment = images[id];
-            embed.data.images = [{
-                id: attachment.image.id,
-                src: attachment.image.url
-            }];
-            embed.data.caption = attachment.caption;
-        }
-        var controller = React.render(
-            <EditorImage data={embed.data} manager={imageManager} />,
-            node
-        );
-        return controller;
-    }
-
-    Quill.registerEmbed('image', testEmbed);
 
     return {
         init: function(){
             if(article){
                 this.fetchImages(function(){
                     this.setupEditor();
-                    this.loadAttachmentThumbs();
                 }.bind(this));
             } else {
                 this.setupEditor();
             }
         },
-        loadAttachmentThumbs: function(){
-            $('.attachment-thumb').each(function(){
-                var id = $(this).data('id');
-                var a = images[id];
-                $(this).css('background-image', "url('"+a.image.thumb+"')");
-            });
-        },
         setupEditor: function(){
             quill = new Quill('#editor');
+
+            quill.addEmbed('image');
+            quill.addEmbed('code');
 
             quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
             quill.addModule('toolbar', { container: '#full-toolbar' });
             quill.addModule('link-tooltip', true);
 
-            var testCon = quill.addEmbed('image');
-
             if(saveAttempt && !saved){
-                //quill.setHTML(sessionStorage['articleContent_'+saveid]);
-                quill.setJSON(sessionStorage['articleContent_'+saveid]);
-            } else {
-                //quill.setHTML(this.processShortcodes($(source).text()));
-
+                quill.setJSON(JSON.parse(sessionStorage['articleContent_'+saveid]));
+            } else if (article) {
                 quill.setJSON(JSON.parse($(source).text()));
                 $.each(embeds, function(key, embed){
                     var node = $('div[data-id='+key+']');
@@ -81,21 +46,11 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
                 });
             }
         },
-        validCode: function(){
-            return CODES.hasOwnProperty(func);
-        },
         prepareSave: function(){
-            var html = quill.getJSON();
-
-            // Store old HTML in browser cache
-            sessionStorage['articleContent_'+saveid] = html;
-
-            // Store attachments list in browser cache
-            // sessionStorage['articleAttachemnts_'+self.saveid] = attachm
-
-            //var output = this.generateShortcodes(html);
-            var output = JSON.stringify(html);
-
+            var data = quill.getJSON();
+            var output = JSON.stringify(data);
+            // Store old content in browser cache
+            sessionStorage['articleContent_'+saveid] = output;
             $(source).text(output);
         },
         fetchImages: function(callback){
@@ -106,54 +61,12 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
                 callback();
             });
         },
-        processShortcodes: function(input) {
-            var matches = [];
-            var pattern = /\[[^\[\]]*\]/g;
-            var n = 1;
-            while (matches = pattern.exec(input)) {
-                var shortcode = matches[0];
-                input = input.replace(shortcode, this.processShortcode(shortcode, n));
-                n += 1;
-            }
-            return input;
-        },
-        processShortcode: function(shortcode, count) {
-            var pattern_func = /\[[a-z]+/g;
-            var pattern_id = /[0-9]+/g;
-            funcs = pattern_func.exec(shortcode)
-            if (!funcs)
-                return shortcode
-            func = funcs[0].substring(1);
-            if (!this.validCode(func))
-                return shortcode
-            var params = pattern_id.exec(shortcode);
-            if (! params)
-                return shortcode
-
-            id = parseInt(params[0]);
-
-            var node = '<div class="ql-embed" data-id="'+count+'"></div>';
-            var replacement = this.processImage(count, id);
-
-            if(replacement){
-                return node;
-            } else {
-                return shortcode;
-            }
-        },
         setImageManager: function(manager){
             imageManager = manager;
         },
-        getEmbed: function(id){
-            return embeds[id];
-        },
-        generateShortcodes: function(input) {
-            var temp = $('<div>').html(input);
-            temp.find('.ql-embed').each(function(){
-                var controller = embeds[$(this).attr('id')];
-                $(this).replaceWith(controller.asShortcode);
-            });
-            return temp.html();
+        setupEmbeds: function(){
+            Quill.registerEmbed('image', EditorImage(imageManager, images));
+            Quill.registerEmbed('code', EditorCode);
         },
         processImage: function(embedId, id) {
             var attachment = images[id];
