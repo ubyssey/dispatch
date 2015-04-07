@@ -59,6 +59,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     section = serializers.CharField(source='section.slug',read_only=True)
     featured_image = AttachmentImageSerializer(read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
+    content = serializers.ReadOnlyField(source='get_json')
 
     class Meta:
         model = Article
