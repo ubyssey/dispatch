@@ -5,6 +5,7 @@ from django.template import RequestContext
 from dispatch.apps.content.models import Article
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
+from django.conf import settings
 
 class UbysseyTheme(DefaultTheme):
 
@@ -22,16 +23,6 @@ class UbysseyTheme(DefaultTheme):
               'thumbs': frontpage[2:4],
               'bullets': frontpage[4:6],
          }
-
-        #articles = Article.objects.filter(head=True)
-
-        #n = 0
-        #for article in articles:
-        #    article.top = n * 105
-        #    n += 1
-
-        #for module in block.modules.all():
-        #    print module.render()
 
         popular = Article.objects.get_most_popular(5)
 
