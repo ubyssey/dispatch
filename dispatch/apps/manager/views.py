@@ -1,12 +1,38 @@
 from dispatch.apps.content.models import Article, Tag, Topic, Author
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
-from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
 from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, UserFormSet
 from dispatch.helpers import ThemeHelper
+from django.contrib.auth.forms import AuthenticationForm
+
+@staff_member_required
+def home(request):
+    users = Person.objects.all()
+    q = request.GET.get('q', False)
+    if q:
+        users = users.filter(full_name__icontains=q)
+    else:
+        q = ""
+
+    return render_to_response(
+        "manager/base.html",
+        {
+            'persons' : users,
+        },
+        RequestContext(request, {}),
+    )
+
+def logout(request):
+    from django.contrib.auth.views import logout
+    return logout(request, template_name='registration/logged_out.html')
+
+def login(request):
+    from django.contrib.auth.views import login
+    return login(request, template_name='manager/login.html')
 
 @staff_member_required
 def users(request):
