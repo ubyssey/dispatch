@@ -355,6 +355,11 @@ class Article(Resource, Publishable):
     def get_absolute_url(self):
         return "http://localhost:8000/%s/%s/" % (self.section.name.lower(), self.slug)
 
+    def get_admin_url(self):
+        return ('dispatch.apps.manager.views.article_edit', [str(self.parent.id)])
+
+    get_admin_url = permalink(get_admin_url)
+
 class Author(Model):
     resource = ForeignKey(Resource)
     person = ForeignKey(Person)
