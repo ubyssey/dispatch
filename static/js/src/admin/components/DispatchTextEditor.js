@@ -17,9 +17,22 @@ var DispatchTextEditor = function(quill, options) {
     $(imageTools).html($('#image-tools').html());
     $(inlineToolbar).html($('#inline-toolbar').html());
 
-    $('.tb-image').imageModal(function(items){
-        var image = items[0];
-        self.addImage(image.url, image.id);
+    $.each(this.quill.getEmbeds(), function(key, item){
+        $('.inline-toolbar .toolbar').append(
+            $('<button class="tb-'+key+' dis-button">').text(key)
+        );
+        $('.tb-'+key).click(function(e){
+            e.preventDefault();
+            if (typeof item.trigger !== 'undefined'){
+                item.trigger(function(data){
+                    if (typeof data === 'undefined')
+                        data = {}
+                    this.addEmbed(key, data);
+                }.bind(this));
+            } else {
+                this.addEmbed(key, {});
+            }
+        }.bind(this));
     }.bind(this));
 
     $('.inline-toolbar .tb-toolbar').click(function(e){
@@ -37,6 +50,17 @@ var DispatchTextEditor = function(quill, options) {
         self.inlineToolbar();
     });
 
+}
+
+DispatchTextEditor.prototype.addEmbed = function(type, data) {
+    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
+
+    this.quill.insertEmbed(type, data, this.lastIndex);
+
+    $("#editor").find()
+    this.closeInlineToolbar();
+    if(lastLine)
+        this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
 DispatchTextEditor.prototype.inlineToolbar = function() {
@@ -63,25 +87,6 @@ DispatchTextEditor.prototype.inlineToolbar = function() {
 DispatchTextEditor.prototype.closeInlineToolbar = function() {
     $('.inline-toolbar .toolbar').hide();
     $('.inline-toolbar').hide();
-}
-
-DispatchTextEditor.prototype.addImage = function(src, id) {
-
-    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
-
-    var images = [
-        {
-            id: id,
-            src: src,
-        }
-    ]
-
-    var inserted = this.quill.insertEmbed('image', {images:images}, this.lastIndex);
-
-    $("#editor").find()
-    this.closeInlineToolbar();
-    if(lastLine)
-        this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
 // Register DispatchTextEditor with Quill
