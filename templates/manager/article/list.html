@@ -1,0 +1,51 @@
+{% extends 'manager/base.html' %}
+
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="list-header clearfix">
+        <div class="checkbox cell">
+            <input type="checkbox">
+        </div>
+        <div class="actions cell">
+            <span><i class="fa fa-warning"></i> &nbsp;{{ unpublished }} unpublished articles</span>
+        </div>
+        <div class="search cell">
+            <form class="search-bar" method="GET">
+                <input placeholder="Search" type="text" value="{{ query }}" name="q">
+            </form>
+            <a href="{% url 'apps.manager.views.article_add' %}">New article</a>
+        </div>
+    </div>
+    <div class="item-list">
+    {% for article in article_list %}
+        <div class="item">
+            <div class="checkbox cell">
+                <input type="checkbox">
+            </div>
+            <div class="status cell">
+                {% if article.is_published %}
+                    <i class="fa fa-check-circle"></i>
+                {% else %}
+                     <i class="fa fa-warning"></i>
+                {% endif %}
+            </div>
+            <div class="title cell">
+                <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline }}</a>
+            </div>
+            <div class="cell">
+                <span>{{ article.get_author_string }}</span>
+            </div>
+            <div class="cell">
+                <span>{{ article.published_at }}</span>
+            </div>
+            <div class="cell">
+                <span>{{ article.revision_id }} revisions</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
