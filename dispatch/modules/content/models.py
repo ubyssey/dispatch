@@ -1,17 +1,18 @@
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager)
+    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
+
 from django.core.validators import MaxValueValidator
 from django.conf import settings
+from django.template import loader, Context
+
 from dispatch.apps.core.models import Person
 
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
-import StringIO
-import os
-import re
+import StringIO, json, os, re
 
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -58,6 +59,7 @@ class Publishable(Model):
 
     parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
     preview = BooleanField(default=False)
+    revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
     # Overriding
@@ -65,6 +67,8 @@ class Publishable(Model):
 
         if revision:
             self.head = True
+            self.revision_id += 1
+
             if self.parent:
                 Article.objects.filter(parent=self.parent,head=True).update(head=False)
                 # Both fields required for this to work -- something to do with model inheritance.
@@ -84,6 +88,12 @@ class Publishable(Model):
             return self
         revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
         return revision
+
+    def check_stale(self):
+        if self.revision_id == 0:
+            return (False, self)
+        head = Article.objects.get(parent=self.parent, head=True)
+        return (head.revision_id != self.revision_id, head)
 
     class Meta:
         abstract = True
@@ -281,6 +291,51 @@ class Article(Resource, Publishable):
                 ins = Topic.objects.create(name=topic)
             self.topics.add(ins)
 
+    def get_json(self):
+        try:
+            return json.loads(self.content)
+        except ValueError:
+            return self.content
+
+    def get_html(self):
+        nodes = json.loads(self.content)
+        html = ""
+        for node in nodes:
+            if type(node) is dict:
+                template = loader.get_template("image.html")
+                id = node['data']['attachment_id']
+                attach = ImageAttachment.objects.get(id=id)
+                c = Context({
+                    'id': attach.id,
+                    'src': attach.image.get_absolute_url(),
+                    'caption': attach.caption,
+                    'credit': ""
+                })
+                html += template.render(c)
+            else:
+                html += "<p>%s</p>" % node
+        return html
+
+    def save_attachments(self):
+        nodes = json.loads(self.content)
+        for node in nodes:
+            if type(node) is dict and node['type'] == 'image':
+                image_id = node['data']['images'][0]['id']
+                image = Image.objects.get(id=image_id)
+                if node['data']['attachment_id']:
+                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
+                else:
+                    attachment = ImageAttachment()
+                attachment.caption = node['data']['caption']
+                attachment.image = image
+                attachment.article = self
+                attachment.save()
+                del node['data']
+                node['data'] = {
+                    'attachment_id': attachment.id
+                }
+        self.content = json.dumps(nodes)
+
     def save_new_attachments(self, attachments):
         def save_new_attachment(code):
             args = re.findall(r'(\".+\"|[0-9]+)+', code.group(0))
@@ -322,6 +377,11 @@ class Article(Resource, Publishable):
     def get_absolute_url(self):
         return "http://localhost:8000/%s/%s/" % (self.section.name.lower(), self.slug)
 
+    def get_admin_url(self):
+        return ('dispatch.apps.manager.views.article_edit', [str(self.parent.id)])
+
+    get_admin_url = permalink(get_admin_url)
+
 class Author(Model):
     resource = ForeignKey(Resource)
     person = ForeignKey(Person)
@@ -335,7 +395,7 @@ class Image(Resource):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
 
-    ROOT_URL = "http://dispatch.dev:8888/media/"
+    ROOT_URL = settings.MEDIA_URL
     #ROOT_URL = "http://petersiemens.com/dispatch/media/"
 
     SIZES = {

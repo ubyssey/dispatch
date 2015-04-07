@@ -1,6 +1,10 @@
 {% extends 'manager/base.html' %}
+{% block header %}
+    <div class="title">
+        <h1>People &nbsp;<i class="fa fa-caret-right"></i>&nbsp; {{ person.full_name }}</h1>
+    </div>
+{% endblock %}
 {% block content %}
-    {{ person.full_name }}<br/>
 <form class="person-form"  action="" method="post">
     {% csrf_token %}
     {% for field in form %}

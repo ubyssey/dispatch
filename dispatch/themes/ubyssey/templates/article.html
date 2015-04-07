@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="article-content">
-            {{ article.content|safe|shortcodes|safe }}
+            {{ article.get_html|safe }}
         </div>
     </article>
 </main>

@@ -5,6 +5,8 @@ from dispatch.apps.content.models import Tag, Topic, Article, Section, Image, Vi
 class ArticleForm(forms.ModelForm):
 
     class Meta:
+        fields = ('long_headline',)
+        exclude = ('is_published',)
         model = Article
 
 #class ImageInlineAdmin(admin.TabularInline):

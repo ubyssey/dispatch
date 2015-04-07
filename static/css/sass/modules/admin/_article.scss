@@ -1,4 +1,5 @@
 @import "compass/css3/box-shadow";
+@import "utilities/fonts";
 
 $text-padding: 60px;
 
@@ -13,7 +14,7 @@ textarea.headline {
   line-height: 40px;
   height: 40px;
   border: none;
-  font-family: "LFT Etica";
+  font-family: $ui-font-helvetica;
   font-weight: 600;
   width: 100%;
   resize: none;
@@ -29,7 +30,7 @@ div.field label {
   display: block;
   margin-bottom: 5px;
   font-size: 12px;
-  font-family: "LFT Etica";
+  font-family: $ui-font-helvetica;
 }
 
 input, select {
@@ -115,7 +116,7 @@ nav.edit-tabs {
 
         display: block;
         padding: 17px 15px;
-        font-family: LFT Etica;
+        font-family: $ui-font-helvetica;
         font-size: 12px;
         color: #A2A2A2;
 
@@ -152,9 +153,9 @@ div.panel.options {
   float: none;
   right: 0;
   left: 730px;
+  bottom: 0;
+  top: 0;
   div.fieldset {
-    margin-bottom: 15px;
-    border-bottom: solid 1px #C6C6C6;
     div.col:first-child {
       margin-right: 15px;
     }
@@ -194,7 +195,8 @@ div.field-row.headline {
   margin-bottom: 30px;
   div.authors {
     padding: 10px 0;
-    font-family: LFTEtica-SemiBold;
+    font-family: $ui-font-lft-etica;
+    font-weight: 600;
     font-size: 16px;
     color: #7E7E7E;
     line-height: 28px;
@@ -320,10 +322,82 @@ ul.tagList {
   margin-left: $text-padding;
 }
 
+.ql-container {
+  overflow: visible;
+}
+
 .ql-editor {
     margin-left: $text-padding;
     img {
-      width: 50%;
+      width: 100%;
+      display: block;
+    }
+    .ql-embed {
+      width: 97%;
+      margin-bottom: 20px;
+      cursor: default;
+      &.selected {
+        .images { outline: 6px solid rgb(74, 144, 226); }
+        .image .image-toolbar-container {
+          display: block;
+        }
+      }
+      .image {
+        position: relative;
+        overflow: visible;
+        .image-toolbar-container {
+          pointer-events: none;
+          display: none;
+          position: absolute;
+          top: -50px;
+          width: 100%;
+          .image-toolbar {
+            pointer-events: auto;
+            margin: 0 auto;
+            width: 200px;
+            background: black;
+            height: 40px;
+          }
+        }
+        .image-caption {
+          padding-top: 15px;
+          textarea {
+            width: 100%;
+            border: none;
+            color: grey;
+            background: none;
+            resize: none;
+            font-family: $ui-font-helvetica;
+            font-size: 14px;
+            line-height: 20px;
+            height: 20px;
+          }
+        }
+        .images {
+          overflow: auto;
+          &.single img {
+            width: 100%;
+          }
+          &.double img {
+            width: 49%;
+            float: left;
+            &:nth-child(2) {
+              float: right;
+            }
+          }
+          .add-image {
+            float: left;
+            width: 50%;
+
+            display: none;
+          }
+          &.show-add-button {
+            .add-image {
+              display: block;
+            }
+          }
+        }
+      }
     }
 }
 
@@ -435,7 +509,7 @@ button.dark-button {
     line-height: 100%;
     font-size: 18px;
     font-weight: 100;
-    font-family: LFT Etica;
+    font-family: $ui-font-helvetica;
   }
   &:hover {
     border-color: grey;
@@ -501,6 +575,11 @@ img.featured-image {
 
 div.tab {
   display: none;
+  position: absolute;
+  top: 51px;
+  width: 100%;
+  bottom: 0;
+  overflow-y: auto;
   &.active {
     display: block;
   }
