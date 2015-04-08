@@ -4,27 +4,43 @@ from dispatch.apps.content.models import Resource, Article, Image, ImageAttachme
 from dispatch.apps.core.models import User, Person
 import uuid
 
-class PersonForm(ModelForm):
-    first_name = CharField(label='First name', required=True)
-    last_name = CharField(label='Last name', required=True)
-
-    class Meta:
-        model = Person
-        fields = '__all__'
-
-        exclude = ('roles', 'user')
-
 class UserForm(ModelForm):
 
-    password1 = CharField(label='Password', widget=PasswordInput)
-    password2 = CharField(label='Password confirmation', widget=PasswordInput)
+    password1 = CharField(label='Password', widget=PasswordInput, required=False)
+    password2 = CharField(label='Password confirmation', widget=PasswordInput, required=False)
+
+    def __init__(self, *args,  **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+
+    def missing_password(self):
+        return self.data.get('password1', False) and not self.data.get('password2', False) or not self.data.get('password1', False) and self.data.get('password2', False)
+
+    def empty_passwords(self):
+        return not self.data.get('password1', False) and not self.data.get('password2', False)
+
+    def clean(self):
+        if not self.is_bound and not self.has_changed():
+            return True
+        else:
+            return super(UserForm, self).clean()
+
+    def is_valid(self):
+        if not self.is_bound and not self.has_changed():
+            return True
+        else:
+            return super(UserForm, self).is_valid()
 
     def clean_password2(self):
-        # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise ValidationError("Passwords don't match")
+        if self.missing_password():
+            raise ValidationError("Please fill out both passwords")
+        if not self.empty_passwords():
+            # Check that the two password entries match
+            if password1 and password2 and password1 != password2:
+                raise ValidationError("Passwords don't match")
+        elif self.cleaned_data.get("email") and not self.is_bound:
+            raise ValidationError("Please enter a password")
         return password2
 
     def save(self, commit=True):
@@ -37,11 +53,50 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
+        fields = ('email',)
+
+class PersonForm(ModelForm):
+    first_name = CharField(label='First name', required=True)
+    last_name = CharField(label='Last name', required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(PersonForm, self).__init__(*args, **kwargs)
+
+        args = []
+        kwargs = {}
+
+        try:
+            user = User.objects.get(person=self.instance)
+        except:
+            user = None
+
+        if self.data and user:
+            args.append(self.data)
+            kwargs['instance'] = user
+        elif user:
+            kwargs['instance'] = user
+        elif self.data:
+            args.append(self.data)
+
+        self.user_form = UserForm(*args, **kwargs)
+
+
+    def is_valid(self):
+        return super(PersonForm, self).is_valid() and self.user_form.is_valid()
+
+    def save(self, commit=True):
+        person = super(PersonForm, self).save()
+        if self.user_form.has_changed():
+            user = self.user_form.save(commit=False)
+            user.person = person
+            if commit:
+                user.save()
+
+    class Meta:
+        model = Person
         fields = '__all__'
 
-        exclude = ('password',)
-
-UserFormSet = inlineformset_factory(Person, User, form=UserForm, extra=0)
+        exclude = ('roles', 'user')
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -77,6 +132,9 @@ class FeaturedImageForm(ModelForm):
 
 class ProfileForm(ModelForm):
 
+    password1 = CharField(label='Password', widget=PasswordInput, required=False)
+    password2 = CharField(label='Password confirmation', widget=PasswordInput, required=False)
+
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
 
@@ -85,16 +143,12 @@ class ProfileForm(ModelForm):
         if self.data and self.instance.person:
             args.append(self.data)
             kwargs['instance'] = self.instance.person
-            #self.person_form = PersonForm(self.data, instance=self.instance.person)
         elif self.instance.person:
             kwargs['instance'] = self.instance.person
         elif self.data:
             args.append(self.data)
 
         self.person_form = PersonForm(*args, **kwargs)
-
-    password1 = CharField(label='Password', widget=PasswordInput, required=False)
-    password2 = CharField(label='Password confirmation', widget=PasswordInput, required=False)
 
     def missing_password(self):
         return self.data.get('password1', False) and not self.data.get('password2', False) or not self.data.get('password1', False) and self.data.get('password2', False)
@@ -113,10 +167,13 @@ class ProfileForm(ModelForm):
                 raise ValidationError("Passwords don't match")
         return password2
 
+    def is_valid(self):
+        return super(ProfileForm, self).is_valid() and self.person_form.is_valid()
+
     def save(self, commit=True):
         user = super(ProfileForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        if self.person_form.has_changed() and self.person_form.is_valid():
+        if self.person_form.has_changed():
             person = self.person_form.save()
         if not user.person:
             user.person = person
