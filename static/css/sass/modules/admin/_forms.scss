@@ -1,0 +1,47 @@
+// Styles for form elements used in the admin panel
+
+input, select {
+  font-size: 14px;
+}
+
+form {
+  h2 {
+    margin: 25px 0;
+    font-size: 18px;
+  }
+  div.field {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    &:first-child {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-family: $ui-font-helvetica;
+    }
+    input, textarea {
+      font-family: $ui-font-helvetica;
+      border: 1px solid rgb(185,185,185);
+      border-radius: 2px;
+      padding: 9px 8px;
+      font-size: 12px;
+      width: 100%;
+      max-width: 350px;
+      margin-bottom: 10px;
+    }
+    textarea {
+      line-height: 1.5em;
+    }
+    input {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    select {
+       font-size: 12px;
+    }
+  }
+}
