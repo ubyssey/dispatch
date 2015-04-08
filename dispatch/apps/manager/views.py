@@ -5,7 +5,7 @@ from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, UserFormSet
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 
