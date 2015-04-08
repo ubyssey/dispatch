@@ -5,7 +5,7 @@ from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, UserFormSet
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, UserFormSet
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -82,7 +82,23 @@ def user_edit(request, id):
 
     return render(request, "manager/person/edit.html", context)
 
+@staff_member_required
+def profile(request):
+    user = User.objects.get(email=request.user)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+        else:
+            print form.errors
+    else:
+        form = ProfileForm(instance=user)
 
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'manager/profile.html', context)
 
 @staff_member_required
 def section(request, section):

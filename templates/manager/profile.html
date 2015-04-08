@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<form method="post">
+{% csrf_token %}
+{{ form.person_form }}
+{{ form }}
+<input type="submit" />
+</form>
+</body>
+</html>
