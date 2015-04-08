@@ -60,24 +60,15 @@ def user_edit(request, id):
 
     if request.method == 'POST':
         form = PersonForm(request.POST, instance=p)
-        user_form = UserFormSet(request.POST, instance=p)
         if form.is_valid():
             form.save()
-        else:
-            print form.errors
-
-        if user_form.is_valid():
-            user_form.save()
-        else:
-            print user_form.errors
     else:
         form = PersonForm(instance=p)
-        user_form = UserFormSet(instance=p)
 
     context = {
         'person': p,
         'form': form,
-        'user_form': user_form,
+        'user_form': form.user_form,
     }
 
     return render(request, "manager/person/edit.html", context)
@@ -89,13 +80,12 @@ def profile(request):
         form = ProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-        else:
-            print form.errors
     else:
         form = ProfileForm(instance=user)
 
     context = {
-        'form': form,
+        'user_form': form,
+        'person_form': form.person_form,
     }
 
     return render(request, 'manager/profile.html', context)
@@ -145,8 +135,6 @@ def article_add(request):
         if form.is_valid():
             article = form.save()
             return redirect(article_edit, article.id)
-        else:
-            print form.errors
     else:
         form = ArticleForm()
 
@@ -174,8 +162,6 @@ def article_edit(request, id):
             a = form.save()
             saved = 1
             form = ArticleForm(instance=a)
-        else:
-            print form.errors
     else:
         form = ArticleForm(instance=a)
 
