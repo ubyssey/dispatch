@@ -13,6 +13,7 @@ import os
 import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_URL = 'http://localhost:8000/'
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
