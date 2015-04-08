@@ -113,14 +113,14 @@ $(function(){
     pickdate.on('set', function(){ updateDate(pickdate, picktime);});
     picktime.on('set', function(){ updateDate(pickdate, picktime);});
 
-    $('.edit-authors').click(function(e){
-        e.preventDefault();
-        if($('.manage-authors').is(':visible')){
-            $('.manage-authors').slideUp();
-        } else {
-            $('.manage-authors').slideDown();
-        }
-    });
+//    $('.edit-authors').click(function(e){
+//        e.preventDefault();
+//        if($('.manage-authors').is(':visible')){
+//            $('.manage-authors').slideUp();
+//        } else {
+//            $('.manage-authors').slideDown();
+//        }
+//    });
 
     $(document).on("click", '.delete-author', function(e){
         e.preventDefault();
@@ -188,20 +188,6 @@ $(function(){
 
 var images = [];
 
-//$('.modal-trigger').imageModal(function(items){
-//    $.each(items, function(key, image){
-//        if(images.indexOf(image) == -1){
-//            var attachment = new Attachment(ARTICLE_ID, image);
-//            attachment.save(function(){
-//                var img = $("<li>")
-//                    .css("background-image", "url('http://dispatch.dev:8888/media/"+image.thumb+"')");
-//                img.data("id", attachment.id);
-//                $(".images-list").append(img);
-//            });
-//        }
-//    });
-//});
-
 $(document).on("click", "ul.images-list li", function(){
     var id = $(this).data("id");
     var element = this;
@@ -255,7 +241,7 @@ $('.set-featured-image').imageModal(function(items){
 
 window.editor = editor;
 
-},{"./components/ImageManager.jsx":5,"./editor.js":10}],2:[function(require,module,exports){
+},{"./components/ImageManager.jsx":5,"./editor.js":11}],2:[function(require,module,exports){
 var EditorImage = require('./embeds/EditorImage.jsx');
 
 var DispatchTextEditor = function(quill, options) {
@@ -989,11 +975,76 @@ var factory = function(manager, images){
 module.exports = factory;
 
 },{}],10:[function(require,module,exports){
+var EditorVideo = React.createClass({displayName: "EditorVideo",
+    getInitialState: function(){
+        return {
+            validUrl: false,
+            url: this.props.data.url ? this.props.data.url : "",
+        };
+    },
+    validYT: function(url){
+      var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/;
+      return (url.match(p)) ? RegExp.$1 : false;
+    },
+    handleURLChange: function(event){
+        event.preventDefault();
+        valid = this.validYT(event.target.value);
+        console.log(valid);
+        this.setState({
+            url: event.target.value,
+            validUrl: false,
+        });
+    },
+    getJSON: function(){
+        return {
+            type: 'youtube',
+            data: {
+                url: this.state.url,
+            }
+        }
+    },
+    renderInput: function(){
+        return (
+            React.createElement("div", null, 
+                React.createElement("input", {placeholder: "Enter a YouTube video URL", value: this.state.url, onChange: this.handleURLChange})
+            )
+            )
+    },
+    renderVideo: function(){
+        return (
+            React.createElement("div", null, 
+                "this is a video"
+            )
+            )
+    },
+    render: function(){
+        return (
+            React.createElement("div", {className: "embed-video"}, 
+             this.state.validUrl ? this.renderVideo() : this.renderInput()
+            )
+            );
+    }
+});
+
+
+var factory = {
+    controller: function(node, embed){
+        return React.render(
+            React.createElement(EditorVideo, {data: embed.data}),
+            node
+        );
+    },
+}
+
+module.exports = factory;
+
+},{}],11:[function(require,module,exports){
 var CSRF_TOKEN = $(".article-form").data('csrf');
 
 var DispatchTextEditor = require('./components/DispatchTextEditor.js');
 var EditorImage = require('./components/embeds/EditorImage.jsx');
 var EditorCode = require('./components/embeds/EditorCode.jsx');
+var EditorVideo = require('./components/embeds/EditorVideo.jsx');
 
 var Editor = function(article, source, saveAttempt, saved, saveid) {
 
@@ -1019,6 +1070,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 
             quill.addEmbed('image');
             quill.addEmbed('code');
+            quill.addEmbed('video');
 
             quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
             quill.addModule('toolbar', { container: '#full-toolbar' });
@@ -1058,6 +1110,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
         setupEmbeds: function(){
             Quill.registerEmbed('image', EditorImage(imageManager, images));
             Quill.registerEmbed('code', EditorCode);
+            Quill.registerEmbed('video', EditorVideo);
         },
         processImage: function(embedId, id) {
             var attachment = images[id];
@@ -1096,4 +1149,4 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 module.exports = Editor;
 
 
-},{"./components/DispatchTextEditor.js":2,"./components/embeds/EditorCode.jsx":8,"./components/embeds/EditorImage.jsx":9}]},{},[1]);
+},{"./components/DispatchTextEditor.js":2,"./components/embeds/EditorCode.jsx":8,"./components/embeds/EditorImage.jsx":9,"./components/embeds/EditorVideo.jsx":10}]},{},[1]);
