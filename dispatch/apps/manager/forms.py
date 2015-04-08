@@ -1,6 +1,6 @@
 from django.forms import Form, ModelForm, TextInput, Textarea, CharField, EmailField, PasswordInput, ValidationError, HiddenInput
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
+from dispatch.apps.content.models import Resource, Article, Section, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
 import uuid
 
@@ -185,6 +185,12 @@ class ProfileForm(ModelForm):
         model = User
         fields = ('email',)
 
+class SectionForm(ModelForm):
+    class Meta:
+        model = Section
+        fields = '__all__'
+
+
 class ArticleForm(ModelForm):
     class Meta:
         model = Article
@@ -204,6 +210,9 @@ class ArticleForm(ModelForm):
                 'placeholder': 'Write a story...',
                 'class': 'content',
             }),
+            'snippet': Textarea(attrs={
+                'rows': '5',
+            })
         }
 
     # Override

@@ -321,78 +321,87 @@ div.list-header div.cell.search {
 }
 
 /* line 259, sass/modules/admin/_base.scss */
+div.list-container {
+  position: absolute;
+  top: 59px;
+  bottom: 0;
+  overflow: scroll;
+  width: 100%;
+}
+
+/* line 267, sass/modules/admin/_base.scss */
 div.item-list {
   display: table;
   width: 100%;
 }
-/* line 262, sass/modules/admin/_base.scss */
+/* line 270, sass/modules/admin/_base.scss */
 div.item-list div.item {
   display: table-row;
 }
-/* line 264, sass/modules/admin/_base.scss */
+/* line 272, sass/modules/admin/_base.scss */
 div.item-list div.item:hover {
   background: #f9f9f9;
 }
-/* line 267, sass/modules/admin/_base.scss */
+/* line 275, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell {
   display: table-cell;
-  padding: 20px 0 20px 15px;
+  padding: 20px 0 20px 20px;
   border-bottom: thin solid #E2E2E2;
 }
-/* line 271, sass/modules/admin/_base.scss */
+/* line 279, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell a, div.item-list div.item div.cell span {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   text-decoration: none;
   color: #646464;
 }
-/* line 277, sass/modules/admin/_base.scss */
+/* line 285, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell.checkbox, div.item-list div.item div.cell.status {
   text-align: center;
   width: 12px;
   padding-left: 20px;
   padding-right: 0px;
 }
-/* line 283, sass/modules/admin/_base.scss */
+/* line 291, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell.status {
   padding-left: 15px;
 }
-/* line 285, sass/modules/admin/_base.scss */
+/* line 293, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell.status .fa-check-circle {
   color: #4FD74B;
 }
-/* line 290, sass/modules/admin/_base.scss */
+/* line 298, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell.title a {
   font-weight: 600;
   color: black;
   font-size: 14px;
 }
-/* line 294, sass/modules/admin/_base.scss */
+/* line 302, sass/modules/admin/_base.scss */
 div.item-list div.item div.cell.title a:hover {
   color: #4183c4;
 }
 
-/* line 305, sass/modules/admin/_base.scss */
+/* line 313, sass/modules/admin/_base.scss */
 .dropzone {
   height: 100%;
 }
 
-/* line 309, sass/modules/admin/_base.scss */
+/* line 317, sass/modules/admin/_base.scss */
 .dz-preview {
   display: inline-block;
 }
 
-/* line 317, sass/modules/admin/_base.scss */
+/* line 325, sass/modules/admin/_base.scss */
 input:focus, textarea:focus {
   outline: none;
 }
 
-/* line 322, sass/modules/admin/_base.scss */
+/* line 330, sass/modules/admin/_base.scss */
 input {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* line 326, sass/modules/admin/_base.scss */
+/* line 334, sass/modules/admin/_base.scss */
 button.sq-button, a.sq-button {
   border-radius: 2px;
   font-family: "lft-etica", "LFT Etica", Helvetica, Arial, sans-serif;
@@ -409,38 +418,38 @@ button.sq-button, a.sq-button {
   border-color: #4A90E2;
   background: #4A90E2;
 }
-/* line 343, sass/modules/admin/_base.scss */
+/* line 351, sass/modules/admin/_base.scss */
 button.sq-button.green, a.sq-button.green {
   background: #4FD74B;
   border-color: #4FD74B;
 }
-/* line 347, sass/modules/admin/_base.scss */
+/* line 355, sass/modules/admin/_base.scss */
 button.sq-button.red, a.sq-button.red {
   background: #E24A4A;
   border-color: #E24A4A;
 }
-/* line 351, sass/modules/admin/_base.scss */
+/* line 359, sass/modules/admin/_base.scss */
 button.sq-button:hover, a.sq-button:hover {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   background: #437FC5;
   border-color: #437FC5;
 }
-/* line 358, sass/modules/admin/_base.scss */
+/* line 366, sass/modules/admin/_base.scss */
 button.sq-button:hover.green, a.sq-button:hover.green {
   background: #48BB45;
   border-color: #48BB45;
 }
-/* line 363, sass/modules/admin/_base.scss */
+/* line 371, sass/modules/admin/_base.scss */
 button.sq-button:hover.red, a.sq-button:hover.red {
   background: #BD4141;
   border-color: #BD4141;
 }
-/* line 368, sass/modules/admin/_base.scss */
+/* line 376, sass/modules/admin/_base.scss */
 button.sq-button:active, button.sq-button:focus, a.sq-button:active, a.sq-button:focus {
   outline: none;
 }
-/* line 372, sass/modules/admin/_base.scss */
+/* line 380, sass/modules/admin/_base.scss */
 button.sq-button:disabled, button.sq-button:disabled:hover, a.sq-button:disabled, a.sq-button:disabled:hover {
   cursor: default;
   background: gray;
@@ -448,7 +457,7 @@ button.sq-button:disabled, button.sq-button:disabled:hover, a.sq-button:disabled
   opacity: 0.5;
 }
 
-/* line 382, sass/modules/admin/_base.scss */
+/* line 390, sass/modules/admin/_base.scss */
 .loader {
   display: inline-block;
   font-size: 10px;
@@ -462,7 +471,7 @@ button.sq-button:disabled, button.sq-button:disabled:hover, a.sq-button:disabled
   animation: load8 1.1s infinite linear;
 }
 
-/* line 394, sass/modules/admin/_base.scss */
+/* line 402, sass/modules/admin/_base.scss */
 .loader,
 .loader:after {
   border-radius: 50%;
@@ -1109,7 +1118,7 @@ img.featured-image {
 div.tab {
   display: none;
   position: absolute;
-  top: 51px;
+  top: 52px;
   width: 100%;
   bottom: 0;
   overflow-y: auto;
@@ -1240,8 +1249,8 @@ form h2 {
 }
 /* line 12, sass/modules/admin/_forms.scss */
 form div.field {
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 /* line 15, sass/modules/admin/_forms.scss */
 form div.field:first-child {
@@ -1263,7 +1272,7 @@ form div.field input, form div.field textarea {
   font-size: 12px;
   width: 100%;
   max-width: 350px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 /* line 34, sass/modules/admin/_forms.scss */
 form div.field textarea {
@@ -1280,4 +1289,5 @@ form div.field input:last-child {
 /* line 43, sass/modules/admin/_forms.scss */
 form div.field select {
   font-size: 12px;
+  margin-bottom: 5px;
 }
