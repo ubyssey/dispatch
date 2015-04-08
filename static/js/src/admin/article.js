@@ -112,14 +112,14 @@ $(function(){
     pickdate.on('set', function(){ updateDate(pickdate, picktime);});
     picktime.on('set', function(){ updateDate(pickdate, picktime);});
 
-    $('.edit-authors').click(function(e){
-        e.preventDefault();
-        if($('.manage-authors').is(':visible')){
-            $('.manage-authors').slideUp();
-        } else {
-            $('.manage-authors').slideDown();
-        }
-    });
+//    $('.edit-authors').click(function(e){
+//        e.preventDefault();
+//        if($('.manage-authors').is(':visible')){
+//            $('.manage-authors').slideUp();
+//        } else {
+//            $('.manage-authors').slideDown();
+//        }
+//    });
 
     $(document).on("click", '.delete-author', function(e){
         e.preventDefault();
@@ -186,20 +186,6 @@ $(function(){
 
 
 var images = [];
-
-//$('.modal-trigger').imageModal(function(items){
-//    $.each(items, function(key, image){
-//        if(images.indexOf(image) == -1){
-//            var attachment = new Attachment(ARTICLE_ID, image);
-//            attachment.save(function(){
-//                var img = $("<li>")
-//                    .css("background-image", "url('http://dispatch.dev:8888/media/"+image.thumb+"')");
-//                img.data("id", attachment.id);
-//                $(".images-list").append(img);
-//            });
-//        }
-//    });
-//});
 
 $(document).on("click", "ul.images-list li", function(){
     var id = $(this).data("id");
