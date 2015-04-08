@@ -112,14 +112,14 @@ $(function(){
     pickdate.on('set', function(){ updateDate(pickdate, picktime);});
     picktime.on('set', function(){ updateDate(pickdate, picktime);});
 
-//    $('.edit-authors').click(function(e){
-//        e.preventDefault();
-//        if($('.manage-authors').is(':visible')){
-//            $('.manage-authors').slideUp();
-//        } else {
-//            $('.manage-authors').slideDown();
-//        }
-//    });
+    $('.edit-authors').click(function(e){
+        e.preventDefault();
+        if($('.manage-authors').is(':visible')){
+            $('.manage-authors').slideUp();
+        } else {
+            $('.manage-authors').slideDown();
+        }
+    });
 
     $(document).on("click", '.delete-author', function(e){
         e.preventDefault();
