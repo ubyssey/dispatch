@@ -1,10 +1,13 @@
-from django.forms import ModelForm, TextInput, Textarea, CharField, PasswordInput, ValidationError, HiddenInput
+from django.forms import Form, ModelForm, TextInput, Textarea, CharField, EmailField, PasswordInput, ValidationError, HiddenInput
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from dispatch.apps.content.models import Resource, Article, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
 import uuid
 
 class PersonForm(ModelForm):
+    first_name = CharField(label='First name', required=True)
+    last_name = CharField(label='Last name', required=True)
+
     class Meta:
         model = Person
         fields = '__all__'
@@ -71,6 +74,59 @@ class FeaturedImageForm(ModelForm):
             }),
             'image': TextInput()
         }
+
+class ProfileForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        args = []
+        kwargs = {}
+        if self.data and self.instance.person:
+            args.append(self.data)
+            kwargs['instance'] = self.instance.person
+            #self.person_form = PersonForm(self.data, instance=self.instance.person)
+        elif self.instance.person:
+            kwargs['instance'] = self.instance.person
+        elif self.data:
+            args.append(self.data)
+
+        self.person_form = PersonForm(*args, **kwargs)
+
+    password1 = CharField(label='Password', widget=PasswordInput, required=False)
+    password2 = CharField(label='Password confirmation', widget=PasswordInput, required=False)
+
+    def missing_password(self):
+        return self.data.get('password1', False) and not self.data.get('password2', False) or not self.data.get('password1', False) and self.data.get('password2', False)
+
+    def empty_passwords(self):
+        return not self.data.get('password1', False) or self.data.get('password2', False)
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if self.missing_password():
+            raise ValidationError("Please fill out both passwords")
+        if not self.empty_passwords():
+            # Check that the two password entries match
+            if password1 and password2 and password1 != password2:
+                raise ValidationError("Passwords don't match")
+        return password2
+
+    def save(self, commit=True):
+        user = super(ProfileForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if self.person_form.has_changed() and self.person_form.is_valid():
+            person = self.person_form.save()
+        if not user.person:
+            user.person = person
+        if commit:
+            user.save()
+        return user
+
+    class Meta:
+        model = User
+        fields = ('email',)
 
 class ArticleForm(ModelForm):
     class Meta:
