@@ -113,14 +113,14 @@ $(function(){
     pickdate.on('set', function(){ updateDate(pickdate, picktime);});
     picktime.on('set', function(){ updateDate(pickdate, picktime);});
 
-//    $('.edit-authors').click(function(e){
-//        e.preventDefault();
-//        if($('.manage-authors').is(':visible')){
-//            $('.manage-authors').slideUp();
-//        } else {
-//            $('.manage-authors').slideDown();
-//        }
-//    });
+    $('.edit-authors').click(function(e){
+        e.preventDefault();
+        if($('.manage-authors').is(':visible')){
+            $('.manage-authors').slideUp();
+        } else {
+            $('.manage-authors').slideDown();
+        }
+    });
 
     $(document).on("click", '.delete-author', function(e){
         e.preventDefault();
@@ -297,14 +297,8 @@ var DispatchTextEditor = function(quill, options) {
 }
 
 DispatchTextEditor.prototype.addEmbed = function(type, data) {
-    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
-
     this.quill.insertEmbed(type, data, this.lastIndex);
-
-    $("#editor").find()
     this.closeInlineToolbar();
-    if(lastLine)
-        this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
 DispatchTextEditor.prototype.inlineToolbar = function() {
