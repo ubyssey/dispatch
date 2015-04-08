@@ -3,6 +3,7 @@ var CSRF_TOKEN = $(".article-form").data('csrf');
 var DispatchTextEditor = require('./components/DispatchTextEditor.js');
 var EditorImage = require('./components/embeds/EditorImage.jsx');
 var EditorCode = require('./components/embeds/EditorCode.jsx');
+var EditorVideo = require('./components/embeds/EditorVideo.jsx');
 
 var Editor = function(article, source, saveAttempt, saved, saveid) {
 
@@ -28,6 +29,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 
             quill.addEmbed('image');
             quill.addEmbed('code');
+            quill.addEmbed('video');
 
             quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
             quill.addModule('toolbar', { container: '#full-toolbar' });
@@ -67,6 +69,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
         setupEmbeds: function(){
             Quill.registerEmbed('image', EditorImage(imageManager, images));
             Quill.registerEmbed('code', EditorCode);
+            Quill.registerEmbed('video', EditorVideo);
         },
         processImage: function(embedId, id) {
             var attachment = images[id];
