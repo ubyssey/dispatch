@@ -17,16 +17,18 @@
             <a href="#">New person</a>
         </div>
     </div>
-    <div class="item-list">
-    {% for person in persons %}
-        <div class="item">
-            <div class="checkbox cell">
-                <input type="checkbox">
+    <div class="list-container">
+        <div class="item-list">
+        {% for person in persons %}
+            <div class="item">
+                <div class="checkbox cell">
+                    <input type="checkbox">
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'apps.manager.views.user_edit' person.id %}">{{ person.full_name }}</a>
+                </div>
             </div>
-            <div class="title cell">
-                <a href="{% url 'apps.manager.views.user_edit' person.id %}">{{ person.full_name }}</a>
-            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
     </div>
 {% endblock %}

@@ -1,11 +1,11 @@
-from dispatch.apps.content.models import Article, Tag, Topic, Author
+from dispatch.apps.content.models import Article, Section, Tag, Topic, Author
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
 from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -110,6 +110,51 @@ def section(request, section):
         },
         RequestContext(request, {}),
     )
+
+@staff_member_required
+def sections(request):
+
+    sections = Section.objects.all()
+
+    context = {
+        'sections': sections,
+    }
+
+    return render(request, 'manager/section/list.html', context)
+
+@staff_member_required
+def section_add(request):
+
+    if request.method == 'POST':
+        form = SectionForm(request.POST)
+        if form.is_valid():
+            section = form.save()
+            return redirect(section_edit, section.id)
+    else:
+        form = SectionForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'manager/section/edit.html', context)
+
+@staff_member_required
+def section_edit(request, id):
+    section = Section.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = SectionForm(request.POST, instance=section)
+        if form.is_valid():
+            section = form.save()
+    else:
+        form = SectionForm(instance=section)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'manager/section/edit.html', context)
 
 @staff_member_required
 def articles(request):

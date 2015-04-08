@@ -256,6 +256,14 @@ div.list-header {
   }
 }
 
+div.list-container {
+  position: absolute;
+  top: 59px;
+  bottom: 0;
+  overflow: scroll;
+  width: 100%;
+}
+
 div.item-list {
   display: table;
   width: 100%;
@@ -266,7 +274,7 @@ div.item-list {
     }
     div.cell {
       display: table-cell;
-      padding: 20px 0 20px 15px;
+      padding: 20px 0 20px 20px;
       border-bottom: thin solid #E2E2E2;
       a, span {
         font-family: $ui-font-helvetica;
