@@ -337,7 +337,7 @@ ul.tagList {
       margin-bottom: 20px;
       cursor: default;
       &.selected {
-        .images { outline: 6px solid rgb(74, 144, 226); }
+        //.images { outline: 6px solid rgb(74, 144, 226); }
         .image .image-toolbar-container {
           display: block;
         }
@@ -401,7 +401,7 @@ ul.tagList {
     }
 }
 
-#editor p {
+#editor div.ql-line {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
