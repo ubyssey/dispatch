@@ -351,12 +351,7 @@ class Article(Resource, Publishable):
         return author_str
 
     def get_absolute_url(self):
-        return "http://localhost:8000/%s/%s/" % (self.section.name.lower(), self.slug)
-
-    def get_admin_url(self):
-        return ('dispatch.apps.manager.views.article_edit', [str(self.parent.id)])
-
-    get_admin_url = permalink(get_admin_url)
+        return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
 class Author(Model):
     resource = ForeignKey(Resource)
@@ -372,7 +367,6 @@ class Image(Resource):
     title = CharField(max_length=255, blank=True, null=True)
 
     ROOT_URL = settings.MEDIA_URL
-    #ROOT_URL = "http://petersiemens.com/dispatch/media/"
 
     SIZES = {
         'large': (1600, 900),
@@ -440,10 +434,6 @@ class Image(Resource):
                     os.remove(path)
                 except OSError:
                     pass
-
-class Gallery(Resource):
-    #images = ManyToManyField('Image', through="ImageAttachment", blank=True, null=True)
-    pass
 
 class ImageAttachment(Model):
     NORMAL = 'normal'

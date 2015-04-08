@@ -6,20 +6,18 @@
     </div>
 {% endblock %}
 {% block content %}
-    <div class="item-list">
-        <div class="header clearfix">
-            <div class="checkbox cell">
-                <input type="checkbox">
-            </div>
-            <div class="actions cell">
-                <a href="#">New person</a>
-            </div>
-            <div class="search cell">
-                <form class="search-bar" method="GET">
-                    <input placeholder="Search" type="text" value="{{ query }}" name="q">
-                </form>
-            </div>
+    <div class="list-header clearfix">
+        <div class="checkbox cell">
+            <input type="checkbox">
         </div>
+        <div class="search cell">
+            <form class="search-bar" method="GET">
+                <input placeholder="Search" type="text" value="{{ query }}" name="q">
+            </form>
+            <a href="#">New person</a>
+        </div>
+    </div>
+    <div class="item-list">
     {% for person in persons %}
         <div class="item">
             <div class="checkbox cell">

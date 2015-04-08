@@ -60,6 +60,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     featured_image = AttachmentImageSerializer(read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
     content = serializers.ReadOnlyField(source='get_json')
+    authors_string = serializers.CharField(source='get_author_string',read_only=True)
+    url = serializers.CharField(source='get_absolute_url',read_only=True)
 
     class Meta:
         model = Article
@@ -70,14 +72,13 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'featured_image',
             'content',
             'authors',
+            'authors_string',
             'section',
             'published_at',
             'importance',
             'slug',
             'revision_id',
-            'get_author_string',
-            'get_absolute_url',
-            'get_admin_url',
+            'url',
         )
 
 class SectionSerializer(serializers.HyperlinkedModelSerializer):

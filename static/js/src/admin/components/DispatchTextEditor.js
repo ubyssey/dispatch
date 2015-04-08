@@ -53,14 +53,8 @@ var DispatchTextEditor = function(quill, options) {
 }
 
 DispatchTextEditor.prototype.addEmbed = function(type, data) {
-    var lastLine = this.quill.getLength() - 1 == this.lastIndex;
-
     this.quill.insertEmbed(type, data, this.lastIndex);
-
-    $("#editor").find()
     this.closeInlineToolbar();
-    if(lastLine)
-        this.quill.editor.doc.appendLine(document.createElement('P'));
 }
 
 DispatchTextEditor.prototype.inlineToolbar = function() {

@@ -26,21 +26,6 @@ div.field-row {
   }
 }
 
-div.field label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 12px;
-  font-family: $ui-font-helvetica;
-}
-
-input, select {
-  font-size: 14px;
-}
-
-div.field {
-  margin-bottom: 10px;
-}
-
 ul.author-list {
   list-style-type: none;
   padding: 0;
@@ -195,7 +180,7 @@ div.field-row.headline {
   margin-bottom: 30px;
   div.authors {
     padding: 10px 0;
-    font-family: $ui-font-lft-etica;
+    font-family: $ui-font-helvetica;
     font-weight: 600;
     font-size: 16px;
     color: #7E7E7E;
@@ -337,7 +322,7 @@ ul.tagList {
       margin-bottom: 20px;
       cursor: default;
       &.selected {
-        .images { outline: 6px solid rgb(74, 144, 226); }
+        //.images { outline: 6px solid rgb(74, 144, 226); }
         .image .image-toolbar-container {
           display: block;
         }
@@ -401,7 +386,7 @@ ul.tagList {
     }
 }
 
-#editor p {
+#editor div.ql-line {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
@@ -527,26 +512,6 @@ button.dark-button {
   margin-right: 15px;
   &:hover, &.ql-active {
     color: rgba(0,0,0,0.5);
-  }
-}
-
-.field {
-  margin: 15px 0;
-  &:first-child {
-    margin-top: 0;
-  }
-  input {
-    border: 1px solid rgb(185,185,185);
-    border-radius: 2px;
-    padding: 9px 8px;
-    font-size: 12px;
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-  select {
-     font-size: 12px;
   }
 }
 
