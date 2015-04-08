@@ -17,5 +17,9 @@ urlpatterns = patterns('',
     url(r'^article/(\d*)/$', views.article_edit),
     url(r'^article/delete/(\d*)/?$', views.article_delete),
     url(r'^article/add/?$', views.article_add),
+    url(r'^section/edit/(\d*)/?$', views.section_edit),
+    url(r'^section/add/?$', views.section_add),
     url(r'^section/(?P<section>[-\w]+)/?$', views.section),
+    url(r'^sections/$', views.sections),
+
 )

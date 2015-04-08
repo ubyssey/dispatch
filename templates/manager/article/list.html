@@ -20,32 +20,34 @@
             <a href="{% url 'apps.manager.views.article_add' %}">New article</a>
         </div>
     </div>
-    <div class="item-list">
-    {% for article in article_list %}
-        <div class="item">
-            <div class="checkbox cell">
-                <input type="checkbox">
+    <div class="list-container">
+        <div class="item-list">
+        {% for article in article_list %}
+            <div class="item">
+                <div class="checkbox cell">
+                    <input type="checkbox">
+                </div>
+                <div class="status cell">
+                    {% if article.is_published %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                         <i class="fa fa-warning"></i>
+                    {% endif %}
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline }}</a>
+                </div>
+                <div class="cell">
+                    <span>{{ article.get_author_string }}</span>
+                </div>
+                <div class="cell">
+                    <span>{{ article.published_at }}</span>
+                </div>
+                <div class="cell">
+                    <span>{{ article.revision_id }} revisions</span>
+                </div>
             </div>
-            <div class="status cell">
-                {% if article.is_published %}
-                    <i class="fa fa-check-circle"></i>
-                {% else %}
-                     <i class="fa fa-warning"></i>
-                {% endif %}
-            </div>
-            <div class="title cell">
-                <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline }}</a>
-            </div>
-            <div class="cell">
-                <span>{{ article.get_author_string }}</span>
-            </div>
-            <div class="cell">
-                <span>{{ article.published_at }}</span>
-            </div>
-            <div class="cell">
-                <span>{{ article.revision_id }} revisions</span>
-            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
     </div>
 {% endblock %}
