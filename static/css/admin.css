@@ -874,10 +874,6 @@ ul.tagList li {
   margin-bottom: 20px;
   cursor: default;
 }
-/* line 340, sass/modules/admin/_article.scss */
-.ql-editor .ql-embed.selected .images {
-  outline: 6px solid #4a90e2;
-}
 /* line 341, sass/modules/admin/_article.scss */
 .ql-editor .ql-embed.selected .image .image-toolbar-container {
   display: block;
@@ -948,7 +944,7 @@ ul.tagList li {
 }
 
 /* line 404, sass/modules/admin/_article.scss */
-#editor p {
+#editor div.ql-line {
   font-family: Georgia;
   font-size: 16px;
   color: #2F2F2F;
