@@ -219,12 +219,27 @@
 
     dispatch.search = function(model, values, callback) {
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
-        return this.get(getModelRoute(model), values, callback);
+        return dispatch.get(getModelRoute(model), values, callback);
     };
 
     dispatch.find = function(model, id, callback){
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
         return dispatch.get(getModelRoute(model, id), {}, callback);
+    }
+
+    dispatch.components = function(slug, callback){
+        var url = 'components/' + slug;
+        return dispatch.get(url, {}, callback);
+    }
+
+    dispatch.saveComponent= function(slug, component, spot, fields, callback){
+        var url = 'components/' + slug;
+        var data = {
+            spot: spot,
+            component: component,
+            fields: fields,
+        };
+        return dispatch.post(url, data, callback);
     }
 
     // AJAX Functions
