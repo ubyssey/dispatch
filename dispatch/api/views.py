@@ -5,9 +5,12 @@ from dispatch.apps.core.models import Person
 from rest_framework import viewsets, generics, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import api_view, detail_route, list_route
 from dispatch.apps.api.serializers import UserSerializer, ArticleSerializer, SectionSerializer, ImageSerializer, AttachmentSerializer, AttachmentImageSerializer, TagSerializer, PersonSerializer
 from django.db.models import Q
+from dispatch.helpers import ThemeHelper
+
+from dispatch.apps.frontend.models import Page, Component
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = ArticleSerializer
@@ -77,8 +80,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
         """
         queryset = Article.objects.filter(head=True).order_by('-published_at')
         topic = self.request.QUERY_PARAMS.get('topic', None)
+        q = self.request.QUERY_PARAMS.get('q', None)
+        limit = self.request.QUERY_PARAMS.get('limit', None)
         if topic is not None:
             queryset = queryset.filter(topics__name=topic)
+        if q is not None:
+            queryset = queryset.filter(long_headline__icontains=q)
+        if limit is not None:
+            queryset = queryset[:limit]
         return queryset
 
     @detail_route(methods=['get'],)
@@ -149,8 +158,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         resource = serializer.save()
 
         if authors:
-            print "saving authors"
-            print authors
             resource.save_authors(authors)
 
         return Response(serializer.data)
