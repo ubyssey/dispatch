@@ -37,10 +37,8 @@
                 </article>
                 {% endwith %}
             </div>
-            <div class="cell right">
-                {% comment %}{% for module in side_block.modules.all %}
-                    {{ module.render }}
-                {% endfor %}{% endcomment %}
+            <div class="multi-zone cell right">
+                {{ components.multi_zone|safe }}
             </div>
         </div>
     </div>

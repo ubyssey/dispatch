@@ -1,11 +1,16 @@
+# Django imports
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
-from django.template.loader import get_template
-from django.template import RequestContext
-from dispatch.apps.content.models import Article
+from django.shortcuts import render
+from django.conf import settings
+
+# Dispatch imports
+from dispatch.apps.content.models import Article, Section
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
-from django.conf import settings
+
+# Ubyssey imports
+from .pages import Homepage
 
 class UbysseyTheme(DefaultTheme):
 
@@ -24,17 +29,18 @@ class UbysseyTheme(DefaultTheme):
               'bullets': frontpage[4:6],
          }
 
+        page = Homepage()
+
         popular = Article.objects.get_most_popular(5)
 
         context = {
             'articles': articles,
             'sections': sections,
-            'popular': popular,
+            'popular':  popular,
+            'components': page.components(),
         }
 
-        t = get_template('homepage/base.html')
-        c = RequestContext(request, context)
-        return HttpResponse(t.render(c))
+        return render(request, 'homepage/base.html', context)
 
     def article(self, request, section=False, slug=False):
 
@@ -43,6 +49,17 @@ class UbysseyTheme(DefaultTheme):
         context = {
             'article': article
         }
-        t = get_template('article.html')
-        c = RequestContext(request, context)
-        return HttpResponse(t.render(c))
+
+        return render(request, 'article.html', context)
+
+    def section(self, request, section):
+
+        section = Section.objects.get(slug=section)
+        articles = Article.objects.filter(head=True,section=section)
+
+        context = {
+            'section': section,
+            'articles': articles,
+        }
+
+        return render(request, 'section/base.html', context)

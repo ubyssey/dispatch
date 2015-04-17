@@ -62,11 +62,13 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     content = serializers.ReadOnlyField(source='get_json')
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
     url = serializers.CharField(source='get_absolute_url',read_only=True)
+    parent = serializers.ReadOnlyField(source='parent.id')
 
     class Meta:
         model = Article
         fields = (
             'id',
+            'parent',
             'long_headline',
             'short_headline',
             'featured_image',

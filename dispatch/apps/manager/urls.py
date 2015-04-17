@@ -21,5 +21,7 @@ urlpatterns = patterns('',
     url(r'^section/add/?$', views.section_add),
     url(r'^section/(?P<section>[-\w]+)/?$', views.section),
     url(r'^sections/$', views.sections),
+    url(r'^pages/$', views.pages),
+    url(r'^page/edit/(?P<slug>[-\w]+)/?$', views.page_edit),
 
 )
