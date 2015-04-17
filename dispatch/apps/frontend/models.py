@@ -1,4 +1,17 @@
-from django.db.models import Model, CharField, TextField, FileField, ForeignKey, ManyToManyField
+from django.db.models import Model, CharField, TextField, FileField, ForeignKey, ManyToManyField, SlugField
+
+class Page(Model):
+    slug = SlugField()
+    components = ManyToManyField('Component')
+
+class Component(Model):
+    slug = CharField(max_length=50)
+    spot = CharField(max_length=50)
+    fields = ManyToManyField('ComponentField')
+
+class ComponentField(Model):
+    name = CharField(max_length=50)
+    value = TextField()
 
 class TemplateVariable(Model):
     template_slug = CharField(max_length=255)
