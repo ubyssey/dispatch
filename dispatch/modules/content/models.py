@@ -6,10 +6,6 @@ from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.template import loader, Context
 
-from dispatch.apps.core.models import Person
-
-from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
-
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
 import StringIO, json, os, re
@@ -17,6 +13,9 @@ import StringIO, json, os, re
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from dispatch.apps.core.models import Person
+from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
+from dispatch.apps.frontend.embeds import embedlib
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -298,20 +297,14 @@ class Article(Resource, Publishable):
             return self.content
 
     def get_html(self):
-        nodes = json.loads(self.content)
+        try:
+            nodes = json.loads(self.content)
+        except ValueError:
+            return self.content
         html = ""
         for node in nodes:
             if type(node) is dict:
-                template = loader.get_template("image.html")
-                id = node['data']['attachment_id']
-                attach = ImageAttachment.objects.get(id=id)
-                c = Context({
-                    'id': attach.id,
-                    'src': attach.image.get_absolute_url(),
-                    'caption': attach.caption,
-                    'credit': ""
-                })
-                html += template.render(c)
+                html += embedlib.render(node['type'], node['data'])
             else:
                 html += "<p>%s</p>" % node
         return html
@@ -444,8 +437,32 @@ class ImageAttachment(Model):
         (FILE, 'File photo'),
         (COURTESY, 'Courtesy photo'),
     )
+    TYPE_DISPLAYS = (
+        (NORMAL, 'Photo'),
+        (FILE, 'File photo'),
+        (COURTESY, 'Photo courtesy'),
+    )
 
     article = ForeignKey(Article, blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+
+    def get_credit(self):
+        author = self.image.authors.all()[0]
+        types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
+        return "%s %s" % (types[self.type], author)
+
+    def render(data):
+        template = loader.get_template("image.html")
+        id = data['attachment_id']
+        attach = ImageAttachment.objects.get(id=id)
+        c = Context({
+            'id': attach.id,
+            'src': attach.image.get_absolute_url(),
+            'caption': attach.caption,
+            'credit': attach.get_credit(),
+        })
+        return template.render(c)
+
+    embedlib.register('image', render)
