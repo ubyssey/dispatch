@@ -7,12 +7,7 @@ class ThemeHelper():
 
     @staticmethod
     def get_current_theme():
-        try:
-            theme_setting = Setting.objects.get(name="current_theme")
-            theme_name = theme_setting.value
-        except Setting.DoesNotExist:
-            theme_name = "default"
-        return theme_name
+        return settings.CURRENT_THEME
 
     @staticmethod
     def get_theme_templates(theme_name=False):
@@ -36,10 +31,7 @@ class ThemeHelper():
 
     @staticmethod
     def fetch_theme_urls(theme_name):
-        try:
-            urls = importlib.import_module("dispatch.themes." + theme_name + ".urls")
-        except ImportError:
-            urls = importlib.import_module("dispatch.apps.frontend.themes.default.urls")
+        urls = importlib.import_module("dispatch.themes." + theme_name + ".urls")
         return urls.theme_urls
 
     @staticmethod
@@ -54,4 +46,14 @@ class ThemeHelper():
             theme_name = ThemeHelper.get_current_theme()
         return 'dispatch/themes/' + theme_name + '/templates/'
 
+    @staticmethod
+    def get_theme_pages():
+        theme_name = ThemeHelper.get_current_theme()
+        pages = importlib.import_module("dispatch.themes." + theme_name + ".pages")
+        return pages.theme_pages
 
+    @staticmethod
+    def get_theme_components():
+        theme_name = ThemeHelper.get_current_theme()
+        components = importlib.import_module("dispatch.themes." + theme_name + ".components")
+        return components.theme_components

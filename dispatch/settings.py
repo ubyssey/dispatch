@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['dispatch.dev', 'localhost', '127.0.0.1',]
 AUTH_USER_MODEL = 'core.User'
 
 
+CURRENT_THEME = 'ubyssey'
+
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, 'templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
