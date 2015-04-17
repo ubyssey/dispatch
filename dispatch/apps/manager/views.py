@@ -9,6 +9,8 @@ from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, Perso
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 
+from dispatch.apps.frontend.models import Page, Component, ComponentField
+
 @staff_member_required
 def home(request):
     users = Person.objects.all()
@@ -228,3 +230,26 @@ def article_delete(request, id):
     article.is_active = False
     article.save(update_fields=['is_active'])
     return redirect(section, section_slug)
+
+
+def page_edit(request, slug):
+
+    pages = ThemeHelper.get_theme_pages()
+
+    context = {
+        'page': pages.get(slug),
+        'slug': slug,
+    }
+
+    return render(request, 'manager/page/edit.html', context)
+
+@staff_member_required
+def pages(request):
+
+    pages = ThemeHelper.get_theme_pages()
+
+    context = {
+        'pages': pages.all(),
+    }
+
+    return render(request, 'manager/page/list.html', context)

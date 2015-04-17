@@ -1,0 +1,11 @@
+<h2 class="title">{{ title }}</h2>
+{% for article in articles %}
+<article class="thumb row">
+    <div class="left">
+        <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
+    </div>
+    <div>
+        <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+    </div>
+</article>
+{% endfor %}
