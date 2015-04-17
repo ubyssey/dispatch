@@ -161,3 +161,72 @@ class ImageViewSet(viewsets.ModelViewSet):
         if q is not None:
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset
+
+@api_view(['GET', 'POST'])
+def component_view(request, slug=None):
+    components = ThemeHelper.get_theme_components()
+    if request.method == 'POST':
+        post_data = request.POST
+        try:
+            instance = Page.objects.get(slug=slug)
+        except:
+            instance = Page(slug=slug)
+            instance.save()
+
+        component_slug = post_data.get('component')
+        spot = post_data.get('spot')
+
+        component_class = components.get(component_slug)
+
+        try:
+            component_instance = Component.objects.get(page=instance, spot=spot)
+            if component_instance.slug == component_slug:
+                component_obj = component_class(post_data, instance=component_instance, spot=spot)
+            else:
+                instance.components.remove(instance)
+                raise Exception()
+        except:
+            component_obj = component_class(post_data, spot=spot)
+
+        component_instance = component_obj.save()
+
+        instance.components.add(component_instance)
+
+        instance.save()
+
+        for c in instance.components.all():
+            print c.slug
+
+        data = {
+            'saved': True,
+        }
+
+    else:
+        pages = ThemeHelper.get_theme_pages()
+        page = pages.get(slug)
+
+        spots_list = []
+        components_dict = {}
+
+        for spot, name in page.component_spots:
+            options = []
+            for component in components.get_for_spot(spot):
+                options.append({
+                    'name': component.NAME,
+                    'slug': component.SLUG,
+                    })
+                if component.SLUG not in components_dict:
+                    component_obj = component()
+                    components_dict[component.SLUG] = component_obj.fields_as_json()
+            spots_list.append({
+                'name': name,
+                'slug': spot,
+                'options': options,
+            })
+
+        data = {
+            'spots': spots_list,
+            'components': components_dict,
+        }
+
+    return Response(data)

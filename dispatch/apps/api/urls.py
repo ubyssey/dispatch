@@ -13,6 +13,7 @@ router.register(r'person', views.PersonViewSet, base_name='person')
 router.register(r'tag', views.TagViewSet)
 router.register(r'images', views.ImageViewSet, base_name='images')
 
+
 section_frontpage = views.SectionViewSet.as_view({
     'get': 'frontpage',
 })
@@ -21,4 +22,5 @@ urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
     url(r'^sections/(?P<slug>[\w-]+)/frontpage/$', section_frontpage, name='section-frontpage'),
+    url(r'^components/(?P<slug>[\w-]+)/$', views.component_view, name='component'),
 ]) + router.urls
