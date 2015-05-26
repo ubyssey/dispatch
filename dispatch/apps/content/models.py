@@ -405,6 +405,8 @@ class Video(Model):
 class Image(Model):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
+    width = PositiveIntegerField(blank=True, null=True)
+    height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
@@ -453,10 +455,18 @@ class Image(Model):
         return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
 
     #Overriding
-    def save(self, *args, **kwargs):
-        super(Image, self).save(*args, **kwargs)
-        if self.img:
+    def save(self, thumbnails=True, **kwargs):
+        """
+        Custom save method to process thumbnails and save image dimensions.
+        """
+
+        # Call super method
+        super(Image, self).save()
+
+        if self.img and thumbnails:
             image = Img.open(StringIO.StringIO(self.img.read()))
+            self.width, self.height = image.size
+            super(Image, self).save()
             name = re.split('.(jpg|gif|png)', self.img.name)[0]
 
             for size in self.SIZES.keys():
