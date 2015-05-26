@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import (Resource, Author, Article, Section,
+from dispatch.apps.content.models import (Author, Article, Section,
                                           Tag, Image, ImageAttachment)
 from dispatch.apps.core.models import Person
 
@@ -50,6 +50,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         write_only_fields = (
             'img',
         )
+
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     """
