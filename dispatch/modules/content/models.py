@@ -328,6 +328,11 @@ class Article(Publishable):
             return self.content
 
     def save_attachments(self):
+        """
+        Saves all attachments embedded in article content.
+
+        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
+        """
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
@@ -381,6 +386,9 @@ class Article(Publishable):
         return author_str
 
     def get_absolute_url(self):
+        """
+        Returns article URL.
+        """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
 
@@ -412,22 +420,37 @@ class Image(Model):
     THUMBNAIL_SIZE = 'square'
 
     def filename(self):
+        """
+        Returns the image filename.
+        """
         return os.path.basename(self.img.name)
 
     def get_name(self):
+        """
+        Returns the image filename without extension.
+        """
         return re.split('.(jpg|gif|png)', self.img.name)[0]
 
     def get_absolute_url(self):
-        return self.ROOT_URL + str(self.img)
+        """
+        Returns the full size image URL.
+        """
+        return settings.MEDIA_URL + str(self.img)
 
     def get_medium_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'medium')
+        """
+        Returns the medium size image URL.
+        """
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'medium')
 
     def get_thumbnail_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), self.THUMBNAIL_SIZE)
+        """
+        Returns the thumbnail URL.
+        """
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
     def get_wide_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'wide')
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
 
     #Overriding
     def save(self, *args, **kwargs):
