@@ -5,6 +5,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.template import loader, Context
+from django.utils.functional import cached_property
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
@@ -278,23 +279,53 @@ class Article(Publishable):
             self.topics.add(ins)
 
     def get_json(self):
+        """
+        Returns a JSON representation (if possible) of the article content.
+        """
+        def prepare_json(nodes):
+            """
+            Processes each in the document, returning its full object representation.
+            """
+            for i, node in enumerate(nodes):
+                if type(node) is dict:
+                    # If node is a dictionary, replace data attribute with processed data.
+                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    nodes[i] = {
+                        'type': 'paragraph',
+                        'data': node,
+                    }
+            return nodes
+        # Attempt to load content as JSON, return raw content as fallback
         try:
-            return json.loads(self.content)
+            return prepare_json(json.loads(self.content))
         except ValueError:
             return self.content
 
     def get_html(self):
+        """
+        Returns article content as HTML.
+        """
+        def prepare_html(nodes):
+            """
+            Processes each in the document, returning its rendered HTML representation.
+            """
+            html = ""
+            for node in nodes:
+                if type(node) is dict:
+                    # If node is a dictionary, append its rendered HTML.
+                    html += embedlib.render(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    html += "<p>%s</p>" % node
+            return html
+
         try:
-            nodes = json.loads(self.content)
+            # Attempt to load content as JSON, return raw content as fallback
+            return prepare_html(json.loads(self.content))
         except ValueError:
             return self.content
-        html = ""
-        for node in nodes:
-            if type(node) is dict:
-                html += embedlib.render(node['type'], node['data'])
-            else:
-                html += "<p>%s</p>" % node
-        return html
 
     def save_attachments(self):
         nodes = json.loads(self.content)
