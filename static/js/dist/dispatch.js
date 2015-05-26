@@ -54,7 +54,7 @@
 
     // Local Settings
     LOCAL_SETTINGS = {
-        'api_url': 'http://localhost:8000/api/',
+        'api_url': '/api/',
         'api_format': 'json',
     }
 
@@ -279,6 +279,15 @@
         success: callback
       });
     };
+
+    dispatch.delete = function(url, callback){
+        return $.ajax({
+            type: "DELETE",
+            beforeSend: defaultBeforeSend,
+            url: generateAjaxURL(url),
+            success: callback
+        });
+    }
 
     dispatch.getNext = function(nextUrl, callback) {
       return $.ajax({
