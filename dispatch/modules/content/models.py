@@ -541,16 +541,31 @@ class ImageAttachment(Model):
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
         return "%s %s" % (types[self.type], author)
 
-    def render(data):
-        template = loader.get_template("image.html")
-        id = data['attachment_id']
-        attach = ImageAttachment.objects.get(id=id)
-        c = Context({
-            'id': attach.id,
-            'src': attach.image.get_absolute_url(),
-            'caption': attach.caption,
-            'credit': attach.get_credit(),
-        })
-        return template.render(c)
+    class EmbedController:
+        @staticmethod
+        def json(data):
+            id = data['attachment_id']
+            attach = ImageAttachment.objects.get(id=id)
+            return {
+                'id': attach.id,
+                'url': attach.image.get_absolute_url(),
+                'caption': attach.caption,
+                'credit': attach.get_credit(),
+                'width': attach.image.width,
+                'height': attach.image.height,
+            }
 
-    embedlib.register('image', render)
+        @staticmethod
+        def render(data):
+            template = loader.get_template("image.html")
+            id = data['attachment_id']
+            attach = ImageAttachment.objects.get(id=id)
+            c = Context({
+                'id': attach.id,
+                'src': attach.image.get_absolute_url(),
+                'caption': attach.caption,
+                'credit': attach.get_credit(),
+            })
+            return template.render(c)
+
+    embedlib.register('image', EmbedController)
