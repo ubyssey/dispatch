@@ -29,24 +29,6 @@ class Topic(Model):
     def __str__(self):
         return self.name
 
-class Resource(Model):
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
-
-    def save_authors(self, authors):
-        Author.objects.filter(resource_id=self.id).delete()
-        n=0
-        if type(authors) is not list:
-            authors = authors.split(",")
-        for author in authors:
-            try:
-                person = Person.objects.get(id=author)
-                Author.objects.create(resource=self,person=person,order=n)
-                n = n + 1
-            except Person.DoesNotExist:
-                pass
-
 class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
@@ -56,7 +38,7 @@ class Section(Model):
 
 class Publishable(Model):
 
-    parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
+    parent = ForeignKey('Article', related_name='child', blank=True, null=True)
     preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
@@ -196,7 +178,7 @@ class ArticleManager(Manager):
     def get_most_popular(self, count=10):
         return self.filter(head=True).order_by('-importance')[:count]
 
-class Article(Resource, Publishable):
+class Article(Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
@@ -205,6 +187,8 @@ class Article(Resource, Publishable):
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField()
+
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
@@ -234,6 +218,9 @@ class Article(Resource, Publishable):
 
     content = TextField()
     snippet = TextField()
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     objects = ArticleManager()
 
@@ -329,16 +316,35 @@ class Article(Resource, Publishable):
                 }
         self.content = json.dumps(nodes)
 
+    def save_authors(self, authors):
+        Author.objects.filter(article_id=self.id).delete()
+        n=0
+        if type(authors) is not list:
+            authors = authors.split(",")
+        for author in authors:
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(article=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
+
     def get_author_string(self):
+        """
+        Returns list of authors as a comma-separated string (with 'and' before last author).
+        """
         author_str = ""
         authors = self.authors.order_by('author__order')
         n = 1
         for author in authors:
-            if n + 1 == len(authors) and len(authors) > 0:
+            if len(authors) > 0 and n + 1 == len(authors):
+                # If this is the second last author in the list, follow author name with an 'and'
                 author_str = author_str + author.full_name + " and "
             elif n == len(authors):
+                # If this is the last author or only author in the list, just return author name
                 author_str = author_str + author.full_name
             else:
+                # If author is somewhere in the middle of the list, follow author name with a comma
                 author_str = author_str + author.full_name + ", "
             n = n + 1
         return author_str
@@ -346,20 +352,25 @@ class Article(Resource, Publishable):
     def get_absolute_url(self):
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
+
 class Author(Model):
-    resource = ForeignKey(Resource)
+    article = ForeignKey(Article, null=True)
+    image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
 
-class Video(Resource):
+class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Resource):
+class Image(Model):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
 
-    ROOT_URL = settings.MEDIA_URL
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     SIZES = {
         'large': (1600, 900),
@@ -406,6 +417,19 @@ class Image(Resource):
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
         image.save(output, format='JPEG', quality=75)
+
+    def save_authors(self, authors):
+        Author.objects.filter(article_id=self.id).delete()
+        n=0
+        if type(authors) is not list:
+            authors = authors.split(",")
+        for author in authors:
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(image=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):
