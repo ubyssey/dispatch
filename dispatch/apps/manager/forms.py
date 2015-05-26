@@ -1,6 +1,6 @@
 from django.forms import Form, ModelForm, TextInput, Textarea, CharField, EmailField, PasswordInput, ValidationError, HiddenInput
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from dispatch.apps.content.models import Resource, Article, Section, Image, ImageAttachment
+from dispatch.apps.content.models import Article, Section, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
 import uuid
 
@@ -59,8 +59,8 @@ class PersonForm(ModelForm):
     first_name = CharField(label='First name', required=True)
     last_name = CharField(label='Last name', required=True)
 
-    def __init__(self, *args, **kwargs):
-        super(PersonForm, self).__init__(*args, **kwargs)
+    def __init__(self, data=None, user_form=True, instance=None):
+        super(PersonForm, self).__init__(data, instance=instance)
 
         args = []
         kwargs = {}
@@ -70,27 +70,34 @@ class PersonForm(ModelForm):
         except:
             user = None
 
-        if self.data and user:
-            args.append(self.data)
-            kwargs['instance'] = user
-        elif user:
-            kwargs['instance'] = user
-        elif self.data:
-            args.append(self.data)
+        if user_form:
+            if self.data and user:
+                args.append(self.data)
+                kwargs['instance'] = user
+            elif user:
+                kwargs['instance'] = user
+            elif self.data:
+                args.append(self.data)
 
-        self.user_form = UserForm(*args, **kwargs)
+            self.user_form = UserForm(*args, **kwargs)
+        else:
+            self.user_form = False
 
 
     def is_valid(self):
-        return super(PersonForm, self).is_valid() and self.user_form.is_valid()
+        if self.user_form:
+            return super(PersonForm, self).is_valid() and self.user_form.is_valid()
+        else:
+            return super(PersonForm, self).is_valid()
 
     def save(self, commit=True):
         person = super(PersonForm, self).save()
-        if self.user_form.has_changed():
+        if self.user_form and self.user_form.has_changed():
             user = self.user_form.save(commit=False)
             user.person = person
             if commit:
                 user.save()
+        return person
 
     class Meta:
         model = Person
@@ -140,15 +147,16 @@ class ProfileForm(ModelForm):
 
         args = []
         kwargs = {}
-        if self.data and self.instance.person:
-            args.append(self.data)
-            kwargs['instance'] = self.instance.person
-        elif self.instance.person:
-            kwargs['instance'] = self.instance.person
-        elif self.data:
-            args.append(self.data)
 
-        self.person_form = PersonForm(*args, **kwargs)
+
+        if self.data and self.instance.person:
+            self.person_form = PersonForm(self.data, user_form=False, instance=self.instance.person)
+        elif self.instance.person:
+            self.person_form = PersonForm(user_form=False, instance=self.instance.person)
+        elif self.data:
+            self.person_form = PersonForm(self.data, user_form=False)
+        else:
+            self.person_form = PersonForm(user_form=False)
 
     def missing_password(self):
         return self.data.get('password1', False) and not self.data.get('password2', False) or not self.data.get('password1', False) and self.data.get('password2', False)
@@ -173,9 +181,8 @@ class ProfileForm(ModelForm):
     def save(self, commit=True):
         user = super(ProfileForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        if self.person_form.has_changed():
+        if self.person_form.is_valid() and self.person_form.has_changed():
             person = self.person_form.save()
-        if not user.person:
             user.person = person
         if commit:
             user.save()
