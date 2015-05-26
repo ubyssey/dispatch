@@ -5,6 +5,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.template import loader, Context
+from django.utils.functional import cached_property
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as Img
@@ -29,24 +30,6 @@ class Topic(Model):
     def __str__(self):
         return self.name
 
-class Resource(Model):
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
-
-    def save_authors(self, authors):
-        Author.objects.filter(resource_id=self.id).delete()
-        n=0
-        if type(authors) is not list:
-            authors = authors.split(",")
-        for author in authors:
-            try:
-                person = Person.objects.get(id=author)
-                Author.objects.create(resource=self,person=person,order=n)
-                n = n + 1
-            except Person.DoesNotExist:
-                pass
-
 class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
@@ -56,7 +39,7 @@ class Section(Model):
 
 class Publishable(Model):
 
-    parent = ForeignKey(Resource, related_name='parent', blank=True, null=True)
+    parent = ForeignKey('Article', related_name='child', blank=True, null=True)
     preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
@@ -196,7 +179,7 @@ class ArticleManager(Manager):
     def get_most_popular(self, count=10):
         return self.filter(head=True).order_by('-importance')[:count]
 
-class Article(Resource, Publishable):
+class Article(Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
     section = ForeignKey('Section')
@@ -205,6 +188,8 @@ class Article(Resource, Publishable):
     is_published = BooleanField(default=False)
     published_at = DateTimeField()
     slug = SlugField()
+
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
 
     topics = ManyToManyField('Topic', blank=True, null=True)
     tags = ManyToManyField('Tag', blank=True, null=True)
@@ -234,6 +219,9 @@ class Article(Resource, Publishable):
 
     content = TextField()
     snippet = TextField()
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     objects = ArticleManager()
 
@@ -291,25 +279,60 @@ class Article(Resource, Publishable):
             self.topics.add(ins)
 
     def get_json(self):
+        """
+        Returns a JSON representation (if possible) of the article content.
+        """
+        def prepare_json(nodes):
+            """
+            Processes each in the document, returning its full object representation.
+            """
+            for i, node in enumerate(nodes):
+                if type(node) is dict:
+                    # If node is a dictionary, replace data attribute with processed data.
+                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    nodes[i] = {
+                        'type': 'paragraph',
+                        'data': node,
+                    }
+            return nodes
+        # Attempt to load content as JSON, return raw content as fallback
         try:
-            return json.loads(self.content)
+            return prepare_json(json.loads(self.content))
         except ValueError:
             return self.content
 
     def get_html(self):
+        """
+        Returns article content as HTML.
+        """
+        def prepare_html(nodes):
+            """
+            Processes each in the document, returning its rendered HTML representation.
+            """
+            html = ""
+            for node in nodes:
+                if type(node) is dict:
+                    # If node is a dictionary, append its rendered HTML.
+                    html += embedlib.render(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    html += "<p>%s</p>" % node
+            return html
+
         try:
-            nodes = json.loads(self.content)
+            # Attempt to load content as JSON, return raw content as fallback
+            return prepare_html(json.loads(self.content))
         except ValueError:
             return self.content
-        html = ""
-        for node in nodes:
-            if type(node) is dict:
-                html += embedlib.render(node['type'], node['data'])
-            else:
-                html += "<p>%s</p>" % node
-        return html
 
     def save_attachments(self):
+        """
+        Saves all attachments embedded in article content.
+
+        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
+        """
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
@@ -329,37 +352,66 @@ class Article(Resource, Publishable):
                 }
         self.content = json.dumps(nodes)
 
+    def save_authors(self, authors):
+        Author.objects.filter(article_id=self.id).delete()
+        n=0
+        if type(authors) is not list:
+            authors = authors.split(",")
+        for author in authors:
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(article=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
+
     def get_author_string(self):
+        """
+        Returns list of authors as a comma-separated string (with 'and' before last author).
+        """
         author_str = ""
         authors = self.authors.order_by('author__order')
         n = 1
         for author in authors:
-            if n + 1 == len(authors) and len(authors) > 0:
+            if len(authors) > 0 and n + 1 == len(authors):
+                # If this is the second last author in the list, follow author name with an 'and'
                 author_str = author_str + author.full_name + " and "
             elif n == len(authors):
+                # If this is the last author or only author in the list, just return author name
                 author_str = author_str + author.full_name
             else:
+                # If author is somewhere in the middle of the list, follow author name with a comma
                 author_str = author_str + author.full_name + ", "
             n = n + 1
         return author_str
 
     def get_absolute_url(self):
+        """
+        Returns article URL.
+        """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
+
 class Author(Model):
-    resource = ForeignKey(Resource)
+    article = ForeignKey(Article, null=True)
+    image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
 
-class Video(Resource):
+class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Resource):
+class Image(Model):
     img = ImageField(upload_to='images')
     title = CharField(max_length=255, blank=True, null=True)
+    width = PositiveIntegerField(blank=True, null=True)
+    height = PositiveIntegerField(blank=True, null=True)
 
-    ROOT_URL = settings.MEDIA_URL
+    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     SIZES = {
         'large': (1600, 900),
@@ -370,28 +422,51 @@ class Image(Resource):
     THUMBNAIL_SIZE = 'square'
 
     def filename(self):
+        """
+        Returns the image filename.
+        """
         return os.path.basename(self.img.name)
 
     def get_name(self):
+        """
+        Returns the image filename without extension.
+        """
         return re.split('.(jpg|gif|png)', self.img.name)[0]
 
     def get_absolute_url(self):
-        return self.ROOT_URL + str(self.img)
+        """
+        Returns the full size image URL.
+        """
+        return settings.MEDIA_URL + str(self.img)
 
     def get_medium_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'medium')
+        """
+        Returns the medium size image URL.
+        """
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'medium')
 
     def get_thumbnail_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), self.THUMBNAIL_SIZE)
+        """
+        Returns the thumbnail URL.
+        """
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
     def get_wide_url(self):
-        return self.ROOT_URL+"%s-%s.jpg" % (self.get_name(), 'wide')
+        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
 
     #Overriding
-    def save(self, *args, **kwargs):
-        super(Image, self).save(*args, **kwargs)
-        if self.img:
+    def save(self, thumbnails=True, **kwargs):
+        """
+        Custom save method to process thumbnails and save image dimensions.
+        """
+
+        # Call super method
+        super(Image, self).save()
+
+        if self.img and thumbnails:
             image = Img.open(StringIO.StringIO(self.img.read()))
+            self.width, self.height = image.size
+            super(Image, self).save()
             name = re.split('.(jpg|gif|png)', self.img.name)[0]
 
             for size in self.SIZES.keys():
@@ -406,6 +481,19 @@ class Image(Resource):
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)
         image.save(output, format='JPEG', quality=75)
+
+    def save_authors(self, authors):
+        Author.objects.filter(article_id=self.id).delete()
+        n=0
+        if type(authors) is not list:
+            authors = authors.split(",")
+        for author in authors:
+            try:
+                person = Person.objects.get(id=author)
+                Author.objects.create(image=self,person=person,order=n)
+                n = n + 1
+            except Person.DoesNotExist:
+                pass
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):
@@ -453,16 +541,31 @@ class ImageAttachment(Model):
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
         return "%s %s" % (types[self.type], author)
 
-    def render(data):
-        template = loader.get_template("image.html")
-        id = data['attachment_id']
-        attach = ImageAttachment.objects.get(id=id)
-        c = Context({
-            'id': attach.id,
-            'src': attach.image.get_absolute_url(),
-            'caption': attach.caption,
-            'credit': attach.get_credit(),
-        })
-        return template.render(c)
+    class EmbedController:
+        @staticmethod
+        def json(data):
+            id = data['attachment_id']
+            attach = ImageAttachment.objects.get(id=id)
+            return {
+                'id': attach.id,
+                'url': attach.image.get_absolute_url(),
+                'caption': attach.caption,
+                'credit': attach.get_credit(),
+                'width': attach.image.width,
+                'height': attach.image.height,
+            }
 
-    embedlib.register('image', render)
+        @staticmethod
+        def render(data):
+            template = loader.get_template("image.html")
+            id = data['attachment_id']
+            attach = ImageAttachment.objects.get(id=id)
+            c = Context({
+                'id': attach.id,
+                'src': attach.image.get_absolute_url(),
+                'caption': attach.caption,
+                'credit': attach.get_credit(),
+            })
+            return template.render(c)
+
+    embedlib.register('image', EmbedController)
