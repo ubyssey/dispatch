@@ -16,15 +16,16 @@ var SearchField = React.createClass({displayName: "SearchField",
          this.refs.search.getDOMNode().focus();
     },
     updateQuery: function(event){
+        var query = event.target.value;
         this.setState({
-            query: event.target.value,
+            query: query,
         });
-        if(event.target.value){
-            this.props.searchItems(event.target.value, function(results){
+        if(query.length >= 3){
+            this.props.searchItems(query, function(results){
                 this.setState({
                     results: results,
                 });
-            }.bind(this))
+            }.bind(this));
         } else {
             this.setState({
                 results: [],
@@ -62,7 +63,7 @@ var SearchField = React.createClass({displayName: "SearchField",
 var TextField = React.createClass({displayName: "TextField",
     getInitialState: function(){
         return {
-            text: "",
+            text: this.props.data ? this.props.data : "",
         }
     },
     updateField: function(){
@@ -83,9 +84,10 @@ var TextField = React.createClass({displayName: "TextField",
     }
 });
 
-var ItemStore = function(){
+var ItemStore = function(data){
+
     return {
-        items: [],
+        items: data ? data : [],
         remove: function(id){
             for(var i = 0; i < this.items.length; i++){
                 if(this.items[i].id == id){
@@ -113,7 +115,7 @@ var ItemStore = function(){
 var ModelField = React.createClass({displayName: "ModelField",
     getInitialState: function(){
         return {
-            items: ItemStore(),
+            items: this.props.data ? ItemStore(this.props.data) : ItemStore(),
             active: false,
         }
     },
@@ -247,17 +249,21 @@ var ComponentEditor = React.createClass({displayName: "ComponentEditor",
     updateField: function(field, data){
         this.fields[field] = data;
     },
-    renderField: function(field){
+    renderField: function(field, data){
         switch(FIELDS[field.type]){
             case(FIELDS.text):
-                return (React.createElement(TextField, {field: field, updateHandler: this.updateField}));
+                return (React.createElement(TextField, {field: field, data: data, updateHandler: this.updateField}));
             case(FIELDS.model):
-                return (React.createElement(ModelField, {field: field, updateHandler: this.updateField}));
+                return (React.createElement(ModelField, {field: field, data: data, updateHandler: this.updateField}));
         }
     },
     renderFields: function(){
         return this.props.fields.map(function(field, i){
-            return this.renderField(field);
+            if(this.props.data && this.props.data[field.name]){
+                return this.renderField(field, this.props.data[field.name]);
+            } else {
+                return this.renderField(field, null);
+            }
         }.bind(this));
     },
     render: function(){
@@ -275,12 +281,14 @@ var PageEditor = React.createClass({displayName: "PageEditor",
         return {
             currentSpot: false,
             currentComponent: false,
+            currentComponentData: null,
             spots: [],
         };
     },
     componentWillMount: function(){
         dispatch.components(this.props.slug, function(data){
             this.components = data.components;
+            this.component_data = data.saved;
             this.setState({
                 spots: data.spots,
             });
@@ -288,14 +296,23 @@ var PageEditor = React.createClass({displayName: "PageEditor",
         }.bind(this));
     },
     changeSpot: function(spot){
-        this.changeComponent(spot.options[0].slug);
+        if(this.component_data[spot.slug]){
+            var data = this.component_data[spot.slug];
+            this.changeComponent(data.slug, data.fields);
+        } else {
+            this.changeComponent(spot.options[0].slug);
+        }
         this.setState({
             currentSpot: spot,
         });
     },
-    changeComponent: function(component){
+    changeComponent: function(component, data){
+        if(typeof data === 'undefined'){
+            data = null;
+        }
         this.setState({
             currentComponent: component,
+            currentComponentData: data,
         });
     },
     handleChangeComponent: function(event){
@@ -305,7 +322,7 @@ var PageEditor = React.createClass({displayName: "PageEditor",
         if(!this.state.currentComponent)
             return
         return (
-            React.createElement(ComponentEditor, {page: this.props.slug, spot: this.state.currentSpot.slug, component: this.state.currentComponent, fields: this.components[this.state.currentComponent]})
+            React.createElement(ComponentEditor, {page: this.props.slug, spot: this.state.currentSpot.slug, component: this.state.currentComponent, data: this.state.currentComponentData, fields: this.components[this.state.currentComponent]})
             )
     },
     renderOptions: function(){
