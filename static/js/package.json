@@ -1,0 +1,32 @@
+{
+  "name": "dispatch",
+  "version": "0.0.1",
+  "description": "The frontend framework for the Dispatch publishing platform.",
+  "author": "Peter Siemens <peterjsiemens@gmail.com>",
+  "homepage": "http://quilljs.com",
+  "contributors": [
+    "Ben Cook <b@bencook.ca>"
+  ],
+  "scripts": {
+    "build": "browserify -t reactify src/admin/article.js -o admin/article.js"
+  },
+  "dependencies": {
+    "react": "~0.13.1"
+  },
+  "devDependencies": {
+    "reactify": "*",
+    "browserify": "*",
+    "react-tabs": "*"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ubyssey/dispatch"
+  },
+  "bugs": {
+    "url": "https://github.com/ubyssey/dispatch/issues"
+  }
+}
