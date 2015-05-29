@@ -12,8 +12,12 @@ class EmbedLibrary():
         if name in self.library:
             return self.library[name](args)
 
+    def json(self, type, data):
+        if type in self.library:
+            return self.library[type].json(data)
+
     def render(self, type, data):
         if type in self.library:
-            return self.library[type](data)
+            return self.library[type].render(data)
 
 embedlib = EmbedLibrary()
