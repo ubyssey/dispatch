@@ -1,50 +1,31 @@
 {% extends 'base.html' %}
-{% load dispatch_filters %}
 {% block content %}
-<header class="topbar">
-    <div class="container">
-        <div class="header-site">
-            <img class="logo" src="{{ STATIC_DIR }}img/ubyssey_logo.png" type="text/css"/>
-            <nav>
-                <ul>
-                    <li>News</li>
-                    <li>Culture</li>
-                    <li>Opinion</li>
-                    <li>Features</li>
-                    <li>Sports</li>
-                    <li>Blog</li>
-                </ul>
-            </nav>
-        </div>
-        <div class="header-article">
-            <div class="section-name">
-                <img class="logo" src="{{ STATIC_DIR }}img/ubyssey_icon.png" type="text/css"/>
-                <span>{{ article.section.name }}</span>
-            </div>
-            |
-            <h1 class="nav-headline">
-                {{ article.long_headline }}</li>
-            </h1>
-        </div>
-    </div>
-</header>
+{% include 'headers/topbar.html' with article=article section=article.section.slug %}
 <main class="article">
     <div class="advertisement leaderboard">
         <img src="{{ STATIC_DIR }}img/sample-leaderboard-ad.png" />
     </div>
     <article data-id="{{ article.id }}">
         <h1 class="headline">{{ article.long_headline }}</h1>
-        <div class="article-info">
-            <div class="author-published">
+        <div class="article-info row">
+            <div class="article-byline">
                 <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+            </div>
+            <div class="article-social-top">
+                <ul>
+                    <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
+                    <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
+                    <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
+                </ul>
             </div>
         </div>
         <div class="right-column">
             {% if article.featured_image %}
             <div class="featured-image">
-                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="http://dispatch.dev:8888/media/{{ article.featured_image.image.img }}"/>
+                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="{{ MEDIA_DIR }}{{ article.featured_image.image.img }}"/>
                 <div class="caption">
-                    {{ article.featured_image.caption }} <span class="credit">Photo {{ article.featured_image.image.authors.all.0 }} / The Ubyssey</span>
+                    {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
                 </div>
             </div>
             <div class="sidebar offset">
@@ -84,5 +65,5 @@
 
 <!-- Article-specific scripts -->
 {% for s in article.scripts.all %}
-<script src="http://dispatch.dev:8888/resources/js/{{ s.filename }}"></script>
+<script src="http://localhost:8888/resources/js/{{ s.filename }}"></script>
 {% endfor %}
