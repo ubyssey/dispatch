@@ -14,6 +14,7 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = 'http://localhost:8000/'
+BASE_STATIC_URL = 'http://localhost:8888/'
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
@@ -33,16 +34,15 @@ ALLOWED_HOSTS = ['dispatch.dev', 'localhost', '127.0.0.1',]
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
-
 CURRENT_THEME = 'ubyssey'
 
 TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'dispatch/themes/' + CURRENT_THEME + '/templates'),
     os.path.join(BASE_DIR, 'templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
     ]
 
 TEMPLATE_LOADERS = (
-    'dispatch.loaders.load_template_source',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'dispatch.apps.core',
     'dispatch.apps.frontend',
     'dispatch.apps.manager',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -120,7 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'http://dispatch.dev:8888/static/'
+STATIC_URL = 'http://localhost:8888/static/'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -134,4 +135,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'http://dispatch.dev:8888/media/'
+MEDIA_URL = 'http://localhost:8888/media/'
