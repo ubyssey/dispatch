@@ -1,0 +1,38 @@
+<header class="topbar">
+    <div class="container">
+        <div class="header-site">
+            <a href="{% url 'home' %}"><img class="logo" src="{{ STATIC_DIR }}img/ubyssey-logo-small.svg" type="text/css"/></a>
+            <nav>
+                <ul>
+                    <li {% if section == 'news' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'news' %}">News</a>
+                    </li><li {% if section == 'culture' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'culture' %}">Culture</a>
+                    </li><li {% if section == 'opinion' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'opinion' %}">Opinion</a>
+                    </li><li {% if section == 'features' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'features' %}">Features</a>
+                    </li><li {% if section == 'sports' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'sports' %}">Sports</a>
+                    </li><li {% if section == 'blog' %}class="current"{% endif %}>
+                        <a href="{% url 'section' 'blog' %}">Blog</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {% if article %}
+        <div class="header-article">
+            <div class="section-name">
+                <a href="{% url 'home' %}" class="icon-logo">
+                    <img class="logo" src="{{ STATIC_DIR }}img/ubyssey-logo-small.svg" type="text/css"/>
+                </a>
+                <span>{{ article.section.name }}</span>
+            </div>
+            |
+            <h1 class="nav-headline">
+                {{ article.long_headline }}</li>
+            </h1>
+        </div>
+        {% endif %}
+    </div>
+</header>

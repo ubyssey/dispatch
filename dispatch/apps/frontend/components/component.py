@@ -19,11 +19,11 @@ class BaseComponent:
                 self.data[name] = data.get('fields['+name+']')
         elif self.instance is not None:
             self.context = {}
-            saved_fields = {}
+            self.saved_fields = {}
             for field in self.instance.fields.all():
-                saved_fields[field.name] = field
+                self.saved_fields[field.name] = field
             for name, label, field_obj in self.fields:
-                saved_field = saved_fields[name]
+                saved_field = self.saved_fields[name]
                 field_obj.set_value(saved_field.value)
                 self.context[name] = field_obj.context()
 
@@ -36,6 +36,13 @@ class BaseComponent:
     def __iter__(self):
         if self.instance is not None:
             return self.rendered.__iter__()
+
+    def field_data_as_json(self):
+        output = {}
+        for name, label, field_obj in self.fields:
+            field_obj.set_value(self.saved_fields[name].value)
+            output[name] = field_obj.data_as_json()
+        return output
 
     def fields_as_json(self):
         data = []

@@ -62,26 +62,6 @@ div.component {
   }
 }
 
-div.field {
-  padding: 8px;
-  width: 300px;
-  box-sizing: border-box;
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 12px;
-  }
-  input {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #b9b9b9;
-    border-radius: 2px;
-    padding: 9px 8px;
-    font-size: 12px;
-    background: white;
-  }
-}
-
 div.model-field {
   margin: 10px 0;
   width: 300px;
