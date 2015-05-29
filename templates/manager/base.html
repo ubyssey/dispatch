@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="{% static 'js/vendor/pickadate/themes/classic.date.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'js/vendor/pickadate/themes/classic.time.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/vendor/font-awesome.min.css' %}" type="text/css">
-    <script src="//use.typekit.net/qjp6bnp.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
     <div class="wrapper">
@@ -18,12 +16,12 @@
             <div class="dispatch-logo">D</div>
             <nav class="side-nav">
                 <ul>
-                    <li><a href="{% url 'apps.manager.views.section' 'news' %}"><i class="fa fa-newspaper-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}"><i class="fa fa-soccer-ball-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}"><i class="fa fa-paint-brush"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-th-list"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'news' %}">news<i class="fa fa-newspaper-o"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}">sports<i class="fa fa-soccer-ball-o"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}">culture<i class="fa fa-paint-brush"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.sections' %}">sections<i class="fa fa-th-list"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.users' %}">users<i class="fa fa-users"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.profile' %}">profile<i class="fa fa-user"></i></a></li>
                 </ul>
             </nav>
         </div>
