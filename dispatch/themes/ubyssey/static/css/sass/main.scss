@@ -1,4 +1,5 @@
 @import 'modules/core';
+@import 'modules/fonts';
 @import 'modules/header';
 @import 'modules/homepage';
 
@@ -14,73 +15,14 @@ main.article {
     margin-right: auto;
 }
 
-header.topbar {
-  height: 55px;
-  line-height: 55px;
-  width: 100%;
-  z-index: 50;
-  position: fixed;
-  top: 0;
-  /* background: rgba(255, 255, 255, 0.98); */
-  background: #fff;
-  border-bottom: 1px solid #DADADA;
-  box-shadow: rgba(0,0,0,0.15) 0 0 3px 0;
-
-  .section-name {
-      display: inline-block;
-      margin-right: 10px;
-      span {
-        margin-left: 10px;
-        font-family: LFT Etica;
-        text-transform: uppercase;
-        font-size: 14px;
-        font-weight: 600;
-        color: #33331E;
-      }
-  }
-
-  .header-article {
-      display: none;
-  }
-
-  img.logo {
-      vertical-align: middle;
-      margin-top: -3px;
-  }
-  nav {
-    display: inline-block;
-    font-family: FranklinGothicURW-Med;
-    font-size: 15px;
-    color: #33331E;
-    line-height: 19px;
-    margin-left: 20px;
-    ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      li {
-        display: inline-block;
-        margin: 0 17px;
-      }
+div.advertisement {
+  &.leaderboard {
+    &.homepage {
+      padding-bottom: 0;
     }
-  }
-
-  h1.nav-headline {
-      display: inline-block;
-      font-family: FranklinGothicURW-Med;
-      font-size: 15px;
-      color: #33331E;
-      line-height: 19px;
-      margin-top: 0;
-      margin-bottom: 0;
-      margin-left: 10px;
-      font-weight: normal;
-  }
-}
-
-div.advertisement.leaderboard {
     padding: 25px 0;
     text-align: center;
+  }
 }
 
 div.container {
@@ -89,12 +31,12 @@ div.container {
     margin-right: auto;
 }
 
-article {
+main.article article {
   h1.headline {
     border-top: 2px solid #3E3E3E;
     border-bottom: 1px solid #D2D2D2;
-    font-family: TisaPro-Bold;
-    font-size: 32px;
+    font-family: $font-headline;
+    font-size: 30px;
     color: #000000;
     line-height: 46px;
     padding: 25px 0;
@@ -118,9 +60,10 @@ article {
   }
   div.article-info {
     padding: 25px 0;
-    div.author-published {
-      font-size: 13px;
-      color: #333333;
+    color: #222222;
+    div.article-byline {
+      float: left;
+      font-size: 12px;
       line-height: 17px;
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -130,6 +73,30 @@ article {
 
       span.published {
         font-family: LFTEtica-Regular;
+      }
+    }
+    div.article-social-top {
+      float: right;
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        li {
+          display: inline;
+          margin-left: 20px;
+          a {
+            font-family: "LFT Etica";
+            font-weight: 300;
+            font-size: 12px;
+            i, span {
+              vertical-align: middle;
+            }
+            i {
+              margin-right: 8px;
+              font-size: 16px;
+            }
+          }
+        }
       }
     }
   }

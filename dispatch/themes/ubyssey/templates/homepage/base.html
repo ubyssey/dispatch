@@ -1,13 +1,17 @@
-{% include 'header.html' %}
-
+{% extends 'base.html' %}
+{% block content %}
+<div class="advertisement homepage leaderboard">
+    <img src="{{ STATIC_DIR }}img/sample-leaderboard-ad.png">
+</div>
+{% include 'headers/main.html' %}
 <div class="container large">
-    <div class="frontpage-container">
+    <div class="homepage-section frontpage-container">
         <div class="frontpage">
             <div class="cell left">
             {% with articles.secondary as article %}
                 <article class="secondary">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-                    <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
             {% endwith %}
@@ -23,16 +27,16 @@
             {% endfor %}
                <ul class="article-headlines">
             {% for article in articles.bullets %}
-                <li><h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2></li>
+                <li><a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a></li>
             {% endfor %}
                 </ul>
             </div>
             <div class="cell middle">
                 {% with articles.primary as article %}
-                <article class="primary feature">
+                <article class="primary">
                     <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
-                    <h1>{{ article.long_headline }}</h1>
-                    <span class="author small">By {{ article.get_author_string }} &nbsp;&middot;&nbsp; {{ article.published_at }} </span>
+                    <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
                 {% endwith %}
@@ -42,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="homepage-section row">
         <div class="sections">
             {% include 'homepage/blocks/section_1.html' with section="news" articles=sections.news %}
             {% include 'homepage/blocks/section_2.html' with section="culture" articles=sections.culture %}
@@ -80,7 +84,8 @@
             </div>
         </div>
     </div>
+    <footer>
+        this is a footer
+    </footer>
 </div>
-
-</body>
-</html>
+{% endblock %}
