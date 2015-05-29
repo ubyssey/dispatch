@@ -22,7 +22,7 @@ class PrintIssueDefault(BaseComponent):
     compatible_spots = ('print_issue',)
 
     fields = (
-        ('url', 'Issue link', TextField),
+        ('url', 'Issue link', TextField()),
     )
 
 theme_components.register(ReadingList)
