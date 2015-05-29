@@ -1247,24 +1247,26 @@ form h2 {
   margin: 25px 0;
   font-size: 18px;
 }
-/* line 12, sass/modules/admin/_forms.scss */
-form div.field {
-  margin-top: 10px;
-  margin-bottom: 10px;
+
+/* line 14, sass/modules/admin/_forms.scss */
+div.field {
+  padding: 8px 0;
+  box-sizing: border-box;
 }
-/* line 15, sass/modules/admin/_forms.scss */
-form div.field:first-child {
+/* line 17, sass/modules/admin/_forms.scss */
+div.field:first-child {
   margin-top: 0;
 }
-/* line 18, sass/modules/admin/_forms.scss */
-form div.field label {
+/* line 20, sass/modules/admin/_forms.scss */
+div.field label {
   display: block;
   margin-bottom: 5px;
   font-size: 12px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-/* line 24, sass/modules/admin/_forms.scss */
-form div.field input, form div.field textarea {
+/* line 26, sass/modules/admin/_forms.scss */
+div.field input, div.field textarea {
+  box-sizing: border-box;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border: 1px solid #b9b9b9;
   border-radius: 2px;
@@ -1274,20 +1276,20 @@ form div.field input, form div.field textarea {
   max-width: 350px;
   margin-bottom: 5px;
 }
-/* line 34, sass/modules/admin/_forms.scss */
-form div.field textarea {
+/* line 37, sass/modules/admin/_forms.scss */
+div.field textarea {
   line-height: 1.5em;
 }
-/* line 37, sass/modules/admin/_forms.scss */
-form div.field input {
+/* line 40, sass/modules/admin/_forms.scss */
+div.field input {
   margin-right: 10px;
 }
-/* line 39, sass/modules/admin/_forms.scss */
-form div.field input:last-child {
+/* line 42, sass/modules/admin/_forms.scss */
+div.field input:last-child {
   margin-right: 0;
 }
-/* line 43, sass/modules/admin/_forms.scss */
-form div.field select {
+/* line 46, sass/modules/admin/_forms.scss */
+div.field select {
   font-size: 12px;
   margin-bottom: 5px;
 }
@@ -1367,51 +1369,28 @@ div.component div.component-fields {
 }
 
 /* line 65, sass/modules/admin/_page.scss */
-div.field {
-  padding: 8px;
-  width: 300px;
-  box-sizing: border-box;
-}
-/* line 69, sass/modules/admin/_page.scss */
-div.field label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 12px;
-}
-/* line 74, sass/modules/admin/_page.scss */
-div.field input {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #b9b9b9;
-  border-radius: 2px;
-  padding: 9px 8px;
-  font-size: 12px;
-  background: white;
-}
-
-/* line 85, sass/modules/admin/_page.scss */
 div.model-field {
   margin: 10px 0;
   width: 300px;
   padding: 0;
 }
-/* line 89, sass/modules/admin/_page.scss */
+/* line 69, sass/modules/admin/_page.scss */
 div.model-field div.field-container {
   padding: 8px 8px 0 8px;
   background: none;
   border: 1px solid transparent;
 }
-/* line 94, sass/modules/admin/_page.scss */
+/* line 74, sass/modules/admin/_page.scss */
 div.model-field.active div.field-container {
   background: #f2f2f2;
   border-color: #dadada;
 }
-/* line 98, sass/modules/admin/_page.scss */
+/* line 78, sass/modules/admin/_page.scss */
 div.model-field div.search-container {
   position: absolute;
   width: 300px;
 }
-/* line 102, sass/modules/admin/_page.scss */
+/* line 82, sass/modules/admin/_page.scss */
 div.model-field div.model-label {
   background: #FFFFFF;
   padding: 8px;
@@ -1423,11 +1402,11 @@ div.model-field div.model-label {
   cursor: default;
   margin-bottom: 8px;
 }
-/* line 112, sass/modules/admin/_page.scss */
+/* line 92, sass/modules/admin/_page.scss */
 div.model-field div.model-label div.left {
   margin-right: 25px;
 }
-/* line 115, sass/modules/admin/_page.scss */
+/* line 95, sass/modules/admin/_page.scss */
 div.model-field div.model-label div.model-delete {
   right: 8px;
   bottom: 0;
@@ -1436,21 +1415,21 @@ div.model-field div.model-label div.model-delete {
   width: 20px;
   position: absolute;
 }
-/* line 122, sass/modules/admin/_page.scss */
+/* line 102, sass/modules/admin/_page.scss */
 div.model-field div.model-label div.model-delete:hover {
   cursor: pointer;
   opacity: 0.85;
 }
-/* line 128, sass/modules/admin/_page.scss */
+/* line 108, sass/modules/admin/_page.scss */
 div.model-field div.config {
   padding: 0 8px;
 }
-/* line 130, sass/modules/admin/_page.scss */
+/* line 110, sass/modules/admin/_page.scss */
 div.model-field div.config a {
   font-size: 12px;
 }
 
-/* line 137, sass/modules/admin/_page.scss */
+/* line 117, sass/modules/admin/_page.scss */
 div.search-field {
   position: absolute;
   top: -1px;
@@ -1460,7 +1439,7 @@ div.search-field {
   border-radius: 0 1px 0 1px;
   box-sizing: border-box;
 }
-/* line 148, sass/modules/admin/_page.scss */
+/* line 128, sass/modules/admin/_page.scss */
 div.search-field input {
   width: 100%;
   box-sizing: border-box;
@@ -1470,31 +1449,31 @@ div.search-field input {
   background: white;
   color: gray;
 }
-/* line 156, sass/modules/admin/_page.scss */
+/* line 136, sass/modules/admin/_page.scss */
 div.search-field input:focus {
   color: black;
 }
-/* line 160, sass/modules/admin/_page.scss */
+/* line 140, sass/modules/admin/_page.scss */
 div.search-field ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-/* line 164, sass/modules/admin/_page.scss */
+/* line 144, sass/modules/admin/_page.scss */
 div.search-field ul li {
   padding: 6px 8px;
   font-size: 13px;
   border-bottom: 1px solid #dadada;
 }
-/* line 168, sass/modules/admin/_page.scss */
+/* line 148, sass/modules/admin/_page.scss */
 div.search-field ul li:last-child {
   border: none;
 }
-/* line 171, sass/modules/admin/_page.scss */
+/* line 151, sass/modules/admin/_page.scss */
 div.search-field ul li:first-child {
   border-top: 1px solid #dadada;
 }
-/* line 174, sass/modules/admin/_page.scss */
+/* line 154, sass/modules/admin/_page.scss */
 div.search-field ul li:hover {
   background: #f2f2f2;
   cursor: pointer;
