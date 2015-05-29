@@ -1,11 +1,12 @@
 <h2 class="title">{{ title }}</h2>
-{% for article in articles %}
-<article class="thumb row">
-    <div class="left">
-        <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
-    </div>
-    <div>
-        <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-    </div>
-</article>
-{% endfor %}
+<div class="article-list blog sidebar-block">
+    <ul>
+        {% for article in articles %}
+        <li>
+            <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
+            <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+            <p class="snippet">{{ article.snippet }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

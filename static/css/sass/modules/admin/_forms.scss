@@ -9,40 +9,42 @@ form {
     margin: 25px 0;
     font-size: 18px;
   }
-  div.field {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    &:first-child {
-      margin-top: 0;
+}
+
+div.field {
+  padding: 8px 0;
+  box-sizing: border-box;
+  &:first-child {
+    margin-top: 0;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-family: $ui-font-helvetica;
+  }
+  input, textarea {
+    box-sizing: border-box;
+    font-family: $ui-font-helvetica;
+    border: 1px solid rgb(185,185,185);
+    border-radius: 2px;
+    padding: 9px 8px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 5px;
+  }
+  textarea {
+    line-height: 1.5em;
+  }
+  input {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
     }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 12px;
-      font-family: $ui-font-helvetica;
-    }
-    input, textarea {
-      font-family: $ui-font-helvetica;
-      border: 1px solid rgb(185,185,185);
-      border-radius: 2px;
-      padding: 9px 8px;
-      font-size: 12px;
-      width: 100%;
-      max-width: 350px;
-      margin-bottom: 5px;
-    }
-    textarea {
-      line-height: 1.5em;
-    }
-    input {
-      margin-right: 10px;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-    select {
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
+  }
+  select {
+    font-size: 12px;
+    margin-bottom: 5px;
   }
 }

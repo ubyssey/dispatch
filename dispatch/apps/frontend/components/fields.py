@@ -8,16 +8,21 @@ class BaseField(object):
 
 class TextField(BaseField):
 
-    @staticmethod
-    def as_json():
+    def as_json(self):
         return {
             'type': 'text',
         }
+
+    def data_as_json(self):
+        return self.value
 
     def context(self):
         return self.value
 
 class ModelField(BaseField):
+
+    KEY = 'parent'
+    DISPLAY = 'long_headline'
 
     def __init__(self, model, many=False):
         self.model = model
@@ -27,15 +32,23 @@ class ModelField(BaseField):
         return {
             'type': 'model',
             'model': self.model,
-            'key': 'parent',
-            'display': 'long_headline',
+            'key': self.KEY,
+            'display': self.DISPLAY,
             'many': self.many,
         }
 
+    def data_as_json(self):
+        ids = [int(id) for id in self.value.split(',')]
+        articles = Article.objects.filter(parent__in=ids,head=True)
+        return [
+            {'id': getattr(a, self.KEY).id, 'display': getattr(a, self.DISPLAY)}
+            for a in articles
+        ]
+
     def context(self):
         ids = [int(id) for id in self.value.split(',')]
-        article = Article.objects.filter(parent__in=ids,head=True)
+        articles = Article.objects.filter(parent__in=ids,head=True)
         try:
-            return article
+            return articles
         except:
             return None
