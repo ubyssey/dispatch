@@ -50,12 +50,3 @@ If you run into problems serving up the site because of migration issues, it may
 `python manage.py makemigrations`
 
 `python manage.py migrate`
-
-
-
-
-
-
-
-
- 
