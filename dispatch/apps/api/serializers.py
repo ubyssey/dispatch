@@ -102,6 +102,18 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'type'
         )
 
+class SectionSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the Section model.
+    """
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'slug',
+        )
+
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Article model.
@@ -115,11 +127,18 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     url                 mapped to Article.get_absolute_url()
     parent              mapped to Parent.id
     """
-    section = serializers.CharField(source='section.slug',read_only=True)
+    section = SectionSerializer(read_only=True)
+    section_id = serializers.IntegerField(write_only=True)
+
     featured_image = FullImageAttachmentSerializer(read_only=True)
-    authors = PersonSerializer(many=True, read_only=True)
+
     content = serializers.ReadOnlyField(source='get_json')
+    content_json = serializers.CharField(write_only=True)
+
+    authors = PersonSerializer(many=True)
+    author_ids = serializers.CharField(write_only=True)
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
+
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
@@ -132,9 +151,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'short_headline',
             'featured_image',
             'content',
+            'content_json',
             'authors',
+            'author_ids',
             'authors_string',
             'section',
+            'section_id',
             'published_at',
             'importance',
             'slug',
@@ -142,14 +164,20 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'url',
         )
 
-class SectionSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializes the Section model.
-    """
-    class Meta:
-        model = Section
-        fields = (
-            'id',
-            'name',
-            'slug',
-        )
+    def update(self, instance, validated_data):
+
+        instance.save()
+
+        instance.content = validated_data.get('content_json', instance.content)
+        instance.save_attachments()
+
+        authors = validated_data.get('author_ids', False)
+
+        if authors:
+            instance.save_authors(authors)
+
+        instance.long_headline = validated_data.get('long_headline', instance.long_headline)
+        instance.section_id = validated_data.get('section_id', instance.section.id)
+
+        instance.save(update_fields=['content', 'featured_image'], revision=False)
+        return instance
