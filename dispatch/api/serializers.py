@@ -166,6 +166,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
 
+        instance.long_headline = validated_data.get('long_headline', instance.long_headline)
+        instance.section_id = validated_data.get('section_id', instance.section.id)
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
@@ -176,8 +178,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         if authors:
             instance.save_authors(authors)
 
-        instance.long_headline = validated_data.get('long_headline', instance.long_headline)
-        instance.section_id = validated_data.get('section_id', instance.section.id)
-
         instance.save(update_fields=['content', 'featured_image'], revision=False)
+
         return instance
