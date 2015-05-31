@@ -1,6 +1,15 @@
 @import "compass/css3/box-shadow";
 @import "utilities/fonts";
 
+
+.article-form {
+  display: none;
+}
+
+#article-admin, #article-admin .container {
+  height: 100%;
+}
+
 $text-padding: 60px;
 
 div.panel {
@@ -72,7 +81,56 @@ div.panel.content {
   }
 }
 
-div.fieldset.tab {
+#article-sidebar {
+  div[role='tabpanel']{
+    padding: 20px 35px;
+    img {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+
+div.react-tabs > ul, nav.edit-tabs ul {
+  border-bottom: 1px solid #D9D9D9;
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+  li {
+    display: inline-block;
+    padding: 17px 15px;
+    font-family: $ui-font-helvetica;
+    font-size: 12px;
+    color: #A2A2A2;
+
+    min-width: 60px;
+    text-align: center;
+
+    border-width: 0 1px;
+    border-style: solid;
+    border-color: transparent;
+
+    &:visited {
+      color: #A2A2A2;
+    }
+    &:hover {
+      color: rgb(110, 110, 110);
+      cursor: pointer;
+    }
+    &:active, &:focus {
+      outline: none;
+    }
+    line-height: 17px;
+    text-decoration: none;
+    &.ui-state-active, &[selected='selected'] {
+      background: rgb(245, 245, 245);
+      border-color: rgb(217, 217, 217);
+      color: rgb(110, 110, 110);
+    }
+  }
+}
+
+div.fieldset.tab, div[role="tabpanel"] {
   padding: 20px 35px;
   &.list {
     padding: 0;
@@ -89,49 +147,6 @@ div.fieldset.tab {
   }
 }
 
-nav.edit-tabs {
-  border-bottom: 1px solid #D9D9D9;
-  ul {
-    padding-left: 0;
-    margin: 0;
-    list-style-type: none;
-    li {
-      display: inline-block;
-      a {
-
-        display: block;
-        padding: 17px 15px;
-        font-family: $ui-font-helvetica;
-        font-size: 12px;
-        color: #A2A2A2;
-
-        min-width: 60px;
-        text-align: center;
-
-        border-width: 0 1px;
-        border-style: solid;
-        border-color: transparent;
-
-        &:visited {
-          color: #A2A2A2;
-        }
-        &:hover {
-          color: rgb(110, 110, 110);
-        }
-        &:active, &:focus {
-          outline: none;
-        }
-        line-height: 17px;
-        text-decoration: none;
-      }
-      &.ui-state-active a {
-        background: rgb(245, 245, 245);
-        border-color: rgb(217, 217, 217);
-        color: rgb(110, 110, 110);
-      }
-    }
-  }
-}
 
 div.panel.options {
   position: absolute;
@@ -297,11 +312,6 @@ ul.tagList {
 
 // Editor styles
 
-#editor {
-    min-height: 200px;
-    padding: 0;
-}
-
 #full-toolbar {
   padding: 0;
   margin-left: $text-padding;
@@ -385,18 +395,20 @@ ul.tagList {
       }
     }
 }
-
-#editor div.ql-line {
+#article-editor {
+  min-height: 200px;
+  padding: 0;
+  div.ql-line {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
     line-height: 26px;
     margin-top: 0;
     margin-bottom: 20px;
-}
-
-#editor p.no-bottom-margin {
+  }
+  p.no-bottom-margin {
     margin-bottom: 0;
+  }
 }
 
 .drop-area {
@@ -416,10 +428,6 @@ span.format-shortcode {
 img.drag-image {
     width: 150px;
     height: auto;
-}
-
-#editor img.drag-image {
-    width: 50%;
 }
 
 button.dark-button {

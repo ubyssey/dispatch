@@ -65,7 +65,9 @@ main {
 }
 
 header {
-  background: #4A90E2;
+  background: #FAFAFA;
+  border-bottom: 1px solid rgb(228, 228, 228);
+
   height: $toolbar-width;
   line-height: 40px;
   position: fixed;
