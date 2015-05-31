@@ -14,7 +14,6 @@ router.register(r'people', views.PersonViewSet, base_name='person')
 router.register(r'tag', views.TagViewSet)
 router.register(r'images', views.ImageViewSet, base_name='images')
 
-
 section_frontpage = views.SectionViewSet.as_view({
     'get': 'frontpage',
 })
