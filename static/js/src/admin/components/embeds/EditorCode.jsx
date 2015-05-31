@@ -1,3 +1,4 @@
+var React = require('react');
 var EditorCode = React.createClass({
     getInitialState: function(){
         return {
@@ -27,13 +28,15 @@ var EditorCode = React.createClass({
 });
 
 
-var factory = {
-    controller: function(node, embed){
-        return React.render(
-            <EditorCode data={embed.data} />,
-            node
-        );
-    },
+var factory = function(options){
+    return {
+        controller: function(node, embed){
+            return React.render(
+                <EditorCode data={embed.data} />,
+                node
+            );
+        },
+    }
 }
 
 module.exports = factory;
