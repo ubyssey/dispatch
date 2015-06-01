@@ -174,51 +174,18 @@ def articles(request):
 
 @staff_member_required
 def article_add(request):
-    saved = 0
-    save_attempt = 0
-    if request.method == 'POST':
-        save_attempt = 1
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            article = form.save()
-            return redirect(article_edit, article.id)
-    else:
-        form = ArticleForm()
-
-    user = User.objects.get(email=request.user)
-
-    context = {
-        'person': user.person,
-        'form': form,
-        'authors_list': int(user.person.id),
-        'saved': saved,
-        'save_attempt': save_attempt,
-    }
-
-    return render(request, 'manager/article/edit.html', context)
+    return render(request, 'manager/article/edit.html')
 
 @staff_member_required
 def article_edit(request, id):
+    """
+    TODO: create API route to return article from parent ID eliminate below query.
+    """
     a = Article.objects.filter(parent=id,preview=False).order_by('-pk')[0]
-    saved = 0
-    save_attempt = 0
-    if request.method == 'POST':
-        save_attempt = 1
-        form = ArticleForm(request.POST, instance=a)
-        if form.is_valid():
-            a = form.save()
-            saved = 1
-            form = ArticleForm(instance=a)
-    else:
-        form = ArticleForm(instance=a)
 
     context = {
-        'article': a,
-        'form': form,
-        'authors_list': a.authors_list(),
-        'templates': ThemeHelper.get_theme_templates(),
-        'saved': saved,
-        'save_attempt': save_attempt,
+        'article': a.id,
+        #'templates': ThemeHelper.get_theme_templates(),
     }
 
     return render(request, 'manager/article/edit.html', context)

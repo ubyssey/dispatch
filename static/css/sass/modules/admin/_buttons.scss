@@ -1,0 +1,39 @@
+div.button {
+  display: inline-block;
+  position: relative;
+  height: 55px;
+  &.dropdown {
+    width: 250px;
+    ul.items {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      position: absolute;
+      top: 56px;
+      z-index: 600;
+      width: 100%;
+      background: #fff;
+      border: 1px solid #cacaca;
+      border-top: none;
+      border-radius: 0 0 2px 2px;
+      max-height: 300px;
+      overflow: scroll;
+      li {
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid #cacaca;
+        font-size: 13px;
+        height: 34px;
+        line-height: 34px;
+        padding: 0 8px;
+        &:last-child {
+          border-bottom: none;
+        }
+        &:hover {
+          background: rgb(242, 242, 242);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

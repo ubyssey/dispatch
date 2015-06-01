@@ -1,4 +1,5 @@
-var EditorImage = require('./embeds/EditorImage.jsx');
+var React = require('react');
+var InlineToolbar = require('./InlineToolbar.jsx');
 
 var DispatchTextEditor = function(quill, options) {
 
@@ -12,11 +13,13 @@ var DispatchTextEditor = function(quill, options) {
     this.embeds = options.embeds;
 
     var inlineToolbar = this.quill.addContainer('inline-toolbar');
-    var imageTools = this.quill.addContainer('image-tools');
 
-    $(imageTools).html($('#image-tools').html());
-    $(inlineToolbar).html($('#inline-toolbar').html());
+    React.render(
+        <InlineToolbar />,
+        inlineToolbar
+    );
 
+    // TODO: Move this to React component:
     $.each(this.quill.getEmbeds(), function(key, item){
         $('.inline-toolbar .toolbar').append(
             $('<button class="tb-'+key+' dis-button">').text(key)
@@ -82,8 +85,5 @@ DispatchTextEditor.prototype.closeInlineToolbar = function() {
     $('.inline-toolbar .toolbar').hide();
     $('.inline-toolbar').hide();
 }
-
-// Register DispatchTextEditor with Quill
-Quill.registerModule('dispatch', DispatchTextEditor);
 
 module.exports = DispatchTextEditor;
