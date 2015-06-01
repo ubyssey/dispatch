@@ -142,6 +142,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     featured_image = FullImageAttachmentSerializer(read_only=True)
+    featured_image_json = JSONField(required=False, write_only=True)
 
     content = serializers.ReadOnlyField(source='get_json')
     content_json = serializers.CharField(write_only=True)
@@ -161,6 +162,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'long_headline',
             'short_headline',
             'featured_image',
+            'featured_image_json',
             'content',
             'content_json',
             'authors',
@@ -179,12 +181,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         instance = Article()
 
-        print validated_data.get('section_id')
-
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
-
 
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
         instance.short_headline = validated_data.get('short_headline', instance.short_headline)
@@ -195,6 +194,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.content = validated_data.get('content_json', instance.content)
         instance.save_attachments()
+
+        featured_image = validated_data.get('featured_image_json')
+
+        if featured_image:
+            instance.save_featured_image(featured_image)
 
         authors = validated_data.get('author_ids', False)
 
