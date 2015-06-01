@@ -1,3 +1,5 @@
+var React = require('react');
+
 var Image = React.createClass({
     onClick: function(){
         this.props.onClickHandler(this.props.id);
