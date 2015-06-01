@@ -86,7 +86,4 @@ DispatchTextEditor.prototype.closeInlineToolbar = function() {
     $('.inline-toolbar').hide();
 }
 
-// Register DispatchTextEditor with Quill
-Quill.registerModule('dispatch', DispatchTextEditor);
-
 module.exports = DispatchTextEditor;

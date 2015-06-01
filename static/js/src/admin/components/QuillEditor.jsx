@@ -6,6 +6,8 @@ var EditorImage = require('./embeds/EditorImage.jsx');
 var EditorCode = require('./embeds/EditorCode.jsx');
 var EditorVideo = require('./embeds/EditorVideo.jsx');
 
+var Quill = require('quill/index.js');
+
 var QuillEditor = React.createClass({
     getInitialState: function(){
         return {
@@ -19,6 +21,8 @@ var QuillEditor = React.createClass({
         Quill.registerEmbed('image', EditorImage);
         Quill.registerEmbed('code', EditorCode);
         Quill.registerEmbed('video', EditorVideo);
+
+        Quill.registerModule('dispatch', DispatchTextEditor);
 
         this.quill = new Quill('#article-editor');
 
