@@ -31,7 +31,7 @@ var ArticleFeaturedImage = React.createClass({
     renderImage: function(){
         return (
             <div className="featured-image">
-                <img src={this.state.url} />
+                <img onClick={this.selectImage} src={this.state.url} />
                 <div className="field">
                     <label>Caption</label>
                     <input type="text" value={this.state.caption} onChange={this.updateCaption} />
