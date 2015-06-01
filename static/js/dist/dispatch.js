@@ -30,6 +30,9 @@
                 'attachments': {
                     'actions': ['GET',],
                 },
+                'revision': {
+                    'actions': ['GET', ],
+                },
             },
         },
         'tag': {
@@ -47,7 +50,11 @@
             'route': 'attachments',
         },
         'person': {
-            'route': 'persons',
+            'route': 'people',
+            'actions': ['GET', 'POST', 'DELETE'],
+        },
+        'section': {
+            'route': 'sections',
             'actions': ['GET', 'POST', 'DELETE'],
         }
     }
@@ -110,7 +117,7 @@
     }
 
     var hasModelHelper = function(model, action){
-        return models[model].helpers.hasOwnProperty(action);
+        return models[model].hasOwnProperty('helpers') && models[model].helpers.hasOwnProperty(action);
     }
 
     var getModelHelper = function(model, action){
@@ -225,6 +232,12 @@
     dispatch.find = function(model, id, callback){
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
         return dispatch.get(getModelRoute(model, id), {}, callback);
+    }
+
+    dispatch.revision = function(model, parent_id, revision_id, callback){
+        var model = model + '.revision';
+        if (!validAction(model, 'GET')) throw InvalidActionError(model);
+        return dispatch.get(getModelRoute(model, parent_id), {revision_id: revision_id}, callback);
     }
 
     dispatch.components = function(slug, callback){
