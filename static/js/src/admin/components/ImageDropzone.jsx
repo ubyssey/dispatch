@@ -1,3 +1,4 @@
+var React = require('react');
 var Image = require('./Image.jsx');
 
 var ImageDropzone = React.createClass({

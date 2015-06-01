@@ -1,3 +1,4 @@
+var React = require('react');
 var ImageStore = require('./ImageStore.js');
 var ImageMeta = require('./ImageMeta.jsx');
 var ImageDropzone = require('./ImageDropzone.jsx');
@@ -12,12 +13,13 @@ var ImageManager = React.createClass({
             currentTrigger: false,
             nextImages: false,
             loadingMore: false,
-            images: ImageStore,
+            images: ImageStore(),
             query: "",
         }
     },
     componentDidMount: function() {
 
+        this.ImageStore = this.state.images;
         var func = this.selectImage;
 
         // Clicking outside container
@@ -53,9 +55,9 @@ var ImageManager = React.createClass({
     open: function(){
         if(!this.state.initialized){
             dispatch.search("image", {'ordering': '-created_at'}, function(data){
-                ImageStore.dump(data.results);
+                this.ImageStore.dump(data.results);
                 this.setState({
-                    images: ImageStore,
+                    images: this.ImageStore,
                     initialized: true,
                     visible: true,
                     nextImages: data.next,
@@ -73,10 +75,10 @@ var ImageManager = React.createClass({
     },
     insertImage: function(){
         if(this.callback) {
-            this.callback(ImageStore.getImages(this.state.selected));
+            this.callback(this.ImageStore.getImages(this.state.selected));
             this.callback = false;
         } else {
-            this.callbacks[this.state.currentTrigger.selector](ImageStore.getImages(this.state.selected));
+            this.callbacks[this.state.currentTrigger.selector](this.ImageStore.getImages(this.state.selected));
         }
         this.close();
     },
@@ -94,32 +96,32 @@ var ImageManager = React.createClass({
     },
     deleteImage: function(id){
         dispatch.remove('image', id, function(){
-            ImageStore.removeImage(id);
+            this.ImageStore.removeImage(id);
             this.setState({
                 activeImage: false,
-                images: ImageStore,
+                images: this.ImageStore,
             });
         }.bind(this));
     },
     addFile: function(file, dataUrl){
-        ImageStore.addTemp(file.name, dataUrl);
+        this.ImageStore.addTemp(file.name, dataUrl);
         this.reloadStore();
     },
     onUpload: function(file, image){
-        ImageStore.replaceTemp(file.name, image);
+        this.ImageStore.replaceTemp(file.name, image);
         this.reloadStore();
     },
     updateProgress: function(file, progress, bytesSent){
-        ImageStore.updateProgress(file.name, progress);
+        this.ImageStore.updateProgress(file.name, progress);
         this.reloadStore();
     },
     reloadStore: function(){
         this.setState({
-            images: ImageStore,
+            images: this.ImageStore,
         });
     },
     updateImage: function(data){
-        ImageStore.updateImageWithData(data);
+        this.ImageStore.updateImageWithData(data);
         this.reloadStore();
     },
     onScroll: function(scroll){
@@ -134,9 +136,9 @@ var ImageManager = React.createClass({
         if(this.state.nextImages){
             this.setState({ loadingMore: true });
             dispatch.getNext(this.state.nextImages, function(data){
-                ImageStore.append(data.results);
+                this.ImageStore.append(data.results);
                 this.setState({
-                    images: ImageStore,
+                    images: this.ImageStore,
                     loadingMore: false,
                     nextImages: data.next,
                 });
@@ -149,15 +151,15 @@ var ImageManager = React.createClass({
             query: event.target.value,
         });
         dispatch.search("image", {'q': event.target.value, 'ordering': '-created_at'}, function(data){
-            ImageStore.dump(data.results);
+            this.ImageStore.dump(data.results);
             this.setState({
-                images: ImageStore,
+                images: this.ImageStore,
             });
         }.bind(this));
     },
     renderImageMeta: function(){
         if ( this.state.activeImage ){
-            var image = ImageStore.getImage(this.state.activeImage);
+            var image = this.ImageStore.getImage(this.state.activeImage);
             return ( <ImageMeta id={image.id} url={image.url} authors={image.authors} filename={image.filename} title={image.title} onDelete={this.deleteImage} onUpdate={this.updateImage} /> );
         }
     },
