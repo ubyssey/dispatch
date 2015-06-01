@@ -336,7 +336,9 @@ class Article(Publishable):
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['images'][0]['id']
+                image_id = node['data']['image']['id']
+                print node['data']['attachment_id']
+                print 'image-id: ' + str(image_id)
                 image = Image.objects.get(id=image_id)
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
@@ -351,6 +353,14 @@ class Article(Publishable):
                     'attachment_id': attachment.id
                 }
         self.content = json.dumps(nodes)
+
+    def save_featured_image(self, data):
+        attachment = ImageAttachment()
+        attachment.image_id = data['id']
+        attachment.caption = data['caption']
+        attachment.article = self
+        attachment.save()
+        self.featured_image = attachment
 
     def save_authors(self, authors):
         Author.objects.filter(article_id=self.id).delete()
