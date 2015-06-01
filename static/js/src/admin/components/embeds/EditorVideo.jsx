@@ -1,3 +1,4 @@
+var React = require('react');
 var EditorVideo = React.createClass({
     getInitialState: function(){
         return {
@@ -50,13 +51,15 @@ var EditorVideo = React.createClass({
 });
 
 
-var factory = {
-    controller: function(node, embed){
-        return React.render(
-            <EditorVideo data={embed.data} />,
-            node
-        );
-    },
+var factory = function(options){
+    return {
+        controller: function(node, embed){
+            return React.render(
+                <EditorVideo data={embed.data} />,
+                node
+            );
+        },
+    }
 }
 
 module.exports = factory;
