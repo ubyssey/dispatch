@@ -1,4 +1,7 @@
+require('babel/polyfill');
+
 var React = require('react');
+var Textarea = require('react-textarea-autosize');
 var ReactTabs = require('react-tabs');
 var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
@@ -51,28 +54,53 @@ var ArticleAdmin = React.createClass({
             article: article,
         });
     },
-    save: function(){
-        var values = {
-            long_headline: this.state.article.long_headline,
-            content_json: this.refs.content.save(),
-            section_id: this.state.article.section.id,
-            author_ids: ItemStore(this.state.article.authors).getIds(),
+    requiredFields: [
+        'long_headline',
+        'short_headline',
+        'content',
+        'published_at',
+        'authors',
+    ],
+    missingFields: function(){
+        var errors = [];
+        for(var i = 0; i < this.requiredFields.length; i++){
+            var field = this.requiredFields[i];
+            if(!this.state.article.hasOwnProperty(field))
+                errors.push(field);
         }
-        if(this.state.firstSave){
-            dispatch.add('article', values, function(article){
-                this.setState({
-                    article: article,
-                    head: article.revision_id,
-                    firstSave: false,
-                });
-            }.bind(this));
+        return errors.length == 0 ? false : errors;
+    },
+    save: function(){
+        this.updateModelField('content', this.refs.content.save());
+        var missing = this.missingFields();
+        if(!missing){
+            var values = {
+                long_headline: this.state.article.long_headline,
+                short_headline: this.state.article.short_headline,
+                published_at: this.state.article.published_at,
+                slug: this.state.article.slug,
+                content_json: this.refs.content.save(),
+                section_id: this.state.article.section.id,
+                author_ids: ItemStore(this.state.article.authors).getIds(),
+            }
+            if(this.state.firstSave){
+                dispatch.add('article', values, function(article){
+                    this.setState({
+                        article: article,
+                        head: article.revision_id,
+                        firstSave: false,
+                    });
+                }.bind(this));
+            } else {
+                dispatch.update('article', this.state.article.id, values, function(article){
+                    this.setState({
+                        article: article,
+                        head: article.revision_id,
+                    });
+                }.bind(this));
+            }
         } else {
-            dispatch.update('article', this.state.article.id, values, function(article){
-                this.setState({
-                    article: article,
-                    head: article.revision_id,
-                });
-            }.bind(this));
+            console.log("Missing fields: " + missing.join());
         }
     },
     renderVersions: function(){
@@ -104,7 +132,7 @@ var ArticleAdmin = React.createClass({
                         <div className="content panel">
                             <div className="inner">
                                 <div className="field-row headline">
-                                    <textarea value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')} className="headline" placeholder="Enter a headline..."></textarea>
+                                    <Textarea rows={1} placeholder="Enter a headline"className="headline" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
                                 </div>
                                 <div className="field-row content">
                                     <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
@@ -120,6 +148,10 @@ var ArticleAdmin = React.createClass({
                                     <Tab>Featured Image</Tab>
                                 </TabList>
                                 <TabPanel>
+                                    <div className="field">
+                                        <label>Publish at</label>
+                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                    </div>
                                     <div className="field">
                                         <label>Short Headline</label>
                                         <input type="text" value={this.state.article.short_headline} onChange={this.updateField.bind(this,'short_headline')} />
