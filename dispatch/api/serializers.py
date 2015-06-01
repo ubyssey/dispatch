@@ -164,10 +164,22 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'url',
         )
 
+    def create(self, validated_data):
+
+        instance = Article()
+
+        print validated_data.get('section_id')
+
+        return self.update(instance, validated_data)
+
     def update(self, instance, validated_data):
 
+
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
-        instance.section_id = validated_data.get('section_id', instance.section.id)
+        instance.short_headline = validated_data.get('short_headline', instance.short_headline)
+        instance.section_id = validated_data.get('section_id')
+        instance.published_at = validated_data.get('published_at')
+        instance.slug = validated_data.get('slug')
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
