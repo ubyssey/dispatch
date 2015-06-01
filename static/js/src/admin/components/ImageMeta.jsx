@@ -1,3 +1,4 @@
+var React = require('react');
 var ImageMeta = React.createClass({
     getInitialState: function(){
         return this.getState();
