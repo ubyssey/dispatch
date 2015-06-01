@@ -1,4 +1,8 @@
+require('babel/polyfill');
+
 var React = require('react');
+var Textarea = require('react-textarea-autosize');
+
 var EditorImage = React.createClass({
     getInitialState: function(){
         return {
@@ -10,14 +14,14 @@ var EditorImage = React.createClass({
             caption: this.props.data.caption ? this.props.data.caption : '',
         };
     },
-    componentDidMount: function(){
-        $(React.findDOMNode(this.refs.captionTextarea)).autosize();
-    },
     addImage: function(image){
         console.log(image);
         this.setState({
             image: image
         });
+    },
+    removeImage: function(){
+
     },
     openImageManager: function(){
         this.props.manager.openWithCallback(function(items){
@@ -43,15 +47,17 @@ var EditorImage = React.createClass({
     render: function(){
         return (
             <div className="image">
-                <div className="image-toolbar-container">
-                    <div className="image-toolbar">
-                    </div>
-                </div>
                 <div className="images">
-                    <img onClick={this.openImageManager} className="item" key={this.state.image.id} src={this.state.image.url} />
+                    <img className="item" key={this.state.image.id} src={this.state.image.url} />
                 </div>
-                <div className="image-caption">
-                    <textarea placeholder="Write a caption" ref="captionTextarea" onChange={this.handleCaptionChange}>{this.state.caption}</textarea>
+                <div className="meta">
+                    <div className="caption">
+                        <Textarea rows={1} placeholder="Write a caption" defaultValue={this.state.caption} onChange={this.handleCaptionChange}></Textarea>
+                    </div>
+                    <ul className="controls">
+                        <li onClick={this.removeImage}>Remove</li>
+                        <li onClick={this.openImageManager}>Change</li>
+                    </ul>
                 </div>
             </div>
             );
