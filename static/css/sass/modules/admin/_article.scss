@@ -81,13 +81,11 @@ div.panel.content {
   }
 }
 
-#article-sidebar {
-  div[role='tabpanel']{
-    padding: 20px 35px;
-    img {
-      width: 100%;
-      max-width: 300px;
-    }
+
+div.featured-image {
+  img {
+    width: 100%;
+    max-width: 400px;
   }
 }
 
@@ -131,7 +129,7 @@ div.react-tabs > ul, nav.edit-tabs ul {
 }
 
 div.fieldset.tab, div[role="tabpanel"] {
-  padding: 20px 35px;
+  padding: 20px;
   &.list {
     padding: 0;
     .row {
@@ -340,22 +338,13 @@ ul.tagList {
       .image {
         position: relative;
         overflow: visible;
-        .image-toolbar-container {
-          pointer-events: none;
-          display: none;
-          position: absolute;
-          top: -50px;
-          width: 100%;
-          .image-toolbar {
-            pointer-events: auto;
-            margin: 0 auto;
-            width: 200px;
-            background: black;
-            height: 40px;
-          }
-        }
-        .image-caption {
+        .meta {
+          overflow: auto;
           padding-top: 15px;
+        }
+        .caption {
+          float: left;
+          width: 80%;
           textarea {
             width: 100%;
             border: none;
@@ -365,7 +354,23 @@ ul.tagList {
             font-family: $ui-font-helvetica;
             font-size: 14px;
             line-height: 20px;
-            height: 20px;
+          }
+        }
+        .controls {
+          float: right;
+          width: 20%;
+          text-align: right;
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          li {
+            display: inline;
+            margin-left: 10px;
+            line-height: 20px;
+            &:hover {
+              opacity: 0.5;
+              cursor: pointer;
+            }
           }
         }
         .images {
