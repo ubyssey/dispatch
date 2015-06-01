@@ -77,6 +77,7 @@ var ArticleAdmin = React.createClass({
             var values = {
                 long_headline: this.state.article.long_headline,
                 short_headline: this.state.article.short_headline,
+                featured_image_json: JSON.stringify(this.state.article.featured_image),
                 published_at: this.state.article.published_at,
                 slug: this.state.article.slug,
                 content_json: this.refs.content.save(),
@@ -148,23 +149,23 @@ var ArticleAdmin = React.createClass({
                                     <Tab>Featured Image</Tab>
                                 </TabList>
                                 <TabPanel>
-                                    <div className="field">
-                                        <label>Publish at</label>
-                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                    </div>
-                                    <div className="field">
+                                    <div className="field full">
                                         <label>Short Headline</label>
                                         <input type="text" value={this.state.article.short_headline} onChange={this.updateField.bind(this,'short_headline')} />
                                     </div>
-                                    <div className="field">
+                                    <div className="field full">
                                         <label>Slug</label>
                                         <input type="text" value={this.state.article.slug} onChange={this.updateField.bind(this,'slug')} />
+                                    </div>
+                                    <div className="field">
+                                        <label>Publish at</label>
+                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
                                     </div>
                                     <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
                                     <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <FeaturedImage manager={this.props.imageManager}/>
+                                    <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
                                 </TabPanel>
                             </Tabs>
                         </div>

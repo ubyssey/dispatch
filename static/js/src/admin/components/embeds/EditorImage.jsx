@@ -6,7 +6,6 @@ var Textarea = require('react-textarea-autosize');
 var EditorImage = React.createClass({
     getInitialState: function(){
         return {
-            type: 'single',
             image: {
                 id: this.props.data.id,
                 url: this.props.data.url,
@@ -52,7 +51,7 @@ var EditorImage = React.createClass({
                 </div>
                 <div className="meta">
                     <div className="caption">
-                        <Textarea rows={1} placeholder="Write a caption" defaultValue={this.state.caption} onChange={this.handleCaptionChange}></Textarea>
+                        <Textarea rows={1} placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange}></Textarea>
                     </div>
                     <ul className="controls">
                         <li onClick={this.removeImage}>Remove</li>
