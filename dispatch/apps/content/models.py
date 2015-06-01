@@ -336,7 +336,9 @@ class Article(Publishable):
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['images'][0]['id']
+                image_id = node['data']['image']['id']
+                print node['data']['attachment_id']
+                print 'image-id: ' + str(image_id)
                 image = Image.objects.get(id=image_id)
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
@@ -351,6 +353,14 @@ class Article(Publishable):
                     'attachment_id': attachment.id
                 }
         self.content = json.dumps(nodes)
+
+    def save_featured_image(self, data):
+        attachment = ImageAttachment()
+        attachment.image_id = data['id']
+        attachment.caption = data['caption']
+        attachment.article = self
+        attachment.save()
+        self.featured_image = attachment
 
     def save_authors(self, authors):
         Author.objects.filter(article_id=self.id).delete()
@@ -537,7 +547,8 @@ class ImageAttachment(Model):
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
 
     def get_credit(self):
-        author = self.image.authors.all()[0]
+        #author = self.image.authors.all()[0]
+        author = "Peter Siemens"
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
         return "%s %s" % (types[self.type], author)
 
@@ -547,7 +558,7 @@ class ImageAttachment(Model):
             id = data['attachment_id']
             attach = ImageAttachment.objects.get(id=id)
             return {
-                'id': attach.id,
+                'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
                 'credit': attach.get_credit(),

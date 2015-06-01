@@ -5,6 +5,7 @@ from rest_framework import viewsets, generics, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, detail_route, list_route
+from rest_framework.generics import get_object_or_404
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
@@ -117,6 +118,18 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if limit is not None:
             queryset = queryset[:limit]
         return queryset
+
+    @detail_route(methods=['get'],)
+    def revision(self, request, pk=None):
+        revision_id = request.QUERY_PARAMS.get('revision_id', None)
+        filter_kwargs = {
+            'parent_id': pk,
+            'revision_id': revision_id,
+        }
+        queryset = Article.objects.all()
+        instance = get_object_or_404(queryset, **filter_kwargs)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def attachments(self, request, pk=None):
