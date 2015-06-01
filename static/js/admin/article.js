@@ -36642,7 +36642,7 @@ var ArticleFeaturedImage = React.createClass({displayName: "ArticleFeaturedImage
     renderImage: function(){
         return (
             React.createElement("div", {className: "featured-image"}, 
-                React.createElement("img", {src: this.state.url}), 
+                React.createElement("img", {onClick: this.selectImage, src: this.state.url}), 
                 React.createElement("div", {className: "field"}, 
                     React.createElement("label", null, "Caption"), 
                     React.createElement("input", {type: "text", value: this.state.caption, onChange: this.updateCaption})
