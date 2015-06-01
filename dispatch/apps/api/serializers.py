@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
@@ -6,6 +8,10 @@ from rest_framework import serializers
 from dispatch.apps.content.models import (Author, Article, Section,
                                           Tag, Image, ImageAttachment)
 from dispatch.apps.core.models import Person
+
+class JSONField(serializers.Field):
+    def to_internal_value(self, value):
+        return json.loads(value)
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     """

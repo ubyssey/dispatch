@@ -1,6 +1,9 @@
 {% extends 'manager/base.html' %}
 {% load staticfiles %}
-{% block header %}
+{% block main %}
+    <div id="article-admin" data-id="{{ article.id }}"></div>
+{% endblock %}
+{% block header2 %}
 {% include 'manager/article/toolbar.html' %}
     <div class="save-buttons">
         {% if article.is_published %}
@@ -13,7 +16,7 @@
         <button class="submit-article sq-button green" type="submit">Save</button>
     </div>
 {% endblock %}
-{% block content %}
+{% block content2 %}
 <form class="article-form" data-id="{{ article.id }}" data-csrf="{{ csrf_token }}" data-saveattempt="{{ save_attempt }}" data-saved="{{ saved }}" data-saveid="{{ form.save_id }}" action="" method="post">
     {% csrf_token %}
     <input type="hidden" name="saveid" value="{{ form.save_id }}" />
@@ -83,6 +86,7 @@
         </div>
     </div>
     <div class="options panel">
+        <div id="article-sidebar"></div>
         <nav class="edit-tabs">
             <ul>
                 <li><a href="#basic-fields">Basic</a></li>
@@ -177,12 +181,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
-    <script src="{% static 'js/vendor/jquery-ui/jquery-ui.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/vendor/lowdash.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/vendor/autosize/jquery.autosize.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/vendor/pickadate/picker.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/vendor/pickadate/picker.date.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/vendor/pickadate/picker.time.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/vendor/moment.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/vendor/quill/dist/quill.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/vendor/dropzone.js' %}" type="text/javascript"></script>

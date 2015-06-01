@@ -2,32 +2,51 @@ var React = require('react');
 
 var ArticleFeaturedImage = React.createClass({
     getInitialState: function(){
-       return {
-           image: this.props.image ? this.props.image : false,
-       }
+       return this.props.data ? this.props.data : {};
     },
     selectImage: function(e){
         e.preventDefault();
         this.props.manager.openWithCallback(function(items){
-            this.setImage(items[0]);
+            this.updateImage(items[0]);
         }.bind(this));
     },
-    setImage: function(image){
+    updateImage: function(image){
         this.setState({
-            image: image,
+            id: image.id,
+            url: image.url,
+        }, function(){
+            this.save();
+        })
+    },
+    save: function(){
+        return this.props.updateHandler(this.props.name, this.state);
+    },
+    updateCaption: function(event){
+        this.setState({
+            caption: event.target.value,
+        }, function(){
+            this.save();
         });
     },
     renderImage: function(){
         return (
-            <img src={this.state.image.url} />
+            <div className="featured-image">
+                <img src={this.state.url} />
+                <div className="field">
+                    <label>Caption</label>
+                    <input type="text" value={this.state.caption} onChange={this.updateCaption} />
+                </div>
+            </div>
             )
     },
     render: function(){
-        if(this.state.image){
+        if(this.state.url){
             return this.renderImage();
         } else {
             return (
-                <button onClick={this.selectImage}>Set featured image</button>
+                <div>
+                    <button onClick={this.selectImage}>Set featured image</button>
+                </div>
                 )
         }
     }
