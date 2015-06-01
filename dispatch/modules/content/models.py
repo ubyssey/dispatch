@@ -547,7 +547,8 @@ class ImageAttachment(Model):
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
 
     def get_credit(self):
-        author = self.image.authors.all()[0]
+        #author = self.image.authors.all()[0]
+        author = "Peter Siemens"
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
         return "%s %s" % (types[self.type], author)
 
@@ -557,7 +558,7 @@ class ImageAttachment(Model):
             id = data['attachment_id']
             attach = ImageAttachment.objects.get(id=id)
             return {
-                'id': attach.id,
+                'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
                 'credit': attach.get_credit(),
