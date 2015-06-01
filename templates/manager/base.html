@@ -16,15 +16,16 @@
             <div class="dispatch-logo">D</div>
             <nav class="side-nav">
                 <ul>
-                    <li><a href="{% url 'apps.manager.views.section' 'news' %}">news<i class="fa fa-newspaper-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}">sports<i class="fa fa-soccer-ball-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}">culture<i class="fa fa-paint-brush"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.sections' %}">sections<i class="fa fa-th-list"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.users' %}">users<i class="fa fa-users"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.profile' %}">profile<i class="fa fa-user"></i></a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'news' %}">news</a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}">sports</a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}">culture</a></li>
+                    <li><a href="{% url 'apps.manager.views.sections' %}">sections</a></li>
+                    <li><a href="{% url 'apps.manager.views.users' %}">users</a></li>
+                    <li><a href="{% url 'apps.manager.views.profile' %}">profile</a></li>
                 </ul>
             </nav>
         </div>
+        {% block main %}
         <main>
             <header>
                 <div class="header-main">
@@ -37,10 +38,11 @@
                 {% endblock %}
             </div>
         </main>
+        {% endblock %}
     </div>
     {% block modals %}
     {% endblock %}
-    <script src="{% static 'js/vendor/react.min.js' %}" type="text/javascript"></script>
+    {% comment %}<script src="{% static 'js/vendor/react.js' %}" type="text/javascript"></script>{% endcomment %}
     <script src="{% static 'js/vendor/jquery.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/dist/dispatch.js' %}" type="text/javascript"></script>
     {% block scripts %}
