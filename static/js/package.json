@@ -19,7 +19,8 @@
     "react-sortable": "~0.0.2",
     "react-textarea-autosize": "~2.2.2",
     "browserify": "~6.3.2",
-    "babel": "^5.1.0"
+    "babel": "^5.1.0",
+    "quill": "https://github.com/psiemens/quill/tarball/master"
   },
   "engines": {
     "node": ">=0.10"
