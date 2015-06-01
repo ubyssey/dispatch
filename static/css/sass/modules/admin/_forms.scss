@@ -14,7 +14,11 @@ form {
 div.field {
   padding: 8px 0;
   box-sizing: border-box;
+  width: 100%;
   max-width: 300px;
+  &.full {
+    max-width: none;
+  }
   &:first-child {
     margin-top: 0;
   }
@@ -33,7 +37,6 @@ div.field {
     font-size: 13px;
     line-height: 24px;
     width: 100%;
-    max-width: 350px;
     margin-bottom: 5px;
   }
   textarea {
@@ -112,7 +115,7 @@ div.model-dropdown {
       border-radius: 0 0 2px 2px;
     }
     div.field-container {
-      border-top: none;
+      margin-top: 5px;
       div.model-label .left {
         color: rgb(144, 144, 144);
       }
