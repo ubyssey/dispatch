@@ -29,7 +29,7 @@ var QuillEditor = React.createClass({
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');
 
-        //this.quill.addModule('toolbar', { container: '#full-toolbar' });
+        this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
 
         this.fetchImages();
