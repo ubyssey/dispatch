@@ -36439,6 +36439,8 @@ var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
 var QuillEditor = require('./QuillEditor.jsx');
+var QuillToolbar = require('./QuillEditorToolbar.jsx');
+
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var ModelField = require('./fields/ModelFieldA.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
@@ -36452,6 +36454,8 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
            article: this.props.articleId ? false : {},
            firstSave: this.props.articleId ? false : true,
            head: 0,
+           version: 1,
+           head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
        };
     },
@@ -36460,6 +36464,7 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
             this.setState({
                 article: article,
                 head: article.revision_id,
+                version: article.revision_id,
             });
         }.bind(this));
     },
@@ -36467,6 +36472,7 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
             this.setState({
                 article: article,
+                version: article.revision_id,
             });
         }.bind(this));
     },
@@ -36523,10 +36529,12 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
                     });
                 }.bind(this));
             } else {
-                dispatch.update('article', this.state.article.id, values, function(article){
+                dispatch.update('article', this.state.head_id, values, function(article){
                     this.setState({
                         article: article,
                         head: article.revision_id,
+                        head_id: article.id,
+                        version: article.revision_id,
                     });
                 }.bind(this));
             }
@@ -36553,9 +36561,10 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
         return (
             React.createElement("main", null, 
                 React.createElement("header", null, 
+                    QuillToolbar, 
                     React.createElement("div", {className: "save-buttons"}, 
                         React.createElement("button", {onClick: this.save}, "Save"), 
-                        React.createElement(DropdownButton, {selectItem: this.loadRevision, label: 'Version ' + this.state.head, items: this.renderVersions()})
+                        React.createElement(DropdownButton, {selectItem: this.loadRevision, label: 'Version ' + this.state.version, items: this.renderVersions()})
                     )
                 ), 
                 React.createElement("div", {className: "main clearfix"}, 
@@ -36608,7 +36617,7 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
 
 module.exports = ArticleAdmin;
 
-},{"./ArticleFeaturedImage.jsx":277,"./QuillEditor.jsx":286,"./buttons/DropdownButton.jsx":287,"./fields/ManyModelDropdown.jsx":291,"./fields/ModelDropdown.jsx":292,"./fields/ModelFieldA.jsx":293,"./stores/ItemStore.js":296,"babel/polyfill":91,"react":274,"react-tabs":95,"react-textarea-autosize":100}],277:[function(require,module,exports){
+},{"./ArticleFeaturedImage.jsx":277,"./QuillEditor.jsx":286,"./QuillEditorToolbar.jsx":287,"./buttons/DropdownButton.jsx":288,"./fields/ManyModelDropdown.jsx":292,"./fields/ModelDropdown.jsx":293,"./fields/ModelFieldA.jsx":294,"./stores/ItemStore.js":297,"babel/polyfill":91,"react":274,"react-tabs":95,"react-textarea-autosize":100}],277:[function(require,module,exports){
 var React = require('react');
 
 var ArticleFeaturedImage = React.createClass({displayName: "ArticleFeaturedImage",
@@ -37324,7 +37333,7 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');
 
-        //this.quill.addModule('toolbar', { container: '#full-toolbar' });
+        this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
 
         this.fetchImages();
@@ -37459,7 +37468,23 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 module.exports = QuillEditor;
 
 
-},{"./DispatchTextEditor.js":279,"./ImageStore.js":284,"./embeds/EditorCode.jsx":288,"./embeds/EditorImage.jsx":289,"./embeds/EditorVideo.jsx":290,"quill/index.js":94,"react":274}],287:[function(require,module,exports){
+},{"./DispatchTextEditor.js":279,"./ImageStore.js":284,"./embeds/EditorCode.jsx":289,"./embeds/EditorImage.jsx":290,"./embeds/EditorVideo.jsx":291,"quill/index.js":94,"react":274}],287:[function(require,module,exports){
+var React = require('react');
+
+var toolbar = (
+    React.createElement("div", {id: "full-toolbar", className: "toolbar ql-toolbar ql-snow"}, 
+        React.createElement("span", {className: "ql-format-group"}, 
+            React.createElement("span", {title: "Bold", className: "ql-format-button ql-bold"}, React.createElement("i", {className: "fa fa-bold"})), 
+            React.createElement("span", {title: "Italic", className: "ql-format-button ql-italic"}, React.createElement("i", {className: "fa fa-italic"})), 
+            React.createElement("span", {title: "Underline", className: "ql-format-button ql-underline"}, React.createElement("i", {className: "fa fa-underline"})), 
+            React.createElement("span", {title: "Strikethrough", className: "ql-format-button ql-strike"}, React.createElement("i", {className: "fa fa-strikethrough"}))
+        )
+    )
+    );
+
+module.exports = toolbar;
+
+},{"react":274}],288:[function(require,module,exports){
 var React = require('react');
 
 var DropdownButton = React.createClass({displayName: "DropdownButton",
@@ -37508,7 +37533,7 @@ var DropdownButton = React.createClass({displayName: "DropdownButton",
 
 module.exports = DropdownButton;
 
-},{"react":274}],288:[function(require,module,exports){
+},{"react":274}],289:[function(require,module,exports){
 var React = require('react');
 var EditorCode = React.createClass({displayName: "EditorCode",
     getInitialState: function(){
@@ -37552,7 +37577,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"react":274}],289:[function(require,module,exports){
+},{"react":274}],290:[function(require,module,exports){
 require('babel/polyfill');
 
 var React = require('react');
@@ -37645,7 +37670,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"babel/polyfill":91,"react":274,"react-textarea-autosize":100}],290:[function(require,module,exports){
+},{"babel/polyfill":91,"react":274,"react-textarea-autosize":100}],291:[function(require,module,exports){
 var React = require('react');
 var EditorVideo = React.createClass({displayName: "EditorVideo",
     getInitialState: function(){
@@ -37712,7 +37737,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"react":274}],291:[function(require,module,exports){
+},{"react":274}],292:[function(require,module,exports){
 var React = require('react');
 var SearchList = require('./SearchList.jsx');
 var ItemStore = require('../stores/ItemStore.js');
@@ -37847,7 +37872,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
 
 module.exports = ManyModelDropdown;
 
-},{"../stores/ItemStore.js":296,"./SearchList.jsx":295,"react":274}],292:[function(require,module,exports){
+},{"../stores/ItemStore.js":297,"./SearchList.jsx":296,"react":274}],293:[function(require,module,exports){
 var React = require('react');
 var SearchList = require('./SearchList.jsx');
 
@@ -37953,7 +37978,7 @@ var ModelDropdown = React.createClass({displayName: "ModelDropdown",
 
 module.exports = ModelDropdown;
 
-},{"./SearchList.jsx":295,"react":274}],293:[function(require,module,exports){
+},{"./SearchList.jsx":296,"react":274}],294:[function(require,module,exports){
 var React = require('react');
 var SearchField = require('./SearchField.jsx');
 var ItemStore = require('../stores/ItemStore.js');
@@ -38091,7 +38116,7 @@ var ModelField = React.createClass({displayName: "ModelField",
 
 module.exports = ModelField;
 
-},{"../stores/ItemStore.js":296,"./SearchField.jsx":294,"react":274}],294:[function(require,module,exports){
+},{"../stores/ItemStore.js":297,"./SearchField.jsx":295,"react":274}],295:[function(require,module,exports){
 var React = require('react');
 
 var SearchField = React.createClass({displayName: "SearchField",
@@ -38151,7 +38176,7 @@ var SearchField = React.createClass({displayName: "SearchField",
 
 module.exports = SearchField;
 
-},{"react":274}],295:[function(require,module,exports){
+},{"react":274}],296:[function(require,module,exports){
 var React = require('react');
 
 var SearchList = React.createClass({displayName: "SearchList",
@@ -38235,7 +38260,7 @@ var SearchList = React.createClass({displayName: "SearchList",
 
 module.exports = SearchList;
 
-},{"react":274}],296:[function(require,module,exports){
+},{"react":274}],297:[function(require,module,exports){
 var ItemStore = function(data){
     return {
         items: data ? data : [],

@@ -9,6 +9,8 @@ var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
 
 var QuillEditor = require('./QuillEditor.jsx');
+var QuillToolbar = require('./QuillEditorToolbar.jsx');
+
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var ModelField = require('./fields/ModelFieldA.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
@@ -22,6 +24,8 @@ var ArticleAdmin = React.createClass({
            article: this.props.articleId ? false : {},
            firstSave: this.props.articleId ? false : true,
            head: 0,
+           version: 1,
+           head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
        };
     },
@@ -30,6 +34,7 @@ var ArticleAdmin = React.createClass({
             this.setState({
                 article: article,
                 head: article.revision_id,
+                version: article.revision_id,
             });
         }.bind(this));
     },
@@ -37,6 +42,7 @@ var ArticleAdmin = React.createClass({
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
             this.setState({
                 article: article,
+                version: article.revision_id,
             });
         }.bind(this));
     },
@@ -93,10 +99,12 @@ var ArticleAdmin = React.createClass({
                     });
                 }.bind(this));
             } else {
-                dispatch.update('article', this.state.article.id, values, function(article){
+                dispatch.update('article', this.state.head_id, values, function(article){
                     this.setState({
                         article: article,
                         head: article.revision_id,
+                        head_id: article.id,
+                        version: article.revision_id,
                     });
                 }.bind(this));
             }
@@ -123,9 +131,10 @@ var ArticleAdmin = React.createClass({
         return (
             <main>
                 <header>
+                    {QuillToolbar}
                     <div className="save-buttons">
                         <button onClick={this.save}>Save</button>
-                        <DropdownButton selectItem={this.loadRevision} label={'Version ' + this.state.head} items={this.renderVersions()} />
+                        <DropdownButton selectItem={this.loadRevision} label={'Version ' + this.state.version} items={this.renderVersions()} />
                     </div>
                 </header>
                 <div className="main clearfix">
