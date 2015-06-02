@@ -18,7 +18,7 @@ body {
 div.sidebar {
   width: $toolbar-width;
   height: 100%;
-  background: #1D1D1D;
+  border-right: 1px solid rgb(228, 228, 228);
   position: absolute;
   left: 0;
   top: 0;
@@ -26,10 +26,11 @@ div.sidebar {
     height: 55px;
     line-height: 55px;
     text-align: center;
-    color: white;
+    color: rgb(79, 79, 79);
+    border-bottom: 1px solid rgb(228, 228, 228);
+    background: #FAFAFA;
     font-size: 22px;
     font-weight: 800;
-    background: black;
   }
   nav {
     ul {
@@ -43,7 +44,7 @@ div.sidebar {
           text-align: center;
           display: block;
           width: 100%;
-          color: white;
+          color: #BBBBBB;
           &:hover {
             color: #4A90E2;
           }
@@ -60,16 +61,17 @@ div.wrapper {
 }
 
 main {
-  margin-left: 55px;
   height: 100%;
 }
 
 header {
-  background: #4A90E2;
+  color: rgb(79, 79, 79);
+  background: #FAFAFA;
+  border-bottom: 1px solid rgb(228, 228, 228);
   height: $toolbar-width;
   line-height: 40px;
   position: fixed;
-  left: $toolbar-width;
+  left: ($toolbar-width + 1);
   right: 0;
   top: 0;
   z-index: 50;
@@ -87,7 +89,6 @@ header {
     float: left;
     margin-left: 20px;
     h1 {
-      color: white;
       margin: 0;
       font-size: 16px;
       font-family: $ui-font-lft-etica;
@@ -113,7 +114,7 @@ div.main {
   overflow: hidden;
   bottom: 0;
   right: 0;
-  left: 55px;
+  left: $toolbar-width + 1;
   > div.content {
     overflow: hidden;
     float: left;
