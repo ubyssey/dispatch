@@ -29,7 +29,7 @@ class UbysseyTheme(DefaultTheme):
               'bullets': frontpage[4:6],
          }
 
-        page = Homepage()
+        #page = Homepage()
 
         popular = Article.objects.get_most_popular(5)
 
@@ -37,7 +37,7 @@ class UbysseyTheme(DefaultTheme):
             'articles': articles,
             'sections': sections,
             'popular':  popular,
-            'components': page.components(),
+            #'components': page.components(),
         }
 
         return render(request, 'homepage/base.html', context)
