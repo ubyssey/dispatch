@@ -1,5 +1,4 @@
 var React = require('react');
-var ImageStore = require('./ImageStore.js');
 var DispatchTextEditor = require('./DispatchTextEditor.js');
 
 var EditorImage = require('./embeds/EditorImage.jsx');
@@ -12,7 +11,6 @@ var QuillEditor = React.createClass({
     getInitialState: function(){
         return {
             article: this.props.article,
-            images: ImageStore(),
         }
     },
     componentDidMount: function(){
@@ -25,22 +23,25 @@ var QuillEditor = React.createClass({
         Quill.registerModule('dispatch', DispatchTextEditor);
 
         this.quill = new Quill('#article-editor');
-
+        
+        this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');
 
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
 
-        this.fetchImages();
+        this.quill.addModule('dispatch', { article: this.state.article, embeds: this.embeds, editor: this });
 
-        $.each(this.embeds, function(key, embed){
-            var node = $('div[data-id='+key+']');
-            this.embeds[node.attr('id')] = React.render(
-                <embed.controller {...embed.props} />,
-                node.get(0)
-            );
-        }.bind(this));
+        this.quill.setJSON(this.state.article.content);
+
+//        $.each(this.embeds, function(key, embed){
+//            var node = $('div[data-id='+key+']');
+//            this.embeds[node.attr('id')] = React.render(
+//                <embed.controller {...embed.props} />,
+//                node.get(0)
+//            );
+//        }.bind(this));
 
     },
     componentWillReceiveProps: function(nextProps) {
@@ -51,27 +52,12 @@ var QuillEditor = React.createClass({
             })
         }
     },
-    fetchImages: function(callback){
-        dispatch.articleAttachments(this.state.article.id, function(data){
-            var images = this.state.images;
-            images.dump(data.results);
-
-            this.quill.addEmbed('image', {manager: this.props.imageManager, images: data.results})
-            this.quill.addModule('dispatch', { article: this.state.article, embeds: this.embeds, editor: this });
-
-            this.quill.setJSON(this.state.article.content);
-
-            this.setState({
-                images: images,
-            })
-        }.bind(this));
-    },
     save: function(){
         return JSON.stringify(this.quill.getJSON());
     },
     render: function(){
         return (
-            <div id="article-editor">test</div>
+            <div id="article-editor"></div>
             )
     }
 });
