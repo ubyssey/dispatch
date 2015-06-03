@@ -36460,13 +36460,15 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
        };
     },
     componentDidMount: function(){
-        dispatch.articles(this.props.articleId, function(article){
-            this.setState({
-                article: article,
-                head: article.revision_id,
-                version: article.revision_id,
-            });
-        }.bind(this));
+        if(this.props.articleId){
+            dispatch.articles(this.props.articleId, function(article){
+                this.setState({
+                    article: article,
+                    head: article.revision_id,
+                    version: article.revision_id,
+                });
+            }.bind(this));
+        }
     },
     loadRevision: function(revision_id){
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
@@ -37304,7 +37306,7 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
         Quill.registerModule('dispatch', DispatchTextEditor);
 
         this.quill = new Quill('#article-editor');
-        
+
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');
