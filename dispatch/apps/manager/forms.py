@@ -56,9 +56,6 @@ class UserForm(ModelForm):
         fields = ('email',)
 
 class PersonForm(ModelForm):
-    first_name = CharField(label='First name', required=True)
-    last_name = CharField(label='Last name', required=True)
-
     def __init__(self, data=None, user_form=True, instance=None):
         super(PersonForm, self).__init__(data, instance=instance)
 
@@ -102,8 +99,7 @@ class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = '__all__'
-
-        exclude = ('roles', 'user')
+        exclude = ('first_name', 'last_name', 'roles', 'user')
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -148,7 +144,6 @@ class ProfileForm(ModelForm):
         args = []
         kwargs = {}
 
-
         if self.data and self.instance.person:
             self.person_form = PersonForm(self.data, user_form=False, instance=self.instance.person)
         elif self.instance.person:
@@ -180,7 +175,8 @@ class ProfileForm(ModelForm):
 
     def save(self, commit=True):
         user = super(ProfileForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
+        if not self.empty_passwords():
+            user.set_password(self.cleaned_data["password1"])
         if self.person_form.is_valid() and self.person_form.has_changed():
             person = self.person_form.save()
             user.person = person
