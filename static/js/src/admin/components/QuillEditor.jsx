@@ -23,7 +23,7 @@ var QuillEditor = React.createClass({
         Quill.registerModule('dispatch', DispatchTextEditor);
 
         this.quill = new Quill('#article-editor');
-        
+
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');

@@ -30,13 +30,15 @@ var ArticleAdmin = React.createClass({
        };
     },
     componentDidMount: function(){
-        dispatch.articles(this.props.articleId, function(article){
-            this.setState({
-                article: article,
-                head: article.revision_id,
-                version: article.revision_id,
-            });
-        }.bind(this));
+        if(this.props.articleId){
+            dispatch.articles(this.props.articleId, function(article){
+                this.setState({
+                    article: article,
+                    head: article.revision_id,
+                    version: article.revision_id,
+                });
+            }.bind(this));
+        }
     },
     loadRevision: function(revision_id){
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
