@@ -36525,6 +36525,8 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
                     this.setState({
                         article: article,
                         head: article.revision_id,
+                        head_id: article.id,
+                        version: article.revision_id,
                         firstSave: false,
                     });
                 }.bind(this));
@@ -36555,8 +36557,8 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
     render: function(){
         if(!this.state.article){
             return (
-                React.createElement("div", null, "Loading")
-            )
+                React.createElement("header", null)
+                )
         }
         return (
             React.createElement("main", null, 
@@ -37278,7 +37280,6 @@ module.exports = InlineToolbar;
 
 },{"react":274}],286:[function(require,module,exports){
 var React = require('react');
-var ImageStore = require('./ImageStore.js');
 var DispatchTextEditor = require('./DispatchTextEditor.js');
 
 var EditorImage = require('./embeds/EditorImage.jsx');
@@ -37291,7 +37292,6 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
     getInitialState: function(){
         return {
             article: this.props.article,
-            images: ImageStore(),
         }
     },
     componentDidMount: function(){
@@ -37304,22 +37304,25 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
         Quill.registerModule('dispatch', DispatchTextEditor);
 
         this.quill = new Quill('#article-editor');
-
+        
+        this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('code');
         this.quill.addEmbed('video');
 
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
 
-        this.fetchImages();
+        this.quill.addModule('dispatch', { article: this.state.article, embeds: this.embeds, editor: this });
 
-        $.each(this.embeds, function(key, embed){
-            var node = $('div[data-id='+key+']');
-            this.embeds[node.attr('id')] = React.render(
-                React.createElement(embed.controller, React.__spread({},  embed.props)),
-                node.get(0)
-            );
-        }.bind(this));
+        this.quill.setJSON(this.state.article.content);
+
+//        $.each(this.embeds, function(key, embed){
+//            var node = $('div[data-id='+key+']');
+//            this.embeds[node.attr('id')] = React.render(
+//                <embed.controller {...embed.props} />,
+//                node.get(0)
+//            );
+//        }.bind(this));
 
     },
     componentWillReceiveProps: function(nextProps) {
@@ -37330,27 +37333,12 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
             })
         }
     },
-    fetchImages: function(callback){
-        dispatch.articleAttachments(this.state.article.id, function(data){
-            var images = this.state.images;
-            images.dump(data.results);
-
-            this.quill.addEmbed('image', {manager: this.props.imageManager, images: data.results})
-            this.quill.addModule('dispatch', { article: this.state.article, embeds: this.embeds, editor: this });
-
-            this.quill.setJSON(this.state.article.content);
-
-            this.setState({
-                images: images,
-            })
-        }.bind(this));
-    },
     save: function(){
         return JSON.stringify(this.quill.getJSON());
     },
     render: function(){
         return (
-            React.createElement("div", {id: "article-editor"}, "test")
+            React.createElement("div", {id: "article-editor"})
             )
     }
 });
@@ -37443,7 +37431,7 @@ var Editor = function(article, source, saveAttempt, saved, saveid) {
 module.exports = QuillEditor;
 
 
-},{"./DispatchTextEditor.js":279,"./ImageStore.js":284,"./embeds/EditorCode.jsx":289,"./embeds/EditorImage.jsx":290,"./embeds/EditorVideo.jsx":291,"quill/index.js":94,"react":274}],287:[function(require,module,exports){
+},{"./DispatchTextEditor.js":279,"./embeds/EditorCode.jsx":289,"./embeds/EditorImage.jsx":290,"./embeds/EditorVideo.jsx":291,"quill/index.js":94,"react":274}],287:[function(require,module,exports){
 var React = require('react');
 
 var toolbar = (

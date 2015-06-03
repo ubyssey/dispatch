@@ -95,6 +95,8 @@ var ArticleAdmin = React.createClass({
                     this.setState({
                         article: article,
                         head: article.revision_id,
+                        head_id: article.id,
+                        version: article.revision_id,
                         firstSave: false,
                     });
                 }.bind(this));
@@ -125,8 +127,8 @@ var ArticleAdmin = React.createClass({
     render: function(){
         if(!this.state.article){
             return (
-                <div>Loading</div>
-            )
+                <header></header>
+                )
         }
         return (
             <main>
