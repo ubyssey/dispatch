@@ -14,31 +14,6 @@ var ImageMeta = React.createClass({
         }
     },
     componentDidMount: function(){
-        $( ".image-meta input.add-author" ).autocomplete({
-            minLength: 3,
-            appendTo: '.image-meta .author-dropdown',
-            focus: function (event, ui) {
-                event.preventDefault();
-                this.changeAuthor({id: ui.item.id, full_name: ui.item.full_name});
-                $(event.target).val(ui.item.full_name);
-            }.bind(this),
-            source: function( request, response ) {
-                var term = request.term;
-                if ( term in authorCache ) {
-                    response( authorCache[ term ] );
-                    return;
-                }
-                // TODO: make use of the Dispatch API library
-                $.getJSON( "http://localhost:8000/api/person/", {q: request.term}, function( data, status, xhr ) {
-                    authorCache[ term ] = data.results;
-                    response( data.results );
-                });
-            }
-        }).autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $( "<li>" )
-            .append( "<a>" + item.id + "<br>" + item.full_name + "</a>" )
-            .appendTo( ul );
-        };
     },
     componentWillReceiveProps: function(nextProps){
         this.props = nextProps;
