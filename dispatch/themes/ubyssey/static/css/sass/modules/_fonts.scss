@@ -1,6 +1,7 @@
 $font-default: 'ITC Franklin Gothic Std', 'Proxima Nova', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 $font-secondary: 'ub-lft-etica', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 $font-headline: 'ub-minion-pro', 'Georgia', serif;
+$font-body: 'Georgia', serif;
 
 $font-size-11px: 0.78571428571em;
 $font-size-145px: 1.03571428571em;
@@ -29,6 +30,32 @@ $font-size-26px: 1.85714285714em;
 		url('fonts/MinionPro-BoldIt_gdi.ttf') format('truetype'),
 		url('fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt') format('svg');
 	font-weight: 800;
+	font-style: italic;
+	font-stretch: normal;
+	unicode-range: U+0020-25CA;
+}
+
+@font-face {
+	font-family:'ub-minion-pro';
+	src: url('fonts/MinionPro-Regular_gdi.eot');
+	src: url('fonts/MinionPro-Regular_gdi.eot?#iefix') format('embedded-opentype'),
+		url('fonts/MinionPro-Regular_gdi.woff') format('woff'),
+		url('fonts/MinionPro-Regular_gdi.ttf') format('truetype'),
+		url('fonts/MinionPro-Regular_gdi.svg#MinionPro-Regular') format('svg');
+	font-weight: 400;
+	font-style: normal;
+	font-stretch: normal;
+	unicode-range: U+0020-25CA;
+}
+
+@font-face {
+	font-family:'ub-minion-pro';
+	src: url('fonts/MinionPro-It_gdi.eot');
+	src: url('fonts/MinionPro-It_gdi.eot?#iefix') format('embedded-opentype'),
+		url('fonts/MinionPro-It_gdi.woff') format('woff'),
+		url('fonts/MinionPro-It_gdi.ttf') format('truetype'),
+		url('fonts/MinionPro-It_gdi.svg#MinionPro-It') format('svg');
+	font-weight: 400;
 	font-style: italic;
 	font-stretch: normal;
 	unicode-range: U+0020-25CA;
