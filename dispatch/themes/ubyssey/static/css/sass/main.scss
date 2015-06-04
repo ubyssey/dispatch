@@ -46,9 +46,7 @@ main.article article {
   div.article-content {
     max-width: 585px;
     p {
-      /* font-family: MinionPro-Regular; */
-      /* font-size: 18px; */
-      font-family: Georgia;
+      font-family: $font-body;
       font-size: 16px;
       color: #333333;
       line-height: 26px;
@@ -68,11 +66,12 @@ main.article article {
       text-transform: uppercase;
       letter-spacing: 0.3px;
       span.author {
-        font-family: LFTEtica-Bold;
+        font-family: $font-secondary;
+        font-weight: 800;
       }
 
       span.published {
-        font-family: LFTEtica-Regular;
+        font-family: $font-secondary;
       }
     }
     div.article-social-top {
@@ -85,8 +84,7 @@ main.article article {
           display: inline;
           margin-left: 20px;
           a {
-            font-family: "LFT Etica";
-            font-weight: 300;
+            font-family: $font-secondary;
             font-size: 12px;
             i, span {
               vertical-align: middle;
@@ -138,7 +136,7 @@ div.article-image img {
 
 div.caption {
     margin-top: 6px;
-    font-family: MinionPro-Regular;
+    font-family: $font-headline;
     font-size: 15px;
     color: #5A5A5A;
     line-height: 19px;
@@ -177,7 +175,7 @@ div.image-inner {
 }
 
 p.slide-caption {
-    font-family: MinionPro-Regular;
+    font-family: $font-headline;
     font-size: 15px;
     color: rgb(195, 195, 195);
     line-height: 19px;
@@ -196,7 +194,7 @@ img.slide-image {
 
 div.navigation {
     color: white;
-    font-family: "LFT Etica";
+    font-family: $font-secondary;
     font-size: 13px;
     text-align: center;
 }
