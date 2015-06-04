@@ -69,6 +69,24 @@ a:hover {
   unicode-range: U+0020-25CA;
 }
 @font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-Regular_gdi.eot");
+  src: url("fonts/MinionPro-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Regular_gdi.woff") format("woff"), url("fonts/MinionPro-Regular_gdi.ttf") format("truetype"), url("fonts/MinionPro-Regular_gdi.svg#MinionPro-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-It_gdi.eot");
+  src: url("fonts/MinionPro-It_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-It_gdi.woff") format("woff"), url("fonts/MinionPro-It_gdi.ttf") format("truetype"), url("fonts/MinionPro-It_gdi.svg#MinionPro-It") format("svg");
+  font-weight: 400;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
   font-family: 'ub-lft-etica';
   src: url("fonts/LFTEtica-Bold_gdi.eot");
   src: url("fonts/LFTEtica-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Bold_gdi.woff") format("woff"), url("fonts/LFTEtica-Bold_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Bold_gdi.svg#LFTEtica-Bold") format("svg");
@@ -100,6 +118,24 @@ a:hover {
   src: url("fonts/MinionPro-BoldIt_gdi.eot");
   src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
   font-weight: 800;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-Regular_gdi.eot");
+  src: url("fonts/MinionPro-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Regular_gdi.woff") format("woff"), url("fonts/MinionPro-Regular_gdi.ttf") format("truetype"), url("fonts/MinionPro-Regular_gdi.svg#MinionPro-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-It_gdi.eot");
+  src: url("fonts/MinionPro-It_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-It_gdi.woff") format("woff"), url("fonts/MinionPro-It_gdi.ttf") format("truetype"), url("fonts/MinionPro-It_gdi.svg#MinionPro-It") format("svg");
+  font-weight: 400;
   font-style: italic;
   font-stretch: normal;
   unicode-range: U+0020-25CA;
@@ -322,6 +358,24 @@ header.topbar a.icon-logo {
   src: url("fonts/MinionPro-BoldIt_gdi.eot");
   src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
   font-weight: 800;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-Regular_gdi.eot");
+  src: url("fonts/MinionPro-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Regular_gdi.woff") format("woff"), url("fonts/MinionPro-Regular_gdi.ttf") format("truetype"), url("fonts/MinionPro-Regular_gdi.svg#MinionPro-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
+  src: url("fonts/MinionPro-It_gdi.eot");
+  src: url("fonts/MinionPro-It_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-It_gdi.woff") format("woff"), url("fonts/MinionPro-It_gdi.ttf") format("truetype"), url("fonts/MinionPro-It_gdi.svg#MinionPro-It") format("svg");
+  font-weight: 400;
   font-style: italic;
   font-stretch: normal;
   unicode-range: U+0020-25CA;
@@ -841,24 +895,22 @@ main.article article div.article-content {
 }
 /* line 48, sass/main.scss */
 main.article article div.article-content p {
-  /* font-family: MinionPro-Regular; */
-  /* font-size: 18px; */
-  font-family: Georgia;
+  font-family: "Georgia", serif;
   font-size: 16px;
   color: #333333;
   line-height: 26px;
   margin-top: 20px;
 }
-/* line 56, sass/main.scss */
+/* line 54, sass/main.scss */
 main.article article div.article-content p:first-child {
   margin-top: 5px;
 }
-/* line 61, sass/main.scss */
+/* line 59, sass/main.scss */
 main.article article div.article-info {
   padding: 25px 0;
   color: #222222;
 }
-/* line 64, sass/main.scss */
+/* line 62, sass/main.scss */
 main.article article div.article-info div.article-byline {
   float: left;
   font-size: 12px;
@@ -866,104 +918,104 @@ main.article article div.article-info div.article-byline {
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
-/* line 70, sass/main.scss */
+/* line 68, sass/main.scss */
 main.article article div.article-info div.article-byline span.author {
-  font-family: LFTEtica-Bold;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 800;
 }
-/* line 74, sass/main.scss */
+/* line 73, sass/main.scss */
 main.article article div.article-info div.article-byline span.published {
-  font-family: LFTEtica-Regular;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
-/* line 78, sass/main.scss */
+/* line 77, sass/main.scss */
 main.article article div.article-info div.article-social-top {
   float: right;
 }
-/* line 80, sass/main.scss */
+/* line 79, sass/main.scss */
 main.article article div.article-info div.article-social-top ul {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-/* line 84, sass/main.scss */
+/* line 83, sass/main.scss */
 main.article article div.article-info div.article-social-top ul li {
   display: inline;
   margin-left: 20px;
 }
-/* line 87, sass/main.scss */
+/* line 86, sass/main.scss */
 main.article article div.article-info div.article-social-top ul li a {
-  font-family: "LFT Etica";
-  font-weight: 300;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 12px;
 }
-/* line 91, sass/main.scss */
+/* line 89, sass/main.scss */
 main.article article div.article-info div.article-social-top ul li a i, main.article article div.article-info div.article-social-top ul li a span {
   vertical-align: middle;
 }
-/* line 94, sass/main.scss */
+/* line 92, sass/main.scss */
 main.article article div.article-info div.article-social-top ul li a i {
   margin-right: 8px;
   font-size: 16px;
 }
 
-/* line 105, sass/main.scss */
+/* line 103, sass/main.scss */
 div.right-column {
   padding: 0 0 40px 40px;
   float: right;
   position: relative;
 }
-/* line 109, sass/main.scss */
+/* line 107, sass/main.scss */
 div.right-column div.featured-image {
   width: 500px;
 }
 
-/* line 114, sass/main.scss */
+/* line 112, sass/main.scss */
 div.right-column img {
   width: 100%;
 }
 
-/* line 118, sass/main.scss */
+/* line 116, sass/main.scss */
 div.side {
   float: right;
 }
 
-/* line 122, sass/main.scss */
+/* line 120, sass/main.scss */
 div.sidebar {
   position: absolute;
   right: 0;
   width: 300px;
 }
-/* line 126, sass/main.scss */
+/* line 124, sass/main.scss */
 div.sidebar.offset {
   margin-top: 4em;
 }
 
-/* line 131, sass/main.scss */
+/* line 129, sass/main.scss */
 div.article-image {
   margin: 40px 0;
 }
 
-/* line 135, sass/main.scss */
+/* line 133, sass/main.scss */
 div.article-image img {
   width: 100%;
 }
 
-/* line 139, sass/main.scss */
+/* line 137, sass/main.scss */
 div.caption {
   margin-top: 6px;
-  font-family: MinionPro-Regular;
+  font-family: "ub-minion-pro", "Georgia", serif;
   font-size: 15px;
   color: #5A5A5A;
   line-height: 19px;
 }
 
-/* line 147, sass/main.scss */
+/* line 145, sass/main.scss */
 span.credit {
   font-style: italic;
   color: #969696;
   margin-left: 4px;
 }
 
-/* line 153, sass/main.scss */
+/* line 151, sass/main.scss */
 div.slideshow {
   display: none;
   z-index: 100;
@@ -974,12 +1026,12 @@ div.slideshow {
   left: 0;
   background: rgba(0, 0, 0, 0.9);
 }
-/* line 162, sass/main.scss */
+/* line 160, sass/main.scss */
 div.slideshow.visible {
   display: block;
 }
 
-/* line 167, sass/main.scss */
+/* line 165, sass/main.scss */
 div.image-container {
   height: 100%;
   display: table;
@@ -987,39 +1039,39 @@ div.image-container {
   max-width: 90%;
 }
 
-/* line 174, sass/main.scss */
+/* line 172, sass/main.scss */
 div.image-inner {
   display: table-cell;
   vertical-align: middle;
 }
 
-/* line 179, sass/main.scss */
+/* line 177, sass/main.scss */
 p.slide-caption {
-  font-family: MinionPro-Regular;
+  font-family: "ub-minion-pro", "Georgia", serif;
   font-size: 15px;
   color: #c3c3c3;
   line-height: 19px;
 }
 
-/* line 189, sass/main.scss */
+/* line 187, sass/main.scss */
 img.article-attachment:hover {
   cursor: pointer;
 }
 
-/* line 193, sass/main.scss */
+/* line 191, sass/main.scss */
 img.slide-image {
   max-width: 100%;
 }
 
-/* line 197, sass/main.scss */
+/* line 195, sass/main.scss */
 div.navigation {
   color: white;
-  font-family: "LFT Etica";
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 13px;
   text-align: center;
 }
 
-/* line 204, sass/main.scss */
+/* line 202, sass/main.scss */
 div.navigation a {
   display: inline-block;
   padding: 6px 9px;
@@ -1029,13 +1081,13 @@ div.navigation a {
   font-size: 12px;
 }
 
-/* line 213, sass/main.scss */
+/* line 211, sass/main.scss */
 div.navigation a:hover {
   color: black;
   background: #fff;
 }
 
-/* line 218, sass/main.scss */
+/* line 216, sass/main.scss */
 .no-scroll {
   overflow: hidden;
 }
