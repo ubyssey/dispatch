@@ -294,22 +294,21 @@ header.topbar .section-name span {
   margin-left: 7px;
   font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 600;
-  letter-spacing: 0.5px;
   font-size: 12.5px;
   text-transform: uppercase;
   color: #33331E;
 }
-/* line 128, sass/modules/_header.scss */
+/* line 127, sass/modules/_header.scss */
 header.topbar .header-article {
   display: none;
 }
-/* line 132, sass/modules/_header.scss */
+/* line 131, sass/modules/_header.scss */
 header.topbar img.logo {
   vertical-align: middle;
   margin-top: -2px;
   height: 20px;
 }
-/* line 137, sass/modules/_header.scss */
+/* line 136, sass/modules/_header.scss */
 header.topbar nav {
   display: inline-block;
   white-space: nowrap;
@@ -320,28 +319,28 @@ header.topbar nav {
   color: #373737;
   margin-left: 20px;
 }
-/* line 146, sass/modules/_header.scss */
+/* line 145, sass/modules/_header.scss */
 header.topbar nav ul {
   line-height: 48px;
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-/* line 151, sass/modules/_header.scss */
+/* line 150, sass/modules/_header.scss */
 header.topbar nav ul li {
   display: inline-block;
   padding: 0 15px;
   height: 45px;
 }
-/* line 155, sass/modules/_header.scss */
+/* line 154, sass/modules/_header.scss */
 header.topbar nav ul li a {
   display: inline-block;
 }
-/* line 158, sass/modules/_header.scss */
+/* line 157, sass/modules/_header.scss */
 header.topbar nav ul li.current, header.topbar nav ul li:hover {
   border-bottom: 3px solid #3490d6;
 }
-/* line 165, sass/modules/_header.scss */
+/* line 164, sass/modules/_header.scss */
 header.topbar h1.nav-headline {
   display: inline-block;
   white-space: nowrap;
@@ -354,7 +353,7 @@ header.topbar h1.nav-headline {
   margin-bottom: 0;
   margin-left: 10px;
 }
-/* line 177, sass/modules/_header.scss */
+/* line 176, sass/modules/_header.scss */
 header.topbar a.icon-logo {
   display: inline-block;
   width: 20px;
@@ -944,12 +943,12 @@ main.article article div.article-info div.article-byline {
   font-size: 12px;
   line-height: 17px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
 }
-/* line 68, sass/main.scss */
+/* line 67, sass/main.scss */
 main.article article div.article-info div.article-byline span.author {
   font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 800;
+  letter-spacing: 0.05em;
 }
 /* line 73, sass/main.scss */
 main.article article div.article-info div.article-byline span.published {

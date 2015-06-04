@@ -64,10 +64,10 @@ main.article article {
       font-size: 12px;
       line-height: 17px;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
       span.author {
         font-family: $font-secondary;
         font-weight: 800;
+        letter-spacing: 0.05em;
       }
 
       span.published {
