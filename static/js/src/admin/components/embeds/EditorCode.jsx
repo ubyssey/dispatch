@@ -30,10 +30,10 @@ var EditorCode = React.createClass({
 
 var factory = function(options){
     return {
-        controller: function(node, embed){
+        controller: function(line, embed){
             return React.render(
                 <EditorCode data={embed.data} />,
-                node
+                line.node
             );
         },
     }

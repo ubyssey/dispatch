@@ -176,6 +176,7 @@ button.dis-button {
   padding: 0 9px;
   height: 28px;
   vertical-align: middle;
+  margin-right: 5px;
   &:hover {
     cursor: pointer;
     border-color: grey;
@@ -476,10 +477,10 @@ button.dark-button {
   }
 }
 
-.inline-toolbar {
+.inline-toolbar > div {
     position: absolute;
     z-index: 500;
-    display: none;
+    //display: none;
     height: 22px;
     line-height: 22px;
 }
@@ -491,7 +492,6 @@ button.dark-button {
 
 .inline-toolbar .toolbar {
     float: left;
-    display: none;
     margin-left: 15px;
 }
 
