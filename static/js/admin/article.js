@@ -3676,10 +3676,10 @@ process.chdir = function (dir) {
 (function (global){
 /**
  * @license
- * lodash 3.6.0 (Custom Build) <https://lodash.com/>
+ * lodash 3.9.3 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern include="difference,intersection,last,all,each,invoke,map,reduce,bind,defer,partial,clone,extend,defaults,omit,values,isElement,isEqual,isNumber,isObject,isString,uniqueId" --development --output .build/lodash.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.8.2 <http://underscorejs.org/LICENSE>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  * Available under MIT license <https://lodash.com/license>
  */
@@ -3689,7 +3689,7 @@ process.chdir = function (dir) {
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '3.6.0';
+  var VERSION = '3.9.3';
 
   /** Used to compose bitmasks for wrapper metadata. */
   var BIND_FLAG = 1,
@@ -3738,11 +3738,10 @@ process.chdir = function (dir) {
       uint16Tag = '[object Uint16Array]',
       uint32Tag = '[object Uint32Array]';
 
-  /** Used to match `RegExp` flags from their coerced string values. */
-  var reFlags = /\w*$/;
-
-  /** Used to detect host constructors (Safari > 5). */
-  var reHostCtor = /^\[object .+?Constructor\]$/;
+  /** Used to match property names within property paths. */
+  var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
+      reIsPlainProp = /^\w*$/,
+      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
 
   /**
    * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
@@ -3751,6 +3750,18 @@ process.chdir = function (dir) {
    */
   var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
       reHasRegExpChars = RegExp(reRegExpChars.source);
+
+  /** Used to match backslashes in property paths. */
+  var reEscapeChar = /\\(\\)?/g;
+
+  /** Used to match `RegExp` flags from their coerced string values. */
+  var reFlags = /\w*$/;
+
+  /** Used to detect host constructors (Safari > 5). */
+  var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+  /** Used to detect unsigned integer values. */
+  var reIsUint = /^\d+$/;
 
   /** Used to identify `toStringTag` values of typed arrays. */
   var typedArrayTags = {};
@@ -3795,7 +3806,7 @@ process.chdir = function (dir) {
   var freeModule = objectTypes[typeof module] && module && !module.nodeType && module;
 
   /** Detect free variable `global` from Node.js. */
-  var freeGlobal = freeExports && freeModule && typeof global == 'object' && global;
+  var freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
   /** Detect free variable `self`. */
   var freeSelf = objectTypes[typeof self] && self && self.Object && self;
@@ -3809,7 +3820,7 @@ process.chdir = function (dir) {
   /**
    * Used as a reference to the global object.
    *
-   * The `this` value is used if it is the global object to avoid Greasemonkey's
+   * The `this` value is used if it's the global object to avoid Greasemonkey's
    * restricted `window` object, otherwise the `window` object is used.
    */
   var root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
@@ -3841,7 +3852,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Converts `value` to a string if it is not one. An empty string is returned
+   * Converts `value` to a string if it's not one. An empty string is returned
    * for `null` or `undefined` values.
    *
    * @private
@@ -3918,7 +3929,7 @@ process.chdir = function (dir) {
   var objectProto = Object.prototype;
 
   /** Used to detect DOM support. */
-  var document = (document = root.window) && document.document;
+  var document = (document = root.window) ? document.document : null;
 
   /** Used to resolve the decompiled source of functions. */
   var fnToString = Function.prototype.toString;
@@ -3936,20 +3947,19 @@ process.chdir = function (dir) {
   var objToString = objectProto.toString;
 
   /** Used to detect if a method is native. */
-  var reNative = RegExp('^' +
-    escapeRegExp(objToString)
-    .replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+  var reIsNative = RegExp('^' +
+    escapeRegExp(fnToString.call(hasOwnProperty))
+    .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
   );
 
   /** Native method references. */
-  var ArrayBuffer = isNative(ArrayBuffer = root.ArrayBuffer) && ArrayBuffer,
-      bufferSlice = isNative(bufferSlice = ArrayBuffer && new ArrayBuffer(0).slice) && bufferSlice,
+  var ArrayBuffer = getNative(root, 'ArrayBuffer'),
+      bufferSlice = getNative(ArrayBuffer && new ArrayBuffer(0), 'slice'),
       floor = Math.floor,
-      getPrototypeOf = isNative(getPrototypeOf = Object.getPrototypeOf) && getPrototypeOf,
-      propertyIsEnumerable = objectProto.propertyIsEnumerable,
-      Set = isNative(Set = root.Set) && Set,
-      Uint8Array = isNative(Uint8Array = root.Uint8Array) && Uint8Array,
-      WeakMap = isNative(WeakMap = root.WeakMap) && WeakMap;
+      getPrototypeOf = getNative(Object, 'getPrototypeOf'),
+      Set = getNative(root, 'Set'),
+      Uint8Array = getNative(root, 'Uint8Array'),
+      WeakMap = getNative(root, 'WeakMap');
 
   /** Used to clone array buffers. */
   var Float64Array = (function() {
@@ -3957,26 +3967,26 @@ process.chdir = function (dir) {
     // where the array buffer's `byteLength` is not a multiple of the typed
     // array's `BYTES_PER_ELEMENT`.
     try {
-      var func = isNative(func = root.Float64Array) && func,
+      var func = getNative(root, 'Float64Array'),
           result = new func(new ArrayBuffer(10), 0, 1) && func;
     } catch(e) {}
-    return result;
+    return result || null;
   }());
 
   /* Native method references for those with the same name as other `lodash` methods. */
-  var nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray,
-      nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate,
-      nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys,
+  var nativeCreate = getNative(Object, 'create'),
+      nativeIsArray = getNative(Array, 'isArray'),
+      nativeKeys = getNative(Object, 'keys'),
       nativeMax = Math.max,
       nativeMin = Math.min,
-      nativeNow = isNative(nativeNow = Date.now) && nativeNow;
+      nativeNow = getNative(Date, 'now');
 
   /** Used as references for `-Infinity` and `Infinity`. */
   var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
 
   /** Used as references for the maximum length and index of an array. */
-  var MAX_ARRAY_LENGTH = Math.pow(2, 32) - 1,
-      MAX_ARRAY_INDEX =  MAX_ARRAY_LENGTH - 1,
+  var MAX_ARRAY_LENGTH = 4294967295,
+      MAX_ARRAY_INDEX = MAX_ARRAY_LENGTH - 1,
       HALF_MAX_ARRAY_LENGTH = MAX_ARRAY_LENGTH >>> 1;
 
   /** Used as the size, in bytes, of each `Float64Array` element. */
@@ -3986,7 +3996,7 @@ process.chdir = function (dir) {
    * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
    * of an array-like value.
    */
-  var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+  var MAX_SAFE_INTEGER = 9007199254740991;
 
   /** Used to store function metadata. */
   var metaMap = WeakMap && new WeakMap;
@@ -4035,30 +4045,31 @@ process.chdir = function (dir) {
    * `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`, `forEach`,
    * `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`, `functions`,
    * `groupBy`, `indexBy`, `initial`, `intersection`, `invert`, `invoke`, `keys`,
-   * `keysIn`, `map`, `mapValues`, `matches`, `matchesProperty`, `memoize`, `merge`,
-   * `mixin`, `negate`, `noop`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
-   * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
-   * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `reverse`,
-   * `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`, `sortByOrder`, `splice`,
-   * `spread`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `tap`,
-   * `throttle`, `thru`, `times`, `toArray`, `toPlainObject`, `transform`,
-   * `union`, `uniq`, `unshift`, `unzip`, `values`, `valuesIn`, `where`,
-   * `without`, `wrap`, `xor`, `zip`, and `zipObject`
+   * `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`, `matchesProperty`,
+   * `memoize`, `merge`, `method`, `methodOf`, `mixin`, `negate`, `omit`, `once`,
+   * `pairs`, `partial`, `partialRight`, `partition`, `pick`, `plant`, `pluck`,
+   * `property`, `propertyOf`, `pull`, `pullAt`, `push`, `range`, `rearg`,
+   * `reject`, `remove`, `rest`, `restParam`, `reverse`, `set`, `shuffle`,
+   * `slice`, `sort`, `sortBy`, `sortByAll`, `sortByOrder`, `splice`, `spread`,
+   * `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `tap`, `throttle`,
+   * `thru`, `times`, `toArray`, `toPlainObject`, `transform`, `union`, `uniq`,
+   * `unshift`, `unzip`, `unzipWith`, `values`, `valuesIn`, `where`, `without`,
+   * `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
    *
    * The wrapper methods that are **not** chainable by default are:
    * `add`, `attempt`, `camelCase`, `capitalize`, `clone`, `cloneDeep`, `deburr`,
    * `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`, `findKey`,
-   * `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`, `has`,
-   * `identity`, `includes`, `indexOf`, `inRange`, `isArguments`, `isArray`,
-   * `isBoolean`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isError`,
-   * `isFinite`,`isFunction`, `isMatch`, `isNative`, `isNaN`, `isNull`, `isNumber`,
+   * `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`, `get`,
+   * `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`, `inRange`, `isArguments`,
+   * `isArray`, `isBoolean`, `isDate`, `isElement`, `isEmpty`, `isEqual`, `isError`,
+   * `isFinite` `isFunction`, `isMatch`, `isNative`, `isNaN`, `isNull`, `isNumber`,
    * `isObject`, `isPlainObject`, `isRegExp`, `isString`, `isUndefined`,
-   * `isTypedArray`, `join`, `kebabCase`, `last`, `lastIndexOf`, `max`, `min`,
-   * `noConflict`, `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`,
-   * `random`, `reduce`, `reduceRight`, `repeat`, `result`, `runInContext`,
-   * `shift`, `size`, `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`,
-   * `startCase`, `startsWith`, `sum`, `template`, `trim`, `trimLeft`,
-   * `trimRight`, `trunc`, `unescape`, `uniqueId`, `value`, and `words`
+   * `isTypedArray`, `join`, `kebabCase`, `last`, `lastIndexOf`, `lt`, `lte`,
+   * `max`, `min`, `noConflict`, `noop`, `now`, `pad`, `padLeft`, `padRight`,
+   * `parseInt`, `pop`, `random`, `reduce`, `reduceRight`, `repeat`, `result`,
+   * `runInContext`, `shift`, `size`, `snakeCase`, `some`, `sortedIndex`,
+   * `sortedLastIndex`, `startCase`, `startsWith`, `sum`, `template`, `trim`,
+   * `trimLeft`, `trimRight`, `trunc`, `unescape`, `uniqueId`, `value`, and `words`
    *
    * The wrapper method `sample` will return a wrapped value when `n` is provided,
    * otherwise an unwrapped value is returned.
@@ -4073,8 +4084,8 @@ process.chdir = function (dir) {
    * var wrapped = _([1, 2, 3]);
    *
    * // returns an unwrapped value
-   * wrapped.reduce(function(sum, n) {
-   *   return sum + n;
+   * wrapped.reduce(function(total, n) {
+   *   return total + n;
    * });
    * // => 6
    *
@@ -4112,24 +4123,12 @@ process.chdir = function (dir) {
   var support = lodash.support = {};
 
   (function(x) {
+    var Ctor = function() { this.x = x; },
+        object = { '0': x, 'length': x },
+        props = [];
 
-    /**
-     * Detect if functions can be decompiled by `Function#toString`
-     * (all but Firefox OS certified apps, older Opera mobile browsers, and
-     * the PlayStation 3; forced `false` for Windows 8 apps).
-     *
-     * @memberOf _.support
-     * @type boolean
-     */
-    support.funcDecomp = /\bthis\b/.test(function() { return this; });
-
-    /**
-     * Detect if `Function#name` is supported (all but IE).
-     *
-     * @memberOf _.support
-     * @type boolean
-     */
-    support.funcNames = typeof Function.name == 'string';
+    Ctor.prototype = { 'valueOf': x, 'y': x };
+    for (var key in new Ctor) { props.push(key); }
 
     /**
      * Detect if the DOM is supported.
@@ -4142,25 +4141,7 @@ process.chdir = function (dir) {
     } catch(e) {
       support.dom = false;
     }
-
-    /**
-     * Detect if `arguments` object indexes are non-enumerable.
-     *
-     * In Firefox < 4, IE < 9, PhantomJS, and Safari < 5.1 `arguments` object
-     * indexes are non-enumerable. Chrome < 25 and Node.js < 0.11.0 treat
-     * `arguments` object indexes as non-enumerable and fail `hasOwnProperty`
-     * checks for indexes that exceed their function's formal parameters with
-     * associated values of `0`.
-     *
-     * @memberOf _.support
-     * @type boolean
-     */
-    try {
-      support.nonEnumArgs = !propertyIsEnumerable.call(arguments, 1);
-    } catch(e) {
-      support.nonEnumArgs = true;
-    }
-  }(0, 0));
+  }(1, 0));
 
   /*------------------------------------------------------------------------*/
 
@@ -4342,6 +4323,28 @@ process.chdir = function (dir) {
   }
 
   /**
+   * A specialized version of `_.some` for arrays without support for callback
+   * shorthands and `this` binding.
+   *
+   * @private
+   * @param {Array} array The array to iterate over.
+   * @param {Function} predicate The function invoked per iteration.
+   * @returns {boolean} Returns `true` if any element passes the predicate check,
+   *  else `false`.
+   */
+  function arraySome(array, predicate) {
+    var index = -1,
+        length = array.length;
+
+    while (++index < length) {
+      if (predicate(array[index], index, array)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Used by `_.defaults` to customize its `_.assign` use.
    *
    * @private
@@ -4350,25 +4353,23 @@ process.chdir = function (dir) {
    * @returns {*} Returns the value to assign to the destination object.
    */
   function assignDefaults(objectValue, sourceValue) {
-    return typeof objectValue == 'undefined' ? sourceValue : objectValue;
+    return objectValue === undefined ? sourceValue : objectValue;
   }
 
   /**
-   * The base implementation of `_.assign` without support for argument juggling,
-   * multiple sources, and `this` binding `customizer` functions.
+   * A specialized version of `_.assign` for customizing assigned values without
+   * support for argument juggling, multiple sources, and `this` binding `customizer`
+   * functions.
    *
    * @private
    * @param {Object} object The destination object.
    * @param {Object} source The source object.
-   * @param {Function} [customizer] The function to customize assigning values.
-   * @returns {Object} Returns the destination object.
+   * @param {Function} customizer The function to customize assigned values.
+   * @returns {Object} Returns `object`.
    */
-  function baseAssign(object, source, customizer) {
-    var props = keys(source);
-    if (!customizer) {
-      return baseCopy(source, object, props);
-    }
+  function assignWith(object, source, customizer) {
     var index = -1,
+        props = keys(source),
         length = props.length;
 
     while (++index < length) {
@@ -4377,7 +4378,7 @@ process.chdir = function (dir) {
           result = customizer(value, source[key], key, object, source);
 
       if ((result === result ? (result !== value) : (value === value)) ||
-          (typeof value == 'undefined' && !(key in object))) {
+          (value === undefined && !(key in object))) {
         object[key] = result;
       }
     }
@@ -4385,19 +4386,32 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Copies the properties of `source` to `object`.
+   * The base implementation of `_.assign` without support for argument juggling,
+   * multiple sources, and `customizer` functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @returns {Object} Returns `object`.
+   */
+  function baseAssign(object, source) {
+    return source == null
+      ? object
+      : baseCopy(source, keys(source), object);
+  }
+
+  /**
+   * Copies properties of `source` to `object`.
    *
    * @private
    * @param {Object} source The object to copy properties from.
-   * @param {Object} [object={}] The object to copy properties to.
    * @param {Array} props The property names to copy.
+   * @param {Object} [object={}] The object to copy properties to.
    * @returns {Object} Returns `object`.
    */
-  function baseCopy(source, object, props) {
-    if (!props) {
-      props = object;
-      object = {};
-    }
+  function baseCopy(source, props, object) {
+    object || (object = {});
+
     var index = -1,
         length = props.length;
 
@@ -4421,7 +4435,7 @@ process.chdir = function (dir) {
   function baseCallback(func, thisArg, argCount) {
     var type = typeof func;
     if (type == 'function') {
-      return typeof thisArg == 'undefined'
+      return thisArg === undefined
         ? func
         : bindCallback(func, thisArg, argCount);
     }
@@ -4431,9 +4445,9 @@ process.chdir = function (dir) {
     if (type == 'object') {
       return baseMatches(func);
     }
-    return typeof thisArg == 'undefined'
-      ? baseProperty(func + '')
-      : baseMatchesProperty(func + '', thisArg);
+    return thisArg === undefined
+      ? property(func)
+      : baseMatchesProperty(func, thisArg);
   }
 
   /**
@@ -4455,7 +4469,7 @@ process.chdir = function (dir) {
     if (customizer) {
       result = object ? customizer(value, key, object) : customizer(value);
     }
-    if (typeof result != 'undefined') {
+    if (result !== undefined) {
       return result;
     }
     if (!isObject(value)) {
@@ -4474,7 +4488,7 @@ process.chdir = function (dir) {
       if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
         result = initCloneObject(isFunc ? {} : value);
         if (!isDeep) {
-          return baseCopy(value, result, keys(value));
+          return baseAssign(result, value);
         }
       } else {
         return cloneableTags[tag]
@@ -4512,14 +4526,14 @@ process.chdir = function (dir) {
    * @returns {Object} Returns the new object.
    */
   var baseCreate = (function() {
-    function Object() {}
+    function object() {}
     return function(prototype) {
       if (isObject(prototype)) {
-        Object.prototype = prototype;
-        var result = new Object;
-        Object.prototype = null;
+        object.prototype = prototype;
+        var result = new object;
+        object.prototype = null;
       }
-      return result || root.Object();
+      return result || {};
     };
   }());
 
@@ -4623,8 +4637,8 @@ process.chdir = function (dir) {
    *
    * @private
    * @param {Array} array The array to flatten.
-   * @param {boolean} isDeep Specify a deep flatten.
-   * @param {boolean} isStrict Restrict flattening to arrays and `arguments` objects.
+   * @param {boolean} [isDeep] Specify a deep flatten.
+   * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
    * @returns {Array} Returns the new flattened array.
    */
   function baseFlatten(array, isDeep, isStrict) {
@@ -4635,8 +4649,8 @@ process.chdir = function (dir) {
 
     while (++index < length) {
       var value = array[index];
-
-      if (isObjectLike(value) && isLength(value.length) && (isArray(value) || isArguments(value))) {
+      if (isObjectLike(value) && isArrayLike(value) &&
+          (isStrict || isArray(value) || isArguments(value))) {
         if (isDeep) {
           // Recursively flatten arrays (susceptible to call stack limits).
           value = baseFlatten(value, isDeep, isStrict);
@@ -4644,7 +4658,6 @@ process.chdir = function (dir) {
         var valIndex = -1,
             valLength = value.length;
 
-        result.length += valLength;
         while (++valIndex < valLength) {
           result[++resIndex] = value[valIndex];
         }
@@ -4658,7 +4671,7 @@ process.chdir = function (dir) {
   /**
    * The base implementation of `baseForIn` and `baseForOwn` which iterates
    * over `object` properties returned by `keysFunc` invoking `iteratee` for
-   * each property. Iterator functions may exit iteration early by explicitly
+   * each property. Iteratee functions may exit iteration early by explicitly
    * returning `false`.
    *
    * @private
@@ -4696,6 +4709,32 @@ process.chdir = function (dir) {
   }
 
   /**
+   * The base implementation of `get` without support for string paths
+   * and default values.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Array} path The path of the property to get.
+   * @param {string} [pathKey] The key representation of path.
+   * @returns {*} Returns the resolved value.
+   */
+  function baseGet(object, path, pathKey) {
+    if (object == null) {
+      return;
+    }
+    if (pathKey !== undefined && pathKey in toObject(object)) {
+      path = [pathKey];
+    }
+    var index = 0,
+        length = path.length;
+
+    while (object != null && index < length) {
+      object = object[path[index++]];
+    }
+    return (index && index == length) ? object : undefined;
+  }
+
+  /**
    * The base implementation of `_.isEqual` without support for `this` binding
    * `customizer` functions.
    *
@@ -4709,18 +4748,10 @@ process.chdir = function (dir) {
    * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
    */
   function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
-    // Exit early for identical values.
     if (value === other) {
-      // Treat `+0` vs. `-0` as not equal.
-      return value !== 0 || (1 / value == 1 / other);
+      return true;
     }
-    var valType = typeof value,
-        othType = typeof other;
-
-    // Exit early for unlike primitive values.
-    if ((valType != 'function' && valType != 'object' && othType != 'function' && othType != 'object') ||
-        value == null || other == null) {
-      // Return `false` unless both values are `NaN`.
+    if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
       return value !== value && other !== other;
     }
     return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
@@ -4763,27 +4794,23 @@ process.chdir = function (dir) {
         othIsArr = isTypedArray(other);
       }
     }
-    var objIsObj = (objTag == objectTag || (isLoose && objTag == funcTag)),
-        othIsObj = (othTag == objectTag || (isLoose && othTag == funcTag)),
+    var objIsObj = objTag == objectTag,
+        othIsObj = othTag == objectTag,
         isSameTag = objTag == othTag;
 
     if (isSameTag && !(objIsArr || objIsObj)) {
       return equalByTag(object, other, objTag);
     }
-    if (isLoose) {
-      if (!isSameTag && !(objIsObj && othIsObj)) {
-        return false;
-      }
-    } else {
-      var valWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-          othWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+    if (!isLoose) {
+      var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+          othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
-      if (valWrapped || othWrapped) {
-        return equalFunc(valWrapped ? object.value() : object, othWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
+      if (objIsWrapped || othIsWrapped) {
+        return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
       }
-      if (!isSameTag) {
-        return false;
-      }
+    }
+    if (!isSameTag) {
+      return false;
     }
     // Assume cyclic values are equal.
     // For more information on detecting circular references see https://es5.github.io/#JO.
@@ -4814,41 +4841,43 @@ process.chdir = function (dir) {
    *
    * @private
    * @param {Object} object The object to inspect.
-   * @param {Array} props The source property names to match.
-   * @param {Array} values The source values to match.
-   * @param {Array} strictCompareFlags Strict comparison flags for source values.
+   * @param {Array} matchData The propery names, values, and compare flags to match.
    * @param {Function} [customizer] The function to customize comparing objects.
    * @returns {boolean} Returns `true` if `object` is a match, else `false`.
    */
-  function baseIsMatch(object, props, values, strictCompareFlags, customizer) {
-    var index = -1,
-        length = props.length,
+  function baseIsMatch(object, matchData, customizer) {
+    var index = matchData.length,
+        length = index,
         noCustomizer = !customizer;
 
-    while (++index < length) {
-      if ((noCustomizer && strictCompareFlags[index])
-            ? values[index] !== object[props[index]]
-            : !(props[index] in object)
+    if (object == null) {
+      return !length;
+    }
+    object = toObject(object);
+    while (index--) {
+      var data = matchData[index];
+      if ((noCustomizer && data[2])
+            ? data[1] !== object[data[0]]
+            : !(data[0] in object)
           ) {
         return false;
       }
     }
-    index = -1;
     while (++index < length) {
-      var key = props[index],
+      data = matchData[index];
+      var key = data[0],
           objValue = object[key],
-          srcValue = values[index];
+          srcValue = data[1];
 
-      if (noCustomizer && strictCompareFlags[index]) {
-        var result = typeof objValue != 'undefined' || (key in object);
-      } else {
-        result = customizer ? customizer(objValue, srcValue, key) : undefined;
-        if (typeof result == 'undefined') {
-          result = baseIsEqual(srcValue, objValue, customizer, true);
+      if (noCustomizer && data[2]) {
+        if (objValue === undefined && !(key in object)) {
+          return false;
         }
-      }
-      if (!result) {
-        return false;
+      } else {
+        var result = customizer ? customizer(objValue, srcValue, key) : undefined;
+        if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
+          return false;
+        }
       }
     }
     return true;
@@ -4864,9 +4893,11 @@ process.chdir = function (dir) {
    * @returns {Array} Returns the new mapped array.
    */
   function baseMap(collection, iteratee) {
-    var result = [];
+    var index = -1,
+        result = isArrayLike(collection) ? Array(collection.length) : [];
+
     baseEach(collection, function(value, key, collection) {
-      result.push(iteratee(value, key, collection));
+      result[++index] = iteratee(value, key, collection);
     });
     return result;
   }
@@ -4879,59 +4910,59 @@ process.chdir = function (dir) {
    * @returns {Function} Returns the new function.
    */
   function baseMatches(source) {
-    var props = keys(source),
-        length = props.length;
+    var matchData = getMatchData(source);
+    if (matchData.length == 1 && matchData[0][2]) {
+      var key = matchData[0][0],
+          value = matchData[0][1];
 
-    if (!length) {
-      return constant(true);
-    }
-    if (length == 1) {
-      var key = props[0],
-          value = source[key];
-
-      if (isStrictComparable(value)) {
-        return function(object) {
-          return object != null && object[key] === value &&
-            (typeof value != 'undefined' || (key in toObject(object)));
-        };
-      }
-    }
-    var values = Array(length),
-        strictCompareFlags = Array(length);
-
-    while (length--) {
-      value = source[props[length]];
-      values[length] = value;
-      strictCompareFlags[length] = isStrictComparable(value);
-    }
-    return function(object) {
-      return object != null && baseIsMatch(toObject(object), props, values, strictCompareFlags);
-    };
-  }
-
-  /**
-   * The base implementation of `_.matchesProperty` which does not coerce `key`
-   * to a string.
-   *
-   * @private
-   * @param {string} key The key of the property to get.
-   * @param {*} value The value to compare.
-   * @returns {Function} Returns the new function.
-   */
-  function baseMatchesProperty(key, value) {
-    if (isStrictComparable(value)) {
       return function(object) {
-        return object != null && object[key] === value &&
-          (typeof value != 'undefined' || (key in toObject(object)));
+        if (object == null) {
+          return false;
+        }
+        return object[key] === value && (value !== undefined || (key in toObject(object)));
       };
     }
     return function(object) {
-      return object != null && baseIsEqual(value, object[key], null, true);
+      return baseIsMatch(object, matchData);
     };
   }
 
   /**
-   * The base implementation of `_.property` which does not coerce `key` to a string.
+   * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
+   *
+   * @private
+   * @param {string} path The path of the property to get.
+   * @param {*} srcValue The value to compare.
+   * @returns {Function} Returns the new function.
+   */
+  function baseMatchesProperty(path, srcValue) {
+    var isArr = isArray(path),
+        isCommon = isKey(path) && isStrictComparable(srcValue),
+        pathKey = (path + '');
+
+    path = toPath(path);
+    return function(object) {
+      if (object == null) {
+        return false;
+      }
+      var key = pathKey;
+      object = toObject(object);
+      if ((isArr || !isCommon) && !(key in object)) {
+        object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+        if (object == null) {
+          return false;
+        }
+        key = last(path);
+        object = toObject(object);
+      }
+      return object[key] === srcValue
+        ? (srcValue !== undefined || (key in object))
+        : baseIsEqual(srcValue, object[key], undefined, true);
+    };
+  }
+
+  /**
+   * The base implementation of `_.property` without support for deep paths.
    *
    * @private
    * @param {string} key The key of the property to get.
@@ -4940,6 +4971,21 @@ process.chdir = function (dir) {
   function baseProperty(key) {
     return function(object) {
       return object == null ? undefined : object[key];
+    };
+  }
+
+  /**
+   * A specialized version of `baseProperty` which supports deep paths.
+   *
+   * @private
+   * @param {Array|string} path The path of the property to get.
+   * @returns {Function} Returns the new function.
+   */
+  function basePropertyDeep(path) {
+    var pathKey = (path + '');
+    path = toPath(path);
+    return function(object) {
+      return baseGet(object, path, pathKey);
     };
   }
 
@@ -4980,9 +5026,40 @@ process.chdir = function (dir) {
   };
 
   /**
+   * The base implementation of `_.slice` without an iteratee call guard.
+   *
+   * @private
+   * @param {Array} array The array to slice.
+   * @param {number} [start=0] The start position.
+   * @param {number} [end=array.length] The end position.
+   * @returns {Array} Returns the slice of `array`.
+   */
+  function baseSlice(array, start, end) {
+    var index = -1,
+        length = array.length;
+
+    start = start == null ? 0 : (+start || 0);
+    if (start < 0) {
+      start = -start > length ? 0 : (length + start);
+    }
+    end = (end === undefined || end > length) ? length : (+end || 0);
+    if (end < 0) {
+      end += length;
+    }
+    length = start > end ? 0 : ((end - start) >>> 0);
+    start >>>= 0;
+
+    var result = Array(length);
+    while (++index < length) {
+      result[index] = array[index + start];
+    }
+    return result;
+  }
+
+  /**
    * The base implementation of `_.values` and `_.valuesIn` which creates an
    * array of `object` property values corresponding to the property names
-   * returned by `keysFunc`.
+   * of `props`.
    *
    * @private
    * @param {Object} object The object to query.
@@ -5020,7 +5097,7 @@ process.chdir = function (dir) {
         var mid = (low + high) >>> 1,
             computed = array[mid];
 
-        if (retHighest ? (computed <= value) : (computed < value)) {
+        if ((retHighest ? (computed <= value) : (computed < value)) && computed !== null) {
           low = mid + 1;
         } else {
           high = mid;
@@ -5050,17 +5127,23 @@ process.chdir = function (dir) {
     var low = 0,
         high = array ? array.length : 0,
         valIsNaN = value !== value,
-        valIsUndef = typeof value == 'undefined';
+        valIsNull = value === null,
+        valIsUndef = value === undefined;
 
     while (low < high) {
       var mid = floor((low + high) / 2),
           computed = iteratee(array[mid]),
+          isDef = computed !== undefined,
           isReflexive = computed === computed;
 
       if (valIsNaN) {
         var setLow = isReflexive || retHighest;
+      } else if (valIsNull) {
+        setLow = isReflexive && isDef && (retHighest || computed != null);
       } else if (valIsUndef) {
-        setLow = isReflexive && (retHighest || typeof computed != 'undefined');
+        setLow = isReflexive && (retHighest || isDef);
+      } else if (computed == null) {
+        setLow = false;
       } else {
         setLow = retHighest ? (computed <= value) : (computed < value);
       }
@@ -5087,7 +5170,7 @@ process.chdir = function (dir) {
     if (typeof func != 'function') {
       return identity;
     }
-    if (typeof thisArg == 'undefined') {
+    if (thisArg === undefined) {
       return func;
     }
     switch (argCount) {
@@ -5191,12 +5274,12 @@ process.chdir = function (dir) {
     while (++argsIndex < argsLength) {
       result[argsIndex] = args[argsIndex];
     }
-    var pad = argsIndex;
+    var offset = argsIndex;
     while (++rightIndex < rightLength) {
-      result[pad + rightIndex] = partials[rightIndex];
+      result[offset + rightIndex] = partials[rightIndex];
     }
     while (++holdersIndex < holdersLength) {
-      result[pad + holders[holdersIndex]] = args[argsIndex++];
+      result[offset + holders[holdersIndex]] = args[argsIndex++];
     }
     return result;
   }
@@ -5212,38 +5295,32 @@ process.chdir = function (dir) {
    * @returns {Function} Returns the new assigner function.
    */
   function createAssigner(assigner) {
-    return function() {
-      var args = arguments,
-          length = args.length,
-          object = args[0];
+    return restParam(function(object, sources) {
+      var index = -1,
+          length = object == null ? 0 : sources.length,
+          customizer = length > 2 ? sources[length - 2] : undefined,
+          guard = length > 2 ? sources[2] : undefined,
+          thisArg = length > 1 ? sources[length - 1] : undefined;
 
-      if (length < 2 || object == null) {
-        return object;
-      }
-      var customizer = args[length - 2],
-          thisArg = args[length - 1],
-          guard = args[3];
-
-      if (length > 3 && typeof customizer == 'function') {
+      if (typeof customizer == 'function') {
         customizer = bindCallback(customizer, thisArg, 5);
         length -= 2;
       } else {
-        customizer = (length > 2 && typeof thisArg == 'function') ? thisArg : null;
+        customizer = typeof thisArg == 'function' ? thisArg : undefined;
         length -= (customizer ? 1 : 0);
       }
-      if (guard && isIterateeCall(args[1], args[2], guard)) {
-        customizer = length == 3 ? null : customizer;
-        length = 2;
+      if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+        customizer = length < 3 ? undefined : customizer;
+        length = 1;
       }
-      var index = 0;
       while (++index < length) {
-        var source = args[index];
+        var source = sources[index];
         if (source) {
           assigner(object, source, customizer);
         }
       }
       return object;
-    };
+    });
   }
 
   /**
@@ -5256,7 +5333,7 @@ process.chdir = function (dir) {
    */
   function createBaseEach(eachFunc, fromRight) {
     return function(collection, iteratee) {
-      var length = collection ? collection.length : 0;
+      var length = collection ? getLength(collection) : 0;
       if (!isLength(length)) {
         return eachFunc(collection, iteratee);
       }
@@ -5336,8 +5413,20 @@ process.chdir = function (dir) {
    */
   function createCtorWrapper(Ctor) {
     return function() {
+      // Use a `switch` statement to work with class constructors.
+      // See https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-function-objects-call-thisargument-argumentslist
+      // for more details.
+      var args = arguments;
+      switch (args.length) {
+        case 0: return new Ctor;
+        case 1: return new Ctor(args[0]);
+        case 2: return new Ctor(args[0], args[1]);
+        case 3: return new Ctor(args[0], args[1], args[2]);
+        case 4: return new Ctor(args[0], args[1], args[2], args[3]);
+        case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+      }
       var thisBinding = baseCreate(Ctor.prototype),
-          result = Ctor.apply(thisBinding, arguments);
+          result = Ctor.apply(thisBinding, args);
 
       // Mimic the constructor's `return` behavior.
       // See https://es5.github.io/#x13.2.2 for more details.
@@ -5355,7 +5444,7 @@ process.chdir = function (dir) {
    */
   function createForEach(arrayFunc, eachFunc) {
     return function(collection, iteratee, thisArg) {
-      return (typeof iteratee == 'function' && typeof thisArg == 'undefined' && isArray(collection))
+      return (typeof iteratee == 'function' && thisArg === undefined && isArray(collection))
         ? arrayFunc(collection, iteratee)
         : eachFunc(collection, bindCallback(iteratee, thisArg, 3));
     };
@@ -5387,7 +5476,7 @@ process.chdir = function (dir) {
   function createReduce(arrayFunc, eachFunc) {
     return function(collection, iteratee, accumulator, thisArg) {
       var initFromArray = arguments.length < 3;
-      return (typeof iteratee == 'function' && typeof thisArg == 'undefined' && isArray(collection))
+      return (typeof iteratee == 'function' && thisArg === undefined && isArray(collection))
         ? arrayFunc(collection, iteratee, accumulator, initFromArray)
         : baseReduce(collection, getCallback(iteratee, thisArg, 4), accumulator, initFromArray, eachFunc);
     };
@@ -5416,10 +5505,8 @@ process.chdir = function (dir) {
         isBindKey = bitmask & BIND_KEY_FLAG,
         isCurry = bitmask & CURRY_FLAG,
         isCurryBound = bitmask & CURRY_BOUND_FLAG,
-        isCurryRight = bitmask & CURRY_RIGHT_FLAG;
-
-    var Ctor = !isBindKey && createCtorWrapper(func),
-        key = func;
+        isCurryRight = bitmask & CURRY_RIGHT_FLAG,
+        Ctor = isBindKey ? null : createCtorWrapper(func);
 
     function wrapper() {
       // Avoid `arguments` object use disqualifying optimizations by
@@ -5466,17 +5553,18 @@ process.chdir = function (dir) {
           return result;
         }
       }
-      var thisBinding = isBind ? thisArg : this;
-      if (isBindKey) {
-        func = thisBinding[key];
-      }
+      var thisBinding = isBind ? thisArg : this,
+          fn = isBindKey ? thisBinding[func] : func;
+
       if (argPos) {
         args = reorder(args, argPos);
       }
       if (isAry && ary < args.length) {
         args.length = ary;
       }
-      var fn = (this && this !== root && this instanceof wrapper) ? (Ctor || createCtorWrapper(func)) : func;
+      if (this && this !== root && this instanceof wrapper) {
+        fn = Ctor || createCtorWrapper(func);
+      }
       return fn.apply(thisBinding, args);
     }
     return wrapper;
@@ -5601,40 +5689,35 @@ process.chdir = function (dir) {
   function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
     var index = -1,
         arrLength = array.length,
-        othLength = other.length,
-        result = true;
+        othLength = other.length;
 
     if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
       return false;
     }
-    // Deep compare the contents, ignoring non-numeric properties.
-    while (result && ++index < arrLength) {
+    // Ignore non-index properties.
+    while (++index < arrLength) {
       var arrValue = array[index],
-          othValue = other[index];
+          othValue = other[index],
+          result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
 
-      result = undefined;
-      if (customizer) {
-        result = isLoose
-          ? customizer(othValue, arrValue, index)
-          : customizer(arrValue, othValue, index);
-      }
-      if (typeof result == 'undefined') {
-        // Recursively compare arrays (susceptible to call stack limits).
-        if (isLoose) {
-          var othIndex = othLength;
-          while (othIndex--) {
-            othValue = other[othIndex];
-            result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
-            if (result) {
-              break;
-            }
-          }
-        } else {
-          result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+      if (result !== undefined) {
+        if (result) {
+          continue;
         }
+        return false;
+      }
+      // Recursively compare arrays (susceptible to call stack limits).
+      if (isLoose) {
+        if (!arraySome(other, function(othValue) {
+              return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+            })) {
+          return false;
+        }
+      } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
+        return false;
       }
     }
-    return !!result;
+    return true;
   }
 
   /**
@@ -5665,8 +5748,7 @@ process.chdir = function (dir) {
         // Treat `NaN` vs. `NaN` as equal.
         return (object != +object)
           ? other != +other
-          // But, treat `-0` vs. `+0` as not equal.
-          : (object == 0 ? ((1 / object) == (1 / other)) : object == +other);
+          : object == +other;
 
       case regexpTag:
       case stringTag:
@@ -5700,29 +5782,22 @@ process.chdir = function (dir) {
     if (objLength != othLength && !isLoose) {
       return false;
     }
-    var skipCtor = isLoose,
-        index = -1;
-
-    while (++index < objLength) {
-      var key = objProps[index],
-          result = isLoose ? key in other : hasOwnProperty.call(other, key);
-
-      if (result) {
-        var objValue = object[key],
-            othValue = other[key];
-
-        result = undefined;
-        if (customizer) {
-          result = isLoose
-            ? customizer(othValue, objValue, key)
-            : customizer(objValue, othValue, key);
-        }
-        if (typeof result == 'undefined') {
-          // Recursively compare objects (susceptible to call stack limits).
-          result = (objValue && objValue === othValue) || equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB);
-        }
+    var index = objLength;
+    while (index--) {
+      var key = objProps[index];
+      if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
+        return false;
       }
-      if (!result) {
+    }
+    var skipCtor = isLoose;
+    while (++index < objLength) {
+      key = objProps[index];
+      var objValue = object[key],
+          othValue = other[key],
+          result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
+
+      // Recursively compare objects (susceptible to call stack limits).
+      if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
         return false;
       }
       skipCtor || (skipCtor = key == 'constructor');
@@ -5775,29 +5850,20 @@ process.chdir = function (dir) {
    * @param {Function} func The function to query.
    * @returns {string} Returns the function name.
    */
-  var getFuncName = (function() {
-    if (!support.funcNames) {
-      return constant('');
-    }
-    if (constant.name == 'constant') {
-      return baseProperty('name');
-    }
-    return function(func) {
-      var result = func.name,
-          array = realNames[result],
-          length = array ? array.length : 0;
+  function getFuncName(func) {
+    var result = func.name,
+        array = realNames[result],
+        length = array ? array.length : 0;
 
-      while (length--) {
-        var data = array[length],
-            otherFunc = data.func;
-
-        if (otherFunc == null || otherFunc == func) {
-          return data.name;
-        }
+    while (length--) {
+      var data = array[length],
+          otherFunc = data.func;
+      if (otherFunc == null || otherFunc == func) {
+        return data.name;
       }
-      return result;
-    };
-  }());
+    }
+    return result;
+  }
 
   /**
    * Gets the appropriate "indexOf" function. If the `_.indexOf` method is
@@ -5812,6 +5878,48 @@ process.chdir = function (dir) {
     var result = lodash.indexOf || indexOf;
     result = result === indexOf ? baseIndexOf : result;
     return collection ? result(collection, target, fromIndex) : result;
+  }
+
+  /**
+   * Gets the "length" property value of `object`.
+   *
+   * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+   * that affects Safari on at least iOS 8.1-8.3 ARM64.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {*} Returns the "length" value.
+   */
+  var getLength = baseProperty('length');
+
+  /**
+   * Gets the propery names, values, and compare flags of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the match data of `object`.
+   */
+  function getMatchData(object) {
+    var result = pairs(object),
+        length = result.length;
+
+    while (length--) {
+      result[length][2] = isStrictComparable(result[length][1]);
+    }
+    return result;
+  }
+
+  /**
+   * Gets the native function at `key` of `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {string} key The key of the method to get.
+   * @returns {*} Returns the function if it's native, else `undefined`.
+   */
+  function getNative(object, key) {
+    var value = object == null ? undefined : object[key];
+    return isNative(value) ? value : undefined;
   }
 
   /**
@@ -5854,7 +5962,6 @@ process.chdir = function (dir) {
    * **Note:** This function only supports cloning values with tags of
    * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
    *
-   *
    * @private
    * @param {Object} object The object to clone.
    * @param {string} tag The `toStringTag` of the object to clone.
@@ -5889,6 +5996,36 @@ process.chdir = function (dir) {
   }
 
   /**
+   * Invokes the method at `path` on `object`.
+   *
+   * @private
+   * @param {Object} object The object to query.
+   * @param {Array|string} path The path of the method to invoke.
+   * @param {Array} args The arguments to invoke the method with.
+   * @returns {*} Returns the result of the invoked method.
+   */
+  function invokePath(object, path, args) {
+    if (object != null && !isKey(path, object)) {
+      path = toPath(path);
+      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+      path = last(path);
+    }
+    var func = object == null ? object : object[path];
+    return func == null ? undefined : func.apply(object, args);
+  }
+
+  /**
+   * Checks if `value` is array-like.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+   */
+  function isArrayLike(value) {
+    return value != null && isLength(getLength(value));
+  }
+
+  /**
    * Checks if `value` is a valid array-like index.
    *
    * @private
@@ -5897,7 +6034,7 @@ process.chdir = function (dir) {
    * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
    */
   function isIndex(value, length) {
-    value = +value;
+    value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
     length = length == null ? MAX_SAFE_INTEGER : length;
     return value > -1 && value % 1 == 0 && value < length;
   }
@@ -5916,17 +6053,33 @@ process.chdir = function (dir) {
       return false;
     }
     var type = typeof index;
-    if (type == 'number') {
-      var length = object.length,
-          prereq = isLength(length) && isIndex(index, length);
-    } else {
-      prereq = type == 'string' && index in object;
-    }
-    if (prereq) {
+    if (type == 'number'
+        ? (isArrayLike(object) && isIndex(index, object.length))
+        : (type == 'string' && index in object)) {
       var other = object[index];
       return value === value ? (value === other) : (other !== other);
     }
     return false;
+  }
+
+  /**
+   * Checks if `value` is a property name and not a property path.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @param {Object} [object] The object to query keys on.
+   * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+   */
+  function isKey(value, object) {
+    var type = typeof value;
+    if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
+      return true;
+    }
+    if (isArray(value)) {
+      return false;
+    }
+    var result = !reIsDeepProp.test(value);
+    return result || (object != null && value in toObject(object));
   }
 
   /**
@@ -5938,7 +6091,15 @@ process.chdir = function (dir) {
    */
   function isLaziable(func) {
     var funcName = getFuncName(func);
-    return !!funcName && func === lodash[funcName] && funcName in LazyWrapper.prototype;
+    if (!(funcName in LazyWrapper.prototype)) {
+      return false;
+    }
+    var other = lodash[funcName];
+    if (func === other) {
+      return true;
+    }
+    var data = getData(other);
+    return !!data && func === data[0];
   }
 
   /**
@@ -5963,7 +6124,7 @@ process.chdir = function (dir) {
    *  equality comparisons, else `false`.
    */
   function isStrictComparable(value) {
-    return value === value && (value === 0 ? ((1 / value) > 0) : !isObject(value));
+    return value === value && !isObject(value);
   }
 
   /**
@@ -6037,8 +6198,8 @@ process.chdir = function (dir) {
   }
 
   /**
-   * A specialized version of `_.pick` that picks `object` properties specified
-   * by the `props` array.
+   * A specialized version of `_.pick` which picks `object` properties specified
+   * by `props`.
    *
    * @private
    * @param {Object} object The source object.
@@ -6062,7 +6223,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * A specialized version of `_.pick` that picks `object` properties `predicate`
+   * A specialized version of `_.pick` which picks `object` properties `predicate`
    * returns truthy for.
    *
    * @private
@@ -6164,7 +6325,7 @@ process.chdir = function (dir) {
     baseForIn(value, function(subValue, key) {
       result = key;
     });
-    return typeof result == 'undefined' || hasOwnProperty.call(value, result);
+    return result === undefined || hasOwnProperty.call(value, result);
   }
 
   /**
@@ -6172,17 +6333,16 @@ process.chdir = function (dir) {
    * own enumerable property names of `object`.
    *
    * @private
-   * @param {Object} object The object to inspect.
+   * @param {Object} object The object to query.
    * @returns {Array} Returns the array of property names.
    */
   function shimKeys(object) {
     var props = keysIn(object),
         propsLength = props.length,
-        length = propsLength && object.length,
-        support = lodash.support;
+        length = propsLength && object.length;
 
-    var allowIndexes = length && isLength(length) &&
-      (isArray(object) || (support.nonEnumArgs && isArguments(object)));
+    var allowIndexes = !!length && isLength(length) &&
+      (isArray(object) || isArguments(object));
 
     var index = -1,
         result = [];
@@ -6197,7 +6357,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Converts `value` to an object if it is not one.
+   * Converts `value` to an object if it's not one.
    *
    * @private
    * @param {*} value The value to process.
@@ -6207,15 +6367,30 @@ process.chdir = function (dir) {
     return isObject(value) ? value : Object(value);
   }
 
+  /**
+   * Converts `value` to property path array if it's not one.
+   *
+   * @private
+   * @param {*} value The value to process.
+   * @returns {Array} Returns the property path array.
+   */
+  function toPath(value) {
+    if (isArray(value)) {
+      return value;
+    }
+    var result = [];
+    baseToString(value).replace(rePropName, function(match, number, quote, string) {
+      result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+    });
+    return result;
+  }
+
   /*------------------------------------------------------------------------*/
 
   /**
-   * Creates an array excluding all values of the provided arrays using
-   * `SameValueZero` for equality comparisons.
-   *
-   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
-   * comparisons are like strict equality comparisons, e.g. `===`, except that
-   * `NaN` matches `NaN`.
+   * Creates an array of unique `array` values not included in the other
+   * provided arrays using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * for equality comparisons.
    *
    * @static
    * @memberOf _
@@ -6229,20 +6404,17 @@ process.chdir = function (dir) {
    * // => [1, 3]
    */
   var difference = restParam(function(array, values) {
-    return (isArray(array) || isArguments(array))
+    return isArrayLike(array)
       ? baseDifference(array, baseFlatten(values, false, true))
       : [];
   });
 
   /**
    * Gets the index at which the first occurrence of `value` is found in `array`
-   * using `SameValueZero` for equality comparisons. If `fromIndex` is negative,
-   * it is used as the offset from the end of `array`. If `array` is sorted
-   * providing `true` for `fromIndex` performs a faster binary search.
-   *
-   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
-   * comparisons are like strict equality comparisons, e.g. `===`, except that
-   * `NaN` matches `NaN`.
+   * using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
+   * for equality comparisons. If `fromIndex` is negative, it is used as the offset
+   * from the end of `array`. If `array` is sorted providing `true` for `fromIndex`
+   * performs a faster binary search.
    *
    * @static
    * @memberOf _
@@ -6285,12 +6457,9 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Creates an array of unique values in all provided arrays using `SameValueZero`
+   * Creates an array of unique values that are included in all of the provided
+   * arrays using [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
    * for equality comparisons.
-   *
-   * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
-   * comparisons are like strict equality comparisons, e.g. `===`, except that
-   * `NaN` matches `NaN`.
    *
    * @static
    * @memberOf _
@@ -6301,36 +6470,31 @@ process.chdir = function (dir) {
    * _.intersection([1, 2], [4, 2], [2, 1]);
    * // => [2]
    */
-  function intersection() {
-    var args = [],
-        argsIndex = -1,
-        argsLength = arguments.length,
-        caches = [],
+  var intersection = restParam(function(arrays) {
+    var othLength = arrays.length,
+        othIndex = othLength,
+        caches = Array(length),
         indexOf = getIndexOf(),
-        isCommon = indexOf == baseIndexOf;
+        isCommon = indexOf == baseIndexOf,
+        result = [];
 
-    while (++argsIndex < argsLength) {
-      var value = arguments[argsIndex];
-      if (isArray(value) || isArguments(value)) {
-        args.push(value);
-        caches.push((isCommon && value.length >= 120) ? createCache(argsIndex && value) : null);
-      }
+    while (othIndex--) {
+      var value = arrays[othIndex] = isArrayLike(value = arrays[othIndex]) ? value : [];
+      caches[othIndex] = (isCommon && value.length >= 120) ? createCache(othIndex && value) : null;
     }
-    argsLength = args.length;
-    var array = args[0],
+    var array = arrays[0],
         index = -1,
         length = array ? array.length : 0,
-        result = [],
         seen = caches[0];
 
     outer:
     while (++index < length) {
       value = array[index];
       if ((seen ? cacheIndexOf(seen, value) : indexOf(result, value, 0)) < 0) {
-        argsIndex = argsLength;
-        while (--argsIndex) {
-          var cache = caches[argsIndex];
-          if ((cache ? cacheIndexOf(cache, value) : indexOf(args[argsIndex], value, 0)) < 0) {
+        var othIndex = othLength;
+        while (--othIndex) {
+          var cache = caches[othIndex];
+          if ((cache ? cacheIndexOf(cache, value) : indexOf(arrays[othIndex], value, 0)) < 0) {
             continue outer;
           }
         }
@@ -6341,7 +6505,7 @@ process.chdir = function (dir) {
       }
     }
     return result;
-  }
+  });
 
   /**
    * Gets the last element of `array`.
@@ -6416,7 +6580,7 @@ process.chdir = function (dir) {
     if (thisArg && isIterateeCall(collection, predicate, thisArg)) {
       predicate = null;
     }
-    if (typeof predicate != 'function' || typeof thisArg != 'undefined') {
+    if (typeof predicate != 'function' || thisArg !== undefined) {
       predicate = getCallback(predicate, thisArg, 3);
     }
     return func(collection, predicate);
@@ -6425,10 +6589,10 @@ process.chdir = function (dir) {
   /**
    * Iterates over elements of `collection` invoking `iteratee` for each element.
    * The `iteratee` is bound to `thisArg` and invoked with three arguments:
-   * (value, index|key, collection). Iterator functions may exit iteration early
+   * (value, index|key, collection). Iteratee functions may exit iteration early
    * by explicitly returning `false`.
    *
-   * **Note:** As with other "Collections" methods, objects with a `length` property
+   * **Note:** As with other "Collections" methods, objects with a "length" property
    * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
    * may be used for object iteration.
    *
@@ -6455,16 +6619,16 @@ process.chdir = function (dir) {
   var forEach = createForEach(arrayEach, baseEach);
 
   /**
-   * Invokes the method named by `methodName` on each element in `collection`,
-   * returning an array of the results of each invoked method. Any additional
-   * arguments are provided to each invoked method. If `methodName` is a function
-   * it is invoked for, and `this` bound to, each element in `collection`.
+   * Invokes the method at `path` of each element in `collection`, returning
+   * an array of the results of each invoked method. Any additional arguments
+   * are provided to each invoked method. If `methodName` is a function it is
+   * invoked for, and `this` bound to, each element in `collection`.
    *
    * @static
    * @memberOf _
    * @category Collection
    * @param {Array|Object|string} collection The collection to iterate over.
-   * @param {Function|string} methodName The name of the method to invoke or
+   * @param {Array|Function|string} path The path of the method to invoke or
    *  the function invoked per iteration.
    * @param {...*} [args] The arguments to invoke the method with.
    * @returns {Array} Returns the array of results.
@@ -6476,15 +6640,15 @@ process.chdir = function (dir) {
    * _.invoke([123, 456], String.prototype.split, '');
    * // => [['1', '2', '3'], ['4', '5', '6']]
    */
-  var invoke = restParam(function(collection, methodName, args) {
+  var invoke = restParam(function(collection, path, args) {
     var index = -1,
-        isFunc = typeof methodName == 'function',
-        length = collection ? collection.length : 0,
-        result = isLength(length) ? Array(length) : [];
+        isFunc = typeof path == 'function',
+        isProp = isKey(path),
+        result = isArrayLike(collection) ? Array(collection.length) : [];
 
     baseEach(collection, function(value) {
-      var func = isFunc ? methodName : (value != null && value[methodName]);
-      result[++index] = func ? func.apply(value, args) : undefined;
+      var func = isFunc ? path : ((isProp && value != null) ? value[path] : null);
+      result[++index] = func ? func.apply(value, args) : invokePath(value, path, args);
     });
     return result;
   });
@@ -6505,14 +6669,15 @@ process.chdir = function (dir) {
    * callback returns `true` for elements that have the properties of the given
    * object, else `false`.
    *
-   * Many lodash methods are guarded to work as interatees for methods like
+   * Many lodash methods are guarded to work as iteratees for methods like
    * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
    *
    * The guarded methods are:
-   * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`, `drop`,
-   * `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`, `parseInt`,
-   * `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`, `trimLeft`,
-   * `trimRight`, `trunc`, `random`, `range`, `sample`, `some`, `uniq`, and `words`
+   * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`,
+   * `drop`, `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`,
+   * `parseInt`, `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`,
+   * `trimLeft`, `trimRight`, `trunc`, `random`, `range`, `sample`, `some`,
+   * `sum`, `uniq`, and `words`
    *
    * @static
    * @memberOf _
@@ -6521,7 +6686,6 @@ process.chdir = function (dir) {
    * @param {Array|Object|string} collection The collection to iterate over.
    * @param {Function|Object|string} [iteratee=_.identity] The function invoked
    *  per iteration.
-   *  create a `_.property` or `_.matches` style callback respectively.
    * @param {*} [thisArg] The `this` binding of `iteratee`.
    * @returns {Array} Returns the new mapped array.
    * @example
@@ -6559,7 +6723,7 @@ process.chdir = function (dir) {
    * value. The `iteratee` is bound to `thisArg` and invoked with four arguments:
    * (accumulator, value, index|key, collection).
    *
-   * Many lodash methods are guarded to work as interatees for methods like
+   * Many lodash methods are guarded to work as iteratees for methods like
    * `_.reduce`, `_.reduceRight`, and `_.transform`.
    *
    * The guarded methods are:
@@ -6576,8 +6740,8 @@ process.chdir = function (dir) {
    * @returns {*} Returns the accumulated value.
    * @example
    *
-   * _.reduce([1, 2], function(sum, n) {
-   *   return sum + n;
+   * _.reduce([1, 2], function(total, n) {
+   *   return total + n;
    * });
    * // => 3
    *
@@ -6619,7 +6783,7 @@ process.chdir = function (dir) {
    * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
    * may be used as a placeholder for partially applied arguments.
    *
-   * **Note:** Unlike native `Function#bind` this method does not set the `length`
+   * **Note:** Unlike native `Function#bind` this method does not set the "length"
    * property of bound functions.
    *
    * @static
@@ -6684,7 +6848,7 @@ process.chdir = function (dir) {
    * The `_.partial.placeholder` value, which defaults to `_` in monolithic
    * builds, may be used as a placeholder for partially applied arguments.
    *
-   * **Note:** This method does not set the `length` property of partially
+   * **Note:** This method does not set the "length" property of partially
    * applied functions.
    *
    * @static
@@ -6736,7 +6900,7 @@ process.chdir = function (dir) {
     if (typeof func != 'function') {
       throw new TypeError(FUNC_ERROR_TEXT);
     }
-    start = nativeMax(typeof start == 'undefined' ? (func.length - 1) : (+start || 0), 0);
+    start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
     return function() {
       var args = arguments,
           index = -1,
@@ -6823,8 +6987,9 @@ process.chdir = function (dir) {
       customizer = isDeep;
       isDeep = false;
     }
-    customizer = typeof customizer == 'function' && bindCallback(customizer, thisArg, 1);
-    return baseClone(value, isDeep, customizer);
+    return typeof customizer == 'function'
+      ? baseClone(value, isDeep, bindCallback(customizer, thisArg, 1))
+      : baseClone(value, isDeep);
   }
 
   /**
@@ -6844,8 +7009,7 @@ process.chdir = function (dir) {
    * // => false
    */
   function isArguments(value) {
-    var length = isObjectLike(value) ? value.length : undefined;
-    return isLength(length) && objToString.call(value) == argsTag;
+    return isObjectLike(value) && isArrayLike(value) && objToString.call(value) == argsTag;
   }
 
   /**
@@ -6910,10 +7074,11 @@ process.chdir = function (dir) {
    *
    * @static
    * @memberOf _
+   * @alias eq
    * @category Lang
    * @param {*} value The value to compare.
    * @param {*} other The other value to compare.
-   * @param {Function} [customizer] The function to customize comparing values.
+   * @param {Function} [customizer] The function to customize value comparisons.
    * @param {*} [thisArg] The `this` binding of `customizer`.
    * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
    * @example
@@ -6939,12 +7104,9 @@ process.chdir = function (dir) {
    * // => true
    */
   function isEqual(value, other, customizer, thisArg) {
-    customizer = typeof customizer == 'function' && bindCallback(customizer, thisArg, 3);
-    if (!customizer && isStrictComparable(value) && isStrictComparable(other)) {
-      return value === other;
-    }
+    customizer = typeof customizer == 'function' ? bindCallback(customizer, thisArg, 3) : undefined;
     var result = customizer ? customizer(value, other) : undefined;
-    return typeof result == 'undefined' ? baseIsEqual(value, other, customizer) : !!result;
+    return  result === undefined ? baseIsEqual(value, other, customizer) : !!result;
   }
 
   /**
@@ -6971,7 +7133,7 @@ process.chdir = function (dir) {
     // Avoid a V8 JIT bug in Chrome 19-20.
     // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
     var type = typeof value;
-    return type == 'function' || (!!value && type == 'object');
+    return !!value && (type == 'object' || type == 'function');
   }
 
   /**
@@ -6995,9 +7157,9 @@ process.chdir = function (dir) {
       return false;
     }
     if (objToString.call(value) == funcTag) {
-      return reNative.test(fnToString.call(value));
+      return reIsNative.test(fnToString.call(value));
     }
-    return isObjectLike(value) && reHostCtor.test(value);
+    return isObjectLike(value) && reIsHostCtor.test(value);
   }
 
   /**
@@ -7060,8 +7222,8 @@ process.chdir = function (dir) {
     if (!(value && objToString.call(value) == objectTag)) {
       return false;
     }
-    var valueOf = value.valueOf,
-        objProto = isNative(valueOf) && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
+    var valueOf = getNative(value, 'valueOf'),
+        objProto = valueOf && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
 
     return objProto
       ? (value == objProto || getPrototypeOf(value) == objProto)
@@ -7117,13 +7279,16 @@ process.chdir = function (dir) {
    * The `customizer` is bound to `thisArg` and invoked with five arguments:
    * (objectValue, sourceValue, key, object, source).
    *
+   * **Note:** This method mutates `object` and is based on
+   * [`Object.assign`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign).
+   *
    * @static
    * @memberOf _
    * @alias extend
    * @category Object
    * @param {Object} object The destination object.
    * @param {...Object} [sources] The source objects.
-   * @param {Function} [customizer] The function to customize assigning values.
+   * @param {Function} [customizer] The function to customize assigned values.
    * @param {*} [thisArg] The `this` binding of `customizer`.
    * @returns {Object} Returns `object`.
    * @example
@@ -7133,18 +7298,24 @@ process.chdir = function (dir) {
    *
    * // using a customizer callback
    * var defaults = _.partialRight(_.assign, function(value, other) {
-   *   return typeof value == 'undefined' ? other : value;
+   *   return _.isUndefined(value) ? other : value;
    * });
    *
    * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
    * // => { 'user': 'barney', 'age': 36 }
    */
-  var assign = createAssigner(baseAssign);
+  var assign = createAssigner(function(object, source, customizer) {
+    return customizer
+      ? assignWith(object, source, customizer)
+      : baseAssign(object, source);
+  });
 
   /**
    * Assigns own enumerable properties of source object(s) to the destination
    * object for all destination properties that resolve to `undefined`. Once a
    * property is set, additional values of the same property are ignored.
+   *
+   * **Note:** This method mutates `object`.
    *
    * @static
    * @memberOf _
@@ -7176,7 +7347,7 @@ process.chdir = function (dir) {
    * @static
    * @memberOf _
    * @category Object
-   * @param {Object} object The object to inspect.
+   * @param {Object} object The object to query.
    * @returns {Array} Returns the array of property names.
    * @example
    *
@@ -7194,12 +7365,9 @@ process.chdir = function (dir) {
    * // => ['0', '1']
    */
   var keys = !nativeKeys ? shimKeys : function(object) {
-    if (object) {
-      var Ctor = object.constructor,
-          length = object.length;
-    }
+    var Ctor = object == null ? null : object.constructor;
     if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-        (typeof object != 'function' && (length && isLength(length)))) {
+        (typeof object != 'function' && isArrayLike(object))) {
       return shimKeys(object);
     }
     return isObject(object) ? nativeKeys(object) : [];
@@ -7213,7 +7381,7 @@ process.chdir = function (dir) {
    * @static
    * @memberOf _
    * @category Object
-   * @param {Object} object The object to inspect.
+   * @param {Object} object The object to query.
    * @returns {Array} Returns the array of property names.
    * @example
    *
@@ -7236,7 +7404,7 @@ process.chdir = function (dir) {
     }
     var length = object.length;
     length = (length && isLength(length) &&
-      (isArray(object) || (support.nonEnumArgs && isArguments(object))) && length) || 0;
+      (isArray(object) || isArguments(object)) && length) || 0;
 
     var Ctor = object.constructor,
         index = -1,
@@ -7259,11 +7427,6 @@ process.chdir = function (dir) {
   /**
    * The opposite of `_.pick`; this method creates an object composed of the
    * own and inherited enumerable properties of `object` that are not omitted.
-   * Property names may be specified as individual arguments or as arrays of
-   * property names. If `predicate` is provided it is invoked for each property
-   * of `object` omitting the properties `predicate` returns truthy for. The
-   * predicate is bound to `thisArg` and invoked with three arguments:
-   * (value, key, object).
    *
    * @static
    * @memberOf _
@@ -7297,6 +7460,35 @@ process.chdir = function (dir) {
       return !predicate(value, key, object);
     });
   });
+
+  /**
+   * Creates a two dimensional array of the key-value pairs for `object`,
+   * e.g. `[[key1, value1], [key2, value2]]`.
+   *
+   * @static
+   * @memberOf _
+   * @category Object
+   * @param {Object} object The object to query.
+   * @returns {Array} Returns the new array of key-value pairs.
+   * @example
+   *
+   * _.pairs({ 'barney': 36, 'fred': 40 });
+   * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
+   */
+  function pairs(object) {
+    object = toObject(object);
+
+    var index = -1,
+        props = keys(object),
+        length = props.length,
+        result = Array(length);
+
+    while (++index < length) {
+      var key = props[index];
+      result[index] = [key, object[key]];
+    }
+    return result;
+  }
 
   /**
    * Creates an array of the own enumerable property values of `object`.
@@ -7441,7 +7633,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * Creates a function which performs a deep comparison between a given object
+   * Creates a function that performs a deep comparison between a given object
    * and `source`, returning `true` if the given object has equivalent property
    * values, else `false`.
    *
@@ -7470,7 +7662,7 @@ process.chdir = function (dir) {
   }
 
   /**
-   * A no-operation function which returns `undefined` regardless of the
+   * A no-operation function that returns `undefined` regardless of the
    * arguments it receives.
    *
    * @static
@@ -7485,6 +7677,32 @@ process.chdir = function (dir) {
    */
   function noop() {
     // No operation performed.
+  }
+
+  /**
+   * Creates a function that returns the property value at `path` on a
+   * given object.
+   *
+   * @static
+   * @memberOf _
+   * @category Utility
+   * @param {Array|string} path The path of the property to get.
+   * @returns {Function} Returns the new function.
+   * @example
+   *
+   * var objects = [
+   *   { 'a': { 'b': { 'c': 2 } } },
+   *   { 'a': { 'b': { 'c': 1 } } }
+   * ];
+   *
+   * _.map(objects, _.property('a.b.c'));
+   * // => [2, 1]
+   *
+   * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
+   * // => [1, 2]
+   */
+  function property(path) {
+    return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
   }
 
   /**
@@ -7532,7 +7750,9 @@ process.chdir = function (dir) {
   lodash.map = map;
   lodash.matches = matches;
   lodash.omit = omit;
+  lodash.pairs = pairs;
   lodash.partial = partial;
+  lodash.property = property;
   lodash.restParam = restParam;
   lodash.values = values;
 
@@ -7568,6 +7788,7 @@ process.chdir = function (dir) {
 
   // Add aliases.
   lodash.all = every;
+  lodash.eq = isEqual;
   lodash.foldl = reduce;
   lodash.inject = reduce;
 
@@ -7609,7 +7830,7 @@ process.chdir = function (dir) {
     if (moduleExports) {
       (freeModule.exports = lodash)._ = lodash;
     }
-    // Export for Narwhal or Rhino -require.
+    // Export for Rhino with CommonJS support.
     else {
       freeExports._ = lodash;
     }
@@ -9810,6 +10031,7 @@ Embed = (function(_super) {
   function Embed(doc, node, type, data) {
     this.doc = doc;
     this.node = node;
+    this.remove = __bind(this.remove, this);
     this._initController = __bind(this._initController, this);
     this._clickListener = __bind(this._clickListener, this);
     this.isEmbed = true;
@@ -9837,7 +10059,11 @@ Embed = (function(_super) {
       type: type,
       data: data
     };
-    return this.controller = controller(this.node, initialState);
+    return this.controller = controller(this, initialState);
+  };
+
+  Embed.prototype.remove = function() {
+    return this.doc.removeLine(this);
   };
 
   Embed.prototype.getJSON = function() {
@@ -13531,7 +13757,13 @@ Quill = (function(_super) {
   };
 
   Quill.prototype.getEmbeds = function() {
-    return this.embeds;
+    var embeds;
+    embeds = [];
+    _.forEach(this.embeds, function(embed, key) {
+      embed.key = key;
+      return embeds.push(embed);
+    });
+    return embeds;
   };
 
   Quill.prototype.getSelection = function() {
@@ -36427,7 +36659,7 @@ $.fn.imageModal = function(callback){
    imageManager.addTrigger(this, callback);
 }
 
-},{"./components/ArticleAdmin.jsx":276,"./components/ArticleSidebar.jsx":278,"./components/ImageManager.jsx":282,"react":274}],276:[function(require,module,exports){
+},{"./components/ArticleAdmin.jsx":276,"./components/ArticleSidebar.jsx":278,"./components/ImageManager.jsx":281,"react":274}],276:[function(require,module,exports){
 require('babel/polyfill');
 
 var React = require('react');
@@ -36621,7 +36853,7 @@ var ArticleAdmin = React.createClass({displayName: "ArticleAdmin",
 
 module.exports = ArticleAdmin;
 
-},{"./ArticleFeaturedImage.jsx":277,"./QuillEditor.jsx":286,"./QuillEditorToolbar.jsx":287,"./buttons/DropdownButton.jsx":288,"./fields/ManyModelDropdown.jsx":292,"./fields/ModelDropdown.jsx":293,"./fields/ModelFieldA.jsx":294,"./stores/ItemStore.js":297,"babel/polyfill":91,"react":274,"react-tabs":95,"react-textarea-autosize":100}],277:[function(require,module,exports){
+},{"./ArticleFeaturedImage.jsx":277,"./QuillEditor.jsx":285,"./QuillEditorToolbar.jsx":286,"./buttons/DropdownButton.jsx":287,"./fields/ManyModelDropdown.jsx":291,"./fields/ModelDropdown.jsx":292,"./fields/ModelFieldA.jsx":293,"./stores/ItemStore.js":296,"babel/polyfill":91,"react":274,"react-tabs":95,"react-textarea-autosize":100}],277:[function(require,module,exports){
 var React = require('react');
 
 var ArticleFeaturedImage = React.createClass({displayName: "ArticleFeaturedImage",
@@ -36716,97 +36948,6 @@ module.exports = ArticleSidebar;
 
 },{"./ArticleFeaturedImage.jsx":277,"react":274,"react-tabs":95}],279:[function(require,module,exports){
 var React = require('react');
-var InlineToolbar = require('./InlineToolbar.jsx');
-
-var DispatchTextEditor = function(quill, options) {
-
-    var self = this;
-    this.quill = quill;
-    this.options = options;
-    this.article = options.article;
-    this.inlineEditorOpen = false;
-    this.lastIndex;
-
-    this.embeds = options.embeds;
-
-    var inlineToolbar = this.quill.addContainer('inline-toolbar');
-
-    React.render(
-        React.createElement(InlineToolbar, null),
-        inlineToolbar
-    );
-
-    // TODO: Move this to React component:
-    $.each(this.quill.getEmbeds(), function(key, item){
-        $('.inline-toolbar .toolbar').append(
-            $('<button class="tb-'+key+' dis-button">').text(key)
-        );
-        $('.tb-'+key).click(function(e){
-            e.preventDefault();
-            if (typeof item.trigger !== 'undefined'){
-                item.trigger(function(data){
-                    if (typeof data === 'undefined')
-                        data = {}
-                    this.addEmbed(key, data);
-                }.bind(this));
-            } else {
-                this.addEmbed(key, {});
-            }
-        }.bind(this));
-    }.bind(this));
-
-    $('.inline-toolbar .tb-toolbar').click(function(e){
-        e.preventDefault();
-        this.inlineEditorOpen = true;
-        $('.inline-toolbar .toolbar').show();
-        self.quill.setSelection();
-    });
-
-    quill.on('text-change', function (delta, source) {
-        self.inlineToolbar();
-    });
-
-    quill.on('selection-change', function(range) {
-        self.inlineToolbar();
-    });
-
-}
-
-DispatchTextEditor.prototype.addEmbed = function(type, data) {
-    this.quill.insertEmbed(type, data, this.lastIndex);
-    this.closeInlineToolbar();
-}
-
-DispatchTextEditor.prototype.inlineToolbar = function() {
-
-    var range = this.quill.getSelection();
-
-    if(range == null || range.start != range.end)
-        return false
-
-    var curLine = this.quill.editor.doc.findLineAt(range.start);
-
-    if(curLine[0]['length'] == 1){
-        var lineData = curLine[0];
-        var id = lineData.id;
-        var offset = $('#'+id).position().top;
-        this.lastIndex = range.start;
-        $('.inline-toolbar .toolbar').hide();
-        $('.inline-toolbar').css('top', offset).show();
-    } else {
-        this.closeInlineToolbar();
-    }
-}
-
-DispatchTextEditor.prototype.closeInlineToolbar = function() {
-    $('.inline-toolbar .toolbar').hide();
-    $('.inline-toolbar').hide();
-}
-
-module.exports = DispatchTextEditor;
-
-},{"./InlineToolbar.jsx":285,"react":274}],280:[function(require,module,exports){
-var React = require('react');
 
 var Image = React.createClass({displayName: "Image",
     onClick: function(){
@@ -36826,7 +36967,7 @@ var Image = React.createClass({displayName: "Image",
 module.exports = Image;
 
 
-},{"react":274}],281:[function(require,module,exports){
+},{"react":274}],280:[function(require,module,exports){
 var React = require('react');
 var Image = require('./Image.jsx');
 
@@ -36878,7 +37019,7 @@ var ImageDropzone = React.createClass({displayName: "ImageDropzone",
 
 module.exports = ImageDropzone;
 
-},{"./Image.jsx":280,"react":274}],282:[function(require,module,exports){
+},{"./Image.jsx":279,"react":274}],281:[function(require,module,exports){
 var React = require('react');
 var ImageStore = require('./ImageStore.js');
 var ImageMeta = require('./ImageMeta.jsx');
@@ -37084,7 +37225,7 @@ var ImageManager = React.createClass({displayName: "ImageManager",
 
 module.exports = ImageManager;
 
-},{"./ImageDropzone.jsx":281,"./ImageMeta.jsx":283,"./ImageStore.js":284,"react":274}],283:[function(require,module,exports){
+},{"./ImageDropzone.jsx":280,"./ImageMeta.jsx":282,"./ImageStore.js":283,"react":274}],282:[function(require,module,exports){
 var React = require('react');
 var ImageMeta = React.createClass({displayName: "ImageMeta",
     getInitialState: function(){
@@ -37201,7 +37342,7 @@ var ImageMeta = React.createClass({displayName: "ImageMeta",
 
 module.exports = ImageMeta;
 
-},{"react":274}],284:[function(require,module,exports){
+},{"react":274}],283:[function(require,module,exports){
 var ImageStore = function(){
     return {
         images: [],
@@ -37261,28 +37402,126 @@ var ImageStore = function(){
 
 module.exports = ImageStore;
 
-},{}],285:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 var React = require('react');
 
 var InlineToolbar = React.createClass({displayName: "InlineToolbar",
-    render: function(){
+    getInitialState: function(){
+        return {
+            showToolbar: false,
+            showEmbeds: false,
+            offset: 0,
+        }
+    },
+    componentDidMount: function(){
+        this.props.quill.on('text-change', function (delta, source) {
+            this.triggerToolbar();
+        }.bind(this));
+
+        this.props.quill.on('selection-change', function(range) {
+            this.triggerToolbar();
+        }.bind(this));
+
+        this.embeds = this.prepareEmbeds();
+    },
+    addEmbed: function(type, data) {
+        this.props.quill.insertEmbed(type, data, this.lastIndex);
+        this.closeToolbar();
+    },
+    triggerToolbar: function(){
+        var range = this.props.quill.getSelection();
+
+        if(range == null || range.start != range.end)
+            return false
+
+        var curLine = this.props.quill.editor.doc.findLineAt(range.start);
+
+        if(curLine[0]['length'] == 1){
+            var lineData = curLine[0];
+            var id = lineData.id;
+            var offset = document.getElementById(id).getBoundingClientRect().top - document.getElementById('article-editor').getBoundingClientRect().top;
+
+            this.lastIndex = range.start;
+
+            this.setState({
+                showToolbar: true,
+                showEmbeds: false,
+                offset: offset,
+            });
+        } else {
+            this.closeToolbar();
+        }
+    },
+    triggerEmbed: function(item){
+        if (typeof item.trigger !== 'undefined'){
+            item.trigger(function(data){
+                if (typeof data === 'undefined')
+                    data = {}
+                this.addEmbed(item.key, data);
+            }.bind(this));
+        } else {
+            this.addEmbed(item.key, {});
+        }
+    },
+    closeToolbar: function(){
+        this.setState({
+            showToolbar: false,
+        });
+    },
+    toggleEmbeds: function(){
+        var show;
+        if(this.state.showEmbeds)
+            show = false;
+        else
+            show = true;
+        this.setState({
+            showEmbeds: show,
+        });
+    },
+    prepareEmbeds: function(){
+        var embeds = this.props.quill.getEmbeds().map(function(item, i){
+            return (
+                React.createElement("button", {onClick: this.triggerEmbed.bind(this, item), key: i, className: "tb-"+item.key+" dis-button"}, item.key)
+                )
+            }.bind(this));
+
         return (
-            React.createElement("div", null, 
+            React.createElement("div", {className: "toolbar"}, embeds)
+            );
+
+    },
+    render: function(){
+        if(!this.state.showToolbar)
+            return false;
+
+        return (
+            React.createElement("div", {style: {top: this.state.offset}}, 
                 React.createElement("div", {className: "side-button"}, 
-                    React.createElement("button", {className: "tb-toolbar"}, React.createElement("span", null, "+"))
+                    React.createElement("button", {onClick: this.toggleEmbeds, className: "tb-toolbar"}, React.createElement("span", null, "+"))
                 ), 
-                React.createElement("div", {className: "toolbar"})
+                this.state.showEmbeds ? this.embeds : null
             )
             )
     }
 });
 
-module.exports = InlineToolbar;
+var factory = function(quill, options) {
+
+    var toolbarContainer = quill.addContainer('inline-toolbar');
+
+    var toolbar = React.render(
+        React.createElement(InlineToolbar, {quill: quill}),
+        toolbarContainer
+    );
+
+}
+
+module.exports = factory;
 
 
-},{"react":274}],286:[function(require,module,exports){
+},{"react":274}],285:[function(require,module,exports){
 var React = require('react');
-var DispatchTextEditor = require('./DispatchTextEditor.js');
+var InlineToolbar = require('./InlineToolbar.jsx');
 
 var EditorImage = require('./embeds/EditorImage.jsx');
 var EditorCode = require('./embeds/EditorCode.jsx');
@@ -37294,16 +37533,14 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
     getInitialState: function(){
         return {
             article: this.props.article,
-        }
+        };
     },
     componentDidMount: function(){
-        this.embeds = [];
-
         Quill.registerEmbed('image', EditorImage);
         Quill.registerEmbed('code', EditorCode);
         Quill.registerEmbed('video', EditorVideo);
 
-        Quill.registerModule('dispatch', DispatchTextEditor);
+        Quill.registerModule('inline-toolbar', InlineToolbar);
 
         this.quill = new Quill('#article-editor');
 
@@ -37313,26 +37550,17 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
 
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
+        this.quill.addModule('inline-toolbar', true);
 
-        this.quill.addModule('dispatch', { article: this.state.article, embeds: this.embeds, editor: this });
-
-        this.quill.setJSON(this.state.article.content);
-
-//        $.each(this.embeds, function(key, embed){
-//            var node = $('div[data-id='+key+']');
-//            this.embeds[node.attr('id')] = React.render(
-//                <embed.controller {...embed.props} />,
-//                node.get(0)
-//            );
-//        }.bind(this));
-
+        if(this.state.article.content)
+            this.quill.setJSON(this.state.article.content);
     },
-    componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps: function(nextProps){
         if(nextProps.article.revision_id != this.state.article.revision_id){
             this.quill.setJSON(nextProps.article.content);
             this.setState({
               article: nextProps.article,
-            })
+            });
         }
     },
     save: function(){
@@ -37345,95 +37573,10 @@ var QuillEditor = React.createClass({displayName: "QuillEditor",
     }
 });
 
-var Editor = function(article, source, saveAttempt, saved, saveid) {
-
-    var quill;
-
-    var images = [];
-    var embeds = {};
-
-    var imageManager;
-
-    return {
-        init: function(){
-            if(article){
-                this.fetchImages(function(){
-                    this.setupEditor();
-                }.bind(this));
-            } else {
-                this.setupEditor();
-            }
-        },
-        setupEditor: function(){
-            quill = new Quill('#editor');
-
-            quill.addEmbed('image');
-            quill.addEmbed('code');
-            quill.addEmbed('video');
-
-            quill.addModule('dispatch', { article: article, embeds: embeds, editor: this });
-            quill.addModule('toolbar', { container: '#full-toolbar' });
-            quill.addModule('link-tooltip', true);
-
-            if(saveAttempt && !saved){
-                quill.setJSON(JSON.parse(sessionStorage['articleContent_'+saveid]));
-            } else if (article) {
-                quill.setJSON(JSON.parse($(source).text()));
-                $.each(embeds, function(key, embed){
-                    var node = $('div[data-id='+key+']');
-                    embeds[node.attr('id')] = React.render(
-                        React.createElement(embed.controller, React.__spread({},  embed.props)),
-                        node.get(0)
-                    );
-                });
-            }
-        },
-        prepareSave: function(){
-            var data = quill.getJSON();
-            var output = JSON.stringify(data);
-            // Store old content in browser cache
-            sessionStorage['articleContent_'+saveid] = output;
-            $(source).text(output);
-        },
-
-        processImage: function(embedId, id) {
-            var attachment = images[id];
-            if(typeof attachment !== 'undefined'){
-                embeds[embedId] = {
-                    controller: EditorImage,
-                    props: {
-                        images: [
-                            {
-                                id: id,
-                                src: attachment.image.url
-                            },
-                        ],
-                        caption: attachment.caption,
-                        manager: imageManager,
-                    }
-                }
-                return true;
-            } else {
-                return false;
-            }
-        },
-        getJSON: function(){
-            return quill.getJSON();
-        },
-        setJSON: function(data){
-            return quill.setJSON(data);
-        },
-        getImages: function(){
-            return images;
-        }
-    }
-
-}
-
 module.exports = QuillEditor;
 
 
-},{"./DispatchTextEditor.js":279,"./embeds/EditorCode.jsx":289,"./embeds/EditorImage.jsx":290,"./embeds/EditorVideo.jsx":291,"quill/index.js":94,"react":274}],287:[function(require,module,exports){
+},{"./InlineToolbar.jsx":284,"./embeds/EditorCode.jsx":288,"./embeds/EditorImage.jsx":289,"./embeds/EditorVideo.jsx":290,"quill/index.js":94,"react":274}],286:[function(require,module,exports){
 var React = require('react');
 
 var toolbar = (
@@ -37449,7 +37592,7 @@ var toolbar = (
 
 module.exports = toolbar;
 
-},{"react":274}],288:[function(require,module,exports){
+},{"react":274}],287:[function(require,module,exports){
 var React = require('react');
 
 var DropdownButton = React.createClass({displayName: "DropdownButton",
@@ -37498,7 +37641,7 @@ var DropdownButton = React.createClass({displayName: "DropdownButton",
 
 module.exports = DropdownButton;
 
-},{"react":274}],289:[function(require,module,exports){
+},{"react":274}],288:[function(require,module,exports){
 var React = require('react');
 var EditorCode = React.createClass({displayName: "EditorCode",
     getInitialState: function(){
@@ -37531,10 +37674,10 @@ var EditorCode = React.createClass({displayName: "EditorCode",
 
 var factory = function(options){
     return {
-        controller: function(node, embed){
+        controller: function(line, embed){
             return React.render(
                 React.createElement(EditorCode, {data: embed.data}),
-                node
+                line.node
             );
         },
     }
@@ -37542,7 +37685,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"react":274}],290:[function(require,module,exports){
+},{"react":274}],289:[function(require,module,exports){
 require('babel/polyfill');
 
 var React = require('react');
@@ -37565,7 +37708,7 @@ var EditorImage = React.createClass({displayName: "EditorImage",
         });
     },
     removeImage: function(){
-
+        this.props.remove();
     },
     openImageManager: function(){
         this.props.manager.openWithCallback(function(items){
@@ -37611,10 +37754,10 @@ var EditorImage = React.createClass({displayName: "EditorImage",
 
 var factory = function(options){
     var manager = options.manager;
-    var controller = function(node, embed){
+    var controller = function(line, embed){
         var component = React.render(
-            React.createElement(EditorImage, {data: embed.data, manager: manager}),
-            node
+            React.createElement(EditorImage, {data: embed.data, manager: manager, remove: line.remove}),
+            line.node
         );
         return component;
     }
@@ -37635,7 +37778,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"babel/polyfill":91,"react":274,"react-textarea-autosize":100}],291:[function(require,module,exports){
+},{"babel/polyfill":91,"react":274,"react-textarea-autosize":100}],290:[function(require,module,exports){
 var React = require('react');
 var EditorVideo = React.createClass({displayName: "EditorVideo",
     getInitialState: function(){
@@ -37691,10 +37834,10 @@ var EditorVideo = React.createClass({displayName: "EditorVideo",
 
 var factory = function(options){
     return {
-        controller: function(node, embed){
+        controller: function(line, embed){
             return React.render(
                 React.createElement(EditorVideo, {data: embed.data}),
-                node
+                line.node
             );
         },
     }
@@ -37702,7 +37845,7 @@ var factory = function(options){
 
 module.exports = factory;
 
-},{"react":274}],292:[function(require,module,exports){
+},{"react":274}],291:[function(require,module,exports){
 var React = require('react');
 var SearchList = require('./SearchList.jsx');
 var ItemStore = require('../stores/ItemStore.js');
@@ -37837,7 +37980,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
 
 module.exports = ManyModelDropdown;
 
-},{"../stores/ItemStore.js":297,"./SearchList.jsx":296,"react":274}],293:[function(require,module,exports){
+},{"../stores/ItemStore.js":296,"./SearchList.jsx":295,"react":274}],292:[function(require,module,exports){
 var React = require('react');
 var SearchList = require('./SearchList.jsx');
 
@@ -37943,7 +38086,7 @@ var ModelDropdown = React.createClass({displayName: "ModelDropdown",
 
 module.exports = ModelDropdown;
 
-},{"./SearchList.jsx":296,"react":274}],294:[function(require,module,exports){
+},{"./SearchList.jsx":295,"react":274}],293:[function(require,module,exports){
 var React = require('react');
 var SearchField = require('./SearchField.jsx');
 var ItemStore = require('../stores/ItemStore.js');
@@ -38081,7 +38224,7 @@ var ModelField = React.createClass({displayName: "ModelField",
 
 module.exports = ModelField;
 
-},{"../stores/ItemStore.js":297,"./SearchField.jsx":295,"react":274}],295:[function(require,module,exports){
+},{"../stores/ItemStore.js":296,"./SearchField.jsx":294,"react":274}],294:[function(require,module,exports){
 var React = require('react');
 
 var SearchField = React.createClass({displayName: "SearchField",
@@ -38141,7 +38284,7 @@ var SearchField = React.createClass({displayName: "SearchField",
 
 module.exports = SearchField;
 
-},{"react":274}],296:[function(require,module,exports){
+},{"react":274}],295:[function(require,module,exports){
 var React = require('react');
 
 var SearchList = React.createClass({displayName: "SearchList",
@@ -38225,7 +38368,7 @@ var SearchList = React.createClass({displayName: "SearchList",
 
 module.exports = SearchList;
 
-},{"react":274}],297:[function(require,module,exports){
+},{"react":274}],296:[function(require,module,exports){
 var ItemStore = function(data){
     return {
         items: data ? data : [],
