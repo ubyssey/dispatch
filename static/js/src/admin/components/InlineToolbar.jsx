@@ -89,10 +89,14 @@ var InlineToolbar = React.createClass({
         if(!this.state.showToolbar)
             return false;
 
+        var buttonStyle = {
+            transform: "rotate(45deg)",
+        }
+
         return (
             <div style={{top: this.state.offset}}>
                 <div className="side-button">
-                    <button onClick={this.toggleEmbeds} className="tb-toolbar"><span>+</span></button>
+                    <button style={this.state.showEmbeds ? buttonStyle : null} onClick={this.toggleEmbeds} className="tb-toolbar"></button>
                 </div>
                 {this.state.showEmbeds ? this.embeds : null}
             </div>

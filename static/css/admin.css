@@ -1070,26 +1070,30 @@ button.dark-button:active {
   width: 28px;
   padding: 0;
   height: 28px;
+  background-image: url("../img/toolbar-open.png");
+  background-size: 100%;
+  background-position: center;
+  transition: transform 0.1s;
 }
-/* line 507, sass/modules/admin/_article.scss */
+/* line 511, sass/modules/admin/_article.scss */
 .tb-toolbar span {
   line-height: 100%;
   font-size: 18px;
   font-weight: 100;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-/* line 513, sass/modules/admin/_article.scss */
+/* line 517, sass/modules/admin/_article.scss */
 .tb-toolbar:hover {
   border-color: grey;
   color: grey;
   cursor: pointer;
 }
-/* line 518, sass/modules/admin/_article.scss */
+/* line 522, sass/modules/admin/_article.scss */
 .tb-toolbar:focus {
   outline: none;
 }
 
-/* line 523, sass/modules/admin/_article.scss */
+/* line 527, sass/modules/admin/_article.scss */
 .ql-format-button {
   display: inline-block;
   text-align: center;
@@ -1098,25 +1102,25 @@ button.dark-button:active {
   height: 100%;
   line-height: 55px;
 }
-/* line 530, sass/modules/admin/_article.scss */
+/* line 534, sass/modules/admin/_article.scss */
 .ql-format-button i {
   width: 38px;
   padding: 8px 0;
   border: 1px solid transparent;
 }
-/* line 535, sass/modules/admin/_article.scss */
+/* line 539, sass/modules/admin/_article.scss */
 .ql-format-button:hover {
   color: #4f4f4f;
   cursor: pointer;
 }
-/* line 539, sass/modules/admin/_article.scss */
+/* line 543, sass/modules/admin/_article.scss */
 .ql-format-button.ql-active i {
   color: #4f4f4f;
   border-color: #BBBBBB;
   border-radius: 2px;
 }
 
-/* line 546, sass/modules/admin/_article.scss */
+/* line 550, sass/modules/admin/_article.scss */
 input.dis-input, select.dis-input {
   border: 1px solid #b9b9b9;
   border-radius: 2px;
@@ -1125,25 +1129,25 @@ input.dis-input, select.dis-input {
   margin-right: 4px;
 }
 
-/* line 554, sass/modules/admin/_article.scss */
+/* line 558, sass/modules/admin/_article.scss */
 #id_section {
   width: 100%;
   max-width: 250px;
 }
 
-/* line 559, sass/modules/admin/_article.scss */
+/* line 563, sass/modules/admin/_article.scss */
 #id_slug, #id_short_headline {
   width: 100%;
   max-width: 350px;
 }
 
-/* line 564, sass/modules/admin/_article.scss */
+/* line 568, sass/modules/admin/_article.scss */
 img.featured-image {
   width: 100%;
   max-width: 300px;
 }
 
-/* line 569, sass/modules/admin/_article.scss */
+/* line 573, sass/modules/admin/_article.scss */
 div.tab {
   display: none;
   position: absolute;
@@ -1152,23 +1156,23 @@ div.tab {
   bottom: 0;
   overflow-y: auto;
 }
-/* line 576, sass/modules/admin/_article.scss */
+/* line 580, sass/modules/admin/_article.scss */
 div.tab.active {
   display: block;
 }
 
-/* line 581, sass/modules/admin/_article.scss */
+/* line 585, sass/modules/admin/_article.scss */
 div.save-buttons {
   padding: 0 40px;
 }
-/* line 583, sass/modules/admin/_article.scss */
+/* line 587, sass/modules/admin/_article.scss */
 div.save-buttons a {
   display: inline-block;
   text-align: center;
   text-decoration: none;
 }
 
-/* line 590, sass/modules/admin/_article.scss */
+/* line 594, sass/modules/admin/_article.scss */
 input.full {
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -1178,12 +1182,12 @@ input.full {
   box-sizing: border-box;
 }
 
-/* line 597, sass/modules/admin/_article.scss */
+/* line 601, sass/modules/admin/_article.scss */
 input.image-search {
   width: 250px;
 }
 
-/* line 602, sass/modules/admin/_article.scss */
+/* line 606, sass/modules/admin/_article.scss */
 .image-meta .fa-check {
   display: none;
   width: 25px;
@@ -1193,7 +1197,7 @@ input.image-search {
   color: rgba(128, 128, 128, 0.5);
 }
 
-/* line 612, sass/modules/admin/_article.scss */
+/* line 616, sass/modules/admin/_article.scss */
 div.attachment-thumb {
   width: 110px;
   height: 110px;
@@ -1201,7 +1205,7 @@ div.attachment-thumb {
   background-position: center;
 }
 
-/* line 620, sass/modules/admin/_article.scss */
+/* line 624, sass/modules/admin/_article.scss */
 #attachments-form input {
   min-width: 300px;
 }

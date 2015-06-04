@@ -50,6 +50,42 @@ a:hover {
   color: #0071c9;
 }
 
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-Bold_gdi.eot");
+  src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-BoldIt_gdi.eot");
+  src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
+  font-weight: 800;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-Bold_gdi.eot");
+  src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-BoldIt_gdi.eot");
+  src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
+  font-weight: 800;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
 /* line 5, sass/modules/_header.scss */
 div.branding {
   text-align: center;
@@ -236,6 +272,24 @@ header.topbar a.icon-logo {
   margin-top: -2px;
 }
 
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-Bold_gdi.eot");
+  src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'MinionPro';
+  src: url("fonts/MinionPro-BoldIt_gdi.eot");
+  src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
+  font-weight: 800;
+  font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
 /* line 3, sass/modules/_homepage.scss */
 img.featured {
   width: 100%;
@@ -299,7 +353,7 @@ div.frontpage div.cell.right {
 }
 /* line 57, sass/modules/_homepage.scss */
 div.frontpage article h1, div.frontpage article h2, div.frontpage li h1, div.frontpage li h2 {
-  font-family: "Minion Pro", "FF Tisa Pro", "skolar";
+  font-family: "MinionPro", "Georgia", serif;
   margin: 3px 0;
 }
 /* line 63, sass/modules/_homepage.scss */
@@ -504,7 +558,7 @@ p.snippet {
 /* line 262, sass/modules/_homepage.scss */
 h1.headline, h2.headline, h3.headline, h4.headline, h5.headline {
   margin: 7px 0;
-  font-family: "Minion Pro", "FF Tisa Pro", "skolar";
+  font-family: "MinionPro", "Georgia", serif;
   font-weight: 800;
 }
 /* line 266, sass/modules/_homepage.scss */
@@ -618,7 +672,7 @@ div.article-list ul > li, div.article-list ol > li {
 }
 /* line 372, sass/modules/_homepage.scss */
 div.article-list ul > li h2.headline, div.article-list ol > li h2.headline {
-  font-family: "Minion Pro", "FF Tisa Pro", "skolar";
+  font-family: "MinionPro", "Georgia", serif;
   font-weight: 800;
   font-size: 16px;
   line-height: 22px;
@@ -720,7 +774,7 @@ div.container {
 main.article article h1.headline {
   border-top: 2px solid #3E3E3E;
   border-bottom: 1px solid #D2D2D2;
-  font-family: "Minion Pro", "FF Tisa Pro", "skolar";
+  font-family: "MinionPro", "Georgia", serif;
   font-size: 30px;
   color: #000000;
   line-height: 46px;

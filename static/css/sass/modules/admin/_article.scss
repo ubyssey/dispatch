@@ -504,6 +504,10 @@ button.dark-button {
   width: 28px;
   padding: 0;
   height: 28px;
+  background-image: url('../img/toolbar-open.png');
+  background-size: 100%;
+  background-position: center;
+  transition: transform 0.1s;
   span {
     line-height: 100%;
     font-size: 18px;
