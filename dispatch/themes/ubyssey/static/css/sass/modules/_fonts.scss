@@ -1,4 +1,4 @@
-$font-default: 'ITC Franklin Gothic Std', 'Proxima Nova', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$font-default: 'ub-franklin-gothic', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 $font-secondary: 'ub-lft-etica', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 $font-headline: 'ub-minion-pro', 'Georgia', serif;
 $font-body: 'Georgia', serif;
@@ -82,6 +82,19 @@ $font-size-26px: 1.85714285714em;
 		url('fonts/LFTEtica-Regular_gdi.ttf') format('truetype'),
 		url('fonts/LFTEtica-Regular_gdi.svg#LFTEtica-Regular') format('svg');
 	font-weight: 400;
+	font-style: normal;
+	font-stretch: normal;
+	unicode-range: U+0020-25CA;
+}
+
+@font-face {
+	font-family:'ub-franklin-gothic';
+	src: url('fonts/ITCFranklinGothicStd-Med_gdi.eot');
+	src: url('fonts/ITCFranklinGothicStd-Med_gdi.eot?#iefix') format('embedded-opentype'),
+		url('fonts/ITCFranklinGothicStd-Med_gdi.woff') format('woff'),
+		url('fonts/ITCFranklinGothicStd-Med_gdi.ttf') format('truetype'),
+		url('fonts/ITCFranklinGothicStd-Med_gdi.svg#ITCFranklinGothicStd-Med') format('svg');
+	font-weight: 500;
 	font-style: normal;
 	font-stretch: normal;
 	unicode-range: U+0020-25CA;

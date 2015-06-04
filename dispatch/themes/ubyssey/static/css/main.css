@@ -105,6 +105,15 @@ a:hover {
   unicode-range: U+0020-25CA;
 }
 @font-face {
+  font-family: 'ub-franklin-gothic';
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot");
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/ITCFranklinGothicStd-Med_gdi.woff") format("woff"), url("fonts/ITCFranklinGothicStd-Med_gdi.ttf") format("truetype"), url("fonts/ITCFranklinGothicStd-Med_gdi.svg#ITCFranklinGothicStd-Med") format("svg");
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
   font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-Bold_gdi.eot");
   src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
@@ -158,6 +167,15 @@ a:hover {
   font-stretch: normal;
   unicode-range: U+0020-25CA;
 }
+@font-face {
+  font-family: 'ub-franklin-gothic';
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot");
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/ITCFranklinGothicStd-Med_gdi.woff") format("woff"), url("fonts/ITCFranklinGothicStd-Med_gdi.ttf") format("truetype"), url("fonts/ITCFranklinGothicStd-Med_gdi.svg#ITCFranklinGothicStd-Med") format("svg");
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
 /* line 5, sass/modules/_header.scss */
 div.branding {
   text-align: center;
@@ -186,7 +204,7 @@ div.branding .right {
 }
 /* line 24, sass/modules/_header.scss */
 div.branding h1.section-title {
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 34px;
   margin: 0;
   line-height: 60px;
@@ -239,7 +257,7 @@ nav.main ul li {
 }
 /* line 78, sass/modules/_header.scss */
 nav.main ul.sections li {
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 1.03571em;
   font-weight: 500;
   color: #2B2B2B;
@@ -248,7 +266,7 @@ nav.main ul.sections li {
 }
 /* line 89, sass/modules/_header.scss */
 nav.main ul.meta li {
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 13px;
   color: #33331E;
   margin: 0 20px;
@@ -275,7 +293,7 @@ header.topbar .section-name {
 /* line 120, sass/modules/_header.scss */
 header.topbar .section-name span {
   margin-left: 7px;
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 600;
   letter-spacing: 0.5px;
   font-size: 12.5px;
@@ -296,7 +314,7 @@ header.topbar img.logo {
 header.topbar nav {
   display: inline-block;
   vertical-align: top;
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #373737;
@@ -326,7 +344,7 @@ header.topbar nav ul li.current, header.topbar nav ul li:hover {
 /* line 167, sass/modules/_header.scss */
 header.topbar h1.nav-headline {
   display: inline-block;
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: #373737;
@@ -394,6 +412,15 @@ header.topbar a.icon-logo {
   src: url("fonts/LFTEtica-Regular_gdi.eot");
   src: url("fonts/LFTEtica-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Regular_gdi.woff") format("woff"), url("fonts/LFTEtica-Regular_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Regular_gdi.svg#LFTEtica-Regular") format("svg");
   font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-franklin-gothic';
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot");
+  src: url("fonts/ITCFranklinGothicStd-Med_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/ITCFranklinGothicStd-Med_gdi.woff") format("woff"), url("fonts/ITCFranklinGothicStd-Med_gdi.ttf") format("truetype"), url("fonts/ITCFranklinGothicStd-Med_gdi.svg#ITCFranklinGothicStd-Med") format("svg");
+  font-weight: 500;
   font-style: normal;
   font-stretch: normal;
   unicode-range: U+0020-25CA;
@@ -832,7 +859,7 @@ div.article-list ol > li:last-child {
 }
 /* line 417, sass/modules/_homepage.scss */
 div.article-list ol > li:before {
-  font-family: "ITC Franklin Gothic Std", "Proxima Nova", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-franklin-gothic", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 600;
   leter-spacing: 0.75px;
   position: absolute;
