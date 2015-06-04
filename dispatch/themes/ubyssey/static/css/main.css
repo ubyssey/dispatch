@@ -51,7 +51,7 @@ a:hover {
 }
 
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-Bold_gdi.eot");
   src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
   font-weight: 800;
@@ -60,7 +60,7 @@ a:hover {
   unicode-range: U+0020-25CA;
 }
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-BoldIt_gdi.eot");
   src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
   font-weight: 800;
@@ -69,7 +69,25 @@ a:hover {
   unicode-range: U+0020-25CA;
 }
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Bold_gdi.eot");
+  src: url("fonts/LFTEtica-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Bold_gdi.woff") format("woff"), url("fonts/LFTEtica-Bold_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Bold_gdi.svg#LFTEtica-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Regular_gdi.eot");
+  src: url("fonts/LFTEtica-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Regular_gdi.woff") format("woff"), url("fonts/LFTEtica-Regular_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Regular_gdi.svg#LFTEtica-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-Bold_gdi.eot");
   src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
   font-weight: 800;
@@ -78,11 +96,29 @@ a:hover {
   unicode-range: U+0020-25CA;
 }
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-BoldIt_gdi.eot");
   src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
   font-weight: 800;
   font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Bold_gdi.eot");
+  src: url("fonts/LFTEtica-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Bold_gdi.woff") format("woff"), url("fonts/LFTEtica-Bold_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Bold_gdi.svg#LFTEtica-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Regular_gdi.eot");
+  src: url("fonts/LFTEtica-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Regular_gdi.woff") format("woff"), url("fonts/LFTEtica-Regular_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Regular_gdi.svg#LFTEtica-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
   font-stretch: normal;
   unicode-range: U+0020-25CA;
 }
@@ -273,7 +309,7 @@ header.topbar a.icon-logo {
 }
 
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-Bold_gdi.eot");
   src: url("fonts/MinionPro-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-Bold_gdi.woff") format("woff"), url("fonts/MinionPro-Bold_gdi.ttf") format("truetype"), url("fonts/MinionPro-Bold_gdi.svg#MinionPro-Bold") format("svg");
   font-weight: 800;
@@ -282,11 +318,29 @@ header.topbar a.icon-logo {
   unicode-range: U+0020-25CA;
 }
 @font-face {
-  font-family: 'MinionPro';
+  font-family: 'ub-minion-pro';
   src: url("fonts/MinionPro-BoldIt_gdi.eot");
   src: url("fonts/MinionPro-BoldIt_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/MinionPro-BoldIt_gdi.woff") format("woff"), url("fonts/MinionPro-BoldIt_gdi.ttf") format("truetype"), url("fonts/MinionPro-BoldIt_gdi.svg#MinionPro-BoldIt") format("svg");
   font-weight: 800;
   font-style: italic;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Bold_gdi.eot");
+  src: url("fonts/LFTEtica-Bold_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Bold_gdi.woff") format("woff"), url("fonts/LFTEtica-Bold_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Bold_gdi.svg#LFTEtica-Bold") format("svg");
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-25CA;
+}
+@font-face {
+  font-family: 'ub-lft-etica';
+  src: url("fonts/LFTEtica-Regular_gdi.eot");
+  src: url("fonts/LFTEtica-Regular_gdi.eot?#iefix") format("embedded-opentype"), url("fonts/LFTEtica-Regular_gdi.woff") format("woff"), url("fonts/LFTEtica-Regular_gdi.ttf") format("truetype"), url("fonts/LFTEtica-Regular_gdi.svg#LFTEtica-Regular") format("svg");
+  font-weight: 400;
+  font-style: normal;
   font-stretch: normal;
   unicode-range: U+0020-25CA;
 }
@@ -353,7 +407,7 @@ div.frontpage div.cell.right {
 }
 /* line 57, sass/modules/_homepage.scss */
 div.frontpage article h1, div.frontpage article h2, div.frontpage li h1, div.frontpage li h2 {
-  font-family: "MinionPro", "Georgia", serif;
+  font-family: "ub-minion-pro", "Georgia", serif;
   margin: 3px 0;
 }
 /* line 63, sass/modules/_homepage.scss */
@@ -442,7 +496,7 @@ div.sections section.homepage.section-1 .right {
 
 /* line 152, sass/modules/_homepage.scss */
 h1.section {
-  font-family: "LFT Etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 26px;
   color: #242424;
   line-height: 28px;
@@ -558,7 +612,7 @@ p.snippet {
 /* line 262, sass/modules/_homepage.scss */
 h1.headline, h2.headline, h3.headline, h4.headline, h5.headline {
   margin: 7px 0;
-  font-family: "MinionPro", "Georgia", serif;
+  font-family: "ub-minion-pro", "Georgia", serif;
   font-weight: 800;
 }
 /* line 266, sass/modules/_homepage.scss */
@@ -590,7 +644,7 @@ h4.headline {
 
 /* line 290, sass/modules/_homepage.scss */
 span.byline {
-  font-family: "LFT Etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 0.75em;
   letter-spacing: 0.035em;
   display: block;
@@ -611,7 +665,7 @@ span.byline span.published {
 /* line 311, sass/modules/_homepage.scss */
 div.multi-zone h2.title {
   text-align: center;
-  font-family: "LFT Etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   text-transform: uppercase;
   font-size: 14px;
   border-style: dotted;
@@ -650,7 +704,7 @@ div.sidebar-home .sidebar-block h2.block-title {
   margin-top: 0;
   margin-bottom: 25px;
   text-align: center;
-  font-family: "LFT Etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-family: "ub-lft-etica", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   text-transform: uppercase;
   font-size: 14px;
 }
@@ -672,7 +726,7 @@ div.article-list ul > li, div.article-list ol > li {
 }
 /* line 372, sass/modules/_homepage.scss */
 div.article-list ul > li h2.headline, div.article-list ol > li h2.headline {
-  font-family: "MinionPro", "Georgia", serif;
+  font-family: "ub-minion-pro", "Georgia", serif;
   font-weight: 800;
   font-size: 16px;
   line-height: 22px;
@@ -774,7 +828,7 @@ div.container {
 main.article article h1.headline {
   border-top: 2px solid #3E3E3E;
   border-bottom: 1px solid #D2D2D2;
-  font-family: "MinionPro", "Georgia", serif;
+  font-family: "ub-minion-pro", "Georgia", serif;
   font-size: 30px;
   color: #000000;
   line-height: 46px;
