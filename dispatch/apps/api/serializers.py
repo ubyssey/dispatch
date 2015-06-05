@@ -98,6 +98,7 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     image       returns serialized Image instance using ImageSerializer
     """
     id = serializers.IntegerField(source='image.id', read_only=True)
+    attachment_id = serializers.IntegerField(source='id', read_only=True)
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
     width = serializers.IntegerField(source='image.width', read_only=True)
     height = serializers.IntegerField(source='image.height', read_only=True)
@@ -106,6 +107,7 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
         model = ImageAttachment
         fields = (
             'id',
+            'attachment_id',
             'url',
             'caption',
             'type',
