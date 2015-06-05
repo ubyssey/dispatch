@@ -129,6 +129,12 @@ div.react-tabs > ul, nav.edit-tabs ul {
 }
 
 div.fieldset.tab, div[role="tabpanel"] {
+  position: absolute;
+  top: 52px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: scroll;
   padding: 20px;
   &.list {
     padding: 0;
@@ -176,6 +182,7 @@ button.dis-button {
   padding: 0 9px;
   height: 28px;
   vertical-align: middle;
+  margin-right: 5px;
   &:hover {
     cursor: pointer;
     border-color: grey;
@@ -476,10 +483,10 @@ button.dark-button {
   }
 }
 
-.inline-toolbar {
+.inline-toolbar > div {
     position: absolute;
     z-index: 500;
-    display: none;
+    //display: none;
     height: 22px;
     line-height: 22px;
 }
@@ -491,7 +498,6 @@ button.dark-button {
 
 .inline-toolbar .toolbar {
     float: left;
-    display: none;
     margin-left: 15px;
 }
 
@@ -504,9 +510,10 @@ button.dark-button {
   width: 28px;
   padding: 0;
   height: 28px;
+  transition: transform 0.1s;
   span {
-    line-height: 100%;
-    font-size: 18px;
+    line-height: 14px;
+    font-size: 22px;
     font-weight: 100;
     font-family: $ui-font-helvetica;
   }

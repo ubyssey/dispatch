@@ -30,13 +30,15 @@ var ArticleAdmin = React.createClass({
        };
     },
     componentDidMount: function(){
-        dispatch.articles(this.props.articleId, function(article){
-            this.setState({
-                article: article,
-                head: article.revision_id,
-                version: article.revision_id,
-            });
-        }.bind(this));
+        if(this.props.articleId){
+            dispatch.articles(this.props.articleId, function(article){
+                this.setState({
+                    article: article,
+                    head: article.revision_id,
+                    version: article.revision_id,
+                });
+            }.bind(this));
+        }
     },
     loadRevision: function(revision_id){
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
@@ -86,6 +88,7 @@ var ArticleAdmin = React.createClass({
                 featured_image_json: JSON.stringify(this.state.article.featured_image),
                 published_at: this.state.article.published_at,
                 slug: this.state.article.slug,
+                snippet: this.state.article.snippet,
                 content_json: this.refs.content.save(),
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
@@ -95,6 +98,8 @@ var ArticleAdmin = React.createClass({
                     this.setState({
                         article: article,
                         head: article.revision_id,
+                        head_id: article.id,
+                        version: article.revision_id,
                         firstSave: false,
                     });
                 }.bind(this));
@@ -125,8 +130,8 @@ var ArticleAdmin = React.createClass({
     render: function(){
         if(!this.state.article){
             return (
-                <div>Loading</div>
-            )
+                <header></header>
+                )
         }
         return (
             <main>
@@ -169,6 +174,10 @@ var ArticleAdmin = React.createClass({
                                     <div className="field">
                                         <label>Publish at</label>
                                         <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                    </div>
+                                    <div className="field full">
+                                        <label>Snippet</label>
+                                        <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>
                                     </div>
                                     <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
                                     <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />

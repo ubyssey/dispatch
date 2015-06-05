@@ -3,11 +3,6 @@
 <html>
 <head>
     <title>{{ article.long_headline }} | The Ubyssey</title>
-    <link rel="stylesheet" href="{{ STATIC_DIR }}css/main.css" type="text/css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="//use.typekit.net/qjp6bnp.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
-
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="57x57" href="{{ STATIC_DIR }}img/favicons/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="{{ STATIC_DIR }}img/favicons/apple-touch-icon-60x60.png">
@@ -26,13 +21,15 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
-
+    <!-- Above-the-fold CSS for faster page loads -->
+    <style>{% include 'inline.css' %}</style>
 </head>
 <body>
 
 {% block content %}
 {% endblock %}
-
+<link rel="stylesheet" href="{{ STATIC_DIR }}css/main.css" type="text/css"/>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="{% static 'js/vendor/jquery.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/dist/dispatch.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/vendor/keymaster/keymaster.js' %}" type="text/javascript"></script>
@@ -40,5 +37,6 @@
 {% block scripts %}
 
 {% endblock %}
+
 </body>
 </html>

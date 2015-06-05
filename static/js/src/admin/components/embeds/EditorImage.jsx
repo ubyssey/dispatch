@@ -20,7 +20,7 @@ var EditorImage = React.createClass({
         });
     },
     removeImage: function(){
-
+        this.props.remove();
     },
     openImageManager: function(){
         this.props.manager.openWithCallback(function(items){
@@ -66,10 +66,10 @@ var EditorImage = React.createClass({
 
 var factory = function(options){
     var manager = options.manager;
-    var controller = function(node, embed){
+    var controller = function(line, embed){
         var component = React.render(
-            <EditorImage data={embed.data} manager={manager} />,
-            node
+            <EditorImage data={embed.data} manager={manager} remove={line.remove}/>,
+            line.node
         );
         return component;
     }
