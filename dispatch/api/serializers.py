@@ -163,6 +163,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'short_headline',
             'featured_image',
             'featured_image_json',
+            'snippet',
             'content',
             'content_json',
             'authors',
@@ -190,6 +191,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.section_id = validated_data.get('section_id')
         instance.published_at = validated_data.get('published_at')
         instance.slug = validated_data.get('slug')
+        instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)

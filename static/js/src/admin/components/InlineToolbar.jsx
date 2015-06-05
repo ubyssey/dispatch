@@ -96,7 +96,7 @@ var InlineToolbar = React.createClass({
         return (
             <div style={{top: this.state.offset}}>
                 <div className="side-button">
-                    <button style={this.state.showEmbeds ? buttonStyle : null} onClick={this.toggleEmbeds} className="tb-toolbar"></button>
+                    <button style={this.state.showEmbeds ? buttonStyle : null} onClick={this.toggleEmbeds} className="tb-toolbar"><span>+</span></button>
                 </div>
                 {this.state.showEmbeds ? this.embeds : null}
             </div>
