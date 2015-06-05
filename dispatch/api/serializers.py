@@ -98,6 +98,7 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     image       returns serialized Image instance using ImageSerializer
     """
     id = serializers.IntegerField(source='image.id', read_only=True)
+    attachment_id = serializers.IntegerField(source='id', read_only=True)
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
     width = serializers.IntegerField(source='image.width', read_only=True)
     height = serializers.IntegerField(source='image.height', read_only=True)
@@ -106,6 +107,7 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
         model = ImageAttachment
         fields = (
             'id',
+            'attachment_id',
             'url',
             'caption',
             'type',
@@ -163,6 +165,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'short_headline',
             'featured_image',
             'featured_image_json',
+            'snippet',
             'content',
             'content_json',
             'authors',
@@ -190,6 +193,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.section_id = validated_data.get('section_id')
         instance.published_at = validated_data.get('published_at')
         instance.slug = validated_data.get('slug')
+        instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
