@@ -29,7 +29,10 @@ var ManyModelDropdown = React.createClass({
         });
     },
     updateField: function(){
-        this.props.updateHandler(this.props.name, this.state.items.all());
+        if(this.props.serialize)
+            this.props.updateHandler(this.props.name, this.state.items.getIds(this.props.item_key));
+        else
+            this.props.updateHandler(this.props.name, this.state.items.all());
     },
     getObjProp: function(obj, str){
         str = str.split(".");
@@ -38,7 +41,6 @@ var ManyModelDropdown = React.createClass({
         return obj;
     },
     selectItem: function(item){
-        var id = this.getObjProp(item, this.props.item_key);
         var display = this.getObjProp(item, this.props.display);
         this.appendItem(item);
     },
