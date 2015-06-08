@@ -1,17 +1,18 @@
+{% load staticfiles %}
 <header>
     <div class="container large">
         <div class="branding">
         {% if section %}
             <div class="row">
                 <div class="left">
-                    <a href="{% url 'home' %}"><img class="left-logo" src="{{ STATIC_DIR }}img/ubyssey-logo.svg" /></a>
+                    <a href="{% url 'home' %}"><img class="left-logo" src="{% static 'img/ubyssey-logo.svg' %}" /></a>
                 </div>
                 <div class="middle">
                     <h1 class="section-title">{{ section }}</h1>
                 </div>
             </div>
         {% else %}
-            <img class="top-logo" src="{{ STATIC_DIR }}img/ubyssey-logo.svg" />
+            <img class="top-logo" src="{% static 'img/ubyssey-logo.svg' %}" />
         {% endif %}
         </div>
         <nav class="main">

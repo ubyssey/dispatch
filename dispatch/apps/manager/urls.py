@@ -23,5 +23,4 @@ urlpatterns = patterns('',
     url(r'^sections/$', views.sections),
     url(r'^pages/$', views.pages),
     url(r'^page/edit/(?P<slug>[-\w]+)/?$', views.page_edit),
-
 )
