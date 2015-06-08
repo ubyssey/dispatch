@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
 <div class="advertisement homepage leaderboard">
-    <img src="{{ STATIC_DIR }}img/sample-leaderboard-ad.png">
+    <img src="{% static 'img/sample-leaderboard-ad.png' %}">
 </div>
 {% include 'headers/main.html' %}
 <div class="container large">
@@ -11,7 +12,7 @@
             {% with articles.secondary as article %}
                 <article class="secondary">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
+                    <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
             {% endwith %}
@@ -36,7 +37,7 @@
                 <article class="primary">
                     <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
                     <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                    <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
                 {% endwith %}
@@ -54,7 +55,7 @@
         </div>
         <div class="sidebar-home">
             <div class="advert box sidebar-block">
-                <img src="{{ STATIC_DIR }}img/sample-box-ad.png" />
+                <img src="{% static 'img/sample-box-ad.png' %}" />
             </div>
             <div class="article-list popular sidebar-block">
                 <h2 class="block-title">Most popular this week</h2>
@@ -65,7 +66,7 @@
                 </ol>
             </div>
             <div class="advert box sidebar-block">
-                <img src="{{ STATIC_DIR }}img/sample-box-ad.png" />
+                <img src="{% static 'img/sample-box-ad.png' %}" />
             </div>
             <div class="article-list blog sidebar-block">
                 <h2 class="block-title">From the blog</h2>

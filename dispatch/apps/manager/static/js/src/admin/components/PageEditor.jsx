@@ -1,5 +1,6 @@
 var React = require('react');
 var ModelField = require('./fields/ModelField.jsx');
+var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 
 var FIELDS = {
     text: 0,
@@ -35,11 +36,14 @@ var ComponentEditor = React.createClass({
         this.fields = {};
     },
     saveComponent: function(){
+        console.log(this.fields);
         dispatch.saveComponent(this.props.page, this.props.component, this.props.spot, this.fields, function(data){
             console.log(data);
         });
     },
     updateField: function(field, data){
+        console.log(field);
+        console.log(data);
         this.fields[field] = data;
     },
     renderField: function(field, data){
@@ -47,7 +51,10 @@ var ComponentEditor = React.createClass({
             case(FIELDS.text):
                 return (<TextField field={field} data={data} updateHandler={this.updateField} />);
             case(FIELDS.model):
-                return (<ModelField field={field} data={data} updateHandler={this.updateField} />);
+                if(field.many)
+                    return (<ManyModelDropdown model={field.model} serialize item_key={field.key} display={field.display} label={field.label} name={field.name} data={data} updateHandler={this.updateField} />);
+                else
+                    return (<ModelField field={field} data={data} updateHandler={this.updateField} />);
         }
     },
     renderFields: function(){
