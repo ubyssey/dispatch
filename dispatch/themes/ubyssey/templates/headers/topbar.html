@@ -1,7 +1,8 @@
+{% load staticfiles %}
 <header class="topbar">
     <div class="container">
         <div class="header-site">
-            <a href="{% url 'home' %}"><img class="logo" src="{{ STATIC_DIR }}img/ubyssey-logo-small.svg" type="text/css"/></a>
+            <a href="{% url 'home' %}"><img class="logo" src="{% static 'img/ubyssey-logo-small.svg' %}" type="text/css"/></a>
             <nav>
                 <ul>
                     <li {% if section == 'news' %}class="current"{% endif %}>
@@ -24,7 +25,7 @@
         <div class="header-article">
             <div class="section-name">
                 <a href="{% url 'home' %}" class="icon-logo">
-                    <img class="logo" src="{{ STATIC_DIR }}img/ubyssey-logo-small.svg" type="text/css"/>
+                    <img class="logo" src="{% static 'img/ubyssey-logo-small.svg' %}" type="text/css"/>
                 </a>
                 <span>{{ article.section.name }}</span>
             </div>
