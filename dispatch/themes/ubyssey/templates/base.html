@@ -21,14 +21,12 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <!-- Above-the-fold CSS for faster page loads -->
-    <style>{% include 'inline.css' %}</style>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css"/>
 </head>
 <body>
 
 {% block content %}
 {% endblock %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css"/>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="{% static 'js/vendor/jquery.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/dist/dispatch.js' %}" type="text/javascript"></script>
