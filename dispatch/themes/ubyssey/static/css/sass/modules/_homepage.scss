@@ -78,8 +78,8 @@ div.frontpage {
     &.secondary {
       h2 {
         margin-top: 0;
-        font-size: 21px;
-        line-height: 27px;
+        font-size: 28px;
+        line-height: 32px;
       }
     }
 
@@ -291,17 +291,14 @@ span.byline {
   font-family: $font-secondary;
   font-size: 0.75em;
   letter-spacing: 0.035em;
+  font-weight: 500;
   display: block;
   margin: 10px 0;
-  text-transform: uppercase;
-  //letter-spacing: 0.25px;
+  color: #777;
   span.author {
-    font-weight: 600;
-    color: rgb(80,80,80);
+    text-transform: uppercase;
   }
   span.published {
-    font-weight: 500;
-    color: #777;
   }
 }
 

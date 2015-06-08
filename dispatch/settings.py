@@ -14,7 +14,6 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = 'http://localhost:8000/'
-BASE_STATIC_URL = 'http://localhost:8888/'
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
@@ -116,13 +115,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'http://localhost:8888/static/'
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -134,5 +126,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "dispatch.context_processors.static"
 )
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.7/howto/static-files/
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'dispatch/themes/' + CURRENT_THEME + '/static'),
+)
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'http://localhost:8888/media/'
+MEDIA_URL = '/media/'
