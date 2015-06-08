@@ -1310,43 +1310,42 @@ div.field label {
 div.field input, div.field textarea {
   box-sizing: border-box;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  border: 1px solid #b9b9b9;
+  border: 1px solid #ccc;
   border-radius: 2px;
-  padding: 4px 8px;
-  font-size: 13px;
-  line-height: 24px;
+  padding: 9px 10px;
+  font-size: 14px;
   width: 100%;
   margin-bottom: 5px;
 }
-/* line 42, sass/modules/admin/_forms.scss */
+/* line 41, sass/modules/admin/_forms.scss */
 div.field textarea {
   line-height: 1.5em;
 }
-/* line 45, sass/modules/admin/_forms.scss */
+/* line 44, sass/modules/admin/_forms.scss */
 div.field input {
   margin-right: 10px;
 }
-/* line 47, sass/modules/admin/_forms.scss */
+/* line 46, sass/modules/admin/_forms.scss */
 div.field input:last-child {
   margin-right: 0;
 }
-/* line 51, sass/modules/admin/_forms.scss */
+/* line 50, sass/modules/admin/_forms.scss */
 div.field select {
   font-size: 12px;
   margin-bottom: 5px;
 }
 
-/* line 58, sass/modules/admin/_forms.scss */
+/* line 57, sass/modules/admin/_forms.scss */
 div.model-dropdown div.field-container, div.model-dropdown div.search-field {
   border: 1px solid #cacaca;
   border-radius: 2px;
   position: relative;
 }
-/* line 63, sass/modules/admin/_forms.scss */
+/* line 62, sass/modules/admin/_forms.scss */
 div.model-dropdown.active div.field-container {
   border-color: #dadada;
 }
-/* line 66, sass/modules/admin/_forms.scss */
+/* line 65, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-container {
   position: relative;
   width: 100%;
@@ -1354,7 +1353,7 @@ div.model-dropdown div.search-container {
   z-index: 600;
   top: -34px;
 }
-/* line 73, sass/modules/admin/_forms.scss */
+/* line 72, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label {
   background: #FFFFFF;
   font-size: 13px;
@@ -1365,19 +1364,19 @@ div.model-dropdown div.model-label {
   line-height: 34px;
   padding: 0 8px;
 }
-/* line 82, sass/modules/admin/_forms.scss */
+/* line 81, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label div.left {
   margin-right: 25px;
 }
-/* line 85, sass/modules/admin/_forms.scss */
+/* line 84, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label:hover {
   cursor: pointer;
 }
-/* line 87, sass/modules/admin/_forms.scss */
+/* line 86, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label:hover div.icon.drop {
   opacity: 0.5;
 }
-/* line 91, sass/modules/admin/_forms.scss */
+/* line 90, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label div.icon {
   right: 8px;
   bottom: 0;
@@ -1386,43 +1385,43 @@ div.model-dropdown div.model-label div.icon {
   width: 20px;
   position: absolute;
 }
-/* line 98, sass/modules/admin/_forms.scss */
+/* line 97, sass/modules/admin/_forms.scss */
 div.model-dropdown div.model-label div.icon.delete:hover {
   opacity: 0.5;
 }
-/* line 104, sass/modules/admin/_forms.scss */
+/* line 103, sass/modules/admin/_forms.scss */
 div.model-dropdown.many div.items {
   border: 1px solid #cacaca;
   border-radius: 2px 2px 0 0;
   border-bottom: none;
 }
-/* line 108, sass/modules/admin/_forms.scss */
+/* line 107, sass/modules/admin/_forms.scss */
 div.model-dropdown.many div.items div.model-label {
   border-bottom: 1px solid #cacaca;
   border-radius: 0;
   background: #FDFDFD;
 }
-/* line 114, sass/modules/admin/_forms.scss */
+/* line 113, sass/modules/admin/_forms.scss */
 div.model-dropdown.many div.field-container, div.model-dropdown.many div.search-field {
   border-radius: 0 0 2px 2px;
 }
-/* line 117, sass/modules/admin/_forms.scss */
+/* line 116, sass/modules/admin/_forms.scss */
 div.model-dropdown.many div.field-container {
   margin-top: 5px;
 }
-/* line 119, sass/modules/admin/_forms.scss */
+/* line 118, sass/modules/admin/_forms.scss */
 div.model-dropdown.many div.field-container div.model-label .left {
   color: #909090;
 }
-/* line 125, sass/modules/admin/_forms.scss */
+/* line 124, sass/modules/admin/_forms.scss */
 div.model-dropdown div.config {
   padding: 0 8px;
 }
-/* line 127, sass/modules/admin/_forms.scss */
+/* line 126, sass/modules/admin/_forms.scss */
 div.model-dropdown div.config a {
   font-size: 12px;
 }
-/* line 131, sass/modules/admin/_forms.scss */
+/* line 130, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field {
   position: absolute;
   top: -1px;
@@ -1432,7 +1431,7 @@ div.model-dropdown div.search-field {
   box-sizing: border-box;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.075);
 }
-/* line 139, sass/modules/admin/_forms.scss */
+/* line 138, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field input {
   width: 100%;
   box-sizing: border-box;
@@ -1444,32 +1443,32 @@ div.model-dropdown div.search-field input {
   color: gray;
   margin: 0;
 }
-/* line 149, sass/modules/admin/_forms.scss */
+/* line 148, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field input:focus {
   color: black;
 }
-/* line 153, sass/modules/admin/_forms.scss */
+/* line 152, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-/* line 157, sass/modules/admin/_forms.scss */
+/* line 156, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field ul li {
   font-size: 13px;
   line-height: 18px;
   padding: 8px;
   border-bottom: 1px solid #dadada;
 }
-/* line 162, sass/modules/admin/_forms.scss */
+/* line 161, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field ul li:last-child {
   border: none;
 }
-/* line 165, sass/modules/admin/_forms.scss */
+/* line 164, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field ul li:first-child {
   border-top: 1px solid #dadada;
 }
-/* line 168, sass/modules/admin/_forms.scss */
+/* line 167, sass/modules/admin/_forms.scss */
 div.model-dropdown div.search-field ul li:hover {
   background: #f2f2f2;
   cursor: pointer;

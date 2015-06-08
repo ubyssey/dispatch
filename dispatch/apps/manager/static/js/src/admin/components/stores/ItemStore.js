@@ -15,10 +15,10 @@ var ItemStore = function(data){
         all: function(){
             return this.items;
         },
-        getIds: function(){
+        getIds: function(key){
             var ids = [];
             for(var i = 0; i < this.items.length; i++){
-                ids.push(this.items[i].id);
+                ids.push(this.items[i][key]);
             }
             return ids.join();
         }
