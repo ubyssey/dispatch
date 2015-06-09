@@ -28,7 +28,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['dispatch.dev', 'localhost', '127.0.0.1',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
 
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
@@ -129,12 +129,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+BASE_STATIC_URL = 'http://localhost:8888/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_URL = BASE_STATIC_URL + 'static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dispatch/themes/' + CURRENT_THEME + '/static'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = BASE_STATIC_URL + 'media/'
