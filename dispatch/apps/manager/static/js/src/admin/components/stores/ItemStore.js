@@ -9,16 +9,18 @@ var ItemStore = function(data){
                 }
             }
         },
-        append: function(item){
+        append: function(item, key){
+            if(typeof key !== undefined)
+                item.id = item[key];
             this.items.push(item);
         },
         all: function(){
             return this.items;
         },
-        getIds: function(key){
+        getIds: function(){
             var ids = [];
             for(var i = 0; i < this.items.length; i++){
-                ids.push(this.items[i][key]);
+                ids.push(this.items[i].id);
             }
             return ids.join();
         }

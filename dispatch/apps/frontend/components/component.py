@@ -16,16 +16,18 @@ class BaseComponent:
         if data is not None:
             self.data = {}
             for name, label, field_class in self.fields:
-                self.data[name] = data.get('fields['+name+']')
+                self.data[name] = data.get('fields['+name+']', None)
+
         elif self.instance is not None:
             self.context = {}
             self.saved_fields = {}
             for field in self.instance.fields.all():
                 self.saved_fields[field.name] = field
             for name, label, field_obj in self.fields:
-                saved_field = self.saved_fields[name]
-                field_obj.set_value(saved_field.value)
-                self.context[name] = field_obj.context()
+                if name in self.saved_fields:
+                    saved_field = self.saved_fields[name]
+                    field_obj.set_value(saved_field.value)
+                    self.context[name] = field_obj.context()
 
 
     def __str__(self):
@@ -40,8 +42,9 @@ class BaseComponent:
     def field_data_as_json(self):
         output = {}
         for name, label, field_obj in self.fields:
-            field_obj.set_value(self.saved_fields[name].value)
-            output[name] = field_obj.data_as_json()
+            if name in self.saved_fields:
+                field_obj.set_value(self.saved_fields[name].value)
+                output[name] = field_obj.data_as_json()
         return output
 
     def fields_as_json(self):
@@ -59,10 +62,22 @@ class BaseComponent:
             self.instance.save()
 
         for field, label, field_class in self.fields:
-            if field in self.data:
-                field_instance = ComponentField(name=field, value=self.data[field])
-                field_instance.save()
-                self.instance.fields.add(field_instance)
+            if field in self.data and self.data[field] is not None:
+                try:
+                    field_instance = self.instance.fields.get(name=field)
+                    if not self.data[field]:
+                        self.instance.fields.remove(field_instance)
+                    else:
+                        field_instance.value = self.data[field]
+                        field_instance.save()
+                except ComponentField.DoesNotExist:
+                    if self.data[field]:
+                        field_instance = ComponentField(name=field, value=self.data[field])
+                        field_instance.save()
+                        self.instance.fields.add(field_instance)
+
+        for f in self.instance.fields.all():
+            print f.name
 
         self.instance.save()
 
