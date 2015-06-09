@@ -1,0 +1,50 @@
+// BODY
+
+body {
+  font-size: 14px;
+  &.no-scroll {
+    overflow-y: hidden;
+  }
+}
+
+// ROWS AND COLUMNS
+
+.row {
+  overflow: auto;
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+}
+
+.col, .col-4, .col-8 {
+  float: left;
+}
+
+.col-4 {
+  width: 33.3%;
+}
+
+.col-8 {
+  width: 66.3%;
+}
+
+// UTILITIES
+
+.clearfix {
+  overflow: auto;
+}
+
+
+// ANCHORS
+
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    color: rgb(0, 113, 201);
+  }
+}
