@@ -71,7 +71,6 @@ INSTALLED_APPS = (
     'dispatch.apps.core',
     'dispatch.apps.frontend',
     'dispatch.apps.manager',
-    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
