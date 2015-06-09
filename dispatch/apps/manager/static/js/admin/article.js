@@ -37886,7 +37886,10 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
         });
     },
     updateField: function(){
-        this.props.updateHandler(this.props.name, this.state.items.all());
+        if(this.props.serialize)
+            this.props.updateHandler(this.props.name, this.state.items.getIds());
+        else
+            this.props.updateHandler(this.props.name, this.state.items.all());
     },
     getObjProp: function(obj, str){
         str = str.split(".");
@@ -37895,13 +37898,12 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
         return obj;
     },
     selectItem: function(item){
-        var id = this.getObjProp(item, this.props.item_key);
         var display = this.getObjProp(item, this.props.display);
         this.appendItem(item);
     },
     appendItem: function(item){
         var items = this.state.items;
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -37911,7 +37913,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
     },
     replaceItem: function(item){
         var items = ItemStore();
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -38389,7 +38391,9 @@ var ItemStore = function(data){
                 }
             }
         },
-        append: function(item){
+        append: function(item, key){
+            if(typeof key !== undefined)
+                item.id = item[key];
             this.items.push(item);
         },
         all: function(){

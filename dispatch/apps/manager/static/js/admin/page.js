@@ -19913,11 +19913,10 @@ var ComponentEditor = React.createClass({displayName: "ComponentEditor",
         console.log(this.fields);
         dispatch.saveComponent(this.props.page, this.props.component, this.props.spot, this.fields, function(data){
             console.log(data);
-        });
+            console.log(this.fields);
+        }.bind(this));
     },
     updateField: function(field, data){
-        console.log(field);
-        console.log(data);
         this.fields[field] = data;
     },
     renderField: function(field, data){
@@ -20068,7 +20067,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
     },
     updateField: function(){
         if(this.props.serialize)
-            this.props.updateHandler(this.props.name, this.state.items.getIds(this.props.item_key));
+            this.props.updateHandler(this.props.name, this.state.items.getIds());
         else
             this.props.updateHandler(this.props.name, this.state.items.all());
     },
@@ -20084,7 +20083,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
     },
     appendItem: function(item){
         var items = this.state.items;
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -20094,7 +20093,7 @@ var ManyModelDropdown = React.createClass({displayName: "ManyModelDropdown",
     },
     replaceItem: function(item){
         var items = ItemStore();
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -20460,16 +20459,18 @@ var ItemStore = function(data){
                 }
             }
         },
-        append: function(item){
+        append: function(item, key){
+            if(typeof key !== undefined)
+                item.id = item[key];
             this.items.push(item);
         },
         all: function(){
             return this.items;
         },
-        getIds: function(key){
+        getIds: function(){
             var ids = [];
             for(var i = 0; i < this.items.length; i++){
-                ids.push(this.items[i][key]);
+                ids.push(this.items[i].id);
             }
             return ids.join();
         }

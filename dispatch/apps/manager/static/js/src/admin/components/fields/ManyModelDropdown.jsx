@@ -30,7 +30,7 @@ var ManyModelDropdown = React.createClass({
     },
     updateField: function(){
         if(this.props.serialize)
-            this.props.updateHandler(this.props.name, this.state.items.getIds(this.props.item_key));
+            this.props.updateHandler(this.props.name, this.state.items.getIds());
         else
             this.props.updateHandler(this.props.name, this.state.items.all());
     },
@@ -46,7 +46,7 @@ var ManyModelDropdown = React.createClass({
     },
     appendItem: function(item){
         var items = this.state.items;
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -56,7 +56,7 @@ var ManyModelDropdown = React.createClass({
     },
     replaceItem: function(item){
         var items = ItemStore();
-        items.append(item);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){

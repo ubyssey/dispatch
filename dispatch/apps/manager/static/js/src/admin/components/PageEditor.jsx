@@ -39,11 +39,10 @@ var ComponentEditor = React.createClass({
         console.log(this.fields);
         dispatch.saveComponent(this.props.page, this.props.component, this.props.spot, this.fields, function(data){
             console.log(data);
-        });
+            console.log(this.fields);
+        }.bind(this));
     },
     updateField: function(field, data){
-        console.log(field);
-        console.log(data);
         this.fields[field] = data;
     },
     renderField: function(field, data){
