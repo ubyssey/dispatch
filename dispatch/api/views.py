@@ -219,17 +219,14 @@ class ComponentViewSet(viewsets.GenericViewSet):
 
         page = self.pages.get(slug)
 
-        try:
-            instance = Page.objects.get(slug=slug)
-            for component in instance.components.all():
-                component_class = self.components.get(component.slug)
-                component_obj = component_class(instance=component)
-                saved_dict[component.spot] = {
-                    'slug': component.slug,
-                    'fields': component_obj.field_data_as_json(),
-                }
-        except:
-            pass
+        instance = Page.objects.get(slug=slug)
+        for component in instance.components.all():
+            component_class = self.components.get(component.slug)
+            component_obj = component_class(instance=component)
+            saved_dict[component.spot] = {
+                'slug': component.slug,
+                'fields': component_obj.field_data_as_json(),
+            }
 
 
 
