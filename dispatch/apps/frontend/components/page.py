@@ -12,7 +12,6 @@ class BasePage:
 
         for component in instance.components.all():
             component_class = components.get(component.slug)
-            print component.slug
             spots[component.spot] = component_class(instance=component, spot=component.spot)
 
         return spots
