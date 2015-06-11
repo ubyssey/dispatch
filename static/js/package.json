@@ -1,0 +1,39 @@
+{
+  "name": "dispatch",
+  "version": "0.0.1",
+  "description": "The frontend framework for the Dispatch publishing platform.",
+  "author": "Peter Siemens <peterjsiemens@gmail.com>",
+  "homepage": "http://ubyssey.ca",
+  "contributors": [
+    "Ben Cook <b@bencook.ca>"
+  ],
+  "devDependencies": {
+    "babel": "^5.1.0",
+    "browserify": "^10.2.4",
+    "gulp": "^3.9.0",
+    "gulp-derequire": "^2.1.0",
+    "gulp-react": "^3.0.1",
+    "gulp-uglify": "^1.2.0",
+    "minimist": "^1.1.1",
+    "quill": "https://github.com/psiemens/quill/tarball/master",
+    "react": "~0.13.1",
+    "react-sortable": "~0.0.2",
+    "react-tabs": "https://github.com/psiemens/react-tabs/tarball/master",
+    "react-textarea-autosize": "~2.2.2",
+    "reactify": "^1.1.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.2"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ubyssey/dispatch"
+  },
+  "bugs": {
+    "url": "https://github.com/ubyssey/dispatch/issues"
+  }
+}

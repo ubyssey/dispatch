@@ -1,0 +1,110 @@
+// Button colors
+
+$green-bg: #60b044;
+$green-border: #5ca941;
+$green-grad: (#8add6d, #60b044);
+$green-hover-bg: #569e3d;
+$green-hover-border: #4a993e;
+$green-hover-grad: (#79d858, #569e3d);
+
+$grey-bg: #eee;
+$grey-border: #d5d5d5;
+$grey-grad: (#fcfcfc, #eee);
+$grey-hover-bg: #ddd;
+$grey-hover-border: #ccc;
+$grey-hover-grad: (#eee, #ddd);
+
+$blue-grad: (#6D77DD, #4445B0);
+
+button.dis-button, a.dis-button, div.dis-button > button {
+  border-radius: 3px;
+  color: #666;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  padding: 6px 12px;
+  border-width: 1px;
+  border-style: solid;
+
+  background-color: $grey-bg;
+  border-color: $grey-border;
+  @include background-image(linear-gradient(nth($grey-grad, 1), nth($grey-grad, 2)));
+
+  &.green, &.red {
+    color: #fff;
+  }
+
+  &.green {
+    background-color: $green-bg;
+    border-color: $green-border;
+    @include background-image(linear-gradient(nth($green-grad, 1), nth($green-grad, 2)));
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    background-color: $grey-hover-bg;
+    border-color: $grey-hover-border;
+    @include background-image(linear-gradient(nth($grey-hover-grad, 1), nth($grey-hover-grad, 2)));
+
+    &.green {
+      @include background-image(linear-gradient(nth($green-hover-grad, 1), nth($green-hover-grad, 2)));
+      background-color: $green-hover-bg;
+      border-color: $green-hover-border;
+    }
+  }
+  &:active, &:focus {
+    outline: none;
+  }
+
+  &:disabled, &:disabled:hover {
+    cursor: default;
+    background: gray;
+    border-color: gray;
+    opacity: 0.5;
+  }
+}
+
+div.dropdown-button {
+  position: relative;
+  button {
+    float: none;
+    position: relative;
+    i {
+      margin-left: 5px;
+    }
+  }
+  &.left ul.items {
+    right: 0;
+  }
+  ul.items {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    position: absolute;
+    z-index: 600;
+    width: 250px;
+    background: #fff;
+    border: 1px solid #cacaca;
+    border-radius: 3px;
+    max-height: 300px;
+    overflow: scroll;
+    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
+    li {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid #cacaca;
+      font-size: 13px;
+      height: 34px;
+      line-height: 34px;
+      padding: 0 8px;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+        background: rgb(242, 242, 242);
+        cursor: pointer;
+      }
+    }
+  }
+}
