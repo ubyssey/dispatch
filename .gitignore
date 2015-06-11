@@ -3,7 +3,6 @@
 media/
 resources/
 .sass-cache/
-/static/
 npm-debug.log
 *.module-cache/
 node_modules/
