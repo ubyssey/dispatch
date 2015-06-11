@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<header>
+    <div class="container large">
+        <div class="branding">
+        {% if section %}
+            <div class="row">
+                <div class="left">
+                    <a href="{% url 'home' %}"><img class="left-logo" src="{% static 'img/ubyssey-logo.svg' %}" /></a>
+                </div>
+                <div class="middle">
+                    <h1 class="section-title">{{ section }}</h1>
+                </div>
+            </div>
+        {% else %}
+            <img class="top-logo" src="{% static 'img/ubyssey-logo.svg' %}" />
+        {% endif %}
+        </div>
+        <nav class="main">
+            <div class="inner row">
+                <div class="left">
+                    <ul class="meta">
+                        <li>Tuesday, November 4, 2014</li>
+                        <li>Latest Issue</li>
+                    </ul>
+                </div>
+                <div class="middle">
+                    <ul class="sections">
+                        <li><a href="{% url 'section' 'news' %}">News</a></li>
+                        <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
+                        <li><a href="{% url 'section' 'features' %}">Features</a></li>
+                        <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
+                        <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
+                        <li><a href="{% url 'section' 'video' %}">Video</a></li>
+                        <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="right">
+                    <ul class="meta">
+                        <li>Volunteer</li>
+                        <li>Advertise</li>
+                        <li>Contact</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
