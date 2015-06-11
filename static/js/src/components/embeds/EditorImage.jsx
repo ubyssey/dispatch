@@ -51,7 +51,7 @@ var EditorImage = React.createClass({
                 </div>
                 <div className="meta">
                     <div className="caption">
-                        <Textarea rows={1} placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange}></Textarea>
+                        <Textarea rows={1} className="plain" placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange}></Textarea>
                     </div>
                     <ul className="controls">
                         <li onClick={this.removeImage}>Remove</li>
