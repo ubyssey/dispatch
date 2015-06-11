@@ -1,0 +1,34 @@
+{% extends 'manager/base.html' %}
+
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="list-header clearfix">
+        <div class="checkbox cell">
+            <input type="checkbox">
+        </div>
+        <div class="search cell">
+            <form class="search-bar" method="GET">
+                <input placeholder="Search" type="text" value="{{ query }}" name="q">
+            </form>
+            <a href="#">New person</a>
+        </div>
+    </div>
+    <div class="list-container">
+        <div class="item-list">
+        {% for person in persons %}
+            <div class="item">
+                <div class="checkbox cell">
+                    <input type="checkbox">
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'apps.manager.views.user_edit' person.id %}">{{ person.full_name }}</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

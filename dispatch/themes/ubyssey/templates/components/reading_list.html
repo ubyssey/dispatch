@@ -1,0 +1,12 @@
+<h2 class="title">{{ title }}</h2>
+<div class="article-list blog sidebar-block">
+    <ul>
+        {% for article in articles %}
+        <li>
+            <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
+            <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+            <p class="snippet">{{ article.snippet }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
