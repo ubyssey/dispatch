@@ -3,8 +3,6 @@ Dispatch
 <a href="https://zenhub.io"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png" height="18px"></a> <a href="https://travis-ci.org/ubyssey/dispatch"><img src=https://travis-ci.org/ubyssey/dispatch.svg?branch=develop  height="18px"></a>
 
 v 0.1
-###*It's not Wordpress*###
-
 
 ### We <3 help, here's how to get started
 
@@ -34,17 +32,20 @@ It will also ask you to create a superuser with an email and password that can b
 
 ### Serve me Dispatch
 
-Due to speed issues, we've decided not to use Django's development server to
-
-### Serve me Dispatch
-
 Now for the fun bit, getting Dispatch serving pages!
 
 * Start serving the app with `python manage.py runserver`
-* You will also need to serve the static contents of the site at the same time. Do this by opening the `dispatch` directory in another shell window and running `python -m SimpleHTTPServer 8888`
+
+#### Static files
+
+Although the Django development server is capabable of serving static files, we find it's faster to deliver them separately. 
+
+* Open the `dispatch` directory in another shell window and run `python manage.py collectstatic` to collect all of Dispatch's static files into one directory.
+* Run `python -m SimpleHTTPServer 8888` from the same directory to start a basic static file server.
+
+*Note: this is one of many ways to configure static files for a Django project, and may not be the best configuration for your system. [More information on serving static files with Django.](https://docs.djangoproject.com/en/1.8/howto/static-files/#serving-static-files-during-development)*
 
 Now open `http://localhost:8000/` in your browser.
-
 
 ### Troubleshooting
 
