@@ -13,8 +13,9 @@ import os
 import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+BASE_URL = 'http://localhost:8000/'
 
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -27,23 +28,34 @@ DEBUG = True
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGINATE_BY': 10
-}
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
 
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
+CURRENT_THEME = 'ubyssey'
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'dispatch/themes/' + CURRENT_THEME + '/templates'),
+    os.path.join(BASE_DIR, 'templates'),
+    os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
+    ]
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+    'UNICODE_JSON': True,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'PAGINATE_BY': 10
 }
+
+LOGIN_REDIRECT_URL = 'dispatch.apps.manager.views.home'
 
 # Application definition
 
@@ -55,8 +67,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'apps.content',
-    'apps.core',
+    'dispatch.apps.content',
+    'dispatch.apps.core',
+    'dispatch.apps.frontend',
+    'dispatch.apps.manager',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -100,8 +114,28 @@ USE_L10N = True
 
 USE_TZ = True
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "dispatch.context_processors.static"
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+BASE_STATIC_URL = 'http://localhost:8888/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = BASE_STATIC_URL + 'static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'dispatch/themes/' + CURRENT_THEME + '/static'),
+)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = BASE_STATIC_URL + 'media/'
