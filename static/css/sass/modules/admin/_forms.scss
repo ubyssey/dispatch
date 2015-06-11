@@ -1,5 +1,12 @@
 // Styles for form elements used in the admin panel
 
+/* Contents
+ *
+ * 1.0 -- Fields & Inputs
+ * 2.0 --
+ *
+ */
+
 input, select {
   font-size: 14px;
 }
@@ -11,12 +18,16 @@ form {
   }
 }
 
+// 1.0 -- Fields & Inputs
+
 div.field {
+  // Wrapper DIV for field + label combos.
   padding: 8px 0;
   box-sizing: border-box;
   width: 100%;
   max-width: 300px;
   &.full {
+    // Full-width field
     max-width: none;
   }
   &:first-child {
@@ -30,23 +41,8 @@ div.field {
     font-family: $ui-font-helvetica;
   }
   input, textarea {
-    box-sizing: border-box;
-    font-family: $ui-font-helvetica;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
-    padding: 9px 10px;
-    font-size: 14px;
     width: 100%;
     margin-bottom: 5px;
-    &:focus {
-      border-color: #51a7e8;
-      outline: none;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(81,167,232,0.5);
-    }
-  }
-  textarea {
-    line-height: 1.5em;
   }
   input {
     margin-right: 10px;
@@ -54,11 +50,55 @@ div.field {
       margin-right: 0;
     }
   }
-  select {
-    font-size: 12px;
-    margin-bottom: 5px;
+}
+
+input, textarea {
+  // Base styles for inputs and textareas.
+  box-sizing: border-box;
+  font-family: $ui-font-helvetica;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+  padding: 9px 10px;
+  font-size: 14px;
+
+  &.plain {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+  }
+
+  &:focus {
+    &.plain {
+      box-shadow: none;
+    }
+    border-color: #51a7e8;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(81,167,232,0.5);
   }
 }
+
+textarea {
+  line-height: 1.5em;
+}
+
+select {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+form.search-bar {
+  float: left;
+  input {
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+    min-width: 250px;
+    margin: 0 10px;
+  }
+}
+
 
 div.model-dropdown {
   div.field-container, div.search-field {

@@ -6,10 +6,6 @@
   display: none;
 }
 
-#article-admin, #article-admin .container {
-  height: 100%;
-}
-
 $text-padding: 60px;
 
 div.panel {
@@ -22,8 +18,6 @@ textarea.headline {
   color: #000000;
   line-height: 40px;
   height: 40px;
-  border: none;
-  font-family: $ui-font-helvetica;
   font-weight: 600;
   width: 100%;
   resize: none;
@@ -65,7 +59,7 @@ div.main {
 }
 
 div.panel.content {
-  width: 730px;
+  width: 780px;
   background: white;
   height: 100%;
   overflow: scroll;
@@ -165,7 +159,7 @@ div.panel.options {
   position: absolute;
   float: none;
   right: 0;
-  left: 730px;
+  left: 780px;
   bottom: 0;
   top: 0;
   div.fieldset {
@@ -596,7 +590,7 @@ div.tab {
 }
 
 div.header-buttons {
-  padding: 0 40px;
+  padding: 0 15px;
   line-height: 50px;
   vertical-align: middle;
   float: right;
