@@ -23,6 +23,7 @@ def home(request):
     return render_to_response(
         "manager/base.html",
         {
+            'title': "Dashboard",
             'persons' : users,
         },
         RequestContext(request, {}),
@@ -48,6 +49,7 @@ def users(request):
     return render_to_response(
         "manager/person/list.html",
         {
+            'title': 'People',
             'persons' : users,
             'list_title': 'People',
             'query': q,
@@ -68,6 +70,7 @@ def user_edit(request, id):
         form = PersonForm(instance=p)
 
     context = {
+        'title': 'Edit User',
         'person': p,
         'form': form,
         'user_form': form.user_form,
@@ -86,6 +89,7 @@ def profile(request):
         form = ProfileForm(instance=user)
 
     context = {
+        'title': user.person.full_name,
         'user_form': form,
         'person_form': form.person_form,
     }
@@ -94,7 +98,8 @@ def profile(request):
 
 @staff_member_required
 def section(request, section):
-    articles = Article.objects.filter(section__name__iexact=section,is_active=True,head=True).order_by('-published_at')
+    section = Section.objects.get(name=section)
+    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-published_at')
     q = request.GET.get('q', False)
     if q:
         articles = articles.filter(long_headline__icontains=q)
@@ -104,6 +109,7 @@ def section(request, section):
     return render_to_response(
         "manager/article/list.html",
         {
+            'title': section,
             'article_list' : articles,
             'unpublished': articles.filter(is_published=False).count(),
             'section': section,
@@ -119,6 +125,7 @@ def sections(request):
     sections = Section.objects.all()
 
     context = {
+        'title': 'Sections',
         'sections': sections,
     }
 
@@ -126,7 +133,6 @@ def sections(request):
 
 @staff_member_required
 def section_add(request):
-
     if request.method == 'POST':
         form = SectionForm(request.POST)
         if form.is_valid():
@@ -136,6 +142,7 @@ def section_add(request):
         form = SectionForm()
 
     context = {
+        'title': 'Add Section',
         'form': form,
     }
 
@@ -153,6 +160,7 @@ def section_edit(request, id):
         form = SectionForm(instance=section)
 
     context = {
+        'title': 'Edit Section',
         'form': form,
     }
 
@@ -168,7 +176,9 @@ def articles(request):
 
     return render_to_response(
         "manager/article/list.html",
-        {'article_list' : articles},
+        {
+            'article_list' : articles
+        },
         RequestContext(request, {}),
     )
 
@@ -184,6 +194,7 @@ def article_edit(request, id):
     a = Article.objects.filter(parent=id,preview=False).order_by('-pk')[0]
 
     context = {
+        'title': 'Edit Article',
         'article': a.id,
         #'templates': ThemeHelper.get_theme_templates(),
     }
@@ -198,12 +209,13 @@ def article_delete(request, id):
     article.save(update_fields=['is_active'])
     return redirect(section, section_slug)
 
-
+@staff_member_required
 def page_edit(request, slug):
 
     pages = ThemeHelper.get_theme_pages()
 
     context = {
+        'title': 'Edit Page',
         'page': pages.get(slug),
         'slug': slug,
     }
@@ -216,6 +228,7 @@ def pages(request):
     pages = ThemeHelper.get_theme_pages()
 
     context = {
+        'title': 'Pages',
         'pages': pages.all(),
     }
 
