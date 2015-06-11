@@ -13,7 +13,6 @@ from dispatch.apps.frontend.models import Page, Component, ComponentField
 
 @staff_member_required
 def home(request):
-    users = Person.objects.all()
     q = request.GET.get('q', False)
     if q:
         users = users.filter(full_name__icontains=q)
@@ -24,7 +23,6 @@ def home(request):
         "manager/base.html",
         {
             'title': "Dashboard",
-            'persons' : users,
         },
         RequestContext(request, {}),
     )
