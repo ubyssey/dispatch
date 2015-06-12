@@ -13,6 +13,7 @@ var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var ModelField = require('./fields/ModelFieldA.jsx');
+var SlugField = require('./fields/SlugField.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 var ItemStore = require('./stores/ItemStore.js');
@@ -21,13 +22,22 @@ var DropdownButton = require('./buttons/DropdownButton.jsx');
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
        return {
-           article: this.props.articleId ? false : {},
+           article: this.props.articleId ? false : this.newArticle(),
            firstSave: this.props.articleId ? false : true,
            head: 0,
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
        };
+    },
+    newArticle: function(){
+        if(this.props.section){
+            return {
+                section: { slug: this.props.section }
+            };
+        } else {
+            return {};
+        }
     },
     componentDidMount: function(){
         if(this.props.articleId){
@@ -209,7 +219,7 @@ var ArticleAdmin = React.createClass({
                                 </div>
                                 <div className="field full">
                                     <label>Slug</label>
-                                    <input type="text" value={this.state.article.slug} onChange={this.updateField.bind(this,'slug')} />
+                                    <SlugField url={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") } value={this.state.article.slug ? this.state.article.slug : ""} onChange={this.updateField.bind(this,'slug')} />
                                 </div>
                                 <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
                                 <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
