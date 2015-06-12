@@ -56,6 +56,25 @@ def users(request):
     )
 
 @staff_member_required
+def user_add(request):
+
+    if request.method == 'POST':
+        form = PersonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(users)
+    else:
+        form = PersonForm()
+
+    context = {
+        'title': 'Add User',
+        'form': form,
+        'user_form': form.user_form,
+    }
+
+    return render(request, "manager/person/edit.html", context)
+
+@staff_member_required
 def user_edit(request, id):
 
     p = Person.objects.get(pk=id)
@@ -181,8 +200,8 @@ def articles(request):
     )
 
 @staff_member_required
-def article_add(request):
-    return render(request, 'manager/article/edit.html')
+def article_add(request, section=None):
+    return render(request, 'manager/article/edit.html', {'section': section})
 
 @staff_member_required
 def article_edit(request, id):
