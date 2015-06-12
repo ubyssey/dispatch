@@ -3,7 +3,7 @@
 /* Contents
  *
  * 1.0 -- Fields & Inputs
- * 2.0 --
+ *     1.2 -- Slug Field
  *
  */
 
@@ -36,8 +36,8 @@ div.field {
   label {
     display: block;
     margin-bottom: 5px;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 600;
     font-family: $ui-font-helvetica;
   }
   input, textarea {
@@ -88,12 +88,36 @@ select {
   margin-bottom: 5px;
 }
 
+// 1.2 -- Slug Field
+
+div.slug-field {
+  display: table;
+  margin-bottom: 5px;
+  width: 100%;
+  div.url {
+    display: table-cell;
+    width: 1px;
+    white-space: nowrap;
+    font-size: 13px;
+    padding: 9px 10px;
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(204, 204, 204);
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+  }
+  input {
+    display: table-cell;
+    margin: 0;
+    border-radius: 0 2px 2px 0;
+  }
+}
+
 form.search-bar {
   float: left;
   input {
     height: 32px;
     line-height: 32px;
-    font-size: 12px;
+    font-size: 13px;
     min-width: 250px;
     margin: 0 10px;
   }
