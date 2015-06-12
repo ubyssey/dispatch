@@ -13,6 +13,7 @@ var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var ModelField = require('./fields/ModelFieldA.jsx');
+var SlugField = require('./fields/SlugField.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 var ItemStore = require('./stores/ItemStore.js');
@@ -21,13 +22,22 @@ var DropdownButton = require('./buttons/DropdownButton.jsx');
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
        return {
-           article: this.props.articleId ? false : {},
+           article: this.props.articleId ? false : this.newArticle(),
            firstSave: this.props.articleId ? false : true,
            head: 0,
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
        };
+    },
+    newArticle: function(){
+        if(this.props.section){
+            return {
+                section: { slug: this.props.section }
+            };
+        } else {
+            return {};
+        }
     },
     componentDidMount: function(){
         if(this.props.articleId){
@@ -171,8 +181,8 @@ var ArticleAdmin = React.createClass({
                 )
         }
         return (
-            <main>
-                <header>
+            <div className="inner">
+                <header className="secondary">
                     {QuillToolbar}
                     <div className="header-buttons">
                         {this.renderLoader()}
@@ -184,53 +194,51 @@ var ArticleAdmin = React.createClass({
                     </div>
                 </header>
                 <div className="main clearfix">
-                    <div className="container">
-                        <div className="content panel">
-                            <div className="inner">
-                                <div className="field-row headline">
-                                    <Textarea rows={1} placeholder="Enter a headline"className="headline" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
-                                </div>
-                                <div className="field-row content">
-                                    <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
-                                </div>
+                    <div className="content panel">
+                        <div className="inner">
+                            <div className="field-row headline">
+                                <Textarea rows={1} placeholder="Enter a headline"className="headline plain" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
+                            </div>
+                            <div className="field-row content">
+                                <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
                             </div>
                         </div>
-                        <div className="options panel">
-                            <Tabs
-                                onSelect={this.handleSelected}
-                                selectedIndex={0}>
-                                <TabList>
-                                    <Tab><i className="fa fa-info"></i> Basic Fields</Tab>
-                                    <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
-                                </TabList>
-                                <TabPanel>
-                                    <div className="field full">
-                                        <label>Short Headline</label>
-                                        <input type="text" value={this.state.article.short_headline} onChange={this.updateField.bind(this,'short_headline')} />
-                                    </div>
-                                    <div className="field full">
-                                        <label>Slug</label>
-                                        <input type="text" value={this.state.article.slug} onChange={this.updateField.bind(this,'slug')} />
-                                    </div>
-                                    <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
-                                    <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
-                                    <div className="field">
-                                        <label>Publish at</label>
-                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                    </div>
-                                    <div className="field full">
-                                        <label>Snippet</label>
-                                        <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>
-                                    </div>
-                                </TabPanel>
-                                <TabPanel>
-                                    <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
-                                </TabPanel>
-                            </Tabs>
-                        </div>
+                    </div>
+                    <div className="options panel">
+                        <Tabs
+                            onSelect={this.handleSelected}
+                            selectedIndex={0}>
+                            <TabList>
+                                <Tab><i className="fa fa-info"></i> Basic Fields</Tab>
+                                <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
+                            </TabList>
+                            <TabPanel>
+                                <div className="field full">
+                                    <label>Short Headline</label>
+                                    <input type="text" value={this.state.article.short_headline} onChange={this.updateField.bind(this,'short_headline')} />
+                                </div>
+                                <div className="field full">
+                                    <label>Slug</label>
+                                    <SlugField url={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") } value={this.state.article.slug ? this.state.article.slug : ""} onChange={this.updateField.bind(this,'slug')} />
+                                </div>
+                                <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
+                                <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
+                                <div className="field">
+                                    <label>Publish at</label>
+                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                </div>
+                                <div className="field full">
+                                    <label>Snippet</label>
+                                    <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>
+                                </div>
+                            </TabPanel>
+                            <TabPanel>
+                                <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
+                            </TabPanel>
+                        </Tabs>
                     </div>
                 </div>
-            </main>
+            </div>
             )
     }
 });

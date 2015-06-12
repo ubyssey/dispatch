@@ -6,10 +6,6 @@
   display: none;
 }
 
-#article-admin, #article-admin .container {
-  height: 100%;
-}
-
 $text-padding: 60px;
 
 div.panel {
@@ -17,14 +13,11 @@ div.panel {
 }
 
 textarea.headline {
-  font-weight: 600;
   font-size: 28px;
   color: #000000;
   line-height: 40px;
   height: 40px;
-  border: none;
-  font-family: $ui-font-helvetica;
-  font-weight: 600;
+  font-weight: 800;
   width: 100%;
   resize: none;
 }
@@ -65,7 +58,7 @@ div.main {
 }
 
 div.panel.content {
-  width: 730px;
+  width: 780px;
   background: white;
   height: 100%;
   overflow: scroll;
@@ -98,7 +91,7 @@ div.react-tabs > ul, nav.edit-tabs ul {
     display: inline-block;
     padding: 0 15px;
     font-family: $ui-font-helvetica;
-    font-size: 12px;
+    font-size: 13px;
     color: #A2A2A2;
 
     height: 46px;
@@ -165,7 +158,7 @@ div.panel.options {
   position: absolute;
   float: none;
   right: 0;
-  left: 730px;
+  left: 780px;
   bottom: 0;
   top: 0;
   div.fieldset {
@@ -205,7 +198,7 @@ button.embed-button {
 div.field-row.headline {
   margin-left: $text-padding;
   border-bottom: 1px solid rgb(226, 226, 226);
-  padding-bottom: 15px;
+  padding-bottom: 20px;
   margin-bottom: 30px;
   div.authors {
     padding: 10px 0;
@@ -596,7 +589,7 @@ div.tab {
 }
 
 div.header-buttons {
-  padding: 0 40px;
+  padding: 0 15px;
   line-height: 50px;
   vertical-align: middle;
   float: right;
