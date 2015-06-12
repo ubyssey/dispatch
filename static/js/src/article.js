@@ -10,8 +10,10 @@ var imageManager = React.render(
 
 var articleId = $('#article-admin').data('id');
 var articleId = articleId ? articleId : false;
+var section = $('#article-admin').data('section');
+
 var articleAdmin = React.render(
-    <ArticleAdmin imageManager={imageManager} articleId={articleId}/>,
+    <ArticleAdmin imageManager={imageManager} articleId={articleId} section={section} />,
     document.getElementById('article-admin')
 );
 
