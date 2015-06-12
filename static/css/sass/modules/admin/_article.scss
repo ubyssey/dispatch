@@ -13,12 +13,11 @@ div.panel {
 }
 
 textarea.headline {
-  font-weight: 600;
   font-size: 28px;
   color: #000000;
   line-height: 40px;
   height: 40px;
-  font-weight: 600;
+  font-weight: 800;
   width: 100%;
   resize: none;
 }
@@ -92,7 +91,7 @@ div.react-tabs > ul, nav.edit-tabs ul {
     display: inline-block;
     padding: 0 15px;
     font-family: $ui-font-helvetica;
-    font-size: 12px;
+    font-size: 13px;
     color: #A2A2A2;
 
     height: 46px;
@@ -199,7 +198,7 @@ button.embed-button {
 div.field-row.headline {
   margin-left: $text-padding;
   border-bottom: 1px solid rgb(226, 226, 226);
-  padding-bottom: 15px;
+  padding-bottom: 20px;
   margin-bottom: 30px;
   div.authors {
     padding: 10px 0;
