@@ -1,10 +1,4 @@
 {% extends 'manager/base.html' %}
-
-{% block header %}
-    <div class="title">
-        <h1>{{ list_title|title }}</h1>
-    </div>
-{% endblock %}
 {% block content %}
     <div class="list-header clearfix">
         <div class="checkbox cell">
@@ -15,9 +9,9 @@
         </div>
         <div class="search cell">
             <form class="search-bar" method="GET">
-                <input placeholder="Search" type="text" value="{{ query }}" name="q">
+                <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
-            <a href="{% url 'apps.manager.views.article_add' %}">New article</a>
+            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}">New article</a>
         </div>
     </div>
     <div class="list-container">
