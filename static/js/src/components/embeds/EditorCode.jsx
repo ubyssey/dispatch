@@ -2,7 +2,7 @@ var React = require('react');
 var EditorCode = React.createClass({
     getInitialState: function(){
         return {
-            content: this.props.data.content ? this.props.data.content : '',
+            content: this.props.data ? this.props.data.content : '',
         };
     },
     handleContentChange: function(event){
