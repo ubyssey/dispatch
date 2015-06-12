@@ -320,10 +320,6 @@ div.list-header {
         font-size: 15px;
       }
     }
-    a {
-      font-size: 14px;
-      color: #4A90E2;
-    }
     &.checkbox {
       text-align: center;
       width: 12px;
@@ -380,7 +376,7 @@ div.item-list {
         a {
           font-weight: 600;
           color: black;
-          font-size: 14px;
+          font-size: 15px;
           &:hover {
             color: $steel-blue;
           }
