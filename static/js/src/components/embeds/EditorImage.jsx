@@ -68,7 +68,7 @@ var factory = function(options){
     var manager = options.manager;
     var controller = function(line, embed){
         var component = React.render(
-            <EditorImage data={embed.data} manager={manager} remove={line.remove}/>,
+            <EditorImage data={embed.data} manager={manager} remove={line.remove} />,
             line.node
         );
         return component;
