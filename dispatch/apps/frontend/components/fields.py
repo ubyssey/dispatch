@@ -39,15 +39,17 @@ class ModelField(BaseField):
 
     def data_as_json(self):
         ids = [int(id) for id in self.value.split(',')]
-        articles = Article.objects.filter(parent__in=ids,head=True)
+        articles = list(Article.objects.filter(parent__in=ids,head=True))
+        articles.sort(key=lambda article: ids.index(article.parent.id))
         return [
-            {'id': getattr(a, self.KEY).id, 'display': getattr(a, self.DISPLAY)}
+            {'id': getattr(a, self.KEY).id, self.DISPLAY: getattr(a, self.DISPLAY)}
             for a in articles
         ]
 
     def context(self):
         ids = [int(id) for id in self.value.split(',')]
-        articles = Article.objects.filter(parent__in=ids,head=True)
+        articles = list(Article.objects.filter(parent__in=ids,head=True))
+        articles.sort(key=lambda article: ids.index(article.parent.id))
         try:
             return articles
         except:

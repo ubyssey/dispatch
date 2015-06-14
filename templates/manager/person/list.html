@@ -14,7 +14,7 @@
             <form class="search-bar" method="GET">
                 <input placeholder="Search" type="text" value="{{ query }}" name="q">
             </form>
-            <a href="#">New person</a>
+            <a class="dis-button" href="{% url 'apps.manager.views.user_add' %}">New person</a>
         </div>
     </div>
     <div class="list-container">

@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, include, url
+
 from rest_framework import routers
+
 from dispatch.apps.api.urls import urlpatterns as api_patterns
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.content import views as content_views
 from dispatch.apps.manager import urls as adminurls
-
 
 urlpatterns = patterns('',
     url(r'^admin/', include(adminurls)),

@@ -38,8 +38,9 @@ var Gallery = React.createClass({displayName: "Gallery",
     initializeImages: function(callback) {
         dispatch.articleAttachments(this.props.article, function(data){
             var images = {};
+
             $.each(data.results, function(key, image){
-                images[image.id] = key;
+                images[image.attachment_id] = key;
             });
 
             this.setState({
@@ -118,15 +119,13 @@ var Gallery = React.createClass({displayName: "Gallery",
         var attachment = this.state.images_list[currentIndex];
         this.setState({
             currentIndex: currentIndex,
-            image: attachment.image.url,
+            image: attachment.url,
             caption: attachment.caption,
         });
     },
     open: function(image_id){
         this.setCurrentImage(image_id);
-        //if(this.state.images_list.length != 0){
         this.displayCurrentImage();
-        //}
         this.setState({
             visible: true,
         });
@@ -141,13 +140,13 @@ var Gallery = React.createClass({displayName: "Gallery",
     previous: function(){
         if(this.state.currentIndex == 0) return;
         this.setCurrentIndex(this.state.currentIndex - 1);
-        this.setCurrentImage(this.state.images_list[this.state.currentIndex].id);
+        this.setCurrentImage(this.state.images_list[this.state.currentIndex].attachment_id);
         this.displayCurrentImage();
     },
     next: function(){
         if(this.state.currentIndex + 1 >= this.state.images_list.length) return;
         this.setCurrentIndex(this.state.currentIndex + 1);
-        this.setCurrentImage(this.state.images_list[this.state.currentIndex].id);
+        this.setCurrentImage(this.state.images_list[this.state.currentIndex].attachment_id);
         this.displayCurrentImage();
     },
     renderImage: function(){
