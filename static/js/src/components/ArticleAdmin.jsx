@@ -28,6 +28,8 @@ var ArticleAdmin = React.createClass({
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
+           unsaved: false,
+
        };
     },
     newArticle: function(){
@@ -62,6 +64,7 @@ var ArticleAdmin = React.createClass({
         var article = this.state.article;
         article[field] = event.target.value;
         this.setState({
+            unsaved: true,
             article: article,
         });
     },
@@ -69,6 +72,7 @@ var ArticleAdmin = React.createClass({
         var article = this.state.article;
         article[field] = data;
         this.setState({
+            unsaved: true,
             article: article,
         });
     },
@@ -114,6 +118,7 @@ var ArticleAdmin = React.createClass({
                         version: article.revision_id,
                         firstSave: false,
                         saving: false,
+                        unsaved: false
                     });
                     this.animateLoader();
                 }.bind(this));
@@ -125,6 +130,7 @@ var ArticleAdmin = React.createClass({
                         head_id: article.id,
                         version: article.revision_id,
                         saving: false,
+                        unsaved: false
                     });
                     this.animateLoader();
                 }.bind(this));
@@ -186,8 +192,9 @@ var ArticleAdmin = React.createClass({
                     {QuillToolbar}
                     <div className="header-buttons">
                         {this.renderLoader()}
-                        <button className="dis-button green" onClick={this.save}>Save</button>
-                        <button className="dis-button blue" onClick={this.save}>Publish</button>
+                        <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.save}>Save</button>
+                        <button className="dis-button" onClick={this.save}>Publish</button>
+                        <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}
                         </DropdownButton>
