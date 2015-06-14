@@ -213,14 +213,13 @@ class ComponentViewSet(viewsets.GenericViewSet):
     pages = ThemeHelper.get_theme_pages()
 
     def detail(self, request, slug=None):
-
-        instance = Page.objects.get(slug=slug)
-        page = self.pages.get(slug)
-
         spots_list = []
         components_dict = {}
         saved_dict = {}
 
+        page = self.pages.get(slug)
+
+        instance = Page.objects.get(slug=slug)
         for component in instance.components.all():
             component_class = self.components.get(component.slug)
             component_obj = component_class(instance=component)
@@ -228,6 +227,8 @@ class ComponentViewSet(viewsets.GenericViewSet):
                 'slug': component.slug,
                 'fields': component_obj.field_data_as_json(),
             }
+
+
 
         for spot, name in page.component_spots:
             options = []
@@ -256,7 +257,7 @@ class ComponentViewSet(viewsets.GenericViewSet):
     def update(self, request, slug=None):
 
         try:
-            update_status = status.HTTP_201_UPDATED
+            update_status = status.HTTP_200_OK
             instance = Page.objects.get(slug=slug)
         except:
             update_status = status.HTTP_201_CREATED
