@@ -1,38 +1,42 @@
 <!DOCTYPE html>{% load staticfiles %}
 <html>
 <head>
-    <title></title>
+    <title>{{ title }}</title>
     <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/dropzone.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/vendor/font-awesome.min.css' %}" type="text/css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
     <div class="wrapper">
-        <div class="sidebar">
-            <div class="dispatch-logo">D</div>
-            <nav class="side-nav">
-                <ul>
-                    <li><a href="{% url 'apps.manager.views.section' 'news' %}"><i class="fa fa-newspaper-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}"><i class="fa fa-futbol-o"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}"><i class="fa fa-paint-brush"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users"></i></a></li>
-                    <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user"></i></a></li>
-                </ul>
-            </nav>
-        </div>
+        <header class="main">
+            <div class="dispatch-logo">
+                <a href="{% url 'apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+            </div>
+            <ul>
+                <li><a href="{% url 'apps.manager.views.section' 'news' %}">News</a></li>
+                <li><a href="{% url 'apps.manager.views.section' 'sports' %}">Sports</a></li>
+                <li><a href="{% url 'apps.manager.views.section' 'culture' %}">Culture</a></li>
+                <li class="dropdown">
+                    <a>more<i class="fa fa-caret-down left"></i></a>
+                    <ul>
+                        <li><a href="{% url 'apps.manager.views.section' 'features' %}">Features</a></li>
+                        <li><a href="{% url 'apps.manager.views.section' 'blog' %}">Blog</a></li>
+                    </ul>
+                </li>
+             </ul>
+             <ul class="right">
+                <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user right"></i>{{ user.get_username }}</a></li>
+            </ul>
+        </header>
         {% block main %}
         <main>
-            <header>
-                <div class="header-main">
-                    {% block header %}
-                    {% endblock %}
-                </div>
-            </header>
-            <div class="main clearfix">
-                {% block content %}
-                {% endblock %}
-            </div>
+            {% block content %}
+            {% endblock %}
         </main>
         {% endblock %}
     </div>

@@ -61,11 +61,13 @@
 
     // Local Settings
     LOCAL_SETTINGS = {
+        'base_url': 'http://localhost:8000/',
         'api_url': '/api/',
         'api_format': 'json',
     }
 
     PRODUCTION_SETTINGS = {
+        'base_url': 'http://dev.ubyssey.ca/',
         'api_url': 'http://dev.ubyssey.ca/api/',
         'api_format': 'json',
     }

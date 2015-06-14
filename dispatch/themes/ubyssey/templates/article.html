@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
 {% include 'headers/topbar.html' with article=article section=article.section.slug %}
 <main class="article">
     <div class="advertisement leaderboard">
-        <img src="{{ STATIC_DIR }}img/sample-leaderboard-ad.png" />
+        <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     <article data-id="{{ article.id }}">
         <h1 class="headline">{{ article.long_headline }}</h1>
@@ -23,7 +24,7 @@
         <div class="right-column">
             {% if article.featured_image %}
             <div class="featured-image">
-                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="{{ MEDIA_DIR }}{{ article.featured_image.image.img }}"/>
+                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
                 <div class="caption">
                     {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
                 </div>
@@ -32,7 +33,7 @@
             {% else %}
             <div class="sidebar">
             {% endif %}
-                <img src="{{ STATIC_DIR }}img/sample-box-ad.png" />
+                <img src="{% static 'img/sample-box-ad.png' %}" />
             </div>
         </div>
         <div class="article-content">
@@ -60,7 +61,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="{{ STATIC_DIR }}js/article.js" type="text/javascript"></script>
+<script src="{% static 'js/article.js' %}" type="text/javascript"></script>
 {% endblock %}
 
 <!-- Article-specific scripts -->
