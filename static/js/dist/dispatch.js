@@ -61,7 +61,7 @@
 
     // Local Settings
     LOCAL_SETTINGS = {
-        'base_url': 'http://dev.ubyssey.ca/',
+        'base_url': 'http://localhost:8000/',
         'api_url': '/api/',
         'api_format': 'json',
     }

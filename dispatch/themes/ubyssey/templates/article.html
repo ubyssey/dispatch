@@ -24,7 +24,7 @@
         <div class="right-column">
             {% if article.featured_image %}
             <div class="featured-image">
-                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="{{ MEDIA_DIR }}{{ article.featured_image.image.img }}"/>
+                <img class="article-attachment" data-id="{{ article.featured_image.id }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
                 <div class="caption">
                     {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
                 </div>
