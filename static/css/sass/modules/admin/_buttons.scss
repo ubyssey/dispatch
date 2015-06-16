@@ -76,22 +76,26 @@ div.dropdown-button {
       margin-left: 5px;
     }
   }
-  &.left ul.items {
+  &.left .items {
     right: 0;
   }
-  ul.items {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
+  .dropdown-panel {
     position: absolute;
+    line-height: normal;
+    padding: 5px 12px;
     z-index: 600;
     width: 250px;
     background: #fff;
     border: 1px solid #cacaca;
     border-radius: 2px;
+    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
+  }
+  ul.items {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
     max-height: 300px;
     overflow: scroll;
-    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
     li {
       width: 100%;
       box-sizing: border-box;
@@ -109,4 +113,41 @@ div.dropdown-button {
       }
     }
   }
+}
+
+div.combo-buttons {
+  display: inline-block;
+  button.dis-button, a.dis-button {
+    display: inline-block;
+    border-radius: 0;
+    border-width: 1px 0 1px 1px;
+    &:first-child {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    &:last-child {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-width: 1px;
+    }
+  }
+  div.dropdown-button {
+    display: inline-block;
+    button {
+      display: inline-block;
+      border-radius: 0;
+      border-width: 1px 0 1px 1px;
+    }
+    &:first-child button {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    &:last-child button {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-width: 1px;
+    }
+
+  }
+
 }

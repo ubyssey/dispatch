@@ -136,7 +136,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND section_id = %(section_id)s
+                WHERE head = 1 AND is_published = 1 AND section_id = %(section_id)s
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -151,7 +151,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1
+                WHERE head = 1 AND is_published = 1
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -186,7 +186,7 @@ class Article(Publishable):
 
     is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
-    published_at = DateTimeField()
+    published_at = DateTimeField(null=True)
     slug = SlugField()
 
     authors = ManyToManyField(Person, through="Author", blank=True, null=True)
