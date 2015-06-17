@@ -16,6 +16,11 @@ body {
   color: #333;
 }
 
+div.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 header.main {
   background: #447AB7;
   color: white;

@@ -75,6 +75,9 @@ var ArticleAdmin = React.createClass({
             article: article,
         });
     },
+    createTag: function(tag_name, callback){
+        dispatch.add('tag', {name: tag_name}, callback);
+    },
     requiredFields: [
         'long_headline',
         'short_headline',
@@ -112,6 +115,7 @@ var ArticleAdmin = React.createClass({
                 content_json: this.refs.content.save(),
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
+                tag_ids: ItemStore(this.state.article.tags).getIds(),
             }
             this.setState({ saving: true, });
             if(this.state.firstSave){
@@ -181,23 +185,25 @@ var ArticleAdmin = React.createClass({
         return (
             <div className="inner">
                 <header className="secondary">
-                    {QuillToolbar}
-                    <div className="header-buttons">
-                        {this.renderLoader()}
-                        <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                        <div className="combo-buttons">
-                            <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
-                            <DropdownPanel push="left" label="Schedule">
-                                <div className="field">
-                                    <label>Publish at</label>
-                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                </div>
-                            </DropdownPanel>
+                    <div className="container">
+                        {QuillToolbar}
+                        <div className="header-buttons">
+                            {this.renderLoader()}
+                            <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
+                            <div className="combo-buttons">
+                                <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
+                                <DropdownPanel push="left" label="Schedule">
+                                    <div className="field">
+                                        <label>Publish at</label>
+                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                    </div>
+                                </DropdownPanel>
+                            </div>
+                            <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
+                            <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
+                            {'Version ' + this.state.version}
+                            </DropdownButton>
                         </div>
-                        <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
-                        <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
-                        {'Version ' + this.state.version}
-                        </DropdownButton>
                     </div>
                 </header>
                 <div className="main clearfix">
@@ -230,7 +236,7 @@ var ArticleAdmin = React.createClass({
                                 </div>
                                 <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
                                 <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
-                                <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} />
+                                <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} createHandler={this.createTag} />
                                 <div className="field full">
                                     <label>Snippet</label>
                                     <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>
