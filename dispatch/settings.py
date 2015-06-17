@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import sys
 
+VERSION = "0.0.3"
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = 'http://localhost:8000/'
 
