@@ -177,7 +177,7 @@ class TagViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             resource = serializer.save()
-            status_code = HTTP_201_CREATED
+            status_code = status.HTTP_201_CREATED
         except APIException:
             instance = Tag.objects.get(name=request.data.get('name'))
             serializer = self.get_serializer(instance)
