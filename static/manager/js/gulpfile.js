@@ -6,7 +6,9 @@ var watchify = require('watchify');
 var reactify = require('reactify');
 var uglify = require('gulp-uglify');
 var derequire = require('gulp-derequire');
+var rename = require('gulp-rename');
 var argv = require('minimist')(process.argv.slice(2));
+var dispatch = require('./dist/dispatch.js');
 
 var path = {
   DEST: 'dist',
@@ -22,7 +24,7 @@ else
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
     entries: [path.SRC + file + '.js'],
-    transform: [reactify],
+    transform: [reactify0],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true
   }));
@@ -31,16 +33,18 @@ gulp.task('watch', function() {
     watcher.bundle()
       .pipe(source(file + '.js'))
       .pipe(derequire())
-      .pipe(buffer())
-      .pipe(uglify())
+      //.pipe(buffer())
+      //.pipe(uglify())
+      .pipe(rename(file + '-' + dispatch.version + '.js'))
       .pipe(gulp.dest(path.DEST))
       console.log('Updated');
   })
     .bundle()
     .pipe(source(file + '.js'))
     .pipe(derequire())
-    .pipe(buffer())
-    .pipe(uglify())
+    //.pipe(buffer())
+    //.pipe(uglify())
+    .pipe(rename(file + '-' + dispatch.version + '.js'))
     .pipe(gulp.dest(path.DEST));
 });
 

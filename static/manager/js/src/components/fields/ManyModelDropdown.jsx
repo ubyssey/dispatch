@@ -44,6 +44,9 @@ var ManyModelDropdown = React.createClass({
         var display = this.getObjProp(item, this.props.display);
         this.appendItem(item);
     },
+    createItem: function(item, callback){
+        this.props.createHandler(item, callback);
+    },
     appendItem: function(item){
         var items = this.state.items;
         items.append(item, this.props.item_key);
@@ -93,7 +96,7 @@ var ManyModelDropdown = React.createClass({
     renderSearch: function(){
         return (
             <div className="search-container">
-                <SearchList initialItems={this.initialItems} selectItem={this.selectItem} renderItem={this.renderItem} searchItems={this.searchItems} />
+                <SearchList initialItems={this.initialItems} selectItem={this.selectItem} createItem={this.createItem} renderItem={this.renderItem} searchItems={this.searchItems} />
             </div>
             )
     },

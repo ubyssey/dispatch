@@ -172,13 +172,16 @@ div.model-dropdown {
   }
   &.many {
     div.items {
-      border: 1px solid rgb(202, 202, 202);
       border-radius: 2px 2px 0 0;
       border-bottom: none;
       div.model-label {
-        border-bottom: 1px solid rgb(202, 202, 202);
+        border: 1px solid rgb(202, 202, 202);
+        border-bottom: none;
         border-radius: 0;
         background: #FDFDFD;
+        &:last-child {
+          border-bottom: 1px solid rgb(202,202,202);
+        }
       }
     }
     div.field-container, div.search-field {
