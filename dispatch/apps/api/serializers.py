@@ -65,6 +65,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = (
+            'id',
             'name',
         )
 
@@ -153,6 +154,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     author_ids = serializers.CharField(write_only=True)
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
@@ -170,6 +174,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'content_json',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'authors_string',
             'section',
             'section_id',
@@ -211,8 +217,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         if authors:
             instance.save_authors(authors)
 
-        tags = validated_data.get('tag_names', False)
-
+        tags = validated_data.get('tag_ids', False)
+        print tags
         if tags:
             instance.save_tags(tags)
 

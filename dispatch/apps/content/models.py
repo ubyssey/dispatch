@@ -264,10 +264,10 @@ class Article(Publishable):
         self.tags.clear()
         for tag in tags.split(","):
             try:
-                ins = Tag.objects.get(name=tag)
+                ins = Tag.objects.get(id=int(tag))
+                self.tags.add(ins)
             except Tag.DoesNotExist:
-                ins = Tag.objects.create(name=tag)
-            self.tags.add(ins)
+                pass
 
     def save_topics(self, topics):
         self.topics.clear()
@@ -337,8 +337,6 @@ class Article(Publishable):
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image']['id']
-                print node['data']['attachment_id']
-                print 'image-id: ' + str(image_id)
                 image = Image.objects.get(id=image_id)
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
