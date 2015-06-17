@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <h3 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h3>
-                    <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </div>
 
@@ -24,7 +24,7 @@
                             </div>
                             <h4 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h4>
                         </div>
-                        <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                         <p class="snippet">{{ article.snippet }}</p>
                     </div>
                 </article>
