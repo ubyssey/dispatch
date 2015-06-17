@@ -10,8 +10,8 @@ router = routers.DefaultRouter()
 router.register(r'articles', views.ArticleViewSet, base_name='articles')
 router.register(r'frontpage', views.FrontpageViewSet, base_name='frontpage')
 router.register(r'sections', views.SectionViewSet, base_name='sections')
-router.register(r'people', views.PersonViewSet, base_name='person')
-router.register(r'tag', views.TagViewSet)
+router.register(r'people', views.PersonViewSet, base_name='people')
+router.register(r'tags', views.TagViewSet, base_name='tags')
 router.register(r'images', views.ImageViewSet, base_name='images')
 
 section_frontpage = views.SectionViewSet.as_view({
