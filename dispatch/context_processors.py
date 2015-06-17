@@ -1,8 +1,9 @@
 import os
 from django.conf import settings
 from dispatch.helpers import ThemeHelper
+from dispatch import __version__
 
 def static(request):
     return {
-        'version': settings.VERSION,
+        'version': __version__,
     }
