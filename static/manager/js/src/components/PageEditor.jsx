@@ -1,5 +1,4 @@
 var React = require('react');
-var ModelField = require('./fields/ModelField.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 
 var FIELDS = {
