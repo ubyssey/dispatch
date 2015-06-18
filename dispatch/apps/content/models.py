@@ -189,10 +189,10 @@ class Article(Publishable):
     published_at = DateTimeField()
     slug = SlugField()
 
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+    authors = ManyToManyField(Person, through="Author", blank=True)
 
-    topics = ManyToManyField('Topic', blank=True, null=True)
-    tags = ManyToManyField('Tag', blank=True, null=True)
+    topics = ManyToManyField('Topic', blank=True)
+    tags = ManyToManyField('Tag', blank=True)
     shares = PositiveIntegerField(default=0, blank=True, null=True)
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
@@ -210,12 +210,12 @@ class Article(Publishable):
 
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
-    videos = ManyToManyField('Video', blank=True, null=True)
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True)
+    videos = ManyToManyField('Video', blank=True)
 
-    scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
-    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True, null=True)
-    snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
+    scripts = ManyToManyField(Script, related_name='scripts', blank=True)
+    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True)
+    snippets = ManyToManyField(Snippet, related_name='snippets', blank=True)
 
     content = TextField()
     snippet = TextField()
@@ -418,7 +418,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+    authors = ManyToManyField(Person, through="Author", blank=True)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)

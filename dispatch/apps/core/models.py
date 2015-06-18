@@ -35,7 +35,7 @@ class Person(Model):
     first_name = CharField(max_length=255, blank=True, null=True)
     last_name = CharField(max_length=255, blank=True, null=True)
     full_name = CharField(max_length=255, blank=True, null=True)
-    roles = ManyToManyField(ContributorRole, blank=True, null=True)
+    roles = ManyToManyField(ContributorRole, blank=True)
 
     def __str__(self):
         if self.full_name:
