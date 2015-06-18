@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.generics import get_object_or_404
+from rest_framework.exceptions import APIException
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
@@ -108,9 +109,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
         against a `topic` query parameter in the URL.
         """
         queryset = Article.objects.filter(head=True).order_by('-published_at')
+        tag = self.request.QUERY_PARAMS.get('tag', None)
         topic = self.request.QUERY_PARAMS.get('topic', None)
         q = self.request.QUERY_PARAMS.get('q', None)
         limit = self.request.QUERY_PARAMS.get('limit', None)
+        if tag is not None:
+            queryset = queryset.filter(tags__name=tag)
         if topic is not None:
             queryset = queryset.filter(topics__name=topic)
         if q is not None:
@@ -158,8 +162,29 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     Viewset for Tag model views.
     """
-    queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        q = self.request.QUERY_PARAMS.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `full_name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            resource = serializer.save()
+            status_code = status.HTTP_201_CREATED
+        except APIException:
+            instance = Tag.objects.get(name=request.data.get('name'))
+            serializer = self.get_serializer(instance)
+            status_code = status.HTTP_200_OK
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status_code, headers=headers)
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

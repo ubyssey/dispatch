@@ -16,7 +16,7 @@ var QuillEditor = React.createClass({
     componentDidMount: function(){
         Quill.registerEmbed('image', EditorImage);
         Quill.registerEmbed('code', EditorCode);
-        Quill.registerEmbed('video', EditorVideo);
+        //Quill.registerEmbed('video', EditorVideo);
 
         Quill.registerModule('inline-toolbar', InlineToolbar);
 
@@ -24,7 +24,7 @@ var QuillEditor = React.createClass({
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('code');
-        this.quill.addEmbed('video');
+        //this.quill.addEmbed('video');
 
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);

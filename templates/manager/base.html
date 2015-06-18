@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/dropzone.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'manager/css/admin.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'manager/css/dropzone.css' %}" type="text/css">
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
@@ -11,27 +11,29 @@
 <body>
     <div class="wrapper">
         <header class="main">
-            <div class="dispatch-logo">
-                <a href="{% url 'apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+            <div class="container">
+                <div class="dispatch-logo">
+                    <a href="{% url 'apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+                </div>
+                <ul>
+                    <li><a href="{% url 'apps.manager.views.section' 'news' %}">News</a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'sports' %}">Sports</a></li>
+                    <li><a href="{% url 'apps.manager.views.section' 'culture' %}">Culture</a></li>
+                    <li class="dropdown">
+                        <a>more<i class="fa fa-caret-down left"></i></a>
+                        <ul>
+                            <li><a href="{% url 'apps.manager.views.section' 'features' %}">Features</a></li>
+                            <li><a href="{% url 'apps.manager.views.section' 'blog' %}">Blog</a></li>
+                        </ul>
+                    </li>
+                 </ul>
+                 <ul class="right">
+                    <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                    <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                    <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                    <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user right"></i>{{ user.get_username }}</a></li>
+                </ul>
             </div>
-            <ul>
-                <li><a href="{% url 'apps.manager.views.section' 'news' %}">News</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'sports' %}">Sports</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'culture' %}">Culture</a></li>
-                <li class="dropdown">
-                    <a>more<i class="fa fa-caret-down left"></i></a>
-                    <ul>
-                        <li><a href="{% url 'apps.manager.views.section' 'features' %}">Features</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'blog' %}">Blog</a></li>
-                    </ul>
-                </li>
-             </ul>
-             <ul class="right">
-                <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
-                <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
-                <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
-                <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user right"></i>{{ user.get_username }}</a></li>
-            </ul>
         </header>
         {% block main %}
         <main>
@@ -43,8 +45,8 @@
     {% block modals %}
     {% endblock %}
     {% comment %}<script src="{% static 'js/vendor/react.js' %}" type="text/javascript"></script>{% endcomment %}
-    <script src="{% static 'js/vendor/jquery.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/dist/dispatch.js' %}" type="text/javascript"></script>
+    <script src="{% static 'manager/js/vendor/jquery.js' %}" type="text/javascript"></script>
+    <script src="{% static 'manager/js/dist/dispatch.js' %}" type="text/javascript"></script>
     {% block scripts %}
     {% endblock %}
 </body>

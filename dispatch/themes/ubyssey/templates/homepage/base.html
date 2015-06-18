@@ -12,7 +12,7 @@
             {% with articles.secondary as article %}
                 <article class="secondary">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-                    <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
             {% endwith %}
@@ -37,7 +37,7 @@
                 <article class="primary">
                     <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
                     <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
-                    <span class="byline">By <span class="author">{{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                     <p class="snippet">{{ article.snippet }}</p>
                 </article>
                 {% endwith %}

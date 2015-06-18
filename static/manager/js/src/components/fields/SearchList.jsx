@@ -17,6 +17,13 @@ var SearchList = React.createClass({
         }.bind(this));
         this.refs.searchField.getDOMNode().focus();
     },
+    handleKeyPress: function(event){
+        if(event.key === 'Enter'){
+            this.props.createItem(event.target.value, function(item){
+                this.selectItem(item);
+            }.bind(this));
+        }
+    },
     updateQuery: function(event){
         var query = event.target.value;
         this.setState({
@@ -54,7 +61,7 @@ var SearchList = React.createClass({
     renderNoResults: function(message){
         if(this.props.createItem){
            return (
-                 <li>{'Press enter to add "' + this.state.query + '"'}</li>
+                 <li className="disabled">{'Press enter to add "' + this.state.query + '"'}</li>
                 )
         } else {
             return (
@@ -71,7 +78,7 @@ var SearchList = React.createClass({
         return (
             <div className="search-field">
                 <div className="search-bar">
-                    <input ref="searchField" onChange={this.updateQuery} value={this.state.query} placeholder="Search" type="text" />
+                    <input ref="searchField" onChange={this.updateQuery} onKeyPress={this.handleKeyPress} value={this.state.query} placeholder="Search" type="text" />
                 </div>
                 <ul>{results}</ul>
             </div>

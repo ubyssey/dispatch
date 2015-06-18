@@ -1,6 +1,6 @@
 var React = require('react');
 
-var DropdownButton = React.createClass({
+var DropdownPanel = React.createClass({
     getInitialState: function(){
         return {
             active: false,
@@ -45,25 +45,20 @@ var DropdownButton = React.createClass({
         return this.props.selectItem(value);
     },
     renderDropdown: function(){
-        var items = this.props.items.map(function(item){
-            return (
-                <li onClick={this.selectItem.bind(this, item.value)}>{item.label}</li>
-                );
-        }.bind(this));
         return (
-            <ul onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="items">
-                {items}
-            </ul>
+            <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="dropdown-panel items">
+                {this.props.children}
+            </div>
             );
     },
     render: function(){
         return (
             <div className={"dis-button dropdown-button " + (this.props.push ? this.props.push : "right")}>
-                <button onClick={this.toggleActive}>{this.props.children} <i className="fa fa-caret-down"></i></button>
+                <button onClick={this.toggleActive}>{this.props.label}<i className="fa fa-caret-down"></i></button>
                 {this.state.active ? this.renderDropdown() : null}
             </div>
             )
     }
 })
 
-module.exports = DropdownButton;
+module.exports = DropdownPanel;
