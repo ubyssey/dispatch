@@ -1,18 +1,13 @@
 var React = require('react');
-var SearchField = require('./SearchField.jsx');
+var SearchList = require('./SearchList.jsx');
 var ItemStore = require('../stores/ItemStore.js');
 
-var ModelField = React.createClass({
+var ManyModelDropdown = React.createClass({
     getInitialState: function(){
         return {
             items: this.props.data ? ItemStore(this.props.data) : ItemStore(),
             active: false,
         }
-    },
-    getDefaultProps: function() {
-        return {
-            many: false,
-        };
     },
     componentDidMount: function(){
       window.addEventListener("mousedown", this.pageClick, false);
@@ -34,7 +29,10 @@ var ModelField = React.createClass({
         });
     },
     updateField: function(){
-        this.props.updateHandler(this.props.name, this.state.items.all(), this.props.many);
+        if(this.props.serialize)
+            this.props.updateHandler(this.props.name, this.state.items.getIds());
+        else
+            this.props.updateHandler(this.props.name, this.state.items.all());
     },
     getObjProp: function(obj, str){
         str = str.split(".");
@@ -43,21 +41,15 @@ var ModelField = React.createClass({
         return obj;
     },
     selectItem: function(item){
-        console.log(this.props);
-        var id = this.getObjProp(item, this.props.item_key);
         var display = this.getObjProp(item, this.props.display);
-        var item_obj = {
-            id: id,
-            display: display,
-        };
-        if(this.props.many)
-            this.appendItem(item);
-        else
-            this.replaceItem(item);
+        this.appendItem(item);
     },
-    appendItem: function(item_obj){
+    createItem: function(item, callback){
+        this.props.createHandler(item, callback);
+    },
+    appendItem: function(item){
         var items = this.state.items;
-        items.append(item_obj);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -65,9 +57,9 @@ var ModelField = React.createClass({
             this.updateField();
         });
     },
-    replaceItem: function(item_obj){
+    replaceItem: function(item){
         var items = ItemStore();
-        items.append(item_obj);
+        items.append(item, this.props.item_key);
         this.setState({
             items: items,
         }, function(){
@@ -85,6 +77,11 @@ var ModelField = React.createClass({
     renderItem: function(item){
         return this.getObjProp(item, this.props.display);
     },
+    initialItems: function(callback){
+        dispatch.search(this.props.model, {}, function(data){
+            callback(data.results);
+        });
+    },
     searchItems: function(query, callback){
         dispatch.search(this.props.model, { q:query, limit:5 }, function(data){
             callback(data.results);
@@ -99,38 +96,43 @@ var ModelField = React.createClass({
     renderSearch: function(){
         return (
             <div className="search-container">
-                <SearchField selectItem={this.selectItem} renderItem={this.renderItem} searchItems={this.searchItems} />
+                <SearchList initialItems={this.initialItems} selectItem={this.selectItem} createItem={this.createItem} renderItem={this.renderItem} searchItems={this.searchItems} />
             </div>
             )
     },
-    renderModel: function(item){
-        var deleteButton = (
-            <div onClick={this.removeItem.bind(this, item.id)} className="model-delete"><i className="fa fa-close"></i></div>
-            );
+    renderField: function(text){
         return (
-            <div className="model-label">
-                <div className="left">{this.getObjProp(item, this.props.display)}</div>
-                {deleteButton}
+            <div className="model-label" onMouseDown={this.setActive}>
+                <div className="left">{text}</div>
+                <div className="icon drop"><i className="fa fa-plus"></i></div>
+            </div>
+            )
+    },
+    renderModel: function(model, i){
+        return (
+            <div key={i} className="model-label">
+                <div className="left">{this.renderItem(model)}</div>
+                <div className="icon delete" onClick={this.removeItem.bind(this, model.id)}><i className="fa fa-close"></i></div>
             </div>
             )
     },
     render: function(){
         var items = this.state.items.all().map(function(item, i){
-            return this.renderModel(item);
+            return this.renderModel(item, i);
         }.bind(this));
         return (
-            <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className={'field model-field ' + (this.state.active ? 'active' : '')}>
-                <div className="field-container">
-                    <label>{this.props.label}</label>
+            <div className={'field model-dropdown many ' + (this.state.active ? 'active' : '')}>
+                <label>{this.props.label}</label>
+                <div className="items">
                     {items}
                 </div>
-                {this.state.active ? this.renderSearch() : ""}
-                <div className="config">
-                    <a href="#" onMouseDown={this.setActive}>Change article</a>
+                <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="field-container">
+                    {this.renderField("Add new")}
+                    {this.state.active ? this.renderSearch() : ""}
                 </div>
             </div>
             )
     }
 });
 
-module.exports = ModelField;
+module.exports = ManyModelDropdown;

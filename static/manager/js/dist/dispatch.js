@@ -72,8 +72,8 @@
         'api_format': 'json',
     }
 
-    dispatch.settings = LOCAL_SETTINGS;
-    dispatch.version = '0.0.1';
+    dispatch.settings = PRODUCTION_SETTINGS;
+    dispatch.version = '0.0.4';
 
     // Errors
     // --------------------

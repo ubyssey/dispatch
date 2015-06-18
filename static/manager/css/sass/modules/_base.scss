@@ -19,9 +19,10 @@ body {
 header.main {
   background: #447AB7;
   color: white;
-  padding: 0 45px;
   font-family: $ui-font-source-sans;
   font-size: 13px;
+  box-sizing: border-box;
+  padding: 0 60px;
   // Clearfix
   &:after {
     content:"";
@@ -171,7 +172,8 @@ header.secondary {
   border-bottom: 1px solid rgb(228, 228, 228);
   height: $toolbar-width;
   line-height: 40px;
-  left: ($toolbar-width + 1);
+  box-sizing: border-box;
+  padding: 0 20px 0 60px;
   div.header-main {
     line-height: $toolbar-width;
     height: 100%;
@@ -219,9 +221,10 @@ main {
   }
   div.main {
     position: absolute;
-    top: 56px;
+    top: 55px;
     bottom: 0;
     width: 100%;
+    overflow-x: hidden;
   }
 }
 
@@ -329,7 +332,6 @@ div.list-header {
 
     }
     &.search {
-      padding-right: 20px;
       float: right;
     }
   }
