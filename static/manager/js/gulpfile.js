@@ -24,26 +24,27 @@ else
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
     entries: [path.SRC + file + '.js'],
-    transform: [reactify0],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true
   }));
 
   return watcher.on('update', function () {
-    watcher.bundle()
+    watcher.transform({ global: true }, reactify)
+      .bundle()
       .pipe(source(file + '.js'))
       .pipe(derequire())
-      //.pipe(buffer())
-      //.pipe(uglify())
+      .pipe(buffer())
+      .pipe(uglify())
       .pipe(rename(file + '-' + dispatch.version + '.js'))
       .pipe(gulp.dest(path.DEST))
       console.log('Updated');
   })
+    .transform({ global: true }, reactify)
     .bundle()
     .pipe(source(file + '.js'))
     .pipe(derequire())
-    //.pipe(buffer())
-    //.pipe(uglify())
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(rename(file + '-' + dispatch.version + '.js'))
     .pipe(gulp.dest(path.DEST));
 });

@@ -21,7 +21,7 @@
     "react": "~0.13.3",
     "react-slug": "^0.1.2",
     "react-sortable": "~0.0.2",
-    "react-tabs": "0.1.2",
+    "react-tabs": "0.1.1",
     "react-textarea-autosize": "~2.2.2",
     "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
