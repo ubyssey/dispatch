@@ -28,6 +28,7 @@ var ArticleAdmin = React.createClass({
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
+           showOptions: true,
            unsaved: false,
        };
     },
@@ -148,6 +149,11 @@ var ArticleAdmin = React.createClass({
             console.log("Missing fields: " + missing.join());
         }
     },
+    toggleOptions: function(){
+        this.setState({
+            showOptions: !this.state.showOptions
+        });
+    },
     animateLoader: function(){
         $('.load-success').fadeIn(500, function(){
             setTimeout(function(){
@@ -179,35 +185,33 @@ var ArticleAdmin = React.createClass({
     render: function(){
         if(!this.state.article){
             return (
-                <header></header>
+                <header className="secondary"></header>
                 )
         }
         return (
             <div className="inner">
                 <header className="secondary">
-                    <div className="container">
-                        {QuillToolbar}
-                        <div className="header-buttons">
-                            {this.renderLoader()}
-                            <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                            <div className="combo-buttons">
-                                <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
-                                <DropdownPanel push="left" label="Schedule">
-                                    <div className="field">
-                                        <label>Publish at</label>
-                                        <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                    </div>
-                                </DropdownPanel>
-                            </div>
-                            <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
-                            <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
-                            {'Version ' + this.state.version}
-                            </DropdownButton>
+                    {QuillToolbar}
+                    <div className="header-buttons">
+                        {this.renderLoader()}
+                        <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
+                        <div className="combo-buttons">
+                            <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
+                            <DropdownPanel push="left" label="Schedule">
+                                <div className="field">
+                                    <label>Publish at</label>
+                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                </div>
+                            </DropdownPanel>
                         </div>
+                        <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
+                        <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
+                        {'Version ' + this.state.version}
+                        </DropdownButton>
                     </div>
                 </header>
                 <div className="main clearfix">
-                    <div className="content panel">
+                    <div className={"content panel" + (this.state.showOptions ? "" : " expanded")}>
                         <div className="inner">
                             <div className="field-row headline">
                                 <Textarea rows={1} placeholder="Enter a headline"className="headline plain" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
@@ -216,8 +220,9 @@ var ArticleAdmin = React.createClass({
                                 <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
                             </div>
                         </div>
+                        <div className="toggle-options" onClick={this.toggleOptions}><i className={"fa fa-angle-double-" + (this.state.showOptions ? "right" : "left")}></i>{this.state.showOptions ? null : "open options"}</div>
                     </div>
-                    <div className="options panel">
+                    <div className={"options panel" + (this.state.showOptions ? "" : " expanded")} >
                         <Tabs
                             onSelect={this.handleSelected}
                             selectedIndex={0}>
