@@ -65,6 +65,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = (
+            'id',
             'name',
         )
 
@@ -153,6 +154,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     author_ids = serializers.CharField(write_only=True)
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
@@ -170,9 +174,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'content_json',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'authors_string',
             'section',
             'section_id',
+            'is_published',
             'published_at',
             'importance',
             'slug',
@@ -191,8 +198,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
         instance.short_headline = validated_data.get('short_headline', instance.short_headline)
         instance.section_id = validated_data.get('section_id')
-        instance.published_at = validated_data.get('published_at')
-        instance.slug = validated_data.get('slug')
+        instance.is_published = validated_data.get('is_published', instance.is_published)
+        instance.published_at = validated_data.get('published_at', instance.published_at)
+        instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.save()
 
@@ -208,6 +216,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         if authors:
             instance.save_authors(authors)
+
+        tags = validated_data.get('tag_ids', False)
+        print tags
+        if tags:
+            instance.save_tags(tags)
 
         instance.save(update_fields=['content', 'featured_image'], revision=False)
 

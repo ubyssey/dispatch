@@ -12,12 +12,12 @@ var QuillEditor = require('./QuillEditor.jsx');
 var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
-var ModelField = require('./fields/ModelFieldA.jsx');
 var SlugField = require('./fields/SlugField.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 var ItemStore = require('./stores/ItemStore.js');
 var DropdownButton = require('./buttons/DropdownButton.jsx');
+var DropdownPanel = require('./buttons/DropdownPanel.jsx');
 
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
@@ -28,8 +28,8 @@ var ArticleAdmin = React.createClass({
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
+           showOptions: true,
            unsaved: false,
-
        };
     },
     newArticle: function(){
@@ -68,19 +68,21 @@ var ArticleAdmin = React.createClass({
             article: article,
         });
     },
-    updateModelField: function(field, data){
+    updateModelField: function(field, data, unsaved){
         var article = this.state.article;
         article[field] = data;
         this.setState({
-            unsaved: true,
+            unsaved: typeof unsaved !== 'undefined' ? unsaved : true,
             article: article,
         });
+    },
+    createTag: function(tag_name, callback){
+        dispatch.add('tag', {name: tag_name}, callback);
     },
     requiredFields: [
         'long_headline',
         'short_headline',
         'content',
-        'published_at',
         'authors',
     ],
     missingFields: function(){
@@ -92,22 +94,30 @@ var ArticleAdmin = React.createClass({
         }
         return errors.length == 0 ? false : errors;
     },
-    save: function(){
-        this.updateModelField('content', this.refs.content.save());
+    handleSave: function(){
+        return this.save();
+    },
+    handlePublish: function(published, event){
+        return this.save(published);
+    },
+    save: function(published){
+        var published = typeof published !== 'undefined' ? published : this.state.article.is_published;
+        this.updateModelField('content', this.refs.content.save(), false);
         var missing = this.missingFields();
         if(!missing){
             var values = {
                 long_headline: this.state.article.long_headline,
                 short_headline: this.state.article.short_headline,
                 featured_image_json: JSON.stringify(this.state.article.featured_image),
+                is_published: published,
                 published_at: this.state.article.published_at,
                 slug: this.state.article.slug,
                 snippet: this.state.article.snippet,
                 content_json: this.refs.content.save(),
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
+                tag_ids: ItemStore(this.state.article.tags).getIds(),
             }
-
             this.setState({ saving: true, });
             if(this.state.firstSave){
                 dispatch.add('article', values, function(article){
@@ -139,18 +149,10 @@ var ArticleAdmin = React.createClass({
             console.log("Missing fields: " + missing.join());
         }
     },
-    updateAuthor: function(authorId){
+    toggleOptions: function(){
         this.setState({
-            saving: true,
+            showOptions: !this.state.showOptions
         });
-        dispatch.update('image', this.props.id, {authors: authorId, title: this.state.title}, function(data){
-            this.props.onUpdate(data);
-            this.setState({
-                saving: false,
-                saved: true,
-            });
-
-        }.bind(this));
     },
     animateLoader: function(){
         $('.load-success').fadeIn(500, function(){
@@ -183,7 +185,7 @@ var ArticleAdmin = React.createClass({
     render: function(){
         if(!this.state.article){
             return (
-                <header></header>
+                <header className="secondary"></header>
                 )
         }
         return (
@@ -192,8 +194,16 @@ var ArticleAdmin = React.createClass({
                     {QuillToolbar}
                     <div className="header-buttons">
                         {this.renderLoader()}
-                        <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.save}>Save</button>
-                        <button className="dis-button" onClick={this.save}>Publish</button>
+                        <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
+                        <div className="combo-buttons">
+                            <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
+                            <DropdownPanel push="left" label="Schedule">
+                                <div className="field">
+                                    <label>Publish at</label>
+                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
+                                </div>
+                            </DropdownPanel>
+                        </div>
                         <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}
@@ -201,7 +211,7 @@ var ArticleAdmin = React.createClass({
                     </div>
                 </header>
                 <div className="main clearfix">
-                    <div className="content panel">
+                    <div className={"content panel" + (this.state.showOptions ? "" : " expanded")}>
                         <div className="inner">
                             <div className="field-row headline">
                                 <Textarea rows={1} placeholder="Enter a headline"className="headline plain" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
@@ -210,8 +220,9 @@ var ArticleAdmin = React.createClass({
                                 <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
                             </div>
                         </div>
+                        <div className="toggle-options" onClick={this.toggleOptions}><i className={"fa fa-angle-double-" + (this.state.showOptions ? "right" : "left")}></i>{this.state.showOptions ? null : "open options"}</div>
                     </div>
-                    <div className="options panel">
+                    <div className={"options panel" + (this.state.showOptions ? "" : " expanded")} >
                         <Tabs
                             onSelect={this.handleSelected}
                             selectedIndex={0}>
@@ -230,10 +241,7 @@ var ArticleAdmin = React.createClass({
                                 </div>
                                 <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
                                 <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
-                                <div className="field">
-                                    <label>Publish at</label>
-                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                </div>
+                                <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} createHandler={this.createTag} />
                                 <div className="field full">
                                     <label>Snippet</label>
                                     <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>

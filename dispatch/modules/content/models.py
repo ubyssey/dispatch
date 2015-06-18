@@ -136,7 +136,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND section_id = %(section_id)s
+                WHERE head = 1 AND is_published = 1 AND section_id = %(section_id)s
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -151,7 +151,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1
+                WHERE head = 1 AND is_published = 1
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -186,7 +186,7 @@ class Article(Publishable):
 
     is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
-    published_at = DateTimeField()
+    published_at = DateTimeField(null=True)
     slug = SlugField()
 
     authors = ManyToManyField(Person, through="Author", blank=True, null=True)
@@ -264,10 +264,10 @@ class Article(Publishable):
         self.tags.clear()
         for tag in tags.split(","):
             try:
-                ins = Tag.objects.get(name=tag)
+                ins = Tag.objects.get(id=int(tag))
+                self.tags.add(ins)
             except Tag.DoesNotExist:
-                ins = Tag.objects.create(name=tag)
-            self.tags.add(ins)
+                pass
 
     def save_topics(self, topics):
         self.topics.clear()
@@ -337,8 +337,6 @@ class Article(Publishable):
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image']['id']
-                print node['data']['attachment_id']
-                print 'image-id: ' + str(image_id)
                 image = Image.objects.get(id=image_id)
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])

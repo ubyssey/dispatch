@@ -63,17 +63,16 @@ main.article article {
     color: #222222;
     div.article-byline {
       float: left;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 17px;
-      text-transform: uppercase;
+      font-family: $font-default;
+      font-weight: 500;
       span.author {
-        font-family: $font-secondary;
-        font-weight: 800;
-        letter-spacing: 0.05em;
+        font-family: $font-default;
       }
-
       span.published {
-        font-family: $font-secondary;
+        color: #777;
+        font-size: 13px;
       }
     }
     div.article-social-top {
