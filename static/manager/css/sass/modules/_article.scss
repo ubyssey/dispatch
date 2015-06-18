@@ -8,10 +8,6 @@
 
 $text-padding: 60px;
 
-div.panel {
-  float: left;
-}
-
 textarea.headline {
   font-size: 28px;
   color: #000000;
@@ -54,24 +50,91 @@ div.manage-authors {
   display: none;
 }
 
-div.main {
-}
-
 div.panel.content {
-  width: 780px;
+  position: relative;
+  margin-right: 600px;
   background: white;
   height: 100%;
   overflow: scroll;
 
   border-right: 1px solid #DEDEDE;
 
-  @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
+  &.expanded {
+    margin-right: 0;
+    > div.inner {
+      @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
+    }
+    div.toggle-options {
+      right: 0;
+      border: none;
+      background: none;
+    }
+  }
+
+  @include transition(margin-right 0.3s ease-in-out);
 
   > div.inner {
     padding-right: $text-padding;
     padding-bottom: 95px;
+    width: 720px;
+    margin: 0 auto;
+    @include transition(box-shadow 0.3s ease-in-out);
+    @media(min-width: 1500px) {
+      @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
+    }
+  }
+  div.toggle-options {
+    position: fixed;
+    z-index: 1;
+    top: 95px;
+    right: 600px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    padding: 0 13px;
+    color: #a2a2a2;
+    background: #fff;
+    border-bottom-left-radius: 3px;
+    border: 1px solid rgb(217, 217, 217);
+    border-top: none;
+
+    @include transition(right 0.3s ease-in-out);
+
+    &:hover {
+      color: rgb(90, 90, 90);
+    }
+    span {
+      font-size: 13px;
+      margin-left: 5px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
+
+div.panel.options {
+  border-left: 1px solid rgb(228, 228, 228);
+  position: absolute;
+  width: 600px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+
+  &.expanded {
+    right: -600px;
+  }
+
+  @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
+  @include transition(right 0.3s ease-in-out);
+
+  div.fieldset {
+    div.col:first-child {
+      margin-right: 15px;
+    }
+  }
+}
+
 
 
 div.featured-image {
@@ -115,9 +178,17 @@ div.react-tabs > ul, nav.edit-tabs ul {
     }
 
     &.ui-state-active, &[selected='selected'] {
-      background: rgb(245, 245, 245);
+      background: rgb(250, 250, 250);
       border-color: rgb(217, 217, 217);
       color: rgb(110, 110, 110);
+    }
+
+    &:first-child {
+      border-left: none;
+    }
+
+    * {
+      pointer-events: none;
     }
 
     i.fa {
@@ -153,19 +224,6 @@ div.fieldset.tab, div[role="tabpanel"] {
 }
 
 
-div.panel.options {
-  position: absolute;
-  float: none;
-  right: 0;
-  left: 780px;
-  bottom: 0;
-  top: 0;
-  div.fieldset {
-    div.col:first-child {
-      margin-right: 15px;
-    }
-  }
-}
 
 div.field-row.content {
   textarea.content {
@@ -197,7 +255,7 @@ button.embed-button {
 div.field-row.headline {
   margin-left: $text-padding;
   border-bottom: 1px solid rgb(226, 226, 226);
-  padding-top: 20px;
+  padding-top: 35px;
   padding-bottom: 20px;
   margin-bottom: 30px;
   div.authors {
@@ -347,13 +405,15 @@ div.tab {
 }
 
 div.header-buttons {
-  padding: 0 15px;
   line-height: 50px;
   vertical-align: middle;
   float: right;
   > a, > button, > div.dis-button, > div.combo-buttons {
     display: inline-block;
     margin: 0 5px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
   .loader {
     border-left: 5px solid #FAFAFA;

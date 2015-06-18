@@ -17,13 +17,14 @@ $grey-hover-grad: (#eee, #ddd);
 $blue-grad: (#6D77DD, #4445B0);
 
 button.dis-button, a.dis-button, div.dis-button > button {
+  display: inline-block;
   border-radius: 3px;
   color: #666;
   font-family: $ui-font-helvetica;
   font-size: 13px;
   font-weight: 600;
-  line-height: 20px;
-  padding: 6px 12px;
+  line-height: 30px;
+  padding: 0 12px;
   border-width: 1px;
   border-style: solid;
   text-decoration: none;
