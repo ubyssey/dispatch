@@ -86,15 +86,15 @@ class ImageAttachmentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     paginate_by = 50
     queryset = ImageAttachment.objects.all()
 
-    def article(self, request, pk=None):
+    def article(self, request, parent_id=None):
         """
         Extra method to return ImageAttachments for given Article.
 
         TODO: add error handling for when pk is None
         """
-        if pk is not None:
+        if parent_id is not None:
             # Update queryset to filter by given Article id
-            self.queryset = self.queryset.filter(article__id=pk)
+            self.queryset = self.queryset.filter(article__parent_id=parent_id)
         return super(ImageAttachmentViewSet, self).list(self, request)
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -124,6 +124,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset[:limit]
         return queryset
 
+
+
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):
         revision_id = request.QUERY_PARAMS.get('revision_id', None)
@@ -137,13 +139,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
-    def attachments(self, request, pk=None):
+    def attachments(self, request, parent_id=None):
         """
         Returns a list of the arictle's attachments.
         Uses ImageAttachmentViewSet.article() to perform request
         """
         view = ImageAttachmentViewSet.as_view({'get': 'article'})
-        return view(request, pk)
+        return view(request, parent_id)
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
