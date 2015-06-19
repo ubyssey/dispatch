@@ -5,6 +5,7 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var reactify = require('reactify');
 var uglify = require('gulp-uglify');
+var gulpif = require('gulp-if');
 var derequire = require('gulp-derequire');
 var rename = require('gulp-rename');
 var argv = require('minimist')(process.argv.slice(2));
@@ -15,11 +16,20 @@ var path = {
   SRC: './src/',
 };
 
-var file;
-if(typeof argv.i === 'undefined')
-    file = "article";
-else
-    file = argv.i;
+var file, dev;
+file = typeof argv.i === 'undefined' ? 'article' : argv.i;
+dev = typeof argv.d === 'undefined' ? false : true;
+
+var reactTask = function(obj){
+    return obj.transform({ global: true }, reactify)
+    .bundle()
+    .pipe(source(file + '.js'))
+    .pipe(derequire())
+    .pipe(gulpif(!dev, buffer()))
+    .pipe(gulpif(!dev, uglify()))
+    .pipe(rename(file + '-' + dispatch.version + '.js'))
+    .pipe(gulp.dest(path.DEST));
+}
 
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
@@ -28,25 +38,11 @@ gulp.task('watch', function() {
     cache: {}, packageCache: {}, fullPaths: true
   }));
 
-  return watcher.on('update', function () {
-    watcher.transform({ global: true }, reactify)
-      .bundle()
-      .pipe(source(file + '.js'))
-      .pipe(derequire())
-      .pipe(buffer())
-      .pipe(uglify())
-      .pipe(rename(file + '-' + dispatch.version + '.js'))
-      .pipe(gulp.dest(path.DEST))
-      console.log('Updated');
-  })
-    .transform({ global: true }, reactify)
-    .bundle()
-    .pipe(source(file + '.js'))
-    .pipe(derequire())
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(rename(file + '-' + dispatch.version + '.js'))
-    .pipe(gulp.dest(path.DEST));
+  return reactTask(watcher.on('update', function () {
+      reactTask(watcher);
+      console.log('updated');
+  }));
+
 });
 
 gulp.task('default', ['watch']);
