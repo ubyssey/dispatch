@@ -1,0 +1,27 @@
+header.list-header {
+  padding: 0 60px;
+  border-bottom: thin solid #E2E2E2;
+  background: #f9f9f9;
+  div.cell {
+    float: left;
+    line-height: 55px;
+    span {
+      color: gray;
+      font-size: 14px;
+      .fa {
+        font-size: 15px;
+      }
+    }
+    &.checkbox {
+      text-align: center;
+      width: 12px;
+    }
+    &.actions {
+      margin-left: 20px;
+
+    }
+    &.search {
+      float: right;
+    }
+  }
+}

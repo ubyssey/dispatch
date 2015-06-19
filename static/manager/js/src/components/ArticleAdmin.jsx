@@ -124,7 +124,7 @@ var ArticleAdmin = React.createClass({
                     this.setState({
                         article: article,
                         head: article.revision_id,
-                        head_id: article.id,
+                        head_id: article.parent,
                         version: article.revision_id,
                         firstSave: false,
                         saving: false,
@@ -137,7 +137,7 @@ var ArticleAdmin = React.createClass({
                     this.setState({
                         article: article,
                         head: article.revision_id,
-                        head_id: article.id,
+                        head_id: article.parent,
                         version: article.revision_id,
                         saving: false,
                         unsaved: false
@@ -158,19 +158,11 @@ var ArticleAdmin = React.createClass({
         $('.load-success').fadeIn(500, function(){
             setTimeout(function(){
                 $('.load-success').fadeOut(500);
-            }, 3000);
+            }, 1000);
         });
     },
     renderLoader: function(){
-        if(this.state.saving){
-            return (
-                <div className="loader"></div>
-            )
-        } else if (this.state.saved){
-            return (
-                <i className="load-success fa fa-check"></i>
-            );
-        }
+        return ( <div className={'load-status' + (this.state.saving ? ' saving' : "")}><div className="loader"></div><div className="load-success"><i className="fa fa-check"></i></div></div> );
     },
     renderVersions: function(){
         var versions = [];
