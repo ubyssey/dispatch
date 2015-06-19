@@ -62,8 +62,6 @@ button.dis-button, a.dis-button, div.dis-button > button {
 
   &:disabled, &:disabled:hover {
     cursor: default;
-    background: gray;
-    border-color: gray;
     opacity: 0.5;
   }
 }

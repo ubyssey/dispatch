@@ -104,7 +104,7 @@ var ImageMeta = React.createClass({
                         {this.renderLoader()}
                     </div>
                     <div className="pull-right">
-                        <button onClick={this.handleDelete} className="dis-button red" >Delete</button>
+                        <button onClick={this.handleDelete} className="dis-button" >Delete</button>
                     </div>
                 </div>
             </div>
