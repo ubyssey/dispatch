@@ -79,6 +79,12 @@ input, textarea {
   }
 }
 
+.header input {
+  line-height: 30px;
+  vertical-align: middle;
+  padding: 0 10px;
+}
+
 textarea {
   line-height: 1.5em;
 }

@@ -208,11 +208,10 @@ def article_edit(request, id):
     """
     TODO: create API route to return article from parent ID eliminate below query.
     """
-    a = Article.objects.filter(parent=id,preview=False).order_by('-pk')[0]
 
     context = {
         'title': 'Edit Article',
-        'article': a.id,
+        'article': id,
         #'templates': ThemeHelper.get_theme_templates(),
     }
 
