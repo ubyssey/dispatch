@@ -102,6 +102,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     Viewset for Article model views.
     """
     serializer_class = ArticleSerializer
+    lookup_field = 'parent_id'
 
     def get_queryset(self):
         """
@@ -124,10 +125,10 @@ class ArticleViewSet(viewsets.ModelViewSet):
         return queryset
 
     @detail_route(methods=['get'],)
-    def revision(self, request, pk=None):
+    def revision(self, request, parent_id=None):
         revision_id = request.QUERY_PARAMS.get('revision_id', None)
         filter_kwargs = {
-            'parent_id': pk,
+            'parent_id': parent_id,
             'revision_id': revision_id,
         }
         queryset = Article.objects.all()
