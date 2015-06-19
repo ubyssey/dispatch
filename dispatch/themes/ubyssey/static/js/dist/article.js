@@ -25,36 +25,13 @@ $(document).scroll(function() {
 var Gallery = React.createClass({displayName: "Gallery",
     getInitialState: function(){
         return {
-            images: {},
-            images_list: [],
-            currentIndex: false,
-            currentImage: false,
+            index: false,
             image: false,
-            image_height: false,
-            initialized: false,
             visible: false,
         }
     },
-    initializeImages: function(callback) {
-        dispatch.articleAttachments(this.props.article, function(data){
-            var images = {};
-
-            $.each(data.results, function(key, image){
-                images[image.attachment_id] = key;
-            });
-
-            this.setState({
-                images: images,
-                images_list: data.results,
-                image_height: $(window).height() - 200,
-                initialized: true,
-            });
-
-            this.setupEventListeners();
-
-            callback();
-
-        }.bind(this));
+    componentDidMount: function(){
+        this.setupEventListeners();
     },
     setupEventListeners: function(){
 
@@ -93,42 +70,26 @@ var Gallery = React.createClass({displayName: "Gallery",
             if(gallery.state.visible){
                 this.close();
             } else {
-                if(!this.state.initialized){
-                    this.initializeImages(function(){
-                        this.open(image_id);
-                    }.bind(this));
-                } else {
-                    this.open(image_id);
-                }
+                this.open(image_id);
             }
 
         }.bind(this));
     },
-    setCurrentImage: function(image_id){
+    setIndex: function(index){
+        var attachment = this.props.images[index];
         this.setState({
-            currentImage: image_id,
-        });
-    },
-    setCurrentIndex: function(currentIndex){
-        this.setState({
-            currentIndex: currentIndex,
-        });
-    },
-    displayCurrentImage: function(){
-        var currentIndex = this.state.images[this.state.currentImage];
-        var attachment = this.state.images_list[currentIndex];
-        this.setState({
-            currentIndex: currentIndex,
+            index: index,
             image: attachment.url,
             caption: attachment.caption,
         });
     },
-    open: function(image_id){
-        this.setCurrentImage(image_id);
-        this.displayCurrentImage();
-        this.setState({
-            visible: true,
-        });
+    setCurrentImage: function(imageId){
+        var index = this.props.imagesTable[imageId];
+        return this.setIndex(index);
+    },
+    open: function(imageId){
+        this.setCurrentImage(imageId);
+        this.setState({ visible: true });
         $('body').addClass('no-scroll');
     },
     close: function(){
@@ -138,25 +99,19 @@ var Gallery = React.createClass({displayName: "Gallery",
         $('body').removeClass('no-scroll');
     },
     previous: function(){
-        if(this.state.currentIndex == 0) return;
-        this.setCurrentIndex(this.state.currentIndex - 1);
-        this.setCurrentImage(this.state.images_list[this.state.currentIndex].attachment_id);
-        this.displayCurrentImage();
+        if(this.state.index == 0) return;
+        this.setIndex(this.state.index - 1);
     },
     next: function(){
-        if(this.state.currentIndex + 1 >= this.state.images_list.length) return;
-        this.setCurrentIndex(this.state.currentIndex + 1);
-        this.setCurrentImage(this.state.images_list[this.state.currentIndex].attachment_id);
-        this.displayCurrentImage();
+        if(this.state.index + 1 >= this.props.images.length) return;
+        this.setIndex(this.state.index + 1);
     },
     renderImage: function(){
         if(this.state.image){
-            var imageStyle = {
-                maxHeight: this.state.image_height,
-            };
+            var imageStyle = { maxHeight: $(window).height() - 200 };
             return (
                 React.createElement("div", {className: "slide"}, 
-                    React.createElement("img", {className: "slide-image", style: imageStyle, src:  this.state.image}), 
+                    React.createElement("img", {className: "slide-image", style: imageStyle, src: this.state.image}), 
                     React.createElement("p", {className: "slide-caption"}, this.state.caption), 
                     this.renderControls()
                 )
@@ -164,11 +119,11 @@ var Gallery = React.createClass({displayName: "Gallery",
         }
     },
     renderControls: function(){
-        if(this.state.images_list.length > 1){
+        if(this.props.images.length > 1){
             return (
                 React.createElement("div", {className: "navigation"}, 
                     React.createElement("a", {className: "prev-slide", href: "#"}, React.createElement("i", {className: "fa fa-chevron-left"})), 
-                    React.createElement("span", {className: "curr-slide"}, this.state.currentIndex + 1), "   of   ", React.createElement("span", {className: "total-slide"}, this.state.images_list.length), 
+                    React.createElement("span", {className: "curr-slide"}, this.state.index + 1), "  of  ", React.createElement("span", {className: "total-slide"}, this.props.images.length), 
                     React.createElement("a", {className: "next-slide", href: "#"}, React.createElement("i", {className: "fa fa-chevron-right"}))
                 )
             );
@@ -192,9 +147,31 @@ var Gallery = React.createClass({displayName: "Gallery",
     }
 });
 
-var article = $('article').data("id");
+function gatherImages(){
+    var images = [];
+    var imagesTable = {};
+    var n = 0;
+    $('.article-attachment').each(function(){
+        var id = $(this).data('id');
+        images.push({
+            'id': id,
+            'url': $(this).attr('src'),
+            'caption': $(this).data('caption'),
+            'credit': $(this).data('credit'),
+        });
+        imagesTable[id] = n;
+        n++;
+    });
+    return {
+        'list': images,
+        'table': imagesTable,
+    }
+}
+
+var images = gatherImages();
+
 var gallery = React.render(
-    React.createElement(Gallery, {article: article}),
+    React.createElement(Gallery, {images: images.list, imagesTable: images.table}),
     document.getElementById('gallery')
 );
 
