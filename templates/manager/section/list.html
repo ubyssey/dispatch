@@ -5,11 +5,11 @@
     </div>
 {% endblock %}
 {% block content %}
-    <div class="list-header clearfix">
+    <header class="secondary clearfix">
         <div class="cell">
             <a class="dis-button" href="{% url 'apps.manager.views.section_add' %}">New section</a>
         </div>
-    </div>
+    </header>
     <div class="list-container">
         <div class="item-list">
         {% for section in sections %}
