@@ -46,7 +46,6 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
-
         if revision:
             self.head = True
             self.revision_id += 1
@@ -57,6 +56,9 @@ class Publishable(Model):
                 self.pk = None
                 self.id = None
 
+            if self.is_published:
+                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
+
         super(Publishable, self).save(*args, **kwargs)
 
         if not self.parent:
@@ -64,6 +66,18 @@ class Publishable(Model):
             super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def publish(self, publish=True, commit=True):
+        if publish:
+            # Unpublished existing published version, if one exists
+            try:
+                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
+            except:
+                pass
+
+        self.is_published = publish
+        if commit:
+            return self.save(revision=False, update_fields=['is_published'])
 
     def get_previous_revision(self):
         if self.parent == self:

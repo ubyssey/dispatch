@@ -98,7 +98,11 @@ var ArticleAdmin = React.createClass({
         return this.save();
     },
     handlePublish: function(published, event){
-        return this.save(published);
+        if(this.state.unsaved){
+            return this.save(published);
+        } else {
+            return this.publish(published);
+        }
     },
     save: function(published){
         var published = typeof published !== 'undefined' ? published : this.state.article.is_published;
@@ -120,34 +124,28 @@ var ArticleAdmin = React.createClass({
             }
             this.setState({ saving: true, });
             if(this.state.firstSave){
-                dispatch.add('article', values, function(article){
-                    this.setState({
-                        article: article,
-                        head: article.revision_id,
-                        head_id: article.parent,
-                        version: article.revision_id,
-                        firstSave: false,
-                        saving: false,
-                        unsaved: false
-                    });
-                    this.animateLoader();
-                }.bind(this));
+                dispatch.add('article', values, this.saveCallback);
             } else {
-                dispatch.update('article', this.state.head_id, values, function(article){
-                    this.setState({
-                        article: article,
-                        head: article.revision_id,
-                        head_id: article.parent,
-                        version: article.revision_id,
-                        saving: false,
-                        unsaved: false
-                    });
-                    this.animateLoader();
-                }.bind(this));
+                dispatch.update('article', this.state.head_id, values, this.saveCallback);
             }
         } else {
             console.log("Missing fields: " + missing.join());
         }
+    },
+    publish: function(published){
+        dispatch.publish('article', this.state.head_id, published, this.saveCallback);
+    },
+    saveCallback: function(article){
+        this.setState({
+            article: article,
+            head: article.revision_id,
+            head_id: article.parent,
+            version: article.revision_id,
+            firstSave: false,
+            saving: false,
+            unsaved: false
+        });
+        this.animateLoader();
     },
     toggleOptions: function(){
         this.setState({
