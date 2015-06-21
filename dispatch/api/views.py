@@ -124,7 +124,19 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset[:limit]
         return queryset
 
+    @detail_route(methods=['post',],)
+    def publish(self, request, parent_id=None):
+        return self.perform_publish(True)
 
+    @detail_route(methods=['post',],)
+    def unpublish(self, request, parent_id=None):
+        return self.perform_publish(False)
+
+    def perform_publish(self, publish):
+        instance = self.get_object()
+        instance.publish(publish)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):

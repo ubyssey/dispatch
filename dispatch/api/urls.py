@@ -27,5 +27,6 @@ urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
     url(r'^sections/(?P<slug>[\w-]+)/frontpage/$', section_frontpage, name='section-frontpage'),
+    # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
 ]) + router.urls

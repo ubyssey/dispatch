@@ -28,11 +28,17 @@
             'actions': ['GET', 'POST', 'DELETE'],
             'sub_routes': {
                 'attachments': {
-                    'actions': ['GET',],
+                    'actions': ['GET',]
                 },
                 'revision': {
-                    'actions': ['GET', ],
+                    'actions': ['GET',]
                 },
+                'publish': {
+                    'actions': ['POST',]
+                },
+                'unpublish': {
+                    'actions': ['POST',]
+                }
             },
         },
         'tag': {
@@ -73,7 +79,7 @@
     }
 
     dispatch.settings = PRODUCTION_SETTINGS;
-    dispatch.version = '0.0.5';
+    dispatch.version = '0.1.6';
 
     // Errors
     // --------------------
@@ -215,6 +221,13 @@
         if (!validAction(model, 'POST')) throw InvalidActionError(model);
         return dispatch.patch(getModelRoute(model, id), values, callback);
     };
+
+    dispatch.publish = function(model, id, published, callback) {
+        var route = published ? 'publish' : 'unpublish';
+        var model = model + '.' + route;
+        if (!validAction(model, 'POST')) throw InvalidActionError(model);
+        return dispatch.post(getModelRoute(model, id), {}, callback);
+    }
 
     dispatch.remove = function(model, id, callback) {
         if (!validAction(model, 'DELETE')) throw InvalidActionError(model);

@@ -198,10 +198,15 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
         instance.short_headline = validated_data.get('short_headline', instance.short_headline)
         instance.section_id = validated_data.get('section_id')
-        instance.is_published = validated_data.get('is_published', instance.is_published)
         instance.published_at = validated_data.get('published_at', instance.published_at)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
+
+        is_published = validated_data.get('is_published', None)
+
+        if is_published is not None and is_published != instance.is_published:
+            instance.publish(is_published, commit=False)
+
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
@@ -218,7 +223,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_authors(authors)
 
         tags = validated_data.get('tag_ids', False)
-        print tags
+
         if tags:
             instance.save_tags(tags)
 
