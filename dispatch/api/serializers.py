@@ -160,6 +160,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+
     class Meta:
         model = Article
         fields = (
@@ -198,10 +199,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
         instance.short_headline = validated_data.get('short_headline', instance.short_headline)
         instance.section_id = validated_data.get('section_id')
-        instance.is_published = validated_data.get('is_published', instance.is_published)
-        instance.published_at = validated_data.get('published_at', instance.published_at)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
+
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
@@ -218,7 +218,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_authors(authors)
 
         tags = validated_data.get('tag_ids', False)
-        print tags
+
         if tags:
             instance.save_tags(tags)
 
