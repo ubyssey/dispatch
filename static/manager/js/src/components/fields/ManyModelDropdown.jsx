@@ -126,7 +126,7 @@ var ManyModelDropdown = React.createClass({
                 <div className="items">
                     {items}
                 </div>
-                <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="field-container">
+                <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className={"field-container " + this.props.errorClass}>
                     {this.renderField("Add new")}
                     {this.state.active ? this.renderSearch() : ""}
                 </div>

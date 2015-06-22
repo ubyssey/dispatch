@@ -24,6 +24,7 @@ var ArticleAdmin = React.createClass({
     getInitialState: function(){
        return {
            article: this.props.articleId ? false : this.newArticle(),
+           errors: [],
            firstSave: this.props.articleId ? false : true,
            head: 0,
            version: 1,
@@ -64,6 +65,9 @@ var ArticleAdmin = React.createClass({
     updateField: function(field, event){
         var article = this.state.article;
         article[field] = event.target.value;
+        if(event.target.value != ""){
+            this.clearError(field);
+        }
         this.setState({
             unsaved: true,
             article: article,
@@ -72,6 +76,9 @@ var ArticleAdmin = React.createClass({
     updateModelField: function(field, data, unsaved){
         var article = this.state.article;
         article[field] = data;
+        if(data){
+            this.clearError(field);
+        }
         this.setState({
             unsaved: typeof unsaved !== 'undefined' ? unsaved : true,
             article: article,
@@ -83,17 +90,35 @@ var ArticleAdmin = React.createClass({
     requiredFields: [
         'long_headline',
         'short_headline',
-        'content',
+        'section',
         'authors',
+        'slug',
+        'snippet'
     ],
+    errorClass: function(field){
+        return this.state.errors.indexOf(field) != -1 ? "error" : "";
+    },
+    clearError: function(field){
+        var errors = this.state.errors;
+        var index = errors.indexOf(field);
+        if (index > -1) {
+            errors.splice(index, 1);
+        }
+        this.setState({ errors: errors });
+    },
     missingFields: function(){
         var errors = [];
         for(var i = 0; i < this.requiredFields.length; i++){
             var field = this.requiredFields[i];
-            if(!this.state.article.hasOwnProperty(field))
+            if(!this.state.article.hasOwnProperty(field) || this.state.article[field] == "")
                 errors.push(field);
         }
-        return errors.length == 0 ? false : errors;
+        if ( errors.length != 0 ){
+            this.setState({ errors: errors });
+            return errors;
+        } else {
+            return false;
+        }
     },
     handleSave: function(){
         return this.save();
@@ -168,6 +193,11 @@ var ArticleAdmin = React.createClass({
             }, 1000);
         });
     },
+    previewButton: function(){
+        if(this.state.article.section){
+            return (<a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>);
+        }
+    },
     renderLoader: function(){
         return ( <div className={'load-status' + (this.state.saving ? ' saving' : "")}><div className="loader"></div><div className="load-success"><i className="fa fa-check"></i></div></div> );
     },
@@ -200,7 +230,7 @@ var ArticleAdmin = React.createClass({
                                 <DateTimeField datetime={this.state.article.published_at} updateHandler={this.handleSchedule} />
                             </DropdownPanel>
                         </div>
-                        <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
+                        {this.previewButton()}
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}
                         </DropdownButton>
@@ -210,7 +240,7 @@ var ArticleAdmin = React.createClass({
                     <div className={"content panel" + (this.state.showOptions ? "" : " expanded")}>
                         <div className="inner">
                             <div className="field-row headline">
-                                <Textarea rows={1} placeholder="Enter a headline"className="headline plain" value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
+                                <Textarea rows={1} placeholder="Enter a headline" className={"headline " + this.errorClass("long_headline")} value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
                             </div>
                             <div className="field-row content">
                                 <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
@@ -229,18 +259,18 @@ var ArticleAdmin = React.createClass({
                             <TabPanel>
                                 <div className="field full">
                                     <label>Short Headline</label>
-                                    <input type="text" value={this.state.article.short_headline} onChange={this.updateField.bind(this,'short_headline')} />
+                                    <input type="text" value={this.state.article.short_headline} className={this.errorClass("short_headline")} tabIndex={1} onChange={this.updateField.bind(this,'short_headline')} />
                                 </div>
                                 <div className="field full">
                                     <label>Slug</label>
-                                    <SlugField url={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") } value={this.state.article.slug ? this.state.article.slug : ""} onChange={this.updateField.bind(this,'slug')} />
+                                    <SlugField url={dispatch.settings.base_url + (this.state.article && this.state.article.section ? this.state.article.section.slug + "/" : "") } value={this.state.article.slug ? this.state.article.slug : ""} tabIndex={2} errorClass={this.errorClass("slug")} onChange={this.updateField.bind(this,'slug')} />
                                 </div>
-                                <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} updateHandler={this.updateModelField} />
-                                <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} updateHandler={this.updateModelField} />
+                                <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} errorClass={this.errorClass("section")} updateHandler={this.updateModelField} />
+                                <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} errorClass={this.errorClass("authors")} updateHandler={this.updateModelField} />
                                 <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} createHandler={this.createTag} />
                                 <div className="field full">
                                     <label>Snippet</label>
-                                    <Textarea rows={4} value={this.state.article.snippet} onChange={this.updateField.bind(this,'snippet')}></Textarea>
+                                    <Textarea rows={4} value={this.state.article.snippet} className={this.errorClass("snippet")} onChange={this.updateField.bind(this,'snippet')}></Textarea>
                                 </div>
                             </TabPanel>
                             <TabPanel>
