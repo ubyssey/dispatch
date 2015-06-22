@@ -377,7 +377,8 @@ class Article(Publishable):
     def save_featured_image(self, data):
         attachment = ImageAttachment()
         attachment.image_id = data['id']
-        attachment.caption = data['caption']
+        if 'caption' in data:
+            attachment.caption = data['caption']
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
