@@ -79,7 +79,7 @@ class Publishable(Model):
 
         self.is_published = publish
         if commit:
-            return self.save(revision=False, update_fields=['is_published'])
+            return self.save(revision=False, update_fields=['is_published', 'published_at'])
 
     def schedule(self, publish_at, commit=True):
         self.published_at = datetime.datetime.strptime(publish_at, '%Y-%m-%dT%H:%M:%S.%fZ')
