@@ -13,6 +13,7 @@ var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var SlugField = require('./fields/SlugField.jsx');
+var DateTimeField = require('./fields/DateTimeField.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 var ItemStore = require('./stores/ItemStore.js');
@@ -97,11 +98,18 @@ var ArticleAdmin = React.createClass({
     handleSave: function(){
         return this.save();
     },
-    handlePublish: function(published, event){
-        return this.save(published);
+    handlePublish: function(publish, event){
+        if(this.state.unsaved){
+            return this.save({publish: publish});
+        } else {
+            return this.publish(publish);
+        }
     },
-    save: function(published){
-        var published = typeof published !== 'undefined' ? published : this.state.article.is_published;
+    handleSchedule: function(publish_at){
+        return this.save({schedule: publish_at});
+    },
+    save: function(options){
+        var options = typeof options !== 'undefined' ? options : {};
         this.updateModelField('content', this.refs.content.save(), false);
         var missing = this.missingFields();
         if(!missing){
@@ -109,8 +117,6 @@ var ArticleAdmin = React.createClass({
                 long_headline: this.state.article.long_headline,
                 short_headline: this.state.article.short_headline,
                 featured_image_json: JSON.stringify(this.state.article.featured_image),
-                is_published: published,
-                published_at: this.state.article.published_at,
                 slug: this.state.article.slug,
                 snippet: this.state.article.snippet,
                 content_json: this.refs.content.save(),
@@ -118,36 +124,37 @@ var ArticleAdmin = React.createClass({
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
             }
+
+            if(options.hasOwnProperty('publish'))
+                values.publish = options.publish
+            if(options.hasOwnProperty('schedule'))
+                values.schedule = true
+                values.publish_at = options.schedule
+
             this.setState({ saving: true, });
             if(this.state.firstSave){
-                dispatch.add('article', values, function(article){
-                    this.setState({
-                        article: article,
-                        head: article.revision_id,
-                        head_id: article.parent,
-                        version: article.revision_id,
-                        firstSave: false,
-                        saving: false,
-                        unsaved: false
-                    });
-                    this.animateLoader();
-                }.bind(this));
+                dispatch.add('article', values, this.saveCallback);
             } else {
-                dispatch.update('article', this.state.head_id, values, function(article){
-                    this.setState({
-                        article: article,
-                        head: article.revision_id,
-                        head_id: article.parent,
-                        version: article.revision_id,
-                        saving: false,
-                        unsaved: false
-                    });
-                    this.animateLoader();
-                }.bind(this));
+                dispatch.update('article', this.state.head_id, values, this.saveCallback);
             }
         } else {
             console.log("Missing fields: " + missing.join());
         }
+    },
+    publish: function(published){
+        dispatch.publish('article', this.state.head_id, published, this.saveCallback);
+    },
+    saveCallback: function(article){
+        this.setState({
+            article: article,
+            head: article.revision_id,
+            head_id: article.parent,
+            version: article.revision_id,
+            firstSave: false,
+            saving: false,
+            unsaved: false
+        });
+        this.animateLoader();
     },
     toggleOptions: function(){
         this.setState({
@@ -190,10 +197,7 @@ var ArticleAdmin = React.createClass({
                         <div className="combo-buttons">
                             <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
                             <DropdownPanel push="left" label="Schedule">
-                                <div className="field">
-                                    <label>Publish at</label>
-                                    <input type="text" value={this.state.article.published_at} onChange={this.updateField.bind(this,'published_at')} />
-                                </div>
+                                <DateTimeField datetime={this.state.article.published_at} updateHandler={this.handleSchedule} />
                             </DropdownPanel>
                         </div>
                         <a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>
