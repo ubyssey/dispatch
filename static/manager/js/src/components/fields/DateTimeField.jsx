@@ -17,22 +17,11 @@ var MONTHS = [
 ];
 
 var DateTimeField = React.createClass({
-    getRange: function(start, end){
-        var range = [];
-        for(var i = start; i <= end; i++){
-            range.push(i);
-        }
-        return range;
-    },
     getInitialState: function(){
         return this.parseDatetime(this.props.datetime);
     },
-    componentWillMount: function(){
-        var currentYear = new Date().getFullYear();
-        this.years = this.getRange(1970, currentYear);
-    },
     parseDatetime: function(datetime){
-        var parsed = moment(datetime);
+        var parsed = typeof datetime !== 'undefined' ? moment(datetime) : moment();
         return {
             year:   parsed.get('year'),
             month:  parsed.get('month'),
@@ -40,14 +29,14 @@ var DateTimeField = React.createClass({
             hour:   parsed.get('hour'),
             minute: parsed.get('minute'),
             second: parsed.get('second'),
-            days: this.getRange(1, parsed.daysInMonth())
+            days: parsed.daysInMonth()
         }
     },
     updateMonth: function(event){
         var daysInMonth = moment({year: this.state.year, month: event.target.value}).daysInMonth()
         this.setState({
             month: event.target.value,
-            days: this.getRange(1, daysInMonth)
+            days: daysInMonth
         });
     },
     updateHandler: function(field, event){
@@ -81,9 +70,12 @@ var DateTimeField = React.createClass({
         return hours;
     },
     yearOptions: function(){
-        return this.years.map(function(year, i){
-            return (<option key={i} value={year}>{year}</option>);
-        });
+        var currentYear = new Date().getFullYear();
+        var years = [];
+        for(var year = 1970; year <= currentYear; year++){
+            years.push((<option key={year} value={year}>{year}</option>));
+        }
+        return years;
     },
     monthOptions: function(){
         return MONTHS.map(function(month, i){
@@ -91,9 +83,11 @@ var DateTimeField = React.createClass({
         });
     },
     dayOptions: function(){
-        return this.state.days.map(function(day, i){
-            return (<option key={i} value={day}>{day}</option>);
-        });
+        var days = [];
+        for(var day = 1; day <= this.state.days; day++){
+            days.push((<option key={day} value={day}>{day}</option>));
+        }
+        return days;
     },
     render: function(){
         return (
