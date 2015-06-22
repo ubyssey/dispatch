@@ -1,3 +1,7 @@
+import datetime
+from PIL import Image as Img
+import StringIO, json, os, re
+
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
@@ -6,11 +10,7 @@ from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.template import loader, Context
 from django.utils.functional import cached_property
-
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image as Img
-import StringIO, json, os, re
-
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
@@ -75,9 +75,17 @@ class Publishable(Model):
             except:
                 pass
 
+            self.published_at = datetime.datetime.today()
+
         self.is_published = publish
         if commit:
             return self.save(revision=False, update_fields=['is_published'])
+
+    def schedule(self, publish_at, commit=True):
+        self.published_at = datetime.datetime.strptime(publish_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+        self.publish(False, commit=False)
+        if commit:
+            return self.save(revision=False, update_fields=['published_at'])
 
     def get_previous_revision(self):
         if self.parent == self:
