@@ -62,6 +62,10 @@
         'section': {
             'route': 'sections',
             'actions': ['GET', 'POST', 'DELETE'],
+        },
+        'template': {
+            'route': 'templates',
+            'actions': ['GET']
         }
     }
 
