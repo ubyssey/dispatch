@@ -186,6 +186,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'slug',
             'revision_id',
             'url',
+            'template',
         )
 
     def create(self, validated_data):
@@ -201,6 +202,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.section_id = validated_data.get('section_id')
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
+        instance.template = validated_data.get('template', instance.template)
 
         instance.save()
 
