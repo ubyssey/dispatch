@@ -235,6 +235,8 @@ class Article(Publishable):
     images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
     videos = ManyToManyField('Video', blank=True, null=True)
 
+    template = CharField(max_length=255, default='default')
+
     scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
     stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True, null=True)
     snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
@@ -270,6 +272,12 @@ class Article(Publishable):
 
     def get_time(self):
         return self.published_at.strftime("%H:%M")
+
+    def get_template(self):
+        if self.template != 'default':
+            return 'article/%s.html' % self.template
+        else:
+            return 'article.html'
 
     def save_related(self, data):
         tags = data["tags-list"]
