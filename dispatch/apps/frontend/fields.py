@@ -19,6 +19,17 @@ class TextField(BaseField):
     def context(self):
         return self.value
 
+class SelectField(BaseField):
+
+    def __init__(self, options=()):
+        self.options = options
+
+    def as_json(self):
+        return {
+            'type': 'select',
+            'options': self.options,
+        }
+
 class ModelField(BaseField):
 
     KEY = 'parent'
