@@ -291,8 +291,6 @@ class ComponentViewSet(viewsets.GenericViewSet):
                 'fields': component_obj.field_data_as_json(),
             }
 
-
-
         for spot, name in page.component_spots:
             options = []
             for component in self.components.get_for_spot(spot):
@@ -353,3 +351,16 @@ class ComponentViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data, status=update_status)
+
+class TemplateViewSet(viewsets.GenericViewSet):
+
+    def list(self, request):
+        templates = []
+        for template in ThemeHelper.get_theme_templates():
+            templates.append(template().to_json())
+
+        data = {
+            'results': templates
+        }
+
+        return Response(data)
