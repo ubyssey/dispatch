@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from rest_framework import viewsets, generics, mixins, filters, status
@@ -13,7 +14,6 @@ from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Page, Component
 from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment
 from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer,
-                                           ImageAttachmentSerializer, FullImageAttachmentSerializer,
                                            TagSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -77,26 +77,6 @@ class SectionViewSet(viewsets.ModelViewSet):
         view = FrontpageViewSet.as_view({'get': 'section'})
         return view(request, pk=pk, slug=slug)
 
-class ImageAttachmentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    """
-    Viewset for ImageAttachment model views.
-    """
-    model = ImageAttachment
-    serializer_class = FullImageAttachmentSerializer
-    paginate_by = 50
-    queryset = ImageAttachment.objects.all()
-
-    def article(self, request, parent_id=None):
-        """
-        Extra method to return ImageAttachments for given Article.
-
-        TODO: add error handling for when pk is None
-        """
-        if parent_id is not None:
-            # Update queryset to filter by given Article id
-            self.queryset = self.queryset.filter(article__parent_id=parent_id)
-        return super(ImageAttachmentViewSet, self).list(self, request)
-
 class ArticleViewSet(viewsets.ModelViewSet):
     """
     Viewset for Article model views.
@@ -147,11 +127,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-    @detail_route(methods=['post',],)
+    @detail_route(methods=['post'],)
     def publish(self, request, parent_id=None):
         return self.perform_publish(True)
 
-    @detail_route(methods=['post',],)
+    @detail_route(methods=['post'],)
     def unpublish(self, request, parent_id=None):
         return self.perform_publish(False)
 
@@ -172,15 +152,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def attachments(self, request, parent_id=None):
-        """
-        Returns a list of the arictle's attachments.
-        Uses ImageAttachmentViewSet.article() to perform request
-        """
-        view = ImageAttachmentViewSet.as_view({'get': 'article'})
-        return view(request, parent_id)
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
