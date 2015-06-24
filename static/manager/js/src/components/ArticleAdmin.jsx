@@ -19,6 +19,7 @@ var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
 var ItemStore = require('./stores/ItemStore.js');
 var DropdownButton = require('./buttons/DropdownButton.jsx');
 var DropdownPanel = require('./buttons/DropdownPanel.jsx');
+var TemplateEditor = require('./TemplateEditor.jsx');
 
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
@@ -58,7 +59,7 @@ var ArticleAdmin = React.createClass({
         dispatch.revision('article', this.state.article.parent, revision_id, function(article){
             this.setState({
                 article: article,
-                version: article.revision_id,
+                version: article.revision_id
             });
         }.bind(this));
     },
@@ -148,6 +149,7 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
+                template: this.state.article.template
             }
 
             if(options.hasOwnProperty('publish'))
@@ -255,6 +257,7 @@ var ArticleAdmin = React.createClass({
                             <TabList>
                                 <Tab><i className="fa fa-info"></i> Basic Fields</Tab>
                                 <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
+                                <Tab><i className="fa fa-files-o"></i> Template</Tab>
                             </TabList>
                             <TabPanel>
                                 <div className="field full">
@@ -275,6 +278,9 @@ var ArticleAdmin = React.createClass({
                             </TabPanel>
                             <TabPanel>
                                 <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
+                            </TabPanel>
+                            <TabPanel>
+                                <TemplateEditor template={this.state.article.template} updateHandler={this.updateField} />
                             </TabPanel>
                         </Tabs>
                     </div>
