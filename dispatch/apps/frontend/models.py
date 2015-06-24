@@ -14,6 +14,7 @@ class ComponentField(Model):
     value = TextField()
 
 class TemplateVariable(Model):
+    article = ForeignKey('content.Article')
     template_slug = CharField(max_length=255)
     variable = CharField(max_length=50)
     value = TextField()
