@@ -50,7 +50,7 @@ class UbysseyTheme(DefaultTheme):
             'article': article
         }
 
-        return render(request, 'article.html', context)
+        return render(request, article.get_template(), context)
 
     def section(self, request, section):
 
