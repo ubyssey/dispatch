@@ -14,7 +14,7 @@ class ThemeHelper():
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:
-            templates = importlib.import_module("themes." + theme_name + ".templates")
+            templates = importlib.import_module("dispatch.themes." + theme_name + ".templates")
             templates = templates.templates.all()
         except:
             templates = []
