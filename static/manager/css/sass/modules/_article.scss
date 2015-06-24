@@ -9,6 +9,8 @@
 $text-padding: 60px;
 
 textarea.headline {
+  border-radius: 3px;
+  padding: 0px 10px;
   font-size: 28px;
   color: #000000;
   line-height: 40px;
@@ -16,6 +18,13 @@ textarea.headline {
   font-weight: 800;
   width: 100%;
   resize: none;
+  border-color: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  &:focus {
+    border-color: transparent;
+    box-shadow: none;
+  }
 }
 
 div.field-row {
@@ -253,7 +262,7 @@ button.embed-button {
 }
 
 div.field-row.headline {
-  margin-left: $text-padding;
+  margin-left: ($text-padding - 10);
   border-bottom: 1px solid rgb(226, 226, 226);
   padding-top: 35px;
   padding-bottom: 20px;
