@@ -1,5 +1,5 @@
 from dispatch.apps.frontend.helpers import theme_pages
-from dispatch.apps.frontend.components import BasePage
+from dispatch.apps.frontend.pages import BasePage
 
 class Homepage(BasePage):
 
