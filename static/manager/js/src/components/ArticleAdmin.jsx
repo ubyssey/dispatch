@@ -21,10 +21,14 @@ var DropdownButton = require('./buttons/DropdownButton.jsx');
 var DropdownPanel = require('./buttons/DropdownPanel.jsx');
 var TemplateEditor = require('./TemplateEditor.jsx');
 
+var diff = require('deep-diff').diff;
+
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
+        var article = this.props.articleId ? false : this.newArticle();
        return {
-           article: this.props.articleId ? false : this.newArticle(),
+           article: article,
+           savedArticle: JSON.parse(JSON.stringify(article)),
            errors: [],
            firstSave: this.props.articleId ? false : true,
            head: 0,
@@ -49,6 +53,7 @@ var ArticleAdmin = React.createClass({
             dispatch.articles(this.props.articleId, function(article){
                 this.setState({
                     article: article,
+                    savedArticle: JSON.parse(JSON.stringify(article)),
                     head: article.revision_id,
                     version: article.revision_id,
                 });
@@ -70,7 +75,7 @@ var ArticleAdmin = React.createClass({
             this.clearError(field);
         }
         this.setState({
-            unsaved: true,
+            unsaved: diff(article, this.state.savedArticle) ? true : false,
             article: article,
         });
     },
@@ -81,7 +86,7 @@ var ArticleAdmin = React.createClass({
             this.clearError(field);
         }
         this.setState({
-            unsaved: typeof unsaved !== 'undefined' ? unsaved : true,
+            unsaved: diff(article, this.state.savedArticle) ? true : false,
             article: article,
         });
     },
@@ -174,6 +179,7 @@ var ArticleAdmin = React.createClass({
     saveCallback: function(article){
         this.setState({
             article: article,
+            savedArticle: JSON.parse(JSON.stringify(article)),
             head: article.revision_id,
             head_id: article.parent,
             version: article.revision_id,
