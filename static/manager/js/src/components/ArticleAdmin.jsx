@@ -53,7 +53,7 @@ var ArticleAdmin = React.createClass({
     },
     componentDidMount: function(){
         if(this.props.articleId){
-            dispatch.articles(this.props.articleId, function(article){
+            dispatch.article(this.props.articleId, {template_fields:true}, function(article){
                 this.setState({
                     article: article,
                     savedArticle: JSON.parse(JSON.stringify(article)),
@@ -157,7 +157,8 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
-                template: this.state.article.template
+                template: this.state.article.template,
+                template_fields: this.refs.template.save()
             }
 
             if(options.hasOwnProperty('publish'))
@@ -289,7 +290,7 @@ var ArticleAdmin = React.createClass({
                                 <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
                             </TabPanel>
                             <TabPanel>
-                                <TemplateEditor template={this.state.article.template} updateHandler={this.updateField} />
+                                <TemplateEditor ref="template" article_id={this.state.article.id} fields={this.state.article.template_fields} template={this.state.article.template} updateHandler={this.updateField} />
                             </TabPanel>
                         </Tabs>
                     </div>
