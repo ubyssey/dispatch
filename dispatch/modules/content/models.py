@@ -14,9 +14,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
+from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -278,6 +280,13 @@ class Article(Publishable):
             return 'article/%s.html' % self.template
         else:
             return 'article.html'
+
+    def get_template_fields(self):
+        Template = ThemeHelper.get_theme_template(template_slug=self.template)
+        return Template(article_id=self.id).field_data_as_json()
+
+    def save_template_fields(self, template_fields):
+        return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def save_related(self, data):
         tags = data["tags-list"]
