@@ -145,8 +145,7 @@ var ArticleAdmin = React.createClass({
     save: function(options){
         var options = typeof options !== 'undefined' ? options : {};
         this.updateModelField('content', this.refs.content.save(), false);
-        var missing = this.missingFields();
-        if(!missing){
+        if(!this.missingFields()){
             var values = {
                 long_headline: this.state.article.long_headline,
                 short_headline: this.state.article.short_headline,
@@ -173,8 +172,6 @@ var ArticleAdmin = React.createClass({
             } else {
                 dispatch.update('article', this.state.head_id, values, this.saveCallback);
             }
-        } else {
-            console.log("Missing fields: " + missing.join());
         }
     },
     publish: function(published){
