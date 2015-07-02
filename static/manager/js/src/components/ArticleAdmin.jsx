@@ -40,10 +40,13 @@ var ArticleAdmin = React.createClass({
        };
     },
     newArticle: function(){
-        if(this.props.section){
+        if(this.props.sectionId){
             return {
-                section: { slug: this.props.section }
-            };
+                section: {
+                    id: this.props.sectionId,
+                    name: this.props.sectionName,
+                }
+            }
         } else {
             return {};
         }
