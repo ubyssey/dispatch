@@ -14,7 +14,7 @@ class ComponentField(Model):
     value = TextField()
 
 class TemplateVariable(Model):
-    article = IntegerField()
+    article_id = IntegerField()
     template_slug = CharField(max_length=255)
     variable = CharField(max_length=50)
     value = TextField()
