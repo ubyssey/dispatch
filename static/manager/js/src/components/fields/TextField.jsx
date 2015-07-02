@@ -5,7 +5,7 @@ var TextField = React.createClass({
         return (
             <div className="field full">
                 <label>{this.props.field.label}</label>
-                <input type="text" />
+                <input type="text" value={this.props.value} onChange={this.props.updateHandler} />
             </div>
             );
     }
