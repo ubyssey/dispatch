@@ -200,7 +200,12 @@ def articles(request):
     )
 
 @staff_member_required
-def article_add(request, section=None):
+def article_add(request):
+    section_id = request.GET.get('section', False)
+    try:
+        section = Section.objects.get(pk=section_id)
+    except:
+        section = None
     return render(request, 'manager/article/edit.html', {'section': section})
 
 @staff_member_required
