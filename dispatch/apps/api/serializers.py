@@ -115,6 +115,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+    template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
         model = Article
@@ -142,7 +143,17 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'revision_id',
             'url',
             'template',
+            'template_fields'
         )
+
+    def __init__(self, *args, **kwargs):
+        # Instantiate the superclass normally
+        super(ArticleSerializer, self).__init__(*args, **kwargs)
+
+        template_fields = self.context['request'].QUERY_PARAMS.get('template_fields', False)
+
+        if self.context['request'].method == 'GET' and not template_fields:
+            self.fields.pop('template_fields')
 
     def create(self, validated_data):
 
@@ -169,6 +180,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         # Process article attachments
         instance.save_attachments()
+
+        # Save template fields
+        template_fields = validated_data.get('get_template_fields', False)
+        if template_fields:
+            instance.save_template_fields(template_fields)
 
         # If there's a featured image, save it
         featured_image = validated_data.get('featured_image_json', False)
