@@ -1,12 +1,18 @@
 from dispatch.apps.frontend.helpers import templates
+from dispatch.apps.frontend.models import TemplateVariable
+
+class TemplateManager:
+
+    @staticmethod
+    def save_fields(article_id, template_slug, fields):
+        entries = [TemplateVariable(article_id=article_id, template_slug=template_slug, variable=field, value=value) for field, value in fields.iteritems()]
+        TemplateVariable.objects.bulk_create(entries)
+
 
 class BaseTemplate:
 
-    def __init__(self, data=None):
-        if data is not None:
-            self.data = {}
-            for name, label, field_class in self.fields:
-                self.data[name] = data.get('fields['+name+']', None)
+    def __init__(self, article_id=None):
+        self.article_id = article_id
 
     def to_json(self):
         return {
@@ -17,10 +23,12 @@ class BaseTemplate:
 
     def field_data_as_json(self):
         output = {}
-        for name, label, field_obj in self.fields:
-            if name in self.saved_fields:
-                field_obj.set_value(self.saved_fields[name].value)
-                output[name] = field_obj.data_as_json()
+        for field, label, field_class in self.fields:
+            try:
+                field_data= TemplateVariable.objects.get(article_id=self.article_id, variable=field, template_slug=self.SLUG)
+                output[field] = field_data.value
+            except:
+                pass
         return output
 
     def fields_as_json(self):
