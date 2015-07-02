@@ -236,12 +236,7 @@ var ArticleAdmin = React.createClass({
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                        <div className="combo-buttons">
-                            <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
-                            <DropdownPanel push="left" label="Schedule">
-                                <DateTimeField datetime={this.state.article.published_at} updateHandler={this.handleSchedule} />
-                            </DropdownPanel>
-                        </div>
+                        <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
                         {this.previewButton()}
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}
