@@ -1,3 +1,7 @@
+import datetime
+from PIL import Image as Img
+import StringIO, json, os, re
+
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
@@ -6,17 +10,15 @@ from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.template import loader, Context
 from django.utils.functional import cached_property
-
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image as Img
-import StringIO, json, os, re
-
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
+from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -46,7 +48,6 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
-
         if revision:
             self.head = True
             self.revision_id += 1
@@ -57,6 +58,9 @@ class Publishable(Model):
                 self.pk = None
                 self.id = None
 
+            if self.is_published:
+                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
+
         super(Publishable, self).save(*args, **kwargs)
 
         if not self.parent:
@@ -64,6 +68,26 @@ class Publishable(Model):
             super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def publish(self, publish=True, commit=True):
+        if publish:
+            # Unpublished existing published version, if one exists
+            try:
+                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
+            except:
+                pass
+
+            self.published_at = datetime.datetime.today()
+
+        self.is_published = publish
+        if commit:
+            return self.save(revision=False, update_fields=['is_published', 'published_at'])
+
+    def schedule(self, publish_at, commit=True):
+        self.published_at = datetime.datetime.strptime(publish_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+        self.publish(False, commit=False)
+        if commit:
+            return self.save(revision=False, update_fields=['published_at'])
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -136,7 +160,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND section_id = %(section_id)s
+                WHERE head = 1 AND is_published = 1 AND section_id = %(section_id)s
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -151,7 +175,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1
+                WHERE head = 1 AND is_published = 1
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -186,13 +210,13 @@ class Article(Publishable):
 
     is_active = BooleanField(default=True)
     is_published = BooleanField(default=False)
-    published_at = DateTimeField()
+    published_at = DateTimeField(null=True)
     slug = SlugField()
 
-    authors = ManyToManyField(Person, through="Author", blank=True)
+    authors = ManyToManyField(Person, through="Author")
 
-    topics = ManyToManyField('Topic', blank=True)
-    tags = ManyToManyField('Tag', blank=True)
+    topics = ManyToManyField('Topic')
+    tags = ManyToManyField('Tag')
     shares = PositiveIntegerField(default=0, blank=True, null=True)
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
@@ -210,12 +234,14 @@ class Article(Publishable):
 
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True)
-    videos = ManyToManyField('Video', blank=True)
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='images')
+    videos = ManyToManyField('Video')
 
-    scripts = ManyToManyField(Script, related_name='scripts', blank=True)
-    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True)
-    snippets = ManyToManyField(Snippet, related_name='snippets', blank=True)
+    template = CharField(max_length=255, default='default')
+
+    scripts = ManyToManyField(Script, related_name='scripts')
+    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
+    snippets = ManyToManyField(Snippet, related_name='snippets')
 
     content = TextField()
     snippet = TextField()
@@ -249,6 +275,19 @@ class Article(Publishable):
     def get_time(self):
         return self.published_at.strftime("%H:%M")
 
+    def get_template(self):
+        if self.template != 'default':
+            return 'article/%s.html' % self.template
+        else:
+            return 'article.html'
+
+    def get_template_fields(self):
+        Template = ThemeHelper.get_theme_template(template_slug=self.template)
+        return Template(article_id=self.id).field_data_as_json()
+
+    def save_template_fields(self, template_fields):
+        return TemplateManager.save_fields(self.id, self.template, template_fields)
+
     def save_related(self, data):
         tags = data["tags-list"]
         topics = data["topics-list"]
@@ -264,10 +303,10 @@ class Article(Publishable):
         self.tags.clear()
         for tag in tags.split(","):
             try:
-                ins = Tag.objects.get(name=tag)
+                ins = Tag.objects.get(id=int(tag))
+                self.tags.add(ins)
             except Tag.DoesNotExist:
-                ins = Tag.objects.create(name=tag)
-            self.tags.add(ins)
+                pass
 
     def save_topics(self, topics):
         self.topics.clear()
@@ -337,8 +376,6 @@ class Article(Publishable):
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image']['id']
-                print node['data']['attachment_id']
-                print 'image-id: ' + str(image_id)
                 image = Image.objects.get(id=image_id)
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
@@ -357,7 +394,8 @@ class Article(Publishable):
     def save_featured_image(self, data):
         attachment = ImageAttachment()
         attachment.image_id = data['id']
-        attachment.caption = data['caption']
+        if 'caption' in data:
+            attachment.caption = data['caption']
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
@@ -418,7 +456,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author", blank=True)
+    authors = ManyToManyField(Person, through="Author")
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
