@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, TextField, FileField, ForeignKey, ManyToManyField, SlugField
+from django.db.models import Model, IntegerField, CharField, TextField, FileField, ForeignKey, ManyToManyField, SlugField
 
 class Page(Model):
     slug = SlugField()
@@ -14,7 +14,7 @@ class ComponentField(Model):
     value = TextField()
 
 class TemplateVariable(Model):
-    article = ForeignKey('content.Article')
+    article_id = IntegerField()
     template_slug = CharField(max_length=255)
     variable = CharField(max_length=50)
     value = TextField()

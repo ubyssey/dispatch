@@ -8,7 +8,7 @@ var SelectField = React.createClass({
         return (
             <div className="field">
                 <label>{this.props.field.label}</label>
-                <select>{options}</select>
+                <select value={this.props.value} onChange={this.props.updateHandler}>{options}</select>
             </div>
             );
     }
