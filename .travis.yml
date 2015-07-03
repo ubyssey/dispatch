@@ -3,7 +3,7 @@ python:
   - "2.7"
 services: mysql
 env:
-  - DJANGO=django==1.8.2  DJANGO_SETTINGS_MODULE="dispatch.travis_settings"
+  - DJANGO=django==1.8.2  DJANGO_SETTINGS_MODULE="dispatch.travis_settings" DB_ENGINE="django.db.backends.mysql" DB_NAME="dispatch" DB_USER="root"
 install: "pip install -r requirements.txt"
 before_script:
   - mysql -uroot -e 'create database dispatch;'
