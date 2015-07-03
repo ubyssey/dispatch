@@ -8,4 +8,5 @@ before_script:
   - mysql -uroot -e 'create database dispatch;'
   #- python manage.py makemigrations --settings=dispatch.settings
   - python manage.py migrate
+  - python manage.py migrate
 script: python manage.py test --pattern="tests*.py"
