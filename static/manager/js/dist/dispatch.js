@@ -83,7 +83,7 @@
     }
 
     dispatch.settings = PRODUCTION_SETTINGS;
-    dispatch.version = '0.1.7';
+    dispatch.version = '0.1.8';
 
     // Errors
     // --------------------
@@ -136,73 +136,6 @@
         return dispatch[models[model].helpers[action]];
     }
 
-    // Pretty Functions
-    // TODO: make more of these
-    // --------------------
-
-    function Model(model) {
-
-        var func;
-
-        var remove = function(callback){
-            func = function(callback){
-                dispatch.remove(model, this.id, callback);
-            }
-            return this.call(callback);
-        };
-
-        return {
-            find: function(id, callback){
-                this.id = id;
-                func = function(callback){
-                    dispatch.find(model, id, callback);
-                }
-                this.data = {};
-                this.delete = remove;
-                delete this.find;
-                delete this.list;
-                return this.call(callback);
-            },
-            list: function(callback) {
-                func = function(callback){
-                    dispatch.list(model, callback);
-                }
-                delete this.find;
-                delete this.list;
-                return this.call(callback);
-            },
-            update: function(callback){
-                func = function(callback){
-                    dispatch.update(model, this.id, this.data, callback);
-                }.bind(this);
-                return this.call(callback);
-            },
-            set: function(key, value){
-                this.data[key] = value;
-                return this;
-            },
-            call: function(callback) {
-                if (typeof callback !== 'undefined')
-                    return func(callback);
-                else
-                    return this;
-            }
-        }
-
-    }
-
-    dispatch.articles = function(id, callback){
-        if (typeof id !== 'undefined')
-            return Model('article').find(id, callback);
-        else
-            return Model('article').list(callback);
-    }
-
-    dispatch.articleAttachments = function(id, callback){
-        return dispatch.find('article.attachments', id, callback);
-    }
-
-
     // Handy functions
     // --------------------
     dispatch.getModelURL = function(model){
@@ -253,12 +186,19 @@
         return dispatch.get(getModelRoute(model, id), {}, callback);
     }
 
+    // Model-specific functions
+
+    dispatch.article = function(id, values, callback){
+        return dispatch.get(getModelRoute('article', id), values, callback);
+    }
+
     dispatch.revision = function(model, parent_id, revision_id, callback){
         var model = model + '.revision';
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
         return dispatch.get(getModelRoute(model, parent_id), {revision_id: revision_id}, callback);
     }
 
+    // TODO: fix component routes
     dispatch.components = function(slug, callback){
         var url = 'components/' + slug;
         return dispatch.get(url, {}, callback);

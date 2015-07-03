@@ -11,9 +11,10 @@ var TemplateEditor = React.createClass({
     getInitialState: function(){
         return {
             templates: [],
+            field_data: this.props.fields ? this.props.fields : {},
         };
     },
-    componentDidMount: function(){
+    componentWillMount: function(){
         dispatch.list('template', function(data){
             this.setState({ templates: data.results });
         }.bind(this));
@@ -21,26 +22,34 @@ var TemplateEditor = React.createClass({
     updateTemplate: function(event){
         return this.props.updateHandler('template', event);
     },
+    updateField: function(field, event){
+        var field_data = this.state.field_data;
+        field_data[field] = event.target.value;
+        this.setState({ field_data: field_data});
+    },
     templateOptions: function(){
         return this.state.templates.map(function(template, i){
             return (<option key={i} value={template.slug}>{template.name}</option>);
         });
     },
-    renderFields: function(){
+    save: function(){
+        return JSON.stringify(this.state.field_data);
+    },
+    renderFields: function(field_data){
         for(var i = 0; i < this.state.templates.length; i++){
             if(this.state.templates[i].slug == this.props.template){
                 return this.state.templates[i].fields.map(function(field, i){
                     var rendered;
                     switch(FIELDS[field.type]){
                         case(FIELDS.text):
-                            rendered = (<TextField field={field} />);
+                            rendered = (<TextField key={i} field={field} value={field_data[field.name]} updateHandler={this.updateField.bind(this, field.name)} />);
                             break;
                         case(FIELDS.select):
-                            rendered = (<SelectField field={field} />);
+                            rendered = (<SelectField key={i} field={field} value={field_data[field.name]} updateHandler={this.updateField.bind(this, field.name)} />);
                             break;
                     }
                    return rendered;
-                });
+                }.bind(this));
             }
         }
     },
@@ -53,7 +62,7 @@ var TemplateEditor = React.createClass({
                         {this.templateOptions()}
                     </select>
                 </div>
-                {this.renderFields()}
+                {this.renderFields(this.state.field_data)}
             </div>
             );
     }

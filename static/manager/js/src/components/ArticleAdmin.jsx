@@ -21,10 +21,14 @@ var DropdownButton = require('./buttons/DropdownButton.jsx');
 var DropdownPanel = require('./buttons/DropdownPanel.jsx');
 var TemplateEditor = require('./TemplateEditor.jsx');
 
+var diff = require('deep-diff').diff;
+
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
+        var article = this.props.articleId ? false : this.newArticle();
        return {
-           article: this.props.articleId ? false : this.newArticle(),
+           article: article,
+           savedArticle: JSON.parse(JSON.stringify(article)),
            errors: [],
            firstSave: this.props.articleId ? false : true,
            head: 0,
@@ -36,19 +40,23 @@ var ArticleAdmin = React.createClass({
        };
     },
     newArticle: function(){
-        if(this.props.section){
+        if(this.props.sectionId){
             return {
-                section: { slug: this.props.section }
-            };
+                section: {
+                    id: this.props.sectionId,
+                    name: this.props.sectionName,
+                }
+            }
         } else {
             return {};
         }
     },
     componentDidMount: function(){
         if(this.props.articleId){
-            dispatch.articles(this.props.articleId, function(article){
+            dispatch.article(this.props.articleId, {template_fields:true}, function(article){
                 this.setState({
                     article: article,
+                    savedArticle: JSON.parse(JSON.stringify(article)),
                     head: article.revision_id,
                     version: article.revision_id,
                 });
@@ -70,7 +78,7 @@ var ArticleAdmin = React.createClass({
             this.clearError(field);
         }
         this.setState({
-            unsaved: true,
+            unsaved: diff(article, this.state.savedArticle) ? true : false,
             article: article,
         });
     },
@@ -81,7 +89,7 @@ var ArticleAdmin = React.createClass({
             this.clearError(field);
         }
         this.setState({
-            unsaved: typeof unsaved !== 'undefined' ? unsaved : true,
+            unsaved: diff(article, this.state.savedArticle) ? true : false,
             article: article,
         });
     },
@@ -137,8 +145,7 @@ var ArticleAdmin = React.createClass({
     save: function(options){
         var options = typeof options !== 'undefined' ? options : {};
         this.updateModelField('content', this.refs.content.save(), false);
-        var missing = this.missingFields();
-        if(!missing){
+        if(!this.missingFields()){
             var values = {
                 long_headline: this.state.article.long_headline,
                 short_headline: this.state.article.short_headline,
@@ -149,7 +156,8 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
-                template: this.state.article.template
+                template: this.state.article.template,
+                template_fields: this.refs.template.save()
             }
 
             if(options.hasOwnProperty('publish'))
@@ -164,8 +172,6 @@ var ArticleAdmin = React.createClass({
             } else {
                 dispatch.update('article', this.state.head_id, values, this.saveCallback);
             }
-        } else {
-            console.log("Missing fields: " + missing.join());
         }
     },
     publish: function(published){
@@ -174,6 +180,7 @@ var ArticleAdmin = React.createClass({
     saveCallback: function(article){
         this.setState({
             article: article,
+            savedArticle: JSON.parse(JSON.stringify(article)),
             head: article.revision_id,
             head_id: article.parent,
             version: article.revision_id,
@@ -226,12 +233,7 @@ var ArticleAdmin = React.createClass({
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                        <div className="combo-buttons">
-                            <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
-                            <DropdownPanel push="left" label="Schedule">
-                                <DateTimeField datetime={this.state.article.published_at} updateHandler={this.handleSchedule} />
-                            </DropdownPanel>
-                        </div>
+                        <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
                         {this.previewButton()}
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}
@@ -280,7 +282,7 @@ var ArticleAdmin = React.createClass({
                                 <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
                             </TabPanel>
                             <TabPanel>
-                                <TemplateEditor template={this.state.article.template} updateHandler={this.updateField} />
+                                <TemplateEditor ref="template" article_id={this.state.article.id} fields={this.state.article.template_fields} template={this.state.article.template} updateHandler={this.updateField} />
                             </TabPanel>
                         </Tabs>
                     </div>
