@@ -14,9 +14,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
+from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -211,10 +213,10 @@ class Article(Publishable):
     published_at = DateTimeField(null=True)
     slug = SlugField()
 
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+    authors = ManyToManyField(Person, through="Author")
 
-    topics = ManyToManyField('Topic', blank=True, null=True)
-    tags = ManyToManyField('Tag', blank=True, null=True)
+    topics = ManyToManyField('Topic')
+    tags = ManyToManyField('Tag')
     shares = PositiveIntegerField(default=0, blank=True, null=True)
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
@@ -232,14 +234,14 @@ class Article(Publishable):
 
     featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
 
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='images', blank=True, null=True)
-    videos = ManyToManyField('Video', blank=True, null=True)
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='images')
+    videos = ManyToManyField('Video')
 
     template = CharField(max_length=255, default='default')
 
-    scripts = ManyToManyField(Script, related_name='scripts', blank=True, null=True)
-    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets', blank=True, null=True)
-    snippets = ManyToManyField(Snippet, related_name='snippets', blank=True, null=True)
+    scripts = ManyToManyField(Script, related_name='scripts')
+    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
+    snippets = ManyToManyField(Snippet, related_name='snippets')
 
     content = TextField()
     snippet = TextField()
@@ -278,6 +280,13 @@ class Article(Publishable):
             return 'article/%s.html' % self.template
         else:
             return 'article.html'
+
+    def get_template_fields(self):
+        Template = ThemeHelper.get_theme_template(template_slug=self.template)
+        return Template(article_id=self.id).field_data_as_json()
+
+    def save_template_fields(self, template_fields):
+        return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def save_related(self, data):
         tags = data["tags-list"]
@@ -447,7 +456,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author", blank=True, null=True)
+    authors = ManyToManyField(Person, through="Author")
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)

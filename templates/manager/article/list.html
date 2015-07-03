@@ -11,7 +11,7 @@
              <form class="search-bar" method="GET">
                 <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}">New article</a>
+            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
         </div>
     </header>
     <div class="list-container">
