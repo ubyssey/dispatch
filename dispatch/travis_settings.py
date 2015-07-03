@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'dispatch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_dispatch',
+        'NAME': 'dispatch',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
