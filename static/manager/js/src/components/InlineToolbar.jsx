@@ -31,8 +31,9 @@ var InlineToolbar = React.createClass({
 
         var curLine = this.props.quill.editor.doc.findLineAt(range.start);
 
-        if(curLine[0]['length'] == 1){
-            var lineData = curLine[0];
+        var lineData = curLine[0];
+
+        if(curLine[0]['length'] == 1 && lineData.node.nodeName != 'LI'){
             var id = lineData.id;
             var offset = document.getElementById(id).getBoundingClientRect().top - document.getElementById('article-editor').getBoundingClientRect().top;
 
