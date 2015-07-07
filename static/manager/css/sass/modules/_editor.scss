@@ -97,11 +97,13 @@
 #article-editor {
   min-height: 200px;
   padding: 0;
-  div.ql-line {
+  div.ql-line, li.ql-line {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
     line-height: 26px;
+  }
+  div.ql-line, .ql-editor > ul {
     margin-top: 0;
     margin-bottom: 20px;
   }
