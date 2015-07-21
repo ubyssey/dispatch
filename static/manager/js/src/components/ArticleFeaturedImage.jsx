@@ -1,4 +1,5 @@
 var React = require('react');
+var Textarea = require('react-textarea-autosize');
 
 var ArticleFeaturedImage = React.createClass({
     getInitialState: function(){
@@ -32,9 +33,9 @@ var ArticleFeaturedImage = React.createClass({
         return (
             <div className="featured-image">
                 <img onClick={this.selectImage} src={this.state.url} />
-                <div className="field">
+                <div className="field full">
                     <label>Caption</label>
-                    <input type="text" value={this.state.caption} onChange={this.updateCaption} />
+                    <Textarea rows={2} placeholder="Add a caption"  value={this.state.caption} onChange={this.updateCaption}></Textarea>
                 </div>
             </div>
             )
