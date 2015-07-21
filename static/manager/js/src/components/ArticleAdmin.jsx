@@ -23,6 +23,29 @@ var TemplateEditor = require('./TemplateEditor.jsx');
 
 var diff = require('deep-diff').diff;
 
+var STATUS_ITEMS = [
+    {
+        value: 2,
+        label: 'Pitch'
+    },
+    {
+        value: 0,
+        label: 'Draft'
+    },
+    {
+        value: 3,
+        label: 'To be copyedited'
+    },
+    {
+        value: 4,
+        label: 'To be managed'
+    },
+    {
+        value: 1,
+        label: 'Published'
+    },
+];
+
 var ArticleAdmin = React.createClass({
     getInitialState: function(){
         var article = this.props.articleId ? false : this.newArticle();
@@ -70,6 +93,21 @@ var ArticleAdmin = React.createClass({
                 version: article.revision_id
             });
         }.bind(this));
+    },
+    updateStatus: function(status){
+        var article = this.state.article;
+        article.status = status;
+        this.setState({
+            unsaved: diff(article, this.state.savedArticle) ? true : false,
+            article: article,
+        });
+    },
+    getStatus: function(status){
+        for(var i = 0; i < STATUS_ITEMS.length; i++){
+            if(STATUS_ITEMS[i].value == status){
+                return STATUS_ITEMS[i].label;
+            }
+        }
     },
     updateField: function(field, event){
         var article = this.state.article;
@@ -132,17 +170,7 @@ var ArticleAdmin = React.createClass({
     handleSave: function(){
         return this.save();
     },
-    handlePublish: function(publish, event){
-        if(this.state.unsaved){
-            return this.save({publish: publish});
-        } else {
-            return this.publish(publish);
-        }
-    },
-    handleSchedule: function(publish_at){
-        return this.save({schedule: publish_at});
-    },
-    save: function(options){
+    save: function(options, callback){
         var options = typeof options !== 'undefined' ? options : {};
         this.updateModelField('content', this.refs.content.save(), false);
         if(!this.missingFields()){
@@ -156,28 +184,24 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
+                status: this.state.article.status,
                 template: this.state.article.template,
                 template_fields: this.refs.template.save()
             }
 
-            if(options.hasOwnProperty('publish'))
-                values.publish = options.publish
-            if(options.hasOwnProperty('schedule'))
-                values.schedule = true
-                values.publish_at = options.schedule
-
             this.setState({ saving: true, });
             if(this.state.firstSave){
-                dispatch.add('article', values, this.saveCallback);
+                dispatch.add('article', values, function(article){
+                    this.saveCallback(article, callback)
+                }.bind(this));
             } else {
-                dispatch.update('article', this.state.head_id, values, this.saveCallback);
+                dispatch.update('article', this.state.head_id, values, function(article){
+                    this.saveCallback(article, callback)
+                }.bind(this));
             }
         }
     },
-    publish: function(published){
-        dispatch.publish('article', this.state.head_id, published, this.saveCallback);
-    },
-    saveCallback: function(article){
+    saveCallback: function(article, callback){
         this.setState({
             article: article,
             savedArticle: JSON.parse(JSON.stringify(article)),
@@ -187,6 +211,9 @@ var ArticleAdmin = React.createClass({
             firstSave: false,
             saving: false,
             unsaved: false
+        }, function(){
+            if(callback)
+                callback();
         });
         this.animateLoader();
     },
@@ -202,9 +229,21 @@ var ArticleAdmin = React.createClass({
             }, 1000);
         });
     },
+    handlePreview: function(){
+       if(this.state.unsaved){
+           this.save(false, this.loadPreview);
+       } else {
+           this.loadPreview();
+       }
+    },
+    loadPreview: function(){
+        var url = dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug;
+        var win = window.open(url, '_dispatch_' + this.state.article.parent);
+        win.focus();
+    },
     previewButton: function(){
         if(this.state.article.section){
-            return (<a className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</a>);
+            return (<button onClick={this.handlePreview} className="dis-button" href={dispatch.settings.base_url + (this.state.article ? this.state.article.section.slug + "/" : "") + this.state.article.slug } target="dispatch_preview">Preview</button>);
         }
     },
     renderLoader: function(){
@@ -233,7 +272,9 @@ var ArticleAdmin = React.createClass({
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                        <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.article.is_published)}>{this.state.article.is_published ? "Unpublish" : "Publish"}</button>
+                        <DropdownButton push="left" selectItem={this.updateStatus} items={STATUS_ITEMS}>
+                        {this.state.article.status ? this.getStatus(this.state.article.status) : 'Draft'}
+                        </DropdownButton>
                         {this.previewButton()}
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}

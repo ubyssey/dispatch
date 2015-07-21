@@ -58,8 +58,8 @@ class Publishable(Model):
                 self.pk = None
                 self.id = None
 
-            if self.is_published:
-                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
+            if self.is_published():
+                Article.objects.filter(parent=self.parent,status=Article.PUBLISHED).update(status=Article.DRAFT)
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -68,26 +68,6 @@ class Publishable(Model):
             super(Publishable, self).save(update_fields=['parent'])
 
         return self
-
-    def publish(self, publish=True, commit=True):
-        if publish:
-            # Unpublished existing published version, if one exists
-            try:
-                Article.objects.filter(parent=self.parent,is_published=True).update(is_published=False)
-            except:
-                pass
-
-            self.published_at = datetime.datetime.today()
-
-        self.is_published = publish
-        if commit:
-            return self.save(revision=False, update_fields=['is_published', 'published_at'])
-
-    def schedule(self, publish_at, commit=True):
-        self.published_at = datetime.datetime.strptime(publish_at, '%Y-%m-%dT%H:%M:%S.%fZ')
-        self.publish(False, commit=False)
-        if commit:
-            return self.save(revision=False, update_fields=['published_at'])
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -160,7 +140,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND is_published = 1 AND section_id = %(section_id)s
+                WHERE head = 1 AND status = 1 AND section_id = %(section_id)s
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -175,7 +155,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND is_published = 1
+                WHERE head = 1 AND status = 1
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -209,7 +189,6 @@ class Article(Publishable):
     section = ForeignKey('Section')
 
     is_active = BooleanField(default=True)
-    is_published = BooleanField(default=False)
     published_at = DateTimeField(null=True)
     slug = SlugField()
 
@@ -222,6 +201,22 @@ class Article(Publishable):
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
+
+    DRAFT = 0
+    PUBLISHED = 1
+    PITCH = 2
+    COPY = 3
+    MANAGE = 4
+
+    STATUS_CHOICES = (
+        (DRAFT, 'Draft'),
+        (PUBLISHED, 'Published'),
+        (PITCH, 'Pitch'),
+        (COPY, 'To be copyedited'),
+        (MANAGE, 'To be managed'),
+    )
+
+    status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
 
     READING_CHOICES = (
         ('anytime', 'Anytime'),
@@ -279,7 +274,16 @@ class Article(Publishable):
         if self.template != 'default':
             return 'article/%s.html' % self.template
         else:
-            return 'article.html'
+            return 'article/base.html'
+
+    def is_published(self):
+        return self.status == self.PUBLISHED
+
+    def get_status(self):
+        for status in self.STATUS_CHOICES:
+            if status[0] == self.status:
+                return status[1]
+        return 'Draft'
 
     def get_template_fields(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
