@@ -136,12 +136,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'authors_string',
             'section',
             'section_id',
-            'is_published',
             'published_at',
             'importance',
             'slug',
             'revision_id',
             'url',
+            'status',
             'template',
             'template_fields'
         )
@@ -172,6 +172,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.template = validated_data.get('template', instance.template)
+        instance.status = validated_data.get('status', instance.status)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
