@@ -94,6 +94,7 @@
     }
   }
 }
+
 #article-editor {
   min-height: 200px;
   padding: 0;
@@ -103,12 +104,30 @@
     color: #2F2F2F;
     line-height: 26px;
   }
-  div.ql-line, .ql-editor > ul {
+  div.ql-line, .ql-editor > ul, h1, h2, h3 {
     margin-top: 0;
     margin-bottom: 20px;
   }
   p.no-bottom-margin {
     margin-bottom: 0;
+  }
+  h1, h2, h3 {
+    font-family: $ui-font-source-sans;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 32px;
+    line-height: 40px;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  h3 {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 300;
   }
 }
 
@@ -222,18 +241,22 @@ button.dark-button {
   padding: 0 5px;
   height: 100%;
   line-height: 55px;
-  i {
+  i, span {
     width: 38px;
     padding: 8px 0;
-    border: 1px solid transparent;
+  }
+  span {
+    font-size: 18px;
   }
   &:hover {
     color: rgb(79, 79, 79);
     cursor: pointer;
   }
-  &.ql-active i {
-    color: rgb(79, 79, 79);
-    border-color: #BBBBBB;
-    border-radius: 2px;
+  &.ql-active i, &.ql-active span {
+    color: rgb(45, 178, 30);
   }
+}
+
+.ql-header {
+  width: 38px;
 }

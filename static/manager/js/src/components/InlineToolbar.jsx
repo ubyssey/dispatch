@@ -49,7 +49,6 @@ var InlineToolbar = React.createClass({
         }
     },
     triggerEmbed: function(item){
-        console.log(item);
         if (typeof item.trigger !== 'undefined'){
             item.trigger(function(data){
                 if (typeof data === 'undefined')
