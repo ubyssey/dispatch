@@ -117,28 +117,10 @@ class ArticleViewSet(viewsets.ModelViewSet):
             publish_at = request.data.get('publish_at', None)
             instance.schedule(publish_at, commit=False)
 
-        publish = request.data.get('publish', None)
-        if publish is not None:
-            instance.publish(publish, commit=False)
-
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        return Response(serializer.data)
-
-    @detail_route(methods=['post'],)
-    def publish(self, request, parent_id=None):
-        return self.perform_publish(True)
-
-    @detail_route(methods=['post'],)
-    def unpublish(self, request, parent_id=None):
-        return self.perform_publish(False)
-
-    def perform_publish(self, publish):
-        instance = self.get_object()
-        instance.publish(publish)
-        serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)

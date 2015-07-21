@@ -128,7 +128,7 @@ def section(request, section):
         {
             'title': section,
             'article_list' : articles,
-            'unpublished': articles.filter(is_published=False).count(),
+            'unpublished': articles.exclude(status=Article.PUBLISHED).count(),
             'section': section,
             'list_title': section,
             'query': q,

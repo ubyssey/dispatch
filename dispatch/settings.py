@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
+# Dispatch settings
 CURRENT_THEME = 'ubyssey'
 
 TEMPLATE_DIRS = [
