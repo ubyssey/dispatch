@@ -6,6 +6,9 @@ var EditorCode = require('./embeds/EditorCode.jsx');
 var EditorVideo = require('./embeds/EditorVideo.jsx');
 
 var Quill = require('quill');
+var Headers = require('./modules/Headers.js');
+
+Quill.registerModule('headers', Headers);
 
 var QuillEditor = React.createClass({
     getInitialState: function(){
@@ -29,6 +32,8 @@ var QuillEditor = React.createClass({
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
         this.quill.addModule('link-tooltip', true);
         this.quill.addModule('inline-toolbar', true);
+        this.quill.addModule('headers', true);
+
 
         if(this.state.article.content)
             this.quill.setJSON(this.state.article.content);
