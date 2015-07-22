@@ -7,6 +7,7 @@
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     <article data-id="{{ article.id }}">
+        {% block banner %}{% endblock %}
         <h1 class="headline">{{ article.long_headline }}</h1>
         <div class="article-info row">
             <div class="article-byline">
@@ -21,6 +22,7 @@
                 </ul>
             </div>
         </div>
+        {% block right-column %}
         <div class="right-column">
             {% if article.featured_image %}
             <div class="featured-image">
@@ -36,6 +38,7 @@
                 <img src="{% static 'img/sample-box-ad.png' %}" />
             </div>
         </div>
+        {% endblock %}
         <div class="article-content">
             {{ article.get_html|safe }}
         </div>
