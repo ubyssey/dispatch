@@ -134,6 +134,9 @@ var ArticleAdmin = React.createClass({
     createTag: function(tag_name, callback){
         dispatch.add('tag', {name: tag_name}, callback);
     },
+    createAuthor: function(author_name, callback){
+        dispatch.add('person', {full_name: author_name}, callback);
+    },
     requiredFields: [
         'long_headline',
         'short_headline',
@@ -312,7 +315,7 @@ var ArticleAdmin = React.createClass({
                                     <SlugField url={dispatch.settings.base_url + (this.state.article && this.state.article.section ? this.state.article.section.slug + "/" : "") } value={this.state.article.slug ? this.state.article.slug : ""} tabIndex={2} errorClass={this.errorClass("slug")} onChange={this.updateField.bind(this,'slug')} />
                                 </div>
                                 <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} errorClass={this.errorClass("section")} updateHandler={this.updateModelField} />
-                                <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} errorClass={this.errorClass("authors")} updateHandler={this.updateModelField} />
+                                <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} errorClass={this.errorClass("authors")} updateHandler={this.updateModelField} createHandler={this.createAuthor} />
                                 <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} createHandler={this.createTag} />
                                 <div className="field full">
                                     <label>Snippet</label>
