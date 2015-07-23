@@ -4,10 +4,17 @@ var ItemStore = require('../stores/ItemStore.js');
 
 var ManyModelDropdown = React.createClass({
     getInitialState: function(){
+        return this.getState();
+    },
+    getState: function(){
         return {
             items: this.props.data ? ItemStore(this.props.data) : ItemStore(),
             active: false,
         }
+    },
+    componentWillReceiveProps: function(nextProps){
+        this.props = nextProps;
+        this.setState(this.getState());
     },
     componentDidMount: function(){
       window.addEventListener("mousedown", this.pageClick, false);
