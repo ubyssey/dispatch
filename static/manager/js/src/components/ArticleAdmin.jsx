@@ -13,6 +13,8 @@ var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
 var SlugField = require('./fields/SlugField.jsx');
+var SelectField = require('./fields/SelectField.jsx');
+
 var DateTimeField = require('./fields/DateTimeField.jsx');
 var ModelDropdown = require('./fields/ModelDropdown.jsx');
 var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
@@ -44,6 +46,20 @@ var STATUS_ITEMS = [
         value: 1,
         label: 'Published'
     },
+];
+
+var READING_TIME_OPTIONS = [
+    ['morning', 'Morning'],
+    ['midday', 'Midday'],
+    ['evening', 'Evening']
+];
+
+var IMPORTANCE_OPTIONS = [
+    [1, 1],
+    [2, 2],
+    [3, 3],
+    [4, 4],
+    [5, 5],
 ];
 
 var ArticleAdmin = React.createClass({
@@ -188,6 +204,8 @@ var ArticleAdmin = React.createClass({
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
                 status: this.state.article.status,
+                reading_time: this.state.article.reading_time,
+                importance: this.state.article.importance,
                 template: this.state.article.template,
                 template_fields: this.refs.template.save()
             }
@@ -303,6 +321,7 @@ var ArticleAdmin = React.createClass({
                             <TabList>
                                 <Tab><i className="fa fa-info"></i> Basic Fields</Tab>
                                 <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
+                                <Tab><i className="fa fa-paper-plane"></i> Delivery</Tab>
                                 <Tab><i className="fa fa-files-o"></i> Template</Tab>
                             </TabList>
                             <TabPanel>
@@ -324,6 +343,10 @@ var ArticleAdmin = React.createClass({
                             </TabPanel>
                             <TabPanel>
                                 <FeaturedImage name="featured_image" data={this.state.article.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
+                            </TabPanel>
+                            <TabPanel>
+                                <SelectField label="Importance" options={IMPORTANCE_OPTIONS} value={this.state.article.importance} updateHandler={this.updateField.bind(this, 'importance')} />
+                                <SelectField label="Reading time" options={READING_TIME_OPTIONS} value={this.state.article.reading_time} updateHandler={this.updateField.bind(this, 'reading_time')} />
                             </TabPanel>
                             <TabPanel>
                                 <TemplateEditor ref="template" article_id={this.state.article.id} fields={this.state.article.template_fields} template={this.state.article.template} updateHandler={this.updateField} />
