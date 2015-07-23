@@ -281,6 +281,7 @@ var ArticleAdmin = React.createClass({
         return versions;
     },
     render: function(){
+        console.log('rendering');
         if(!this.state.article){
             return (
                 <header className="secondary"></header>
@@ -289,7 +290,7 @@ var ArticleAdmin = React.createClass({
         return (
             <div className="inner">
                 <header className="secondary">
-                    {QuillToolbar}
+                    <div dangerouslySetInnerHTML={QuillToolbar} />
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
@@ -309,7 +310,7 @@ var ArticleAdmin = React.createClass({
                                 <Textarea rows={1} placeholder="Enter a headline" className={"headline " + this.errorClass("long_headline")} value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
                             </div>
                             <div className="field-row content">
-                                <QuillEditor imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
+                                <QuillEditor key="quill-editor" imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
                             </div>
                         </div>
                         <div className="toggle-options" onClick={this.toggleOptions}><i className={"fa fa-angle-double-" + (this.state.showOptions ? "right" : "left")}></i>{this.state.showOptions ? null : "open options"}</div>
