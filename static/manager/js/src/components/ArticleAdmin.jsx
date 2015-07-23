@@ -84,6 +84,7 @@ var ArticleAdmin = React.createClass({
                 section: {
                     id: this.props.sectionId,
                     name: this.props.sectionName,
+                    slug: this.props.sectionSlug
                 }
             }
         } else {
@@ -281,7 +282,6 @@ var ArticleAdmin = React.createClass({
         return versions;
     },
     render: function(){
-        console.log('rendering');
         if(!this.state.article){
             return (
                 <header className="secondary"></header>
