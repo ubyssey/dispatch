@@ -45,7 +45,7 @@ var TemplateEditor = React.createClass({
                             rendered = (<TextField key={i} field={field} value={field_data[field.name]} updateHandler={this.updateField.bind(this, field.name)} />);
                             break;
                         case(FIELDS.select):
-                            rendered = (<SelectField key={i} field={field} value={field_data[field.name]} updateHandler={this.updateField.bind(this, field.name)} />);
+                            rendered = (<SelectField key={i} label={field.label} options={field.options} value={field_data[field.name]} updateHandler={this.updateField.bind(this, field.name)} />);
                             break;
                     }
                    return rendered;
