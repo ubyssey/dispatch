@@ -9,14 +9,16 @@ var imageManager = React.render(
 );
 
 var articleId = $('#article-admin').data('id');
-var articleId = articleId ? articleId : false;
+articleId = articleId ? articleId : false;
 var sectionId = $('#article-admin').data('section-id');
-var sectionId = sectionId ? sectionId : false;
+sectionId = sectionId ? sectionId : false;
 var sectionName = $('#article-admin').data('section-name');
-var sectionName = sectionName ? sectionName : false;
+sectionName = sectionName ? sectionName : false;
+var sectionSlug = $('#article-admin').data('section-slug');
+sectionSlug = sectionSlug ? sectionSlug : false;
 
 var articleAdmin = React.render(
-    <ArticleAdmin imageManager={imageManager} articleId={articleId} sectionId={sectionId} sectionName={sectionName} />,
+    <ArticleAdmin imageManager={imageManager} articleId={articleId} sectionId={sectionId} sectionName={sectionName} sectionSlug={sectionSlug}/>,
     document.getElementById('article-admin')
 );
 
