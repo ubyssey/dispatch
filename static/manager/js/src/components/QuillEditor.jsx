@@ -34,9 +34,9 @@ var QuillEditor = React.createClass({
         this.quill.addModule('inline-toolbar', true);
         this.quill.addModule('headers', true);
 
-
         if(this.state.article.content)
             this.quill.setJSON(this.state.article.content);
+
     },
     componentWillReceiveProps: function(nextProps){
         if(nextProps.article.revision_id != this.state.article.revision_id){
