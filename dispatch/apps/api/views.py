@@ -201,7 +201,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
 
-        authors = request.data.get('authors', False)
+        authors = request.data.get('author_ids', False)
 
         partial = kwargs.pop('partial', False)
 
