@@ -535,7 +535,7 @@ class Image(Model):
         image.save(output, format='JPEG', quality=75)
 
     def save_authors(self, authors):
-        Author.objects.filter(article_id=self.id).delete()
+        Author.objects.filter(image_id=self.id).delete()
         n=0
         if type(authors) is not list:
             authors = authors.split(",")
