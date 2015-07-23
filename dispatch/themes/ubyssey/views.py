@@ -55,7 +55,7 @@ class UbysseyTheme(DefaultTheme):
     def section(self, request, section):
 
         section = Section.objects.get(slug=section)
-        articles = Article.objects.filter(head=True,section=section)
+        articles = Article.objects.filter(status=Article.PUBLISHED,section=section)
 
         context = {
             'section': section,
