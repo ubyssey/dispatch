@@ -74,8 +74,11 @@ class Publishable(Model):
     def get_previous_revision(self):
         if self.parent == self:
             return self
-        revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
-        return revision
+        try:
+            revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
+            return revision
+        except:
+            return self
 
     def check_stale(self):
         if self.revision_id == 0:
