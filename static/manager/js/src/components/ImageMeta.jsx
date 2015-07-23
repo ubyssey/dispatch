@@ -75,7 +75,6 @@ var ImageMeta = React.createClass({
         }
     },
     render: function(){
-        console.log(this.state.authors);
         return (
             <div className="image-meta">
                 <img className="image-meta-preview" src={ this.props.image.url } />
