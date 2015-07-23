@@ -160,7 +160,7 @@ var ImageManager = React.createClass({
     renderImageMeta: function(){
         if ( this.state.activeImage ){
             var image = this.ImageStore.getImage(this.state.activeImage);
-            return ( <ImageMeta id={image.id} url={image.url} authors={image.authors} filename={image.filename} title={image.title} onDelete={this.deleteImage} onUpdate={this.updateImage} /> );
+            return ( <ImageMeta image={image} onDelete={this.deleteImage} onUpdate={this.updateImage} /> );
         }
     },
     render: function() {
