@@ -60,6 +60,8 @@ class Publishable(Model):
 
             if self.is_published():
                 Article.objects.filter(parent=self.parent,status=Article.PUBLISHED).update(status=Article.DRAFT)
+                if self.get_previous_revision().status != Article.PUBLISHED:
+                    self.published_at = datetime.datetime.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
