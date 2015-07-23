@@ -573,6 +573,10 @@ class Image(Model):
                 except OSError:
                     pass
 
+class ImageGallery(Model):
+    title = CharField(max_length=255)
+    images = ManyToManyField(Image)
+
 class ImageAttachment(Model):
     NORMAL = 'normal'
     FILE = 'file'
