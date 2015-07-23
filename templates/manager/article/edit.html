@@ -1,7 +1,7 @@
 {% extends 'manager/base.html' %}
 {% load staticfiles %}
 {% block main %}
-    <main id="article-admin" data-id="{{ article }}" {% if section %}data-section-id={{ section.id }} data-section-name={{ section.name }}{% endif %}>
+    <main id="article-admin" data-id="{{ article }}" {% if section %}data-section-id={{ section.id }} data-section-name={{ section.name }} data-section-slug={{ section.slug }}{% endif %}>
     <header class="secondary"></header>
     </main>
 {% endblock %}
