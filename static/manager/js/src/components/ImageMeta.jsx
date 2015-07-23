@@ -1,36 +1,32 @@
 var React = require('react');
+var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
+var ItemStore = require('./stores/ItemStore.js');
+
 var ImageMeta = React.createClass({
     getInitialState: function(){
         return this.getState();
     },
     getState: function(){
         return {
-            authorName: this.props.authors[0] ? this.props.authors[0].full_name : "",
-            author: this.props.authors[0] ? this.props.authors[0] : false,
-            title: this.props.title,
+            authors: this.props.image.authors ? this.props.image.authors : [],
+            title: this.props.image.title,
             edited: false,
             saving: false,
             saved: false,
         }
     },
-    componentDidMount: function(){
-    },
     componentWillReceiveProps: function(nextProps){
         this.props = nextProps;
         this.setState(this.getState());
     },
-    changeAuthor: function(author){
+    updateAuthors: function(field, authors){
         this.setState({
-            authorName: author.full_name,
-            author: author,
+            authors: authors,
+            edited: true
         });
     },
-    handleChangeAuthor: function(event){
-        this.setState({
-            authorName: event.target.value,
-            author: false,
-            edited: true,
-        });
+    createAuthor: function(author_name, callback){
+        dispatch.add('person', {full_name: author_name}, callback);
     },
     handleChangeTitle: function(event){
         this.setState({
@@ -39,24 +35,18 @@ var ImageMeta = React.createClass({
         });
     },
     handleUpdate: function(event){
-        if(this.state.author){
-            this.updateAuthor(this.state.author.id);
-        } else {
-            dispatch.add("person", {
-                'full_name': this.state.authorName,
-            }, function(data){
-                this.updateAuthor(data.id);
-            }.bind(this));
+        if(this.state.authors){
+            this.saveAuthors(this.state.authors);
         }
     },
     handleDelete: function(){
-        this.props.onDelete(this.props.id);
+        this.props.onDelete(this.props.image.id);
     },
-    updateAuthor: function(authorId){
+    saveAuthors: function(authors){
         this.setState({
             saving: true,
         });
-        dispatch.update('image', this.props.id, {authors: authorId, title: this.state.title}, function(data){
+        dispatch.update('image', this.props.image.id, {author_ids: ItemStore(this.state.authors).getIds(), title: this.state.title}, function(data){
             this.props.onUpdate(data);
             this.setState({
                 saving: false,
@@ -85,17 +75,17 @@ var ImageMeta = React.createClass({
         }
     },
     render: function(){
+        console.log(this.state.authors);
         return (
             <div className="image-meta">
-                <img className="image-meta-preview" src={ this.props.url } />
-                <h3>{this.props.filename}</h3>
+                <img className="image-meta-preview" src={ this.props.image.url } />
+                <h3>{this.props.image.filename}</h3>
                 <div className="field full">
-                    <label>Title:</label>
+                    <label>Title</label>
                     <input type="text" className="full" onChange={ this.handleChangeTitle } value={ this.state.title }/>
                 </div>
                 <div className="field full">
-                    <label>Photographer:</label>
-                    <input type="text" className="dis-input add-author" onChange={ this.handleChangeAuthor } value={ this.state.authorName }/>
+                    <ManyModelDropdown model="person" item_key="id" display="full_name" label="Photographers" name="authors" data={this.state.authors} updateHandler={this.updateAuthors} createHandler={this.createAuthor} />
                     <div className="author-dropdown"></div>
                 </div>
                 <div className="field full">
