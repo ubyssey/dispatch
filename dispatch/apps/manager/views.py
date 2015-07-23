@@ -116,7 +116,7 @@ def profile(request):
 @staff_member_required
 def section(request, section):
     section = Section.objects.get(name=section)
-    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-published_at')
+    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
     q = request.GET.get('q', False)
     if q:
         articles = articles.filter(long_headline__icontains=q)
