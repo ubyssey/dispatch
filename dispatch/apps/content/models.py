@@ -171,7 +171,7 @@ class ArticleManager(Manager):
         sections = Section.objects.all()
 
         for section in sections:
-            articles = self.exclude(id__in=frontpage).filter(section=section,head=True)[:5]
+            articles = self.exclude(id__in=frontpage).filter(section=section,status=Article.PUBLISHED)[:5]
             if len(articles) > 0:
                 results[section.slug] = {
                     'first': articles[0],
