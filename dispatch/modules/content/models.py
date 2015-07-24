@@ -573,10 +573,6 @@ class Image(Model):
                 except OSError:
                     pass
 
-class ImageGallery(Model):
-    title = CharField(max_length=255)
-    images = ManyToManyField(Image)
-
 class ImageAttachment(Model):
     NORMAL = 'normal'
     FILE = 'file'
@@ -593,11 +589,16 @@ class ImageAttachment(Model):
     )
 
     article = ForeignKey(Article, blank=True, null=True)
+    gallery = ForeignKey('ImageGallery', blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+    order = PositiveIntegerField(null=True)
 
     def get_credit(self):
+        """
+        TODO: fix this
+        """
         #author = self.image.authors.all()[0]
         author = "Peter Siemens"
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
@@ -631,3 +632,17 @@ class ImageAttachment(Model):
             return template.render(c)
 
     embedlib.register('image', EmbedController)
+
+class ImageGallery(Model):
+    title = CharField(max_length=255)
+    images = ManyToManyField(ImageAttachment)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    def save_attachments(self, attachments):
+        self.images.clear()
+        for attachment in attachments:
+            attachment_obj = ImageAttachment(caption=attachment['caption'], image_id=attachment['image_id'])
+            attachment_obj.save()
+            self.images.add(attachment_obj)

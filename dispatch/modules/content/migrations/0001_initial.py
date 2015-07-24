@@ -24,12 +24,11 @@ class Migration(migrations.Migration):
                 ('long_headline', models.CharField(max_length=200)),
                 ('short_headline', models.CharField(max_length=100)),
                 ('is_active', models.BooleanField(default=True)),
-                ('is_published', models.BooleanField(default=False)),
                 ('published_at', models.DateTimeField(null=True)),
                 ('slug', models.SlugField()),
                 ('shares', models.PositiveIntegerField(default=0, null=True, blank=True)),
                 ('importance', models.PositiveIntegerField(default=3, choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)], validators=[django.core.validators.MaxValueValidator(5)])),
-                ('status', models.CharField(max_length=100, null=True, blank=True)),
+                ('status', models.PositiveIntegerField(default=0, choices=[(0, b'Draft'), (1, b'Published'), (2, b'Pitch'), (3, b'To be copyedited'), (4, b'To be managed')])),
                 ('reading_time', models.CharField(default=b'anytime', max_length=100, choices=[(b'anytime', b'Anytime'), (b'morning', b'Morning'), (b'midday', b'Midday'), (b'evening', b'Evening')])),
                 ('template', models.CharField(default=b'default', max_length=255)),
                 ('content', models.TextField()),
@@ -68,8 +67,16 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('caption', models.CharField(max_length=255, null=True, blank=True)),
                 ('type', models.CharField(default=b'normal', max_length=255, null=True, choices=[(b'normal', b'Normal'), (b'file', b'File photo'), (b'courtesy', b'Courtesy photo')])),
+                ('order', models.PositiveIntegerField(null=True)),
                 ('article', models.ForeignKey(blank=True, to='content.Article', null=True)),
-                ('image', models.ForeignKey(related_name='image', on_delete=django.db.models.deletion.SET_NULL, to='content.Image', null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='ImageGallery',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('title', models.CharField(max_length=255)),
+                ('images', models.ManyToManyField(to='content.Image')),
             ],
         ),
         migrations.CreateModel(
@@ -101,6 +108,16 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255)),
                 ('url', models.CharField(max_length=500)),
             ],
+        ),
+        migrations.AddField(
+            model_name='imageattachment',
+            name='gallery',
+            field=models.ForeignKey(blank=True, to='content.ImageGallery', null=True),
+        ),
+        migrations.AddField(
+            model_name='imageattachment',
+            name='image',
+            field=models.ForeignKey(related_name='image', on_delete=django.db.models.deletion.SET_NULL, to='content.Image', null=True),
         ),
         migrations.AddField(
             model_name='author',
