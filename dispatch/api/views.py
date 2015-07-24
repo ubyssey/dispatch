@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from rest_framework import viewsets, generics, mixins, filters, status
@@ -6,13 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, detail_route, list_route
 from rest_framework.generics import get_object_or_404
+from rest_framework.exceptions import APIException
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Page, Component
 from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment
 from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer,
-                                           ImageAttachmentSerializer, FullImageAttachmentSerializer,
                                            TagSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -76,31 +77,12 @@ class SectionViewSet(viewsets.ModelViewSet):
         view = FrontpageViewSet.as_view({'get': 'section'})
         return view(request, pk=pk, slug=slug)
 
-class ImageAttachmentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    """
-    Viewset for ImageAttachment model views.
-    """
-    model = ImageAttachment
-    serializer_class = FullImageAttachmentSerializer
-    paginate_by = 50
-    queryset = ImageAttachment.objects.all()
-
-    def article(self, request, pk=None):
-        """
-        Extra method to return ImageAttachments for given Article.
-
-        TODO: add error handling for when pk is None
-        """
-        if pk is not None:
-            # Update queryset to filter by given Article id
-            self.queryset = self.queryset.filter(article__id=pk)
-        return super(ImageAttachmentViewSet, self).list(self, request)
-
 class ArticleViewSet(viewsets.ModelViewSet):
     """
     Viewset for Article model views.
     """
     serializer_class = ArticleSerializer
+    lookup_field = 'parent_id'
 
     def get_queryset(self):
         """
@@ -108,9 +90,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
         against a `topic` query parameter in the URL.
         """
         queryset = Article.objects.filter(head=True).order_by('-published_at')
+        tag = self.request.QUERY_PARAMS.get('tag', None)
         topic = self.request.QUERY_PARAMS.get('topic', None)
         q = self.request.QUERY_PARAMS.get('q', None)
         limit = self.request.QUERY_PARAMS.get('limit', None)
+        if tag is not None:
+            queryset = queryset.filter(tags__name=tag)
         if topic is not None:
             queryset = queryset.filter(topics__name=topic)
         if q is not None:
@@ -119,26 +104,36 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset[:limit]
         return queryset
 
+
+    def update(self, request, *args, **kwargs):
+        """
+        Custom update method.
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        schedule = request.data.get('schedule', None)
+        if schedule is not None and schedule:
+            publish_at = request.data.get('publish_at', None)
+            instance.schedule(publish_at, commit=False)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
     @detail_route(methods=['get'],)
-    def revision(self, request, pk=None):
+    def revision(self, request, parent_id=None):
         revision_id = request.QUERY_PARAMS.get('revision_id', None)
         filter_kwargs = {
-            'parent_id': pk,
+            'parent_id': parent_id,
             'revision_id': revision_id,
         }
         queryset = Article.objects.all()
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def attachments(self, request, pk=None):
-        """
-        Returns a list of the arictle's attachments.
-        Uses ImageAttachmentViewSet.article() to perform request
-        """
-        view = ImageAttachmentViewSet.as_view({'get': 'article'})
-        return view(request, pk)
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
@@ -158,8 +153,29 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     Viewset for Tag model views.
     """
-    queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        q = self.request.QUERY_PARAMS.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `full_name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            resource = serializer.save()
+            status_code = status.HTTP_201_CREATED
+        except APIException:
+            instance = Tag.objects.get(name=request.data.get('name'))
+            serializer = self.get_serializer(instance)
+            status_code = status.HTTP_200_OK
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status_code, headers=headers)
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
@@ -185,7 +201,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
 
-        authors = request.data.get('authors', False)
+        authors = request.data.get('author_ids', False)
 
         partial = kwargs.pop('partial', False)
 
@@ -227,8 +243,6 @@ class ComponentViewSet(viewsets.GenericViewSet):
                 'slug': component.slug,
                 'fields': component_obj.field_data_as_json(),
             }
-
-
 
         for spot, name in page.component_spots:
             options = []
@@ -290,3 +304,16 @@ class ComponentViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data, status=update_status)
+
+class TemplateViewSet(viewsets.GenericViewSet):
+
+    def list(self, request):
+        templates = []
+        for template in ThemeHelper.get_theme_templates():
+            templates.append(template().to_json())
+
+        data = {
+            'results': templates
+        }
+
+        return Response(data)

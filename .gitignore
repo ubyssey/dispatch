@@ -2,8 +2,11 @@
 .idea/
 media/
 resources/
+dispatch/production_settings/
+/static/*
+!/static/manager/
 .sass-cache/
 npm-debug.log
 *.module-cache/
 node_modules/
-dispatch/production_settings/
+.DS_Store

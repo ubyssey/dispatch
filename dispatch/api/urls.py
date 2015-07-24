@@ -10,9 +10,10 @@ router = routers.DefaultRouter()
 router.register(r'articles', views.ArticleViewSet, base_name='articles')
 router.register(r'frontpage', views.FrontpageViewSet, base_name='frontpage')
 router.register(r'sections', views.SectionViewSet, base_name='sections')
-router.register(r'people', views.PersonViewSet, base_name='person')
-router.register(r'tag', views.TagViewSet)
+router.register(r'people', views.PersonViewSet, base_name='people')
+router.register(r'tags', views.TagViewSet, base_name='tags')
 router.register(r'images', views.ImageViewSet, base_name='images')
+router.register(r'templates', views.TemplateViewSet, base_name='templates')
 
 section_frontpage = views.SectionViewSet.as_view({
     'get': 'frontpage',
@@ -27,5 +28,6 @@ urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
     url(r'^sections/(?P<slug>[\w-]+)/frontpage/$', section_frontpage, name='section-frontpage'),
+    # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
 ]) + router.urls

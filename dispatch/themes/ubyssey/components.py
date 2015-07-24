@@ -1,5 +1,5 @@
 from dispatch.apps.frontend.helpers import theme_components
-from dispatch.apps.frontend.components.fields import TextField, ModelField
+from dispatch.apps.frontend.fields import TextField, ModelField
 from dispatch.apps.frontend.components import BaseComponent
 
 class ReadingList(BaseComponent):

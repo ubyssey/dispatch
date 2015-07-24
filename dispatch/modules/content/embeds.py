@@ -23,3 +23,30 @@ class EmbedLibrary():
             return self.library[type].render(data)
 
 embedlib = EmbedLibrary()
+
+class ListController:
+
+    @staticmethod
+    def json(data):
+        return data
+
+    @staticmethod
+    def render(data):
+        html = "<ul>"
+        for item in data:
+            html += "<li>%s</li>" % item
+        html += "</ul>"
+        return html
+
+class HeaderController:
+
+    @staticmethod
+    def json(data):
+        return data
+
+    @staticmethod
+    def render(data):
+        return "<h1>%s</h1>" % data['content']
+
+embedlib.register('header', HeaderController)
+embedlib.register('list', ListController)
