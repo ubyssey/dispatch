@@ -1,5 +1,5 @@
 var React = require('react');
-var ImageStore = require('./ImageStore.js');
+var ImageStore = require('../ImageStore.js');
 var ImageMeta = require('./ImageMeta.jsx');
 var ImageDropzone = require('./ImageDropzone.jsx');
 
