@@ -14,11 +14,22 @@ class ThemeHelper():
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:
-            templates = importlib.import_module("themes." + theme_name + ".templates")
+            templates = importlib.import_module("dispatch.themes." + theme_name + ".templates")
             templates = templates.templates.all()
         except:
             templates = []
         return templates
+
+    @staticmethod
+    def get_theme_template(theme_name=False, template_slug=None):
+        if not theme_name:
+            theme_name = ThemeHelper.get_current_theme()
+        try:
+            templates = importlib.import_module("dispatch.themes." + theme_name + ".templates")
+            template = templates.templates.get(template_slug)
+        except:
+            template = None
+        return template
 
     @staticmethod
     def get_theme_urls(theme_name=False):

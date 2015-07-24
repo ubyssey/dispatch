@@ -17,7 +17,7 @@ class UserTests(TestCase):
 
     def test_user_str(self):
         self.assertEquals(self.u1.__str__(), self.EMAIL)
-        p1 = Person(first_name="John", last_name="Doe")
+        p1 = Person(full_name="John Doe")
         p1.save()
         self.u1.person = p1
         self.u1.save()
@@ -52,8 +52,7 @@ class PersonTests(TestCase):
 
     def setUp(self):
         self.p1 = Person(
-            first_name = "John",
-            last_name = "Doe"
+            full_name = "John Doe",
         )
         self.p1.save()
 

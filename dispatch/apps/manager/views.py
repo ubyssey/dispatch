@@ -116,7 +116,7 @@ def profile(request):
 @staff_member_required
 def section(request, section):
     section = Section.objects.get(name=section)
-    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-published_at')
+    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
     q = request.GET.get('q', False)
     if q:
         articles = articles.filter(long_headline__icontains=q)
@@ -128,7 +128,7 @@ def section(request, section):
         {
             'title': section,
             'article_list' : articles,
-            'unpublished': articles.filter(is_published=False).count(),
+            'unpublished': articles.exclude(status=Article.PUBLISHED).count(),
             'section': section,
             'list_title': section,
             'query': q,
@@ -200,7 +200,12 @@ def articles(request):
     )
 
 @staff_member_required
-def article_add(request, section=None):
+def article_add(request):
+    section_id = request.GET.get('section', False)
+    try:
+        section = Section.objects.get(pk=section_id)
+    except:
+        section = None
     return render(request, 'manager/article/edit.html', {'section': section})
 
 @staff_member_required
@@ -208,11 +213,10 @@ def article_edit(request, id):
     """
     TODO: create API route to return article from parent ID eliminate below query.
     """
-    a = Article.objects.filter(parent=id,preview=False).order_by('-pk')[0]
 
     context = {
         'title': 'Edit Article',
-        'article': a.id,
+        'article': id,
         #'templates': ThemeHelper.get_theme_templates(),
     }
 
