@@ -50,12 +50,12 @@ class UbysseyTheme(DefaultTheme):
             'article': article
         }
 
-        return render(request, 'article.html', context)
+        return render(request, article.get_template(), context)
 
     def section(self, request, section):
 
         section = Section.objects.get(slug=section)
-        articles = Article.objects.filter(head=True,section=section)
+        articles = Article.objects.filter(status=Article.PUBLISHED,section=section)
 
         context = {
             'section': section,

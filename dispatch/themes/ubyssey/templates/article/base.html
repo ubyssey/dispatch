@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+{% include 'headers/topbar.html' with article=article section=article.section.slug %}
+<main class="article">
+    <div class="advertisement leaderboard">
+        <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
+    </div>
+    <article data-id="{{ article.id }}">
+        {% block banner %}{% endblock %}
+        <h1 class="headline">{{ article.long_headline }}</h1>
+        <div class="article-info row">
+            <div class="article-byline">
+                <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+            </div>
+            <div class="article-social-top">
+                <ul>
+                    <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
+                    <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
+                    <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
+                </ul>
+            </div>
+        </div>
+        {% block right-column %}
+        <div class="right-column">
+            {% if article.featured_image %}
+            <div class="featured-image">
+                <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
+                <div class="caption">
+                    {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+                </div>
+            </div>
+            <div class="sidebar offset">
+            {% else %}
+            <div class="sidebar">
+            {% endif %}
+                <img src="{% static 'img/sample-box-ad.png' %}" />
+            </div>
+        </div>
+        {% endblock %}
+        <div class="article-content">
+            {{ article.get_html|safe }}
+        </div>
+    </article>
+</main>
+
+<div class="slideshow">
+    <div class="image-container">
+        <div class="image-inner">
+            <div class="slide">
+                <img class="slide-image" />
+                <p class="slide-caption"></p>
+                <div class="navigation">
+                    <a class="prev-slide" href="#"><i class="fa fa-chevron-left"></i></a>
+                    <span class="curr-slide"></span> &nbsp; of &nbsp; <span class="total-slide"></span>
+                    <a class="next-slide" href="#"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="gallery">
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/dist/article.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+<!-- Article-specific scripts -->
+{% for s in article.scripts.all %}
+<script src="http://localhost:8888/resources/js/{{ s.filename }}"></script>
+{% endfor %}

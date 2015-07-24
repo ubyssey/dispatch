@@ -1,19 +1,19 @@
 {% extends 'manager/base.html' %}
 {% block content %}
-    <div class="list-header clearfix">
+    <header class="secondary list-header clearfix">
         <div class="checkbox cell">
             <input type="checkbox">
         </div>
         <div class="actions cell">
             <span><i class="fa fa-warning"></i> &nbsp;{{ unpublished }} unpublished articles</span>
         </div>
-        <div class="search cell">
-            <form class="search-bar" method="GET">
+        <div class="header-buttons">
+             <form class="search-bar" method="GET">
                 <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}">New article</a>
+            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
         </div>
-    </div>
+    </header>
     <div class="list-container">
         <div class="item-list">
         {% for article in article_list %}
@@ -35,7 +35,10 @@
                     <span>{{ article.get_author_string }}</span>
                 </div>
                 <div class="cell">
-                    <span>{{ article.published_at }}</span>
+                    <span>{{ article.created_at }}</span>
+                </div>
+                <div class="cell">
+                    <span>{{ article.get_status }}</span>
                 </div>
                 <div class="cell">
                     <span>{{ article.revision_id }} revisions</span>

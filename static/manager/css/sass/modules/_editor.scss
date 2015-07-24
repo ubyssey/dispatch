@@ -1,0 +1,262 @@
+// Editor styles
+
+#full-toolbar {
+  margin: 0;
+  float: left;
+}
+
+.ql-container {
+  overflow: visible;
+}
+
+.ql-editor {
+    margin-left: $text-padding;
+    img {
+      width: 100%;
+      display: block;
+    }
+}
+
+.ql-embed {
+  width: 97%;
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+  cursor: default;
+  &.selected {
+    //.images { outline: 6px solid rgb(74, 144, 226); }
+    .image .image-toolbar-container {
+      display: block;
+    }
+  }
+  .meta {
+    overflow: auto;
+    padding-top: 15px;
+  }
+  .caption {
+    float: left;
+    width: 80%;
+    textarea {
+      width: 100%;
+      border: none;
+      color: grey;
+      background: none;
+      resize: none;
+      font-family: $ui-font-helvetica;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+  .controls {
+    float: right;
+    text-align: right;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    li {
+      display: inline;
+      margin-left: 10px;
+      line-height: 20px;
+      &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+      }
+    }
+  }
+  .image {
+    position: relative;
+    overflow: visible;
+    .controls {
+      width: 20%;
+    }
+    .images {
+      overflow: auto;
+      &.single img {
+        width: 100%;
+      }
+      &.double img {
+        width: 49%;
+        float: left;
+        &:nth-child(2) {
+          float: right;
+        }
+      }
+      .add-image {
+        float: left;
+        width: 50%;
+
+        display: none;
+      }
+      &.show-add-button {
+        .add-image {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+#article-editor {
+  min-height: 200px;
+  padding: 0;
+  div.ql-line, li.ql-line {
+    font-family: Georgia;
+    font-size: 16px;
+    color: #2F2F2F;
+    line-height: 26px;
+  }
+  div.ql-line, .ql-editor > ul, h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  p.no-bottom-margin {
+    margin-bottom: 0;
+  }
+  h1, h2, h3 {
+    font-family: $ui-font-source-sans;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 32px;
+    line-height: 40px;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  h3 {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 300;
+  }
+}
+
+.drop-area {
+    height: 20px;
+}
+
+.drop-area.hover {
+    border: 1px solid grey;
+    border-radius: 20px;
+    padding: 10px 0;
+    margin: 8px 0;
+}
+
+span.format-shortcode {
+    color: red;
+}
+img.drag-image {
+    width: 150px;
+    height: auto;
+}
+
+button.dark-button {
+  border: 1px solid #fff;
+  background: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 10px;
+  padding: 0 13px;
+  height: 36px;
+  vertical-align: middle;
+  margin: 0 5px;
+  &:hover {
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    color: white;
+  }
+  &:active {
+    outline: none;
+  }
+}
+
+.image-tools {
+  display: none;
+  position: absolute;
+  left: 60px;
+  background: rgba(0,0,0,0.5);
+  &:hover {
+    cursor: pointer;
+  }
+  > .inner {
+    display: table;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    .tools {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}
+
+.inline-toolbar > div {
+    position: absolute;
+    z-index: 500;
+    //display: none;
+    height: 22px;
+    line-height: 22px;
+}
+
+.inline-toolbar .side-button {
+    width: 45px;
+    float: left;
+}
+
+.inline-toolbar .toolbar {
+    float: left;
+    margin-left: 15px;
+}
+
+.tb-toolbar {
+  float: right;
+  background: none;
+  border: 1px solid rgb(200, 200, 200);
+  color: rgb(150, 150, 150);
+  border-radius: 40px;
+  width: 28px;
+  padding: 0;
+  height: 28px;
+  transition: transform 0.1s;
+  span {
+    line-height: 14px;
+    font-size: 22px;
+    font-weight: 100;
+    font-family: $ui-font-helvetica;
+  }
+  &:hover {
+    border-color: grey;
+    color: grey;
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.ql-format-button {
+  display: inline-block;
+  text-align: center;
+  color: #BBBBBB;
+  background: none;
+  border: none;
+  padding: 0 5px;
+  height: 100%;
+  line-height: 55px;
+  font-size: 16px;
+  i, span {
+    width: 38px;
+    padding: 8px 0;
+  }
+  &:hover {
+    color: rgb(79, 79, 79);
+    cursor: pointer;
+  }
+  &.ql-active i, &.ql-active span {
+    color: rgb(45, 178, 30);
+  }
+}
+
+.ql-header {
+  width: 38px;
+}

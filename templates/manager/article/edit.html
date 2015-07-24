@@ -1,8 +1,8 @@
 {% extends 'manager/base.html' %}
 {% load staticfiles %}
 {% block main %}
-    <main id="article-admin" data-id="{{ article }}" data-section={{ section }}>
-    <header></header>
+    <main id="article-admin" data-id="{{ article }}" {% if section %}data-section-id={{ section.id }} data-section-name={{ section.name }} data-section-slug={{ section.slug }}{% endif %}>
+    <header class="secondary"></header>
     </main>
 {% endblock %}
 
@@ -12,7 +12,9 @@
 </div>
 {% endblock %}
 {% block scripts %}
-    <script src="{% static 'js/vendor/lodash.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/vendor/dropzone.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/dist/article.js' %}" type="text/javascript"></script>
+    <script src="{% static 'manager/js/vendor/lodash.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'manager/js/vendor/dropzone.js' %}" type="text/javascript"></script>
+    {% with 'manager/js/dist/article-'|add:version|add:'.js' as article_url %}
+    <script src="{% static article_url %}" type="application/javascript"></script>
+    {% endwith %}
 {% endblock %}

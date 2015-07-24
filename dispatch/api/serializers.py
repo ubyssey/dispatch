@@ -1,17 +1,12 @@
-import json
-
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import (Author, Article, Section,
-                                          Tag, Image, ImageAttachment)
+from dispatch.apps.content.models import Author, Article, Section, Tag, Image, ImageAttachment
 from dispatch.apps.core.models import Person
+from dispatch.apps.api.fields import JSONField
 
-class JSONField(serializers.Field):
-    def to_internal_value(self, value):
-        return json.loads(value)
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -22,19 +17,11 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'full_name',
-            'first_name',
-            'last_name'
         )
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
-
-    Special fields:
-    url         mapped to Image.get_absolute_url
-    thumb       mapped to Image.get_thumbnail_url
-    authors     returns serialized Author list using PersonSerializer
-    filename    read only field
     """
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
@@ -65,43 +52,20 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = (
+            'id',
             'name',
         )
 
 class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the ImageAttachment model without including full Image instance.
-    This serializer is used for creating new associations between Articles
-    and Images when the Image already exists.
-
-    Special fields:
-    article     returns the ID of related Article instance
-    image       returns the ID of related Image instance
     """
-    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
-    image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
-
-    class Meta:
-        model = ImageAttachment
-        fields = (
-            'id',
-            'article',
-            'image',
-            'caption'
-        )
-
-class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializes the ImageAttachment model, including full Image instance.
-
-    Special fields:
-    image       returns serialized Image instance using ImageSerializer
-    """
-    id = serializers.IntegerField(source='image.id', read_only=True)
+    id = serializers.IntegerField(source='image.id')
     attachment_id = serializers.IntegerField(source='id', read_only=True)
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
-    width = serializers.IntegerField(source='image.width', read_only=True)
-    height = serializers.IntegerField(source='image.height', read_only=True)
+    credit = serializers.CharField(source='get_credit')
+    width = serializers.IntegerField(source='image.width')
+    height = serializers.IntegerField(source='image.height')
 
     class Meta:
         model = ImageAttachment
@@ -110,9 +74,10 @@ class FullImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'attachment_id',
             'url',
             'caption',
+            'credit',
             'type',
             'width',
-            'height',
+            'height'
         )
 
 class SectionSerializer(serializers.HyperlinkedModelSerializer):
@@ -130,20 +95,11 @@ class SectionSerializer(serializers.HyperlinkedModelSerializer):
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Article model.
-
-    Special fields:
-    section             mapped to Section.slug
-    featured_image      returns serialized Image instance using FullImageAttachmentSerializer
-    authors             returns serialized Author list using PersonSerializer
-    content             mapped to Article.get_json()
-    authors_string      mapped to Article.get_author_string()
-    url                 mapped to Article.get_absolute_url()
-    parent              mapped to Parent.id
     """
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    featured_image = FullImageAttachmentSerializer(read_only=True)
+    featured_image = ImageAttachmentSerializer(read_only=True)
     featured_image_json = JSONField(required=False, write_only=True)
 
     content = serializers.ReadOnlyField(source='get_json')
@@ -153,8 +109,13 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     author_ids = serializers.CharField(write_only=True)
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
+
+    template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
         model = Article
@@ -170,45 +131,81 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'content_json',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'authors_string',
             'section',
             'section_id',
             'published_at',
             'importance',
+            'reading_time',
             'slug',
             'revision_id',
             'url',
+            'status',
+            'template',
+            'template_fields'
         )
+
+    def __init__(self, *args, **kwargs):
+        # Instantiate the superclass normally
+        super(ArticleSerializer, self).__init__(*args, **kwargs)
+
+        template_fields = self.context['request'].QUERY_PARAMS.get('template_fields', False)
+
+        if self.context['request'].method == 'GET' and not template_fields:
+            self.fields.pop('template_fields')
 
     def create(self, validated_data):
 
+        # Create new Article instance!
         instance = Article()
 
+        # Then save as usual
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
 
+        # Update all the basic fields
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
         instance.short_headline = validated_data.get('short_headline', instance.short_headline)
-        instance.section_id = validated_data.get('section_id')
-        instance.published_at = validated_data.get('published_at')
-        instance.slug = validated_data.get('slug')
+        instance.section_id = validated_data.get('section_id', instance.section_id)
+        instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
+        instance.template = validated_data.get('template', instance.template)
+        instance.status = validated_data.get('status', instance.status)
+        instance.reading_time = validated_data.get('reading_time', instance.reading_time)
+        instance.importance = validated_data.get('importance', instance.importance)
+
+        # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
+
+        # Process article attachments
         instance.save_attachments()
 
-        featured_image = validated_data.get('featured_image_json')
+        # Save template fields
+        template_fields = validated_data.get('get_template_fields', False)
+        if template_fields:
+            instance.save_template_fields(template_fields)
 
+        # If there's a featured image, save it
+        featured_image = validated_data.get('featured_image_json', False)
         if featured_image:
             instance.save_featured_image(featured_image)
 
+        # If there are authors, save them
         authors = validated_data.get('author_ids', False)
-
         if authors:
             instance.save_authors(authors)
 
+        # If there are tags, save them
+        tags = validated_data.get('tag_ids', False)
+        if tags:
+            instance.save_tags(tags)
+
+        # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image'], revision=False)
 
         return instance
