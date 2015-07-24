@@ -48,8 +48,22 @@ var ImageManager = React.createClass({
             this.open();
         }.bind(this));
     },
-    openWithCallback: function(callback, multiple){
-        this.multiple = multiple ? multiple : false;
+    processOptions: function(options){
+        var options = options ? options : {};
+
+        this.multiple = options.multiple ? options.multiple : false;
+
+        options.backText = options.backText ? options.backText : false;
+
+        this.backHandler = options.backHandler;
+
+        this.setState({
+            backText: options.backText
+        });
+    },
+    openWithCallback: function(callback, options){
+        this.processOptions(options);
+
         this.callback = callback;
         this.open();
     },
@@ -73,6 +87,10 @@ var ImageManager = React.createClass({
     },
     close: function(){
         this.setState({ visible: false });
+    },
+    handleBack: function(){
+        this.close();
+        this.backHandler();
     },
     insertImage: function(){
         if(this.callback) {
@@ -172,12 +190,15 @@ var ImageManager = React.createClass({
             var visible = "";
         }
 
+        var backButton = (<button className="dis-button" onClick={this.handleBack}><i className="fa fa-chevron-left"></i>{this.state.backText}</button>);
+
         return (
             <div className={'modal image-manager ' + visible}>
                 <div className="body">
                     <div id="image-manager" className="content">
                         <div className="header">
                             <nav>
+                                {this.state.backText ? backButton : null}
                                 <button className="dis-button upload-images">Upload &nbsp;<i className="fa fa-upload"></i></button>
                                 <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
                             </nav>
