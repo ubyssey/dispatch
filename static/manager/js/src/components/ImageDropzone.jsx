@@ -34,9 +34,9 @@ var ImageDropzone = React.createClass({
   },
   render: function() {
     var children = this.props.children;
-    var imageNodes = this.props.images.map(function (image) {
+    var imageNodes = this.props.images.map(function(image, i) {
       return (
-        <Image id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} onClickHandler={this.props.onClickHandler}/>
+        <Image key={i} id={image.id} thumb={image.thumb} url={image.url} progress={image.progress} onClickHandler={this.props.onClickHandler} selected={this.props.selected.indexOf(image.id) !== -1} />
       );
     }.bind(this));
     return (

@@ -48,7 +48,8 @@ var ImageManager = React.createClass({
             this.open();
         }.bind(this));
     },
-    openWithCallback: function(callback){
+    openWithCallback: function(callback, multiple){
+        this.multiple = multiple ? multiple : false;
         this.callback = callback;
         this.open();
     },
@@ -83,7 +84,7 @@ var ImageManager = React.createClass({
         this.close();
     },
     selectImage: function(id){
-        if(this.props.multiple){
+        if(this.multiple){
             var selected = this.state.selected;
             selected.push(id);
         } else {
@@ -183,13 +184,14 @@ var ImageManager = React.createClass({
                         </div>
                         <div id="image-catalog" className="content-area">
                             <div className="image-catalog-container" ref="scrollable" onScroll={this.onScroll}>
-                                <ImageDropzone url={dispatch.getModelURL('image')} paramName={'img'} loadMode={this.loadMore} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()}/>
+                                <ImageDropzone url={dispatch.getModelURL('image')} paramName={'img'} loadMode={this.loadMore} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()} selected={this.state.selected} />
                             </div>
                             {this.renderImageMeta()}
                         </div>
                         <div className="footer">
                             <nav>
                                 <div className="pull-right">
+                                    <span className="selected-text">{this.state.selected.length} images selected</span>
                                     <button className="dis-button insert-image" onClick={this.insertImage}>Insert</button>
                                 </div>
                             </nav>
