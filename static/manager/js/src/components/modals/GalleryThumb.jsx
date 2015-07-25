@@ -14,8 +14,9 @@ var GalleryThumb = React.createClass({
         var style = {backgroundImage: "url('" + this.getThumb() + "')"};
         return (
             <li className={"catalog-gallery" + (this.props.selected ? " selected" : "")} onClick={this.onClick}>
-                <div style={style}></div>
-                <span>{this.props.gallery.title}</span>
+                <div className="image" style={style}></div>
+                <div className="title">{this.props.gallery.title}</div>
+                <span className="count">{this.props.gallery.images.length}</span>
             </li>
         );
     }
