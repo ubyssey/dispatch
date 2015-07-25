@@ -55,6 +55,10 @@
         'attachment': {
             'route': 'attachments',
         },
+        'gallery': {
+            'route': 'galleries',
+            'actions': ['GET', 'POST', 'DELETE'],
+        },
         'person': {
             'route': 'people',
             'actions': ['GET', 'POST', 'DELETE'],
