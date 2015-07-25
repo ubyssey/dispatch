@@ -58,7 +58,7 @@ var ImageManager = React.createClass({
         this.backHandler = options.backHandler;
 
         this.setState({
-            backText: options.backText
+            backText: options.backText,
         });
     },
     openWithCallback: function(callback, options){
@@ -200,11 +200,13 @@ var ImageManager = React.createClass({
                             <nav>
                                 {this.state.backText ? backButton : null}
                                 <button className="dis-button upload-images">Upload &nbsp;<i className="fa fa-upload"></i></button>
-                                <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
+                                <div className="pull-right">
+                                    <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchImages} value={this.state.query} />
+                                </div>
                             </nav>
                         </div>
                         <div id="image-catalog" className="content-area">
-                            <div className="image-catalog-container" ref="scrollable" onScroll={this.onScroll}>
+                            <div className="image-catalog-container small" ref="scrollable" onScroll={this.onScroll}>
                                 <ImageDropzone url={dispatch.getModelURL('image')} paramName={'img'} loadMode={this.loadMore} addFile={this.addFile} onClickHandler={this.selectImage} onUpload={this.onUpload} updateProgress={this.updateProgress} clickable={'.upload-images'} images={this.state.images.all()} selected={this.state.selected} />
                             </div>
                             {this.renderImageMeta()}
