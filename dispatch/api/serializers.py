@@ -115,7 +115,7 @@ class ImageGallerySerializer(serializers.HyperlinkedModelSerializer):
 
         attachment_json = validated_data.get('attachment_json', False)
 
-        if attachment_json:
+        if isinstance(attachment_json, list):
             instance.save_attachments(attachment_json)
 
         return instance
