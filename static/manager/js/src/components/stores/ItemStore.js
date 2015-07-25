@@ -25,6 +25,10 @@ var ItemStore = function(data){
             var i = _.findIndex(this.items, {id: id});
             return this.items[i];
         },
+        update: function(id, data){
+            var i = _.findIndex(this.items, {id: id});
+            this.items[i] = data;
+        },
         all: function(){
             return this.items;
         },
