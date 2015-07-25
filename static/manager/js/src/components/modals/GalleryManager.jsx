@@ -69,6 +69,12 @@ var GalleryManager = React.createClass({
     close: function(){
         this.setState({ visible: false });
     },
+    show: function(){
+        this.setState({ visible: true });
+    },
+    hide: function(){
+        this.setState({ visible: false });
+    },
     handleEditGallery: function(event){
         event.preventDefault();
         if(this.state.activeGallery){
@@ -78,7 +84,7 @@ var GalleryManager = React.createClass({
     handleCreateGallery: function(event){
         event.preventDefault();
         this.setState({ visible: false }, function(){
-            this.props.imageManager.openWithCallback(this.createGallery, { many: true, backText: "Back to galleries", backHandler: this.cancelCreateGallery });
+            this.props.imageManager.openWithCallback(this.createGallery, { multiple: true, backText: "Back to galleries", backHandler: this.cancelCreateGallery });
         });
     },
     createGallery: function(items){
@@ -91,6 +97,7 @@ var GalleryManager = React.createClass({
                 caption: ""
             });
         }
+
         dispatch.add('gallery', {title: "New Gallery", attachment_json: JSON.stringify(attachments)}, function(data){
             this.GalleryStore.prepend(data);
             this.setState({ galleries: this.GalleryStore });
@@ -102,12 +109,16 @@ var GalleryManager = React.createClass({
     cancelCreateGallery: function(){
         this.setState({ visible: true });
     },
-    insertImage: function(){
+    updateGallery: function(id, data){
+        this.GalleryStore.update(id, data);
+        this.setState({ galleries: this.GalleryStore });
+    },
+    insertGallery: function(){
         if(this.callback) {
-            this.callback(this.ImageStore.getImages(this.state.selected));
+            this.callback(this.GalleryStore.getItem(this.state.activeGallery));
             this.callback = false;
         } else {
-            this.callbacks[this.state.currentTrigger.selector](this.ImageStore.getImages(this.state.selected));
+            this.callbacks[this.state.currentTrigger.selector](this.GalleryStore.getItem(this.state.activeGallery));
         }
         this.close();
     },
@@ -117,6 +128,9 @@ var GalleryManager = React.createClass({
             activeGallery: id,
             selected: selected,
         });
+    },
+    handleDeleteGallery: function(event){
+        this.deleteGallery(this.state.activeGallery);
     },
     deleteGallery: function(id){
         dispatch.remove('gallery', id, function(){
@@ -177,7 +191,7 @@ var GalleryManager = React.createClass({
         }.bind(this));
 
         if(this.state.editing){
-            var body = (<GalleryEditor gallery={this.GalleryStore.getItem(this.state.activeGallery)} cancelHandler={this.cancelEditGallery} /> );
+            var body = (<GalleryEditor gallery={this.GalleryStore.getItem(this.state.activeGallery)} imageManager={this.props.imageManager} show={this.show} hide={this.hide} updateHandler={this.updateGallery} cancelHandler={this.cancelEditGallery} /> );
         } else {
             var body = (
                 <div className="body">
@@ -185,8 +199,11 @@ var GalleryManager = React.createClass({
                             <div className="header">
                                 <nav>
                                     <button className="dis-button green" onClick={this.handleCreateGallery}>Create gallery</button>
-                                    <button className="dis-button" onClick={this.handleEditGallery}>Edit gallery</button>
-                                    <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchGalleries} value={this.state.query} />
+                                    <button className="dis-button" onClick={this.handleEditGallery} disabled={!this.state.activeGallery}>Edit</button>
+                                    <button className="dis-button" onClick={this.handleDeleteGallery} disabled={!this.state.activeGallery}>Delete</button>
+                                    <div className="pull-right">
+                                        <input type="text" className="dis-input image-search" placeholder="Search" onChange={this.searchGalleries} value={this.state.query} />
+                                    </div>
                                 </nav>
                             </div>
                             <div id="image-catalog" className="content-area">
@@ -197,7 +214,7 @@ var GalleryManager = React.createClass({
                             <div className="footer">
                                 <nav>
                                     <div className="pull-right">
-                                        <button className="dis-button insert-image" onClick={this.insertGallery}>Insert</button>
+                                        <button className="dis-button" onClick={this.insertGallery}>Insert</button>
                                     </div>
                                 </nav>
                             </div>
