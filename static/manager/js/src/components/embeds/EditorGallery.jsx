@@ -7,53 +7,35 @@ var ImageStore = require('../ImageStore.js');
 var EditorGallery = React.createClass({
     getInitialState: function(){
         return {
-            images: this.props.data,
+            gallery: this.props.data,
         };
     },
-    addImages: function(images){
-        this.setState({
-            image: image
-        });
+    updateGallery: function(gallery){
+        this.setState({ gallery: gallery });
     },
-    removeImage: function(){
+    removeGallery: function(){
         this.props.remove();
     },
-    openImageManager: function(){
-        this.props.manager.openWithCallback(function(items){
-            this.addImages(items);
-        }.bind(this), { many: true });
-    },
-    handleCaptionChange: function(event){
-        this.setState({
-            caption: event.target.value,
-        });
+    openGalleryManager: function(){
+        this.props.galleryManager.openWithCallback(this.updateGallery, { multiple: true });
     },
     getJSON: function(){
         return {
-            type: 'image',
+            type: 'gallery',
             data: {
-                attachment_id: this.props.data.attachment_id ? this.props.data.attachment_id : false,
-                subtype: this.state.type,
-                image: this.state.image,
-                caption: this.state.caption,
+                id: this.state.gallery.id,
+                title: this.state.gallery.title
             }
         }
     },
     render: function(){
         return (
-            <div className="image">
-                <div className="images">
-                    <img className="item" key={this.state.image.id} src={this.state.image.url} />
-                </div>
-                <div className="meta">
-                    <div className="caption">
-                        <Textarea className="plain" minRows={1} placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange} />
-                    </div>
-                    <ul className="controls">
-                        <li onClick={this.removeImage}>Remove</li>
-                        <li onClick={this.openImageManager}>Change</li>
-                    </ul>
-                </div>
+            <div className="gallery basic">
+                <strong>Gallery:</strong> {this.state.gallery.title}
+                <ul className="controls">
+                    <li onClick={this.removeGallery}>Remove</li>
+                    <li onClick={this.openGalleryManager}>Change</li>
+                </ul>
             </div>
             );
     }
