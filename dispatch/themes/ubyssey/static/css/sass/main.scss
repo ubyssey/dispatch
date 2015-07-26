@@ -60,6 +60,12 @@ main.article article {
           margin-top: 5px;
       }
     }
+    h1 {
+      font-family: $font-default;
+      font-weight: normal;
+      font-size: 28px;
+      margin: 30px 0 0 0;
+    }
   }
   div.article-info {
     padding: 25px 0;
@@ -140,20 +146,6 @@ div.article-image img {
     width: 100%;
 }
 
-div.caption {
-    margin-top: 6px;
-    font-family: $font-headline;
-    font-size: 15px;
-    color: #5A5A5A;
-    line-height: 19px;
-}
-
-span.credit {
-    font-style: italic;
-    color: #969696;
-    margin-left: 4px;
-}
-
 div.slideshow {
     display: none;
     z-index: 100;
@@ -162,7 +154,7 @@ div.slideshow {
     height: 100%;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,0.95);
+    background: rgba(15, 15, 15, 0.99);
     &.visible {
       display: block;
     }
