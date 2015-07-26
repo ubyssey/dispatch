@@ -1,11 +1,17 @@
 var React = require('react');
-var ImageManager = require('./components/ImageManager.jsx');
-var ArticleSidebar = require('./components/ArticleSidebar.jsx');
+var ImageManager = require('./components/modals/ImageManager.jsx');
+var GalleryManager = require('./components/modals/GalleryManager.jsx');
+
 var ArticleAdmin = require('./components/ArticleAdmin.jsx');
 
 var imageManager = React.render(
     <ImageManager />,
-    document.getElementById('modals')
+    document.getElementById('image-manager')
+);
+
+var galleryManager = React.render(
+    <GalleryManager imageManager={imageManager} />,
+    document.getElementById('gallery-manager')
 );
 
 var articleId = $('#article-admin').data('id');
@@ -18,7 +24,7 @@ var sectionSlug = $('#article-admin').data('section-slug');
 sectionSlug = sectionSlug ? sectionSlug : false;
 
 var articleAdmin = React.render(
-    <ArticleAdmin imageManager={imageManager} articleId={articleId} sectionId={sectionId} sectionName={sectionName} sectionSlug={sectionSlug}/>,
+    <ArticleAdmin imageManager={imageManager} galleryManager={galleryManager} articleId={articleId} sectionId={sectionId} sectionName={sectionName} sectionSlug={sectionSlug}/>,
     document.getElementById('article-admin')
 );
 

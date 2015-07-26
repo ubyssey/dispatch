@@ -2,6 +2,7 @@ var React = require('react');
 var InlineToolbar = require('./InlineToolbar.jsx');
 
 var EditorImage = require('./embeds/EditorImage.jsx');
+var EditorGallery = require('./embeds/EditorGallery.jsx');
 var EditorCode = require('./embeds/EditorCode.jsx');
 var EditorVideo = require('./embeds/EditorVideo.jsx');
 
@@ -18,6 +19,7 @@ var QuillEditor = React.createClass({
     },
     componentDidMount: function(){
         Quill.registerEmbed('image', EditorImage);
+        Quill.registerEmbed('gallery', EditorGallery);
         Quill.registerEmbed('code', EditorCode);
         //Quill.registerEmbed('video', EditorVideo);
 
@@ -26,6 +28,7 @@ var QuillEditor = React.createClass({
         this.quill = new Quill('#article-editor');
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
+        this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
         this.quill.addEmbed('code');
         //this.quill.addEmbed('video');
 

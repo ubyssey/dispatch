@@ -22,7 +22,7 @@ $(document).scroll(function() {
 });
 
 
-var Gallery = React.createClass({displayName: "Gallery",
+var Gallery = React.createClass({
     getInitialState: function(){
         return {
             index: false,
@@ -31,6 +31,8 @@ var Gallery = React.createClass({displayName: "Gallery",
         }
     },
     componentDidMount: function(){
+        console.log(this.props.selector);
+        this.addSlideTrigger(this.props.selector);
         this.setupEventListeners();
     },
     setupEventListeners: function(){
@@ -62,12 +64,12 @@ var Gallery = React.createClass({displayName: "Gallery",
         }.bind(this));
 
     },
-    addSlideTrigger: function(target, action, id_key){
-        $(target).on(action, function(e){
+    addSlideTrigger: function(target){
+        $(target).on('click', function(e){
             e.preventDefault();
             var image_id = $(e.target).data("id");
 
-            if(gallery.state.visible){
+            if(this.state.visible){
                 this.close();
             } else {
                 this.open(image_id);
@@ -147,15 +149,26 @@ var Gallery = React.createClass({displayName: "Gallery",
     }
 });
 
-function gatherImages(){
+
+var Galleries = React.createClass({
+    render: function(){
+        var galleries = this.props.galleries.map(function(gallery, i){
+            return (<Gallery key={i} selector={gallery.selector} images={gallery.list} imagesTable={gallery.table} />);
+        })
+        return (<div>{galleries}</div>);
+    }
+})
+
+function gatherImages(gallery){
+    var selector = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '.article-attachment';
     var images = [];
     var imagesTable = {};
     var n = 0;
-    $('.article-attachment').each(function(){
+    $(selector).each(function(){
         var id = $(this).data('id');
         images.push({
             'id': id,
-            'url': $(this).attr('src'),
+            'url': $(this).data('url'),
             'caption': $(this).data('caption'),
             'credit': $(this).data('credit'),
         });
@@ -165,14 +178,24 @@ function gatherImages(){
     return {
         'list': images,
         'table': imagesTable,
+        'selector': selector
     }
 }
 
-var images = gatherImages();
+function renderGalleries(){
 
-var gallery = React.render(
-    <Gallery images={images.list} imagesTable={images.table} />,
-    document.getElementById('gallery')
-);
+    var galleries = [];
 
-gallery.addSlideTrigger('.article-attachment', 'click', 'id');
+    galleries.push(gatherImages());
+
+    $('.gallery-attachment').each(function(){
+        galleries.push(gatherImages($(this).data('id')));
+    });
+
+    var gallery = React.render(
+        <Galleries galleries={galleries} />,
+        document.getElementById('gallery')
+    );
+}
+
+renderGalleries();

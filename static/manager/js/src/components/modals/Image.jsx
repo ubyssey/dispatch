@@ -10,7 +10,7 @@ var Image = React.createClass({
         //    styles.opacity = 100 / this.props.progress;
         }
         return (
-            <li className={'catalog-image'} onClick={this.onClick} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
+            <li className={"catalog-image" + (this.props.selected ? " selected" : "")} onClick={this.onClick} style={styles} data-id={this.props.id} data-url={this.props.url}></li>
         );
     }
 });
