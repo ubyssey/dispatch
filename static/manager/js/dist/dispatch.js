@@ -87,7 +87,7 @@
     }
 
     dispatch.settings = PRODUCTION_SETTINGS;
-    dispatch.version = '0.1.8';
+    dispatch.version = '0.1.9';
 
     // Errors
     // --------------------

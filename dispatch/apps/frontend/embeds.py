@@ -1,3 +1,5 @@
+from django.template import loader, Context
+
 class EmbedLibrary():
 
     def __init__(self):
@@ -46,6 +48,19 @@ class HeaderController:
     def render(data):
         return "<h1>%s</h1>" % data['content']
 
+class VideoController:
+
+    @staticmethod
+    def json(data):
+        return data
+
+    @staticmethod
+    def render(data):
+        template = loader.get_template("article/embeds/video.html")
+        c = Context(data)
+        return template.render(c)
+
 
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
+embedlib.register('video', VideoController)
