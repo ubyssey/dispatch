@@ -33,8 +33,8 @@ var EditorGallery = React.createClass({
             <div className="gallery basic">
                 <strong>Gallery:</strong> {this.state.gallery.title}
                 <ul className="controls">
-                    <li onClick={this.removeGallery}>Remove</li>
-                    <li onClick={this.openGalleryManager}>Change</li>
+                    <li onClick={this.removeGallery}><button>Remove</button></li>
+                    <li onClick={this.openGalleryManager}><button>Change</button></li>
                 </ul>
             </div>
             );
