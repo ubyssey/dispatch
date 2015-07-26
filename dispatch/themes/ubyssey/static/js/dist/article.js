@@ -31,8 +31,7 @@ var Gallery = React.createClass({displayName: "Gallery",
         }
     },
     componentDidMount: function(){
-        console.log(this.props.selector);
-        this.addSlideTrigger(this.props.selector);
+        this.addSlideTrigger(this.props.trigger);
         this.setupEventListeners();
     },
     setupEventListeners: function(){
@@ -153,14 +152,15 @@ var Gallery = React.createClass({displayName: "Gallery",
 var Galleries = React.createClass({displayName: "Galleries",
     render: function(){
         var galleries = this.props.galleries.map(function(gallery, i){
-            return (React.createElement(Gallery, {key: i, selector: gallery.selector, images: gallery.list, imagesTable: gallery.table}));
+            return (React.createElement(Gallery, {key: i, trigger: gallery.trigger, selector: gallery.selector, images: gallery.list, imagesTable: gallery.table}));
         })
         return (React.createElement("div", null, galleries));
     }
 })
 
 function gatherImages(gallery){
-    var selector = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '.article-attachment';
+    var selector = gallery ? '#gallery-' + gallery + ' .gallery-image' : '.article-attachment';
+    var trigger = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '.article-attachment';
     var images = [];
     var imagesTable = {};
     var n = 0;
@@ -178,7 +178,8 @@ function gatherImages(gallery){
     return {
         'list': images,
         'table': imagesTable,
-        'selector': selector
+        'selector': selector,
+        'trigger': trigger
     }
 }
 
