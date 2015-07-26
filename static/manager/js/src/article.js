@@ -2,7 +2,6 @@ var React = require('react');
 var ImageManager = require('./components/modals/ImageManager.jsx');
 var GalleryManager = require('./components/modals/GalleryManager.jsx');
 
-var ArticleSidebar = require('./components/ArticleSidebar.jsx');
 var ArticleAdmin = require('./components/ArticleAdmin.jsx');
 
 var imageManager = React.render(
