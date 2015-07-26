@@ -310,7 +310,7 @@ var ArticleAdmin = React.createClass({
                                 <Textarea rows={1} placeholder="Enter a headline" className={"headline " + this.errorClass("long_headline")} value={this.state.article.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
                             </div>
                             <div className="field-row content">
-                                <QuillEditor key="quill-editor" imageManager={this.props.imageManager} article={this.state.article} ref="content"/>
+                                <QuillEditor key="quill-editor" imageManager={this.props.imageManager} galleryManager={this.props.galleryManager} article={this.state.article} ref="content"/>
                             </div>
                         </div>
                         <div className="toggle-options" onClick={this.toggleOptions}><i className={"fa fa-angle-double-" + (this.state.showOptions ? "right" : "left")}></i>{this.state.showOptions ? null : "open options"}</div>

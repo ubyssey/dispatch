@@ -29,6 +29,10 @@ var ImageStore = function(){
             var i = _.findIndex(this.images, {id: data.id});
             this.images[i] = data;
         },
+        updateAttachment: function(attachment_id, data){
+            var i = _.findIndex(this.images, {attachment_id: attachment_id});
+            this.images[i] = data;
+        },
         replaceTemp: function(name, image){
             var i = _.findIndex(this.images, {tempName: name});
             this.images[i] = image;
@@ -47,6 +51,11 @@ var ImageStore = function(){
         removeImage: function(id){
             _.remove(this.images, function(n) {
                 return n.id == id;
+            });
+        },
+        removeAttachment: function(attachment_id) {
+            _.remove(this.images, function(n) {
+                return n.attachment_id == attachment_id;
             });
         },
         all: function(){

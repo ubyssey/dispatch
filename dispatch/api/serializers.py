@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Tag, Image, ImageAttachment
+from dispatch.apps.content.models import Author, Article, Section, Tag, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.api.fields import JSONField
 
@@ -79,6 +79,46 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'width',
             'height'
         )
+
+class ImageGallerySerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the ImageGallery model without including full Image instance.
+    """
+
+    images = ImageAttachmentSerializer(read_only=True, many=True)
+    attachment_json = JSONField(required=False, write_only=True)
+
+    class Meta:
+        model = ImageGallery
+        fields = (
+            'id',
+            'title',
+            'images',
+            'attachment_json'
+        )
+
+    def create(self, validated_data):
+
+        # Create new ImageGallery instance!
+        instance = ImageGallery()
+
+        # Then save as usual
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+
+        # Update all the basic fields
+        instance.title = validated_data.get('title', instance.title)
+
+        # Save instance before processing/saving content in order to save associations to correct ID
+        instance.save()
+
+        attachment_json = validated_data.get('attachment_json', False)
+
+        if isinstance(attachment_json, list):
+            instance.save_attachments(attachment_json)
+
+        return instance
 
 class SectionSerializer(serializers.HyperlinkedModelSerializer):
     """

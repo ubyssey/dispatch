@@ -1,5 +1,3 @@
-from django.template import loader, Context
-
 class EmbedLibrary():
 
     def __init__(self):
@@ -47,6 +45,7 @@ class HeaderController:
     @staticmethod
     def render(data):
         return "<h1>%s</h1>" % data['content']
+
 
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)

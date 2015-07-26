@@ -19,9 +19,12 @@
 
 .ql-embed {
   width: 97%;
-  margin-top: 40px !important;
-  margin-bottom: 40px !important;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
   cursor: default;
+  font-family: $ui-font-helvetica;
+  font-size: 14px;
+
   &.selected {
     //.images { outline: 6px solid rgb(74, 144, 226); }
     .image .image-toolbar-container {
@@ -61,6 +64,12 @@
         cursor: pointer;
       }
     }
+  }
+  .basic {
+    border: 1px solid #C1C1C1;
+    padding: 15px;
+    border-radius: 4px;
+    background: #F7F7F7;
   }
   .image {
     position: relative;

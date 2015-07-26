@@ -4,6 +4,8 @@
 @import 'modules/font_faces';
 @import 'modules/homepage';
 
+@import 'modules/article/embeds';
+
 body {
     padding: 0;
     margin: 0;
@@ -159,7 +161,7 @@ div.slideshow {
     height: 100%;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
     &.visible {
       display: block;
     }
