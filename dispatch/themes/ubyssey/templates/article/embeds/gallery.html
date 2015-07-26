@@ -1,6 +1,6 @@
-<div id="gallery-{{ id }}" data-id="{{ id }}" class="gallery-attachment">
+<div id="gallery-{{ id }}" data-id="{{ id }}" class="gallery-attachment attachment">
     <div class="gallery-cover">
-        <img class="gallery-thumb" data-id="{{ cover.id }}" data-url="{{ cover.image.get_absolute_url }}" data-caption="{{ cover.caption }}" src="{{ cover.image.get_absolute_url }}" />
+        <img class="gallery-thumb" data-id="{{ cover.id }}" src="{{ cover.image.get_absolute_url }}" />
         <div class="meta row">
             <div class="eight columns">
                 <h2>{{ title }}</h2>
@@ -12,6 +12,9 @@
         </div>
     </div>
     <ul class="thumbs">
-        {% for attachment in thumbs %}<li><div class="gallery-thumb" data-id="{{ attachment.id }}" data-url="{{ attachment.image.get_absolute_url }}" data-caption="{{ attachment.caption }}" style="background-image: url('{{ attachment.image.get_thumbnail_url }}');" /></div></li>{% endfor %}
+        {% for attachment in thumbs %}<li><div class="gallery-thumb" data-id="{{ attachment.id }}" style="background-image: url('{{ attachment.image.get_thumbnail_url }}');" /></div></li>{% endfor %}
     </ul>
+    <div class="images">
+        {% for attachment in images %}<div class="gallery-image" data-id="{{ attachment.id }}" data-url="{{ attachment.image.get_absolute_url }}" data-caption="{{ attachment.caption }}"></div>{% endfor %}
+    </div>
 </div>
