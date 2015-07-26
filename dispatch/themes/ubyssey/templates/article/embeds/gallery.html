@@ -1,7 +1,15 @@
 <div id="gallery-{{ id }}" data-id="{{ id }}" class="gallery-attachment">
     <div class="gallery-cover">
         <img class="gallery-thumb" data-id="{{ cover.id }}" data-url="{{ cover.image.get_absolute_url }}" data-caption="{{ cover.caption }}" src="{{ cover.image.get_absolute_url }}" />
-        <h2>{{ title }}</h2>
+        <div class="meta row">
+            <div class="eight columns">
+                <h2>{{ title }}</h2>
+                <span>Gallery &middot; {{ size }} images</span>
+            </div>
+            <div class="four columns u-text-right">
+                <button>View Gallery</button>
+            </div>
+        </div>
     </div>
     <ul class="thumbs">
         {% for attachment in thumbs %}<li><div class="gallery-thumb" data-id="{{ attachment.id }}" data-url="{{ attachment.image.get_absolute_url }}" data-caption="{{ attachment.caption }}" style="background-image: url('{{ attachment.image.get_thumbnail_url }}');" /></div></li>{% endfor %}
