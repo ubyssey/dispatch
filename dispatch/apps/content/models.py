@@ -664,7 +664,8 @@ class ImageGallery(Model):
                 'title': gallery.title,
                 'cover': images[0],
                 'thumbs': images[1:5],
-                'images': images
+                'images': images,
+                'size': len(images)
             })
             return template.render(c)
 
