@@ -657,16 +657,19 @@ class ImageGallery(Model):
         def render(data):
             template = loader.get_template("article/embeds/gallery.html")
             id = data['id']
-            gallery = ImageGallery.objects.get(id=id)
-            images = gallery.images.all()
-            c = Context({
-                'id': gallery.id,
-                'title': gallery.title,
-                'cover': images[0],
-                'thumbs': images[1:5],
-                'images': images,
-                'size': len(images)
-            })
-            return template.render(c)
+            try:
+                gallery = ImageGallery.objects.get(id=id)
+                images = gallery.images.all()
+                c = Context({
+                    'id': gallery.id,
+                    'title': gallery.title,
+                    'cover': images[0],
+                    'thumbs': images[1:5],
+                    'images': images,
+                    'size': len(images)
+                })
+                return template.render(c)
+            except:
+                return "Gallery not found"
 
     embedlib.register('gallery', EmbedController)
