@@ -8,11 +8,11 @@ from django.db.models import (
 
 from django.core.validators import MaxValueValidator
 from django.conf import settings
-from django.template import loader, Context
 from django.utils.functional import cached_property
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.template import loader, Context
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
@@ -635,7 +635,7 @@ class ImageAttachment(Model):
 
 class ImageGallery(Model):
     title = CharField(max_length=255)
-    images = ManyToManyField(ImageAttachment)
+    images = ManyToManyField(ImageAttachment, related_name="images")
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -647,3 +647,25 @@ class ImageGallery(Model):
             attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], image_id=attachment['image_id'])
             attachment_obj.save()
             self.images.add(attachment_obj)
+
+    class EmbedController:
+        @staticmethod
+        def json(data):
+            return data
+
+        @staticmethod
+        def render(data):
+            template = loader.get_template("article/embeds/gallery.html")
+            id = data['id']
+            gallery = ImageGallery.objects.get(id=id)
+            images = gallery.images.all()
+            c = Context({
+                'id': gallery.id,
+                'title': gallery.title,
+                'cover': images[0],
+                'thumbs': images[1:5],
+                'images': images
+            })
+            return template.render(c)
+
+    embedlib.register('gallery', EmbedController)
