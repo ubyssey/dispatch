@@ -28,7 +28,6 @@ var ModelDropdown = React.createClass({
         });
     },
     updateField: function(){
-        console.log(this.state.item);
         this.props.updateHandler(this.props.name, this.state.item);
     },
     getObjProp: function(obj, str){
