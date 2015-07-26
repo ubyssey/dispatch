@@ -13,6 +13,7 @@ router.register(r'sections', views.SectionViewSet, base_name='sections')
 router.register(r'people', views.PersonViewSet, base_name='people')
 router.register(r'tags', views.TagViewSet, base_name='tags')
 router.register(r'images', views.ImageViewSet, base_name='images')
+router.register(r'galleries', views.ImageGalleryViewSet, base_name='galleries')
 router.register(r'templates', views.TemplateViewSet, base_name='templates')
 
 section_frontpage = views.SectionViewSet.as_view({

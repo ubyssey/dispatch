@@ -12,9 +12,9 @@ from rest_framework.exceptions import APIException
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Page, Component
-from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment
+from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer,
-                                           TagSerializer, PersonSerializer)
+                                           ImageGallerySerializer, TagSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -222,6 +222,19 @@ class ImageViewSet(viewsets.ModelViewSet):
         if q is not None:
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset
+
+class ImageGalleryViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for ImageGallery model views.
+    """
+    serializer_class = ImageGallerySerializer
+
+    paginate_by = 30
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('created_at',)
+
+    queryset = ImageGallery.objects.all()
+
 
 class ComponentViewSet(viewsets.GenericViewSet):
 

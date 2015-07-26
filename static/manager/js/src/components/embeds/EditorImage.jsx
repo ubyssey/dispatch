@@ -14,7 +14,6 @@ var EditorImage = React.createClass({
         };
     },
     addImage: function(image){
-        console.log(image);
         this.setState({
             image: image
         });

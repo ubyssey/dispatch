@@ -1,6 +1,6 @@
 var React = require('react');
-var ManyModelDropdown = require('./fields/ManyModelDropdown.jsx');
-var ItemStore = require('./stores/ItemStore.js');
+var ManyModelDropdown = require('../fields/ManyModelDropdown.jsx');
+var ItemStore = require('../stores/ItemStore.js');
 
 var ImageMeta = React.createClass({
     getInitialState: function(){

@@ -8,11 +8,11 @@ from django.db.models import (
 
 from django.core.validators import MaxValueValidator
 from django.conf import settings
-from django.template import loader, Context
 from django.utils.functional import cached_property
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.template import loader, Context
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
@@ -589,11 +589,16 @@ class ImageAttachment(Model):
     )
 
     article = ForeignKey(Article, blank=True, null=True)
+    gallery = ForeignKey('ImageGallery', blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+    order = PositiveIntegerField(null=True)
 
     def get_credit(self):
+        """
+        TODO: fix this
+        """
         #author = self.image.authors.all()[0]
         author = "Peter Siemens"
         types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
@@ -627,3 +632,40 @@ class ImageAttachment(Model):
             return template.render(c)
 
     embedlib.register('image', EmbedController)
+
+class ImageGallery(Model):
+    title = CharField(max_length=255)
+    images = ManyToManyField(ImageAttachment, related_name="images")
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    def save_attachments(self, attachments):
+        self.images.clear()
+        ImageAttachment.objects.filter(gallery=self).delete()
+        for attachment in attachments:
+            attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], image_id=attachment['image_id'])
+            attachment_obj.save()
+            self.images.add(attachment_obj)
+
+    class EmbedController:
+        @staticmethod
+        def json(data):
+            return data
+
+        @staticmethod
+        def render(data):
+            template = loader.get_template("article/embeds/gallery.html")
+            id = data['id']
+            gallery = ImageGallery.objects.get(id=id)
+            images = gallery.images.all()
+            c = Context({
+                'id': gallery.id,
+                'title': gallery.title,
+                'cover': images[0],
+                'thumbs': images[1:5],
+                'images': images
+            })
+            return template.render(c)
+
+    embedlib.register('gallery', EmbedController)

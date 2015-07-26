@@ -14,6 +14,21 @@ var ItemStore = function(data){
                 item.id = item[key];
             this.items.push(item);
         },
+        prepend: function(item){
+            this.items.unshift(item);
+        },
+
+        dump: function(items){
+            this.items = items;
+        },
+        getItem: function(id){
+            var i = _.findIndex(this.items, {id: id});
+            return this.items[i];
+        },
+        update: function(id, data){
+            var i = _.findIndex(this.items, {id: id});
+            this.items[i] = data;
+        },
         all: function(){
             return this.items;
         },
