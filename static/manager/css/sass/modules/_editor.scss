@@ -104,6 +104,17 @@
   }
 }
 
+.embed-video {
+  .insert-video {
+    input {
+      width: 60%;
+    }
+    button {
+      margin: 0 10px;
+    }
+  }
+}
+
 #article-editor {
   min-height: 200px;
   padding: 0;
