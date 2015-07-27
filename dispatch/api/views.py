@@ -335,7 +335,7 @@ class TrendingViewSet(viewsets.GenericViewSet):
 
     def list(self, request):
         data = {
-            "count": 10,
+            "count": 3,
             "next": None,
             "previous": None,
             "results": [
