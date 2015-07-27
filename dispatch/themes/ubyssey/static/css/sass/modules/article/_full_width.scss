@@ -1,0 +1,84 @@
+@import 'modules/fonts';
+@import 'modules/variables';
+
+main.article.fw-story {
+  .fw-banner {
+    overflow: auto;
+    margin-bottom: 40px;
+    .header-container {
+      margin: 40px 0 20px 0;
+      padding-bottom: 40px;
+      display: table;
+      border-bottom: 1px solid #DEDEDE;
+    }
+    .headline-container {
+      text-align: center;
+    }
+    .left, .right {
+      display: table-cell;
+      box-sizing: border-box;
+    }
+    .left {
+      width: 55%;
+      padding-right: 50px;
+      padding-bottom: 25px;
+      vertical-align: middle;
+    }
+    .right {
+      width: 45%;
+    }
+    p.fw-description {
+      font-family: $font-headline;
+      font-size: 15px;
+      color: #464646;
+    }
+
+    &.top-image {
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .featured-image {
+        width: 100%;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
+      .header-container {
+        width: 100%;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      .headline-container {
+        max-width: 585px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+        padding: 0 20px;
+      }
+
+      div.article-social-top {
+        float: none;
+        text-align: center;
+        ul li {
+          margin: 0 10px;
+        }
+      }
+
+      @media($bp-larger-than-mobile){
+        .header-container {
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+      }
+
+    }
+  }
+
+  div.article-content {
+    margin: 0 auto;
+  }
+}
+
