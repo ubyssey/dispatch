@@ -27,7 +27,7 @@ class FullWidth(BaseTemplate):
     )
 
     fields = (
-        ('test', 'Test', TextField()),
+        ('description', 'Description', TextField()),
         ('image_size', 'Image Size', SelectField(options=IMAGE_SIZE_OPTIONS))
     )
 
