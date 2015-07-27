@@ -290,6 +290,11 @@ class Article(Publishable):
                 return status[1]
         return 'Draft'
 
+    def template_fields(self):
+        if not hasattr(self, 'template_fields_data'):
+            self.template_fields_data = self.get_template_fields()
+        return self.template_fields_data
+
     def get_template_fields(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template(article_id=self.id).field_data_as_json()
