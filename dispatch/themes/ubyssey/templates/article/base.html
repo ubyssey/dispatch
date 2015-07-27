@@ -3,45 +3,52 @@
 {% block content %}
 {% include 'headers/topbar.html' with article=article section=article.section.slug %}
 <main class="article {{ article.template }}">
+    {% block banner_ad %}
     <div class="advertisement leaderboard">
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
+    {% endblock %}
     <article data-id="{{ article.id }}">
         {% block banner %}
-        <h1 class="headline">{{ article.long_headline }}</h1>
-        <div class="article-info row">
-            <div class="article-byline">
-                <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
-            </div>
-            <div class="article-social-top">
-                <ul>
-                    <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
-                    <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
-                    <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
-                </ul>
-            </div>
-        </div>
-        {% endblock %}
-        {% block right-column %}
-        <div class="right-column">
-            {% if article.featured_image %}
-            <div class="featured-image">
-                <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" data-url="{{ article.featured_image.image.get_absolute_url }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
-                <div class="caption">
-                    {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+        <div class="container">
+            <h1 class="headline">{{ article.long_headline }}</h1>
+            <div class="article-info row">
+                <div class="article-byline">
+                    <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+                </div>
+                <div class="article-social top">
+                    <ul>
+                        <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
+                        <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="sidebar offset">
-            {% else %}
-            <div class="sidebar">
-            {% endif %}
-                <img src="{% static 'img/sample-box-ad.png' %}" />
-            </div>
         </div>
         {% endblock %}
-        <div class="article-content">
-            {{ article.get_html|safe }}
+        <div class="container">
+            {% block right-column %}
+            <div class="right-column">
+                {% if article.featured_image %}
+                <div class="featured-image">
+                    <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" data-url="{{ article.featured_image.image.get_absolute_url }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
+                    <div class="caption">
+                        {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+                    </div>
+                </div>
+                <div class="sidebar offset">
+                {% else %}
+                <div class="sidebar">
+                {% endif %}
+                    <img src="{% static 'img/sample-box-ad.png' %}" />
+                </div>
+            </div>
+            {% endblock %}
+            <div class="article-content">
+                {% block pre-content %}{% endblock %}
+                {{ article.get_html|safe }}
+            </div>
         </div>
     </article>
 </main>
