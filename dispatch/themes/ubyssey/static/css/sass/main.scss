@@ -8,16 +8,11 @@
 @import 'modules/article/base';
 @import 'modules/article/embeds';
 
+@import 'modules/variables';
+
 body {
     padding: 0;
     margin: 0;
-}
-
-main.article {
-    width: 960px;
-    margin-top: 56px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 div.advertisement {
@@ -25,13 +20,19 @@ div.advertisement {
     &.homepage {
       padding-bottom: 0;
     }
+    display: none;
     padding: 25px 0;
     text-align: center;
+    @media($bp-larger-than-mobile){
+      display: block;
+    }
   }
 }
 
 div.container {
-    width: 960px;
+    max-width: 960px;
+    width: 100%;
+    padding: 0 20px;
     margin-left: auto;
     margin-right: auto;
 }
