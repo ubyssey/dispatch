@@ -1,12 +1,24 @@
 {% extends 'article/base.html' %}
 
 {% block banner %}
-<div class="full-width featured-image">
-    <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
-    <div class="caption">
-        {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+<div class="fw-banner">
+    <div class="left">
+        <h1 class="headline">{{ article.long_headline }}</h1>
+        <p class="fw-description">{{ article.template_fields.description }}</p>
+        <div class="article-byline">
+            <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+        </div>
+    </div>
+    <div class="right">
+        <div class="full-width featured-image">
+            <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-url="{{ article.featured_image.image.get_absolute_url }}" data-credit="{{ article.featured_image.get_credit }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
+            <div class="caption">
+                {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+            </div>
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block right-column %}
