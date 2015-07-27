@@ -1,4 +1,5 @@
 @import 'fonts';
+@import 'modules/variables';
 
 // Main header
 
@@ -40,8 +41,7 @@ div.branding {
 nav.main {
   border-top: 2px solid #313131;
   border-bottom: 1px solid #D3D3D3;
-  //border: 1px solid #D3D3D3;
-  //border-radius: 2px;
+
   .inner {
     //padding: 15px 0px 13px 0;
   }
@@ -134,7 +134,11 @@ header.topbar {
       height: 20px;
   }
   nav {
-    display: inline-block;
+    display: none;
+    @media($bp-larger-than-mobile){
+      display: inline-block;
+    }
+
     white-space: nowrap;
     vertical-align: top;
     font-family: $font-default;

@@ -1,4 +1,5 @@
 @import 'full_width';
+@import 'modules/variables';
 
 .featured-image {
   img {
@@ -22,6 +23,13 @@ main.article.default {
 }
 
 main.article {
+
+  max-width: 960px;
+  width: 100%;
+  margin-top: 49px;
+  margin-left: auto;
+  margin-right: auto;
+
   h1.headline {
     font-family: $font-headline;
     font-size: 32px;
@@ -31,6 +39,7 @@ main.article {
 
   div.article-content {
     max-width: 585px;
+    padding: 0 20px;
     p {
       font-family: $font-body;
       font-size: 16px;
@@ -51,25 +60,31 @@ main.article {
   div.article-info {
     padding: 25px 0;
     color: #222222;
-    div.article-social-top {
-      float: right;
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-        li {
-          display: inline;
-          margin-left: 20px;
-          a {
-            font-family: $font-secondary;
-            font-size: 12px;
-            i, span {
-              vertical-align: middle;
-            }
-            i {
-              margin-right: 8px;
-              font-size: 16px;
-            }
+  }
+  div.article-social-top {
+    float: right;
+    display: none;
+
+    @media($bp-larger-than-mobile){
+      display: block;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      li {
+        display: inline;
+        margin-left: 20px;
+        a {
+          font-family: $font-secondary;
+          font-size: 12px;
+          i, span {
+            vertical-align: middle;
+          }
+          i {
+            margin-right: 8px;
+            font-size: 16px;
           }
         }
       }
