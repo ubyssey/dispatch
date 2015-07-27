@@ -2,12 +2,12 @@
 {% load staticfiles %}
 {% block content %}
 {% include 'headers/topbar.html' with article=article section=article.section.slug %}
-<main class="article">
+<main class="article {{ article.template }}">
     <div class="advertisement leaderboard">
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     <article data-id="{{ article.id }}">
-        {% block banner %}{% endblock %}
+        {% block banner %}
         <h1 class="headline">{{ article.long_headline }}</h1>
         <div class="article-info row">
             <div class="article-byline">
@@ -22,6 +22,7 @@
                 </ul>
             </div>
         </div>
+        {% endblock %}
         {% block right-column %}
         <div class="right-column">
             {% if article.featured_image %}

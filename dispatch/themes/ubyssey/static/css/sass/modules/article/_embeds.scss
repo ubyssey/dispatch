@@ -34,22 +34,9 @@
       font-weight: normal;
     }
   }
-  div.caption {
-    margin-top: 6px;
-    font-family: $font-headline;
-    font-size: 15px;
-    color: #5A5A5A;
-    line-height: 19px;
-  }
-  span.credit {
-      font-style: italic;
-      color: #969696;
-      margin-left: 4px;
-  }
 }
 
 .gallery-attachment {
-  margin: 30px 0;
   .gallery-cover {
     position: relative;
     margin-bottom: 4px;
@@ -116,5 +103,12 @@
   }
   .video-launch:hover {
     cursor: pointer;
+  }
+}
+
+
+.image-attachment {
+  img {
+    width: 100%;
   }
 }
