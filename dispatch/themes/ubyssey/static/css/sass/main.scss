@@ -5,6 +5,7 @@
 @import 'modules/font_faces';
 @import 'modules/homepage';
 
+@import 'modules/article/base';
 @import 'modules/article/embeds';
 
 body {
@@ -35,81 +36,6 @@ div.container {
     margin-right: auto;
 }
 
-// Article
-main.article article {
-  h1.headline {
-    border-top: 2px solid #3E3E3E;
-    border-bottom: 1px solid #D2D2D2;
-    font-family: $font-headline;
-    font-size: 30px;
-    color: #000000;
-    line-height: 46px;
-    padding: 25px 0;
-    margin: 0;
-  }
-
-  div.article-content {
-    max-width: 585px;
-    p {
-      font-family: $font-body;
-      font-size: 16px;
-      color: #333333;
-      line-height: 26px;
-      margin-top: 20px;
-      &:first-child {
-          margin-top: 5px;
-      }
-    }
-    h1 {
-      font-family: $font-default;
-      font-weight: normal;
-      font-size: 28px;
-      margin: 30px 0 0 0;
-    }
-  }
-  div.article-info {
-    padding: 25px 0;
-    color: #222222;
-    div.article-byline {
-      float: left;
-      font-size: 14px;
-      line-height: 17px;
-      font-family: $font-default;
-      font-weight: 500;
-      span.author {
-        font-family: $font-default;
-      }
-      span.published {
-        color: #777;
-        font-size: 13px;
-      }
-    }
-    div.article-social-top {
-      float: right;
-      ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-        li {
-          display: inline;
-          margin-left: 20px;
-          a {
-            font-family: $font-secondary;
-            font-size: 12px;
-            i, span {
-              vertical-align: middle;
-            }
-            i {
-              margin-right: 8px;
-              font-size: 16px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 //////
 
 div.right-column {
@@ -136,14 +62,6 @@ div.sidebar {
     &.offset {
       margin-top: 4em;
     }
-}
-
-div.article-image {
-    margin: 40px 0;
-}
-
-div.article-image img {
-    width: 100%;
 }
 
 div.slideshow {
@@ -177,6 +95,19 @@ p.slide-caption {
     font-size: 13px;
     color: #fff;
     line-height: 19px;
+}
+
+div.caption {
+  margin-top: 6px;
+  font-family: $font-headline;
+  font-size: 15px;
+  color: #5A5A5A;
+  line-height: 19px;
+}
+
+span.credit {
+  font-style: italic;
+  color: #969696;
 }
 
 div.slide {
