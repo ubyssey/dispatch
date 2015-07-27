@@ -28,7 +28,8 @@ class FullWidth(BaseTemplate):
 
     HEADER_LAYOUT_OPTIONS = (
         ('right-image', 'Right Image'),
-        ('top-image', 'Top Image')
+        ('top-image', 'Top Image'),
+        ('banner-image', 'Banner Image')
     )
 
     fields = (
