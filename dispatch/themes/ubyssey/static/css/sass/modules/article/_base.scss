@@ -23,12 +23,7 @@ main.article.default {
 }
 
 main.article {
-
-  max-width: 960px;
-  width: 100%;
   margin-top: 49px;
-  margin-left: auto;
-  margin-right: auto;
 
   h1.headline {
     font-family: $font-headline;
@@ -38,10 +33,6 @@ main.article {
   }
 
   div.article-content {
-    max-width: 585px;
-    @media(max-width: 585px){
-      padding: 0 20px;
-    }
     p {
       font-family: $font-body;
       font-size: 16px;
@@ -50,6 +41,10 @@ main.article {
       margin-top: 20px;
       &:first-child {
           margin-top: 5px;
+      }
+      max-width: 585px;
+      @media(max-width: 585px){
+        padding: 0 20px;
       }
     }
     h1 {
@@ -63,35 +58,6 @@ main.article {
     padding: 25px 0;
     color: #222222;
   }
-  div.article-social-top {
-    float: right;
-    display: none;
-
-    @media($bp-larger-than-mobile){
-      display: block;
-    }
-
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-      li {
-        display: inline;
-        margin-left: 20px;
-        a {
-          font-family: $font-secondary;
-          font-size: 12px;
-          i, span {
-            vertical-align: middle;
-          }
-          i {
-            margin-right: 8px;
-            font-size: 16px;
-          }
-        }
-      }
-    }
-  }
   div.article-byline {
     font-size: 14px;
     line-height: 17px;
@@ -104,5 +70,50 @@ main.article {
       color: #777;
       font-size: 13px;
     }
+  }
+}
+
+// Social/share icons
+
+div.article-social {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    li a {
+      font-family: $font-secondary;
+      font-size: 12px;
+      i, span {
+        vertical-align: middle;
+      }
+      i {
+        margin-right: 8px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+div.article-social.top {
+  float: right;
+  display: none;
+
+  @media($bp-larger-than-mobile){
+    display: block;
+  }
+
+  ul li {
+    display: inline;
+    margin-left: 20px;
+  }
+}
+
+div.article-social.left {
+  float: left;
+  ul li {
+    display: block;
+    padding: 15px 0;
+    border-top: 1px solid #E4E4E4;
+    margin: 0;
   }
 }
