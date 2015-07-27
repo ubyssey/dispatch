@@ -1,0 +1,34 @@
+@import 'modules/fonts';
+
+main.article.fw-story {
+  .fw-banner {
+    margin: 40px 0;
+    padding-bottom: 40px;
+    display: table;
+    border-bottom: 1px solid #DEDEDE;
+
+    .left, .right {
+      display: table-cell;
+      box-sizing: border-box;
+    }
+    .left {
+      width: 55%;
+      text-align: center;
+      padding-right: 50px;
+      padding-bottom: 25px;
+      vertical-align: middle;
+    }
+    .right {
+      width: 45%;
+    }
+    p.fw-description {
+      font-family: $font-headline;
+      font-size: 15px;
+      color: #464646;
+    }
+  }
+  div.article-content {
+    margin: 0 auto;
+  }
+}
+
