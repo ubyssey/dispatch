@@ -26,9 +26,15 @@ class FullWidth(BaseTemplate):
         ('full', 'Full')
     )
 
+    HEADER_LAYOUT_OPTIONS = (
+        ('right-image', 'Right Image'),
+        ('top-image', 'Top Image')
+    )
+
     fields = (
         ('description', 'Description', TextField()),
-        ('image_size', 'Image Size', SelectField(options=IMAGE_SIZE_OPTIONS))
+        ('image_size', 'Image Size', SelectField(options=IMAGE_SIZE_OPTIONS)),
+        ('header_layout', 'Header Layout', SelectField(options=HEADER_LAYOUT_OPTIONS))
     )
 
 templates.register(Default)
