@@ -28,6 +28,11 @@ class Tag(Model):
 
 class Topic(Model):
     name = CharField(max_length=255)
+    last_used = DateTimeField(null=True)
+
+    def update_timestamp(self):
+        self.last_used = datetime.datetime.now()
+        self.save()
 
     def __str__(self):
         return self.name
