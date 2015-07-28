@@ -12,9 +12,9 @@ from rest_framework.exceptions import APIException
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Page, Component
-from dispatch.apps.content.models import Article, Section, Tag, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer,
-                                           ImageGallerySerializer, TagSerializer, PersonSerializer)
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -159,7 +159,7 @@ class TagViewSet(viewsets.ModelViewSet):
         queryset = Tag.objects.all()
         q = self.request.QUERY_PARAMS.get('q', None)
         if q is not None:
-            # If a search term (q) is present, filter queryset by term against `full_name`
+            # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
@@ -176,6 +176,32 @@ class TagViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
 
+class TopicViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for Topic model views.
+    """
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        queryset = Topic.objects.order_by('-last_used')
+        q = self.request.QUERY_PARAMS.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            resource = serializer.save()
+            status_code = status.HTTP_201_CREATED
+        except APIException:
+            instance = Topic.objects.get(name=request.data.get('name'))
+            serializer = self.get_serializer(instance)
+            status_code = status.HTTP_200_OK
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status_code, headers=headers)
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

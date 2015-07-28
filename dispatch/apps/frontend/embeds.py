@@ -60,7 +60,19 @@ class VideoController:
         c = Context(data)
         return template.render(c)
 
+class AdvertisementController:
 
+    @staticmethod
+    def json(data):
+        return data
+
+    @staticmethod
+    def render(data):
+        template = loader.get_template("article/embeds/advertisement.html")
+        c = Context(data)
+        return template.render(c)
+
+embedlib.register('advertisement', AdvertisementController)
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
