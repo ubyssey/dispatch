@@ -6,9 +6,15 @@ var ArticleSEO = React.createClass({
   },
     render: function(){
         return (
-            <div className="field full">
-                <label>SEO Keyword</label>
-                <input type="text" value={this.props.seo_keyword} onChange={this.updateSEOKeyword} />
+            <div>
+                <div className="field full">
+                    <label>Keywords</label>
+                    <input type="text" value={this.props.seo_keyword} onChange={this.updateSEOKeyword} />
+                </div>
+                <div className="field full">
+                    <label>Description</label>
+                   <input type="text" value={this.props.seo_description} onChange={this.updateSEODescription} />
+                </div>
             </div>
             );
     }
