@@ -23,6 +23,10 @@ section_frontpage = views.SectionViewSet.as_view({
     'get': 'frontpage',
 })
 
+topic_articles = views.TopicViewSet.as_view({
+    'get': 'articles',
+})
+
 component = views.ComponentViewSet.as_view({
     'get': 'detail',
     'post': 'update',
@@ -32,6 +36,8 @@ urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
     url(r'^sections/(?P<slug>[\w-]+)/frontpage/$', section_frontpage, name='section-frontpage'),
+    # Extra topic route
+    url(r'^topics/(?P<pk>[0-9]+)/articles/$', topic_articles, name='topic-frontpage'),
     # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
 ]) + router.urls
