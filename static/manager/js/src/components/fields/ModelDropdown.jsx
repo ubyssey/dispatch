@@ -54,6 +54,9 @@ var ModelDropdown = React.createClass({
             item: false,
         }, this.updateField);
     },
+    createItem: function(item, callback){
+        this.props.createHandler(item, callback);
+    },
     renderItem: function(item){
         return this.getObjProp(item, this.props.display);
     },
@@ -76,7 +79,7 @@ var ModelDropdown = React.createClass({
     renderSearch: function(){
         return (
             <div className="search-container">
-                <SearchList initialItems={this.initialItems} selectItem={this.selectItem} renderItem={this.renderItem} searchItems={this.searchItems} />
+                <SearchList initialItems={this.initialItems} selectItem={this.selectItem} createItem={this.createItem} renderItem={this.renderItem} searchItems={this.searchItems} />
             </div>
             )
     },
