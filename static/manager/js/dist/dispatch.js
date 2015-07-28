@@ -45,6 +45,10 @@
             'route': 'tags',
             'actions': ['GET', 'POST', 'DELETE'],
         },
+        'topic': {
+            'route': 'topics',
+            'actions': ['GET', 'POST', 'DELETE'],
+        },
         'image': {
             'route': 'images',
             'actions': ['GET', 'POST', 'DELETE'],
