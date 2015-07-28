@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Tag, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Author, Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.api.fields import JSONField
 
@@ -51,6 +51,17 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+
+class TopicSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the Topic model.
+    """
+    class Meta:
+        model = Topic
         fields = (
             'id',
             'name',
