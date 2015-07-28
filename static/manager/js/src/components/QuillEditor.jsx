@@ -5,11 +5,11 @@ var EditorImage = require('./embeds/EditorImage.jsx');
 var EditorGallery = require('./embeds/EditorGallery.jsx');
 var EditorCode = require('./embeds/EditorCode.jsx');
 var EditorVideo = require('./embeds/EditorVideo.jsx');
+var EditorAdvertisement = require('./embeds/EditorAdvertisement.jsx');
 
 var Quill = require('quill');
 var Headers = require('./modules/Headers.js');
-
-Quill.registerModule('headers', Headers);
+var HyperlinkModule = require('./modules/HyperlinkModule.jsx');
 
 var QuillEditor = React.createClass({
     getInitialState: function(){
@@ -22,8 +22,11 @@ var QuillEditor = React.createClass({
         Quill.registerEmbed('gallery', EditorGallery);
         //Quill.registerEmbed('code', EditorCode);
         Quill.registerEmbed('video', EditorVideo);
+        Quill.registerEmbed('advertisement', EditorAdvertisement);
 
+        Quill.registerModule('headers', Headers);
         Quill.registerModule('inline-toolbar', InlineToolbar);
+        Quill.registerModule('hyperlinks', HyperlinkModule)
 
         this.quill = new Quill('#article-editor');
 
@@ -31,11 +34,13 @@ var QuillEditor = React.createClass({
         this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
         //this.quill.addEmbed('code');
         this.quill.addEmbed('video');
+        this.quill.addEmbed('advertisement');
 
         this.quill.addModule('toolbar', { container: '#full-toolbar' });
-        this.quill.addModule('link-tooltip', true);
+        //this.quill.addModule('link-tooltip', true);
         this.quill.addModule('inline-toolbar', true);
         this.quill.addModule('headers', true);
+        this.quill.addModule('hyperlinks', true);
 
         if(this.state.article.content)
             this.quill.setJSON(this.state.article.content);
