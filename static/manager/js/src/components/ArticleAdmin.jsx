@@ -207,13 +207,15 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
-                topic_id: this.state.article.topic.id,
                 status: this.state.article.status,
                 reading_time: this.state.article.reading_time,
                 importance: this.state.article.importance,
                 template: this.state.article.template,
                 template_fields: this.refs.template.save()
             }
+
+            if(this.state.article.topic)
+                values['topic_id'] = this.state.article.topic.id;
 
             this.setState({ saving: true, });
             if(this.state.firstSave){
@@ -287,9 +289,7 @@ var ArticleAdmin = React.createClass({
     },
     render: function(){
         if(!this.state.article){
-            return (
-                <header className="secondary"></header>
-                )
+            return (<header className="secondary"></header>)
         }
         return (
             <div className="inner">
