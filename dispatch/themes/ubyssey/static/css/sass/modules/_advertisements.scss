@@ -1,0 +1,31 @@
+.advertisement {
+
+  // Leaderboard ad
+  &.leaderboard {
+    &.homepage {
+      padding-bottom: 0;
+    }
+    display: none;
+    padding: 25px 0;
+    text-align: center;
+    @media($bp-larger-than-mobile){
+      display: block;
+    }
+  }
+
+  // Full-width article ads
+  &.fw-story {
+    &.inline {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    &.right, &.top {
+      float: right;
+      padding-left: 40px;
+    }
+    &.left {
+      float: left;
+      padding-right: 40px;
+    }
+  }
+}

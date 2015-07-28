@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Tag, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Author, Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.api.fields import JSONField
 
@@ -51,6 +51,17 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+
+class TopicSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the Topic model.
+    """
+    class Meta:
+        model = Topic
         fields = (
             'id',
             'name',
@@ -152,6 +163,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
+    topic = TopicSerializer(read_only=True)
+    topic_id = serializers.IntegerField(write_only=True)
+
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
@@ -173,6 +187,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'author_ids',
             'tags',
             'tag_ids',
+            'topic',
+            'topic_id',
             'authors_string',
             'section',
             'section_id',
@@ -245,7 +261,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         if tags:
             instance.save_tags(tags)
 
+        # If there is a topic, save it
+        topic = validated_data.get('topic_id', False)
+        if topic:
+            instance.save_topic(topic)
+
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image'], revision=False)
+        instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
 
         return instance

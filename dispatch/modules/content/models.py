@@ -28,6 +28,11 @@ class Tag(Model):
 
 class Topic(Model):
     name = CharField(max_length=255)
+    last_used = DateTimeField(null=True)
+
+    def update_timestamp(self):
+        self.last_used = datetime.datetime.now()
+        self.save()
 
     def __str__(self):
         return self.name
@@ -199,7 +204,7 @@ class Article(Publishable):
 
     authors = ManyToManyField(Person, through="Author")
 
-    topics = ManyToManyField('Topic')
+    topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
     shares = PositiveIntegerField(default=0, blank=True, null=True)
 
@@ -321,6 +326,14 @@ class Article(Publishable):
                 self.tags.add(ins)
             except Tag.DoesNotExist:
                 pass
+
+    def save_topic(self, topic_id):
+        try:
+            topic = Topic.objects.get(id=int(topic_id))
+            topic.update_timestamp()
+            self.topic = topic
+        except Tag.DoesNotExist:
+            pass
 
     def save_topics(self, topics):
         self.topics.clear()
