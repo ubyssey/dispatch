@@ -8,6 +8,8 @@
 @import 'modules/article/base';
 @import 'modules/article/embeds';
 
+@import 'modules/advertisements';
+
 @import 'modules/variables';
 
 body {
@@ -15,26 +17,16 @@ body {
     margin: 0;
 }
 
-div.advertisement {
-  &.leaderboard {
-    &.homepage {
-      padding-bottom: 0;
-    }
-    display: none;
-    padding: 25px 0;
-    text-align: center;
-    @media($bp-larger-than-mobile){
-      display: block;
-    }
-  }
-}
-
 div.container {
+  max-width: 1000px;
+  width: 100%;
+  padding: 0 20px;
+  margin-left: auto;
+  margin-right: auto;
+  &.no-padding {
     max-width: 960px;
-    width: 100%;
-    padding: 0 20px;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 0;
+  }
 }
 
 //////

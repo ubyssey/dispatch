@@ -280,3 +280,16 @@ button.dark-button {
 .ql-header {
   width: 38px;
 }
+
+.hyperlink-tooltip {
+  width: 400px;
+  border: 1px solid #C1C1C1;
+  background: #F7F7F7;
+  padding: 5px;
+  border-radius: 4px;
+  position: absolute;
+  display: none;
+  &.visible {
+    display: block;
+  }
+}
