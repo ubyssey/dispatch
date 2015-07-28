@@ -61,6 +61,7 @@ class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         self.queryset = self.fetch_frontpage(section_id=pk, section_slug=slug)
         return super(FrontpageViewSet, self).list(self, request)
 
+
 class SectionViewSet(viewsets.ModelViewSet):
     """
     Viewset for Section model views.
@@ -89,15 +90,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
         Optionally restricts the returned articles by filtering
         against a `topic` query parameter in the URL.
         """
-        queryset = Article.objects.filter(head=True).order_by('-published_at')
+        queryset = Article.objects.filter(status=Article.PUBLISHED).order_by('-published_at')
         tag = self.request.QUERY_PARAMS.get('tag', None)
-        topic = self.request.QUERY_PARAMS.get('topic', None)
         q = self.request.QUERY_PARAMS.get('q', None)
         limit = self.request.QUERY_PARAMS.get('limit', None)
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
-        if topic is not None:
-            queryset = queryset.filter(topics__name=topic)
         if q is not None:
             queryset = queryset.filter(long_headline__icontains=q)
         if limit is not None:
@@ -133,6 +131,18 @@ class ArticleViewSet(viewsets.ModelViewSet):
         queryset = Article.objects.all()
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def topic(self, request, pk=None):
+        queryset = Article.objects.filter(topic_id=pk, status=Article.PUBLISHED).order_by('-published_at')
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
 class PersonViewSet(viewsets.ModelViewSet):
@@ -202,6 +212,14 @@ class TopicViewSet(viewsets.ModelViewSet):
             status_code = status.HTTP_200_OK
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
+
+    def articles(self, request, pk=None):
+        """
+        Extra method to return frontpage listing for the topic.
+        Uses FrontpageViewSet.topic() to perform request.
+        """
+        view = ArticleViewSet.as_view({'get': 'topic'})
+        return view(request, pk=pk)
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
