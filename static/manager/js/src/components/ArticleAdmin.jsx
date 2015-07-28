@@ -151,6 +151,9 @@ var ArticleAdmin = React.createClass({
     createTag: function(tag_name, callback){
         dispatch.add('tag', {name: tag_name}, callback);
     },
+    createTopic: function(topic_name, callback){
+        dispatch.add('topic', {name: topic_name}, callback);
+    },
     createAuthor: function(author_name, callback){
         dispatch.add('person', {full_name: author_name}, callback);
     },
@@ -204,6 +207,7 @@ var ArticleAdmin = React.createClass({
                 section_id: this.state.article.section.id,
                 author_ids: ItemStore(this.state.article.authors).getIds(),
                 tag_ids: ItemStore(this.state.article.tags).getIds(),
+                topic_id: this.state.article.topic.id,
                 status: this.state.article.status,
                 reading_time: this.state.article.reading_time,
                 importance: this.state.article.importance,
@@ -337,6 +341,7 @@ var ArticleAdmin = React.createClass({
                                 <ModelDropdown model="section" item_key="id" display="name" label="Section" name="section" data={this.state.article.section} errorClass={this.errorClass("section")} updateHandler={this.updateModelField} />
                                 <ManyModelDropdown model="person" item_key="id" display="full_name" label="Authors" name="authors" data={this.state.article.authors} errorClass={this.errorClass("authors")} updateHandler={this.updateModelField} createHandler={this.createAuthor} />
                                 <ManyModelDropdown model="tag" item_key="id" display="name" label="Tags" name="tags" data={this.state.article.tags} updateHandler={this.updateModelField} createHandler={this.createTag} />
+                                <ModelDropdown model="topic" item_key="id" display="name" label="Topic" name="topic" data={this.state.article.topic} updateHandler={this.updateModelField} createHandler={this.createTopic} />
                                 <div className="field full">
                                     <label>Snippet</label>
                                     <Textarea rows={4} value={this.state.article.snippet} className={this.errorClass("snippet")} onChange={this.updateField.bind(this,'snippet')}></Textarea>
