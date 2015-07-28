@@ -1,4 +1,5 @@
 var React = require('react');
+var ModelDropdown = require('../fields/ModelDropdown.jsx');
 
 var HyperlinkModule = function(quill, options) {
 
@@ -7,6 +8,9 @@ var HyperlinkModule = function(quill, options) {
             return {
                 position: [0,0],
                 visible: false,
+                href: null,
+                type: 'href',
+                article: {}
             }
         },
         componentDidMount: function(){
@@ -18,19 +22,56 @@ var HyperlinkModule = function(quill, options) {
                     return;
                 var anchor = this.findAnchor(range);
 
-                console.log(anchor);
-
                 if(anchor){
-                    this.setState({
-                        position: this.getPosition(anchor),
-                        href: anchor.href,
-                        visible: true
-                    });
+                    this.range = quill.getSelection();
+                    if(anchor.hasAttribute('data-id')){
+                        this.setState({
+                            position: this.getPosition(anchor),
+                            article: {
+                                'id': anchor.getAttribute('data-id'),
+                                'long_headline': anchor.getAttribute('data-headline')
+                            },
+                            href: null,
+                            type: 'article',
+                            visible: true
+                        });
+                    } else {
+                        this.setState({
+                            position: this.getPosition(anchor),
+                            href: anchor.href,
+                            article: {},
+                            type: 'href',
+                            visible: true
+                        });
+                    }
                 } else {
                     this.range = null;
                     this.setState({ visible: false });
                 }
             }.bind(this));
+
+            quill.onModuleLoad('toolbar', function(toolbar){
+                toolbar.initFormat('link', function(range, value){
+                    this.onToolbar(range, value);
+                }.bind(this));
+            }.bind(this));
+        },
+        onToolbar: function(range, value){
+            if(!range || range.isCollapsed())
+                return;
+            this.range = range;
+            if(value){
+                var nativeRange = quill.editor.selection._getNativeRange();
+                this.setState({
+                    visible: true,
+                    position: this.getPosition(nativeRange),
+                    type: 'href',
+                    article: {},
+                    href: this.suggestUrl(range)
+                });
+            } else {
+                quill.formatText(range, 'link', false, 'user')
+            }
         },
         findAnchor: function(range){
             var leafArray = quill.editor.doc.findLeafAt(range.start, true);
@@ -44,13 +85,84 @@ var HyperlinkModule = function(quill, options) {
             }
             return null;
         },
+        updateHyperlink: function(event){
+            event.preventDefault();
+            this.setHyperlink();
+            this.setState({ visible: false });
+        },
+        removeHyperlink: function(event){
+            event.preventDefault();
+            this.setState({ visible: false });
+        },
+        setHyperlink: function(){
+            if(this.state.type == 'href'){
+                this.setHref();
+            } else {
+                this.setArticle();
+            }
+        },
+        setHref: function(){
+            var url = this.normalizeUrl(this.state.href);
+            if(this.range){
+                if(this.range.isCollapsed()){
+                    var anchor = this.findAnchor(this.range);
+                    if(anchor){
+                        anchor.href = url;
+                        if(anchor.hasAttribute('data-id')){anchor.removeAttribute('data-id')}
+                        if(anchor.hasAttribute('data-headline')){anchor.removeAttribute('data-headline')}
+                    }
+                } else {
+                    quill.formatText(this.range, 'link', url, 'user')
+                }
+            }
+        },
+        setArticle: function(){
+            var url = this.normalizeUrl(this.state.article.url);
+            if(this.range){
+                if(!this.range.isCollapsed()){
+                    quill.formatText(this.range, 'link', url, 'user');
+                }
+                var anchor = this.findAnchor(this.range);
+                if(anchor){
+                    anchor.href = url;
+                    anchor.setAttribute('data-id', this.state.article.parent);
+                    anchor.setAttribute('data-headline', this.state.article.long_headline);
+                }
+            }
+        },
+        suggestUrl: function(range){
+            text = quill.getText(range);
+            return this.normalizeUrl(text);
+        },
+        normalizeUrl: function(url){
+            if(! /^(https?:\/\/|mailto:)/.test(url)){
+                url = 'http://' + url;
+            }
+            return url;
+        },
         getPosition: function(node){
-            var x = node.getBoundingClientRect().left - document.getElementById('article-editor').getBoundingClientRect().left + (node.offsetWidth / 2) - 150;
+            var x = node.getBoundingClientRect().left - document.getElementById('article-editor').getBoundingClientRect().left + (node.offsetWidth / 2) - 225;
             var y = node.getBoundingClientRect().top - document.getElementById('article-editor').getBoundingClientRect().top + 30;
+            if(x < 50 + 10){ x = 50 + 10; }
+            if(x > 600 - 225 - 10){ x = 600 - 225 - 10; }
             return [x, y];
+        },
+        changeType: function(type, event){
+            event.preventDefault();
+            this.setState({ type: type });
+        },
+        updateArticle: function(field, data){
+            this.setState({ article: data });
         },
         updateHref: function(event){
             this.setState({ href: event.target.value });
+        },
+        renderHref: function(){
+            return (<input type="text" placeholder="Enter a URL" value={this.state.href} onChange={this.updateHref}></input>);
+        },
+        renderArticle: function(){
+            return (<ModelDropdown model="article" item_key="parent" display="long_headline" name="article" data={this.state.article} updateHandler={this.updateArticle} />
+);
         },
         render: function(){
             var style = {
@@ -60,8 +172,18 @@ var HyperlinkModule = function(quill, options) {
 
             return(
                 <div style={style} className={"hyperlink-tooltip" + (this.state.visible ? " visible" : "")}>
-                    <input type="text" value={this.state.href} onChange={this.updateHref}></input>
-                    <button className="dis-button">Update</button>
+                    <div className="options">
+                        <a href="#" className={this.state.type == 'href' ? 'active' : ''} onClick={this.changeType.bind(this, "href")}><i className="fa fa-link"></i> URL</a>
+                        <a href="#" className={this.state.type == 'article' ? 'active' : ''} onClick={this.changeType.bind(this, "article")}><i className="fa fa-file-text-o"></i> Article</a>
+                    </div>
+                    <div className="body">
+                        <div className="left">
+                            {this.state.type == 'href' ? this.renderHref() : this.renderArticle()}
+                        </div><div className="right">
+                            <button className="dis-button green" onClick={this.updateHyperlink}>Update</button>
+                            <button className="dis-button" onClick={this.removeHyperlink}>Remove</button>
+                        </div>
+                    </div>
                 </div>);
         }
     });
