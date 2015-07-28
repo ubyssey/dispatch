@@ -76,6 +76,10 @@ main.article {
 // Social/share icons
 
 div.article-social {
+  display: none;
+  @media($bp-larger-than-mobile){
+    display: block;
+  }
   ul {
     margin: 0;
     padding: 0;
