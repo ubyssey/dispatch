@@ -35,20 +35,6 @@
     overflow: auto;
     padding-top: 15px;
   }
-  .caption {
-    float: left;
-    width: 80%;
-    textarea {
-      width: 100%;
-      border: none;
-      color: grey;
-      background: none;
-      resize: none;
-      font-family: $ui-font-helvetica;
-      font-size: 14px;
-      line-height: 20px;
-    }
-  }
   .controls {
     float: right;
     text-align: right;
@@ -66,51 +52,75 @@
     }
   }
   .basic {
-    border: 1px solid #C1C1C1;
-    padding: 15px;
-    border-radius: 4px;
-    background: #F7F7F7;
-  }
-  .image {
+    background: #FFFFFF;
     position: relative;
-    overflow: visible;
-    .controls {
-      width: 20%;
-    }
-    .images {
+    .header {
       overflow: auto;
-      &.single img {
-        width: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 15px;
+      box-sizing: border-box;
+      border-radius: 4px 4px 0 0;
+      &.overlay {
+        position: absolute;
+        z-index: 1;
       }
-      &.double img {
-        width: 49%;
-        float: left;
-        &:nth-child(2) {
-          float: right;
+      &:last-child {
+        border-radius: 4px;
+      }
+      button {
+        font-family: $ui-font-helvetica;
+        background: none;
+        border: none;
+        color: #fff;
+        opacity: 0.65;
+        font-size: 14px;
+        margin-left: 10px;
+        padding: 0 6px;
+        &:hover {
+          cursor: pointer;
+          opacity: 1;
         }
-      }
-      .add-image {
-        float: left;
-        width: 50%;
-
-        display: none;
-      }
-      &.show-add-button {
-        .add-image {
-          display: block;
+        .fa {
+          margin-right: 3px;
         }
       }
     }
+    .image img {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      pointer-events: none;
+    }
+    .body {
+      border: 1px solid #E4E4E4;
+      padding: 10px 15px;
+      border-top: none;
+    }
+  }
+  .fa {
+    font-style: normal;
   }
 }
 
 .embed-video {
   .insert-video {
+    display: table;
+    width: 100%;
+    .left, .right {
+      display: table-cell;
+      vertical-align: top;
+    }
+    .right {
+      width: 1px;
+      white-space: nowrap;
+    }
     input {
-      width: 60%;
+      width: 100%;
     }
     button {
-      margin: 0 10px;
+      margin-left: 5px;
+      vertical-align: top;
     }
   }
 }
