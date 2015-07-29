@@ -282,14 +282,82 @@ button.dark-button {
 }
 
 .hyperlink-tooltip {
-  width: 400px;
+  width: 450px;
   border: 1px solid #C1C1C1;
-  background: #F7F7F7;
-  padding: 5px;
+  background: #fff;
   border-radius: 4px;
   position: absolute;
   display: none;
   &.visible {
     display: block;
+  }
+  .model-dropdown {
+    padding: 0;
+    max-width: none;
+  }
+  input {
+    width: 100%;
+  }
+  .dis-button {
+    vertical-align: top;
+    margin-left: 5px;
+  }
+  div.options {
+    border-bottom: 1px solid #D9D9D9;
+    a {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 50%;
+      font-weight: 600;
+      text-align: center;
+      padding: 10px 0;
+      text-decoration: none;
+      color: #A2A2A2;
+      font-family: $ui-font-helvetica;
+      &:first-child {
+        border-top-left-radius: 4px;
+      }
+      &:last-child {
+        border-top-right-radius: 4px;
+        border-left: 1px solid #d9d9d9;
+      }
+      &.active {
+        background: #fafafa;
+        color: #6e6e6e;
+      }
+      .fa {
+        margin-right: 3px;
+      }
+    }
+  }
+  div.body {
+    div.url-field {
+      display: table;
+      width: 100%;
+      > .left, > .right {
+        display: table-cell;
+        padding: 10px;
+        vertical-align: top;
+      }
+      > .left {
+        padding-right: 0;
+      }
+      > .right {
+        width: 1px;
+        white-space: nowrap;
+        padding-left: 0;
+      }
+    }
+
+    div.links {
+      padding: 0 10px 10px 10px;
+      a {
+        display: inline-block;
+        margin-right: 10px;
+        color: #A2A2A2;
+        font-size: 12px;
+      }
+    }
+
   }
 }

@@ -12,7 +12,9 @@ var Headers = function(quill, options) {
     }
 
     quill.on('selection-change', function(range){
-        updateSelected(getCurrentLine(range));
+        if(range){
+            updateSelected(getCurrentLine(range));
+        }
     });
 
     $('.ql-header').click(function(e){
