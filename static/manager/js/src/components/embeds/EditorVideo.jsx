@@ -1,4 +1,6 @@
 var React = require('react');
+var Textarea = require('react-textarea-autosize');
+
 var EditorVideo = React.createClass({
     getInitialState: function(){
         return {
@@ -60,32 +62,42 @@ var EditorVideo = React.createClass({
     renderInput: function(){
         return (
             <div className="insert-video">
-                <input placeholder="Enter a YouTube video URL" value={this.state.url} onChange={this.handleURLChange} />
-                <button className="dis-button green" disabled={!this.state.validUrl} onClick={this.insertVideo}>Insert</button>
-                <button className="dis-button" onClick={this.removeVideo}>Cancel</button>
+                <div className="left">
+                    <input placeholder="Enter a YouTube video URL" value={this.state.url} onChange={this.handleURLChange} />
+                </div><div className="right">
+                    <button className="dis-button green" disabled={!this.state.validUrl} onClick={this.insertVideo}>Insert</button>
+                    <button className="dis-button" onClick={this.removeVideo}>Cancel</button>
+                </div>
             </div>
             )
     },
     renderVideo: function(){
         return (
             <div className="video basic">
-                <img src={"http://img.youtube.com/vi/" + this.state.id + "/0.jpg"} />
-                <div>
+                <div className="header overlay">
+                    <div className="pull-left">
+                        <h4>Video</h4>
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.removeVideo}><i className="fa fa-trash-o"></i> Remove</button>
+                    </div>
+                </div>
+                <div className="image">
+                    <img src={"http://img.youtube.com/vi/" + this.state.id + "/0.jpg"} />
+                </div>
+                <div className="body">
                     <div className="field full">
                         <label>Title</label>
                         <input type="text" onChange={this.updateTitle} value={this.state.title} />
                     </div>
                     <div className="field full">
                         <label>Caption</label>
-                        <textarea onChange={this.updateCaption} value={this.state.caption}></textarea>
+                        <Textarea rows={1} placeholder="Write a caption" onChange={this.updateCaption} value={this.state.caption} />
                     </div>
                     <div className="field full">
                         <label>Credit</label>
                         <input type="text" onChange={this.updateCredit} value={this.state.credit} />
                     </div>
-                </div>
-                <div className="pull-right">
-                    <button onClick={this.removeVideo}>Remove</button>
                 </div>
             </div>
             );
