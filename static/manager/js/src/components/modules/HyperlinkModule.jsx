@@ -29,7 +29,8 @@ var HyperlinkModule = function(quill, options) {
                             position: this.getPosition(anchor),
                             article: {
                                 'id': anchor.getAttribute('data-id'),
-                                'long_headline': anchor.getAttribute('data-headline')
+                                'long_headline': anchor.getAttribute('data-headline'),
+                                'url': anchor.href
                             },
                             href: null,
                             type: 'article',
@@ -46,7 +47,9 @@ var HyperlinkModule = function(quill, options) {
                     }
                 } else {
                     this.range = null;
-                    this.setState({ visible: false });
+                    if(this.state.visible){
+                        this.setState({ visible: false });
+                    }
                 }
             }.bind(this));
 
@@ -92,6 +95,13 @@ var HyperlinkModule = function(quill, options) {
         },
         removeHyperlink: function(event){
             event.preventDefault();
+            var anchor = this.findAnchor(this.range);
+            if(anchor){
+                var text = anchor.innerHTML;
+                anchor.parentNode.removeChild(anchor);
+                quill.insertText(this.range, text);
+            }
+
             this.setState({ visible: false });
         },
         setHyperlink: function(){
@@ -140,11 +150,19 @@ var HyperlinkModule = function(quill, options) {
             }
             return url;
         },
+        getVisitUrl: function(){
+            return this.state.type == 'href' ? this.state.href : this.state.article.url;
+        },
         getPosition: function(node){
-            var x = node.getBoundingClientRect().left - document.getElementById('article-editor').getBoundingClientRect().left + (node.offsetWidth / 2) - 225;
-            var y = node.getBoundingClientRect().top - document.getElementById('article-editor').getBoundingClientRect().top + 30;
-            if(x < 50 + 10){ x = 50 + 10; }
-            if(x > 600 - 225 - 10){ x = 600 - 225 - 10; }
+            if(node){
+                var x = node.getBoundingClientRect().left - document.getElementById('article-editor').getBoundingClientRect().left + (node.offsetWidth / 2) - 225;
+                var y = node.getBoundingClientRect().top - document.getElementById('article-editor').getBoundingClientRect().top + 30;
+                if(x < 50 + 10){ x = 50 + 10; }
+                if(x > 600 - 225 - 10){ x = 600 - 225 - 10; }
+            } else {
+                var x = quill.container.offsetWidth/2 - 225;
+                var y = quill.container.offsetHeight/2 - 225;
+            }
             return [x, y];
         },
         changeType: function(type, event){
@@ -177,11 +195,16 @@ var HyperlinkModule = function(quill, options) {
                         <a href="#" className={this.state.type == 'article' ? 'active' : ''} onClick={this.changeType.bind(this, "article")}><i className="fa fa-file-text-o"></i> Article</a>
                     </div>
                     <div className="body">
-                        <div className="left">
-                            {this.state.type == 'href' ? this.renderHref() : this.renderArticle()}
-                        </div><div className="right">
-                            <button className="dis-button green" onClick={this.updateHyperlink}>Update</button>
-                            <button className="dis-button" onClick={this.removeHyperlink}>Remove</button>
+                        <div className="url-field">
+                            <div className="left">
+                                {this.state.type == 'href' ? this.renderHref() : this.renderArticle()}
+                            </div><div className="right">
+                                <button className="dis-button green" onClick={this.updateHyperlink}>Update</button>
+                            </div>
+                        </div>
+                        <div className="links">
+                            <a href="#" onClick={this.removeHyperlink}>Remove Link</a>
+                            <a href={this.getVisitUrl()} target="_blank">{'Visit ' + (this.state.type == 'href' ? 'URL' : 'Article')}</a>
                         </div>
                     </div>
                 </div>);
