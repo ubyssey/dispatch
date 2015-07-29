@@ -73,27 +73,8 @@
   }
   .image {
     position: relative;
-    overflow: visible;
-    .controls {
-      width: 20%;
-    }
-    .images {
       overflow: auto;
-      &.single img {
-        width: 100%;
       }
-      &.double img {
-        width: 49%;
-        float: left;
-        &:nth-child(2) {
-          float: right;
-        }
-      }
-      .add-image {
-        float: left;
-        width: 50%;
-
-        display: none;
       }
       &.show-add-button {
         .add-image {
