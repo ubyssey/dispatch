@@ -1,36 +1,37 @@
 var YoutubePlayer = function(element){
     var node = $(element);
+    var playerReady = false;
+    var userReady = false;
 
     var player = new YT.Player('video-' + node.data('id'), {
-      height: node.width() * 0.5625, // 16:9
-      width: node.width(),
-      videoId: node.data('id'),
+        height: node.width() * 0.5625, // 16:9
+        width: node.width(),
+        videoId: node.data('id'),
         playerVars: {
             'showinfo': 0,
-            'modestbranding': 1
+            'modestbranding': 1,
         },
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      }
+        events: {
+            'onReady': onPlayerReady
+        }
     });
 
-    // 4. The API will call this function when the video player is ready.
     function onPlayerReady(event) {
-        //event.target.playVideo();
-    }
-
-    // 5. The API calls this function when the player's state changes.
-    //    The function indicates that when playing a video (state=1),
-    //    the player should play for six seconds and then stop.
-    function onPlayerStateChange(event) {
-
+        if(userReady){
+            player.playVideo();
+        } else {
+            playerReady = true;
+        }
     }
 
     $(element).find('.video-launch').click(function(){
         $(this).hide();
         $('#video-' + node.data('id')).show();
-        player.playVideo();
+        if(playerReady){
+            player.playVideo();
+        } else {
+            userReady = true;
+        }
     })
 
     function stopVideo() {
