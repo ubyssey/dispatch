@@ -11,6 +11,7 @@ var EditorImage = React.createClass({
                 url: this.props.data.url,
             },
             caption: this.props.data.caption ? this.props.data.caption : '',
+            credit: this.props.data.custom_credit
         };
     },
     addImage: function(image){
@@ -27,9 +28,10 @@ var EditorImage = React.createClass({
         }.bind(this));
     },
     handleCaptionChange: function(event){
-        this.setState({
-            caption: event.target.value,
-        });
+        this.setState({ caption: event.target.value });
+    },
+    handleCreditChange: function(event){
+        this.setState({ credit: event.target.value });
     },
     getJSON: function(){
         return {
@@ -39,23 +41,34 @@ var EditorImage = React.createClass({
                 subtype: this.state.type,
                 image: this.state.image,
                 caption: this.state.caption,
+                custom_credit: this.state.credit
             }
         }
     },
     render: function(){
         return (
-            <div className="image">
-                <div className="images">
+            <div className="image basic">
+                <div className="header overlay">
+                    <div className="pull-left">
+                        <h4>Image</h4>
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.openImageManager}><i className="fa fa-pencil"></i> Change</button>
+                        <button onClick={this.removeImage}><i className="fa fa-trash-o"></i> Remove</button>
+                    </div>
+                </div>
+                <div className="image">
                     <img className="item" key={this.state.image.id} src={this.state.image.url} />
                 </div>
-                <div className="meta">
-                    <div className="caption">
-                        <Textarea className="plain" minRows={1} placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange} />
+                <div className="body">
+                    <div className="field full">
+                        <label>Caption</label>
+                        <Textarea rows={1} placeholder="Write a caption" value={this.state.caption} onChange={this.handleCaptionChange} />
                     </div>
-                    <ul className="controls">
-                        <li onClick={this.removeImage}>Remove</li>
-                        <li onClick={this.openImageManager}>Change</li>
-                    </ul>
+                    <div className="field full">
+                        <label>Custom Credit</label>
+                        <input type="text" onChange={this.handleCreditChange} value={this.state.credit} />
+                    </div>
                 </div>
             </div>
             );
