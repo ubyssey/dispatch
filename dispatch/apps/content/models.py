@@ -309,12 +309,9 @@ class Article(Publishable):
 
     def save_related(self, data):
         tags = data["tags-list"]
-        topics = data["topics-list"]
         authors = data["authors-list"]
         if tags:
             self.save_tags(tags)
-        if topics:
-            self.save_topics(topics)
         if authors:
             self.save_authors(authors)
 
@@ -412,9 +409,9 @@ class Article(Publishable):
                 attachment.image = image
                 attachment.article = self
                 attachment.save()
-                del node['data']
                 node['data'] = {
-                    'attachment_id': attachment.id
+                    'attachment_id': attachment.id,
+                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
                 }
         self.content = json.dumps(nodes)
 
@@ -631,6 +628,7 @@ class ImageAttachment(Model):
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
+                'custom_credit': data['custom_credit'] if 'custom_credit' in data else None,
                 'credit': attach.get_credit(),
                 'width': attach.image.width,
                 'height': attach.image.height,
@@ -645,7 +643,7 @@ class ImageAttachment(Model):
                 'id': attach.id,
                 'src': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'credit': attach.get_credit(),
+                'credit': data['custom_credit'] if 'custom_credit' in data and data['custom_credit'] is not None else attach.get_credit()
             })
             return template.render(c)
 

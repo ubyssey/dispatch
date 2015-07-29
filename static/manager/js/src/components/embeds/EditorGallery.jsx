@@ -31,11 +31,15 @@ var EditorGallery = React.createClass({
     render: function(){
         return (
             <div className="gallery basic">
-                <strong>Gallery:</strong> {this.state.gallery.title}
-                <ul className="controls">
-                    <li onClick={this.removeGallery}><button>Remove</button></li>
-                    <li onClick={this.openGalleryManager}><button>Change</button></li>
-                </ul>
+                <div className="header">
+                    <div className="pull-left">
+                        <h4>{'Gallery: ' + this.state.gallery.title}</h4>
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.openGalleryManager}><i className="fa fa-pencil"></i> Change</button>
+                        <button onClick={this.removeGallery}><i className="fa fa-trash-o"></i> Remove</button>
+                    </div>
+                </div>
             </div>
             );
     }
