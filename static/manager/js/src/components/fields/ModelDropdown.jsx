@@ -92,9 +92,10 @@ var ModelDropdown = React.createClass({
             )
     },
     render: function(){
+        var label = (<label>{this.props.label}</label>);
         return (
             <div className={'field model-dropdown ' + (this.state.active ? 'active' : '')}>
-                <label>{this.props.label}</label>
+                {this.props.label ? label : null}
                 <div onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className={"field-container " + this.props.errorClass}>
                     {this.state.item ? this.renderField(this.getObjProp(this.state.item, this.props.display)) : this.renderField()}
                     {this.state.active ? this.renderSearch() : ""}

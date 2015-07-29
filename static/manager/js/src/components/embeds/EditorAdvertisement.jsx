@@ -24,16 +24,23 @@ var EditorAdvertisement = React.createClass({
     render: function(){
         return (
             <div className="advertisment basic">
-                <div className="field full">
-                    <label>Type</label>
-                    <input type="text" onChange={this.updateType} value={this.state.type} />
+                <div className="header">
+                    <div className="pull-left">
+                        <h4>Inline Advertisement</h4>
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.props.remove}><i className="fa fa-trash-o"></i> Remove</button>
+                    </div>
                 </div>
-                <div className="field full">
-                    <label>Alignment</label>
-                    <input type="text" onChange={this.updateAlignment} value={this.state.alignment} />
-                </div>
-                <div className="pull-right">
-                    <button onClick={this.props.remove}>Remove</button>
+                <div className="body">
+                    <div className="field full">
+                        <label>Type</label>
+                        <input type="text" onChange={this.updateType} value={this.state.type} />
+                    </div>
+                    <div className="field full">
+                        <label>Alignment</label>
+                        <input type="text" onChange={this.updateAlignment} value={this.state.alignment} />
+                    </div>
                 </div>
             </div>
         );
