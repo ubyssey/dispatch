@@ -292,7 +292,6 @@ button.dark-button {
     display: block;
   }
   .model-dropdown {
-    display: inline-block;
     padding: 0;
     max-width: none;
   }
@@ -332,20 +331,33 @@ button.dark-button {
     }
   }
   div.body {
-    display: table;
-    width: 100%;
-    > .left, > .right {
-      display: table-cell;
-      padding: 10px;
-      vertical-align: top;
+    div.url-field {
+      display: table;
+      width: 100%;
+      > .left, > .right {
+        display: table-cell;
+        padding: 10px;
+        vertical-align: top;
+      }
+      > .left {
+        padding-right: 0;
+      }
+      > .right {
+        width: 1px;
+        white-space: nowrap;
+        padding-left: 0;
+      }
     }
-    > .left {
-      padding-right: 0;
+
+    div.links {
+      padding: 0 10px 10px 10px;
+      a {
+        display: inline-block;
+        margin-right: 10px;
+        color: #A2A2A2;
+        font-size: 12px;
+      }
     }
-    > .right {
-      width: 1px;
-      white-space: nowrap;
-      padding-left: 0;
-    }
+
   }
 }
