@@ -190,7 +190,8 @@ var ArticleAdmin = React.createClass({
             return false;
         }
     },
-    handleSave: function(){
+    handleSave: function(event){
+        event.preventDefault();
         return this.save();
     },
     save: function(options, callback){
