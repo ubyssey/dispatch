@@ -12,6 +12,10 @@ class UserManager(BaseUserManager):
 
         user = User(email=email,is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
+
+        person = Person.objects.create()
+        user.person = person
+
         user.save()
 
         return user
@@ -24,22 +28,6 @@ class UserManager(BaseUserManager):
 
     def is_valid_password(self, password):
         return len(password) >= 8
-
-class ContributorRole(Model):
-    title = CharField(max_length=255)
-
-    def __str__(self):
-        return u'%s' % (self.title)
-
-class Person(Model):
-    full_name = CharField(max_length=255, blank=True, null=True)
-    roles = ManyToManyField(ContributorRole)
-
-    def __str__(self):
-        if self.full_name:
-            return self.full_name
-        else:
-            return self.first_name + ' ' + self.last_name
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
@@ -86,6 +74,23 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_admin
+
+class Person(Model):
+    full_name = CharField(max_length=255, blank=True, null=True)
+    is_admin = BooleanField(default=True)
+
+    def __str__(self):
+        if self.full_name:
+            return self.full_name
+        else:
+            return self.first_name + ' ' + self.last_name
+
+    def delete(self):
+        try:
+            User.objects.get(person=self).delete()
+        except:
+            pass
+        super(Person, self).delete()
 
 class Setting(Model):
     name = CharField(max_length=255)
