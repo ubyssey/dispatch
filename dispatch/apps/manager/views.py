@@ -5,9 +5,10 @@ from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm, RoleForm
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group, Permission
 
 from dispatch.apps.frontend.models import Page, Component, ComponentField
 
@@ -37,7 +38,7 @@ def login(request):
 
 @staff_member_required
 def users(request):
-    users = Person.objects.all()
+    users = Person.objects.filter(is_admin=True)
     q = request.GET.get('q', False)
     if q:
         users = users.filter(full_name__icontains=q)
@@ -59,12 +60,12 @@ def users(request):
 def user_add(request):
 
     if request.method == 'POST':
-        form = PersonForm(request.POST)
+        form = PersonForm(request.POST, user_form=False)
         if form.is_valid():
             form.save()
             return redirect(users)
     else:
-        form = PersonForm()
+        form = PersonForm(user_form=False)
 
     context = {
         'title': 'Add User',
@@ -83,6 +84,7 @@ def user_edit(request, id):
         form = PersonForm(request.POST, instance=p)
         if form.is_valid():
             form.save()
+            return redirect(users)
     else:
         form = PersonForm(instance=p)
 
@@ -112,6 +114,52 @@ def profile(request):
     }
 
     return render(request, 'manager/profile.html', context)
+
+@staff_member_required
+def roles(request):
+
+    context = {
+        'roles': Group.objects.all()
+    }
+    return render(request, 'manager/role/list.html', context)
+
+@staff_member_required
+def role_add(request):
+
+    if request.method == 'POST':
+        form = RoleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(roles)
+    else:
+        form = RoleForm()
+
+    context = {
+        'title': 'Add Role',
+        'form': form,
+    }
+
+    return render(request, "manager/role/edit.html", context)
+
+@staff_member_required
+def role_edit(request, pk=None):
+
+    role = Group.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            form.save()
+            return redirect(roles)
+    else:
+        form = RoleForm(instance=role)
+
+    context = {
+        'title': 'Edit Role',
+        'form': form,
+    }
+
+    return render(request, "manager/role/edit.html", context)
 
 @staff_member_required
 def section(request, section):
