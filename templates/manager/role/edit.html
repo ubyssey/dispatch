@@ -1,0 +1,23 @@
+{% extends 'manager/base.html' %}
+{% block header %}
+    <div class="title">
+        <h1>Roles &nbsp;<i class="fa fa-caret-right"></i>&nbsp; {{ role.name }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="inner">
+    <div class="container">
+        <form class="person-form"  action="" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field">
+                    {{ field.errors }}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button class="dis-button green">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
