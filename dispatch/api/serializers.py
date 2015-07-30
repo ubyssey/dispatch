@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Author, Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.api.fields import JSONField
 
@@ -74,6 +74,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(source='image.id')
     attachment_id = serializers.IntegerField(source='id', read_only=True)
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
+    thumb = serializers.CharField(source='image.get_thumbnail_url', read_only=True)
     credit = serializers.CharField(source='get_credit')
     width = serializers.IntegerField(source='image.width')
     height = serializers.IntegerField(source='image.height')
@@ -84,6 +85,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'attachment_id',
             'url',
+            'thumb',
             'caption',
             'credit',
             'type',
@@ -141,6 +143,16 @@ class SectionSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'name',
             'slug',
+        )
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = (
+            'content',
+            'email',
+            'created_at'
         )
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):

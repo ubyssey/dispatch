@@ -12,8 +12,8 @@ from rest_framework.exceptions import APIException
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import Page, Component
-from dispatch.apps.content.models import Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
-from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer,
+from dispatch.apps.content.models import Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -144,6 +144,17 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+class CommentViewSet(viewsets.ModelViewSet):
+
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+
+    def article(self, request, pk=None):
+        self.queryset = Comment.objects.filter(article_id=pk)
+        return self.list(request)
+
+
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
