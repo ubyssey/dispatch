@@ -228,6 +228,13 @@ main {
   }
 }
 
+div.container {
+  width: 100%;
+  padding: 0 60px;
+  margin: 0 auto;
+  max-width: 1320px;
+}
+
 div.list-container {
   position: absolute;
   top: 59px;

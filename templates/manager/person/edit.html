@@ -6,32 +6,46 @@
 {% endblock %}
 {% block content %}
 <div class="inner">
-    <form class="person-form"  action="" method="post">
-        {% csrf_token %}
-        <h2>Basic Information</h2>
-        {% for field in form %}
+    <div class="container">
+        <form class="person-form"  action="" method="post">
+            {% csrf_token %}
+            <h2>Basic Information</h2>
+            {% for field in form %}
+                <div class="field">
+                    {{ field.errors }}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            {% if user_form %}
+                <h2>Account information</h2>
             <div class="field">
-                {{ field.errors }}
-                <label>{{ field.label }}</label>
-                {{ field }}
+                {{ user_form.email.errors }}
+                <label>{{ user_form.email.label }}:</label>
+                {{ user_form.email }}
             </div>
-        {% endfor %}
-            <h2>Account information</h2>
-        <div class="field">
-            {{ user_form.email.errors }}
-            <label>{{ user_form.email.label }}:</label>
-            {{ user_form.email }}
-        </div>
-        <div class="field">
-            {{ user_form.password2.errors }}
-            <label>{{ user_form.password1.label }}:</label>
-            {{ user_form.password1}}
-        </div>
-        <div class="field">
-            <label>{{ user_form.password2.label }}:</label>
-            {{ user_form.password2 }}
-        </div>
-        <input type="submit" />
-    </form>
+            <div class="field">
+                {{ user_form.is_admin.errors }}
+                <label>{{ user_form.is_admin.label }}:</label>
+                {{ user_form.is_admin }}
+            </div>
+            <div class="field">
+                {{ user_form.groups.errors }}
+                <label>{{ user_form.groups.label }}:</label>
+                {{ user_form.groups }}
+            </div>
+            <div class="field">
+                {{ user_form.password2.errors }}
+                <label>{{ user_form.password1.label }}:</label>
+                {{ user_form.password1}}
+            </div>
+            <div class="field">
+                <label>{{ user_form.password2.label }}:</label>
+                {{ user_form.password2 }}
+            </div>
+            {% endif %}
+            <button class="dis-button green">Save</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
