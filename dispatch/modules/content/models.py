@@ -204,6 +204,8 @@ class Article(Publishable):
 
     authors = ManyToManyField(Person, through="Author")
 
+    comments = ManyToManyField('Comment', related_name="comments")
+
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
     shares = PositiveIntegerField(default=0, blank=True, null=True)
@@ -463,6 +465,16 @@ class Article(Publishable):
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
+class Comment(Model):
+    article = ForeignKey(Article)
+
+    email = CharField(max_length=255)
+    content = TextField()
+
+    num_ratings = PositiveIntegerField(default=0)
+    total_rating = PositiveIntegerField(default=0)
+
+    created_at = DateTimeField(auto_now_add=True)
 
 class Author(Model):
     article = ForeignKey(Article, null=True)
