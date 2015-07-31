@@ -3,6 +3,7 @@ var YoutubePlayer = function(element){
     var playerReady = false;
     var userReady = false;
 
+
     var player = new YT.Player('video-' + node.data('id'), {
         height: node.width() * 0.5625, // 16:9
         width: node.width(),
@@ -45,12 +46,11 @@ tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-
-
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
-function onYouTubeIframeAPIReady() {
+window.onYouTubeIframeAPIReady = function() {
     $('.video-attachment.youtube').each(function(){
         YoutubePlayer(this);
     });
 }
+
