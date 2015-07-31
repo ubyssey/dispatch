@@ -8,7 +8,7 @@
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     {% endblock %}
-    <article data-id="{{ article.id }}">
+    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}">
         {% block banner %}
         <div class="container">
             <h1 class="headline">{{ article.long_headline }}</h1>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="article-social top">
                     <ul>
-                        <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
+                        <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span>{{ article.comment_count }} comments</span></a></li>
                         <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
                         <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
                         <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
@@ -68,11 +68,12 @@
         </div>
     </div>
 </div>
-<div id="gallery">
-</div>
+<div id="gallery"></div>
+<div id="comments-bar"><div class="inner"></div></div>
 {% endblock %}
 {% block scripts %}
 <script src="{% static 'js/dist/article.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/dist/comments.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/dist/YoutubePlayer.js' %}" type="text/javascript"></script>
 
 {% endblock %}

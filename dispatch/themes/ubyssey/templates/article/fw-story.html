@@ -4,7 +4,6 @@
 {% block banner %}
     {% with article.template_fields.header_layout as header_layout %}
     <div class="fw-banner {{ header_layout }}">
-
         {% if header_layout == 'right-image'  %}
             <div class="header-container">
                 <div class="headline-container left">
@@ -61,7 +60,7 @@
 {% block pre-content %}
     <div class="article-social left">
         <ul>
-            <li><a href="#"><i class="fa fa-comment"></i><span>14 comments</span></a></li>
+            <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span>{{ article.comment_count }} comments</span></a></li>
             <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
             <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
             <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
