@@ -80,34 +80,26 @@ main.article.fw-story {
         width: 100%;
         padding: 30px 0;
 
-        h1.headline, p.fw-description, div.article-byline, span.author, span.published {
-          color: #333;
-          font-family: $font-default;
-        }
-
         div.article-byline {
-          font-size: 13px;
           span.author {
             font-weight: 500;
           }
         }
 
         h1.headline {
-          color: #000;
-          font-size: 28px;
-          font-weight: 500;
           margin-bottom: 15px;
         }
+
         p.fw-description {
+          color: #333;
+          font-family: $font-default;
+
           width: 100%;
           max-width: 650px;
           line-height: 1.5em;
           font-size: 14px;
           margin-top: 0;
           margin-bottom: 15px;
-        }
-        span.author, span.published {
-          font-weight: 300;
         }
       }
       @media($bp-larger-than-mobile){
@@ -136,10 +128,15 @@ main.article.fw-story {
             color: #fff;
           }
           h1.headline {
+            font-family: $font-default;
             font-size: 42px;
+            font-weight: 500;
           }
           div.article-byline {
             font-size: 14px;
+          }
+          span.author, span.published {
+            font-weight: 300;
           }
         }
 

@@ -11,18 +11,20 @@
     <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}">
         {% block banner %}
         <div class="container">
-            <h1 class="headline">{{ article.long_headline }}</h1>
-            <div class="article-info row">
-                <div class="article-byline">
-                    <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
-                </div>
-                <div class="article-social top">
-                    <ul>
-                        <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span>{{ article.comment_count }} comments</span></a></li>
-                        <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
-                        <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
-                    </ul>
+            <div class="headline-container">
+                <h1 class="headline">{{ article.long_headline }}</h1>
+                <div class="article-info row">
+                    <div class="article-byline">
+                        <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+                    </div>
+                    <div class="article-social top">
+                        <ul>
+                            <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span>{{ article.comment_count }} comments</span></a></li>
+                            <li><a href="#"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
