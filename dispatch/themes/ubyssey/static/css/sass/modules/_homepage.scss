@@ -107,7 +107,8 @@ div.frontpage {
     &.thumb {
       .image {
         float: right;
-        width: 25%;
+        margin-left: 20px;
+        width: 35%;
         img {
           width: 100%;
         }
@@ -136,7 +137,7 @@ div.frontpage {
         }
         .image {
           float: left;
-          width: 35%;
+          margin-left: 0;
           margin-right: 15px;
         }
       }
