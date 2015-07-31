@@ -14,7 +14,7 @@
                 <article class="secondary padded">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
                     <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
-                    <p class="snippet">{{ article.snippet }}</p>
+                    <p class="snippet"><span class="byline-inline">{{ article.published_at }}</span>{{ article.snippet }}</p>
                 </article>
             {% endwith %}
             {% for article in articles.thumbs %}
@@ -41,7 +41,7 @@
                     <div class="meta">
                         <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
                         <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
-                        <p class="snippet">{{ article.snippet }}</p>
+                        <p class="snippet"><span class="byline-inline">{{ article.published_at }}</span>{{ article.snippet }}</p>
                     </div>
                 </article>
                 {% endwith %}
