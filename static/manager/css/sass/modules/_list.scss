@@ -14,11 +14,12 @@ header.list-header {
     }
     &.checkbox {
       text-align: center;
-      width: 12px;
     }
     &.actions {
       margin-left: 20px;
-
+      .selected-items {
+        display: inline;
+      }
     }
     &.search {
       float: right;

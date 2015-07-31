@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Author, Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.api.fields import JSONField
 
@@ -74,6 +74,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(source='image.id')
     attachment_id = serializers.IntegerField(source='id', read_only=True)
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
+    thumb = serializers.CharField(source='image.get_thumbnail_url', read_only=True)
     credit = serializers.CharField(source='get_credit')
     width = serializers.IntegerField(source='image.width')
     height = serializers.IntegerField(source='image.height')
@@ -84,6 +85,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'attachment_id',
             'url',
+            'thumb',
             'caption',
             'credit',
             'type',
@@ -142,6 +144,42 @@ class SectionSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'slug',
         )
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+
+    article_id = serializers.IntegerField(write_only=True)
+    user = serializers.CharField(read_only=True, source='user.person.full_name')
+    timestamp = serializers.DateTimeField(format='%B %d, %Y', source='created_at', read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'user',
+            'article_id',
+            'content',
+            'timestamp',
+            'votes'
+        )
+
+    def create(self, validated_data):
+
+        user = validated_data.get('user', None)
+
+        if user is not None:
+            instance = Comment(user=user)
+            return self.update(instance, validated_data)
+        else:
+            return False
+
+    def update(self, instance, validated_data):
+
+        # Update all the fields
+        instance.article_id = validated_data.get('article_id', instance.article_id)
+        instance.content = validated_data.get('content', instance.content)
+
+        instance.save()
+
+        return instance
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     """

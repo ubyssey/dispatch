@@ -27,18 +27,12 @@
             'route': 'articles',
             'actions': ['GET', 'POST', 'DELETE'],
             'sub_routes': {
-                'attachments': {
+                'comments': {
                     'actions': ['GET',]
                 },
                 'revision': {
                     'actions': ['GET',]
                 },
-                'publish': {
-                    'actions': ['POST',]
-                },
-                'unpublish': {
-                    'actions': ['POST',]
-                }
             },
         },
         'tag': {
@@ -65,6 +59,10 @@
         },
         'person': {
             'route': 'people',
+            'actions': ['GET', 'POST', 'DELETE'],
+        },
+        'comment': {
+            'route': 'comments',
             'actions': ['GET', 'POST', 'DELETE'],
         },
         'section': {
@@ -167,16 +165,16 @@
         return dispatch.patch(getModelRoute(model, id), values, callback);
     };
 
-    dispatch.publish = function(model, id, published, callback) {
-        var route = published ? 'publish' : 'unpublish';
-        var model = model + '.' + route;
-        if (!validAction(model, 'POST')) throw InvalidActionError(model);
-        return dispatch.post(getModelRoute(model, id), {}, callback);
-    }
-
     dispatch.remove = function(model, id, callback) {
         if (!validAction(model, 'DELETE')) throw InvalidActionError(model);
         return dispatch.delete(getModelRoute(model, id), callback);
+    }
+
+    dispatch.bulkRemove = function(model, ids, callback) {
+        if (!validAction(model, 'DELETE')) throw InvalidActionError(model);
+        var route = model + '.delete';
+        var values = { 'ids': ids.join() };
+        return dispatch.post(getModelRoute(route), values, callback);
     }
 
     dispatch.list = function(model, callback){
@@ -198,6 +196,20 @@
 
     dispatch.article = function(id, values, callback){
         return dispatch.get(getModelRoute('article', id), values, callback);
+    }
+
+    dispatch.articleComments = function(id, callback){
+        var model = 'article.comments';
+        if (!validAction(model, 'GET')) throw InvalidActionError(model);
+        return dispatch.get(getModelRoute(model, id), {}, callback);
+    }
+
+    dispatch.postComment = function(id, content, callback){
+        var values = {
+            article_id: id,
+            content: content
+        }
+        return dispatch.add('comment', values, callback);
     }
 
     dispatch.revision = function(model, parent_id, revision_id, callback){

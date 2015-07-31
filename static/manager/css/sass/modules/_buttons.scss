@@ -33,6 +33,10 @@ button.dis-button, a.dis-button, div.dis-button > button {
   border-color: $grey-border;
   @include background-image(linear-gradient(nth($grey-grad, 1), nth($grey-grad, 2)));
 
+  &.small {
+    line-height: 30px;
+  }
+
   &.green, &.red {
     color: #fff;
   }
