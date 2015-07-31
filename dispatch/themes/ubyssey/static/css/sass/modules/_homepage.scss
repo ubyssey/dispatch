@@ -36,10 +36,14 @@ div.frontpage {
       padding-right: 15px;
       border-right: 1px solid #E6E6E6;
       article, ul.article-headlines {
+
         border-bottom: 1px dotted #C8C8C8;
         &:last-child {
           border-bottom: none;
         }
+      }
+      ul.article-headlines {
+        display: none;
       }
     }
     &.middle {
@@ -62,11 +66,16 @@ div.frontpage {
       &.left, &.middle {
         display: table-cell;
       }
-      &.left article, ul.article-headlines {
-        padding-top: 15px;
-        padding-bottom: 15px;
-        &.first-child {
-          padding-top: 0;
+      &.left {
+        article, ul.article-headlines {
+          padding-top: 15px;
+          padding-bottom: 15px;
+          &.first-child {
+            padding-top: 0;
+          }
+        }
+        ul.article-headlines {
+          display: block;
         }
       }
     }
@@ -85,7 +94,7 @@ div.frontpage {
         width: 100%;
       }
       h1 {
-        margin: 8px 0;
+        margin-bottom: 10px;
         font-size: $font-size-26px;
         line-height: 32px;
       }
@@ -116,7 +125,7 @@ div.frontpage {
     }
 
     &.padded, div.meta {
-      padding: 20px;
+      padding: 24px 20px;
     }
 
     @media($bp-larger-than-mobile){
@@ -125,6 +134,9 @@ div.frontpage {
       }
       &.primary {
         border-bottom: none;
+        h1.headline {
+          margin: 8px 0;
+        }
       }
       &.thumb {
         span.byline {
@@ -289,21 +301,13 @@ div.featured-image-container {
   }
 }
 
-@media($bp-larger-than-mobile){
-  margin-top: 20px;
-}
-
 p.snippet {
-  font-family: Georgia;
+  font-family: $font-default;
   font-size: 14px;
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 21px;
-  color: #363636;
-  display: none;
-  @media($bp-larger-than-mobile){
-    display: block;
-  }
+  line-height: 1.75em;
+  color: #6B6B6B;
 }
 
 //headlines
@@ -340,7 +344,6 @@ h4.headline {
 span.byline {
   font-family: $font-default;
   font-weight: 500;
-  display: block;
   margin: 10px 0;
   span.author {
     font-size: 0.9em;
@@ -348,6 +351,28 @@ span.byline {
   span.published {
     color: #777;
     font-size: 0.85em;
+  }
+  display: none;
+}
+
+span.byline-inline {
+  font-family: $font-default;
+  color: #0071C9;
+  font-weight: 500;
+  font-size: 13px;
+  margin-right: 12px;
+
+}
+
+@media($bp-larger-than-mobile){
+  span.byline {
+    display: block;
+  }
+  span.byline-inline {
+    display: none;
+  }
+  div.snippet {
+    color: #363636;
   }
 }
 
