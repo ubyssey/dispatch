@@ -104,7 +104,7 @@ class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = '__all__'
-        exclude = ('first_name', 'last_name', 'roles', 'user')
+        exclude = ('first_name', 'last_name', 'roles', 'user', 'is_admin')
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
