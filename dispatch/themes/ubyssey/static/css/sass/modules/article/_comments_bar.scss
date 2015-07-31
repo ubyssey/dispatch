@@ -1,28 +1,52 @@
+@import 'modules/variables';
+
+$bp-comments-bar: "min-width: 960px" !default;
+
 #comments-bar {
   .inner {
-    display: flex;
-    flex-direction: column;
-    top: 0;
-    position: fixed;
-    top: 49px;
-
-    bottom: 0;
-    background: #fff;
     font-family: $font-default;
-    border-left: 1px solid #D8D8D8;
-    width: 525px;
-    right: -526px;
+  }
 
-    -moz-transition: right 0.3s ease-in-out;
-    -o-transition: right 0.3s ease-in-out;
-    -webkit-transition: right 0.3s ease-in-out;
-    transition: right 0.3s ease-in-out;
+  div.close, div.sort, div.comments-list, div.comments-field {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
-    &.active {
-      box-shadow: rgba(0,0,0,0.025) -2px 0 3px 0;
-      right: 0;
+  @media($bp-comments-bar){
+    div.inner {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 49px;
+      bottom: 0;
+      background: #fff;
+      border-left: 1px solid #D8D8D8;
+      width: 525px;
+      right: -526px;
+
+      -moz-transition: right 0.3s ease-in-out;
+      -o-transition: right 0.3s ease-in-out;
+      -webkit-transition: right 0.3s ease-in-out;
+      transition: right 0.3s ease-in-out;
+
+      &.active {
+        box-shadow: rgba(0,0,0,0.025) -2px 0 3px 0;
+        right: 0;
+      }
     }
 
+    div.close, div.sort, div.comments-list, div.comments-field {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    div.comments-field {
+      overflow: visible;
+    }
+
+    div.close button {
+      display: block;
+    }
   }
 }
 
@@ -81,12 +105,13 @@ div.sort {
 
 div.comments-list {
   overflow-y: scroll;
-  padding: 0 30px;
   flex: 1;
 }
 
 div.comments-field {
-  padding: 0 30px 10px 30px;
+  overflow: auto;
+  padding-top: 0;
+  padding-bottom: 10px;
   &.login {
     padding-bottom: 30px;
   }
@@ -138,7 +163,8 @@ div.comments-field {
 div.close {
   height: 30px;
   line-height: 30px;
-  padding: 25px 30px 20px 30px;
+  padding-top: 25px;
+  padding-bottom: 20px;
   i.fa {
     margin-right: 5px;
   }
@@ -147,6 +173,7 @@ div.close {
     font-weight: 500;
   }
   button {
+    display: none;
     border: none;
     background: none;
     font-size: 18px;
