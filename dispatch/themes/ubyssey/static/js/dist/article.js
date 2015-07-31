@@ -20406,7 +20406,7 @@ var CommentBox = React.createClass({displayName: "CommentBox",
             )
             );
     },
-    renderInput(){
+    renderInput: function(){
         return (
             React.createElement("div", {className: "comments-field"}, 
                 React.createElement(Textarea, {rows: 2, placeholder: "Join the conversation...", onChange: this.updateContent, value: this.state.content}), 
