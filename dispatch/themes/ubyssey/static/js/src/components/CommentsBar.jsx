@@ -1,54 +1,6 @@
-var Comment = React.createClass({
-    render: function(){
-        return (
-            <div className="comment">
-                <div className="meta">
-                    <span className="user">{this.props.comment.user}</span>
-                    <span className="timestamp">{this.props.comment.timestamp}</span>
-                    &middot;
-                    <span className="votes">{this.props.comment.votes} points</span>
-                </div>
-                <p className="login-message">{this.props.comment.content}</p>
-            </div>
-            );
-    }
-});
-
-var CommentBox = React.createClass({
-    getInitialState: function(){
-        return {
-            content: "",
-        }
-    },
-    updateContent: function(event){
-        this.setState({ content: event.target.value });
-    },
-    handlePost: function(){
-        this.props.postHandler(this.state.content, function(){
-            this.setState({ content: "" });
-        }.bind(this));
-    },
-    renderLogin: function(){
-        return (
-            <div className="comments-field login">
-                <p>You must login or register before posting a comment.</p>
-                <a href="/login/" className="button">Login</a>
-                <a href="/register/" className="button">Register</a>
-            </div>
-            );
-    },
-    renderInput(){
-        return (
-            <div className="comments-field">
-                <textarea placeholder="Join the conversation..." onChange={this.updateContent} value={this.state.content} />
-                <button className="right" onClick={this.handlePost}>Post Comment</button>
-            </div>
-            );
-    },
-    render: function(){
-        return this.props.loggedIn ? this.renderInput() : this.renderLogin();
-    }
-});
+var React = require('react');
+var Comment = require('./Comment.jsx');
+var CommentBox = require('./CommentBox.jsx');
 
 var CommentsBar = React.createClass({
     getInitialState: function(){
@@ -59,7 +11,13 @@ var CommentsBar = React.createClass({
         }
     },
     componentDidMount: function(){
+
         this.initialized = false;
+
+        if($(window).width() <= this.props.breakpoint){
+            this.loadComments();
+        }
+
         $('.open-comments').click(function(e){
             e.preventDefault();
             if(!this.initialized){
@@ -131,10 +89,4 @@ var CommentsBar = React.createClass({
     }
 });
 
-var articleId = $('article').data('id');
-var userId = $('article').data('user-id');
-
-var commentsBar = React.render(
-    <CommentsBar userId={userId} articleId={articleId} />,
-    document.getElementById('comments-bar')
-);
+module.exports = CommentsBar;
