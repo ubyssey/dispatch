@@ -24,7 +24,7 @@ var CommentBox = React.createClass({
             </div>
             );
     },
-    renderInput(){
+    renderInput: function(){
         return (
             <div className="comments-field">
                 <Textarea rows={2} placeholder="Join the conversation..." onChange={this.updateContent} value={this.state.content} />
