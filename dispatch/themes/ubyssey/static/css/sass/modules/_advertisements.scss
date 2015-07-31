@@ -27,5 +27,14 @@
       float: left;
       padding-right: 30px;
     }
+    &.top {
+      display: none;
+    }
+
+    @media($bp-larger-than-mobile){
+      &.top {
+        display: block;
+      }
+    }
   }
 }
