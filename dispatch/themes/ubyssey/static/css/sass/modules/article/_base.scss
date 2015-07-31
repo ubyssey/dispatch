@@ -12,14 +12,15 @@
 
 main.article.default {
   h1.headline {
-    line-height: 46px;
-    margin-bottom: 10px;
+    line-height: 38px;
+    margin-bottom: 15px;
   }
   div.article-byline {
     float: left;
   }
   @media($bp-larger-than-mobile){
     h1.headline {
+      line-height: 46px;
       border-top: 2px solid #3E3E3E;
       border-bottom: 1px solid #D2D2D2;
       padding: 25px 0;
@@ -110,12 +111,18 @@ div.right-column {
     display: none;
   }
 
+  div.featured-image {
+    margin-bottom: 20px;
+  }
+
   @media($bp-larger-than-mobile){
     position: relative;
     float: right;
     padding: 0 0 40px 40px;
+
     div.featured-image {
       width: 500px;
+      margin-bottom: 0;
     }
 
     div.sidebar {

@@ -37,7 +37,7 @@
             <div class="cell middle">
                 {% with articles.primary as article %}
                 <article class="primary {{ article.template }}">
-                    <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
+                    <a class="image" href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a>
                     <div class="meta">
                         <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
                         <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
