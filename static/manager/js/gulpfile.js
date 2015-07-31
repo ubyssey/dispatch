@@ -45,4 +45,10 @@ gulp.task('watch', function() {
 
 });
 
+gulp.task('list', function(){
+    gulp.src(path.SRC + 'list.js')
+    .pipe(uglify())
+    .pipe(gulp.dest(path.DEST));
+});
+
 gulp.task('default', ['watch']);
