@@ -12,18 +12,29 @@
 
 main.article.default {
   h1.headline {
-    border-top: 2px solid #3E3E3E;
-    border-bottom: 1px solid #D2D2D2;
-    padding: 25px 0;
     line-height: 46px;
+    margin-bottom: 15px;
   }
   div.article-byline {
     float: left;
   }
+  @media($bp-larger-than-mobile){
+    h1.headline {
+      border-top: 2px solid #3E3E3E;
+      border-bottom: 1px solid #D2D2D2;
+      padding: 25px 0;
+      margin: 0;
+    }
+  }
+
 }
 
 main.article {
   margin-top: 49px;
+
+  div.headline-container {
+    padding: 30px 0;
+  }
 
   h1.headline {
     font-family: $font-headline;
@@ -59,7 +70,6 @@ main.article {
     }
   }
   div.article-info {
-    padding: 25px 0;
     color: #222222;
   }
   div.article-byline {
@@ -75,7 +85,57 @@ main.article {
       font-size: 13px;
     }
   }
+
+  @media($bp-larger-than-mobile){
+    div.headline-container {
+      padding: 0;
+    }
+    div.article-info {
+      padding: 25px 0;
+    }
+  }
+
 }
+
+
+// Right column
+
+div.right-column {
+
+  img {
+    width: 100%;
+  }
+
+  div.sidebar {
+    display: none;
+  }
+
+  @media($bp-larger-than-mobile){
+    position: relative;
+    float: right;
+    padding: 0 0 40px 40px;
+    div.featured-image {
+      width: 500px;
+    }
+
+    div.sidebar {
+      position: absolute;
+      right: 0;
+      width: 300px;
+      &.offset {
+        margin-top: 4em;
+      }
+    }
+  }
+
+
+}
+
+div.side {
+    float: right;
+}
+
+
 
 // Social/share icons
 
