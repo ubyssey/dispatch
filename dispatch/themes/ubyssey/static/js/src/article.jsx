@@ -1,3 +1,7 @@
+var React = require('react');
+var CommentsBar = require('./components/CommentsBar.jsx');
+var Youtube = require('./modules/Youtube.js');
+
 var articleHeader = false;
 
 $(function(){
@@ -200,3 +204,11 @@ function renderGalleries(){
 }
 
 renderGalleries();
+
+var articleId = $('article').data('id');
+var userId = $('article').data('user-id');
+
+var commentsBar = React.render(
+    <CommentsBar breakpoint={960} userId={userId} articleId={articleId} />,
+    document.getElementById('comments-bar')
+);
