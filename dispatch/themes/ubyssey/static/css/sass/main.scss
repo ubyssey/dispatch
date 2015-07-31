@@ -28,6 +28,11 @@ div.container {
     max-width: 960px;
     padding: 0;
   }
+  &.large {
+    &.no-padding {
+      max-width: 1220px;
+    }
+  }
 }
 
 //////

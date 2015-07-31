@@ -12,7 +12,10 @@ div.homepage-section {
 
 div.frontpage-container {
   display: table;
-  margin-top: 20px;
+  margin-top: 49px;
+  @media($bp-larger-than-mobile){
+    margin-top: 20px;
+  }
 }
 
 div.frontpage {
@@ -20,7 +23,6 @@ div.frontpage {
   display: table-row;
 
   div.cell {
-    display: table-cell;
     vertical-align: top;
     box-sizing: border-box;
     &.left, &.right {
@@ -28,6 +30,9 @@ div.frontpage {
       width: 29%;
     }
     &.left {
+
+      display: table-footer-group;
+
       padding-right: 15px;
       border-right: 1px solid #E6E6E6;
       article, ul.article-headlines {
@@ -43,7 +48,9 @@ div.frontpage {
       }
     }
     &.middle {
-      //width: 500px;
+
+      display: table-header-group;
+
       width: 42%;
       padding: 0 15px;
       border-right: 1px solid #E6E6E6;
@@ -51,7 +58,18 @@ div.frontpage {
     &.right {
       padding-left: 15px;
     }
+
   }
+
+  @media($bp-larger-than-mobile){
+    div.cell {
+      display: table-cell;
+      &.left, &.middle {
+        display: table-cell;
+      }
+    }
+  }
+
   article, li {
 
     h1, h2 {
@@ -60,6 +78,7 @@ div.frontpage {
     }
 
     &.primary {
+      padding-bottom: 20px;
       img {
         width: 100%;
       }
@@ -98,6 +117,17 @@ div.frontpage {
         margin: 0;
       }
     }
+
+    &.padded, div.meta {
+      padding: 10px 20px;
+    }
+
+    @media($bp-larger-than-mobile){
+      &.padded, div.meta {
+        padding: 0;
+      }
+    }
+
   }
 }
 

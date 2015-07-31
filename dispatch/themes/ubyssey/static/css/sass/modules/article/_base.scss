@@ -32,13 +32,14 @@ main.article {
     margin: 0;
   }
 
-  div.article-content {
-    p, div.caption {
-      max-width: 585px;
-      @media(max-width: 625px){
-        padding: 0 20px;
-      }
+  div.article-content p, div.caption {
+    max-width: 585px;
+    @media(max-width: 625px){
+      padding: 0 20px;
     }
+  }
+
+  div.article-content {
 
     p {
       font-family: $font-body;

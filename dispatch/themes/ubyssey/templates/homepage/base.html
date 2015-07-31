@@ -5,12 +5,13 @@
     <img src="{% static 'img/sample-leaderboard-ad.png' %}">
 </div>
 {% include 'headers/main.html' %}
-<div class="container large">
+{% include 'headers/topbar.html' %}
+<div class="container large no-padding">
     <div class="homepage-section frontpage-container">
         <div class="frontpage">
             <div class="cell left">
             {% with articles.secondary as article %}
-                <article class="secondary">
+                <article class="secondary padded">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
                     <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
                     <p class="snippet">{{ article.snippet }}</p>
@@ -36,9 +37,11 @@
                 {% with articles.primary as article %}
                 <article class="primary {{ article.template }}">
                     <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
-                    <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
-                    <p class="snippet">{{ article.snippet }}</p>
+                    <div class="meta">
+                        <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <p class="snippet">{{ article.snippet }}</p>
+                    </div>
                 </article>
                 {% endwith %}
             </div>
