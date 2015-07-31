@@ -126,6 +126,7 @@ div.comments-field {
     width: 100%;
   }
   button, a.button {
+    font-family: Helvetica, Arial, sans-serif;
     display: inline-block;
     border-radius: 2px;
     color: #4E4D4D;
@@ -162,7 +163,7 @@ div.close {
   height: 30px;
   line-height: 30px;
   padding-top: 25px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   i.fa {
     margin-right: 5px;
   }

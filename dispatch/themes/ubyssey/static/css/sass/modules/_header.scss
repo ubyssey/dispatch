@@ -3,6 +3,13 @@
 
 // Main header
 
+header.main {
+  display: none;
+  @media($bp-larger-than-mobile){
+    display: block;
+  }
+}
+
 div.branding {
   text-align: center;
   margin: 20px 0;
