@@ -18,12 +18,13 @@
                 </article>
             {% endwith %}
             {% for article in articles.thumbs %}
-                <article class="thumb row">
-                    <div class="left">
+                <article class="thumb row padded">
+                    <div class="image">
                         <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
                     </div>
                     <div>
                         <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
                     </div>
                 </article>
             {% endfor %}
