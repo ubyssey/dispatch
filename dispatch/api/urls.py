@@ -33,6 +33,10 @@ component = views.ComponentViewSet.as_view({
     'post': 'update',
 })
 
+person_bulk_delete = views.PersonViewSet.as_view({
+    'post': 'bulk_delete',
+})
+
 urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
@@ -41,4 +45,6 @@ urlpatterns = format_suffix_patterns([
     url(r'^topics/(?P<pk>[0-9]+)/articles/$', topic_articles, name='topic-frontpage'),
     # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
+    # People route
+    url(r'^people/delete/$', person_bulk_delete, name='person-bulk-delete'),
 ]) + router.urls

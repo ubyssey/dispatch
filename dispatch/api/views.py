@@ -170,6 +170,25 @@ class PersonViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
 
+    def bulk_delete(self, request):
+        deleted = []
+        ids = self.request.data.get('ids', None)
+
+        if ids is not None:
+            ids = ids.split(',')
+            for id in ids:
+                try:
+                    Person.objects.get(pk=id).delete()
+                    deleted.append(id)
+                except:
+                    pass
+
+        data = {
+            'deleted': deleted
+        }
+
+        return Response(data)
+
 class TagViewSet(viewsets.ModelViewSet):
     """
     Viewset for Tag model views.
