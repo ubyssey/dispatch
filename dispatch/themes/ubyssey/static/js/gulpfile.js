@@ -31,8 +31,8 @@ gulp.task('article', function(){
         .bundle()
         .pipe(source('article.js'))
         .pipe(derequire())
-        //.pipe(buffer())
-        //.pipe(uglify())
+        .pipe(buffer())
+        .pipe(uglify())
         .pipe(gulp.dest('dist'))
         .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
 });

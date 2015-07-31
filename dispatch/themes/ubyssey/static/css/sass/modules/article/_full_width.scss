@@ -78,7 +78,7 @@ main.article.fw-story {
         text-align: left;
 
         width: 100%;
-        padding: 40px 0;
+        padding: 30px 0;
 
         h1.headline, p.fw-description, div.article-byline, span.author, span.published {
           color: #333;
@@ -93,14 +93,18 @@ main.article.fw-story {
         }
 
         h1.headline {
+          color: #000;
           font-size: 28px;
           font-weight: 500;
+          margin-bottom: 15px;
         }
         p.fw-description {
           width: 100%;
           max-width: 650px;
           line-height: 1.5em;
           font-size: 14px;
+          margin-top: 0;
+          margin-bottom: 15px;
         }
         span.author, span.published {
           font-weight: 300;
