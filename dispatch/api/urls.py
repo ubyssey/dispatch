@@ -16,6 +16,7 @@ router.register(r'topics', views.TopicViewSet, base_name='topics')
 router.register(r'images', views.ImageViewSet, base_name='images')
 router.register(r'galleries', views.ImageGalleryViewSet, base_name='galleries')
 router.register(r'templates', views.TemplateViewSet, base_name='templates')
+router.register(r'comments', views.CommentViewSet, base_name='comments')
 
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
 
@@ -32,6 +33,14 @@ component = views.ComponentViewSet.as_view({
     'post': 'update',
 })
 
+person_bulk_delete = views.PersonViewSet.as_view({
+    'post': 'bulk_delete',
+})
+
+article_comments = views.CommentViewSet.as_view({
+    'get': 'article',
+})
+
 urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
@@ -40,4 +49,8 @@ urlpatterns = format_suffix_patterns([
     url(r'^topics/(?P<pk>[0-9]+)/articles/$', topic_articles, name='topic-frontpage'),
     # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
+    # People route
+    url(r'^people/delete/$', person_bulk_delete, name='person-bulk-delete'),
+    # Article comments
+    url(r'^articles/(?P<pk>[0-9]+)/comments/$', article_comments, name='article-comments'),
 ]) + router.urls

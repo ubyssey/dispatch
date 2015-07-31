@@ -1,0 +1,1 @@
+var List=function(){var e=[];$(".item-checkbox").change(function(){var i=$(this).parent().parent().data("id");if(this.checked)e.push(i);else{var s=e.indexOf(i);s>-1&&e.splice(s,1)}t()});var t=function(){$(".selected-items").html(e.length+" items selected")}},list=List();
