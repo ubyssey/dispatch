@@ -37,11 +37,6 @@ div.frontpage {
       border-right: 1px solid #E6E6E6;
       article, ul.article-headlines {
         border-bottom: 1px dotted #C8C8C8;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        &:first-child {
-          padding-top: 0;
-        }
         &:last-child {
           border-bottom: none;
         }
@@ -67,6 +62,13 @@ div.frontpage {
       &.left, &.middle {
         display: table-cell;
       }
+      &.left article, ul.article-headlines {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        &.first-child {
+          padding-top: 0;
+        }
+      }
     }
   }
 
@@ -78,7 +80,7 @@ div.frontpage {
     }
 
     &.primary {
-      padding-bottom: 20px;
+      border-bottom: 1px dotted #C8C8C8;
       img {
         width: 100%;
       }
@@ -103,28 +105,40 @@ div.frontpage {
     }
 
     &.thumb {
-      .left {
-        //width: 125px;
-        width: 35%;
-        margin-right: 15px;
+      .image {
+        float: right;
+        width: 25%;
         img {
           width: 100%;
         }
       }
-      h2 {
-        font-size: 15px;
-        line-height: 20px;
-        margin: 0;
-      }
     }
 
     &.padded, div.meta {
-      padding: 10px 20px;
+      padding: 20px;
     }
 
     @media($bp-larger-than-mobile){
       &.padded, div.meta {
         padding: 0;
+      }
+      &.primary {
+        border-bottom: none;
+      }
+      &.thumb {
+        span.byline {
+          display: none;
+        }
+        h2 {
+          font-size: 15px;
+          line-height: 20px;
+          margin: 0;
+        }
+        .image {
+          float: left;
+          width: 35%;
+          margin-right: 15px;
+        }
       }
     }
 
@@ -259,9 +273,6 @@ article.col {
   }
 }
 
-// article
-
-
 // Featured image
 
 div.featured-image-container {
@@ -277,6 +288,10 @@ div.featured-image-container {
   }
 }
 
+@media($bp-larger-than-mobile){
+  margin-top: 20px;
+}
+
 p.snippet {
   font-family: Georgia;
   font-size: 14px;
@@ -284,6 +299,10 @@ p.snippet {
   margin-bottom: 0;
   line-height: 21px;
   color: #363636;
+  display: none;
+  @media($bp-larger-than-mobile){
+    display: block;
+  }
 }
 
 //headlines
