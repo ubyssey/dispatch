@@ -15,7 +15,7 @@ from django.dispatch import receiver
 from django.template import loader, Context
 
 from dispatch.helpers import ThemeHelper
-from dispatch.apps.core.models import Person
+from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
 from dispatch.apps.frontend.templates import TemplateManager
@@ -193,6 +193,16 @@ class ArticleManager(Manager):
     def get_most_popular(self, count=10):
         return self.filter(head=True).order_by('-importance')[:count]
 
+class Comment(Model):
+    article = ForeignKey('Article')
+
+    user = ForeignKey(User)
+    content = TextField()
+
+    votes = PositiveIntegerField(default=0)
+
+    created_at = DateTimeField(auto_now_add=True)
+
 class Article(Publishable):
     long_headline = CharField(max_length=200)
     short_headline = CharField(max_length=100)
@@ -267,6 +277,9 @@ class Article(Publishable):
 
     def images_list(self):
         return ",".join([str(i) for i in self.images.values_list('id', flat=True)])
+
+    def comment_count(self):
+        return Comment.objects.filter(article_id=self.parent.id).count()
 
     def get_authors(self):
         return self.authors.order_by('author__order')
@@ -462,7 +475,6 @@ class Article(Publishable):
         Returns article URL.
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
-
 
 class Author(Model):
     article = ForeignKey(Article, null=True)

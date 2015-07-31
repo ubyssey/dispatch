@@ -17,9 +17,9 @@
     <div class="list-container">
         <div class="item-list">
         {% for article in article_list %}
-            <div class="item">
+            <div data-id="{{ article.parent.id }}" class="item">
                 <div class="checkbox cell">
-                    <input type="checkbox">
+                    <input class="item-checkbox" type="checkbox">
                 </div>
                 <div class="status cell">
                     {% if article.is_published %}

@@ -17,21 +17,20 @@
 
         <div class="header-buttons">
              <form class="search-bar" method="GET">
-                <input placeholder="Search people" type="text" value="{{ query }}" name="q">
+                <input placeholder="Search roles" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button small" href="{% url 'apps.manager.views.user_add' %}">New person</a>
-            <a class="dis-button small" href="{% url 'apps.manager.views.roles' %}">Manage roles</a>
+            <a class="dis-button small" href="{% url 'apps.manager.views.role_add' %}">New role</a>
         </div>
     </header>
     <div class="list-container">
         <div class="item-list">
-        {% for person in persons %}
-            <div id="item-{{ person.id }}" data-id="{{ person.id }}" class="item">
+        {% for role in roles %}
+            <div id="item-{{ role.id }}" data-id="{{ role.id }}" class="item">
                 <div class="checkbox cell">
                     <input class="item-checkbox" type="checkbox">
                 </div>
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.user_edit' person.id %}">{{ person.full_name }}</a>
+                    <a href="{% url 'apps.manager.views.role_edit' role.id %}">{{ role.name }}</a>
                 </div>
             </div>
         {% endfor %}

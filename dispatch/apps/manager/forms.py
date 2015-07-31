@@ -2,6 +2,8 @@ from django.forms import Form, ModelForm, TextInput, Textarea, CharField, EmailF
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from dispatch.apps.content.models import Article, Section, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
+from django.contrib.auth.models import Group, Permission
+
 import uuid
 
 class UserForm(ModelForm):
@@ -46,6 +48,9 @@ class UserForm(ModelForm):
     def save(self, commit=True):
         # Save the provided password in hashed format
         user = super(UserForm, self).save(commit=False)
+        user.groups.clear()
+        for group in self.cleaned_data.get('groups'):
+            user.groups.add(group)
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
@@ -53,7 +58,7 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ('email',)
+        fields = ('email', 'is_admin', 'groups',)
 
 class PersonForm(ModelForm):
     def __init__(self, data=None, user_form=True, instance=None):
@@ -99,7 +104,7 @@ class PersonForm(ModelForm):
     class Meta:
         model = Person
         fields = '__all__'
-        exclude = ('first_name', 'last_name', 'roles', 'user')
+        exclude = ('first_name', 'last_name', 'roles', 'user', 'is_admin')
 
 class BaseImageAttachmentFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -191,6 +196,11 @@ class ProfileForm(ModelForm):
 class SectionForm(ModelForm):
     class Meta:
         model = Section
+        fields = '__all__'
+
+class RoleForm(ModelForm):
+    class Meta:
+        model = Group
         fields = '__all__'
 
 
