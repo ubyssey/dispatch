@@ -118,3 +118,10 @@ div.navigation a:hover {
 .no-scroll {
     overflow: hidden;
 }
+
+a.image {
+  display: block;
+  img {
+    display: block;
+  }
+}
