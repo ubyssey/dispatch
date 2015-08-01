@@ -33,6 +33,9 @@
                 'revision': {
                     'actions': ['GET',]
                 },
+                'rendered': {
+                    'actions': ['GET',]
+                }
             },
         },
         'tag': {
@@ -200,6 +203,12 @@
 
     dispatch.articleComments = function(id, callback){
         var model = 'article.comments';
+        if (!validAction(model, 'GET')) throw InvalidActionError(model);
+        return dispatch.get(getModelRoute(model, id), {}, callback);
+    }
+
+    dispatch.articleRendered = function(id, callback){
+        var model = 'article.rendered';
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
         return dispatch.get(getModelRoute(model, id), {}, callback);
     }
