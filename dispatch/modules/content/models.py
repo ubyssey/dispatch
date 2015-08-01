@@ -293,6 +293,15 @@ class Article(Publishable):
     def get_time(self):
         return self.published_at.strftime("%H:%M")
 
+    def get_reading_list(self, ref=None):
+        if ref is not None:
+            pass
+        else:
+            return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+
+    def get_reading_list_ids(self, ref=None):
+        return ",".join([str(a.parent_id) for a in self.get_reading_list(ref)])
+
     def get_template(self):
         if self.template != 'default':
             return 'article/%s.html' % self.template
