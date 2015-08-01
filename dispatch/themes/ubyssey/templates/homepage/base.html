@@ -36,7 +36,7 @@
             </div>
             <div class="cell middle">
                 {% with articles.primary as article %}
-                <article class="primary {{ article.template }}">
+                <article class="primary {{ article.template }} padded">
                     <a class="image" href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a>
                     <div class="meta">
                         <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
