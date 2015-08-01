@@ -121,7 +121,11 @@ div.navigation a:hover {
 
 a.image {
   display: block;
+  margin-bottom: 15px;
   img {
     display: block;
+  }
+  @media($bp-larger-than-mobile){
+    margin-bottom: 0;
   }
 }

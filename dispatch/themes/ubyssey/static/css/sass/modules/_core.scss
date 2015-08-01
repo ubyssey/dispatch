@@ -13,12 +13,25 @@ body {
 
 .row {
   overflow: auto;
-  .left {
+  > .left {
     float: left;
   }
 
-  .right {
+  > .right {
     float: right;
+  }
+
+  > .left.stack-mobile, > .right.stack-mobile {
+    float: none;
+  }
+
+  @media($bp-larger-than-mobile){
+    > .left.stack-mobile {
+      float: left;
+    }
+    > .right.stack-mobile {
+      float: right;
+    }
   }
 }
 
