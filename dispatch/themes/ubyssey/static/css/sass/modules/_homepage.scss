@@ -96,7 +96,7 @@ div.frontpage {
       }
       h1 {
         margin-bottom: 10px;
-        font-size: $font-size-26px;
+        font-size: 28px;
         line-height: 32px;
       }
       &.fw-story {
@@ -138,6 +138,7 @@ div.frontpage {
         border-bottom: none;
         h1.headline {
           margin: 12px 0;
+          font-size: $font-size-26px;
         }
       }
       &.secondary {
