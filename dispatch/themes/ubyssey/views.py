@@ -14,6 +14,8 @@ from .pages import Homepage
 
 class UbysseyTheme(DefaultTheme):
 
+    SITE_TITLE = 'The Ubyssey'
+
     def home(self, request):
 
         frontpage = Article.objects.get_frontpage()
@@ -34,6 +36,7 @@ class UbysseyTheme(DefaultTheme):
         popular = Article.objects.get_most_popular(5)
 
         context = {
+            'title': "%s - UBC's official student newspaper" % self.SITE_TITLE,
             'articles': articles,
             'sections': sections,
             'popular':  popular,
@@ -47,7 +50,9 @@ class UbysseyTheme(DefaultTheme):
         article = self.find_article(request, section, slug)
 
         context = {
-            'article': article
+            'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
+            'article': article,
+            'base_template': 'base.html'
         }
 
         return render(request, article.get_template(), context)
