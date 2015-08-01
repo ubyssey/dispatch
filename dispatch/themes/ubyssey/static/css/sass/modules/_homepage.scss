@@ -301,16 +301,13 @@ article.section-top {
 // Stacked articles (used in .section-1)
 article.stacked {
   border-bottom: 1px dotted #C8C8C8;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
   &:last-of-type {
     border: none;
     margin-bottom: 0;
   }
   @media($bp-larger-than-mobile){
-    h4.headline {
-      font-size: 16px;
-    }
+    padding-bottom: 15px;
+    margin-bottom: 15px;
   }
 }
 
@@ -318,6 +315,7 @@ article.stacked {
 ul.article-headlines {
   padding-left: 22px;
   margin: 0;
+  display: none;
   li {
     font-size: 14px;
     line-height: 20px;
@@ -333,6 +331,9 @@ ul.article-headlines {
       font-weight: 800;
       margin: 0;
     }
+  }
+  @media($bp-larger-than-mobile){
+    display: block;
   }
 }
 
