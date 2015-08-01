@@ -1,14 +1,16 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 {% load staticfiles %}
+{% block header %}
+    {% include 'headers/topbar.html' with article=article section=article.section.slug %}
+{% endblock %}
 {% block content %}
-{% include 'headers/topbar.html' with article=article section=article.section.slug %}
-<main class="article {{ article.template }}">
+<main id="article-{{ article.parent_id }}" class="article {{ article.template }}">
     {% block banner_ad %}
     <div class="advertisement leaderboard">
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     {% endblock %}
-    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}">
+    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ article.get_reading_list_ids }}">
         {% block banner %}
         <div class="container">
             <div class="headline-container">
@@ -72,7 +74,10 @@
     </div>
 </div>
 <div id="gallery"></div>
+
+<div id="article-list"></div>
 {% endblock %}
+
 {% block scripts %}
 <script src="{% static 'js/dist/article.js' %}" type="text/javascript"></script>
 {% endblock %}
