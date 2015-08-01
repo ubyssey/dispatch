@@ -5,7 +5,7 @@
 
 header.main {
   display: none;
-  @media($bp-larger-than-mobile){
+  @media($bp-larger-than-phablet){
     display: block;
   }
 }
