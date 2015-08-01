@@ -40,7 +40,7 @@ div.frontpage {
           border-bottom: none;
         }
         h2.headline {
-          margin-bottom: 8px;
+          margin-bottom: 5px;
         }
       }
       ul.article-headlines {
@@ -77,9 +77,6 @@ div.frontpage {
         article, ul.article-headlines {
           padding-top: 15px;
           padding-bottom: 15px;
-          h2.headline {
-            margin-bottom: 0px;
-          }
           &:first-child {
             padding-top: 0;
           }
@@ -435,9 +432,6 @@ span.timestamp {
 @media($bp-larger-than-mobile){
   span.byline {
     display: block;
-  }
-  span.byline-inline {
-    display: none;
   }
   p.snippet {
     color: #363636;
