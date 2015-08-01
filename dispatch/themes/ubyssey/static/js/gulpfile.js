@@ -12,6 +12,12 @@ var reactify = require('reactify');
 var uglify = require('gulp-uglify');
 var derequire = require('gulp-derequire');
 
+var gulpif = require('gulp-if');
+var argv = require('minimist')(process.argv.slice(2));
+
+var dev;
+dev = typeof argv.d === 'undefined' ? false : true;
+
 gulp.task('default', function () {
     return gulp.src('src/article.jsx')
         .pipe(react())
@@ -31,8 +37,8 @@ gulp.task('article', function(){
         .bundle()
         .pipe(source('article.js'))
         .pipe(derequire())
-        .pipe(buffer())
-        .pipe(uglify())
+        .pipe(gulpif(!dev, buffer()))
+        .pipe(gulpif(!dev, uglify()))
         .pipe(gulp.dest('dist'))
         .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
 });
