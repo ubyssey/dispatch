@@ -80,6 +80,9 @@ div.frontpage {
           &:first-child {
             padding-top: 0;
           }
+          &:last-of-type {
+            border-bottom: 1px dotted #C8C8C8;
+          }
         }
         ul.article-headlines {
           display: block;
@@ -105,7 +108,6 @@ div.frontpage {
         margin-top: 15px;
         margin-bottom: 10px;
         font-size: 28px;
-        line-height: 32px;
       }
       &.fw-story {
         text-align: center;
@@ -118,7 +120,6 @@ div.frontpage {
       h2 {
         margin-top: 0;
         font-size: 28px;
-        line-height: 32px;
         margin-bottom: 10px;
       }
     }
@@ -154,7 +155,6 @@ div.frontpage {
         }
         h2 {
           font-size: 18px;
-          line-height: 24px;
           margin: 0;
         }
         .image {
@@ -197,7 +197,7 @@ div.sections {
         border-bottom: 1px dotted #C8C8C8;
       }
       .left, .right {
-        float: none;
+        display: block;
       }
     }
   }
@@ -220,17 +220,20 @@ div.sections {
 
     section.homepage {
       &.section-1 {
+        display: table;
         article.section-xl {
           border-bottom: none;
         }
+        .left, .right {
+          display: table-cell;
+          vertical-align: top;
+        }
         .left {
           width: 66.3%;
-          float: left;
           padding-right: 15px;
         }
         .right {
           width: 33.3%;
-          float: right;
           border-left: 1px solid #E6E6E6;
           padding-left: 15px;
         }
@@ -262,7 +265,6 @@ h1.section, h2.title {
     font-family: $font-secondary;
     font-size: 26px;
     color: #242424;
-    line-height: 28px;
     letter-spacing: 1px;
     text-transform: uppercase;
     margin: 25px 0;
@@ -283,14 +285,17 @@ h1.section, h2.title {
 // Section articles
 
 article.section-top {
-  .left {
-    float: left;
-    width: 40%;
-    margin-right: 20px;
+  border-bottom: 1px dotted #E0E0E0;
+  @media($bp-larger-than-mobile){
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #E0E0E0;
+    .left {
+      width: 40%;
+      margin-right: 20px;
+    }
   }
-  padding-bottom: 25px;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #E0E0E0;
+
 }
 
 // Stacked articles (used in .section-1)
@@ -298,13 +303,16 @@ article.stacked {
   border-bottom: 1px dotted #C8C8C8;
   padding-bottom: 15px;
   margin-bottom: 15px;
-  &:last-child {
-    padding: 0;
-    margin: 0;
+  &:last-of-type {
     border: none;
+    margin-bottom: 0;
+  }
+  @media($bp-larger-than-mobile){
+    h4.headline {
+      font-size: 16px;
+    }
   }
 }
-
 
 // Headline bullets
 ul.article-headlines {
@@ -322,43 +330,54 @@ ul.article-headlines {
     }
     h2 {
       font-size: 14px;
-      line-height: 20px;
       font-weight: 800;
       margin: 0;
     }
   }
 }
 
+div.featured-image-container {
+  display: none;
+}
+
 article.col {
-  box-sizing: border-box;
-  float: left;
-  width: 33.3%;
-  padding: 0 10px;
-  &:first-child {
-    padding-left: 0;
-  }
+  border-bottom: 1px dotted #C8C8C8;
   &:last-child {
-    padding-right: 0;
-  }
-  h4.headline {
-    font-size: 16px;
-    line-height: 21px;
-    margin: 0;
+    border-bottom: none;
   }
 }
 
-// Featured image
-
-div.featured-image-container {
-  overflow: hidden;
-  float: left;
-  width: 72px;
-  height: 72px;
-  margin-right: 12px;
-  margin-bottom: 5px;
-  img {
-    width: auto;
-    height: 100%;
+@media($bp-larger-than-mobile){
+  article.col {
+    box-sizing: border-box;
+    float: left;
+    width: 33.3%;
+    padding: 0 10px;
+    border-bottom: none;
+    &:first-child {
+      padding-left: 0;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+    h4.headline {
+      font-size: 21px;
+      margin: 0;
+    }
+  }
+  // Featured image
+  div.featured-image-container {
+    display: block;
+    overflow: hidden;
+    float: left;
+    width: 72px;
+    height: 72px;
+    margin-right: 12px;
+    margin-bottom: 5px;
+    img {
+      width: auto;
+      height: 100%;
+    }
   }
 }
 
@@ -375,19 +394,26 @@ p.snippet {
 
 h1, h2, h3, h4, h5 {
   &.headline {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-family: $font-headline;
+    font-weight: 800;
+    line-height: 1.3em;
+    a {
+      color: inherit;
+      text-decoration: none;
+      &:hover {
+        color: rgb(0, 113, 201);
+      }
+    }
+  }
+  @media($bp-larger-than-mobile){
+    &.headline {
       margin: 7px 0;
-      font-family: $font-headline;
-      font-weight: 800;
       &:first-child {
         margin-top: 0;
       }
-      a {
-        color: inherit;
-        text-decoration: none;
-        &:hover {
-          color: rgb(0, 113, 201);
-        }
-      }
+    }
   }
 }
 
@@ -397,13 +423,16 @@ h2.headline {
 
 h3.headline {
   font-size: 24px;
-  line-height: 32px;
-  margin: 10px 0;
 }
 
 h4.headline {
-  font-size: 17px;
-  line-height: 25px;
+  font-size: 21px;
+}
+
+@media($bp-larger-than-mobile){
+  h4.headline {
+    font-size: 17px;
+  }
 }
 
 span.byline {
@@ -420,12 +449,12 @@ span.byline {
   display: none;
 }
 
-span.timestamp {
+p.snippet span.timestamp {
   font-family: $font-default;
   color: #0071C9;
   font-weight: 500;
   font-size: 13px;
-  margin-right: 10px;
+  margin-right: 8px;
 
 }
 
