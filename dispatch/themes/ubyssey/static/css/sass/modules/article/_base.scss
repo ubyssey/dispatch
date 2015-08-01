@@ -11,9 +11,16 @@
 // Article Slide
 
 div.article-slide {
-    border-top: 1px solid #DADADA;
-    margin-top: 100px;
-    padding-top: 25px;
+  border-top: 1px solid #DADADA;
+  margin-top: 100px;
+  main.article {
+    margin-top: 0;
+  }
+  .advertisement.leaderboard {
+    background: #F5F5F5;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #DADADA;
+  }
 }
 
 div.indicator {
