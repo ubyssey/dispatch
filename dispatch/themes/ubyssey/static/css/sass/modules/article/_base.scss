@@ -8,6 +8,22 @@
 }
 
 
+// Article Slide
+
+div.article-slide {
+    border-top: 1px solid #DADADA;
+    margin-top: 100px;
+    padding-top: 25px;
+}
+
+div.indicator {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2000;
+}
+
+
 // Article
 
 main.article.default {
