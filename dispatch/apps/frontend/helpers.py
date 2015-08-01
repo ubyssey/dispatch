@@ -24,7 +24,7 @@ class TemplateRegistry:
 class ComponentRegistry(TemplateRegistry):
     def get_for_spot(self, spot):
         templates = []
-        for template in self.templates:
+        for template in self.all():
             if spot in template.compatible_spots:
                 templates.append(template)
         return templates
