@@ -125,7 +125,7 @@ a.image {
   img {
     display: block;
   }
-  @media($bp-larger-than-mobile){
+  @media($bp-larger-than-phablet){
     margin-bottom: 0;
   }
 }
