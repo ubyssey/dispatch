@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ article.long_headline }} | The Ubyssey</title>
+    <title>{{ title }}</title>
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/favicons/apple-touch-icon-57x57.png' %}">
     <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/favicons/apple-touch-icon-60x60.png' %}">
@@ -25,8 +25,8 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css"/>
 </head>
 <body>
-{% block content %}
-{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}{% endblock %}
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <script src="{% static 'manager/js/dist/dispatch.js' %}" type="text/javascript"></script>
