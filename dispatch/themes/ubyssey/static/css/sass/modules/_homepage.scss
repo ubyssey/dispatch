@@ -25,10 +25,7 @@ div.frontpage {
   div.cell {
     vertical-align: top;
     box-sizing: border-box;
-    &.left, &.right {
-      //width: 340px;
-      width: 29%;
-    }
+
     &.left {
 
       display: table-footer-group;
@@ -36,7 +33,6 @@ div.frontpage {
       padding-right: 15px;
       border-right: 1px solid #E6E6E6;
       article, ul.article-headlines {
-
         border-bottom: 1px dotted #C8C8C8;
         &:last-child {
           border-bottom: none;
@@ -54,15 +50,20 @@ div.frontpage {
       padding: 0 15px;
       border-right: 1px solid #E6E6E6;
     }
-    &.right {
-      padding-left: 15px;
-    }
+
+
 
   }
 
   @media($bp-larger-than-mobile){
     div.cell {
       display: table-cell;
+      &.left, &.right {
+        width: 29%;
+      }
+      &.right {
+        padding-left: 15px;
+      }
       &.left, &.middle {
         display: table-cell;
       }
@@ -70,7 +71,7 @@ div.frontpage {
         article, ul.article-headlines {
           padding-top: 15px;
           padding-bottom: 15px;
-          &.first-child {
+          &:first-child {
             padding-top: 0;
           }
         }
@@ -110,6 +111,7 @@ div.frontpage {
         margin-top: 0;
         font-size: 28px;
         line-height: 32px;
+        margin-bottom: 10px;
       }
     }
 
@@ -136,6 +138,11 @@ div.frontpage {
         border-bottom: none;
         h1.headline {
           margin: 8px 0;
+        }
+      }
+      &.secondary {
+        h2.headline {
+          margin: 0;
         }
       }
       &.thumb {
@@ -306,7 +313,7 @@ p.snippet {
   font-size: 14px;
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 1.75em;
+  line-height: 1.6em;
   color: #6B6B6B;
 }
 
@@ -360,7 +367,7 @@ span.byline-inline {
   color: #0071C9;
   font-weight: 500;
   font-size: 13px;
-  margin-right: 12px;
+  margin-right: 10px;
 
 }
 
@@ -371,7 +378,7 @@ span.byline-inline {
   span.byline-inline {
     display: none;
   }
-  div.snippet {
+  p.snippet {
     color: #363636;
   }
 }
