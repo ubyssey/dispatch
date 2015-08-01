@@ -77,7 +77,7 @@ body {
 
 
 .hide-desktop {
-  @media($bp-larger-than-mobile){
+  @media($bp-larger-than-phablet){
     display: none;
   }
 }
