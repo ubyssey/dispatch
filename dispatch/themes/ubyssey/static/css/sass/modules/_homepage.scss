@@ -258,6 +258,13 @@ h1.section, h2.title {
   margin-top: 0;
   margin-bottom: 0;
   padding: 15px 0;
+
+}
+
+html.hairlines {
+  h1.section, h2.title {
+    border-width: 0.5px 0;
+  }
 }
 
 @media($bp-larger-than-phablet){
