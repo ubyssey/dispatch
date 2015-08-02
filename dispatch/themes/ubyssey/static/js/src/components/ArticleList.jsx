@@ -1,5 +1,6 @@
 var React = require('react');
 
+var Article = require('./Article.jsx');
 var LinkedList = function(array){
 
     var Node = function(id){
@@ -137,8 +138,7 @@ var ArticleList = React.createClass({
     },
     render: function(){
         var articles = this.state.articles.map(function(article, i){
-            var html = {'__html': article};
-            return (<div className="article-slide" key={article.parent} dangerouslySetInnerHTML={html}></div>);
+            return (<Article articleId={article.id} html={article.html} key={article.id} />);
         });
         return (
             <div>
