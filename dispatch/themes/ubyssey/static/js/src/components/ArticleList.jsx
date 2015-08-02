@@ -1,6 +1,7 @@
 var React = require('react');
 
 var Article = require('./Article.jsx');
+var CommentsBar = require('./CommentsBar.jsx');
 var LinkedList = function(array){
 
     var Node = function(id){
@@ -144,6 +145,7 @@ var ArticleList = React.createClass({
             <div>
                 <div className="indicator">{this.state.active.id}</div>
                 {articles}
+                <CommentsBar breakpoint={960} userId={this.props.userId} articleId={this.state.active.id} />
             </div>
             );
     }
