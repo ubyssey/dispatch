@@ -8,7 +8,7 @@
     display: none;
     padding: 25px 0;
     text-align: center;
-    @media($bp-larger-than-mobile){
+    @media($bp-larger-than-phablet){
       display: block;
     }
   }
@@ -26,6 +26,15 @@
     &.left {
       float: left;
       padding-right: 30px;
+    }
+    &.top {
+      display: none;
+    }
+
+    @media($bp-larger-than-mobile){
+      &.top {
+        display: block;
+      }
     }
   }
 }

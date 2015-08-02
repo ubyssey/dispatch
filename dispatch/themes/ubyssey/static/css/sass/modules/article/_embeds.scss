@@ -34,6 +34,15 @@
       color: #FFFFFF;
       font-weight: normal;
     }
+
+    div.four.columns {
+      display: none;
+    }
+  }
+  @media($bp-larger-than-mobile){
+    div.meta div.four.columns {
+      display: block;
+    }
   }
 }
 
@@ -50,6 +59,7 @@
     }
   }
   ul.thumbs {
+    display: none;
     list-style-type: none;
     padding: 0;
     margin: 0 -2px;
@@ -70,6 +80,13 @@
         }
       }
     }
+  }
+
+  @media($bp-larger-than-mobile){
+    ul.thumbs {
+      display: block;
+    }
+
   }
 }
 

@@ -8,22 +8,57 @@
 }
 
 
+// Article Slide
+
+div.article-slide {
+  border-top: 1px solid #DADADA;
+  margin-top: 100px;
+  main.article {
+    margin-top: 0;
+  }
+  .advertisement.leaderboard {
+    background: #F5F5F5;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #DADADA;
+  }
+}
+
+div.indicator {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2000;
+}
+
+
 // Article
 
 main.article.default {
   h1.headline {
-    border-top: 2px solid #3E3E3E;
-    border-bottom: 1px solid #D2D2D2;
-    padding: 25px 0;
-    line-height: 46px;
+    line-height: 38px;
+    margin-bottom: 15px;
   }
   div.article-byline {
     float: left;
   }
+  @media($bp-larger-than-mobile){
+    h1.headline {
+      line-height: 46px;
+      border-top: 2px solid #3E3E3E;
+      border-bottom: 1px solid #D2D2D2;
+      padding: 25px 0;
+      margin: 0;
+    }
+  }
+
 }
 
 main.article {
   margin-top: 49px;
+
+  div.headline-container {
+    padding: 25px 0 30px 0;
+  }
 
   h1.headline {
     font-family: $font-headline;
@@ -32,13 +67,14 @@ main.article {
     margin: 0;
   }
 
-  div.article-content {
-    p, div.caption {
-      max-width: 585px;
-      @media(max-width: 625px){
-        padding: 0 20px;
-      }
+  div.article-content p, div.caption {
+    max-width: 585px;
+    @media(max-width: 625px){
+      padding: 0 20px;
     }
+  }
+
+  div.article-content {
 
     p {
       font-family: $font-body;
@@ -58,7 +94,6 @@ main.article {
     }
   }
   div.article-info {
-    padding: 25px 0;
     color: #222222;
   }
   div.article-byline {
@@ -74,7 +109,63 @@ main.article {
       font-size: 13px;
     }
   }
+
+  @media($bp-larger-than-mobile){
+    div.headline-container {
+      padding: 0;
+    }
+    div.article-info {
+      padding: 25px 0;
+    }
+  }
+
 }
+
+
+// Right column
+
+div.right-column {
+
+  img {
+    width: 100%;
+  }
+
+  div.sidebar {
+    display: none;
+  }
+
+  div.featured-image {
+    margin-bottom: 20px;
+  }
+
+  @media($bp-larger-than-mobile){
+    position: relative;
+    float: right;
+    padding: 0 0 40px 40px;
+
+    div.featured-image {
+      width: 500px;
+      margin-bottom: 0;
+    }
+
+    div.sidebar {
+      position: absolute;
+      right: 0;
+      width: 300px;
+      &.offset {
+        margin-top: 4em;
+      }
+    }
+  }
+
+
+}
+
+div.side {
+    float: right;
+}
+
+
 
 // Social/share icons
 
@@ -88,8 +179,9 @@ div.article-social {
     padding: 0;
     list-style-type: none;
     li a {
-      font-family: $font-secondary;
-      font-size: 12px;
+      font-family: $font-default;
+      font-size: 14px;
+      font-weight: 500;
       i, span {
         vertical-align: middle;
       }
@@ -119,7 +211,7 @@ div.article-social.left {
   float: left;
   ul li {
     display: block;
-    padding: 15px 0;
+    padding: 15px;
     border-top: 1px solid #E4E4E4;
     margin: 0;
   }
