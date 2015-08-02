@@ -99,7 +99,6 @@ div.frontpage {
     }
 
     &.primary {
-      padding-top: 20px;
       border-bottom: 1px dotted #C8C8C8;
       img {
         width: 100%;
@@ -108,12 +107,6 @@ div.frontpage {
         margin-top: 15px;
         margin-bottom: 10px;
         font-size: 28px;
-      }
-      &.fw-story {
-        text-align: center;
-        h1 {
-          margin: 15px 0;
-        }
       }
     }
     &.secondary {
@@ -137,11 +130,16 @@ div.frontpage {
 
     @media($bp-larger-than-phablet){
       &.primary {
-        padding-top: 0;
         border-bottom: none;
         h1.headline {
           margin: 12px 0;
           font-size: $font-size-26px;
+        }
+        &.fw-story {
+          text-align: center;
+          h1 {
+            margin: 15px 0;
+          }
         }
       }
       &.secondary {
@@ -168,11 +166,15 @@ div.frontpage {
   }
 }
 
-article.padded {
+article.padded, div.meta {
   padding: 20px;
   @media($bp-larger-than-phablet){
     padding: 0;
   }
+}
+
+div.meta {
+  padding-top: 0;
 }
 
 div.container.large {
