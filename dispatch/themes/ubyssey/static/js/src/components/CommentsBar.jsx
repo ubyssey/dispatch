@@ -27,7 +27,7 @@ var CommentsBar = React.createClass({
         }.bind(this));
 
     },
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps: function(nextProps){
         this.initialized = false;
         this.toggle(false);
     },
