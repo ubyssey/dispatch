@@ -13,9 +13,9 @@ div.homepage-section {
 }
 
 div.frontpage-container {
-  display: table;
-  margin-top: 49px;
+  margin-top: 61px;
   @media($bp-larger-than-phablet){
+    display: table;
     margin-top: 20px;
   }
 }
