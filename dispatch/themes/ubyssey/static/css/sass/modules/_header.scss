@@ -198,19 +198,20 @@ header.mobile {
   height: 54px;
   line-height: 54px;
   background: rgba(255, 255, 255, 0.99);
-
+  box-shadow: none;
   display: table;
 
   a.left, a.right, a.logo {
     display: table-cell;
+    vertical-align: middle;
   }
 
   a.left, a.right {
     box-sizing: border-box;
     width: 30%;
 
-    font-size: 18px;
-    color: #616161;
+    font-size: 20px;
+    color: #000;
   }
 
   a.left {
