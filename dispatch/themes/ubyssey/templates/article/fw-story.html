@@ -36,7 +36,8 @@
                 </div>
             </div>
         {% elif header_layout == 'banner-image' %}
-            <div class="banner-image" style="background-image: url('{{ article.featured_image.image.get_absolute_url }}');">
+            <div class="banner-image">
+                <div class="backdrop" style="background-image: url('{{ article.featured_image.image.get_absolute_url }}');"></div>
                 <div class="headline-container">
                     <div class="container">
                         <h1 class="headline">{{ article.long_headline }}</h1>
@@ -46,9 +47,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="featured-image">
+                    <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-url="{{ article.featured_image.image.get_absolute_url }}" data-credit="{{ article.featured_image.get_credit }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
+                    <div class="caption">
+                        {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+                    </div>
+                </div>
             </div>
         {% endif %}
-        </div>
     </div>
     {% endwith %}
 {% endblock %}

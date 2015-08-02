@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load humanize %}
 {% block content %}
 <div class="advertisement homepage leaderboard">
     <img src="{% static 'img/sample-leaderboard-ad.png' %}">
 </div>
 {% include 'headers/main.html' %}
-<div class="container large">
+{% include 'headers/topbar.html' %}
+<div class="container large no-padding">
     <div class="homepage-section frontpage-container">
         <div class="frontpage">
             <div class="cell left">
             {% with articles.secondary as article %}
-                <article class="secondary">
+                <article class="secondary padded">
                     <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span> </span>
-                    <p class="snippet">{{ article.snippet }}</p>
+                    <p class="snippet"><span class="timestamp">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
                 </article>
             {% endwith %}
             {% for article in articles.thumbs %}
-                <article class="thumb row">
-                    <div class="left">
+                <article class="thumb row padded">
+                    <div class="image">
                         <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
                     </div>
                     <div>
                         <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                        <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span></p>
                     </div>
                 </article>
             {% endfor %}
@@ -35,10 +37,12 @@
             <div class="cell middle">
                 {% with articles.primary as article %}
                 <article class="primary {{ article.template }}">
-                    <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a><br/>
-                    <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
-                    <p class="snippet">{{ article.snippet }}</p>
+                    <a class="image" href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a>
+                    <div class="meta">
+                        <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
+                    </div>
                 </article>
                 {% endwith %}
             </div>

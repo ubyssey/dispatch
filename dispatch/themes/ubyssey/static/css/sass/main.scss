@@ -28,35 +28,14 @@ div.container {
     max-width: 960px;
     padding: 0;
   }
+  &.large {
+    &.no-padding {
+      max-width: 1220px;
+    }
+  }
 }
 
 //////
-
-div.right-column {
-    padding: 0 0 40px 40px;
-    float: right;
-    position: relative;
-    div.featured-image {
-      width: 500px;
-    }
-}
-
-div.right-column img {
-    width: 100%;
-}
-
-div.side {
-    float: right;
-}
-
-div.sidebar {
-    position: absolute;
-    right: 0;
-    width: 300px;
-    &.offset {
-      margin-top: 4em;
-    }
-}
 
 div.slideshow {
     display: none;
@@ -138,4 +117,15 @@ div.navigation a:hover {
 
 .no-scroll {
     overflow: hidden;
+}
+
+a.image {
+  display: block;
+  margin-bottom: 15px;
+  img {
+    display: block;
+  }
+  @media($bp-larger-than-phablet){
+    margin-bottom: 0;
+  }
 }
