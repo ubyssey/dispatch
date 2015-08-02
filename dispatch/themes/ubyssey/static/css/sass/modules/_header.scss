@@ -197,9 +197,33 @@ header.topbar {
 header.mobile {
   height: 54px;
   line-height: 54px;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.99);
+
+  display: table;
+
+  a.left, a.right, a.logo {
+    display: table-cell;
+  }
+
+  a.left, a.right {
+    box-sizing: border-box;
+    width: 30%;
+
+    font-size: 18px;
+    color: #616161;
+  }
+
+  a.left {
+    padding-left: 25px;
+  }
+
+  a.right {
+    padding-right: 25px;
+    text-align: right;
+  }
+
   a.logo {
-    display: inline-block;
+    text-align: center;
     width: 40%;
     img {
       vertical-align: middle;

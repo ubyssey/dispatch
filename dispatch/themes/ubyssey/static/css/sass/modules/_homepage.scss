@@ -389,11 +389,14 @@ article.col {
 
 p.snippet {
   font-family: $font-default;
-  font-size: 13.5px;
+  font-size: 14px;
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.5em;
   color: #6B6B6B;
+  @media($bp-larger-than-phablet){
+    font-size: 13.5px;
+  }
 }
 
 //headlines
