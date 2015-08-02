@@ -161,7 +161,7 @@ div.frontpage {
   }
 }
 
-article.padded, div.meta {
+article.padded, article div.meta {
   padding: 20px 15px;
   @media($bp-larger-than-phablet){
     padding: 0;
