@@ -13,17 +13,19 @@ $bp-comments-bar: "min-width: 960px" !default;
   }
 
   @media($bp-comments-bar){
+    position: fixed;
+    top: 49px;
+    bottom: 0;
+    right: 0;
     div.inner {
       display: flex;
+      position: absolute;
       flex-direction: column;
-      position: fixed;
-      top: 49px;
-      bottom: 0;
       background: #fff;
       border-left: 1px solid #D8D8D8;
       width: 525px;
       right: -526px;
-
+      height: 100%;
       -moz-transition: right 0.3s ease-in-out;
       -o-transition: right 0.3s ease-in-out;
       -webkit-transition: right 0.3s ease-in-out;
@@ -38,10 +40,6 @@ $bp-comments-bar: "min-width: 960px" !default;
     div.close, div.sort, div.comments-list, div.comments-field {
       padding-left: 30px;
       padding-right: 30px;
-    }
-
-    div.comments-field {
-      overflow: visible;
     }
 
     div.close button {
@@ -68,7 +66,7 @@ div.comment {
     span.user {
       color: #000;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 500;
       margin-right: 5px;
     }
     margin: 8px 0;
@@ -128,6 +126,7 @@ div.comments-field {
     width: 100%;
   }
   button, a.button {
+    font-family: Helvetica, Arial, sans-serif;
     display: inline-block;
     border-radius: 2px;
     color: #4E4D4D;
@@ -164,7 +163,7 @@ div.close {
   height: 30px;
   line-height: 30px;
   padding-top: 25px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   i.fa {
     margin-right: 5px;
   }

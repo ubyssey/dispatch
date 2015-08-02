@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth import get_user_model
+from django.shortcuts import render_to_response
 from django.db.models import Q
 
 from rest_framework import viewsets, generics, mixins, filters, status
@@ -144,6 +145,21 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @detail_route(methods=['get'],)
+    def rendered(self, request, parent_id=None):
+
+        article = Article.objects.get(parent_id=parent_id, head=True)
+
+
+        print article.get_template()
+        context = {
+            'article': article,
+            'base_template': 'blank.html',
+        }
+
+        return render_to_response(article.get_template(), context)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
 
