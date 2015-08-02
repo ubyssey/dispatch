@@ -104,12 +104,9 @@ nav.main {
   }
 }
 
-// Topbar header
+// Mobile & topbar header
 
-
-header.topbar {
-  height: 48px;
-  line-height: 48px;
+header.topbar, header.mobile {
   width: 100%;
   z-index: 50;
   position: fixed;
@@ -117,7 +114,11 @@ header.topbar {
   background: #fff;
   border-bottom: 1px solid #DADADA;
   box-shadow: rgba(0,0,0,0.15) 0 0 3px 0;
+}
 
+header.topbar {
+  height: 48px;
+  line-height: 48px;
   .section-name {
       display: inline-block;
       margin-right: 10px;
@@ -190,5 +191,22 @@ header.topbar {
     overflow: hidden;
     vertical-align: middle;
     margin-top: -2px;
+  }
+}
+
+header.mobile {
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  a.logo {
+    display: inline-block;
+    width: 40%;
+    img {
+      vertical-align: middle;
+      width: 100%;
+    }
+  }
+  @media($bp-larger-than-phablet){
+    display: none;
   }
 }
