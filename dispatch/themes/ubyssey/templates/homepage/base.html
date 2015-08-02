@@ -24,7 +24,7 @@
                     </div>
                     <div>
                         <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
-                        <p class="snippet"><span class="timestamp">{{ article.published_at|naturaltime }}</span></p>
+                        <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span></p>
                     </div>
                 </article>
             {% endfor %}
