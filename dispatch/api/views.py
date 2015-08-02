@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth import get_user_model
-from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 from django.db.models import Q
 
 from rest_framework import viewsets, generics, mixins, filters, status
@@ -151,14 +151,19 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         article = Article.objects.get(parent_id=parent_id, head=True)
 
-
-        print article.get_template()
         context = {
             'article': article,
             'base_template': 'blank.html',
         }
 
-        return render_to_response(article.get_template(), context)
+        data = {
+            'id': article.parent_id,
+            'long_headline': article.long_headline,
+            'url': article.get_absolute_url(),
+            'html': render_to_string(article.get_template(), context)
+        }
+
+        return Response(data)
 
 
 class CommentViewSet(viewsets.ModelViewSet):

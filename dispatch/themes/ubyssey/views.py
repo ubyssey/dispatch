@@ -52,6 +52,7 @@ class UbysseyTheme(DefaultTheme):
         context = {
             'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
             'article': article,
+            'reading_list': article.get_reading_list(),
             'base_template': 'base.html'
         }
 
