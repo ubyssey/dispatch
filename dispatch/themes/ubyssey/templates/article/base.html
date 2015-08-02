@@ -10,7 +10,7 @@
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     {% endblock %}
-    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ article.get_reading_list_ids }}">
+    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ reading_list.ids }}" data-list-name="{{ reading_list.name }}" data-headline="{{ article.long_headline }}" data-url="{{ article.get_absolute_url }}">
         {% block banner %}
         <div class="container">
             <div class="headline-container">
@@ -53,7 +53,6 @@
                 {% block pre-content %}{% endblock %}
                 {{ article.get_html|safe }}
             </div>
-            <div id="comments-bar"><div class="inner"></div></div>
         </div>
     </article>
 </main>
