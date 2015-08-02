@@ -167,7 +167,7 @@ div.frontpage {
 }
 
 article.padded, div.meta {
-  padding: 20px;
+  padding: 20px 15px;
   @media($bp-larger-than-phablet){
     padding: 0;
   }
@@ -394,10 +394,10 @@ article.col {
 
 p.snippet {
   font-family: $font-default;
-  font-size: 14px;
+  font-size: 13.5px;
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 1.6em;
+  line-height: 1.5em;
   color: #6B6B6B;
 }
 
@@ -473,9 +473,6 @@ p.snippet span.timestamp {
   span.byline {
     display: block;
   }
-  p.snippet {
-    color: #363636;
-  }
 }
 
 // Multi-zone
@@ -537,7 +534,7 @@ div.article-list {
     list-style-type: none;
 
     > li {
-      padding: 20px;
+      padding: 20px 15px;
       border-bottom: 1px dotted #C8C8C8;
       h2.headline {
         font-family: $font-headline;
