@@ -235,3 +235,7 @@ header.mobile {
     display: none;
   }
 }
+
+html.hairlines header.mobile {
+  border-bottom: 0.5 solid #000;
+}
