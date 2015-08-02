@@ -297,10 +297,12 @@ class Article(Publishable):
         if ref is not None:
             pass
         else:
-            return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+            articles = Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
 
-    def get_reading_list_ids(self, ref=None):
-        return ",".join([str(a.parent_id) for a in self.get_reading_list(ref)])
+        return {
+            'ids': ",".join([str(a.parent_id) for a in articles]),
+            'name': self.section.name
+        }
 
     def get_template(self):
         if self.template != 'default':

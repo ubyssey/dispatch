@@ -13,9 +13,9 @@ div.homepage-section {
 }
 
 div.frontpage-container {
-  display: table;
-  margin-top: 49px;
+  margin-top: 55px;
   @media($bp-larger-than-phablet){
+    display: table;
     margin-top: 20px;
   }
 }
@@ -38,9 +38,6 @@ div.frontpage {
         border-bottom: 1px dotted #C8C8C8;
         &:last-of-type {
           border-bottom: none;
-        }
-        h2.headline {
-          margin-bottom: 5px;
         }
       }
       ul.article-headlines {
@@ -77,6 +74,9 @@ div.frontpage {
         article, ul.article-headlines {
           padding-top: 15px;
           padding-bottom: 15px;
+          h2.headline {
+            margin-bottom: 5px;
+          }
           &:first-child {
             padding-top: 0;
           }
@@ -92,11 +92,6 @@ div.frontpage {
   }
 
   article, li {
-
-    h1, h2 {
-      font-family: $font-headline;
-      margin: 3px 0;
-    }
 
     &.primary {
       border-bottom: 1px dotted #C8C8C8;
@@ -166,8 +161,8 @@ div.frontpage {
   }
 }
 
-article.padded, div.meta {
-  padding: 20px;
+article.padded, article div.meta {
+  padding: 20px 15px;
   @media($bp-larger-than-phablet){
     padding: 0;
   }
@@ -263,6 +258,13 @@ h1.section, h2.title {
   margin-top: 0;
   margin-bottom: 0;
   padding: 15px 0;
+
+}
+
+html.hairlines {
+  h1.section, h2.title {
+    border-width: 0.5px 0;
+  }
 }
 
 @media($bp-larger-than-phablet){
@@ -397,8 +399,11 @@ p.snippet {
   font-size: 14px;
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 1.6em;
+  line-height: 1.5em;
   color: #6B6B6B;
+  @media($bp-larger-than-phablet){
+    font-size: 13.5px;
+  }
 }
 
 //headlines
@@ -409,7 +414,7 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 10px;
     font-family: $font-headline;
     font-weight: 800;
-    line-height: 1.3em;
+    line-height: 1.1em;
     a {
       color: inherit;
       text-decoration: none;
@@ -420,6 +425,7 @@ h1, h2, h3, h4, h5 {
   }
   @media($bp-larger-than-phablet){
     &.headline {
+      line-height: 1.3em;
       margin: 7px 0;
       &:first-child {
         margin-top: 0;
@@ -472,9 +478,6 @@ p.snippet span.timestamp {
 @media($bp-larger-than-phablet){
   span.byline {
     display: block;
-  }
-  p.snippet {
-    color: #363636;
   }
 }
 
@@ -537,7 +540,7 @@ div.article-list {
     list-style-type: none;
 
     > li {
-      padding: 20px;
+      padding: 20px 15px;
       border-bottom: 1px dotted #C8C8C8;
       h2.headline {
         font-family: $font-headline;
