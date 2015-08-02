@@ -1,18 +1,33 @@
 var React = require('react');
 
-var Node = function(data){
-    return {
-        id: data,
-        next: null,
-        prev: null
+var LinkedList = function(array){
+
+    var Node = function(id){
+        return {
+            id: id,
+            next: null,
+            prev: null
+        }
     }
+
+    var tail = Node(array[array.length - 1]);
+    for(var i = array.length - 2; i >= 0; i--){
+        var prev = Node(array[i]);
+        tail.prev = prev;
+        prev.next = tail;
+        tail = prev;
+    }
+    return tail;
+
 }
 
 var ArticleList = React.createClass({
     getInitialState: function(){
+        var articles = this.props.articles;
+        articles.unshift(this.props.firstArticle.id);
+
         return {
-            active: this.buildList(),
-            articles: [],
+            active: LinkedList(articles),
             loading: false
         }
     },
@@ -22,18 +37,7 @@ var ArticleList = React.createClass({
         this.afterLoad = null;
         this.scrollListener();
     },
-    buildList: function(){
-        var articles = this.props.articles;
-        articles.unshift(this.props.firstArticle);
-
-        var tail = Node(this.props.articles[this.props.articles.length - 1]);
-        for(var i = this.props.articles.length - 2; i >= 0; i--){
-            var prev = Node(this.props.articles[i]);
-            tail.prev = prev;
-            prev.next = tail;
-            tail = prev;
         }
-        return tail;
     },
     getArticlePoints: function(){
         var $article = $('#article-'+this.state.active.id);
