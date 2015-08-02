@@ -15,20 +15,25 @@ var CommentsBar = React.createClass({
         this.initialized = false;
 
         if($(window).width() <= this.props.breakpoint){
-            this.loadComments();
+            this.loadComments(this.props.articleId);
         }
 
-        $('.open-comments').click(function(e){
+        $(document).on('click', '.open-comments', function(e){
             e.preventDefault();
             if(!this.initialized){
-                this.loadComments();
+                this.loadComments(this.props.articleId);
             }
             this.toggle(true);
         }.bind(this));
+
     },
-    loadComments: function(){
+    componentWillReceiveProps(nextProps){
+        this.initialized = false;
+        this.toggle(false);
+    },
+    loadComments: function(article_id){
         this.setState({ loading: true });
-        dispatch.articleComments(this.props.articleId, function(data){
+        dispatch.articleComments(article_id, function(data){
             this.initialized = true;
             this.setState({
                 comments: data.results,
@@ -66,23 +71,25 @@ var CommentsBar = React.createClass({
         }.bind(this));
 
         return (
-            <div className={"inner" + (this.state.active ? " active" : "")}>
-                <div className="close">
-                    <div className="u-pull-left">
-                        <h3><i className="fa fa-comment"></i> {this.state.comments.length + " comments"}</h3>
+            <div id="comments-bar">
+                <div className={"inner" + (this.state.active ? " active" : "")}>
+                    <div className="close">
+                        <div className="u-pull-left">
+                            <h3><i className="fa fa-comment"></i> {this.state.comments.length + " comments"}</h3>
+                        </div>
+                        <div className="u-pull-right">
+                            <button onClick={this.toggle.bind(this, false)}><i className="fa fa-close"></i></button>
+                        </div>
                     </div>
-                    <div className="u-pull-right">
-                        <button onClick={this.toggle.bind(this, false)}><i className="fa fa-close"></i></button>
+                    <CommentBox loggedIn={this.props.userId ? true : false} postHandler={this.postComment} />
+                    <div className="sort">
+                        <a href="#" className={this.state.sort == 'recent' ? 'active' : ''} onClick={this.changeSort.bind(this, 'recent')}>Recent</a>
+                        &middot;
+                        <a href="#" className={this.state.sort == 'top' ? 'active' : ''} onClick={this.changeSort.bind(this, 'top')}>Top</a>
                     </div>
-                </div>
-                <CommentBox loggedIn={this.props.userId ? true : false} postHandler={this.postComment} />
-                <div className="sort">
-                    <a href="#" className={this.state.sort == 'recent' ? 'active' : ''} onClick={this.changeSort.bind(this, 'recent')}>Recent</a>
-                    &middot;
-                    <a href="#" className={this.state.sort == 'top' ? 'active' : ''} onClick={this.changeSort.bind(this, 'top')}>Top</a>
-                </div>
-                <div className="comments-list">
-                    {this.state.loading ? this.renderSpinner() : comments}
+                    <div className="comments-list">
+                        {this.state.loading ? this.renderSpinner() : comments}
+                    </div>
                 </div>
             </div>
             );
