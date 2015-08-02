@@ -39,6 +39,16 @@ var ArticleList = React.createClass({
         this.afterLoad = null;
         this.scrollListener();
     },
+    updateHeader: function(topPos){
+
+        if (topPos > 50 && !window.articleHeader){
+            window.articleHeader = true;
+            $('.header-site').hide();
+            $('.header-article').show();
+        } else if (topPos < 50 && window.articleHeader){
+            window.articleHeader = false;
+            $('.header-article').hide();
+            $('.header-site').show();
         }
     },
     getArticlePoints: function(){
@@ -61,6 +71,7 @@ var ArticleList = React.createClass({
 
             if(scrollPos > (points.mid - 40) && scrollPos < (points.mid + 40)){
                 this.loadNext();
+            this.updateHeader(topPos);
             }
 
             if(scrollPos > points.end){
@@ -78,12 +89,11 @@ var ArticleList = React.createClass({
         });
     },
     setPrev: function(){
-        if(!this.state.active.prev){
+        if(!this.state.active.prev)
             return;
-        }
-        this.setState({
-            active: this.state.active.prev,
-        });
+
+        this.setState({ active: this.state.active.prev }, this.updateURL);
+    },
     },
     setNext: function(){
 
@@ -102,13 +112,14 @@ var ArticleList = React.createClass({
             return;
         }
 
-        this.setState({
-            active: this.state.active.next,
-        });
+        this.setState({ active: this.state.active.next }, this.updateURL);
     },
     loadNext: function(){
 
         if(!this.state.active.next || this.state.loading || this.isLoaded(this.state.active.next.id)){
+    updateURL: function(){
+        history.pushState(null, null, this.getArticle(this.state.active.id).url);
+    },
             return;
         }
 
@@ -143,7 +154,7 @@ var ArticleList = React.createClass({
         });
         return (
             <div>
-                <div className="indicator">{this.state.active.id}</div>
+                <ArticleHeader name={this.props.name} headline={this.getArticle(this.state.active.id).long_headline} />
                 {articles}
                 <CommentsBar breakpoint={960} userId={this.props.userId} articleId={this.state.active.id} />
             </div>
