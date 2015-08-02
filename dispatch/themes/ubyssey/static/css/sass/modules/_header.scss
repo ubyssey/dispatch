@@ -3,7 +3,7 @@
 
 // Main header
 
-header.main {
+header.main, header.topbar {
   display: none;
   @media($bp-larger-than-phablet){
     display: block;
@@ -132,7 +132,7 @@ header.topbar {
       }
   }
 
-  .header-article {
+  &.header-article {
       display: none;
   }
 
