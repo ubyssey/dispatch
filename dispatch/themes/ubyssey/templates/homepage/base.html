@@ -13,33 +13,33 @@
             <div class="cell left">
             {% with articles.secondary as article %}
                 <article class="secondary padded">
-                    <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                    <h2 class="headline"><a href="{{ article.get_absolute_url }}?ref=frontpage">{{ article.long_headline }}</a></h2>
                     <p class="snippet"><span class="timestamp">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
                 </article>
             {% endwith %}
             {% for article in articles.thumbs %}
                 <article class="thumb row padded">
                     <div class="image">
-                        <a href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
+                        <a href="{{ article.get_absolute_url }}?ref=frontpage"><img src="{{ article.featured_image.image.get_thumbnail_url }}"/></a>
                     </div>
                     <div>
-                        <h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2>
+                        <h2 class="headline"><a href="{{ article.get_absolute_url }}?ref=frontpage">{{ article.long_headline }}</a></h2>
                         <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span></p>
                     </div>
                 </article>
             {% endfor %}
                <ul class="article-headlines">
             {% for article in articles.bullets %}
-                <li><a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a></li>
+                <li><a href="{{ article.get_absolute_url }}?ref=frontpage"><h2 class="headline">{{ article.long_headline }}</h2></a></li>
             {% endfor %}
                 </ul>
             </div>
             <div class="cell middle">
                 {% with articles.primary as article %}
                 <article class="primary {{ article.template }}">
-                    <a class="image" href="{{ article.get_absolute_url }}"><img src="{{ article.featured_image.image.get_medium_url }}"/></a>
+                    <a class="image" href="{{ article.get_absolute_url }}?ref=frontpage"><img src="{{ article.featured_image.image.get_medium_url }}"/></a>
                     <div class="meta">
-                        <a href="{{ article.get_absolute_url }}"><h1 class="headline">{{ article.long_headline }}</h1></a>
+                        <a href="{{ article.get_absolute_url }}?ref=frontpage"><h1 class="headline">{{ article.long_headline }}</h1></a>
                         <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                         <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
                     </div>
