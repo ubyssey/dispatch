@@ -1,6 +1,5 @@
 var React = require('react');
 var Youtube = require('./modules/Youtube.js');
-
 var ArticleList = require('./components/ArticleList.jsx');
 
 window.articleHeader = false;
@@ -12,7 +11,6 @@ $(function(){
         $('.header-article').show();
     }
 });
-
 
 var articleId = $('article').data('id');
 var articleHeadline = $('article').data('headline');
@@ -36,6 +34,6 @@ var firstArticle = {
 };
 
 var articleList = React.render(
-    <ArticleList name={listName} firstArticle={firstArticle} articles={articleIds} userId={userId} />,
+    <ArticleList breakpoint={960} name={listName} firstArticle={firstArticle} articles={articleIds} userId={userId} />,
     document.getElementById('article-list')
 );
