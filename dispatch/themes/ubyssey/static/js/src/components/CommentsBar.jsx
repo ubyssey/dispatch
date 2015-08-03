@@ -28,8 +28,10 @@ var CommentsBar = React.createClass({
 
     },
     componentWillReceiveProps: function(nextProps){
-        this.initialized = false;
-        this.toggle(false);
+        if(nextProps.articleId != this.props.articleId){
+            this.initialized = false;
+            this.toggle(false);
+        }
     },
     loadComments: function(article_id){
         this.setState({ loading: true });
