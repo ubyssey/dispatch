@@ -80,10 +80,7 @@ class Person(Model):
     is_admin = BooleanField(default=True)
 
     def __str__(self):
-        if self.full_name:
-            return self.full_name
-        else:
-            return self.first_name + ' ' + self.last_name
+        return self.full_name
 
     def delete(self):
         try:
