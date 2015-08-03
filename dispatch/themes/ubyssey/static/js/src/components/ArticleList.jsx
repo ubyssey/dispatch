@@ -182,9 +182,9 @@ var ArticleList = React.createClass({
         });
         return (
             <div>
-                <ArticleHeader name={this.props.name} headline={this.getArticle(this.state.active.id).long_headline} />
+                <ArticleHeader progress={this.state.progress} name={this.props.name} headline={this.getArticle(this.state.active.data).long_headline} />
                 {articles}
-                <CommentsBar breakpoint={960} userId={this.props.userId} articleId={this.state.active.id} />
+                <CommentsBar breakpoint={this.props.breakpoint} userId={this.props.userId} articleId={this.state.active.data} />
             </div>
             );
     }
