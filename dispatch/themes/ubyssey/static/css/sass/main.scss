@@ -8,6 +8,7 @@
 @import 'modules/article/base';
 @import 'modules/article/embeds';
 @import 'modules/article/comments_bar';
+@import 'modules/article/gallery';
 
 @import 'modules/advertisements';
 
@@ -55,12 +56,13 @@ div.image-container {
     height: 100%;
     display: table;
     margin: 0 auto;
-    max-width: 90%;
+    width: 100%;
 }
 
 div.image-inner {
     display: table-cell;
     vertical-align: middle;
+    width: 100%;
 }
 
 p.slide-caption {
