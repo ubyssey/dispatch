@@ -1,14 +1,60 @@
 var React = require('react');
+var LinkedList = require('../modules/LinkedList.js');
+var GallerySlide = require('./GallerySlide.jsx');
+var Hammer = require('hammerjs');
 
 var Gallery = React.createClass({
     getInitialState: function(){
         return {
+            active: null,
             index: false,
             image: false,
             visible: false,
+            deltax: 0
         }
     },
+    componentWillMount: function(){
+        this.images = LinkedList(this.props.images);
+    },
     componentDidMount: function(){
+
+        //this.preloadImages();
+
+        var myElement = React.findDOMNode(this);
+        this.toucharea = new Hammer(myElement);
+
+        var base = -($(window).width());
+        var left = 0;
+
+        this.toucharea.on("panmove", function(event){
+            left = base + event.deltaX;
+            $('.slides').css({
+                'left': left,
+                'padding-left': $(window).width()
+            });
+            //this.refs.slides.style.left = event.deltaX;
+        }.bind(this));
+
+        this.toucharea.on("panend", function(event){
+            var pos = 0;
+            var callback;
+
+            if(Math.abs(left) > $(window).width() / 3){
+                if(left < 0){
+                    callback = this.next;
+                    pos = -($(window).width());
+                } else {
+                    callback = this.prev;
+                    pos = $(window).width();
+                }
+            }
+
+            $('.slides').animate({ left: base + pos }, 250, function(){
+                console.log('test');
+                callback();
+            });
+        }.bind(this));
+
         this.addSlideTrigger(this.props.trigger);
         this.setupEventListeners();
     },
@@ -42,6 +88,7 @@ var Gallery = React.createClass({
 
     },
     addSlideTrigger: function(target){
+        console.log('adding slide trigger for ' + target);
         $(target).on('click', function(e){
             e.preventDefault();
             var image_id = $(e.target).data("id");
@@ -62,9 +109,30 @@ var Gallery = React.createClass({
             caption: attachment.caption,
         });
     },
-    setCurrentImage: function(imageId){
+    preloadImages: function(){
+        var loaded = [];
+        this.props.images.map(function(image, i){
+            loaded[i] = new Image();
+            loaded[i].src = image.url;
+        });
+    },
+    getImage: function(imageId){
         var index = this.props.imagesTable[imageId];
-        return this.setIndex(index);
+        return this.props.images[index];
+    },
+    getActiveImage: function(imageId){
+        console.log('finding image');
+        console.log(this.images);
+        var active = this.images;
+        while(active){
+            if(active.data.id == imageId)
+                return active;
+            active = active.next;
+        }
+        return null;
+    },
+    setCurrentImage: function(imageId){
+        this.setState({ active: this.getActiveImage(imageId)});
     },
     open: function(imageId){
         this.setCurrentImage(imageId);
@@ -78,12 +146,14 @@ var Gallery = React.createClass({
         $('body').removeClass('no-scroll');
     },
     previous: function(){
-        if(this.state.index == 0) return;
-        this.setIndex(this.state.index - 1);
+        if(!this.state.active || !this.state.active.prev)
+            return
+        this.setState({ active: this.state.active.prev });
     },
     next: function(){
-        if(this.state.index + 1 >= this.props.images.length) return;
-        this.setIndex(this.state.index + 1);
+        if(!this.state.active || !this.state.active.next)
+            return
+        this.setState({ active: this.state.active.next });
     },
     renderImage: function(){
         if(this.state.image){
@@ -108,6 +178,23 @@ var Gallery = React.createClass({
             );
         }
     },
+    renderSlides: function(){
+        //var slidesStyle = { left: -($(window).width()) + this.state.deltax };
+
+        return (
+            <div className="image-inner">
+                <div className="slides" ref="slides">
+                {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : null}
+                {this.state.active ? this.renderSlide(this.state.active, 'active') : null}
+                {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : null}
+                </div>
+            </div>
+            );
+    },
+    renderSlide: function(active, className){
+        var image = active.data;
+        return (<GallerySlide className={className} src={image.url} caption={image.caption} />);
+    },
     render: function() {
         if(this.state.visible){
             var visible = "visible";
@@ -117,9 +204,7 @@ var Gallery = React.createClass({
         return (
             <div className={'slideshow ' + visible}>
                 <div className="image-container">
-                    <div className="image-inner">
-                    {this.renderImage()}
-                    </div>
+                {this.state.active ? this.renderSlides() : null}
                 </div>
             </div>
         );
