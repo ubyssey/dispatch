@@ -3,29 +3,7 @@ var React = require('react');
 var Article = require('./Article.jsx');
 var CommentsBar = require('./CommentsBar.jsx');
 var ArticleHeader = require('./ArticleHeader.jsx');
-
-
-var LinkedList = function(array){
-
-    var Node = function(id){
-        return {
-            id: id,
-            next: null,
-            prev: null
-        }
-    }
-
-    var tail = Node(array[array.length - 1]);
-    for(var i = array.length - 2; i >= 0; i--){
-        var prev = Node(array[i]);
-        tail.prev = prev;
-        prev.next = tail;
-        tail = prev;
-    }
-    return tail;
-
-}
-
+var LinkedList = require('../modules/LinkedList.js');
 
 var ArticleList = React.createClass({
     getInitialState: function(){
@@ -35,7 +13,8 @@ var ArticleList = React.createClass({
         return {
             active: LinkedList(articles),
             articles: [this.props.firstArticle],
-            loading: false
+            loading: false,
+            progress: 0,
         }
     },
     componentWillMount: function(){
@@ -48,7 +27,7 @@ var ArticleList = React.createClass({
 
         this.scrollListener();
         if(this.state.active.next)
-            this.loadNext(this.state.active.next.id);
+            this.loadNext(this.state.active.next.data);
     },
     updateHeader: function(topPos){
 
@@ -67,7 +46,7 @@ var ArticleList = React.createClass({
         return this.state.articles[this.articlesTable[id]];
     },
     getArticlePoints: function(){
-        var $article = $('#article-'+this.state.active.id);
+        var $article = $('#article-'+this.state.active.data);
         var height = $article.height();
         var top = $article.position().top;
         var end = top + height;
@@ -84,7 +63,7 @@ var ArticleList = React.createClass({
 
         var cachedPoints;
         var points;
-        var timer = 0;
+        var timer = 5;
 
         var updateScroll = function(){
 
@@ -93,10 +72,19 @@ var ArticleList = React.createClass({
 
             this.updateHeader(topPos);
 
-            if(cachedPoints != this.state.active.id){
+
+
+            if(cachedPoints != this.state.active.data){
                 points = this.getArticlePoints();
-                cachedPoints = this.state.active.id;
+                cachedPoints = this.state.active.data;
             }
+
+            // Update progress bar
+            if(timer == 5){
+                this.setState({ progress: Math.min( ((bottomPos - points.top) / points.height), 1) });
+                timer = 0;
+            }
+            timer++;
 
             if(bottomPos > points.end)
                 this.prepNext();
@@ -121,16 +109,16 @@ var ArticleList = React.createClass({
     prepNext: function(){
         if(!this.state.active.next || !this.state.active.next.next)
             return
-        if(!this.isLoaded(this.state.active.next.next.id))
-            this.loadNext(this.state.active.next.next.id);
+        if(!this.isLoaded(this.state.active.next.next.data))
+            this.loadNext(this.state.active.next.next.data);
     },
     setNext: function(){
 
         if(!this.state.active.next)
             return;
 
-        if(!this.isLoaded(this.state.active.next.id)){
-            this.loadNext(this.state.active.next.id);
+        if(!this.isLoaded(this.state.active.next.data)){
+            this.loadNext(this.state.active.next.data);
             this.afterLoad = this.setNext;
             return;
         }
@@ -143,7 +131,7 @@ var ArticleList = React.createClass({
         this.setState({ active: this.state.active.next }, this.updateURL);
     },
     updateURL: function(){
-        history.pushState(null, null, this.getArticle(this.state.active.id).url);
+        history.pushState(null, null, this.getArticle(this.state.active.data).url);
     },
     loadNext: function(article_id){
         if(this.state.loading || this.isLoaded(article_id))
