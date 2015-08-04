@@ -14,13 +14,13 @@ var Article = React.createClass({
     setupGalleries: function(){
 
         var gatherImages = function(gallery){
-            var selector = gallery ? '#gallery-' + gallery + ' .gallery-image' : '.article-attachment';
-            var trigger = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '.article-attachment';
+            var selector = gallery ? '#gallery-' + gallery + ' .gallery-image' : '#article-'+this.props.articleId+' .article-attachment';
+            var trigger = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '#article-'+this.props.articleId+' .article-attachment';
             var images = [];
             var imagesTable = {};
             var n = 0;
 
-            $('#article-'+this.props.articleId).find(selector).each(function(){
+            $(selector).each(function(){
                 var id = $(this).data('id');
                 images.push({
                     'id': id,

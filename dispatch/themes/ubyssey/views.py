@@ -49,10 +49,12 @@ class UbysseyTheme(DefaultTheme):
 
         article = self.find_article(request, section, slug)
 
+        ref = request.GET.get('ref', None)
+
         context = {
             'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
             'article': article,
-            'reading_list': article.get_reading_list(),
+            'reading_list': article.get_reading_list(ref=ref),
             'base_template': 'base.html'
         }
 

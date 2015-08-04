@@ -106,7 +106,7 @@ class ArticleManager(Manager):
     def get_revision(self, *args, **kwargs):
         return super(ArticleManager, self).get(*args, **kwargs)
 
-    def get_frontpage(self, reading_times=None, section=None, section_id=None):
+    def get_frontpage(self, reading_times=None, section=None, section_id=None, exclude=[]):
 
         if reading_times is None:
             reading_times = {
@@ -119,6 +119,7 @@ class ArticleManager(Manager):
         context = {
             'section': section,
             'section_id': section_id,
+            'excluded': ",".join(map(str, exclude))
         }
 
         context.update(reading_times)
@@ -135,7 +136,7 @@ class ArticleManager(Manager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
-                WHERE head = 1
+                WHERE head = 1 AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -150,7 +151,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = 1 AND section_id = %(section_id)s
+                WHERE head = 1 AND status = 1 AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -165,7 +166,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = 1
+                WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
@@ -295,13 +296,16 @@ class Article(Publishable):
 
     def get_reading_list(self, ref=None):
         if ref is not None:
-            pass
+            if ref == 'frontpage':
+                articles = Article.objects.get_frontpage(exclude=[self.parent_id])
+                name = 'Top Stories'
         else:
             articles = Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+            name = self.section.name
 
         return {
             'ids': ",".join([str(a.parent_id) for a in articles]),
-            'name': self.section.name
+            'name': name
         }
 
     def get_template(self):

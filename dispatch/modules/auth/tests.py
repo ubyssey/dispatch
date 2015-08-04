@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model, authenticate, login
 from django.db import IntegrityError
-from dispatch.apps.core.models import Person, ContributorRole
+from dispatch.apps.core.models import Person
 
 User = get_user_model()
 
@@ -55,15 +55,6 @@ class PersonTests(TestCase):
             full_name = "John Doe",
         )
         self.p1.save()
-
-    def test_make_contributor(self):
-        writer = ContributorRole(title="writer")
-        writer.save()
-        self.p1.roles.add(writer)
-
-        roles = self.p1.roles.all()
-        if writer not in roles:
-            self.fail()
 
     def test_person_str(self):
         self.assertEquals(self.p1.__str__(), "John Doe")
