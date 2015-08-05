@@ -23,21 +23,18 @@ var Gallery = React.createClass({
         var myElement = React.findDOMNode(this);
         this.toucharea = new Hammer(myElement);
 
-        var base = -($(window).width());
+        var base = 0;
         var left = 0;
 
         this.toucharea.on("panmove", function(event){
             left = base + event.deltaX;
-            $('.slides').css({
-                'left': left,
-                'padding-left': $(window).width()
-            });
+            $('.slides').css({ 'left': left });
             //this.refs.slides.style.left = event.deltaX;
         }.bind(this));
 
         this.toucharea.on("panend", function(event){
             var pos = 0;
-            var callback;
+            var callback = false;
 
             if(Math.abs(left) > $(window).width() / 3){
                 if(left < 0){
@@ -50,8 +47,12 @@ var Gallery = React.createClass({
             }
 
             $('.slides').animate({ left: base + pos }, 250, function(){
-                console.log('test');
-                callback();
+                if(callback){
+                    console.log('switching slides!');
+                    callback(function(){
+                        $('.slides').css({ left: 0 });
+                    });
+                }
             });
         }.bind(this));
 
@@ -145,15 +146,15 @@ var Gallery = React.createClass({
         });
         $('body').removeClass('no-scroll');
     },
-    previous: function(){
+    previous: function(callback){
         if(!this.state.active || !this.state.active.prev)
             return
-        this.setState({ active: this.state.active.prev });
+        this.setState({ active: this.state.active.prev }, callback);
     },
-    next: function(){
+    next: function(callback){
         if(!this.state.active || !this.state.active.next)
             return
-        this.setState({ active: this.state.active.next });
+        this.setState({ active: this.state.active.next }, callback);
     },
     renderImage: function(){
         if(this.state.image){
@@ -184,12 +185,15 @@ var Gallery = React.createClass({
         return (
             <div className="image-inner">
                 <div className="slides" ref="slides">
-                {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : null}
+                {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : this.renderBlankSlide()}
                 {this.state.active ? this.renderSlide(this.state.active, 'active') : null}
-                {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : null}
+                {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : this.renderBlankSlide()}
                 </div>
             </div>
             );
+    },
+    renderBlankSlide(){
+        return(<div className="slide"></div>);
     },
     renderSlide: function(active, className){
         var image = active.data;
