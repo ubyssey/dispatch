@@ -23160,7 +23160,7 @@ var Gallery = React.createClass({displayName: "Gallery",
                     callback = this.next;
                     pos = -($(window).width());
                 } else {
-                    callback = this.prev;
+                    callback = this.previous;
                     pos = $(window).width();
                 }
             }

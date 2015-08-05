@@ -41,7 +41,7 @@ var Gallery = React.createClass({
                     callback = this.next;
                     pos = -($(window).width());
                 } else {
-                    callback = this.prev;
+                    callback = this.previous;
                     pos = $(window).width();
                 }
             }
