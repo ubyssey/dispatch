@@ -23311,7 +23311,7 @@ var Gallery = React.createClass({displayName: "Gallery",
             )
             );
     },
-    renderBlankSlide(){
+    renderBlankSlide: function(){
         return(React.createElement("div", {className: "slide"}));
     },
     renderSlide: function(active, className){
