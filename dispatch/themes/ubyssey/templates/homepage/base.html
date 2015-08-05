@@ -7,7 +7,7 @@
 </div>
 {% include 'headers/main.html' %}
 {% include 'headers/mobile.html' %}
-<div class="container large no-padding">
+<div class="container large">
     <div class="homepage-section frontpage-container">
         <div class="frontpage">
             <div class="cell left">
@@ -61,11 +61,11 @@
             <div class="advert box sidebar-block">
                 <img src="{% static 'img/sample-box-ad.png' %}" />
             </div>
-            <div class="article-list popular sidebar-block">
+            <div class="popular sidebar-block">
                 <h2 class="block-title">Most popular this week</h2>
-                <ol>
+                <ol class="article-list">
                     {% for article in popular %}
-                    <li><h2 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h2></li>
+                    <li><h4 class="headline"><a href="{{ article.get_absolute_url }}?ref=popular&dur=week">{{ article.long_headline }}</a></h4></li>
                     {% endfor %}
                 </ol>
             </div>
@@ -74,14 +74,14 @@
             </div>
             <div class="article-list blog sidebar-block">
                 <h2 class="block-title">From the blog</h2>
-                <ul>
+                <ul class="article-list">
                     {% for article in popular %}
                     <li>
                         <a class="clearfix" href="{{ article.get_absolute_url }}">
                             <div class="featured-image-container">
                                 <img class="featured" src="{{ article.featured_image.image.get_medium_url }}" />
                             </div>
-                            <h2 class="headline">{{ article.long_headline }}</h2>
+                            <h4 class="headline">{{ article.long_headline }}</h4>
                         </a>
                     </li>
                     {% endfor %}
@@ -89,8 +89,9 @@
             </div>
         </div>
     </div>
-    <footer>
-        this is a footer
-    </footer>
 </div>
+{% endblock %}
+
+{% block footer %}
+{% include 'homepage/footer.html' %}
 {% endblock %}

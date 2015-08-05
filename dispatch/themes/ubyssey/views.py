@@ -33,7 +33,7 @@ class UbysseyTheme(DefaultTheme):
 
         page = Homepage()
 
-        popular = Article.objects.get_most_popular(5)
+        popular = Article.objects.get_popular()[:5]
 
         context = {
             'title': "%s - UBC's official student newspaper" % self.SITE_TITLE,
@@ -49,12 +49,15 @@ class UbysseyTheme(DefaultTheme):
 
         article = self.find_article(request, section, slug)
 
+        article.add_view()
+
         ref = request.GET.get('ref', None)
+        dur = request.GET.get('dur', None)
 
         context = {
             'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
             'article': article,
-            'reading_list': article.get_reading_list(ref=ref),
+            'reading_list': article.get_reading_list(ref=ref, dur=dur),
             'base_template': 'base.html'
         }
 
