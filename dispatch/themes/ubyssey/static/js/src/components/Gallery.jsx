@@ -23,41 +23,54 @@ var Gallery = React.createClass({
         var myElement = React.findDOMNode(this);
         this.toucharea = new Hammer(myElement);
 
-        var base = 0;
-        var left = 0;
-
         this.toucharea.on("panmove", function(event){
-            left = base + event.deltaX;
-            $('.slides').css({ 'left': left });
-            //this.refs.slides.style.left = event.deltaX;
+            $('.slides').css({ 'left': event.deltaX });
+        });
+
+        this.toucharea.on('swipeleft', function(){
+            this.swipeSlide('next');
+        }.bind(this));
+
+        this.toucharea.on('swiperight', function(){
+            this.swipeSlide('previous');
         }.bind(this));
 
         this.toucharea.on("panend", function(event){
-            var pos = 0;
-            var callback = false;
-
-            if(Math.abs(left) > $(window).width() / 3){
-                if(left < 0){
-                    callback = this.next;
-                    pos = -($(window).width());
+            if(Math.abs(event.deltaX) > $(window).width() / 3){
+                if(event.deltaX < 0){
+                    this.swipeSlide('previous');
                 } else {
-                    callback = this.previous;
-                    pos = $(window).width();
+                    this.swipeSlide('next');
                 }
+            } else {
+                this.swipeSlide();
             }
-
-            $('.slides').animate({ left: base + pos }, 250, function(){
-                if(callback){
-                    console.log('switching slides!');
-                    callback(function(){
-                        $('.slides').css({ left: 0 });
-                    });
-                }
-            });
         }.bind(this));
 
         this.addSlideTrigger(this.props.trigger);
         this.setupEventListeners();
+    },
+    swipeSlide: function(dir){
+        var pos;
+        var callback = false;
+        if(dir == 'next'){
+            callback = this.next;
+            pos = -($(window).width());
+        } else if(dir == 'previous') {
+            callback = this.previous;
+            pos = $(window).width();
+        } else {
+            pos = 0;
+        }
+
+        $('.slides').animate({ left: pos }, 250, function(){
+            if(callback){
+                console.log('switching slides!');
+                callback(function(){
+                    $('.slides').css({ left: 0 });
+                });
+            }
+        });
     },
     setupEventListeners: function(){
 
