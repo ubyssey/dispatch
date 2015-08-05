@@ -8,7 +8,7 @@
     display: none;
     padding: 25px 0;
     text-align: center;
-    @media($bp-larger-than-phablet){
+    @media($bp-larger-than-tablet){
       display: block;
     }
   }
