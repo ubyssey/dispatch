@@ -2,6 +2,7 @@ var React = require('react');
 var LinkedList = require('../modules/LinkedList.js');
 var GallerySlide = require('./GallerySlide.jsx');
 var Hammer = require('hammerjs');
+//var Modernizr = require('modernizr');
 
 var Gallery = React.createClass({
     getInitialState: function(){
@@ -10,7 +11,8 @@ var Gallery = React.createClass({
             index: false,
             image: false,
             visible: false,
-            deltax: 0
+            deltax: 0,
+            slide_width: $(window).width()
         }
     },
     componentWillMount: function(){
@@ -20,35 +22,182 @@ var Gallery = React.createClass({
 
         //this.preloadImages();
 
-        var myElement = React.findDOMNode(this);
-        this.toucharea = new Hammer(myElement);
+        this.setupEventListeners();
+        this.addSlideTrigger(this.props.trigger);
+        this.initSlider();
+    },
+    initSlider: function(){
 
-        this.toucharea.on("panmove", function(event){
-            $('.slides').css({ 'left': event.deltaX });
+        var element = this.refs.gallery.getDOMNode();
+
+        this.element = $(element);
+
+        this.container = $("ul.slides", this.element);
+
+        this.panes = $("li.slide", this.element);
+
+        this.pane_width = 0;
+        this.pane_height = 0;
+        this.pane_count = this.panes.length;
+
+        this.current_pane = 0;
+
+        this.setPaneDimensions();
+
+        $(window).on("load resize orientationchange", function() {
+            this.setPaneDimensions();
+            this.setState({ slide_width: $(window).width() });
+          //updateOffset();
+        }.bind(this));
+
+        var hammertime = new Hammer(element, { drag_lock_to_axis: true });
+
+        hammertime.on("tap release dragleft dragright swipeleft swiperight dragup dragdown swipeup swipedown", this.handleHammer);
+
+        /* From Modernizr */
+        function whichTransitionEvent(){
+            var t;
+            var el = document.createElement('fakeelement');
+            var transitions = {
+              'transition':'transitionend',
+              'OTransition':'oTransitionEnd',
+              'MozTransition':'transitionend',
+              'WebkitTransition':'webkitTransitionEnd'
+            }
+
+            for(t in transitions){
+                if( el.style[t] !== undefined ){
+                    return transitions[t];
+                }
+            }
+        }
+
+        /* Listen for a transition! */
+        var transitionEvent = whichTransitionEvent();
+        transitionEvent && element.addEventListener(transitionEvent, function() {
+            console.log('Transition complete!  This is the callback, no library needed!');
         });
 
-        this.toucharea.on('swipeleft', function(){
-            this.swipeSlide('next');
-        }.bind(this));
+    },
+    setPaneDimensions: function(){
+        this.pane_width = $(window).width();
+        this.panes.each(function() {
+          console.log(this);
+          $(this).width(this.pane_width);
+        });
 
-        this.toucharea.on('swiperight', function(){
-            this.swipeSlide('previous');
-        }.bind(this));
+        this.container.width(this.pane_width*this.pane_count);
+    },
+    updatePaneDimensions: function(){
+        this.container = $("ul.slides", this.element);
 
-        this.toucharea.on("panend", function(event){
-            if(Math.abs(event.deltaX) > $(window).width() / 3){
-                if(event.deltaX < 0){
-                    this.swipeSlide('previous');
-                } else {
-                    this.swipeSlide('next');
+        this.panes = $("li.slide", this.element);
+
+        this.pane_width = $(window).width();
+
+        this.panes.each(function() {
+          $(this).width(this.pane_width);
+        });
+
+        var containerWidth = this.pane_width*this.panes.length;
+
+        $(this.container).css('width', containerWidth);
+
+        // update pane count
+        this.pane_count = this.panes.length;
+
+        // reset current pane
+        this.showPane(this.current_pane, false);
+    },
+    showPane: function(index, animate) {
+        // between the bounds
+        index = Math.max(0, Math.min(index, this.pane_count-1));
+        this.current_pane = index;
+
+        var offset = -((100/this.pane_count)*this.current_pane);
+
+        this.setContainerOffset(offset, true);
+    },
+    setContainerOffset: function(percent, animate){
+
+
+        console.log('setting offset');
+        console.log(this.pane_count);
+
+        this.container.removeClass("animate");
+
+        if(animate) {
+          this.container.addClass("animate");
+        }
+
+        var px = ((this.pane_width * this.pane_count) / 100) * percent;
+
+        console.log(px);
+
+        console.log(this.container);
+
+        //if(Modernizr.csstransforms3d) {
+          this.container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
+        //}
+//        else if(Modernizr.csstransforms) {
+//          this.container.css("transform", "translate("+ percent +"%,0)");
+//        }
+//        else {
+//            var px = ((this.pane_width*this.pane_count) / 100) * percent;
+//            this.container.css("left", px+"px");
+//        }
+    },
+    nextSlide: function() { return this.showPane(this.current_pane+1, true); },
+    prevSlide: function() { return this.showPane(this.current_pane-1, true); },
+    handleHammer: function(ev) {
+
+        console.log(ev);
+        // disable browser scrolling
+        //ev.preventDefault();
+
+        switch(ev.type) {
+            case 'panright':
+            case 'panleft':
+                console.log('dragging');
+                // stick to the finger
+                var pane_offset = -(100/this.pane_count) * this.current_pane;
+                var drag_offset = ((100/this.pane_width) * ev.deltaX) / this.pane_count;
+
+                // slow down at the first and last pane
+                if((this.current_pane == 0  && ev.direction == Hammer.DIRECTION_RIGHT) ||
+                   (this.current_pane == pane_count-1 && ev.direction == Hammer.DIRECTION_LEFT)) {
+                  drag_offset *= .4;
                 }
-            } else {
-                this.swipeSlide();
-            }
-        }.bind(this));
 
-        this.addSlideTrigger(this.props.trigger);
-        this.setupEventListeners();
+                this.setContainerOffset(drag_offset + pane_offset);
+                break;
+
+          case 'swipeleft':
+            this.nextSlide();
+            //ev.stopDetect();
+            break;
+
+          case 'swiperight':
+            this.prevSlide();
+            //ev.stopDetect();
+            break;
+
+          case 'release':
+            // Left & Right
+            // more then 50% moved, navigate
+            if(Math.abs(ev.deltaX) > this.pane_width/2) {
+              if(ev.direction == 'right') {
+                this.prevSlide();
+              } else {
+                this.nextSlide();
+              }
+            }
+            else {
+              this.showPane(this.current_pane, true);
+            }
+
+            break;
+        }
     },
     swipeSlide: function(dir){
         var pos;
@@ -63,7 +212,7 @@ var Gallery = React.createClass({
             pos = 0;
         }
 
-        $('.slides').animate({ left: pos }, 250, function(){
+        $('.slides').animate({ left: pos }, 150, function(){
             if(callback){
                 console.log('switching slides!');
                 callback(function(){
@@ -84,21 +233,22 @@ var Gallery = React.createClass({
             e.preventDefault();
             this.previous();
         }.bind(this));
+
         $(document).on('click', '.next-slide', function(e){
             e.preventDefault();
             this.next();
         }.bind(this));
 
         // Clicking outside container
-        $(this.getDOMNode()).mouseup(function (e)
-        {
-            var container = $(this.getDOMNode()).find(".slide");
-            if (!container.is(e.target) && container.has(e.target).length === 0)
-            {
-                this.close();
-                $('body').removeClass('no-scroll');
-            }
-        }.bind(this));
+//        $(this.getDOMNode()).mouseup(function (e)
+//        {
+//            var container = $(this.getDOMNode()).find(".slide");
+//            if (!container.is(e.target) && container.has(e.target).length === 0)
+//            {
+//                this.close();
+//                $('body').removeClass('no-scroll');
+//            }
+//        }.bind(this));
 
     },
     addSlideTrigger: function(target){
@@ -146,7 +296,7 @@ var Gallery = React.createClass({
         return null;
     },
     setCurrentImage: function(imageId){
-        this.setState({ active: this.getActiveImage(imageId)});
+        this.setState({ active: this.getActiveImage(imageId)}, this.updatePaneDimensions);
     },
     open: function(imageId){
         this.setCurrentImage(imageId);
@@ -197,11 +347,11 @@ var Gallery = React.createClass({
 
         return (
             <div className="image-inner">
-                <div className="slides" ref="slides">
+                <ul className="slides" ref="slides">
                 {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : this.renderBlankSlide()}
                 {this.state.active ? this.renderSlide(this.state.active, 'active') : null}
                 {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : this.renderBlankSlide()}
-                </div>
+                </ul>
             </div>
             );
     },
@@ -210,7 +360,7 @@ var Gallery = React.createClass({
     },
     renderSlide: function(active, className){
         var image = active.data;
-        return (<GallerySlide className={className} src={image.url} caption={image.caption} />);
+        return (<GallerySlide width={this.state.slide_width} className={className} src={image.url} caption={image.caption} />);
     },
     render: function() {
         if(this.state.visible){
@@ -220,7 +370,7 @@ var Gallery = React.createClass({
         }
         return (
             <div className={'slideshow ' + visible}>
-                <div className="image-container">
+                <div ref="gallery" className="image-container">
                 {this.state.active ? this.renderSlides() : null}
                 </div>
             </div>
