@@ -42,6 +42,8 @@ var Gallery = React.createClass({
 
         this.current_pane = 0;
 
+        this.slideCallback = this.next;
+
         this.setPaneDimensions();
 
         $(window).on("load resize orientationchange", function() {
@@ -52,7 +54,7 @@ var Gallery = React.createClass({
 
         var hammertime = new Hammer(element, { drag_lock_to_axis: true });
 
-        hammertime.on("tap release dragleft dragright swipeleft swiperight dragup dragdown swipeup swipedown", this.handleHammer);
+        hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
 
         /* From Modernizr */
         function whichTransitionEvent(){
@@ -75,8 +77,8 @@ var Gallery = React.createClass({
         /* Listen for a transition! */
         var transitionEvent = whichTransitionEvent();
         transitionEvent && element.addEventListener(transitionEvent, function() {
-            console.log('Transition complete!  This is the callback, no library needed!');
-        });
+            //this.slideCallback();
+        }.bind(this));
 
     },
     setPaneDimensions: function(){
@@ -132,9 +134,6 @@ var Gallery = React.createClass({
 
         var px = ((this.pane_width * this.pane_count) / 100) * percent;
 
-        console.log(px);
-
-        console.log(this.container);
 
         //if(Modernizr.csstransforms3d) {
           this.container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
@@ -147,8 +146,14 @@ var Gallery = React.createClass({
 //            this.container.css("left", px+"px");
 //        }
     },
-    nextSlide: function() { return this.showPane(this.current_pane+1, true); },
-    prevSlide: function() { return this.showPane(this.current_pane-1, true); },
+    nextSlide: function() {
+        this.slideCallback = this.next;
+        return this.showPane(this.current_pane+1, true);
+    },
+    prevSlide: function() {
+        this.slideCallback = this.previous;
+        return this.showPane(this.current_pane-1, true);
+    },
     handleHammer: function(ev) {
 
         console.log(ev);
@@ -165,7 +170,7 @@ var Gallery = React.createClass({
 
                 // slow down at the first and last pane
                 if((this.current_pane == 0  && ev.direction == Hammer.DIRECTION_RIGHT) ||
-                   (this.current_pane == pane_count-1 && ev.direction == Hammer.DIRECTION_LEFT)) {
+                   (this.current_pane == this.pane_count-1 && ev.direction == Hammer.DIRECTION_LEFT)) {
                   drag_offset *= .4;
                 }
 
@@ -182,21 +187,22 @@ var Gallery = React.createClass({
             //ev.stopDetect();
             break;
 
-          case 'release':
-            // Left & Right
-            // more then 50% moved, navigate
-            if(Math.abs(ev.deltaX) > this.pane_width/2) {
-              if(ev.direction == 'right') {
-                this.prevSlide();
-              } else {
-                this.nextSlide();
-              }
-            }
-            else {
-              this.showPane(this.current_pane, true);
-            }
+            case 'panend':
+            case 'pancancel':
+                // Left & Right
+                // more then 50% moved, navigate
+                if(Math.abs(ev.deltaX) > this.pane_width/2) {
+                  if(ev.direction == 'right') {
+                    this.prevSlide();
+                  } else {
+                    this.nextSlide();
+                  }
+                }
+                else {
+                  this.showPane(this.current_pane, true);
+                }
 
-            break;
+                break;
         }
     },
     swipeSlide: function(dir){
@@ -344,14 +350,12 @@ var Gallery = React.createClass({
     },
     renderSlides: function(){
         //var slidesStyle = { left: -($(window).width()) + this.state.deltax };
-
+        var slides = this.props.images.map(function(image, i){
+            return (<GallerySlide key={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
+        }.bind(this));
         return (
             <div className="image-inner">
-                <ul className="slides" ref="slides">
-                {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : this.renderBlankSlide()}
-                {this.state.active ? this.renderSlide(this.state.active, 'active') : null}
-                {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : this.renderBlankSlide()}
-                </ul>
+                <ul className="slides" ref="slides">{slides}</ul>
             </div>
             );
     },
@@ -360,7 +364,7 @@ var Gallery = React.createClass({
     },
     renderSlide: function(active, className){
         var image = active.data;
-        return (<GallerySlide width={this.state.slide_width} className={className} src={image.url} caption={image.caption} />);
+        return (<GallerySlide width={this.state.slide_width} src={image.url} caption={image.caption} />);
     },
     render: function() {
         if(this.state.visible){
