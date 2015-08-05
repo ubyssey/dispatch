@@ -23171,7 +23171,11 @@ var Gallery = React.createClass({displayName: "Gallery",
           //updateOffset();
         }.bind(this));
 
-        var hammertime = new Hammer(element, { drag_lock_to_axis: true });
+        var hammertime = new Hammer(element, { drag_lock_to_axis: true,
+            recognizers: [
+                [Hammer.Pan,{ threshold: 1 }],
+            ]
+        });
 
         hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
 
@@ -23309,9 +23313,9 @@ var Gallery = React.createClass({displayName: "Gallery",
             case 'panend':
             case 'pancancel':
                 // Left & Right
-                // more then 50% moved, navigate
-                if(Math.abs(ev.deltaX) > this.pane_width/2) {
-                  if(ev.direction == 'right') {
+                // more then 1/3 moved, navigate
+                if(Math.abs(ev.deltaX) > this.pane_width/3) {
+                  if(ev.direction == Hammer.DIRECTION_RIGHT) {
                     this.prevSlide();
                   } else {
                     this.nextSlide();
