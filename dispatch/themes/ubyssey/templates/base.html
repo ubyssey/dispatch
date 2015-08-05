@@ -39,6 +39,7 @@ if (window.devicePixelRatio && devicePixelRatio >= 2) {
 </script>
 {% block header %}{% endblock %}
 {% block content %}{% endblock %}
+{% block footer %}{% include 'footer.html' %}{% endblock %}
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <script src="{% static 'manager/js/dist/dispatch.js' %}" type="text/javascript"></script>
