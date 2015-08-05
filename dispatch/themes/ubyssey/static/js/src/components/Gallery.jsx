@@ -192,7 +192,7 @@ var Gallery = React.createClass({
             </div>
             );
     },
-    renderBlankSlide(){
+    renderBlankSlide: function(){
         return(<div className="slide"></div>);
     },
     renderSlide: function(active, className){
