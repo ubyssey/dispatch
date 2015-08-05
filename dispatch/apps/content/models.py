@@ -191,8 +191,18 @@ class ArticleManager(Manager):
 
         return results
 
-    def get_most_popular(self, count=10):
-        return self.filter(head=True).order_by('-importance')[:count]
+    def get_popular(self, dur=None):
+        time = False
+        if dur is not None:
+            if dur == 'week':
+                time = datetime.datetime.now() - datetime.timedelta(days=7)
+
+        if time:
+            articles = Article.objects.filter(status=Article.PUBLISHED, updated_at__gt=time).order_by('-views')
+        else:
+            articles = Article.objects.filter(status=Article.PUBLISHED).order_by('-views')
+
+        return articles
 
 class Comment(Model):
     article = ForeignKey('Article')
@@ -222,6 +232,7 @@ class Article(Publishable):
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
+    views = PositiveIntegerField(default=0)
 
     DRAFT = 0
     PUBLISHED = 1
@@ -288,21 +299,21 @@ class Article(Publishable):
     def authors_list(self):
         return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
-    def get_date(self):
-        return self.published_at.strftime("%Y-%m-%d")
+    def add_view(self):
+        self.views += 1
+        self.save(revision=False)
 
-    def get_time(self):
-        return self.published_at.strftime("%H:%M")
-
-    def get_reading_list(self, ref=None):
+    def get_reading_list(self, ref=None, dur=None):
         if ref is not None:
             if ref == 'frontpage':
                 articles = Article.objects.get_frontpage(exclude=[self.parent_id])
                 name = 'Top Stories'
+            elif ref == 'popular':
+                articles = Article.objects.get_popular(dur=dur).exclude(pk=self.id)[:5]
+                name = "Most popular this week"
         else:
             articles = Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
             name = self.section.name
-
         return {
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
