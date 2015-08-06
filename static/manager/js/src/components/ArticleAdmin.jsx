@@ -357,7 +357,7 @@ var ArticleAdmin = React.createClass({
                                 <TemplateEditor ref="template" article_id={this.state.article.id} fields={this.state.article.template_fields} template={this.state.article.template} updateHandler={this.updateField} />
                             </TabPanel>
                             <TabPanel>
-                                <SEO keyword={this.state.article.seo_keyword} snippet={this.state.article.seo_snippet} updateHandler={this.updateField} />
+                                <SEO keyword={this.state.article.seo_keyword} article={this.state.article} snippet={this.state.article.seo_snippet} updateHandler={this.updateField} />
                             </TabPanel>
                         </Tabs>
                     </div>
