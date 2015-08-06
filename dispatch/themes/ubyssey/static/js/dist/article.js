@@ -23173,7 +23173,8 @@ var Gallery = React.createClass({displayName: "Gallery",
 
         var hammertime = new Hammer(element, { drag_lock_to_axis: true,
             recognizers: [
-                [Hammer.Pan,{ threshold: 1 }],
+                [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL, threshold: 1, velocity: 0.1 }],
+                [Hammer.Pan, { threshold: 5 }],
             ]
         });
 
@@ -23207,7 +23208,6 @@ var Gallery = React.createClass({displayName: "Gallery",
     setPaneDimensions: function(){
         this.pane_width = $(window).width();
         this.panes.each(function() {
-          console.log(this);
           $(this).width(this.pane_width);
         });
 
@@ -23245,10 +23245,6 @@ var Gallery = React.createClass({displayName: "Gallery",
     },
     setContainerOffset: function(percent, animate){
 
-
-        console.log('setting offset');
-        console.log(this.pane_count);
-
         this.container.removeClass("animate");
 
         if(animate) {
@@ -23279,7 +23275,6 @@ var Gallery = React.createClass({displayName: "Gallery",
     },
     handleHammer: function(ev) {
 
-        console.log(ev);
         // disable browser scrolling
         //ev.preventDefault();
 
@@ -23301,11 +23296,13 @@ var Gallery = React.createClass({displayName: "Gallery",
                 break;
 
           case 'swipeleft':
+              console.log('swipe left');
             this.nextSlide();
             //ev.stopDetect();
             break;
 
           case 'swiperight':
+              console.log('swipe right');
             this.prevSlide();
             //ev.stopDetect();
             break;
