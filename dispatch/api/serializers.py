@@ -238,7 +238,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'status',
             'template',
-            'template_fields'
+            'template_fields',
+            'seo_keyword',
+            'seo_description'
         )
 
     def __init__(self, *args, **kwargs):
@@ -270,6 +272,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.status = validated_data.get('status', instance.status)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
+        instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
+        instance.seo_description = validated_data.get('seo_description', instance.seo_description)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
