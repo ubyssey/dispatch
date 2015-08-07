@@ -12,6 +12,7 @@ var QuillEditor = require('./QuillEditor.jsx');
 var QuillToolbar = require('./QuillEditorToolbar.jsx');
 
 var FeaturedImage = require('./ArticleFeaturedImage.jsx');
+var SEO = require('./ArticleSEO.jsx');
 var SlugField = require('./fields/SlugField.jsx');
 var SelectField = require('./fields/SelectField.jsx');
 
@@ -212,7 +213,9 @@ var ArticleAdmin = React.createClass({
                 reading_time: this.state.article.reading_time,
                 importance: this.state.article.importance,
                 template: this.state.article.template,
-                template_fields: this.refs.template.save()
+                template_fields: this.refs.template.save(),
+                seo_keyword: this.state.article.seo_keyword,
+                seo_description: this.state.article.seo_description
             }
 
             if(this.state.article.topic)
@@ -329,6 +332,7 @@ var ArticleAdmin = React.createClass({
                                 <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
                                 <Tab><i className="fa fa-paper-plane"></i> Delivery</Tab>
                                 <Tab><i className="fa fa-files-o"></i> Template</Tab>
+                                <Tab><i className="fa fa-bullhorn"></i> SEO</Tab>
                             </TabList>
                             <TabPanel>
                                 <div className="field full">
@@ -357,6 +361,9 @@ var ArticleAdmin = React.createClass({
                             </TabPanel>
                             <TabPanel>
                                 <TemplateEditor ref="template" article_id={this.state.article.id} fields={this.state.article.template_fields} template={this.state.article.template} updateHandler={this.updateField} />
+                            </TabPanel>
+                            <TabPanel>
+                                <SEO keyword={this.state.article.seo_keyword} article={this.state.article} snippet={this.state.article.seo_snippet} updateHandler={this.updateField} />
                             </TabPanel>
                         </Tabs>
                     </div>
