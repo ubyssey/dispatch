@@ -6,6 +6,7 @@ from django.conf import settings
 
 # Dispatch imports
 from dispatch.apps.content.models import Article, Section
+from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
 
@@ -74,3 +75,13 @@ class UbysseyTheme(DefaultTheme):
         }
 
         return render(request, 'section/base.html', context)
+
+    def author(self, request, pk=None):
+
+        person = Person.objects.get(pk=pk)
+
+        context = {
+            'person': person,
+        }
+
+        return render(request, 'author.html', context)
