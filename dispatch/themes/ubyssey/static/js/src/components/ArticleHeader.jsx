@@ -6,9 +6,6 @@ var ArticleHeader = React.createClass({
         this.home = $('a.home-link').attr('href');
     },
     render: function(){
-        var progressBarStyle = {
-            width: (this.props.progress * 100) + "%"
-        };
         return (
             <header className="topbar header-article">
                 <div className="container">
@@ -21,7 +18,6 @@ var ArticleHeader = React.createClass({
                     |
                     <h1 className="nav-headline">{ this.props.headline }</h1>
                 </div>
-                <div className="progress-bar" style={progressBarStyle}></div>
             </header>
         );
     }
