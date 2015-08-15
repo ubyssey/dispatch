@@ -1,8 +1,30 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% block content %}
 {% include 'headers/topbar.html' with section=section.slug %}
-    <br/>
-    <div class="container">
-        {% include 'homepage/blocks/section_2.html' with articles=articles %}
-    </div>
+    <main class="section">
+        <div class="container">
+            <article class="section-top row padded">
+                {% with articles.first as article %}
+                    <div class="left stack-mobile">
+                        <a class="image" href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
+                    </div>
+                    <div>
+                        <h3 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h3>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
+                    </div>
+
+                {% endwith %}
+            </article>
+            {% for article in articles.rest %}
+                <article class="section-thumb">
+                    <a class="image" href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
+                    <h4 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h4>
+                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                    <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </main>
 {% endblock %}
