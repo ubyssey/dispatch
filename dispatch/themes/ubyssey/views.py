@@ -22,7 +22,7 @@ class UbysseyTheme(DefaultTheme):
 
         return {
             'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
-            'description': article.seo_description if article.seo_description is not None else "",
+            'description': article.seo_description if article.seo_description is not None else article.snippet,
             'url': article.get_absolute_url,
             'image': article.featured_image.image.get_absolute_url(),
             'author': article.get_author_string()
