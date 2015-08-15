@@ -6,6 +6,7 @@ from django.conf import settings
 
 # Dispatch imports
 from dispatch.apps.content.models import Article, Section
+from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
 
@@ -15,6 +16,17 @@ from .pages import Homepage
 class UbysseyTheme(DefaultTheme):
 
     SITE_TITLE = 'The Ubyssey'
+    SITE_URL = settings.BASE_URL
+
+    def get_article_meta(self, article):
+
+        return {
+            'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
+            'description': article.seo_description if article.seo_description is not None else "",
+            'url': article.get_absolute_url,
+            'image': article.featured_image.image.get_absolute_url()
+        }
+
 
     def home(self, request):
 
@@ -36,6 +48,12 @@ class UbysseyTheme(DefaultTheme):
         popular = Article.objects.get_popular()[:5]
 
         context = {
+            'meta': {
+                'title':  "%s - UBC's official student newspaper" % self.SITE_TITLE,
+                'description': 'Weekly student newspaper of the University of British Columbia.',
+                'url': self.SITE_URL,
+                'image': articles['primary'].featured_image.image.get_absolute_url()
+            },
             'title': "%s - UBC's official student newspaper" % self.SITE_TITLE,
             'articles': articles,
             'sections': sections,
@@ -55,7 +73,7 @@ class UbysseyTheme(DefaultTheme):
         dur = request.GET.get('dur', None)
 
         context = {
-            'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
+            'meta': self.get_article_meta(article),
             'article': article,
             'reading_list': article.get_reading_list(ref=ref, dur=dur),
             'base_template': 'base.html'
@@ -74,3 +92,13 @@ class UbysseyTheme(DefaultTheme):
         }
 
         return render(request, 'section/base.html', context)
+
+    def author(self, request, pk=None):
+
+        person = Person.objects.get(pk=pk)
+
+        context = {
+            'person': person,
+        }
+
+        return render(request, 'author.html', context)

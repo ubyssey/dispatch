@@ -2,6 +2,7 @@ var React = require('react');
 var LinkedList = require('../modules/LinkedList.js');
 var GallerySlide = require('./GallerySlide.jsx');
 var Hammer = require('hammerjs');
+//var Modernizr = require('modernizr');
 
 var Gallery = React.createClass({
     getInitialState: function(){
@@ -10,7 +11,8 @@ var Gallery = React.createClass({
             index: false,
             image: false,
             visible: false,
-            deltax: 0
+            deltax: 0,
+            slide_width: $(window).width()
         }
     },
     componentWillMount: function(){
@@ -20,43 +22,211 @@ var Gallery = React.createClass({
 
         //this.preloadImages();
 
-        var myElement = React.findDOMNode(this);
-        this.toucharea = new Hammer(myElement);
+        this.setupEventListeners();
+        this.addSlideTrigger(this.props.trigger);
+        this.initSlider();
+    },
+    initSlider: function(){
 
-        var base = -($(window).width());
-        var left = 0;
+        var element = this.refs.gallery.getDOMNode();
 
-        this.toucharea.on("panmove", function(event){
-            left = base + event.deltaX;
-            $('.slides').css({
-                'left': left,
-                'padding-left': $(window).width()
-            });
-            //this.refs.slides.style.left = event.deltaX;
+        this.element = $(element);
+
+        this.container = $("ul.slides", this.element);
+
+        this.panes = $("li.slide", this.element);
+
+        this.pane_width = 0;
+        this.pane_height = 0;
+        this.pane_count = this.panes.length;
+
+        this.current_pane = 0;
+
+        this.slideCallback = this.next;
+
+        this.setPaneDimensions();
+
+        $(window).on("load resize orientationchange", function() {
+            this.setPaneDimensions();
+            this.setState({ slide_width: $(window).width() });
+          //updateOffset();
         }.bind(this));
 
-        this.toucharea.on("panend", function(event){
-            var pos = 0;
-            var callback;
+        var hammertime = new Hammer(element, { drag_lock_to_axis: true,
+            recognizers: [
+                [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL, threshold: 1, velocity: 0.1 }],
+                [Hammer.Pan, { threshold: 5 }],
+            ]
+        });
 
-            if(Math.abs(left) > $(window).width() / 3){
-                if(left < 0){
-                    callback = this.next;
-                    pos = -($(window).width());
-                } else {
-                    callback = this.prev;
-                    pos = $(window).width();
-                }
+        hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
+
+        /* From Modernizr */
+        function whichTransitionEvent(){
+            var t;
+            var el = document.createElement('fakeelement');
+            var transitions = {
+              'transition':'transitionend',
+              'OTransition':'oTransitionEnd',
+              'MozTransition':'transitionend',
+              'WebkitTransition':'webkitTransitionEnd'
             }
 
-            $('.slides').animate({ left: base + pos }, 250, function(){
-                console.log('test');
-                callback();
-            });
+            for(t in transitions){
+                if( el.style[t] !== undefined ){
+                    return transitions[t];
+                }
+            }
+        }
+
+        /* Listen for a transition! */
+        var transitionEvent = whichTransitionEvent();
+        transitionEvent && element.addEventListener(transitionEvent, function() {
+            //this.slideCallback();
         }.bind(this));
 
-        this.addSlideTrigger(this.props.trigger);
-        this.setupEventListeners();
+    },
+    setPaneDimensions: function(){
+        this.pane_width = $(window).width();
+        this.panes.each(function() {
+          $(this).width(this.pane_width);
+        });
+
+        this.container.width(this.pane_width*this.pane_count);
+    },
+    updatePaneDimensions: function(){
+        this.container = $("ul.slides", this.element);
+
+        this.panes = $("li.slide", this.element);
+
+        this.pane_width = $(window).width();
+
+        this.panes.each(function() {
+          $(this).width(this.pane_width);
+        });
+
+        var containerWidth = this.pane_width*this.panes.length;
+
+        $(this.container).css('width', containerWidth);
+
+        // update pane count
+        this.pane_count = this.panes.length;
+
+        // reset current pane
+        this.showPane(this.current_pane, false);
+    },
+    showPane: function(index, animate) {
+        // between the bounds
+        index = Math.max(0, Math.min(index, this.pane_count-1));
+        this.current_pane = index;
+
+        var offset = -((100/this.pane_count)*this.current_pane);
+
+        this.setContainerOffset(offset, true);
+    },
+    setContainerOffset: function(percent, animate){
+
+        this.container.removeClass("animate");
+
+        if(animate) {
+          this.container.addClass("animate");
+        }
+
+        var px = ((this.pane_width * this.pane_count) / 100) * percent;
+
+
+        //if(Modernizr.csstransforms3d) {
+          this.container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
+        //}
+//        else if(Modernizr.csstransforms) {
+//          this.container.css("transform", "translate("+ percent +"%,0)");
+//        }
+//        else {
+//            var px = ((this.pane_width*this.pane_count) / 100) * percent;
+//            this.container.css("left", px+"px");
+//        }
+    },
+    nextSlide: function() {
+        this.slideCallback = this.next;
+        return this.showPane(this.current_pane+1, true);
+    },
+    prevSlide: function() {
+        this.slideCallback = this.previous;
+        return this.showPane(this.current_pane-1, true);
+    },
+    handleHammer: function(ev) {
+
+        // disable browser scrolling
+        //ev.preventDefault();
+
+        switch(ev.type) {
+            case 'panright':
+            case 'panleft':
+                console.log('dragging');
+                // stick to the finger
+                var pane_offset = -(100/this.pane_count) * this.current_pane;
+                var drag_offset = ((100/this.pane_width) * ev.deltaX) / this.pane_count;
+
+                // slow down at the first and last pane
+                if((this.current_pane == 0  && ev.direction == Hammer.DIRECTION_RIGHT) ||
+                   (this.current_pane == this.pane_count-1 && ev.direction == Hammer.DIRECTION_LEFT)) {
+                  drag_offset *= .4;
+                }
+
+                this.setContainerOffset(drag_offset + pane_offset);
+                break;
+
+          case 'swipeleft':
+              console.log('swipe left');
+            this.nextSlide();
+            //ev.stopDetect();
+            break;
+
+          case 'swiperight':
+              console.log('swipe right');
+            this.prevSlide();
+            //ev.stopDetect();
+            break;
+
+            case 'panend':
+            case 'pancancel':
+                // Left & Right
+                // more then 1/3 moved, navigate
+                if(Math.abs(ev.deltaX) > this.pane_width/3) {
+                  if(ev.direction == Hammer.DIRECTION_RIGHT) {
+                    this.prevSlide();
+                  } else {
+                    this.nextSlide();
+                  }
+                }
+                else {
+                  this.showPane(this.current_pane, true);
+                }
+
+                break;
+        }
+    },
+    swipeSlide: function(dir){
+        var pos;
+        var callback = false;
+        if(dir == 'next'){
+            callback = this.next;
+            pos = -($(window).width());
+        } else if(dir == 'previous') {
+            callback = this.previous;
+            pos = $(window).width();
+        } else {
+            pos = 0;
+        }
+
+        $('.slides').animate({ left: pos }, 150, function(){
+            if(callback){
+                console.log('switching slides!');
+                callback(function(){
+                    $('.slides').css({ left: 0 });
+                });
+            }
+        });
     },
     setupEventListeners: function(){
 
@@ -70,21 +240,22 @@ var Gallery = React.createClass({
             e.preventDefault();
             this.previous();
         }.bind(this));
+
         $(document).on('click', '.next-slide', function(e){
             e.preventDefault();
             this.next();
         }.bind(this));
 
         // Clicking outside container
-        $(this.getDOMNode()).mouseup(function (e)
-        {
-            var container = $(this.getDOMNode()).find(".slide");
-            if (!container.is(e.target) && container.has(e.target).length === 0)
-            {
-                this.close();
-                $('body').removeClass('no-scroll');
-            }
-        }.bind(this));
+//        $(this.getDOMNode()).mouseup(function (e)
+//        {
+//            var container = $(this.getDOMNode()).find(".slide");
+//            if (!container.is(e.target) && container.has(e.target).length === 0)
+//            {
+//                this.close();
+//                $('body').removeClass('no-scroll');
+//            }
+//        }.bind(this));
 
     },
     addSlideTrigger: function(target){
@@ -132,7 +303,7 @@ var Gallery = React.createClass({
         return null;
     },
     setCurrentImage: function(imageId){
-        this.setState({ active: this.getActiveImage(imageId)});
+        this.setState({ active: this.getActiveImage(imageId)}, this.updatePaneDimensions);
     },
     open: function(imageId){
         this.setCurrentImage(imageId);
@@ -145,15 +316,15 @@ var Gallery = React.createClass({
         });
         $('body').removeClass('no-scroll');
     },
-    previous: function(){
+    previous: function(callback){
         if(!this.state.active || !this.state.active.prev)
             return
-        this.setState({ active: this.state.active.prev });
+        this.setState({ active: this.state.active.prev }, callback);
     },
-    next: function(){
+    next: function(callback){
         if(!this.state.active || !this.state.active.next)
             return
-        this.setState({ active: this.state.active.next });
+        this.setState({ active: this.state.active.next }, callback);
     },
     renderImage: function(){
         if(this.state.image){
@@ -180,20 +351,21 @@ var Gallery = React.createClass({
     },
     renderSlides: function(){
         //var slidesStyle = { left: -($(window).width()) + this.state.deltax };
-
+        var slides = this.props.images.map(function(image, i){
+            return (<GallerySlide key={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
+        }.bind(this));
         return (
             <div className="image-inner">
-                <div className="slides" ref="slides">
-                {this.state.active.prev ? this.renderSlide(this.state.active.prev, 'prev') : null}
-                {this.state.active ? this.renderSlide(this.state.active, 'active') : null}
-                {this.state.active.next ? this.renderSlide(this.state.active.next, 'next') : null}
-                </div>
+                <ul className="slides" ref="slides">{slides}</ul>
             </div>
             );
     },
+    renderBlankSlide: function(){
+        return(<div className="slide"></div>);
+    },
     renderSlide: function(active, className){
         var image = active.data;
-        return (<GallerySlide className={className} src={image.url} caption={image.caption} />);
+        return (<GallerySlide width={this.state.slide_width} src={image.url} caption={image.caption} />);
     },
     render: function() {
         if(this.state.visible){
@@ -203,7 +375,7 @@ var Gallery = React.createClass({
         }
         return (
             <div className={'slideshow ' + visible}>
-                <div className="image-container">
+                <div ref="gallery" className="image-container">
                 {this.state.active ? this.renderSlides() : null}
                 </div>
             </div>
