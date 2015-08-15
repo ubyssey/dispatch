@@ -258,16 +258,3 @@ header.mobile {
 html.hairlines header.mobile {
   border-bottom: 0.5px solid rgb(178,178,178);
 }
-
-div.progress-bar {
-  position: absolute;
-  bottom: -1px;
-  height: 3px;
-  left: 0;
-  background: #3490D6;
-
-  -moz-transition: width 0.3s ease-in-out;
-  -o-transition: width 0.3s ease-in-out;
-  -webkit-transition: width 0.3s ease-in-out;
-  transition: width 0.05s ease-in-out;
-}
