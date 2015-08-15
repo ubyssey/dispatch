@@ -14,7 +14,6 @@ var ArticleList = React.createClass({
             active: LinkedList(articles),
             articles: [this.props.firstArticle],
             loading: false,
-            progress: 0,
         }
     },
     componentWillMount: function(){
@@ -63,7 +62,6 @@ var ArticleList = React.createClass({
 
         var cachedPoints;
         var points;
-        var timer = 5;
 
         var updateScroll = function(){
 
@@ -78,13 +76,6 @@ var ArticleList = React.createClass({
                 points = this.getArticlePoints();
                 cachedPoints = this.state.active.data;
             }
-
-            // Update progress bar
-            if(timer == 5){
-                this.setState({ progress: Math.min( ((bottomPos - points.top) / points.height), 1) });
-                timer = 0;
-            }
-            timer++;
 
             if(bottomPos > points.end)
                 this.prepNext();
@@ -170,7 +161,7 @@ var ArticleList = React.createClass({
         });
         return (
             <div>
-                <ArticleHeader progress={this.state.progress} name={this.props.name} headline={this.getArticle(this.state.active.data).long_headline} />
+                <ArticleHeader name={this.props.name} headline={this.getArticle(this.state.active.data).long_headline} />
                 {articles}
                 <CommentsBar breakpoint={this.props.breakpoint} userId={this.props.userId} articleId={this.state.active.data} />
             </div>
