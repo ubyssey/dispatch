@@ -6,6 +6,8 @@
 @import 'modules/font_faces';
 @import 'modules/homepage';
 
+
+@import 'modules/section';
 @import 'modules/article/base';
 @import 'modules/article/embeds';
 @import 'modules/article/comments_bar';
@@ -23,17 +25,20 @@ body {
 div.container {
   max-width: 1000px;
   width: 100%;
-  padding: 0 20px;
   margin-left: auto;
   margin-right: auto;
-  &.no-padding {
-    max-width: 960px;
-    padding: 0;
+  box-sizing: border-box;
+
+  &.padded {
+    padding: 0 20px;
   }
+
   &.large {
-    &.no-padding {
-      max-width: 1220px;
-    }
+    max-width: 1260px;
+  }
+  @media($bp-larger-than-phablet){
+    padding: 0 20px;
+
   }
 }
 

@@ -266,6 +266,9 @@ class Article(Publishable):
 
     template = CharField(max_length=255, default='default')
 
+    seo_keyword = CharField(max_length=100, null=True)
+    seo_description = CharField(max_length=250, null=True)
+
     scripts = ManyToManyField(Script, related_name='scripts')
     stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
     snippets = ManyToManyField(Snippet, related_name='snippets')
