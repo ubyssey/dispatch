@@ -9,6 +9,7 @@ sys.setdefaultencoding("utf-8")
 
 from django.conf import settings
 
+from dispatch.apps.core.models import Person
 from dispatch.apps.content.models import Article, Section, Author, Image, ImageAttachment
 
 class WordpressImporter:
@@ -21,7 +22,7 @@ class WordpressImporter:
 
     def save(self, count=None):
 
-        Article.objects.fitler(section__slug='news').delete()
+        Article.objects.filter(section__slug=self.articles[0]['post_type']).delete()
 
         n = 0
         for article in self.articles:
@@ -89,10 +90,16 @@ class WordpressImporter:
             soup = BeautifulSoup(line, 'html.parser')
             if soup.img:
                 if n == 0:
-                    article.featured_image = self.save_attachment(soup.img['src'], article, caption=soup.img['alt'])
+                    try:
+                        caption = soup.img['alt']
+                    except:
+                        caption = None
+                    article.featured_image = self.save_attachment(soup.img['src'], article, caption=caption)
                 else:
                     for img in soup.find_all('img'):
-                        output.append(self.save_image(img, article))
+                        image_json = self.save_image(img, article)
+                        if image_json is not None:
+                            output.append(self.save_image(img, article))
             elif line not in self.OLD_SHORTCODES and line != '':
                 output.append(line)
             n += 1
@@ -132,14 +139,25 @@ class WordpressImporter:
         return attachment
 
     def save_image(self, img, article):
-        attachment = self.save_attachment(img['src'], article, caption=img['alt'])
+        try:
+            caption = soup.img['alt']
+        except:
+            caption = None
 
-        return {
-            'type': 'image',
-            'data': {
-                'attachment_id': attachment.id,
+        attachment = self.save_attachment(img['src'], article, caption=caption)
+
+        if attachment is not None:
+
+            return {
+                'type': 'image',
+                'data': {
+                    'attachment_id': attachment.id,
+                }
             }
-        }
+
+        else:
+
+            return
 
 
     def count(self):
