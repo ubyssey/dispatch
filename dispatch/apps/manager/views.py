@@ -3,6 +3,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
 from .decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
 from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm, RoleForm
@@ -60,7 +62,7 @@ def users(request):
 def user_add(request):
 
     if request.method == 'POST':
-        form = PersonForm(request.POST, user_form=False)
+        form = PersonForm(request.POST, request.FILES, user_form=False)
         if form.is_valid():
             form.save()
             return redirect(users)
@@ -81,7 +83,7 @@ def user_edit(request, id):
     p = Person.objects.get(pk=id)
 
     if request.method == 'POST':
-        form = PersonForm(request.POST, instance=p)
+        form = PersonForm(request.POST, request.FILES, instance=p)
         if form.is_valid():
             form.save()
             return redirect(users)
@@ -101,7 +103,7 @@ def user_edit(request, id):
 def profile(request):
     user = User.objects.get(email=request.user)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=user)
+        form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
     else:

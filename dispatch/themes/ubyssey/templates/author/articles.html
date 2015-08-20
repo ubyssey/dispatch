@@ -1,0 +1,48 @@
+{% extends 'author/base.html' %}
+{% block author_archive %}
+    <div class="author-archive">
+        <div class="filter clearfix">
+            <h3 class="basic uppercase">All Articles</h2>
+            <div class="dropdown">
+                <a href="#">{{ order|title }} <i class="fa fa-caret-down"></i></a>
+                <ul>
+                    <li><a href="?order=newest">Newest</a></li>
+                    <li><a href="?order=oldest">Oldest</a></li>
+                </ul>
+            </div>
+        </div>
+        {% if articles|length > 0 %}
+        <div class="list">
+        {% for article in articles %}
+            <article>
+                {% if article.featured_image %}
+                <a href="{{ article.get_absolute_url }}" class="image">
+                    <img src="{{ article.featured_image.image.get_absolute_url }}" />
+                </a>
+                {% endif %}
+                <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
+                <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                <p class="snippet">{{ article.snippet }}</p>
+            </article>
+        {% endfor %}
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if articles.has_previous %}
+                    <a class="button large" href="?page={{ articles.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ articles.number }} of {{ articles.paginator.num_pages }}
+                </span>
+
+                {% if articles.has_next %}
+                    <a class="button large" href="?page={{ articles.next_page_number }}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+        {% else %}
+        <div class="no-results">No articles found.</div>
+        {% endif %}
+    </div>
+{% endblock %}

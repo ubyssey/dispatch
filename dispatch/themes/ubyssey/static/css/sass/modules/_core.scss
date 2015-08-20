@@ -1,8 +1,10 @@
 @import 'modules/variables';
+@import 'modules/fonts';
 
 // BODY
 
 body {
+  font-family: $font-default;
   font-size: 14px;
   &.no-scroll {
     overflow-y: hidden;
@@ -53,10 +55,6 @@ main {
 
 // UTILITIES
 
-.clearfix {
-  overflow: auto;
-}
-
 .u-full-width {
   width: 100%;
   box-sizing: border-box;
@@ -79,6 +77,27 @@ main {
   text-align: right;
 }
 
+.u-text-center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
 
 .hide-desktop {
   @media($bp-larger-than-phablet){

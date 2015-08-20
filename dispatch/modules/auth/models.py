@@ -1,5 +1,6 @@
-from django.db.models import Model, CharField, BooleanField, ForeignKey, OneToOneField, ManyToManyField
+from django.db.models import Model, CharField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.conf import settings
 
 class UserManager(BaseUserManager):
 
@@ -78,6 +79,11 @@ class User(AbstractBaseUser):
 class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
     is_admin = BooleanField(default=True)
+
+    image = ImageField(upload_to='images', null=True)
+
+    def get_image_url(self):
+        return settings.MEDIA_URL + str(self.image)
 
     def __str__(self):
         return self.full_name
