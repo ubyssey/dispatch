@@ -21,7 +21,7 @@ class WordpressImporter:
 
     def save(self, count=None):
 
-        Article.objects.fitler(section__slug='news').delete()
+        Article.objects.filter(section__slug='news').delete()
 
         n = 0
         for article in self.articles:
