@@ -12,9 +12,9 @@
     {% endblock %}
     <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ reading_list.ids }}" data-list-name="{{ reading_list.name }}" data-headline="{{ article.long_headline }}" data-url="{{ article.get_absolute_url }}">
         {% block banner %}
-        <div class="container padded">
+        <div class="container">
             <div class="headline-container">
-                <h1 class="headline">{{ article.long_headline }}</h1>
+                <h1 class="headline">{{ article.long_headline|safe }}</h1>
                 <div class="article-info row">
                     <div class="article-byline">
                         <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
@@ -38,7 +38,7 @@
                 <div class="featured-image">
                     <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" data-url="{{ article.featured_image.image.get_absolute_url }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
                     <div class="caption">
-                        {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+                        {{ article.featured_image.caption }} {% if article.featured_image.get_credit %}<span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>{% endif %}
                     </div>
                 </div>
                 <div class="sidebar offset">

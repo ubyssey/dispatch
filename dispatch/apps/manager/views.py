@@ -166,19 +166,37 @@ def role_edit(request, pk=None):
 @staff_member_required
 def section(request, section):
     section = Section.objects.get(name=section)
-    articles = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
+    article_list = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
+
+
     q = request.GET.get('q', False)
     if q:
-        articles = articles.filter(long_headline__icontains=q)
+        article_list = article_list.filter(long_headline__icontains=q)
     else:
         q = ""
+
+    unpublished = article_list.exclude(status=Article.PUBLISHED).count()
+
+
+    paginator = Paginator(article_list, 15) # Show 15 articles per page
+
+    page = request.GET.get('page')
+
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        articles = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        articles = paginator.page(paginator.num_pages)
 
     return render_to_response(
         "manager/article/list.html",
         {
             'title': section,
             'article_list' : articles,
-            'unpublished': articles.exclude(status=Article.PUBLISHED).count(),
+            'unpublished': unpublished,
             'section': section,
             'list_title': section,
             'query': q,
