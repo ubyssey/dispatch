@@ -218,6 +218,9 @@ main {
     bottom: 0;
     top: 0;
     width: 100%;
+    &.scroll {
+      overflow-y: scroll;
+    }
   }
   div.main {
     position: absolute;
