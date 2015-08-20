@@ -38,7 +38,7 @@
                 <div class="featured-image">
                     <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" data-url="{{ article.featured_image.image.get_absolute_url }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
                     <div class="caption">
-                        {{ article.featured_image.caption }} <span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>
+                        {{ article.featured_image.caption }} {% if article.featured_image.get_credit %}<span class="credit">{{ article.featured_image.get_credit }} / The Ubyssey</span>{% endif %}
                     </div>
                 </div>
                 <div class="sidebar offset">
