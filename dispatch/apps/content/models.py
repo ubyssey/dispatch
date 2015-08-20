@@ -652,13 +652,12 @@ class ImageAttachment(Model):
     order = PositiveIntegerField(null=True)
 
     def get_credit(self):
-        """
-        TODO: fix this
-        """
-        #author = self.image.authors.all()[0]
-        author = "Peter Siemens"
-        types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
-        return "%s %s" % (types[self.type], author)
+        try:
+            author = self.image.authors.all()[0]
+            types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
+            return "%s %s" % (types[self.type], author)
+        except:
+            return False
 
     class EmbedController:
         @staticmethod
