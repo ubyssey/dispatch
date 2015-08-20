@@ -5,9 +5,9 @@
     </div>
 {% endblock %}
 {% block content %}
-<div class="inner">
+<div class="inner scroll">
     <div class="container">
-        <form class="person-form"  action="" method="post">
+        <form class="person-form" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h2>Basic Information</h2>
             {% for field in form %}

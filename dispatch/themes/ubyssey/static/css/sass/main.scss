@@ -13,9 +13,15 @@
 @import 'modules/article/comments_bar';
 @import 'modules/article/gallery';
 
+@import 'modules/author';
+
 @import 'modules/advertisements';
 
 @import 'modules/variables';
+
+@import 'modules/headers';
+
+@import 'modules/buttons';
 
 body {
     padding: 0;
@@ -30,15 +36,29 @@ div.container {
   box-sizing: border-box;
 
   &.padded {
-    padding: 0 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   &.large {
     max-width: 1260px;
   }
-  @media($bp-larger-than-phablet){
-    padding: 0 20px;
 
+  @media($bp-larger-than-phablet){
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media($bp-larger-than-phablet){
+  div.table-row {
+    display: table;
+    div.cell {
+      display: table-cell;
+      &.middle {
+        vertical-align: middle;
+      }
+    }
   }
 }
 
