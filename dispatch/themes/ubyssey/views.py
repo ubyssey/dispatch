@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Dispatch imports
 from dispatch.apps.content.models import Article, Section
@@ -101,9 +102,52 @@ class UbysseyTheme(DefaultTheme):
     def author(self, request, pk=None):
 
         person = Person.objects.get(pk=pk)
+        articles = Article.objects.filter(authors__id=pk, status=Article.PUBLISHED)[:6]
 
         context = {
             'person': person,
+            'articles': articles
         }
 
-        return render(request, 'author.html', context)
+        return render(request, 'author/base.html', context)
+
+    def author_articles(self, request, pk=None):
+
+        person = Person.objects.get(pk=pk)
+
+        order = request.GET.get('order', 'newest')
+
+        if order == 'newest':
+            order_by = '-published_at'
+        else:
+            order_by = 'published_at'
+
+        query = request.GET.get('q', False)
+
+        article_list = Article.objects.filter(authors__id=pk, status=Article.PUBLISHED).order_by(order_by)
+
+        if query:
+            article_list = article_list.filter(long_headline__icontains=query)
+
+        paginator = Paginator(article_list, 15) # Show 15 articles per page
+
+        page = request.GET.get('page')
+
+        try:
+            articles = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            articles = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            articles = paginator.page(paginator.num_pages)
+
+        context = {
+            'person': person,
+            'articles': articles,
+            'order': order,
+            'q': query
+        }
+
+        return render(request, 'author/articles.html', context)
+
