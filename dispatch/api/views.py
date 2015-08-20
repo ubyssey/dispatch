@@ -91,7 +91,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         Optionally restricts the returned articles by filtering
         against a `topic` query parameter in the URL.
         """
-        queryset = Article.objects.filter(status=Article.PUBLISHED).order_by('-published_at')
+        queryset = Article.objects.filter(head=True).order_by('-published_at')
         tag = self.request.QUERY_PARAMS.get('tag', None)
         q = self.request.QUERY_PARAMS.get('q', None)
         limit = self.request.QUERY_PARAMS.get('limit', None)
