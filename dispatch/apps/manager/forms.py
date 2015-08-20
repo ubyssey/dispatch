@@ -61,8 +61,8 @@ class UserForm(ModelForm):
         fields = ('email', 'is_admin', 'groups',)
 
 class PersonForm(ModelForm):
-    def __init__(self, data=None, user_form=True, instance=None):
-        super(PersonForm, self).__init__(data, instance=instance)
+    def __init__(self, data=None, files=None, user_form=True, instance=None):
+        super(PersonForm, self).__init__(data, files, instance=instance)
 
         args = []
         kwargs = {}
