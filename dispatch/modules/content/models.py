@@ -215,13 +215,13 @@ class Comment(Model):
     created_at = DateTimeField(auto_now_add=True)
 
 class Article(Publishable):
-    long_headline = CharField(max_length=200)
-    short_headline = CharField(max_length=100)
+    long_headline = CharField(max_length=255)
+    short_headline = CharField(max_length=255)
     section = ForeignKey('Section')
 
     is_active = BooleanField(default=True)
     published_at = DateTimeField(null=True)
-    slug = SlugField()
+    slug = SlugField(max_length=255)
 
     authors = ManyToManyField(Person, through="Author")
 
@@ -267,14 +267,14 @@ class Article(Publishable):
     template = CharField(max_length=255, default='default')
 
     seo_keyword = CharField(max_length=100, null=True)
-    seo_description = CharField(max_length=250, null=True)
+    seo_description = TextField(null=True)
 
     scripts = ManyToManyField(Script, related_name='scripts')
     stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
     snippets = ManyToManyField(Snippet, related_name='snippets')
 
     content = TextField()
-    snippet = TextField()
+    snippet = TextField(null=True)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -516,12 +516,12 @@ class Video(Model):
     url = CharField(max_length=500)
 
 class Image(Model):
-    img = ImageField(upload_to='images')
+    img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author")
+    authors = ManyToManyField(Person, through="Author", related_name="authors")
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -646,7 +646,7 @@ class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True)
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
-    caption = CharField(max_length=255, blank=True, null=True)
+    caption = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
     order = PositiveIntegerField(null=True)
