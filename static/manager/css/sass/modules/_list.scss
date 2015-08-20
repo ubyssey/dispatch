@@ -1,13 +1,16 @@
 header.list-header {
+  overflow: hidden;
   padding: 0 60px;
   border-bottom: thin solid #E2E2E2;
   background: #f9f9f9;
+
+  color: grey;
+  font-size: 14px;
+
   div.cell {
     float: left;
     line-height: 55px;
     span {
-      color: gray;
-      font-size: 14px;
       .fa {
         font-size: 15px;
       }
@@ -24,5 +27,12 @@ header.list-header {
     &.search {
       float: right;
     }
+  }
+}
+
+div.pagination {
+  display: inline-block;
+  span.current {
+    margin: 0 15px;
   }
 }

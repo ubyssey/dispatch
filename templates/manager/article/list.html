@@ -8,6 +8,20 @@
             <span><i class="fa fa-warning"></i> &nbsp;{{ unpublished }} unpublished articles</span>
         </div>
         <div class="header-buttons">
+            <div class="pagination">
+                <span class="step-links">
+
+                    {% if article_list.paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ article_list.number }} of {{ article_list.paginator.num_pages }}
+                    </span>
+                    {% endif %}
+
+                    <div class="combo-buttons">
+                        {% if article_list.has_previous %}<a class="dis-button" href="?page={{ article_list.previous_page_number }}"><i class="fa fa-chevron-left"></i></a>{% endif %}{% if article_list.has_next %}<a class="dis-button" href="?page={{ article_list.next_page_number }}"><i class="fa fa-chevron-right"></i></a>{% endif %}
+                    </div>
+                </span>
+            </div>
              <form class="search-bar" method="GET">
                 <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
@@ -29,13 +43,13 @@
                     {% endif %}
                 </div>
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline }}</a>
+                    <a href="{% url 'apps.manager.views.article_edit' article.parent.id %}">{{ article.long_headline|safe }}</a>
                 </div>
                 <div class="cell">
                     <span>{{ article.get_author_string }}</span>
                 </div>
                 <div class="cell">
-                    <span>{{ article.created_at }}</span>
+                    <span>{{ article.updated_at }}</span>
                 </div>
                 <div class="cell">
                     <span>{{ article.get_status }}</span>
@@ -47,4 +61,5 @@
         {% endfor %}
         </div>
     </div>
+
 {% endblock %}
