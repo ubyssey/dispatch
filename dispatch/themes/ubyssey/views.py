@@ -51,18 +51,12 @@ class UbysseyTheme(DefaultTheme):
 
         title = "%s - UBC's official student newspaper" % self.SITE_TITLE
 
-        try:
-            image = articles['primary'].featured_image.image.get_absolute_url()
-        except:
-            image = ''
-
         context = {
             'title': title,
             'meta': {
                 'title': title,
                 'description': 'Weekly student newspaper of the University of British Columbia.',
-                'url': self.SITE_URL,
-                'image': image
+                'url': self.SITE_URL
             },
             'title': "%s - UBC's official student newspaper" % self.SITE_TITLE,
             'articles': articles,
@@ -99,7 +93,10 @@ class UbysseyTheme(DefaultTheme):
 
         context = {
             'section': section,
-            'articles': articles,
+            'articles': {
+                'first': articles[0],
+                'rest': articles[1:9]
+            }
         }
 
         return render(request, 'section/base.html', context)
