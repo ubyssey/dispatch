@@ -1,6 +1,7 @@
 # Django imports
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
+from django.template import loader
 from django.shortcuts import render
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -84,7 +85,8 @@ class UbysseyTheme(DefaultTheme):
             'base_template': 'base.html'
         }
 
-        return render(request, article.get_template(), context)
+        t = loader.select_template(["%s/%s" % (article.section.slug, article.get_template()), article.get_template()])
+        return HttpResponse(t.render(context))
 
     def section(self, request, section):
 
@@ -99,7 +101,8 @@ class UbysseyTheme(DefaultTheme):
             }
         }
 
-        return render(request, 'section/base.html', context)
+        t = loader.select_template(["%s/%s" % (section.slug, 'section/base.html'), 'section/base.html'])
+        return HttpResponse(t.render(context))
 
     def author(self, request, pk=None):
 
