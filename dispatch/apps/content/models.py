@@ -661,7 +661,7 @@ class ImageAttachment(Model):
             types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
             return "%s %s" % (types[self.type], author)
         except:
-            return False
+            return None
 
     class EmbedController:
         @staticmethod
