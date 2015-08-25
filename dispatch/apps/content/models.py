@@ -306,6 +306,9 @@ class Article(Publishable):
         self.views += 1
         self.save(revision=False)
 
+    def get_related(self):
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+
     def get_reading_list(self, ref=None, dur=None):
         if ref is not None:
             if ref == 'frontpage':
@@ -315,8 +318,9 @@ class Article(Publishable):
                 articles = Article.objects.get_popular(dur=dur).exclude(pk=self.id)[:5]
                 name = "Most popular this week"
         else:
-            articles = Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+            articles = self.get_related()
             name = self.section.name
+
         return {
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
