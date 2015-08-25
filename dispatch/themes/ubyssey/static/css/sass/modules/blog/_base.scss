@@ -55,16 +55,10 @@ p.snippet {
 article.primary {
   position: relative;
 
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  &:hover {
-    div.overlay {
-      backround: rgba(88, 0, 8, 0.6);
-    }
+  div.image {
+    height: 550px;
+    background-size: cover;
+    background-position: center center;
   }
 
   div.overlay {
