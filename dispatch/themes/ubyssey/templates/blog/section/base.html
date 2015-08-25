@@ -6,13 +6,11 @@
 {% with articles.first as article %}
 <article class="primary">
     <a class="article" href="{{ article.get_absolute_url }}">
-        <div class="image">
-            <img src="{{ article.featured_image.image.get_absolute_url }}" />
-        </div>
+        <div class="image" style="background-image: url('{{ article.featured_image.image.get_absolute_url }}');"></div>
         <div class="overlay">
             <div class="meta">
                 <div class="container">
-                    <span class="category">Adventures</span>
+                    {% if article.topic %}<span class="category">{{ article.topic.name }}</span>{% endif %}
                     <h1 class="headline">{{ article.long_headline|safe }}</h1>
                 </div>
             </div>
