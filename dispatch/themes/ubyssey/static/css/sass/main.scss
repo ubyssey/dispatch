@@ -1,13 +1,23 @@
 @import 'modules/core';
 @import 'modules/grid';
-@import 'modules/header';
-@import 'modules/footer';
 @import 'modules/fonts';
 @import 'modules/font_faces';
+@import 'modules/advertisements';
+@import 'modules/variables';
+
+
+// Ubyssey site-specific files
+
+@import 'modules/header';
+@import 'modules/footer';
+
+@import 'modules/headers';
+@import 'modules/buttons';
+
 @import 'modules/homepage';
 
-
 @import 'modules/section';
+
 @import 'modules/article/base';
 @import 'modules/article/embeds';
 @import 'modules/article/comments_bar';
@@ -15,52 +25,7 @@
 
 @import 'modules/author';
 
-@import 'modules/advertisements';
-
-@import 'modules/variables';
-
-@import 'modules/headers';
-
-@import 'modules/buttons';
-
-body {
-    padding: 0;
-    margin: 0;
-}
-
-div.container {
-  max-width: 1000px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-
-  &.padded {
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  &.large {
-    max-width: 1260px;
-  }
-
-  @media($bp-larger-than-phablet){
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-}
-
-@media($bp-larger-than-phablet){
-  div.table-row {
-    display: table;
-    div.cell {
-      display: table-cell;
-      &.middle {
-        vertical-align: middle;
-      }
-    }
-  }
-}
+@import 'modules/search';
 
 //////
 
