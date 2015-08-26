@@ -173,7 +173,7 @@ header.secondary {
   height: $toolbar-width;
   line-height: 40px;
   box-sizing: border-box;
-  padding: 0 20px 0 60px;
+  padding: 0 15px;
   div.header-main {
     line-height: $toolbar-width;
     height: 100%;
@@ -206,6 +206,11 @@ header.secondary {
   }
 }
 
+@media($bp-larger-than-mobile){
+  header.secondary {
+    padding: 0 20px 0 60px;
+  }
+}
 
 main {
   position: absolute;
@@ -233,7 +238,7 @@ main {
 
 div.container {
   width: 100%;
-  padding: 0 60px;
+  padding: 0 75px;
   margin: 0 auto;
   max-width: 1320px;
 }
@@ -285,6 +290,46 @@ div.item-list {
           }
         }
       }
+    }
+  }
+}
+
+div.home {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+ul.activity {
+  li {
+    padding: 20px 0;
+    border-top: 1px solid #DCDCDC;
+    font-size: 14px;
+    display: table;
+    width: 100%;
+    a {
+      text-decoration: none;
+      color: #005CC3;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .timestamp {
+      color: #ADADAD;
+    }
+    i.fa {
+      display: table-cell;
+      width: 60px;
+      text-align: center;
+    }
+    div {
+      display: table-cell;
+      line-height: 1.5em;
     }
   }
 }
