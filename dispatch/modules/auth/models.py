@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField
+from django.db.models import Model, CharField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.conf import settings
 
@@ -98,3 +98,12 @@ class Person(Model):
 class Setting(Model):
     name = CharField(max_length=255)
     value = CharField(max_length=255)
+
+class Action(Model):
+
+    person = ForeignKey(Person)
+    action = CharField(max_length=50)
+    object_type = CharField(max_length=50)
+    object_id = PositiveIntegerField()
+    timestamp = DateTimeField(auto_now=True)
+
