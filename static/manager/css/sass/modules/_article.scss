@@ -273,7 +273,7 @@ div.tab {
 
 @media($bp-smaller-than-mobile){
   div.top-toolbar {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
