@@ -75,7 +75,7 @@ var ArticleAdmin = React.createClass({
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
-           showOptions: true,
+           showOptions: window.innerWidth > 400,
            unsaved: false,
        };
     },
