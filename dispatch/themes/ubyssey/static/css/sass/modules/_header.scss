@@ -255,6 +255,25 @@ header.mobile {
   }
 }
 
-html.hairlines header.mobile {
+nav.mobile {
+  display: none; // Initially
+  position: fixed;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.99); // Barely transparent
+  border-bottom: 1px solid rgb(178,178,178);
+  ul {
+    list-style: none;
+    padding: 10px 20px;
+    margin: 0;
+    li a {
+      padding: 10px 0;
+      display: block;
+      font-weight: 500;
+      font-size: 18px;
+    }
+  }
+}
+
+html.hairlines header.mobile,  html.hairlines nav.mobile {
   border-bottom: 0.5px solid rgb(178,178,178);
 }

@@ -13,6 +13,14 @@ $(document).on('click', function(){
     $('.dropdown ul').hide();
 });
 
+$('a.menu').click(function(e){
+    e.preventDefault();
+    if($('nav.mobile').is(':visible')){
+        $('nav.mobile').hide();
+    } else {
+        $('nav.mobile').show();
+    }
+});
 
 $('a.facebook').click(function(e){
     e.preventDefault();
