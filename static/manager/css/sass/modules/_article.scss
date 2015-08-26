@@ -59,69 +59,6 @@ div.manage-authors {
   display: none;
 }
 
-div.panel.content {
-  position: relative;
-  margin-right: 600px;
-  background: white;
-  height: 100%;
-  overflow: scroll;
-
-  border-right: 1px solid #DEDEDE;
-
-  &.expanded {
-    margin-right: 0;
-    > div.inner {
-      @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
-    }
-    div.toggle-options {
-      right: 0;
-      border: none;
-      background: none;
-    }
-  }
-
-  @include transition(margin-right 0.3s ease-in-out);
-
-  > div.inner {
-    padding-right: $text-padding;
-    padding-bottom: 95px;
-    width: 720px;
-    margin: 0 auto;
-    @include transition(box-shadow 0.3s ease-in-out);
-    @media(min-width: 1500px) {
-      @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
-    }
-  }
-  div.toggle-options {
-    position: fixed;
-    z-index: 1;
-    top: 95px;
-    right: 600px;
-    height: 46px;
-    line-height: 46px;
-    text-align: center;
-    padding: 0 13px;
-    color: #a2a2a2;
-    background: #fff;
-    border-bottom-left-radius: 3px;
-    border: 1px solid rgb(217, 217, 217);
-    border-top: none;
-
-    @include transition(right 0.3s ease-in-out);
-
-    &:hover {
-      color: rgb(90, 90, 90);
-    }
-    span {
-      font-size: 13px;
-      margin-left: 5px;
-    }
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
 div.panel.options {
   border-left: 1px solid rgb(228, 228, 228);
   position: absolute;
@@ -261,31 +198,6 @@ button.embed-button {
   }
 }
 
-div.field-row.headline {
-  margin-left: ($text-padding - 10);
-  border-bottom: 1px solid rgb(226, 226, 226);
-  padding-top: 35px;
-  padding-bottom: 20px;
-  margin-bottom: 30px;
-  div.authors {
-    padding: 10px 0;
-    font-family: $ui-font-helvetica;
-    font-weight: 600;
-    font-size: 16px;
-    color: #7E7E7E;
-    line-height: 28px;
-    height: 28px;
-    &:hover{
-      button {
-        display: inline-block;
-      }
-    }
-    button {
-      display: none;
-    }
-  }
-}
-
 input.add-box {
   display: none;
 }
@@ -359,10 +271,28 @@ div.tab {
   }
 }
 
+@media($bp-smaller-than-mobile){
+  div.top-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500;
+
+    background: #FAFAFA;
+    border-top: 1px solid rgb(228, 228, 228);
+    height: $toolbar-width;
+    line-height: 40px;
+    box-sizing: border-box;
+    padding: 0 15px;
+  }
+}
+
+
+
 div.header-buttons {
   line-height: 50px;
   vertical-align: middle;
-  float: right;
   > a, > button, > div.dis-button, > div.combo-buttons {
     display: inline-block;
     margin: 0 5px;
@@ -371,12 +301,20 @@ div.header-buttons {
     }
   }
   .load-status {
-    .loader {
-      border-left: 5px solid #FAFAFA;
-      left: inherit;
-      display: none;
+    display: none;
+  }
+  .load-status .loader {
+    border-left: 5px solid #FAFAFA;
+    left: inherit;
+    display: none;
+  }
+  @media($bp-larger-than-mobile){
+    float: right;
+
+    .load-status {
+      display: inline-block;
     }
-    &.saving .loader {
+    .load-status.saving .loader {
       display: block;
     }
   }
