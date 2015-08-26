@@ -38,10 +38,10 @@ main.article.default {
     line-height: 38px;
     margin-bottom: 15px;
   }
-  div.article-byline {
-    float: left;
-  }
   @media($bp-larger-than-mobile){
+    div.article-byline {
+      float: left;
+    }
     h1.headline {
       line-height: 46px;
       border-top: 2px solid #3E3E3E;
@@ -56,7 +56,7 @@ main.article.default {
 main {
 
   div.headline-container {
-    padding: 25px 0 30px 0;
+    padding: 25px 20px 30px 20px;
   }
 
   h1.headline {
@@ -168,50 +168,99 @@ div.side {
 
 // Social/share icons
 
-div.article-social {
-  display: none;
-  @media($bp-larger-than-mobile){
-    display: block;
+ul.social {
+  margin-top: 25px;
+  margin-bottom: 0;
+
+
+  padding: 0;
+  list-style-type: none;
+
+  li a {
+    font-family: $font-default;
+    font-size: 14px;
+    font-weight: 500;
+    i, span {
+      vertical-align: middle;
+    }
+    i {
+      margin-right: 8px;
+      font-size: 16px;
+    }
   }
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    li a {
-      font-family: $font-default;
-      font-size: 14px;
-      font-weight: 500;
-      i, span {
-        vertical-align: middle;
+
+  li a span {
+    display: none;
+  }
+
+  @media($bp-larger-than-mobile){
+    margin-top: 0;
+    li a span {
+      display: inline;
+    }
+  }
+
+
+  &.dots {
+    li {
+      margin-right: 5px;
+      a {
+        font-size: 18px;
+        display: block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 20px;
+        color: #fff;
+        text-align: center;
+        background: #ABABAB;
+        span {
+          display: none;
+        }
+        i {
+          margin-right: 0;
+        }
       }
-      i {
-        margin-right: 8px;
-        font-size: 16px;
+    }
+
+    .facebook {
+      background: #3A4E95;
+    }
+
+    .twitter {
+      background: #55ACD2;
+    }
+
+    .pinterest {
+      background: #EE0000;
+    }
+
+  }
+
+  &.top {
+    li {
+      display: inline-block;
+      margin-right: 15px;
+    }
+
+    @media($bp-larger-than-mobile){
+      float: right;
+      li {
+        margin-right: 0;
+        margin-left: 20px;
       }
     }
   }
-}
 
-div.article-social.top {
-  float: right;
-  display: none;
-
-  @media($bp-larger-than-mobile){
-    display: block;
-  }
-
-  ul li {
-    display: inline;
-    margin-left: 20px;
-  }
-}
-
-div.article-social.left {
-  float: left;
-  ul li {
-    display: block;
-    padding: 15px;
-    border-top: 1px solid #E4E4E4;
-    margin: 0;
+  &.left {
+    @media($bp-larger-than-mobile){
+      float: left;
+    }
+    li {
+      display: block;
+      padding: 15px;
+      border-top: 1px solid #E4E4E4;
+      margin: 0;
+    }
   }
 }

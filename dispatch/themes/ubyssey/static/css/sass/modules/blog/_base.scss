@@ -171,40 +171,6 @@ article.blog {
     line-height: 1.6em;
     margin-bottom: 30px;
   }
-
-  ul.social {
-    list-style-type: none;
-    padding: 0;
-    margin: 25px 0;
-    li {
-      display: inline-block;
-      margin-right: 5px;
-      a {
-        font-size: 18px;
-        display: block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 20px;
-        color: #fff;
-        text-align: center;
-        background: #ABABAB;
-      }
-    }
-
-    .facebook {
-      background: #3A4E95;
-    }
-
-    .twitter {
-      background: #55ACD2;
-    }
-
-    .pinterest {
-      background: #EE0000;
-    }
-
-  }
 }
 
 div.related {
