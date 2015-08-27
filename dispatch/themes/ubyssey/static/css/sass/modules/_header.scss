@@ -217,16 +217,19 @@ header.topbar {
 header.mobile {
   height: 54px;
   line-height: 54px;
-  display: table;
+  border-bottom: 1px solid #DADADA;
 
   a.left, a.right, a.logo {
-    display: table-cell;
+    position: absolute;
     vertical-align: middle;
     background: rgba(255, 255, 255, 0.99);
-    border-bottom: 1px solid #DADADA;
   }
 
   a.left, a.right {
+    top: 0;
+    bottom: 0;
+    z-index: 600;
+
     box-sizing: border-box;
     font-size: 20px;
     color: #303030;
@@ -235,11 +238,12 @@ header.mobile {
 
     &.active {
       background: rgba(249, 249, 249, 0.99);
-      border-bottom: 1px solid rgba(249, 249, 249, 0.99);
+      bottom: -1px;
     }
   }
 
   a.left {
+    left: 0;
     border-right: 1px solid transparent;
     &.active {
       border-right: 1px solid #DADADA;
@@ -247,6 +251,7 @@ header.mobile {
   }
 
   a.right {
+    right: 0;
     border-left: 1px solid transparent;
     &.active {
       border-left: 1px solid #DADADA;
@@ -254,6 +259,8 @@ header.mobile {
   }
 
   a.logo {
+    width: 100%;
+    z-index: 500;
     text-align: center;
     img {
       vertical-align: middle;
