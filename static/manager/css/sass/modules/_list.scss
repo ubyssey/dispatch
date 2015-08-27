@@ -28,6 +28,52 @@ header.list-header {
       float: right;
     }
   }
+
+  button.delete-items {
+    margin-left: 15px;
+  }
+}
+
+div.item-list {
+  display: table;
+  width: 100%;
+  div.item {
+    display: table-row;
+    div.cell {
+      display: table-cell;
+      padding: 20px 0 20px 20px;
+      border-bottom: thin solid #E2E2E2;
+      font-size: 13px;
+      color: rgb(100, 100, 100);
+      a {
+        text-decoration: none;
+      }
+
+      &.checkbox, &.status {
+        text-align: center;
+        width: 12px;
+        padding-left: 10px;
+        padding-right: 0px;
+      }
+      &.status {
+        font-size: 16px;
+        padding-left: 15px;
+        .fa-check-circle {
+          color: #4FD74B;
+        }
+      }
+      &.title {
+        a {
+          font-weight: 600;
+          color: black;
+          font-size: 15px;
+          &:hover {
+            color: $steel-blue;
+          }
+        }
+      }
+    }
+  }
 }
 
 div.pagination {
