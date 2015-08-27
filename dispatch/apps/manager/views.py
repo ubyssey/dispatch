@@ -1,4 +1,4 @@
-from dispatch.apps.content.models import Article, Section, Tag, Topic, Author
+from dispatch.apps.content.models import Article, Section, Tag, Topic, Author, File
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
 from .decorators import staff_member_required
@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from dispatch.apps.core.models import User, Person
 from datetime import datetime
-from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm, RoleForm
+from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm, RoleForm, FileForm
 from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group, Permission
@@ -335,3 +335,56 @@ def pages(request):
     }
 
     return render(request, 'manager/page/list.html', context)
+
+@staff_member_required
+def files(request):
+
+    files = File.objects.all()
+
+    context = {
+        'title': 'Files',
+        'files': files,
+    }
+
+    return render(request, 'manager/file/list.html', context)
+
+@staff_member_required
+def file_add(request):
+    if request.method == 'POST':
+        form = FileForm(request.POST, request.FILES,)
+        if form.is_valid():
+            file = form.save()
+            return redirect(file_edit, file.id)
+    else:
+        form = FileForm()
+
+    context = {
+        'title': 'Add File',
+        'form': form,
+    }
+
+    return render(request, 'manager/file/edit.html', context)
+
+@staff_member_required
+def file_edit(request, id):
+    file = File.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = FileForm(request.POST, request.FILES, instance=File)
+        if form.is_valid():
+            file = form.save()
+    else:
+        form = FileForm(instance=file)
+
+    context = {
+        'title': 'Edit File',
+        'form': form,
+        'file': file,
+    }
+
+    return render(request, 'manager/file/edit.html', context)
+
+@staff_member_required
+def file_delete(request, id):
+    File.objects.get(pk=id).delete()
+    return redirect(files)

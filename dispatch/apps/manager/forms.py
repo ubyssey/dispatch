@@ -1,6 +1,6 @@
 from django.forms import Form, ModelForm, TextInput, Textarea, CharField, EmailField, PasswordInput, ValidationError, HiddenInput
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
-from dispatch.apps.content.models import Article, Section, Image, ImageAttachment
+from dispatch.apps.content.models import Article, Section, File, Image, ImageAttachment
 from dispatch.apps.core.models import User, Person
 from django.contrib.auth.models import Group, Permission
 
@@ -203,6 +203,10 @@ class RoleForm(ModelForm):
         model = Group
         fields = '__all__'
 
+class FileForm(ModelForm):
+    class Meta:
+        model = File
+        fields = '__all__'
 
 class ArticleForm(ModelForm):
     class Meta:
