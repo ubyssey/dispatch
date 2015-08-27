@@ -33,9 +33,9 @@ def home(request):
         RequestContext(request, {}),
     )
 
-def logout(request):
+def logout(request, next_page=None):
     from django.contrib.auth.views import logout
-    return logout(request, template_name='registration/logged_out.html')
+    return logout(request, next_page='/admin/')
 
 def login(request):
     from django.contrib.auth.views import login
