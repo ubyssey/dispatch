@@ -1,6 +1,32 @@
 {% load staticfiles %}
 <header class="mobile">
-    <a class="left"><i class="fa fa-bars"></i></a>
+    <a class="menu left" href="#"><i class="fa fa-bars"></i></a>
     <a class="logo" href="{% url 'home' %}"><img src="{% static 'img/ubyssey-logo-small.svg' %}" type="text/css"/></a>
-    <a class="right"><i class="fa fa-search"></i></a>
+    <a class="search right" href="#"><i class="fa fa-search"></i></a>
 </header>
+<nav class="mobile">
+    <div class="left">
+        <h3>Sections</h3>
+        <ul class="sections">
+            <li><a href="{% url 'section' 'news' %}">News</a></li>
+            <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
+            <li><a href="{% url 'section' 'features' %}">Features</a></li>
+            <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
+            <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
+            <li><a href="{% url 'section' 'video' %}">Video</a></li>
+            <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+        </ul>
+    </div>
+    <div class="right">
+        <h3>Links</h3>
+        <ul class="links">
+            <li><a href="{% url 'section' 'news' %}">News</a></li>
+            <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
+            <li><a href="{% url 'section' 'features' %}">Features</a></li>
+            <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
+            <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
+            <li><a href="{% url 'section' 'video' %}">Video</a></li>
+            <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+        </ul>
+    </div>
+</nav>

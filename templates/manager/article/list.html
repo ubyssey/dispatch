@@ -10,7 +10,6 @@
         <div class="header-buttons">
             <div class="pagination">
                 <span class="step-links">
-
                     {% if article_list.paginator.num_pages > 1 %}
                     <span class="current">
                         Page {{ article_list.number }} of {{ article_list.paginator.num_pages }}
@@ -25,7 +24,7 @@
              <form class="search-bar" method="GET">
                 <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button" href="{% url 'apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
+            <a class="dis-button green" href="{% url 'apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
         </div>
     </header>
     <div class="list-container">

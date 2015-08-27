@@ -71,7 +71,6 @@ button.dis-button, a.dis-button, div.dis-button > button {
 }
 
 div.dropdown-button {
-  position: relative;
   button {
     float: none;
     position: relative;
@@ -79,15 +78,14 @@ div.dropdown-button {
       margin-left: 5px;
     }
   }
-  &.left .items {
-    right: 0;
-  }
   .dropdown-panel {
+    left: 15px;
+    right: 15px;
+
     position: absolute;
     line-height: normal;
     padding: 5px 12px;
     z-index: 600;
-    width: 250px;
     background: #fff;
     border: 1px solid #cacaca;
     border-radius: 2px;
@@ -114,6 +112,20 @@ div.dropdown-button {
         background: rgb(242, 242, 242);
         cursor: pointer;
       }
+    }
+  }
+}
+
+@media($bp-larger-than-mobile){
+  div.dropdown-button {
+    position: relative;
+    &.left .items {
+      right: 0;
+    }
+    .dropdown-panel {
+      left: inherit;
+      right: inherit;
+      width: 250px;
     }
   }
 }
