@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from dispatch.apps.content.models import Author, Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
+from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
 
 
@@ -202,7 +203,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     topic = TopicSerializer(read_only=True)
-    topic_id = serializers.IntegerField(write_only=True)
+    topic_id = serializers.IntegerField(write_only=True, required=False)
 
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
@@ -258,9 +259,14 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance = Article()
 
         # Then save as usual
-        return self.update(instance, validated_data)
+        return self.update(instance, validated_data, action='create')
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data, action='update'):
+
+        status = validated_data.get('status', instance.status)
+
+        if status != instance.status and status == Article.PUBLISHED:
+            action = 'publish'
 
         # Update all the basic fields
         instance.long_headline = validated_data.get('long_headline', instance.long_headline)
@@ -269,7 +275,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.template = validated_data.get('template', instance.template)
-        instance.status = validated_data.get('status', instance.status)
+        instance.status = status
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
@@ -310,5 +316,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
+
+
+        if instance.parent:
+            perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)
+        else:
+            perform_action(self.context['request'].user.person, action, 'article', instance.pk)
 
         return instance
