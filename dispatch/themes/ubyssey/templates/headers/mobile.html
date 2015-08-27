@@ -5,13 +5,28 @@
     <a class="search right"><i class="fa fa-search"></i></a>
 </header>
 <nav class="mobile">
-    <ul class="sections">
-        <li><a href="{% url 'section' 'news' %}">News</a></li>
-        <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
-        <li><a href="{% url 'section' 'features' %}">Features</a></li>
-        <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
-        <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
-        <li><a href="{% url 'section' 'video' %}">Video</a></li>
-        <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
-    </ul>
+    <div class="left">
+        <h3>Sections</h3>
+        <ul class="sections">
+            <li><a href="{% url 'section' 'news' %}">News</a></li>
+            <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
+            <li><a href="{% url 'section' 'features' %}">Features</a></li>
+            <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
+            <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
+            <li><a href="{% url 'section' 'video' %}">Video</a></li>
+            <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+        </ul>
+    </div>
+    <div class="right">
+        <h3>Links</h3>
+        <ul class="links">
+            <li><a href="{% url 'section' 'news' %}">News</a></li>
+            <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
+            <li><a href="{% url 'section' 'features' %}">Features</a></li>
+            <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
+            <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
+            <li><a href="{% url 'section' 'video' %}">Video</a></li>
+            <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+        </ul>
+    </div>
 </nav>
