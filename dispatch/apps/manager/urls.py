@@ -22,10 +22,17 @@ urlpatterns = patterns('',
     url(r'^article/delete/(\d*)/?$', views.article_delete),
     url(r'^article/add/(?P<section>[-\w]+)/?$', views.article_add),
     url(r'^article/add/?$', views.article_add),
+
     url(r'^section/edit/(\d*)/?$', views.section_edit),
     url(r'^section/add/?$', views.section_add),
     url(r'^section/(?P<section>[-\w]+)/?$', views.section),
     url(r'^sections/$', views.sections),
+
+    url(r'^files/edit/(\d*)/?$', views.file_edit),
+    url(r'^files/add/?$', views.file_add),
+    url(r'^files/delete/(\d*)/?$', views.file_delete),
+    url(r'^files/$', views.files),
+
     url(r'^pages/$', views.pages),
     url(r'^page/edit/(?P<slug>[-\w]+)/?$', views.page_edit),
 )
