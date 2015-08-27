@@ -1,39 +1,51 @@
 var React = require('react');
 var Youtube = require('./modules/Youtube.js');
 var ArticleList = require('./components/ArticleList.jsx');
+var Search = require('./components/Search.jsx');
 
 window.articleHeader = false;
 
-$(function(){
-    if($(document).scrollTop() > 50){
-        window.articleHeader = true;
-        $('.header-site').hide();
-        $('.header-article').show();
+
+
+if($('main.article').length){
+
+    $(function(){
+        if($(document).scrollTop() > 50){
+            window.articleHeader = true;
+            $('.header-site').hide();
+            $('.header-article').show();
+        }
+    });
+
+    var articleId = $('article').data('id');
+    var articleHeadline = $('article').data('headline');
+    var articleURL = $('article').data('url');
+
+    var userId = $('article').data('user-id');
+
+    var articleIds = $('article').data('list');
+    var listName = $('article').data('list-name');
+
+    if(articleIds === parseInt(articleIds, 10)){
+        articleIds = [articleIds];
+    } else {
+        articleIds = articleIds.split(',');
     }
-});
 
-var articleId = $('article').data('id');
-var articleHeadline = $('article').data('headline');
-var articleURL = $('article').data('url');
+    var firstArticle = {
+        id: articleId,
+        long_headline: articleHeadline,
+        url: articleURL
+    };
 
-var userId = $('article').data('user-id');
-
-var articleIds = $('article').data('list');
-var listName = $('article').data('list-name');
-
-if(articleIds === parseInt(articleIds, 10)){
-    articleIds = [articleIds];
-} else {
-    articleIds = articleIds.split(',');
+    var articleList = React.render(
+        <ArticleList breakpoint={960} name={listName} firstArticle={firstArticle} articles={articleIds} userId={userId} />,
+        document.getElementById('article-list')
+    );
 }
 
-var firstArticle = {
-    id: articleId,
-    long_headline: articleHeadline,
-    url: articleURL
-};
 
-var articleList = React.render(
-    <ArticleList breakpoint={960} name={listName} firstArticle={firstArticle} articles={articleIds} userId={userId} />,
-    document.getElementById('article-list')
+React.render(
+    <Search />,
+    document.getElementById('search-form')
 );
