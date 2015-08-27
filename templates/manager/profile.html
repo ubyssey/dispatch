@@ -5,33 +5,35 @@
     </div>
 {% endblock %}
 {% block content %}
-<div class="inner">
-    <form class="person-form"  action="" method="post">
-        {% csrf_token %}
-        <h2>Basic Information</h2>
-        {% for field in person_form %}
+<div class="inner scroll">
+    <div class="container">
+        <form class="person-form"  action="" method="post">
+            {% csrf_token %}
+            <h2>Basic Information</h2>
+            {% for field in person_form %}
+                <div class="field">
+                    {{ field.errors }}
+                    <label>{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
             <div class="field">
-                {{ field.errors }}
-                <label>{{ field.label }}:</label>
-                {{ field }}
+                {{ user_form.email.errors }}
+                <label>{{ user_form.email.label }}:</label>
+                {{ user_form.email }}
             </div>
-        {% endfor %}
-        <div class="field">
-            {{ user_form.email.errors }}
-            <label>{{ user_form.email.label }}:</label>
-            {{ user_form.email }}
-        </div>
-        <h2>Change password (optional)</h2>
-        <div class="field">
-            {{ user_form.password2.errors }}
-            <label>{{ user_form.password1.label }}:</label>
-            {{ user_form.password1}}
-        </div>
-        <div class="field">
-            <label>{{ user_form.password2.label }}:</label>
-            {{ user_form.password2 }}
-        </div>
-        <input type="submit" />
-    </form>
+            <h2>Change password (optional)</h2>
+            <div class="field">
+                {{ user_form.password2.errors }}
+                <label>{{ user_form.password1.label }}:</label>
+                {{ user_form.password1}}
+            </div>
+            <div class="field">
+                <label>{{ user_form.password2.label }}:</label>
+                {{ user_form.password2 }}
+            </div>
+            <input type="submit" />
+        </form>
+    </div>
 </div>
 {% endblock %}
