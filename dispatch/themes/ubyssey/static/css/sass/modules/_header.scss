@@ -274,6 +274,11 @@ nav.mobile {
   }
 }
 
-html.hairlines header.mobile,  html.hairlines nav.mobile {
-  border-bottom: 0.5px solid rgb(178,178,178);
+html.hairlines {
+  header.mobile, nav.mobile {
+    border-bottom: 0.5px solid rgb(178,178,178);
+  }
+  nav.mobile {
+    margin-top: -0.5px;
+  }
 }
