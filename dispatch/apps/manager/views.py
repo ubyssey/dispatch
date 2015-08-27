@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from dispatch.apps.core.models import User, Person
+from dispatch.apps.core.actions import list_actions, recent_articles
 from datetime import datetime
 from .forms import ArticleForm, FeaturedImageForm, ImageAttachmentFormSet, PersonForm, ProfileForm, SectionForm, RoleForm, FileForm
 from dispatch.helpers import ThemeHelper
@@ -26,6 +27,8 @@ def home(request):
         "manager/base.html",
         {
             'title': "Dashboard",
+            'actions': list_actions(25),
+            'recent': recent_articles(request.user.person),
         },
         RequestContext(request, {}),
     )
