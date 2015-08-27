@@ -253,47 +253,6 @@ div.list-container {
   box-sizing: border-box;
 }
 
-div.item-list {
-  display: table;
-  width: 100%;
-  div.item {
-    display: table-row;
-    div.cell {
-      display: table-cell;
-      padding: 20px 0 20px 20px;
-      border-bottom: thin solid #E2E2E2;
-      a, span {
-        font-family: $ui-font-helvetica;
-        font-size: 13px;
-        text-decoration: none;
-        color: rgb(100, 100, 100);
-      }
-      &.checkbox, &.status {
-        text-align: center;
-        width: 12px;
-        padding-left: 10px;
-        padding-right: 0px;
-      }
-      &.status {
-        padding-left: 15px;
-        .fa-check-circle {
-          color: #4FD74B;
-        }
-      }
-      &.title {
-        a {
-          font-weight: 600;
-          color: black;
-          font-size: 15px;
-          &:hover {
-            color: $steel-blue;
-          }
-        }
-      }
-    }
-  }
-}
-
 div.home {
   padding-top: 25px;
   padding-bottom: 25px;
@@ -330,6 +289,27 @@ ul.activity {
     div {
       display: table-cell;
       line-height: 1.5em;
+    }
+  }
+}
+
+div.sidebox {
+  border: thin solid #E2E2E2;
+  margin-bottom: 25px;
+  &.actions {
+    padding: 15px 20px;
+    background: #f9f9f9;
+  }
+  &.list {
+    ul li {
+      padding: 15px 20px;
+      border-bottom: 1px solid #E2E2E2;
+      a {
+        font-size: 14px;
+      }
+      &:last-child {
+        border-bottom: none;
+      }
     }
   }
 }
