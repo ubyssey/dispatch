@@ -17,8 +17,29 @@ $('a.menu').click(function(e){
     e.preventDefault();
     if($('nav.mobile').is(':visible')){
         $('nav.mobile').hide();
+        $(this).removeClass('active');
     } else {
+        if($('#search-form').is(':visible')){
+            $('#search-form').hide();
+            $('a.search').removeClass('active');
+        }
         $('nav.mobile').show();
+        $(this).addClass('active');
+    }
+});
+
+$('a.search').click(function(){
+
+    if($('#search-form').is(':visible')){
+        $('#search-form').hide();
+        $(this).removeClass('active');
+    } else {
+        if($('nav.mobile').is(':visible')){
+            $('nav.mobile').hide();
+            $('a.menu').removeClass('active');
+        }
+        $('#search-form').show();
+        $(this).addClass('active');
     }
 });
 

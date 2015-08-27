@@ -132,13 +132,13 @@ header.topbar, header.mobile {
   z-index: 50;
   position: fixed;
   top: 0;
-  background: rgba(255, 255, 255, 0.99);
-  border-bottom: 1px solid #DADADA;
 }
 
 header.topbar {
   height: 48px;
   line-height: 48px;
+  background: rgba(255, 255, 255, 0.99);
+  border-bottom: 1px solid #DADADA;
   .section-name {
       display: inline-block;
       margin-right: 10px;
@@ -222,28 +222,39 @@ header.mobile {
   a.left, a.right, a.logo {
     display: table-cell;
     vertical-align: middle;
+    background: rgba(255, 255, 255, 0.99);
+    border-bottom: 1px solid #DADADA;
   }
 
   a.left, a.right {
     box-sizing: border-box;
-    width: 30%;
-
     font-size: 20px;
     color: #303030;
+
+    padding: 0 25px;
+
+    &.active {
+      background: rgba(249, 249, 249, 0.99);
+      border-bottom: 1px solid rgba(249, 249, 249, 0.99);
+    }
   }
 
   a.left {
-    padding-left: 25px;
+    border-right: 1px solid transparent;
+    &.active {
+      border-right: 1px solid #DADADA;
+    }
   }
 
   a.right {
-    padding-right: 25px;
-    text-align: right;
+    border-left: 1px solid transparent;
+    &.active {
+      border-left: 1px solid #DADADA;
+    }
   }
 
   a.logo {
     text-align: center;
-    width: 40%;
     img {
       vertical-align: middle;
       width: 100%;
