@@ -261,16 +261,28 @@ nav.mobile {
   width: 100%;
   background: rgba(249, 249, 249, 0.99); // Barely transparent
   border-bottom: 1px solid rgb(178,178,178);
+  overflow: auto;
+  padding: 10px 20px;
   ul {
     list-style: none;
-    padding: 10px 20px;
+    padding: 0;
     margin: 0;
     li a {
       padding: 10px 0;
       display: block;
       font-weight: 500;
-      font-size: 18px;
+      font-size: 16px;
     }
+  }
+  .left, .right {
+    float: left;
+    width: 50%;
+  }
+  h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #5D5D5D;
   }
 }
 
