@@ -1,46 +1,47 @@
-{% load staticfiles %}
-<!DOCTYPE html>
+<!DOCTYPE html>{% load staticfiles %}
 <html>
 <head>
-    <title></title>
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'manager/css/admin.css' %}" type="text/css">
 </head>
-<body>
-
-{% if form.non_field_errors %}
-{% for error in form.non_field_errors %}
-<p class="errornote">
-    {{ error }}
-</p>
-{% endfor %}
-{% endif %}
-
-<div class="login-box">
-    <h1>Dispatch</h1>
-    <form action="" method="post" id="login-form">
-        {% csrf_token %}
-        <div class="row">
-            {{ form.username.errors }}
-            <label for="id_username" class="required">{{ form.username.label }}:</label>
-            {{ form.username }}
+<body class="login">
+    <div class="login">
+        <div class="inner">
+            <div class="login-box">
+                <h1>Dispatch</h1>
+                <form action="" method="post" id="login-form">
+                    {% csrf_token %}
+                    <div class="field full">
+                        {{ form.username.errors }}
+                        <label for="id_username" class="required">{{ form.username.label }}:</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="field full">
+                        {{ form.password.errors }}
+                        <label for="id_password" class="required">Password:</label>
+                        {{ form.password }}
+                    </div>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    {% url 'admin_password_reset' as password_reset_url %}
+                    {% if password_reset_url %}
+                    <div class="password-reset-link">
+                        <a href="{{ password_reset_url }}">Forgotten your password or username?</a>
+                    </div>
+                    {% endif %}
+                    <div class="submit-row">
+                        <button class="dis-button" type="submit">Log in</button>
+                    </div>
+                    {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                    <p class="errornote">
+                        {{ error }}
+                    </p>
+                    {% endfor %}
+                    {% endif %}
+                </form>
+            </div>
         </div>
-        <div class="row">
-            {{ form.password.errors }}
-            <label for="id_password" class="required">Password:</label>
-            {{ form.password }}
-        </div>
-        <input type="hidden" name="next" value="{{ next }}" />
-        {% url 'admin_password_reset' as password_reset_url %}
-        {% if password_reset_url %}
-        <div class="password-reset-link">
-            <a href="{{ password_reset_url }}">Forgotten your password or username?</a>
-        </div>
-        {% endif %}
-        <div class="submit-row">
-            <input type="submit" value="Log in" />
-        </div>
-    </form>
-</div>
-
+    </div>
 </body>
 </html>
