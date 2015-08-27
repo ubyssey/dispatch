@@ -5,18 +5,20 @@
     </div>
 {% endblock %}
 {% block content %}
-<div class="inner">
-    <form class="section-form"  action="" method="post">
-        {% csrf_token %}
-        <h2>Basic Information</h2>
-        {% for field in form %}
-            <div class="field">
-                {{ field.errors }}
-                <label>{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <input type="submit" />
-    </form>
+<div class="inner scroll">
+    <div class="container">
+        <form class="section-form"  action="" method="post">
+            {% csrf_token %}
+            <h2>Basic Information</h2>
+            {% for field in form %}
+                <div class="field">
+                    {{ field.errors }}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="dis-button green">Update</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
