@@ -22,7 +22,7 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css"/>
 </head>
 <body>
@@ -38,14 +38,34 @@ if (window.devicePixelRatio && devicePixelRatio >= 2) {
   document.body.removeChild(testElem);
 }
 </script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '910205815715611',
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 {% block header %}{% endblock %}
+<div id="search-form"></div>
 {% block content %}{% endblock %}
 {% block footer %}{% include 'footer.html' %}{% endblock %}
+
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <script src="{% static 'manager/js/dist/dispatch.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/vendor/keymaster/keymaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/dist/main.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/dist/article.js' %}" type="text/javascript"></script>
 
 {% block scripts %}
 

@@ -75,7 +75,7 @@ var ArticleAdmin = React.createClass({
            version: 1,
            head_id: this.props.articleId ? this.props.articleId : false,
            showVersions: false,
-           showOptions: true,
+           showOptions: window.innerWidth > 400,
            unsaved: false,
        };
     },
@@ -298,7 +298,7 @@ var ArticleAdmin = React.createClass({
         return (
             <div className="inner">
                 <header className="secondary">
-                    <div dangerouslySetInnerHTML={QuillToolbar} />
+                    <div className="top-toolbar" dangerouslySetInnerHTML={QuillToolbar} />
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>

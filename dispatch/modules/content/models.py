@@ -4,7 +4,7 @@ import StringIO, json, os, re
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
+    ImageField, FileField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
 
 from django.core.validators import MaxValueValidator
 from django.conf import settings
@@ -733,3 +733,13 @@ class ImageGallery(Model):
                 return "Gallery not found"
 
     embedlib.register('gallery', EmbedController)
+
+
+class File(Model):
+
+    name = CharField(max_length=255)
+    file = FileField(upload_to='files/%Y/%m')
+    tag = CharField(max_length=100)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)

@@ -173,7 +173,7 @@ header.secondary {
   height: $toolbar-width;
   line-height: 40px;
   box-sizing: border-box;
-  padding: 0 20px 0 60px;
+  padding: 0 15px;
   div.header-main {
     line-height: $toolbar-width;
     height: 100%;
@@ -206,6 +206,11 @@ header.secondary {
   }
 }
 
+@media($bp-larger-than-mobile){
+  header.secondary {
+    padding: 0 20px 0 60px;
+  }
+}
 
 main {
   position: absolute;
@@ -233,7 +238,7 @@ main {
 
 div.container {
   width: 100%;
-  padding: 0 60px;
+  padding: 0 75px;
   margin: 0 auto;
   max-width: 1320px;
 }
@@ -248,42 +253,62 @@ div.list-container {
   box-sizing: border-box;
 }
 
-div.item-list {
-  display: table;
-  width: 100%;
-  div.item {
-    display: table-row;
-    div.cell {
+div.home {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+ul.activity {
+  li {
+    padding: 20px 0;
+    border-top: 1px solid #DCDCDC;
+    font-size: 14px;
+    display: table;
+    width: 100%;
+    a {
+      text-decoration: none;
+      color: #005CC3;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .timestamp {
+      color: #ADADAD;
+    }
+    i.fa {
       display: table-cell;
-      padding: 20px 0 20px 20px;
-      border-bottom: thin solid #E2E2E2;
-      a, span {
-        font-family: $ui-font-helvetica;
-        font-size: 13px;
-        text-decoration: none;
-        color: rgb(100, 100, 100);
+      width: 60px;
+      text-align: center;
+    }
+    div {
+      display: table-cell;
+      line-height: 1.5em;
+    }
+  }
+}
+
+div.sidebox {
+  border: thin solid #E2E2E2;
+  margin-bottom: 25px;
+  &.actions {
+    padding: 15px 20px;
+    background: #f9f9f9;
+  }
+  &.list {
+    ul li {
+      padding: 15px 20px;
+      border-bottom: 1px solid #E2E2E2;
+      a {
+        font-size: 14px;
       }
-      &.checkbox, &.status {
-        text-align: center;
-        width: 12px;
-        padding-left: 10px;
-        padding-right: 0px;
-      }
-      &.status {
-        padding-left: 15px;
-        .fa-check-circle {
-          color: #4FD74B;
-        }
-      }
-      &.title {
-        a {
-          font-weight: 600;
-          color: black;
-          font-size: 15px;
-          &:hover {
-            color: $steel-blue;
-          }
-        }
+      &:last-child {
+        border-bottom: none;
       }
     }
   }

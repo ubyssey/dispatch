@@ -7,18 +7,21 @@
 {% block content %}
     <header class="secondary list-header clearfix">
         <div class="header-buttons">
-            <a class="dis-button green" href="{% url 'apps.manager.views.section_add' %}">New section</a>
+            <a class="dis-button green" href="{% url 'apps.manager.views.file_add' %}">New file</a>
         </div>
     </header>
     <div class="list-container">
         <div class="item-list">
-        {% for section in sections %}
+        {% for file in files %}
             <div class="item">
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.section_edit' section.id %}">{{ section.name }}</a>
+                    <a href="{% url 'apps.manager.views.file_edit' file.id %}">{{ file.name }}</a>
                 </div>
-                <div class="title cell">
-                    {{ section.slug }}
+                <div class="cell">
+                    {{ file.updated_at }}
+                </div>
+                <div class="cell">
+                    {{ file.tag }}
                 </div>
             </div>
         {% endfor %}
