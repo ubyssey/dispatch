@@ -40,18 +40,31 @@ def login(request):
 
 @staff_member_required
 def users(request):
-    users = Person.objects.filter(is_admin=True)
+    users = Person.objects.filter(is_admin=True).order_by('full_name')
     q = request.GET.get('q', False)
     if q:
         users = users.filter(full_name__icontains=q)
     else:
         q = ""
 
+    paginator = Paginator(users, 15) # Show 15 articles per page
+
+    page = request.GET.get('page')
+
+    try:
+        persons = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        persons = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        persons = paginator.page(paginator.num_pages)
+
     return render_to_response(
         "manager/person/list.html",
         {
             'title': 'People',
-            'persons' : users,
+            'persons' : persons,
             'list_title': 'People',
             'query': q,
         },
