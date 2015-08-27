@@ -13,7 +13,7 @@ body {
   }
 }
 
-div.container {
+.container {
   max-width: 1000px;
   width: 100%;
   margin-left: auto;
@@ -48,7 +48,16 @@ div.container {
 }
 
 main {
-  margin-top: 49px;
+  margin-top: 55px;
+  @media($bp-larger-than-mobile){
+    margin-top: 49px;
+  }
+}
+
+html.hairlines {
+  main {
+    margin-top: -54.5px;
+  }
 }
 
 // ROWS AND COLUMNS
