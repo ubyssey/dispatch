@@ -1,8 +1,8 @@
-<!DOCTYPE html>{% load staticfiles %}
+<!DOCTYPE html>{% load staticfiles %}{% load humanize %}
 <html>
 <head>
     <title>{{ title }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="{% static 'manager/css/admin.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'manager/css/dropzone.css' %}" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -27,15 +27,51 @@
                 </li>
              </ul>
              <ul class="right">
+                <li><a href="{% url 'apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
                 <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
                 <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
                 <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
-                <li><a href="{% url 'apps.manager.views.profile' %}"><i class="fa fa-user right"></i>{{ user.get_username }}</a></li>
+                <li class="dropdown">
+                    <a><i class="fa fa-user right"></i>{{ user.get_username }}</a>
+                    <ul>
+                        <li><a href="{% url 'apps.manager.views.profile' %}">manage profile</a></li>
+                        <li><a href="{% url 'apps.manager.views.logout' %}">logout</a></li>
+                    </ul>
+                </li>
             </ul>
         </header>
         {% block main %}
         <main>
             {% block content %}
+                <div class="inner scroll">
+                    <div class="home container">
+                        <div class="row">
+                            <div class="seven columns">
+                                <h3>Latest Activity</h3>
+                                <ul class="activity">
+                                {% for action in actions %}
+                                    <li><i class="fa fa-{{ action.icon }}"></i><div>{{ action.text|safe }} <span class="timestamp">{{ action.timestamp|naturaltime }}</span></div></li>
+                                {% endfor %}
+                                </ul>
+                            </div><div class="five columns">
+                                <h3>Quick Actions</h3>
+                                <div class="sidebox actions">
+                                    <ul class="actions">
+                                        <li><a href="{% url 'apps.manager.views.article_add' %}">New Article</a></li>
+                                    </ul>
+                                </div>
+                                <h3>Your Recent Articles</h3>
+                                <div class="sidebox list">
+                                    <ul class="actions">
+                                        {% for article in recent %}
+                                            <li><a href="{% url 'apps.manager.views.article_edit' article.parent_id %}">{{ article.long_headline }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endblock %}
         </main>
         {% endblock %}
