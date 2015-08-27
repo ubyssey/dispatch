@@ -18,7 +18,7 @@ a.search {
     label {
       position: absolute;
       height: 40px;
-      line-height: 45px;
+      line-height: 42px;
       width: 40px;
       text-align: center;
       font-size: 18px;
@@ -27,9 +27,11 @@ a.search {
   }
   #search-bar {
     padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     box-sizing: border-box;
     height: 40px;
-    line-height: 40px;
+    line-height: 30px;
     font-size: 14px;
     width: 100%;
     border-radius: 2px;
