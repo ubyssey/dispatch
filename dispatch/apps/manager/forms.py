@@ -47,7 +47,7 @@ class UserForm(ModelForm):
 
     def save(self, commit=True):
         # Save the provided password in hashed format
-        user = super(UserForm, self).save(commit=False)
+        user = super(UserForm, self).save()
         user.groups.clear()
         for group in self.cleaned_data.get('groups'):
             user.groups.add(group)
