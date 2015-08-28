@@ -80,7 +80,7 @@ class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
     is_admin = BooleanField(default=True)
 
-    image = ImageField(upload_to='images', null=True)
+    image = ImageField(upload_to='images', null=True, blank=True)
 
     def get_image_url(self):
         return settings.MEDIA_URL + str(self.image)
