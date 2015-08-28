@@ -60,6 +60,7 @@
                                         <li><a href="{% url 'apps.manager.views.article_add' %}">New Article</a></li>
                                     </ul>
                                 </div>
+                                {% if recent %}
                                 <h3>Your Recent Articles</h3>
                                 <div class="sidebox list">
                                     <ul class="actions">
@@ -68,6 +69,7 @@
                                         {% endfor %}
                                     </ul>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
