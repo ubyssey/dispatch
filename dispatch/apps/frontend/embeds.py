@@ -72,6 +72,19 @@ class AdvertisementController:
         c = Context(data)
         return template.render(c)
 
+class PullQuoteController:
+
+    @staticmethod
+    def json(data):
+        return data
+
+    @staticmethod
+    def render(data):
+        template = loader.get_template("article/embeds/quote.html")
+        c = Context(data)
+        return template.render(c)
+
+embedlib.register('quote', PullQuoteController)
 embedlib.register('advertisement', AdvertisementController)
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
