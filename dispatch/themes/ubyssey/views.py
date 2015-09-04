@@ -22,11 +22,16 @@ class UbysseyTheme(DefaultTheme):
 
     def get_article_meta(self, article):
 
+        try:
+            image = article.featured_image.image.get_absolute_url(),
+        except:
+            image = None
+
         return {
             'title': article.long_headline,
             'description': article.seo_description if article.seo_description is not None else article.snippet,
             'url': article.get_absolute_url,
-            'image': article.featured_image.image.get_absolute_url(),
+            'image': image,
             'author': article.get_author_string()
         }
 
