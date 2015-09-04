@@ -241,7 +241,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'template',
             'template_fields',
             'seo_keyword',
-            'seo_description'
+            'seo_description',
+            'est_reading_time'
         )
 
     def __init__(self, *args, **kwargs):
@@ -286,6 +287,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.content = validated_data.get('content_json', instance.content)
 
+        instance.est_reading_time = instance.calc_est_reading_time()
+
         # Process article attachments
         instance.save_attachments()
 
@@ -315,7 +318,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_topic(topic)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
+        instance.save(update_fields=['content', 'featured_image', 'topic', 'est_reading_time'], revision=False)
 
 
         if instance.parent:
