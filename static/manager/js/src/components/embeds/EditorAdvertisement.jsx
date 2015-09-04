@@ -35,11 +35,17 @@ var EditorAdvertisement = React.createClass({
                 <div className="body">
                     <div className="field full">
                         <label>Type</label>
-                        <input type="text" onChange={this.updateType} value={this.state.type} />
+                        <select onChange={this.updateType} value={this.state.type}>
+                            <option value="square">Square</option>
+                        </select>
                     </div>
                     <div className="field full">
                         <label>Alignment</label>
-                        <input type="text" onChange={this.updateAlignment} value={this.state.alignment} />
+                        <select onChange={this.updateAlignment} value={this.state.alignment}>
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                        </select>
                     </div>
                 </div>
             </div>
