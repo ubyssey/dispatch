@@ -1,6 +1,7 @@
 import datetime
 from PIL import Image as Img
 import StringIO, json, os, re
+from string import punctuation
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
@@ -250,6 +251,8 @@ class Article(Publishable):
 
     status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
 
+    est_reading_time = PositiveIntegerField(null=True)
+
     READING_CHOICES = (
         ('anytime', 'Anytime'),
         ('morning', 'Morning'),
@@ -386,6 +389,22 @@ class Article(Publishable):
             except Topic.DoesNotExist:
                 ins = Topic.objects.create(name=topic)
             self.topics.add(ins)
+
+    def calc_est_reading_time(self):
+
+        def count_words(string):
+            r = re.compile(r'[{}]'.format(punctuation))
+            new_string = r.sub(' ', string)
+            return len(new_string.split())
+
+        words = 0
+
+        for node in json.loads(self.content):
+            if type(node) is unicode:
+                words += count_words(node)
+                print words
+
+        return int(words / 200) # Average reading speed = 200 wpm
 
     def get_json(self):
         """
