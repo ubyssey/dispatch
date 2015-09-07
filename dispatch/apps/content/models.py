@@ -107,7 +107,7 @@ class ArticleManager(Manager):
     def get_revision(self, *args, **kwargs):
         return super(ArticleManager, self).get(*args, **kwargs)
 
-    def get_frontpage(self, reading_times=None, sections=None, section=None, section_id=None, exclude=[]):
+    def get_frontpage(self, reading_times=None, sections=None, section=None, section_id=None, exclude=[], limit=7):
 
         if reading_times is None:
             reading_times = {
@@ -120,7 +120,8 @@ class ArticleManager(Manager):
         context = {
             'section': section,
             'section_id': section_id,
-            'excluded': ",".join(map(str, exclude))
+            'excluded': ",".join(map(str, exclude)),
+            'limit': limit
         }
 
         context.update(reading_times)
@@ -139,7 +140,7 @@ class ArticleManager(Manager):
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
                 WHERE head = 1 AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT 7
+                LIMIT %(limit)s
             """
         elif section_id is not None:
             query = """
@@ -154,7 +155,7 @@ class ArticleManager(Manager):
                 FROM content_article
                 WHERE head = 1 AND status = 1 AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT 7
+                LIMIT %(limit)s
             """
         elif sections is not None:
             context['sections'] = ",".join(sections)
@@ -171,7 +172,7 @@ class ArticleManager(Manager):
                 INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
                 WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT 7
+                LIMIT %(limit)s
             """
         else:
             query = """
@@ -186,11 +187,11 @@ class ArticleManager(Manager):
                 FROM content_article
                 WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT 7
+                LIMIT %(limit)s
             """
 
         return self.raw(query, context)
-    
+
     def get_sections(self, exclude=None, frontpage=[]):
 
         results = {}
