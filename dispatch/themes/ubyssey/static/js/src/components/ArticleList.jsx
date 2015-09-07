@@ -68,9 +68,8 @@ var ArticleList = React.createClass({
             var topPos = $(document).scrollTop();
             var bottomPos = topPos + windowHeight;
 
-            this.updateHeader(topPos);
-
-
+            if($(window).width() > 400)
+                this.updateHeader(topPos);
 
             if(cachedPoints != this.state.active.data){
                 points = this.getArticlePoints();
