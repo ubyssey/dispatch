@@ -55,6 +55,8 @@ class UbysseyTheme(DefaultTheme):
 
         popular = Article.objects.get_popular()[:5]
 
+        blog = Article.objects.get_frontpage(section='blog', limit=5)
+
         title = "%s - UBC's official student newspaper" % self.SITE_TITLE
 
         context = {
@@ -68,6 +70,7 @@ class UbysseyTheme(DefaultTheme):
             'articles': articles,
             'sections': sections,
             'popular':  popular,
+            'blog': blog,
             'components': page.components(),
         }
 
