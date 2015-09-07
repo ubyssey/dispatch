@@ -157,9 +157,9 @@ header.topbar {
 
   img.logo {
       vertical-align: middle;
-      margin-top: -2px;
       height: 20px;
   }
+
   nav {
     display: none;
     @media($bp-larger-than-mobile){
@@ -193,23 +193,22 @@ header.topbar {
   }
 
   h1.nav-headline {
-      display: inline-block;
-      white-space: nowrap;
-      font-family: $font-default;
-      font-size: 14px;
-      font-weight: 500;
-      color: #373737;
-      line-height: 19px;
-      margin-top: 0;
-      margin-bottom: 0;
-      margin-left: 10px;
+    display: inline-block;
+    white-space: nowrap;
+    font-family: $font-default;
+    font-size: 14px;
+    font-weight: 500;
+    color: #373737;
+    line-height: 19px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 10px;
   }
   a.icon-logo {
     display: inline-block;
     width: 20px;
     overflow: hidden;
     vertical-align: middle;
-    margin-top: -2px;
   }
 }
 
