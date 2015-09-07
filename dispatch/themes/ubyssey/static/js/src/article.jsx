@@ -9,13 +9,13 @@ window.articleHeader = false;
 
 if($('main.article').length){
 
-    $(function(){
-        if($(document).scrollTop() > 50){
-            window.articleHeader = true;
-            $('.header-site').hide();
-            $('.header-article').show();
-        }
-    });
+//    $(function(){
+//        if($(window).width() > 400 && $(document).scrollTop() > 50){
+//            window.articleHeader = true;
+//            $('.header-site').hide();
+//            $('.header-article').show();
+//        }
+//    });
 
     var articleId = $('article').data('id');
     var articleHeadline = $('article').data('headline');
