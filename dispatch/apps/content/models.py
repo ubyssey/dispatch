@@ -107,7 +107,10 @@ class ArticleManager(Manager):
     def get_revision(self, *args, **kwargs):
         return super(ArticleManager, self).get(*args, **kwargs)
 
-    def get_frontpage(self, reading_times=None, sections=None, section=None, section_id=None, exclude=[], limit=7):
+    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, status=None):
+
+        if status is None:
+            status = Article.PUBLISHED
 
         if reading_times is None:
             reading_times = {
@@ -121,7 +124,9 @@ class ArticleManager(Manager):
             'section': section,
             'section_id': section_id,
             'excluded': ",".join(map(str, exclude)),
-            'limit': limit
+            'sections': ",".join(sections),
+            'limit': limit,
+            'status': status
         }
 
         context.update(reading_times)
@@ -138,7 +143,7 @@ class ArticleManager(Manager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
-                WHERE head = 1 AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -153,12 +158,11 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = 1 AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND status = %(status)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
-        elif sections is not None:
-            context['sections'] = ",".join(sections)
+        elif sections:
             query = """
             SELECT *,
                 TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
@@ -170,7 +174,7 @@ class ArticleManager(Manager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
-                WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -185,7 +189,7 @@ class ArticleManager(Manager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
