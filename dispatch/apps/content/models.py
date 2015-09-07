@@ -107,7 +107,7 @@ class ArticleManager(Manager):
     def get_revision(self, *args, **kwargs):
         return super(ArticleManager, self).get(*args, **kwargs)
 
-    def get_frontpage(self, reading_times=None, section=None, section_id=None, exclude=[]):
+    def get_frontpage(self, reading_times=None, sections=None, section=None, section_id=None, exclude=[]):
 
         if reading_times is None:
             reading_times = {
@@ -156,6 +156,23 @@ class ArticleManager(Manager):
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT 7
             """
+        elif sections is not None:
+            context['sections'] = ",".join(sections)
+            query = """
+            SELECT *,
+                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+                CASE reading_time
+                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
+                     ELSE 0.5
+                END as reading
+                FROM content_article
+                INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
+                WHERE head = 1 AND status = 1 AND parent_id NOT IN (%(excluded)s)
+                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
+                LIMIT 7
+            """
         else:
             query = """
             SELECT *,
@@ -173,8 +190,8 @@ class ArticleManager(Manager):
             """
 
         return self.raw(query, context)
-
-    def get_sections(self, exclude=False, frontpage=[]):
+    
+    def get_sections(self, exclude=None, frontpage=[]):
 
         results = {}
 
