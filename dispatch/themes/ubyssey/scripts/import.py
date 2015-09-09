@@ -1,4 +1,4 @@
-import json
+import json, re
 from bs4 import BeautifulSoup
 import urllib
 import dateutil.parser
@@ -12,9 +12,70 @@ from django.conf import settings
 from dispatch.apps.core.models import Person
 from dispatch.apps.content.models import Article, Section, Author, Image, ImageAttachment
 
-class WordpressImporter:
+class ShortcodeLibrary:
 
-    OLD_SHORTCODES = ('[ub_topshare2]',)
+    def __init__(self):
+        self.functions = {}
+
+    def register(self, name, function):
+        self.functions[name] = function
+
+    def call(self, func_name, content, kwargs):
+        try:
+            return self.functions[func_name](content, **kwargs)
+        except:
+            return ""
+
+sclib = ShortcodeLibrary()
+
+def sc_ub_ad(content, **args):
+    return {
+        'type': 'advertisement',
+        'data': {}
+    }
+
+def sc_ub_subhead(content, **args):
+
+    return {
+        'type': 'header',
+        'data': {
+            'content': content,
+            'size': "H1"
+        },
+    }
+
+sclib.register('ub_subhead', sc_ub_subhead)
+#sclib.register('ub_ad', sc_ub_ad)
+
+SHORTCODE_EXCLUDES = ['caption',]
+
+def process_shortcodes(line):
+
+    code = re.match(r'\[([^\[\]|]*)\]((.*)\[\/([^\[\]|]*))?', line)
+
+    if code:
+        func = code.group(1).split(" ")
+
+        content = code.group(2)
+
+        if func:
+            func_name = func[0]
+            if func_name not in SHORTCODE_EXCLUDES:
+
+                args = func[1:]
+
+                args_dict = {}
+
+                for arg in args:
+                    pieces = arg.split("=")
+                    if len(pieces) == 2:
+                        args_dict[pieces[0]] = pieces[1]
+
+                return sclib.call(func_name, content, args_dict)
+
+    return line
+
+class WordpressImporter:
 
     def load(self, filename):
         with open(filename) as data_file:
@@ -41,21 +102,21 @@ class WordpressImporter:
         except:
             pass
 
-
         try:
             author = Person.objects.get(full_name=data['author'])
         except:
             author = Person.objects.create(full_name=data['author'])
 
         article = Article()
-        article.long_headline = data['title']
-        article.short_headline = data['title']
+
+        title = str(BeautifulSoup(data['title'], 'html.parser'))
+        article.long_headline = title
+        article.short_headline = title
 
         article.slug = slug
         article.snippet = data['description']
         article.seo_keyword = data['keyword']
         article.seo_description = data['description']
-
 
         date = dateutil.parser.parse(data['date'])
 
@@ -87,20 +148,26 @@ class WordpressImporter:
         n = 0
         for line in lines:
             line.strip()
-            soup = BeautifulSoup(line, 'html.parser')
-            if soup.img:
-                if n == 0:
-                    try:
-                        caption = soup.img['alt']
-                    except:
-                        caption = None
-                    article.featured_image = self.save_attachment(soup.img['src'], article, caption=caption)
-                else:
-                    for img in soup.find_all('img'):
-                        image_json = self.save_image(img, article)
-                        if image_json is not None:
-                            output.append(self.save_image(img, article))
-            elif line not in self.OLD_SHORTCODES and line != '':
+
+            line = process_shortcodes(line)
+
+            if type(line) != dict:
+                soup = BeautifulSoup(line, 'html.parser')
+                if soup.img:
+                    if n == 0:
+                        try:
+                            caption = soup.img['alt']
+                        except:
+                            caption = None
+                        article.featured_image = self.save_attachment(soup.img['src'], article, caption=caption)
+                    else:
+                        for img in soup.find_all('img'):
+                            image_json = self.save_image(img, article)
+                            if image_json is not None:
+                                output.append(self.save_image(img, article))
+                    continue
+
+            if line != '':
                 output.append(line)
             n += 1
 
@@ -116,19 +183,15 @@ class WordpressImporter:
             image = Image()
             image.img = filename
 
-            print settings.MEDIA_ROOT + '/' + filename
-
             try:
                 urllib.urlretrieve(src, settings.MEDIA_ROOT + '/' + filename)
             except:
-                print 'Bad URL'
                 return
 
             image.img.name = filename
             try:
                 image.save()
             except:
-                print 'Image could not be saved'
                 return
 
         try:
@@ -156,13 +219,11 @@ class WordpressImporter:
             }
 
         else:
-
             return
-
 
     def count(self):
         return len(self.articles)
 
 importer = WordpressImporter()
 importer.load('results.json')
-print importer.save()
+importer.save()
