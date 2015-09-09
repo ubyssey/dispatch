@@ -1,3 +1,10 @@
 main.section {
-  padding-top: 20px;
+  article.section-top {
+    border-top: 1px solid #E6E6E6;
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    margin-top: 25px;
+  }
 }
