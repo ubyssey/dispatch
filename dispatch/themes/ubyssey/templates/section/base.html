@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load staticfiles %}
 {% block content %}
 {% include 'headers/topbar.html' with section=section.slug %}
     <main class="section">
+        <div class="advertisement homepage leaderboard">
+            <img src="{% static 'img/sample-leaderboard-ad.png' %}">
+        </div>
         <div class="container">
             <article class="section-top row padded">
                 {% with articles.first as article %}
@@ -17,14 +21,28 @@
 
                 {% endwith %}
             </article>
-            {% for article in articles.rest %}
-                <article class="section-thumb">
-                    <a class="image" href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
-                    <h4 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h4>
-                    <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
-                    <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
-                </article>
-            {% endfor %}
+            <div class="article-archive">
+                <h3 class="basic uppercase">Recent Articles</h2>
+                <div class="blocks">
+                    <div class="row">
+                {% for article in articles.rest|slice:":6" %}
+                    {% if forloop.counter0|divisibleby:3 %}
+                        </div><div class="row">
+                    {% endif %}
+                    <article>
+                        {% if article.featured_image %}
+                        <a href="{{ article.get_absolute_url }}" class="image">
+                            <img src="{{ article.featured_image.image.get_absolute_url }}" />
+                        </a>
+                        {% endif %}
+                        <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline|safe }}</h2></a>
+                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <p class="snippet">{{ article.snippet }}</p>
+                    </article>
+                {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 {% endblock %}
