@@ -19,8 +19,8 @@
             <div class="inner row">
                 <div class="left">
                     <ul class="meta">
-                        <li>Tuesday, November 4, 2014</li>
-                        <li>Latest Issue</li>
+                        <li>{% now "l, F jS, Y" %}</li>
+                        <li>{{ components.print_issue|safe }}</li>
                     </ul>
                 </div>
                 <div class="middle">

@@ -13,14 +13,14 @@
                     <p class="snippet">The National Science and Engineering Counsel of Canada has awarded certain UBC students and postdoctoral fellows over $3 million in an effort to equip these scientists with skills for the workforce.</p>
                 </div>
             </div>
-            <div class="author-search">
+            <div class="article-search">
                 <form method="get" action="{% url 'author-articles' person.pk %}">
                 <label for="author-search"><i class="fa fa-search"></i></label>
                 <input name="q" id="author-search" type="text" {% if q %}value="{{ q }}"{% endif %} placeholder="Search author archive" />
                 </form>
             </div>
             {% block author_archive %}
-            <div class="author-archive clearfix">
+            <div class="article-archive clearfix">
                 <h3 class="basic uppercase">Recent Articles</h2>
                 <div class="blocks">
                     {% for article in articles %}
