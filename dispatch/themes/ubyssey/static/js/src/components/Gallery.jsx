@@ -349,34 +349,25 @@ var Gallery = React.createClass({
             );
         }
     },
-    renderSlides: function(){
-        //var slidesStyle = { left: -($(window).width()) + this.state.deltax };
-        var slides = this.props.images.map(function(image, i){
-            return (<GallerySlide key={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
-        }.bind(this));
-        return (
-            <div className="image-inner">
-                <ul className="slides" ref="slides">{slides}</ul>
-            </div>
-            );
-    },
-    renderBlankSlide: function(){
-        return(<div className="slide"></div>);
-    },
-    renderSlide: function(active, className){
-        var image = active.data;
-        return (<GallerySlide width={this.state.slide_width} src={image.url} caption={image.caption} />);
-    },
     render: function() {
         if(this.state.visible){
             var visible = "visible";
         } else {
             var visible = "";
         }
+
+        var slides = this.props.images.map(function(image, i){
+            return (<GallerySlide key={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
+        }.bind(this));
+
         return (
             <div className={'slideshow ' + visible}>
                 <div ref="gallery" className="image-container">
-                {this.state.active ? this.renderSlides() : null}
+                    <div className="header"></div>
+                    <div className="image-inner">
+                        <ul className="slides" ref="slides">{slides}</ul>
+                    </div>
+                    <div className="footer"></div>
                 </div>
             </div>
         );

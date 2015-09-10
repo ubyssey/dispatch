@@ -24,9 +24,14 @@ gulp.task('default', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('comments', function () {
-    return gulp.src('src/comments.jsx')
-        .pipe(react())
+gulp.task('search', function(){
+    return browserify('./src/search.jsx')
+        .transform({ global: true }, reactify)
+        .bundle()
+        .pipe(source('search.js'))
+        .pipe(derequire())
+        .pipe(gulpif(!dev, buffer()))
+        .pipe(gulpif(!dev, uglify()))
         .pipe(gulp.dest('dist'))
         .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
 });
