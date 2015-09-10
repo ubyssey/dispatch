@@ -4,9 +4,6 @@
 //––––––––––––––––––––––––––––––––––––––––––––––––––
 
 //Grid Variables
-$container-width: 960px !default;
-$container-width-larger-than-mobile: 85% !default;
-$container-width-larger-than-phablet: 80% !default;
 $total-columns: 12 !default;
 $column-width: 100 / $total-columns !default; // calculates individual column width based off of # of columns
 $column-margin: 4% !default; // space between columns
@@ -31,19 +28,8 @@ $column-margin: 4% !default; // space between columns
   box-sizing: border-box;
 }
 
-// For devices larger than 400px
-@media (#{$bp-larger-than-mobile}) {
-  .container {
-    width: $container-width-larger-than-mobile;
-    padding: 0;
-  }
-}
-
 // For devices larger than 550px
 @media (#{$bp-larger-than-phablet}) {
-  .container {
-    width: $container-width-larger-than-phablet;
-  }
   .column,
   .columns {
     margin-left: $column-margin;
