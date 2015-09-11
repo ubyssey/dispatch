@@ -45,9 +45,6 @@ div.frontpage {
       padding-right: 15px;
       article, ul.article-headlines {
         border-bottom: 1px dotted #C8C8C8;
-        &:last-of-type {
-          border-bottom: none;
-        }
       }
       ul.article-headlines {
         display: none;
@@ -164,8 +161,8 @@ div.frontpage {
         &:first-child {
           padding-top: 0;
         }
-        &:last-of-type {
-          border-bottom: 1px dotted #C8C8C8;
+        &:last-child {
+          border-bottom: none;
         }
       }
       ul.article-headlines {
@@ -567,6 +564,7 @@ div.advert {
   }
   &:first-child {
     border-top: none;
+    paddding-top: 0;
   }
 }
 
