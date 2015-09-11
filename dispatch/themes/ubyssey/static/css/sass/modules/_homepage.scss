@@ -14,6 +14,9 @@ div.homepage-section {
       border-bottom: none;
     }
   }
+  &.row {
+    position: relative;
+  }
 }
 
 div.frontpage-container {
@@ -233,6 +236,7 @@ article div.meta {
 // Homepage sections
 
 div.sections {
+
   section.homepage {
     width: 100%;
 
@@ -249,8 +253,15 @@ div.sections {
     }
   }
 
-  @media($bp-larger-than-phablet){
+  @media($bp-larger-than-tablet){
+    position: absolute;
+    top: 0;
+    left: 0;
     box-sizing: border-box;
+    margin-right: 320px;
+
+    border-right: 1px solid #E6E6E6;
+    padding-right: 20px;
 
     section {
       box-sizing: border-box;
@@ -276,11 +287,11 @@ div.sections {
           vertical-align: top;
         }
         .left {
-          width: 60%;
+          width: 50%;
           padding-right: 15px;
         }
         .right {
-          width: 40%;
+          width: 50%;
           border-left: 1px solid #E6E6E6;
           padding-left: 15px;
         }
@@ -288,22 +299,19 @@ div.sections {
     }
   }
 
-  @media($bp-larger-than-tablet){
-    float: left;
-    width: 71%;
-    border-right: 1px solid #E6E6E6;
-    padding-right: 20px;
+  @media($bp-larger-than-desktop){
 
-    section.homepage {
-      &.section-1 {
-        .left {
-          width: 66.3%;
-        }
-        .right {
-          width: 33.3%;
-        }
+    margin-right: 353px;
+
+    section.homepage.section-1 {
+      .left {
+        width: 60%;
+      }
+      .right {
+        width: 40%;
       }
     }
+
   }
 }
 
@@ -395,7 +403,7 @@ ul.article-headlines {
   li {
     font-size: 14px;
     line-height: 20px;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
     &:last-child {
       margin-bottom: 0;
     }
@@ -403,7 +411,7 @@ ul.article-headlines {
       display: block;
     }
     h2 {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 800;
       margin: 0;
     }
@@ -439,8 +447,11 @@ article.col {
     }
     h4.headline {
       margin: 0;
+      font-size: 18px;
     }
   }
+}
+@media($bp-larger-than-desktop){
   // Featured image
   div.featured-image-container {
     display: block;
@@ -524,13 +535,11 @@ div.sidebar-home {
     padding-bottom: 25px;
   }
 
-  @media($bp-larger-than-phablet){
-    padding-left: 20px;
-    padding-right: 20px;
-    float: left;
-    box-sizing: border-box;
-    width: 29%;
+  padding-left: 20px;
+  float: right;
+  width: 300px;
 
+  @media($bp-larger-than-tablet){
     h2.block-title {
       margin-top: 0;
       text-align: center;
@@ -538,6 +547,13 @@ div.sidebar-home {
       text-transform: uppercase;
       font-size: 14px;
     }
+  }
+
+  @media($bp-larger-than-desktop){
+
+    box-sizing: border-box;
+    width: 353px;
+    //width: 29%;
   }
 }
 
@@ -565,6 +581,7 @@ ul.article-list, ol.article-list {
       font-family: $font-headline;
       margin-top: 0;
       margin-bottom: 10px;
+      font-size: 17px;
     }
     a {
       display: block;
