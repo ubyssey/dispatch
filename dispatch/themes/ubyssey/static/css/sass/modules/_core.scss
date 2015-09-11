@@ -49,7 +49,7 @@ body {
 
 main {
   margin-top: 55px;
-  @media($bp-larger-than-mobile){
+  @media($bp-larger-than-tablet){
     margin-top: 49px;
     &.homepage {
       margin-top: 0;
