@@ -14,8 +14,18 @@ var Article = React.createClass({
     setupGalleries: function(){
 
         var gatherImages = function(gallery){
-            var selector = gallery ? '#gallery-' + gallery + ' .gallery-image' : '#article-'+this.props.articleId+' .article-attachment';
-            var trigger = gallery ? '#gallery-' + gallery + ' .gallery-thumb' : '#article-'+this.props.articleId+' .article-attachment';
+
+            var selector, trigger;
+
+            if(gallery){
+                var id = $(gallery).data("id");
+                selector = '#gallery-' + id + ' .gallery-image';
+                trigger = '#gallery-' + id + ' .gallery-thumb';
+            } else {
+                selector = '#article-' + this.props.articleId + ' .article-attachment';
+                trigger = '#article-' + this.props.articleId + ' .article-attachment';
+            }
+
             var images = [];
             var imagesTable = {};
             var n = 0;
@@ -33,6 +43,7 @@ var Article = React.createClass({
             });
 
             return {
+                'title': gallery ? $(gallery).data("id") : "Images",
                 'list': images,
                 'table': imagesTable,
                 'selector': selector,
@@ -45,9 +56,8 @@ var Article = React.createClass({
 
         galleries.push(gatherImages());
 
-
         $('#article-'+this.props.articleId+ ' .gallery-attachment').each(function(){
-            galleries.push(gatherImages($(this).data('id')));
+            galleries.push(gatherImages(this));
         });
 
         return galleries;

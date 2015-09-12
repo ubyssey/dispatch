@@ -712,7 +712,7 @@ class ImageAttachment(Model):
 
             if attach.image is None:
                 return
-            
+
             return {
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),

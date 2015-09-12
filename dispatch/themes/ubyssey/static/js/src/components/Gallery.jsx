@@ -118,6 +118,7 @@ var Gallery = React.createClass({
     showPane: function(index, animate) {
         // between the bounds
         index = Math.max(0, Math.min(index, this.pane_count-1));
+
         this.current_pane = index;
 
         var offset = -((100/this.pane_count)*this.current_pane);
@@ -147,11 +148,13 @@ var Gallery = React.createClass({
 //        }
     },
     nextSlide: function() {
-        this.slideCallback = this.next;
+        if(this.state.active && this.state.active.next)
+            this.setState({ active: this.state.active.next});
         return this.showPane(this.current_pane+1, true);
     },
     prevSlide: function() {
-        this.slideCallback = this.previous;
+        if(this.state.active && this.state.active.prev)
+            this.setState({ active: this.state.active.prev});
         return this.showPane(this.current_pane-1, true);
     },
     handleHammer: function(ev) {
@@ -221,7 +224,6 @@ var Gallery = React.createClass({
 
         $('.slides').animate({ left: pos }, 150, function(){
             if(callback){
-                console.log('switching slides!');
                 callback(function(){
                     $('.slides').css({ left: 0 });
                 });
@@ -231,8 +233,8 @@ var Gallery = React.createClass({
     setupEventListeners: function(){
 
         // Keyboard controls
-        key('left', this.previous);
-        key('right', this.next);
+        key('left', this.prevSlide);
+        key('right', this.nextSlide);
         key('esc', this.close);
 
         // Arrow buttons
@@ -292,8 +294,6 @@ var Gallery = React.createClass({
         return this.props.images[index];
     },
     getActiveImage: function(imageId){
-        console.log('finding image');
-        console.log(this.images);
         var active = this.images;
         while(active){
             if(active.data.id == imageId)
@@ -360,14 +360,18 @@ var Gallery = React.createClass({
             return (<GallerySlide key={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
         }.bind(this));
 
+        var prev = (<div onClick={this.prevSlide} className="prev"><div><i className="fa fa-chevron-left"></i></div></div>);
+        var next = (<div onClick={this.nextSlide} className="next"><div><i className="fa fa-chevron-right"></i></div></div>);
+
         return (
             <div className={'slideshow ' + visible}>
                 <div ref="gallery" className="image-container">
-                    <div className="header"></div>
-                    <div className="image-inner">
+                    <div onClick={this.close} className="close-slideshow"><i className="fa fa-times"></i></div>
+                    <div className="gallery-container">
                         <ul className="slides" ref="slides">{slides}</ul>
                     </div>
-                    <div className="footer"></div>
+                    { this.state.active && this.state.active.prev ? prev : null }
+                    { this.state.active && this.state.active.next ? next : null }
                 </div>
             </div>
         );
