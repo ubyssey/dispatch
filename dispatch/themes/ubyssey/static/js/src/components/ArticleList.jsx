@@ -118,6 +118,9 @@ var ArticleList = React.createClass({
             return;
         }
 
+        // Google analytics pageview
+        ga('send', 'pageview');
+
         this.setState({ active: this.state.active.next }, this.updateURL);
     },
     updateURL: function(){
