@@ -23519,7 +23519,7 @@ var Gallery = React.createClass({displayName: "Gallery",
           $(this).width(this.pane_width);
         });
 
-        this.container.width(this.pane_width*this.pane_count);
+        this.container.width((this.pane_width+15)*this.pane_count);
     },
     updatePaneDimensions: function(){
         this.container = $("ul.slides", this.element);
@@ -23559,20 +23559,8 @@ var Gallery = React.createClass({displayName: "Gallery",
         if(animate) {
           this.container.addClass("animate");
         }
+        this.container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
 
-        var px = ((this.pane_width * this.pane_count) / 100) * percent;
-
-
-        //if(Modernizr.csstransforms3d) {
-          this.container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
-        //}
-//        else if(Modernizr.csstransforms) {
-//          this.container.css("transform", "translate("+ percent +"%,0)");
-//        }
-//        else {
-//            var px = ((this.pane_width*this.pane_count) / 100) * percent;
-//            this.container.css("left", px+"px");
-//        }
     },
     nextSlide: function() {
         if(this.state.active && this.state.active.next)
@@ -23784,7 +23772,7 @@ var Gallery = React.createClass({displayName: "Gallery",
         }
 
         var slides = this.props.images.map(function(image, i){
-            return (React.createElement(GallerySlide, {key: i, width: this.state.slide_width, src: image.url, caption: image.caption}));
+            return (React.createElement(GallerySlide, {key: i, index: i, width: this.state.slide_width, src: image.url, caption: image.caption}));
         }.bind(this));
 
         var prev = (React.createElement("div", {onClick: this.prevSlide, className: "prev"}, React.createElement("div", null, React.createElement("i", {className: "fa fa-chevron-left"}))));
