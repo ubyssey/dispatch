@@ -709,6 +709,10 @@ class ImageAttachment(Model):
         def json(data):
             id = data['attachment_id']
             attach = ImageAttachment.objects.get(id=id)
+
+            if attach.image is None:
+                return
+
             return {
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
