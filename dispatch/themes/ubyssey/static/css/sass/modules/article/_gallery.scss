@@ -47,10 +47,13 @@ div.slideshow {
         position: absolute;
         height: 100%;
         width: 100%;
-        img {
+        div.img {
+          width: 80%;
           height: 100%;
-          width: auto;
-          pointer-events: none;
+          margin: 0 auto;
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
         }
       }
     }
