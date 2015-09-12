@@ -50,15 +50,16 @@ div.slideshow {
         position: absolute;
         height: 100%;
         width: 100%;
-        div.img {
-          width: 80%;
-          height: 100%;
-          margin: 0 auto;
-          background-position: center;
-          background-size: contain;
-          background-repeat: no-repeat;
-        }
       }
+    }
+
+    div.img {
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
 
     p.slide-caption {
@@ -72,6 +73,8 @@ div.slideshow {
   }
 
   .prev, .next {
+
+    display: none;
 
     top: 65px;
     bottom: 65px;
@@ -127,5 +130,15 @@ div.slideshow {
     }
   }
 
+  @media($bp-larger-than-mobile){
+
+    li.slide div.img {
+      width: 80%;
+    }
+    
+    .prev, .next {
+      display: block;
+    }
+  }
 }
 
