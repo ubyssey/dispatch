@@ -2,7 +2,7 @@ var React = require('react');
 
 var GallerySlide = React.createClass({
     render: function(){
-        var slideStyle = { width: $(window).width() };
+        var slideStyle = { width: this.props.width };
         var imageStyle = { backgroundImage: "url('" + this.props.src + "')" };
 
         var caption = (<p className="slide-caption">{this.props.caption}</p>);

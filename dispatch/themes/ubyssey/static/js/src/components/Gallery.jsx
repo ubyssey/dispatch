@@ -25,6 +25,7 @@ var Gallery = React.createClass({
         this.setupEventListeners();
         this.addSlideTrigger(this.props.trigger);
         this.initSlider();
+
     },
     initSlider: function(){
 
@@ -36,9 +37,9 @@ var Gallery = React.createClass({
 
         this.panes = $("li.slide", this.element);
 
-        this.pane_width = 0;
+        this.pane_width = $(window).width();
         this.pane_height = 0;
-        this.pane_count = this.panes.length;
+        this.pane_count = this.props.images.length;
 
         this.current_pane = 0;
 
@@ -49,7 +50,6 @@ var Gallery = React.createClass({
         $(window).on("load resize orientationchange", function() {
             this.setPaneDimensions();
             this.setState({ slide_width: $(window).width() });
-          //updateOffset();
         }.bind(this));
 
         var hammertime = new Hammer(element, { drag_lock_to_axis: true,
@@ -88,29 +88,16 @@ var Gallery = React.createClass({
     },
     setPaneDimensions: function(){
         this.pane_width = $(window).width();
-        this.panes.each(function() {
-          $(this).width(this.pane_width);
-        });
-
-        this.container.width((this.pane_width+15)*this.pane_count);
+        this.container.width(this.pane_width*this.pane_count + this.pane_count*15);
     },
     updatePaneDimensions: function(){
         this.container = $("ul.slides", this.element);
 
         this.panes = $("li.slide", this.element);
 
-        this.pane_width = $(window).width();
+        this.pane_count = this.props.images.length;
 
-        this.panes.each(function() {
-          $(this).width(this.pane_width);
-        });
-
-        var containerWidth = this.pane_width*this.panes.length;
-
-        $(this.container).css('width', containerWidth);
-
-        // update pane count
-        this.pane_count = this.panes.length;
+        this.setPaneDimensions();
 
         // reset current pane
         this.showPane(this.current_pane, false);
@@ -153,7 +140,6 @@ var Gallery = React.createClass({
         switch(ev.type) {
             case 'panright':
             case 'panleft':
-                console.log('dragging');
                 // stick to the finger
                 var pane_offset = -(100/this.pane_count) * this.current_pane;
                 var drag_offset = ((100/this.pane_width) * ev.deltaX) / this.pane_count;
@@ -168,13 +154,11 @@ var Gallery = React.createClass({
                 break;
 
           case 'swipeleft':
-              console.log('swipe left');
             this.nextSlide();
             //ev.stopDetect();
             break;
 
           case 'swiperight':
-              console.log('swipe right');
             this.prevSlide();
             //ev.stopDetect();
             break;
@@ -249,7 +233,6 @@ var Gallery = React.createClass({
 
     },
     addSlideTrigger: function(target){
-        console.log('adding slide trigger for ' + target);
         $(target).on('click', function(e){
             e.preventDefault();
             var image_id = $(e.target).data("id");
