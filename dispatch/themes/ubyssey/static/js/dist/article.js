@@ -23481,14 +23481,12 @@ var Gallery = React.createClass({displayName: "Gallery",
 
         if(this.pane_count > 1){
 
-            var hammertime = new Hammer(element, { drag_lock_to_axis: true,
-                recognizers: [
-                    [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL, threshold: 1, velocity: 0.1 }],
-                    [Hammer.Pan, { threshold: 5 }],
-                ]
-            });
+            var mc = new Hammer.Manager(element, { drag_lock_to_axis: true } );
 
-            hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
+            mc.add( new Hammer.Pan( { threshold: 0, direction: Hammer.DIRECTION_HORIZONTAL }) );
+            mc.add( new Hammer.Swipe( { threshold: 1 }) ).recognizeWith( mc.get('pan') );
+
+            mc.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
 
             /* From Modernizr */
             function whichTransitionEvent(){
@@ -23583,16 +23581,6 @@ var Gallery = React.createClass({displayName: "Gallery",
                 this.setContainerOffset(drag_offset + pane_offset);
                 break;
 
-          case 'swipeleft':
-            this.nextSlide();
-            //ev.stopDetect();
-            break;
-
-          case 'swiperight':
-            this.prevSlide();
-            //ev.stopDetect();
-            break;
-
             case 'panend':
             case 'pancancel':
                 // Left & Right
@@ -23609,6 +23597,15 @@ var Gallery = React.createClass({displayName: "Gallery",
                 }
 
                 break;
+
+            case 'swipeleft':
+                this.nextSlide();
+                break;
+
+            case 'swiperight':
+                this.prevSlide();
+                break;
+
         }
     },
     swipeSlide: function(dir){
