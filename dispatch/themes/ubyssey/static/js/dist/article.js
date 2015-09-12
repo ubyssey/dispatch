@@ -23192,6 +23192,7 @@ var ArticleList = React.createClass({displayName: "ArticleList",
         }
 
         // Google analytics pageview
+        ga('set', 'dimension1', "Peter Siemens");
         ga('send', 'pageview');
 
         this.setState({ active: this.state.active.next }, this.updateURL);
