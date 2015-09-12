@@ -23479,38 +23479,41 @@ var Gallery = React.createClass({displayName: "Gallery",
             this.setState({ slide_width: $(window).width() });
         }.bind(this));
 
-        var hammertime = new Hammer(element, { drag_lock_to_axis: true,
-            recognizers: [
-                [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL, threshold: 1, velocity: 0.1 }],
-                [Hammer.Pan, { threshold: 5 }],
-            ]
-        });
+        if(this.pane_count > 1){
 
-        hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
+            var hammertime = new Hammer(element, { drag_lock_to_axis: true,
+                recognizers: [
+                    [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL, threshold: 1, velocity: 0.1 }],
+                    [Hammer.Pan, { threshold: 5 }],
+                ]
+            });
 
-        /* From Modernizr */
-        function whichTransitionEvent(){
-            var t;
-            var el = document.createElement('fakeelement');
-            var transitions = {
-              'transition':'transitionend',
-              'OTransition':'oTransitionEnd',
-              'MozTransition':'transitionend',
-              'WebkitTransition':'webkitTransitionEnd'
-            }
+            hammertime.on("panend pancancel panleft panright swipeleft swiperight", this.handleHammer);
 
-            for(t in transitions){
-                if( el.style[t] !== undefined ){
-                    return transitions[t];
+            /* From Modernizr */
+            function whichTransitionEvent(){
+                var t;
+                var el = document.createElement('fakeelement');
+                var transitions = {
+                  'transition':'transitionend',
+                  'OTransition':'oTransitionEnd',
+                  'MozTransition':'transitionend',
+                  'WebkitTransition':'webkitTransitionEnd'
+                }
+
+                for(t in transitions){
+                    if( el.style[t] !== undefined ){
+                        return transitions[t];
+                    }
                 }
             }
-        }
 
-        /* Listen for a transition! */
-        var transitionEvent = whichTransitionEvent();
-        transitionEvent && element.addEventListener(transitionEvent, function() {
-            //this.slideCallback();
-        }.bind(this));
+            /* Listen for a transition! */
+            var transitionEvent = whichTransitionEvent();
+            transitionEvent && element.addEventListener(transitionEvent, function() {
+                //this.slideCallback();
+            }.bind(this));
+        }
 
     },
     setPaneDimensions: function(){
