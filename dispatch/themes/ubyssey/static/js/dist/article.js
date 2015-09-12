@@ -22998,6 +22998,8 @@ var Article = React.createClass({displayName: "Article",
                     'url': $(this).data('url'),
                     'caption': $(this).data('caption'),
                     'credit': $(this).data('credit'),
+                    'width': $(this).width(),
+                    'height': $(this).height()
                 });
                 imagesTable[id] = n;
                 n++;
@@ -23811,9 +23813,7 @@ var React = _dereq_('react');
 var GallerySlide = React.createClass({displayName: "GallerySlide",
     render: function(){
         var slideStyle = { width: $(window).width() };
-        var imageStyle = {};
-        if($(window).height() > $(window).width())
-            imageStyle = { width: '100%', height: 'auto' };
+        var imageStyle = { backgroundImage: "url('" + this.props.src + "')" };
 
         var caption = (React.createElement("p", {className: "slide-caption"}, this.props.caption));
         return (
@@ -23821,7 +23821,7 @@ var GallerySlide = React.createClass({displayName: "GallerySlide",
                 React.createElement("div", {className: "inner"}, 
                     React.createElement("div", {className: "image"}, 
                         React.createElement("div", null, 
-                            React.createElement("img", {src: this.props.src, style: imageStyle})
+                            React.createElement("div", {className: "img", style: imageStyle})
                         )
                     ), 
                      this.props.caption ? caption : null
