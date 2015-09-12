@@ -8,8 +8,17 @@
     display: none;
     padding: 25px 0;
     text-align: center;
-    @media($bp-larger-than-tablet){
+    @media($bp-larger-than-mobile){
       display: block;
+      &.homepage {
+        display: none;
+      }
+    }
+
+    @media($bp-larger-than-tablet){
+      &.homepage {
+        display: block;
+      }
     }
   }
 
