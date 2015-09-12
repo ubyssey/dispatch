@@ -23700,7 +23700,15 @@ var Gallery = React.createClass({displayName: "Gallery",
         }
         return null;
     },
+    getIndex: function( imageId, images){
+        for(var i = 0; i < images.length; i++){
+            if(images[i].id == imageId)
+                return i;
+        }
+        return -1;
+    },
     setCurrentImage: function(imageId){
+        this.showPane(this.getIndex(imageId, this.props.images));
         this.setState({ active: this.getActiveImage(imageId)}, this.updatePaneDimensions);
     },
     open: function(imageId){
@@ -23763,7 +23771,7 @@ var Gallery = React.createClass({displayName: "Gallery",
 
         return (
             React.createElement("div", {className: 'slideshow ' + visible}, 
-                React.createElement("div", {ref: "gallery", className: "image-container"}, 
+                React.createElement("div", {className: "image-container", ref: "gallery"}, 
                     React.createElement("div", {onClick: this.close, className: "close-slideshow"}, React.createElement("i", {className: "fa fa-times"})), 
                     React.createElement("div", {className: "gallery-container"}, 
                         React.createElement("ul", {className: "slides", ref: "slides"}, slides)

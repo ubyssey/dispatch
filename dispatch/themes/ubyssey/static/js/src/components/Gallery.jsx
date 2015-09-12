@@ -273,7 +273,15 @@ var Gallery = React.createClass({
         }
         return null;
     },
+    getIndex: function( imageId, images){
+        for(var i = 0; i < images.length; i++){
+            if(images[i].id == imageId)
+                return i;
+        }
+        return -1;
+    },
     setCurrentImage: function(imageId){
+        this.showPane(this.getIndex(imageId, this.props.images));
         this.setState({ active: this.getActiveImage(imageId)}, this.updatePaneDimensions);
     },
     open: function(imageId){
@@ -336,7 +344,7 @@ var Gallery = React.createClass({
 
         return (
             <div className={'slideshow ' + visible}>
-                <div ref="gallery" className="image-container">
+                <div className="image-container" ref="gallery">
                     <div onClick={this.close} className="close-slideshow"><i className="fa fa-times"></i></div>
                     <div className="gallery-container">
                         <ul className="slides" ref="slides">{slides}</ul>
