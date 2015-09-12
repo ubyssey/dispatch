@@ -34,14 +34,17 @@ div.slideshow {
     display: inline-block;
 
     > .inner {
-      display: inline-flex;
+      display: flex;
+      display: -webkit-flex;
       flex-direction: column;
+      -webkit-flex-direction: column;
       height: 100%;
       width: 100%;
     }
 
     div.image {
       flex: 2;
+      -webkit-flex: 2;
       position: relative;
       > div {
         position: absolute;
