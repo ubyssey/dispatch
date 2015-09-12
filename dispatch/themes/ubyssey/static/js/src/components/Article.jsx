@@ -37,6 +37,8 @@ var Article = React.createClass({
                     'url': $(this).data('url'),
                     'caption': $(this).data('caption'),
                     'credit': $(this).data('credit'),
+                    'width': $(this).width(),
+                    'height': $(this).height()
                 });
                 imagesTable[id] = n;
                 n++;
