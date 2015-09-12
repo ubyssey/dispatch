@@ -1,33 +1,125 @@
-div.image-inner {
-  position: relative;
-}
+div.slideshow {
 
-ul.slides {
-  height: 100%;
-  white-space: nowrap;
-  position: absolute;
-  top: 0;
-
-  list-style-type: none;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding: 0;
-
-  &.animate {
-    -webkit-transition: all .15s;
-    -moz-transition: all .15s;
-    -o-transition: all .15s;
-    transition: all .15s;
+  div.gallery-container {
+    position: absolute;
+    top: 65px;
+    bottom: 65px;
+    width: 100%;
   }
 
+  ul.slides {
+    height: 100%;
+    position: absolute;
+    top: 0;
 
-}
+    list-style-type: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
 
-li.slide {
-  vertical-align: top;
-  text-align: center;
-  display: inline-block;
-  img {
-    pointer-events: none;
+    &.animate {
+      -webkit-transition: all .15s;
+      -moz-transition: all .15s;
+      -o-transition: all .15s;
+      transition: all .15s;
+    }
+
   }
+
+  li.slide {
+    vertical-align: top;
+    text-align: center;
+
+    height: 100%;
+    display: inline-block;
+
+    > .inner {
+      display: inline-flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    div.image {
+      flex: 2;
+      position: relative;
+      > div {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        img {
+          height: 100%;
+          width: auto;
+          pointer-events: none;
+        }
+      }
+    }
+
+    p.slide-caption {
+      padding: 20px 20px 0 20px;
+      max-width: 585px;
+      margin: 0 auto;
+    }
+
+
+
+  }
+
+  .prev, .next {
+
+    top: 65px;
+    bottom: 65px;
+
+    opacity: 0.2;
+    position: absolute;
+    font-size: 50px;
+    color: white;
+    padding: 0 50px;
+
+    width: 30%;
+
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    > div {
+      display: table;
+      height: 100%;
+      width: 100%;
+    }
+
+    i.fa {
+      vertical-align: middle;
+      display: table-cell;
+    }
+  }
+
+  .next {
+    right: 0;
+    i.fa {
+      text-align: right;
+    }
+  }
+
+  div.close-slideshow {
+    color: #fff;
+    font-size: 32px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 65px;
+    opacity: 0.5;
+    line-height: 65px;
+    padding: 0 20px;
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+    i.fa {
+      vertical-align: middle;
+    }
+  }
+
 }
+
