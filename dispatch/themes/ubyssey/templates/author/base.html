@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="article-search">
-                <form method="get" action="{% url 'author-articles' person.pk %}">
+                <form method="get" action="{% url 'author-articles' person.slug %}">
                 <label for="author-search"><i class="fa fa-search"></i></label>
                 <input name="q" id="author-search" type="text" {% if q %}value="{{ q }}"{% endif %} placeholder="Search author archive" />
                 </form>
@@ -33,7 +33,7 @@
                 </div>
                 {% if articles|length == 6 %}
                 <div class="more">
-                    <a class="button large" href="{% url 'author-articles' person.pk %}">View all (showing 6 of 124)</a>
+                    <a class="button large" href="{% url 'author-articles' person.slug %}">View all (showing 6 of 124)</a>
                 </div>
                 {% endif %}
             </div>

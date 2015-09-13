@@ -67,4 +67,5 @@ class DefaultTheme():
         context = {
             'article': article
         }
+
         return render(request, 'article.html', context)

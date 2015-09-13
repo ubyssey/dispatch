@@ -112,10 +112,10 @@ class UbysseyTheme(DefaultTheme):
         t = loader.select_template(["%s/%s" % (section.slug, 'section/base.html'), 'section/base.html'])
         return HttpResponse(t.render(context))
 
-    def author(self, request, pk=None):
+    def author(self, request, slug=None):
 
-        person = Person.objects.get(pk=pk)
-        articles = Article.objects.filter(authors__id=pk, status=Article.PUBLISHED)[:6]
+        person = Person.objects.get(slug=slug)
+        articles = Article.objects.filter(authors=person, status=Article.PUBLISHED)[:6]
 
         context = {
             'person': person,
@@ -124,9 +124,9 @@ class UbysseyTheme(DefaultTheme):
 
         return render(request, 'author/base.html', context)
 
-    def author_articles(self, request, pk=None):
+    def author_articles(self, request, slug=None):
 
-        person = Person.objects.get(pk=pk)
+        person = Person.objects.get(slug=slug)
 
         order = request.GET.get('order', 'newest')
 
@@ -137,7 +137,7 @@ class UbysseyTheme(DefaultTheme):
 
         query = request.GET.get('q', False)
 
-        article_list = Article.objects.filter(authors__id=pk, status=Article.PUBLISHED).order_by(order_by)
+        article_list = Article.objects.filter(authors=person, status=Article.PUBLISHED).order_by(order_by)
 
         if query:
             article_list = article_list.filter(long_headline__icontains=query)
