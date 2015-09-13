@@ -11,6 +11,7 @@
                 <input name="q" id="author-search" type="text" {% if q %}value="{{ q }}"{% endif %} placeholder="Search author archive" />
                 </form>
             </div>
+            {% if q %}
             <div class="article-archive">
                 <div class="filter clearfix">
                     {% if articles|length > 0 %}<h3 class="basic uppercase">{{ count }} results for "{{ q }}"</h2>{% endif %}
@@ -32,7 +33,7 @@
                         </a>
                         {% endif %}
                         <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
-                        <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                        <span class="byline"><span class="author">By {{ article.get_author_url|safe }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
                         <p class="snippet">{{ article.snippet }}</p>
                     </article>
                 {% endfor %}
@@ -56,6 +57,7 @@
                 <div class="no-results">No articles found.</div>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
     </main>
 {% endblock %}

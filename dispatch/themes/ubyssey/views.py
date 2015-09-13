@@ -102,6 +102,9 @@ class UbysseyTheme(DefaultTheme):
         articles = Article.objects.filter(status=Article.PUBLISHED,section=section)
 
         context = {
+            'meta': {
+                'title': section.name
+            },
             'section': section,
             'articles': {
                 'first': articles[0],
@@ -112,12 +115,20 @@ class UbysseyTheme(DefaultTheme):
         t = loader.select_template(["%s/%s" % (section.slug, 'section/base.html'), 'section/base.html'])
         return HttpResponse(t.render(context))
 
+    def get_author_meta(self, person):
+
+        return {
+            'title': person.full_name,
+            'image': person.get_image_url if person.image is not None else None,
+        }
+
     def author(self, request, slug=None):
 
         person = Person.objects.get(slug=slug)
         articles = Article.objects.filter(authors=person, status=Article.PUBLISHED)[:6]
 
         context = {
+            'meta': self.get_author_meta(person),
             'person': person,
             'articles': articles
         }
@@ -156,6 +167,7 @@ class UbysseyTheme(DefaultTheme):
             articles = paginator.page(paginator.num_pages)
 
         context = {
+            'meta': self.get_author_meta(person),
             'person': person,
             'articles': articles,
             'order': order,
@@ -176,8 +188,6 @@ class UbysseyTheme(DefaultTheme):
             order_by = '-published_at'
         else:
             order_by = 'published_at'
-
-
 
         context = {
             'order': order,
