@@ -48,4 +48,16 @@ gulp.task('article', function(){
         .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
 });
 
+gulp.task('section', function(){
+    return browserify('./src/section.js')
+        .transform({ global: true }, reactify)
+        .bundle()
+        .pipe(source('section.js'))
+        .pipe(derequire())
+        .pipe(gulpif(!dev, buffer()))
+        .pipe(gulpif(!dev, uglify()))
+        .pipe(gulp.dest('dist'))
+        .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
+});
+
 gulp.task('static', shell.task('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
