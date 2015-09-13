@@ -13,22 +13,37 @@ header.main, header.topbar {
 div.branding {
   text-align: center;
   margin: 20px 0;
+  height: 50px;
+
+  .left, .middle, .right {
+    display: inline-block;
+    height: 100%;
+    line-height: 50px;
+  }
+
   .left, .right {
     width: 25%;
   }
-  .left {
-    text-align: left;
-    line-height: 60px;
-  }
-  .left, .middle {
-    float: left;
-  }
+
   .middle {
     width: 50%;
   }
-  .right {
-    float: right;
+
+  .middle {
+    width: 50%;
   }
+
+  .right {
+    text-align: right;
+    a {
+      margin-right: 20px;
+      font-size: 15px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
   h1.section-title {
     font-family: $font-default;
     font-size: 34px;
