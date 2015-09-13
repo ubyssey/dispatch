@@ -126,13 +126,22 @@ div.article-archive {
   div.blocks {
     margin: 20px -10px 0 -10px;
     overflow: auto;
+
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+
   }
 
   div.blocks article {
+
     box-sizing: border-box;
     padding: 0 10px 30px 10px;
-    width: 33.33%;
-    float: left;
+    //width: 33.33%;
+    flex: 0 0 33.33%;
+    -webkit-flex: 0 0 33.33%;
+    //float: left;
 
     a.image {
       margin-bottom: 15px;
