@@ -1,8 +1,6 @@
-var React = require('react');
 var LinkedList = require('../modules/LinkedList.js');
 var GallerySlide = require('./GallerySlide.jsx');
 var Hammer = require('hammerjs');
-//var Modernizr = require('modernizr');
 
 var Gallery = React.createClass({
     getInitialState: function(){
@@ -19,9 +17,6 @@ var Gallery = React.createClass({
         this.images = LinkedList(this.props.images);
     },
     componentDidMount: function(){
-
-        //this.preloadImages();
-
         this.setupEventListeners();
         this.addSlideTrigger(this.props.trigger);
         this.initSlider();

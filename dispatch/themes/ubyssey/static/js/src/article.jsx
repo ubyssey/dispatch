@@ -1,21 +1,10 @@
-var React = require('react');
 var Youtube = require('./modules/Youtube.js');
 var ArticleList = require('./components/ArticleList.jsx');
 var Search = require('./components/Search.jsx');
 
 window.articleHeader = false;
 
-
-
 if($('main.article').length){
-
-//    $(function(){
-//        if($(window).width() > 400 && $(document).scrollTop() > 50){
-//            window.articleHeader = true;
-//            $('.header-site').hide();
-//            $('.header-article').show();
-//        }
-//    });
 
     var articleId = $('article').data('id');
     var articleHeadline = $('article').data('headline');
@@ -43,7 +32,6 @@ if($('main.article').length){
         document.getElementById('article-list')
     );
 }
-
 
 React.render(
     <Search />,
