@@ -5,12 +5,14 @@
     <main class="author">
         <div class="container padded">
             <div class="profile table-row">
+                {% if person.image %}
                 <div class="profile-image cell">
                     <img src="{{ person.get_image_url }}" />
                 </div>
+                {% endif %}
                 <div class="cell middle">
                     <h1 class="basic">{{ person.full_name }}</h1>
-                    <p class="snippet">The National Science and Engineering Counsel of Canada has awarded certain UBC students and postdoctoral fellows over $3 million in an effort to equip these scientists with skills for the workforce.</p>
+                    {% if person.description %}<p class="snippet">{{ person.description }}</p>{% endif %}
                 </div>
             </div>
             <div class="article-search">

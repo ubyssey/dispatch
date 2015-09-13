@@ -18,7 +18,7 @@
                 <h1 class="headline">{{ article.long_headline|safe }}</h1>
                 <div class="article-info row">
                     <div class="article-byline">
-                        <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
+                        <span class="author">By {{ article.get_author_url|safe }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
                     </div>
                     <ul class="social top">
                         <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span> {% if article.comment_count == 0 %}Post a comment{% else %}{{ article.comment_count }}comments{% endif %}</span></a></li>
