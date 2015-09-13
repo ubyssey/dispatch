@@ -82,7 +82,7 @@ div.article-content p, div.article-content div.caption {
 
 div.article-content {
 
-  p {
+  > p {
     font-family: $font-body;
     font-size: 16px;
     color: #333333;
@@ -92,7 +92,7 @@ div.article-content {
         margin-top: 5px;
     }
   }
-  h1 {
+  > h1 {
     font-family: $font-default;
     font-weight: normal;
     font-size: 28px;
