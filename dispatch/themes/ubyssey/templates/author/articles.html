@@ -21,7 +21,7 @@
                 </a>
                 {% endif %}
                 <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
-                <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
+                <span class="byline"><span class="author">By {{ article.get_author_url|safe }}</span> &nbsp;·&nbsp; <span class="published">{{ article.published_at }}</span></span>
                 <p class="snippet">{{ article.snippet }}</p>
             </article>
         {% endfor %}

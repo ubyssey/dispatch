@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, SlugField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
+from django.db.models import Model, CharField, SlugField, TextField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.conf import settings
 
@@ -81,7 +81,8 @@ class Person(Model):
     is_admin = BooleanField(default=True)
 
     image = ImageField(upload_to='images', null=True, blank=True)
-    slug = SlugField(null=True)
+    slug = SlugField(null=True, blank=True)
+    description = TextField(null=True, blank=True)
 
     def get_image_url(self):
         return settings.MEDIA_URL + str(self.image)

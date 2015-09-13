@@ -8,6 +8,7 @@
             <img src="{% static 'img/sample-leaderboard-ad.png' %}">
         </div>
         <div class="container">
+            <h1 class="section">{{ section.name }}</h1>
             <article class="section-top row padded">
                 {% with articles.first as article %}
                     <div class="left stack-mobile">
@@ -18,7 +19,6 @@
                         <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                         <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
                     </div>
-
                 {% endwith %}
             </article>
             <div class="article-archive">
