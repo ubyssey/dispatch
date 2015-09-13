@@ -1,5 +1,3 @@
-var React = require('react');
-
 var GallerySlide = React.createClass({
     render: function(){
         var slideStyle = { width: this.props.width };

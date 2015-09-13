@@ -1,4 +1,3 @@
-var React = require('react');
 var Textarea = require('react-textarea-autosize');
 
 var CommentBox = React.createClass({

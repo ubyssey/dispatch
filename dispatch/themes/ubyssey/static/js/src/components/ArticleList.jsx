@@ -1,5 +1,3 @@
-var React = require('react');
-
 var Article = require('./Article.jsx');
 var CommentsBar = require('./CommentsBar.jsx');
 var ArticleHeader = require('./ArticleHeader.jsx');

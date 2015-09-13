@@ -1,4 +1,3 @@
-var React = require('react');
 var Galleries = require('./Galleries.jsx');
 
 var Article = React.createClass({

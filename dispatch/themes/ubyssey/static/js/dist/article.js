@@ -22905,14 +22905,11 @@ module.exports = warning;
 module.exports = _dereq_('./lib/React');
 
 },{"./lib/React":33}],161:[function(_dereq_,module,exports){
-var React = _dereq_('react');
 var Youtube = _dereq_('./modules/Youtube.js');
 var ArticleList = _dereq_('./components/ArticleList.jsx');
 var Search = _dereq_('./components/Search.jsx');
 
 window.articleHeader = false;
-
-
 
 if($('main.article').length){
 
@@ -22957,8 +22954,7 @@ React.render(
     document.getElementById('search-form')
 );
 
-},{"./components/ArticleList.jsx":164,"./components/Search.jsx":171,"./modules/Youtube.js":173,"react":160}],162:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{"./components/ArticleList.jsx":164,"./components/Search.jsx":171,"./modules/Youtube.js":173}],162:[function(_dereq_,module,exports){
 var Galleries = _dereq_('./Galleries.jsx');
 
 var Article = React.createClass({displayName: "Article",
@@ -23042,9 +23038,7 @@ var Article = React.createClass({displayName: "Article",
 
 module.exports = Article;
 
-},{"./Galleries.jsx":168,"react":160}],163:[function(_dereq_,module,exports){
-var React = _dereq_('react');
-
+},{"./Galleries.jsx":168}],163:[function(_dereq_,module,exports){
 var ArticleHeader = React.createClass({displayName: "ArticleHeader",
     componentWillMount: function(){
         this.logo = $('img.logo').attr('src');
@@ -23070,9 +23064,7 @@ var ArticleHeader = React.createClass({displayName: "ArticleHeader",
 
 module.exports = ArticleHeader;
 
-},{"react":160}],164:[function(_dereq_,module,exports){
-var React = _dereq_('react');
-
+},{}],164:[function(_dereq_,module,exports){
 var Article = _dereq_('./Article.jsx');
 var CommentsBar = _dereq_('./CommentsBar.jsx');
 var ArticleHeader = _dereq_('./ArticleHeader.jsx');
@@ -23247,8 +23239,7 @@ var ArticleList = React.createClass({displayName: "ArticleList",
 
 module.exports = ArticleList;
 
-},{"../modules/LinkedList.js":172,"./Article.jsx":162,"./ArticleHeader.jsx":163,"./CommentsBar.jsx":167,"react":160}],165:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{"../modules/LinkedList.js":172,"./Article.jsx":162,"./ArticleHeader.jsx":163,"./CommentsBar.jsx":167}],165:[function(_dereq_,module,exports){
 var Comment = React.createClass({displayName: "Comment",
     render: function(){
         return (
@@ -23267,8 +23258,7 @@ var Comment = React.createClass({displayName: "Comment",
 
 module.exports = Comment;
 
-},{"react":160}],166:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{}],166:[function(_dereq_,module,exports){
 var Textarea = _dereq_('react-textarea-autosize');
 
 var CommentBox = React.createClass({displayName: "CommentBox",
@@ -23309,8 +23299,7 @@ var CommentBox = React.createClass({displayName: "CommentBox",
 
 module.exports = CommentBox;
 
-},{"react":160,"react-textarea-autosize":4}],167:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{"react-textarea-autosize":4}],167:[function(_dereq_,module,exports){
 var Comment = _dereq_('./Comment.jsx');
 var CommentBox = _dereq_('./CommentBox.jsx');
 
@@ -23412,8 +23401,7 @@ var CommentsBar = React.createClass({displayName: "CommentsBar",
 
 module.exports = CommentsBar;
 
-},{"./Comment.jsx":165,"./CommentBox.jsx":166,"react":160}],168:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{"./Comment.jsx":165,"./CommentBox.jsx":166}],168:[function(_dereq_,module,exports){
 var Gallery = _dereq_('./Gallery.jsx');
 
 var Galleries = React.createClass({displayName: "Galleries",
@@ -23427,12 +23415,10 @@ var Galleries = React.createClass({displayName: "Galleries",
 
 module.exports = Galleries;
 
-},{"./Gallery.jsx":169,"react":160}],169:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{"./Gallery.jsx":169}],169:[function(_dereq_,module,exports){
 var LinkedList = _dereq_('../modules/LinkedList.js');
 var GallerySlide = _dereq_('./GallerySlide.jsx');
 var Hammer = _dereq_('hammerjs');
-//var Modernizr = require('modernizr');
 
 var Gallery = React.createClass({displayName: "Gallery",
     getInitialState: function(){
@@ -23449,9 +23435,6 @@ var Gallery = React.createClass({displayName: "Gallery",
         this.images = LinkedList(this.props.images);
     },
     componentDidMount: function(){
-
-        //this.preloadImages();
-
         this.setupEventListeners();
         this.addSlideTrigger(this.props.trigger);
         this.initSlider();
@@ -23789,9 +23772,7 @@ var Gallery = React.createClass({displayName: "Gallery",
 
 module.exports = Gallery;
 
-},{"../modules/LinkedList.js":172,"./GallerySlide.jsx":170,"hammerjs":2,"react":160}],170:[function(_dereq_,module,exports){
-var React = _dereq_('react');
-
+},{"../modules/LinkedList.js":172,"./GallerySlide.jsx":170,"hammerjs":2}],170:[function(_dereq_,module,exports){
 var GallerySlide = React.createClass({displayName: "GallerySlide",
     render: function(){
         var slideStyle = { width: this.props.width };
@@ -23815,8 +23796,7 @@ var GallerySlide = React.createClass({displayName: "GallerySlide",
 
 module.exports = GallerySlide;
 
-},{"react":160}],171:[function(_dereq_,module,exports){
-var React = _dereq_('react');
+},{}],171:[function(_dereq_,module,exports){
 var key = _dereq_('keymaster');
 
 var Search = React.createClass({displayName: "Search",
@@ -23863,7 +23843,7 @@ var Search = React.createClass({displayName: "Search",
 
 module.exports = Search;
 
-},{"keymaster":3,"react":160}],172:[function(_dereq_,module,exports){
+},{"keymaster":3}],172:[function(_dereq_,module,exports){
 var LinkedList = function(array){
 
     var Node = function(data){
