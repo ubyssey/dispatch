@@ -164,3 +164,60 @@ class UbysseyTheme(DefaultTheme):
 
         return render(request, 'author/articles.html', context)
 
+    def search(self, request):
+
+        query = request.GET.get('q', None)
+        if query == "":
+            query = None
+
+        order = request.GET.get('order', 'newest')
+
+        if order == 'newest':
+            order_by = '-published_at'
+        else:
+            order_by = 'published_at'
+
+
+
+        context = {
+            'order': order,
+            'q': query
+        }
+
+        if query is not None:
+
+            title = 'Search results for "%s"' % query
+
+            article_list = Article.objects.filter(status=Article.PUBLISHED, long_headline__icontains=query).order_by(order_by)
+
+            paginator = Paginator(article_list, 15) # Show 15 articles per page
+
+            page = request.GET.get('page')
+
+            try:
+                articles = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                articles = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                articles = paginator.page(paginator.num_pages)
+
+            context['articles'] = articles
+            context['count'] = paginator.count
+
+        else:
+            articles = None
+            title = 'Search'
+
+        meta = {
+            'title': title
+        }
+
+        context['meta'] = meta
+
+        return render(request, 'search.html', context)
+
+
+
+
