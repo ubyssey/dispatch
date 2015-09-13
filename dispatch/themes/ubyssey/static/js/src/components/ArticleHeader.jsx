@@ -1,5 +1,3 @@
-var React = require('react');
-
 var ArticleHeader = React.createClass({
     componentWillMount: function(){
         this.logo = $('img.logo').attr('src');

@@ -1,4 +1,3 @@
-var React = require('react');
 var key = require('keymaster');
 
 var Search = React.createClass({
