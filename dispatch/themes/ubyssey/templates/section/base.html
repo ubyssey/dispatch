@@ -31,8 +31,8 @@
                     {% endif %}
                     <article>
                         {% if article.featured_image %}
-                        <a href="{{ article.get_absolute_url }}" class="image">
-                            <img src="{{ article.featured_image.image.get_absolute_url }}" />
+                        <a href="{{ article.get_absolute_url }}" class="image image-aspect-4-3">
+                            <div style="background-image: url('{{ article.featured_image.image.get_absolute_url }}')"></div>
                         </a>
                         {% endif %}
                         <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline|safe }}</h2></a>
