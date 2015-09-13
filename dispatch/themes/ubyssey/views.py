@@ -45,10 +45,10 @@ class UbysseyTheme(DefaultTheme):
         sections = Article.objects.get_sections(exclude=('blog',),frontpage=frontpage_ids)
 
         articles = {
-              'primary': frontpage[0],
-              'secondary': frontpage[1],
-              'thumbs': frontpage[2:4],
-              'bullets': frontpage[4:6],
+            'primary': frontpage[0],
+            'secondary': frontpage[1],
+            'thumbs': frontpage[2:4],
+            'bullets': frontpage[4:6],
          }
 
         page = Homepage()
@@ -99,7 +99,7 @@ class UbysseyTheme(DefaultTheme):
     def section(self, request, section):
 
         section = Section.objects.get(slug=section)
-        articles = Article.objects.filter(status=Article.PUBLISHED,section=section)
+        articles = Article.objects.filter(status=Article.PUBLISHED, section=section).order_by('-published_at')
 
         context = {
             'meta': {

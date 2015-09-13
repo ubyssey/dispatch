@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% block content %}
 {% include 'headers/topbar.html' with section=section.slug %}
-    <main class="section">
+    <main class="section" data-id="{{ section.id }}">
         <div class="advertisement homepage leaderboard">
             <img src="{% static 'img/sample-leaderboard-ad.png' %}">
         </div>
@@ -24,11 +24,7 @@
             <div class="article-archive">
                 <h3 class="basic uppercase">Recent Articles</h2>
                 <div class="blocks">
-                    <div class="row">
                 {% for article in articles.rest|slice:":6" %}
-                    {% if forloop.counter0|divisibleby:3 %}
-                        </div><div class="row">
-                    {% endif %}
                     <article>
                         {% if article.featured_image %}
                         <a href="{{ article.get_absolute_url }}" class="image image-aspect-4-3">
@@ -40,9 +36,12 @@
                         <p class="snippet">{{ article.snippet }}</p>
                     </article>
                 {% endfor %}
-                    </div>
                 </div>
+                <div id="article-loader"></div>
             </div>
         </div>
     </main>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/dist/section.js' %}" type="text/javascript"></script>
 {% endblock %}
