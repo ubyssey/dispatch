@@ -1,6 +1,8 @@
 <div class="image-attachment attachment">
     <img class="article-attachment" data-id="{{ id }}" data-caption="{{ caption }}" data-credit="{{ credit }}" data-url="{{ src }}" src="{{ src }}" alt="{{ caption }}" />
-    <div class="caption">
-        {{ caption }} <span class="credit">{{ credit }} / The Ubyssey</span>
-    </div>
+    {% if caption %}
+        <div class="caption">
+            {{ caption }} <span class="credit">{{ credit }} / The Ubyssey</span>
+        </div>
+    {% endif %}
 </div>
