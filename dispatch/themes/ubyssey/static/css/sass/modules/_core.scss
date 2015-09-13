@@ -153,6 +153,28 @@ html.hairlines {
   }
 }
 
+.image-aspect-4-3 {
+  width: 100%;
+  display: inline-block;
+  position: relative;
+}
+.image-aspect-4-3:after {
+  padding-top: 75%;
+  /* 4:3 ratio */
+  display: block;
+  content: '';
+}
+.image-aspect-4-3 > div {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  background-size: cover;
+  background-position: center;
+}
+
 // ANCHORS
 
 a {
