@@ -91,17 +91,45 @@ class ArticleViewSet(viewsets.ModelViewSet):
         Optionally restricts the returned articles by filtering
         against a `topic` query parameter in the URL.
         """
-        queryset = Article.objects.filter(head=True).order_by('-published_at')
+
+        if self.request.user.is_authenticated():
+            queryset = Article.objects.filter(head=True)
+        else:
+            queryset = Article.objects.filter(head=True, status=Article.PUBLISHED)
+
+        queryset = queryset.order_by('-published_at')
+
         tag = self.request.QUERY_PARAMS.get('tag', None)
         q = self.request.QUERY_PARAMS.get('q', None)
-        limit = self.request.QUERY_PARAMS.get('limit', None)
+        section = self.request.QUERY_PARAMS.get('section', None)
+
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
         if q is not None:
             queryset = queryset.filter(long_headline__icontains=q)
-        if limit is not None:
-            queryset = queryset[:limit]
+        if section is not None:
+            queryset = queryset.filter(section_id=section)
+
         return queryset
+
+
+    def list(self, request, *args, **kwargs):
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        drafts = self.request.QUERY_PARAMS.get('drafts', False)
+
+        if not drafts:
+            queryset = queryset.filter(status=Article.PUBLISHED)
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
     def update(self, request, *args, **kwargs):
