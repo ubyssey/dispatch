@@ -28,8 +28,8 @@ $('a.menu').click(function(e){
     }
 });
 
-$('a.search').click(function(){
-
+$('a.search').click(function(e){
+    e.preventDefault();
     if($('#search-form').is(':visible')){
         $('#search-form').hide();
         $(this).removeClass('active');
