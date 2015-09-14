@@ -1,0 +1,24 @@
+{% extends 'manager/base.html' %}
+
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <header class="secondary list-header"></header>
+    <div class="list-container">
+        <div class="item-list">
+        {% for page in pages %}
+            <div class="item">
+                <div class="checkbox cell">
+                    <input type="checkbox">
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'dispatch.apps.manager.views.page_edit' page.SLUG %}">{{ page.NAME }}</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
