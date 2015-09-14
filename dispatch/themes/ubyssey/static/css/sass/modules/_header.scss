@@ -11,7 +11,6 @@ header.main, header.topbar {
 }
 
 div.branding {
-  text-align: center;
   margin: 20px 0;
   height: 50px;
 
@@ -23,14 +22,13 @@ div.branding {
 
   .left, .right {
     width: 25%;
+    padding: 0 15px;
+    box-sizing: border-box;
   }
 
   .middle {
     width: 50%;
-  }
-
-  .middle {
-    width: 50%;
+    text-align: center;
   }
 
   .right {
@@ -42,6 +40,11 @@ div.branding {
         margin-right: 0;
       }
     }
+  }
+
+  span.since-line {
+    font-size: 13px;
+    color: #7D7D7D;
   }
 
   h1.section-title {

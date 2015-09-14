@@ -2,9 +2,7 @@
 <header class="main">
     <div class="container large">
         <div class="branding row">
-            <div class="left">
-
-            </div>
+            <div class="left"><span class="since-line">UBC's student newspaper since 1918</span></div>
             <div class="middle">
                 <img class="top-logo" src="{% static 'img/ubyssey-logo.svg' %}" />
             </div>
@@ -18,7 +16,7 @@
             <div class="inner row">
                 <div class="left">
                     <ul class="meta">
-                        <li>{% now "l, F jS, Y" %}</li>
+                        <li>{% now "F jS, Y" %}</li>
                         <li>{{ components.print_issue|safe }}</li>
                     </ul>
                 </div>
