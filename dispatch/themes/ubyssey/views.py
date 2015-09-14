@@ -112,7 +112,7 @@ class UbysseyTheme(DefaultTheme):
             }
         }
 
-        t = loader.select_template(["%s/%s" % (section.slug, 'section/base.html'), 'section/base.html'])
+        t = loader.select_template(["%s/%s" % (section.slug, 'section.html'), 'section.html'])
         return HttpResponse(t.render(context))
 
     def get_author_meta(self, person):
