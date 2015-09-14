@@ -45,12 +45,180 @@ class Section(Model):
     def __str__(self):
         return self.name
 
+class PublishableManager(Manager):
+
+    def get(self, *args, **kwargs):
+        if 'pk' in kwargs:
+            kwargs['parent'] = kwargs['pk']
+            kwargs['head'] = True
+            del kwargs['pk']
+        return super(PublishableManager, self).get(*args, **kwargs)
+
+    def get_revision(self, *args, **kwargs):
+        return super(PublishableManager, self).get(*args, **kwargs)
+
 class Publishable(Model):
 
-    parent = ForeignKey('Article', related_name='child', blank=True, null=True)
+    parent = ForeignKey('Article', related_name='%(class)s_parent', blank=True, null=True)
     preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
+
+    is_active = BooleanField(default=True)
+    slug = SlugField(max_length=255)
+
+    shares = PositiveIntegerField(default=0, blank=True, null=True)
+    views = PositiveIntegerField(default=0)
+
+    DRAFT = 0
+    PUBLISHED = 1
+    PITCH = 2
+    COPY = 3
+    MANAGE = 4
+
+    STATUS_CHOICES = (
+        (DRAFT, 'Draft'),
+        (PUBLISHED, 'Published'),
+        (PITCH, 'Pitch'),
+        (COPY, 'To be copyedited'),
+        (MANAGE, 'To be managed'),
+    )
+
+    status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
+
+    featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
+
+    images = ManyToManyField("Image", through='ImageAttachment', related_name='%(class)s_images')
+    videos = ManyToManyField('Video', related_name='%(class)s_videos')
+
+    template = CharField(max_length=255, default='default')
+
+    seo_keyword = CharField(max_length=100, null=True)
+    seo_description = TextField(null=True)
+
+    scripts = ManyToManyField(Script, related_name='%(class)s_scripts')
+    stylesheets = ManyToManyField(Stylesheet, related_name='%(class)s_stylesheets')
+    snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
+
+    content = TextField()
+    snippet = TextField(null=True)
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    def add_view(self):
+        self.views += 1
+        self.save(revision=False)
+
+    def template_fields(self):
+        if not hasattr(self, 'template_fields_data'):
+            self.template_fields_data = self.get_template_fields()
+        return self.template_fields_data
+
+    def get_template(self):
+        if self.template != 'default':
+            return 'article/%s.html' % self.template
+        else:
+            return 'article/base.html'
+
+    def save_template_fields(self, template_fields):
+        return TemplateManager.save_fields(self.id, self.template, template_fields)
+
+    def get_template_fields(self):
+        Template = ThemeHelper.get_theme_template(template_slug=self.template)
+        return Template(article_id=self.id).field_data_as_json()
+
+    def is_published(self):
+        return self.status == self.PUBLISHED
+
+    def get_status(self):
+        for status in self.STATUS_CHOICES:
+            if status[0] == self.status:
+                return status[1]
+        return 'Draft'
+
+    def get_json(self):
+        """
+        Returns a JSON representation (if possible) of the article content.
+        """
+        def prepare_json(nodes):
+            """
+            Processes each in the document, returning its full object representation.
+            """
+            for i, node in enumerate(nodes):
+                if type(node) is dict:
+                    # If node is a dictionary, replace data attribute with processed data.
+                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    nodes[i] = {
+                        'type': 'paragraph',
+                        'data': node,
+                    }
+            return nodes
+        # Attempt to load content as JSON, return raw content as fallback
+        try:
+            return prepare_json(json.loads(self.content))
+        except ValueError:
+            return self.content
+
+    def get_html(self):
+        """
+        Returns article content as HTML.
+        """
+        def prepare_html(nodes):
+            """
+            Processes each in the document, returning its rendered HTML representation.
+            """
+            html = ""
+            for node in nodes:
+                if type(node) is dict:
+                    # If node is a dictionary, append its rendered HTML.
+                    html += embedlib.render(node['type'], node['data'])
+                else:
+                    # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    html += "<p>%s</p>" % node
+            return html
+
+        try:
+            # Attempt to load content as JSON, return raw content as fallback
+            return prepare_html(json.loads(self.content))
+        except ValueError:
+            return self.content
+
+    def save_attachments(self):
+        """
+        Saves all attachments embedded in article content.
+
+        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
+        """
+        nodes = json.loads(self.content)
+        for node in nodes:
+            if type(node) is dict and node['type'] == 'image':
+                image_id = node['data']['image']['id']
+                image = Image.objects.get(id=image_id)
+                if node['data']['attachment_id']:
+                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
+                else:
+                    attachment = ImageAttachment()
+                attachment.caption = node['data']['caption']
+                attachment.image = image
+                attachment.article = self
+                attachment.save()
+                node['data'] = {
+                    'attachment_id': attachment.id,
+                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
+                }
+        self.content = json.dumps(nodes)
+
+    def save_featured_image(self, data):
+        attachment = ImageAttachment()
+        attachment.image_id = data['id']
+        if 'caption' in data:
+            attachment.caption = data['caption']
+        attachment.article = self
+        attachment.save()
+        self.featured_image = attachment
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
@@ -95,17 +263,7 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
-class ArticleManager(Manager):
-
-    def get(self, *args, **kwargs):
-        if 'pk' in kwargs:
-            kwargs['parent'] = kwargs['pk']
-            kwargs['head'] = True
-            del kwargs['pk']
-        return super(ArticleManager, self).get(*args, **kwargs)
-
-    def get_revision(self, *args, **kwargs):
-        return super(ArticleManager, self).get(*args, **kwargs)
+class ArticleManager(PublishableManager):
 
     def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, status=None):
 
@@ -238,40 +396,18 @@ class Comment(Model):
     created_at = DateTimeField(auto_now_add=True)
 
 class Article(Publishable):
+
     long_headline = CharField(max_length=255)
     short_headline = CharField(max_length=255)
     section = ForeignKey('Section')
-
-    is_active = BooleanField(default=True)
     published_at = DateTimeField(null=True)
-    slug = SlugField(max_length=255)
-
     authors = ManyToManyField(Person, through="Author")
-
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
-    shares = PositiveIntegerField(default=0, blank=True, null=True)
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
-    views = PositiveIntegerField(default=0)
-
-    DRAFT = 0
-    PUBLISHED = 1
-    PITCH = 2
-    COPY = 3
-    MANAGE = 4
-
-    STATUS_CHOICES = (
-        (DRAFT, 'Draft'),
-        (PUBLISHED, 'Published'),
-        (PITCH, 'Pitch'),
-        (COPY, 'To be copyedited'),
-        (MANAGE, 'To be managed'),
-    )
-
-    status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
 
     est_reading_time = PositiveIntegerField(null=True)
 
@@ -283,26 +419,6 @@ class Article(Publishable):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
-
-    featured_image = ForeignKey('ImageAttachment', related_name="featured_image", blank=True, null=True)
-
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='images')
-    videos = ManyToManyField('Video')
-
-    template = CharField(max_length=255, default='default')
-
-    seo_keyword = CharField(max_length=100, null=True)
-    seo_description = TextField(null=True)
-
-    scripts = ManyToManyField(Script, related_name='scripts')
-    stylesheets = ManyToManyField(Stylesheet, related_name='stylesheets')
-    snippets = ManyToManyField(Snippet, related_name='snippets')
-
-    content = TextField()
-    snippet = TextField(null=True)
-
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
 
     objects = ArticleManager()
 
@@ -327,10 +443,6 @@ class Article(Publishable):
     def authors_list(self):
         return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
-    def add_view(self):
-        self.views += 1
-        self.save(revision=False)
-
     def get_related(self):
         return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
 
@@ -350,33 +462,6 @@ class Article(Publishable):
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
-
-    def get_template(self):
-        if self.template != 'default':
-            return 'article/%s.html' % self.template
-        else:
-            return 'article/base.html'
-
-    def is_published(self):
-        return self.status == self.PUBLISHED
-
-    def get_status(self):
-        for status in self.STATUS_CHOICES:
-            if status[0] == self.status:
-                return status[1]
-        return 'Draft'
-
-    def template_fields(self):
-        if not hasattr(self, 'template_fields_data'):
-            self.template_fields_data = self.get_template_fields()
-        return self.template_fields_data
-
-    def get_template_fields(self):
-        Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template(article_id=self.id).field_data_as_json()
-
-    def save_template_fields(self, template_fields):
-        return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def save_related(self, data):
         tags = data["tags-list"]
@@ -428,89 +513,6 @@ class Article(Publishable):
 
         return int(words / 200) # Average reading speed = 200 wpm
 
-    def get_json(self):
-        """
-        Returns a JSON representation (if possible) of the article content.
-        """
-        def prepare_json(nodes):
-            """
-            Processes each in the document, returning its full object representation.
-            """
-            for i, node in enumerate(nodes):
-                if type(node) is dict:
-                    # If node is a dictionary, replace data attribute with processed data.
-                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    nodes[i] = {
-                        'type': 'paragraph',
-                        'data': node,
-                    }
-            return nodes
-        # Attempt to load content as JSON, return raw content as fallback
-        try:
-            return prepare_json(json.loads(self.content))
-        except ValueError:
-            return self.content
-
-    def get_html(self):
-        """
-        Returns article content as HTML.
-        """
-        def prepare_html(nodes):
-            """
-            Processes each in the document, returning its rendered HTML representation.
-            """
-            html = ""
-            for node in nodes:
-                if type(node) is dict:
-                    # If node is a dictionary, append its rendered HTML.
-                    html += embedlib.render(node['type'], node['data'])
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    html += "<p>%s</p>" % node
-            return html
-
-        try:
-            # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(json.loads(self.content))
-        except ValueError:
-            return self.content
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image']['id']
-                image = Image.objects.get(id=image_id)
-                if node['data']['attachment_id']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-                attachment.caption = node['data']['caption']
-                attachment.image = image
-                attachment.article = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
-                }
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-        attachment.image_id = data['id']
-        if 'caption' in data:
-            attachment.caption = data['caption']
-        attachment.article = self
-        attachment.save()
-        self.featured_image = attachment
-
     def save_authors(self, authors):
         Author.objects.filter(article_id=self.id).delete()
         n=0
@@ -561,6 +563,10 @@ class Article(Publishable):
         Returns article URL.
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
+
+class Page(Publishable):
+    parent_page = ForeignKey('Page', related_name='parent_page_fk')
+    title = CharField(max_length=255)
 
 class Author(Model):
     article = ForeignKey(Article, null=True)
@@ -701,7 +707,9 @@ class ImageAttachment(Model):
         (COURTESY, 'Photo courtesy'),
     )
 
-    article = ForeignKey(Article, blank=True, null=True)
+    article = ForeignKey(Article, blank=True, null=True, related_name='article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='page')
+
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
     caption = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)

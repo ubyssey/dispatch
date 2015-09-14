@@ -184,7 +184,6 @@ def section(request, section):
     section = Section.objects.get(name=section)
     article_list = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
 
-
     q = request.GET.get('q', False)
     if q:
         article_list = article_list.filter(long_headline__icontains=q)
@@ -294,14 +293,10 @@ def article_add(request):
 
 @staff_member_required
 def article_edit(request, id):
-    """
-    TODO: create API route to return article from parent ID eliminate below query.
-    """
 
     context = {
         'title': 'Edit Article',
         'article': id,
-        #'templates': ThemeHelper.get_theme_templates(),
     }
 
     return render(request, 'manager/article/edit.html', context)
@@ -315,29 +310,72 @@ def article_delete(request, id):
     return redirect(section, section_slug)
 
 @staff_member_required
-def page_edit(request, slug):
+def pages(request):
+    page_list = Page.objects.filter(is_active=True, head=True).order_by('-created_at')
 
-    pages = ThemeHelper.get_theme_pages()
+    q = request.GET.get('q', False)
+    if q:
+        page_list = page_list.filter(title__icontains=q)
+    else:
+        q = ""
 
+    paginator = Paginator(page_list, 15) # Show 15 articles per page
+
+    page = request.GET.get('page')
+
+    try:
+        pages = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        pages = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        pages = paginator.page(paginator.num_pages)
+
+    return render_to_response(
+        "manager/article/list.html",
+        {
+            'title': 'Pages',
+            'pages' : pages,
+            'list_title': 'Pages',
+            'query': q,
+        },
+        RequestContext(request, {}),
+    )
+
+@staff_member_required
+def page_edit(request, id):
     context = {
         'title': 'Edit Page',
-        'page': pages.get(slug),
-        'slug': slug,
+        'page': id,
     }
 
     return render(request, 'manager/page/edit.html', context)
 
 @staff_member_required
-def pages(request):
+def component_edit(request, slug):
 
     pages = ThemeHelper.get_theme_pages()
 
     context = {
-        'title': 'Pages',
+        'title': 'Edit Components',
+        'page': pages.get(slug),
+        'slug': slug,
+    }
+
+    return render(request, 'manager/component/edit.html', context)
+
+@staff_member_required
+def components(request):
+
+    pages = ThemeHelper.get_theme_pages()
+
+    context = {
+        'title': 'components',
         'pages': pages.all(),
     }
 
-    return render(request, 'manager/page/list.html', context)
+    return render(request, 'manager/component/list.html', context)
 
 @staff_member_required
 def files(request):
