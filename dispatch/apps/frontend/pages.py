@@ -1,10 +1,10 @@
-from dispatch.apps.frontend.models import Page
+from dispatch.apps.frontend.models import ComponentSet
 from dispatch.helpers import ThemeHelper
 
 class BasePage:
 
     def components(self):
-        instance = Page.objects.get(slug=self.SLUG)
+        instance = ComponentSet.objects.get(slug=self.SLUG)
 
         spots = {}
 

@@ -1,6 +1,6 @@
 from django.db.models import Model, IntegerField, CharField, TextField, FileField, ForeignKey, ManyToManyField, SlugField
 
-class Page(Model):
+class ComponentSet(Model):
     slug = SlugField()
     components = ManyToManyField('Component')
 
