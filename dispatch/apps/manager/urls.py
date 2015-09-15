@@ -1,19 +1,18 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from . import views
 from django.contrib.admin.views.decorators import staff_member_required
 
-admin.autodiscover()
-
 urlpatterns = patterns('',
     url(r'^$', views.home),
+
     url(r'^logout/?$', views.logout),
     url(r'^login/?$', views.login),
     url(r'^profile/?$', views.profile),
-    url(r'^default/?$', include(admin.site.urls)),
+
     url(r'^users/$', views.users),
     url(r'^user/(\d*)/$', views.user_edit),
     url(r'^user/add/?$', views.user_add),
+
     url(r'^roles/$', views.roles),
     url(r'^roles/add/?$', views.role_add),
     url(r'^roles/edit/(\d*)/?$', views.role_edit),
@@ -25,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^article/add/?$', views.article_add),
 
     url(r'^pages/$', views.pages),
+    url(r'^page/add/?$', views.page_add),
     url(r'^page/(\d*)/$', views.page_edit),
 
     url(r'^section/edit/(\d*)/?$', views.section_edit),

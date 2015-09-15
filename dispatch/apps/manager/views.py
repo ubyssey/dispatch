@@ -1,4 +1,4 @@
-from dispatch.apps.content.models import Article, Section, Tag, Topic, Author, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Author, File
 from django.template import RequestContext
 from django.shortcuts import render_to_response, render, redirect
 from .decorators import staff_member_required
@@ -13,7 +13,7 @@ from dispatch.helpers import ThemeHelper
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group, Permission
 
-from dispatch.apps.frontend.models import Page, Component, ComponentField
+from dispatch.apps.frontend.models import ComponentSet, Component, ComponentField
 
 @staff_member_required
 def home(request):
@@ -333,7 +333,7 @@ def pages(request):
         pages = paginator.page(paginator.num_pages)
 
     return render_to_response(
-        "manager/article/list.html",
+        "manager/page/list.html",
         {
             'title': 'Pages',
             'pages' : pages,
@@ -342,6 +342,10 @@ def pages(request):
         },
         RequestContext(request, {}),
     )
+
+@staff_member_required
+def page_add(request):
+    return render(request, 'manager/page/edit.html')
 
 @staff_member_required
 def page_edit(request, id):
