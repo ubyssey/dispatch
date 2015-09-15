@@ -4,7 +4,11 @@ from dispatch.helpers import ThemeHelper
 class BasePage:
 
     def components(self):
-        instance = ComponentSet.objects.get(slug=self.SLUG)
+
+        try:
+            instance = ComponentSet.objects.get(slug=self.SLUG)
+        except ComponentSet.DoesNotExist:
+            return None
 
         spots = {}
 
