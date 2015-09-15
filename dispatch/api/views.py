@@ -12,7 +12,7 @@ from rest_framework.exceptions import APIException
 
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
-from dispatch.apps.frontend.models import Page, Component
+from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
@@ -378,7 +378,7 @@ class ComponentViewSet(viewsets.GenericViewSet):
 
         page = self.pages.get(slug)
 
-        instance = Page.objects.get(slug=slug)
+        instance = ComponentSet.objects.get(slug=slug)
         for component in instance.components.all():
             component_class = self.components.get(component.slug)
             component_obj = component_class(instance=component)
@@ -415,10 +415,10 @@ class ComponentViewSet(viewsets.GenericViewSet):
 
         try:
             update_status = status.HTTP_200_OK
-            instance = Page.objects.get(slug=slug)
+            instance = ComponentSet.objects.get(slug=slug)
         except:
             update_status = status.HTTP_201_CREATED
-            instance = Page(slug=slug)
+            instance = ComponentSet(slug=slug)
             instance.save()
 
         component_slug = request.POST.get('component')
