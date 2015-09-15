@@ -51,7 +51,7 @@ class UbysseyTheme(DefaultTheme):
             'bullets': frontpage[4:6],
          }
 
-        page = Homepage()
+        component_set = Homepage()
 
         popular = Article.objects.get_popular()[:5]
 
@@ -71,7 +71,7 @@ class UbysseyTheme(DefaultTheme):
             'sections': sections,
             'popular':  popular,
             'blog': blog,
-            'components': page.components(),
+            'components': component_set.components(),
         }
 
         return render(request, 'homepage/base.html', context)
