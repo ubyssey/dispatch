@@ -45,10 +45,8 @@ var DropdownButton = React.createClass({
         return this.props.selectItem(value);
     },
     renderDropdown: function(){
-        var items = this.props.items.map(function(item){
-            return (
-                <li onClick={this.selectItem.bind(this, item.value)}>{item.label}</li>
-                );
+        var items = this.props.items.map(function(item, i){
+            return ( <li key={i} onClick={this.selectItem.bind(this, item.value)}>{item.label}</li> );
         }.bind(this));
         return (
             <ul onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="dropdown-panel items">
