@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Author, Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
@@ -325,5 +325,106 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)
         else:
             perform_action(self.context['request'].user.person, action, 'article', instance.pk)
+
+        return instance
+
+class PageSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the Page model.
+    """
+
+    featured_image = ImageAttachmentSerializer(read_only=True)
+    featured_image_json = JSONField(required=False, write_only=True)
+
+    content = serializers.ReadOnlyField(source='get_json')
+    content_json = serializers.CharField(write_only=True)
+
+    url = serializers.CharField(source='get_absolute_url',read_only=True)
+    parent = serializers.ReadOnlyField(source='parent.id')
+
+    template_fields = JSONField(required=False, source='get_template_fields')
+
+    class Meta:
+        model = Page
+        fields = (
+            'id',
+            'parent',
+            'title',
+            'featured_image',
+            'featured_image_json',
+            'snippet',
+            'content',
+            'content_json',
+            'published_at',
+            'slug',
+            'revision_id',
+            'url',
+            'status',
+            'template',
+            'template_fields',
+            'seo_keyword',
+            'seo_description'
+        )
+
+    def __init__(self, *args, **kwargs):
+        # Instantiate the superclass normally
+        super(PageSerializer, self).__init__(*args, **kwargs)
+
+        template_fields = self.context['request'].QUERY_PARAMS.get('template_fields', False)
+
+        if self.context['request'].method == 'GET' and not template_fields:
+            self.fields.pop('template_fields')
+
+    def create(self, validated_data):
+
+        # Create new Article instance!
+        instance = Page()
+
+        # Then save as usual
+        return self.update(instance, validated_data, action='create')
+
+    def update(self, instance, validated_data, action='update'):
+
+        status = validated_data.get('status', instance.status)
+
+        if status != instance.status and status == Article.PUBLISHED:
+            action = 'publish'
+
+        # Update all the basic fields
+        instance.title = validated_data.get('title', instance.long_headline)
+        instance.slug = validated_data.get('slug', instance.slug)
+        instance.snippet = validated_data.get('snippet', instance.snippet)
+        instance.template = validated_data.get('template', instance.template)
+        instance.status = status
+        instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
+        instance.seo_description = validated_data.get('seo_description', instance.seo_description)
+
+        # Save instance before processing/saving content in order to save associations to correct ID
+        instance.save()
+
+        instance.content = validated_data.get('content_json', instance.content)
+
+        instance.est_reading_time = instance.calc_est_reading_time()
+
+        # Process article attachments
+        instance.save_attachments()
+
+        # Save template fields
+        template_fields = validated_data.get('get_template_fields', False)
+        if template_fields:
+            instance.save_template_fields(template_fields)
+
+        # If there's a featured image, save it
+        featured_image = validated_data.get('featured_image_json', False)
+        if featured_image:
+            instance.save_featured_image(featured_image)
+
+        # Perform a final save (without revision), update content and featured image
+        instance.save(update_fields=['content', 'featured_image'], revision=False)
+
+        if instance.parent:
+            perform_action(self.context['request'].user.person, action, 'page', instance.parent.id)
+        else:
+            perform_action(self.context['request'].user.person, action, 'page', instance.pk)
 
         return instance

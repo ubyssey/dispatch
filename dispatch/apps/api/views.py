@@ -13,8 +13,8 @@ from rest_framework.exceptions import APIException
 from dispatch.helpers import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
-from dispatch.apps.api.serializers import (ArticleSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -193,6 +193,32 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
+class PageViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for Page model views.
+    """
+    serializer_class = PageSerializer
+    lookup_field = 'parent_id'
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned articles by filtering
+        against a `topic` query parameter in the URL.
+        """
+
+        if self.request.user.is_authenticated():
+            queryset = Page.objects.filter(head=True)
+        else:
+            queryset = Page.objects.filter(head=True, status=Article.PUBLISHED)
+
+        queryset = queryset.order_by('-published_at')
+
+        q = self.request.QUERY_PARAMS.get('q', None)
+
+        if q is not None:
+            queryset = queryset.filter(long_headline__icontains=q)
+
+        return queryset
 
 class CommentViewSet(viewsets.ModelViewSet):
 
