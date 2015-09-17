@@ -8,6 +8,7 @@ from dispatch.apps.api import views
 router = routers.DefaultRouter()
 
 router.register(r'articles', views.ArticleViewSet, base_name='articles')
+router.register(r'pages', views.PageViewSet, base_name='pages')
 router.register(r'frontpage', views.FrontpageViewSet, base_name='frontpage')
 router.register(r'sections', views.SectionViewSet, base_name='sections')
 router.register(r'people', views.PersonViewSet, base_name='people')
