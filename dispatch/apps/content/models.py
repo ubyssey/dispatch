@@ -85,6 +85,7 @@ class Publishable(Model):
     )
 
     status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
+    published_at = DateTimeField(null=True)
 
     featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
 
@@ -400,7 +401,6 @@ class Article(Publishable):
     long_headline = CharField(max_length=255)
     short_headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    published_at = DateTimeField(null=True)
     authors = ManyToManyField(Person, through="Author")
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
