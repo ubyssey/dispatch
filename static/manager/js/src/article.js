@@ -24,7 +24,7 @@ var sectionSlug = $('#article-admin').data('section-slug');
 sectionSlug = sectionSlug ? sectionSlug : false;
 
 var articleAdmin = React.render(
-    <ArticleAdmin imageManager={imageManager} galleryManager={galleryManager} articleId={articleId} sectionId={sectionId} sectionName={sectionName} sectionSlug={sectionSlug}/>,
+    <ArticleAdmin imageManager={imageManager} galleryManager={galleryManager} model="article" instanceId={articleId} sectionId={sectionId} sectionName={sectionName} sectionSlug={sectionSlug}/>,
     document.getElementById('article-admin')
 );
 
