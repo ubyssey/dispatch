@@ -38,6 +38,10 @@
                 }
             },
         },
+        'page': {
+            'route': 'pages',
+            'actions': ['GET', 'POST', 'DELETE'],
+        },
         'tag': {
             'route': 'tags',
             'actions': ['GET', 'POST', 'DELETE'],
@@ -91,8 +95,8 @@
         'api_format': 'json',
     }
 
-    dispatch.settings = PRODUCTION_SETTINGS;
-    dispatch.version = '0.1.10';
+    dispatch.settings = LOCAL_SETTINGS;
+    dispatch.version = '0.1.11';
 
     // Errors
     // --------------------
@@ -190,9 +194,9 @@
         return dispatch.get(getModelRoute(model), values, callback);
     };
 
-    dispatch.find = function(model, id, callback){
+    dispatch.find = function(model, id, values, callback){
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
-        return dispatch.get(getModelRoute(model, id), {}, callback);
+        return dispatch.get(getModelRoute(model, id), values, callback);
     }
 
     // Model-specific functions

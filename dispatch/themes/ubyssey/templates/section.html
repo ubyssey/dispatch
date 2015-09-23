@@ -15,7 +15,7 @@
                         <a class="image" href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
                     </div>
                     <div>
-                        <h3 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h3>
+                        <h1 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.long_headline }}</a></h1>
                         <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
                         <p class="snippet"><span class="timestamp hide-desktop">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
                     </div>
