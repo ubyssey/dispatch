@@ -1,4 +1,4 @@
-var List = function(){
+var List = function(model){
 
     var selected = [];
 
@@ -9,7 +9,7 @@ var List = function(){
         }
     }
 
-    $('.item-checkbox').change(function() {
+    $('.item-checkbox').change(function(){
         var id = $(this).parent().parent().data('id');
         if(this.checked) {
             selected.push(id);
@@ -21,7 +21,7 @@ var List = function(){
 
     $('.delete-items').click(function(e){
         e.preventDefault();
-        dispatch.bulkRemove('person', selected, function(data){
+        dispatch.bulkRemove(model, selected, function(data){
             $.each(data.deleted, function(key, id){
                 removeFromList(selected, id);
                 $('#item-'+id).hide();
@@ -38,4 +38,4 @@ var List = function(){
 
 }
 
-var list = List();
+var list = List($('.list').data("model"));
