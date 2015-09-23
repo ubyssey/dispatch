@@ -3,6 +3,7 @@ from PIL import Image as Img
 import StringIO, json, os, re
 from string import punctuation
 
+from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
@@ -59,7 +60,6 @@ class PublishableManager(Manager):
 
 class Publishable(Model):
 
-    parent = ForeignKey('Article', related_name='%(class)s_parent', blank=True, null=True)
     preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
@@ -187,56 +187,26 @@ class Publishable(Model):
         except ValueError:
             return self.content
 
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image']['id']
-                image = Image.objects.get(id=image_id)
-                if node['data']['attachment_id']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-                attachment.caption = node['data']['caption']
-                attachment.image = image
-                attachment.article = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
-                }
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-        attachment.image_id = data['id']
-        if 'caption' in data:
-            attachment.caption = data['caption']
-        attachment.article = self
-        attachment.save()
-        self.featured_image = attachment
-
     # Overriding
     def save(self, revision=True, *args, **kwargs):
+
         if revision:
             self.head = True
             self.revision_id += 1
 
             if self.parent:
-                Article.objects.filter(parent=self.parent,head=True).update(head=False)
+                type(self).objects.filter(parent=self.parent,head=True).update(head=False)
                 # Both fields required for this to work -- something to do with model inheritance.
                 self.pk = None
                 self.id = None
 
             if self.is_published():
-                Article.objects.filter(parent=self.parent,status=Article.PUBLISHED).update(status=Article.DRAFT)
-                if self.get_previous_revision().status != Article.PUBLISHED:
+                type(self).objects.filter(parent=self.parent,status=Publishable.PUBLISHED).update(status=Publishable.DRAFT)
+                if self.get_previous_revision().status != Publishable.PUBLISHED:
                     self.published_at = datetime.datetime.now()
+
+        if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
+            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -250,7 +220,7 @@ class Publishable(Model):
         if self.parent == self:
             return self
         try:
-            revision = Article.objects.filter(parent=self.parent).order_by('-pk')[1]
+            revision = type(self).objects.filter(parent=self.parent).order_by('-pk')[1]
             return revision
         except:
             return self
@@ -258,7 +228,7 @@ class Publishable(Model):
     def check_stale(self):
         if self.revision_id == 0:
             return (False, self)
-        head = Article.objects.get(parent=self.parent, head=True)
+        head = type(self).objects.get(parent=self.parent, head=True)
         return (head.revision_id != self.revision_id, head)
 
     class Meta:
@@ -398,6 +368,8 @@ class Comment(Model):
 
 class Article(Publishable):
 
+    parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
+
     long_headline = CharField(max_length=255)
     short_headline = CharField(max_length=255)
     section = ForeignKey('Section')
@@ -462,6 +434,42 @@ class Article(Publishable):
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
+
+
+    def save_attachments(self):
+        """
+        Saves all attachments embedded in article content.
+
+        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
+        """
+        nodes = json.loads(self.content)
+        for node in nodes:
+            if type(node) is dict and node['type'] == 'image':
+                image_id = node['data']['image']['id']
+                image = Image.objects.get(id=image_id)
+                if node['data']['attachment_id']:
+                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
+                else:
+                    attachment = ImageAttachment()
+                attachment.caption = node['data']['caption']
+                attachment.image = image
+                attachment.article = self
+                attachment.save()
+                node['data'] = {
+                    'attachment_id': attachment.id,
+                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
+                }
+
+        self.content = json.dumps(nodes)
+
+    def save_featured_image(self, data):
+        attachment = ImageAttachment()
+        attachment.image_id = data['id']
+        if 'caption' in data:
+            attachment.caption = data['caption']
+        attachment.article = self
+        attachment.save()
+        self.featured_image = attachment
 
     def save_related(self, data):
         tags = data["tags-list"]
@@ -565,8 +573,45 @@ class Article(Publishable):
         return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
 
 class Page(Publishable):
-    parent_page = ForeignKey('Page', related_name='parent_page_fk')
+    parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
+    parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
+
+
+    def save_attachments(self):
+        """
+        Saves all attachments embedded in article content.
+
+        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
+        """
+        nodes = json.loads(self.content)
+        for node in nodes:
+            if type(node) is dict and node['type'] == 'image':
+                image_id = node['data']['image']['id']
+                image = Image.objects.get(id=image_id)
+                if node['data']['attachment_id']:
+                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
+                else:
+                    attachment = ImageAttachment()
+                attachment.caption = node['data']['caption']
+                attachment.image = image
+                attachment.page = self
+                attachment.save()
+                node['data'] = {
+                    'attachment_id': attachment.id,
+                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
+                }
+
+        self.content = json.dumps(nodes)
+
+    def save_featured_image(self, data):
+        attachment = ImageAttachment()
+        attachment.image_id = data['id']
+        if 'caption' in data:
+            attachment.caption = data['caption']
+        attachment.page = self
+        attachment.save()
+        self.featured_image = attachment
 
 class Author(Model):
     article = ForeignKey(Article, null=True)

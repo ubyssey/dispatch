@@ -4,9 +4,12 @@ from views import DefaultTheme
 
 theme = DefaultTheme()
 
-theme_urls = patterns('',
-    url(r'^(?P<section>[-\w]+)/(?P<slug>[-\w]+)/', theme.article),
-    url(r'^logout/?', theme.logout),
-    url(r'^register/?', theme.register),
-    url(r'^/', theme.home),
-)
+def theme_urls(theme):
+    return patterns('',
+        url(r'^(?P<section>[-\w]+)/(?P<slug>[-\w]+)/?', theme.article, name='article'),
+        url(r'^(?P<slug>[-\w]+)/?', theme.section, name='section'),
+        url(r'^login/?', theme.login),
+        url(r'^logout/?', theme.logout),
+        url(r'^register/?', theme.register),
+        url(r'^/', theme.home),
+    )

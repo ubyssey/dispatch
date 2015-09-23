@@ -47,18 +47,24 @@ a:hover {
 }
 
 p.snippet {
-  font-size: 14px;
+  font-size: 20px;
   color: #737373;
-  line-height: 22px;
+  line-height: 1.3em;
+  font-weight: 200;
+  margin-top: 0;
 }
 
-article.primary {
+div.blog-header {
   position: relative;
+  background: #000;
 
   div.image {
     height: 550px;
     background-size: cover;
     background-position: center center;
+
+    opacity: .85;
+    -webkit-filter: contrast(60%);
   }
 
   div.overlay {
@@ -67,29 +73,31 @@ article.primary {
     top: 0;
     width: 100%;
     background: rgba(0, 9, 88, 0.6);
-
     &:hover {
       backround: rgba(88, 0, 8, 0.6);
     }
+  }
 
-    div.meta {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 50px 0;
-      span.category {
-        background: #000;
-        padding: 10px;
-        text-transform: uppercase;
-        color: #fff;
-        margin-bottom: 10px;
-        font-size: 12px;
-      }
-      h1.headline {
-        color: #fff;
-        margin-top: 25px;
-        margin-bottom: 0;
-      }
+  div.meta {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 50px 0;
+    span.category {
+      background: rgb(255, 0, 0);
+      padding: 10px 15px;
+      border-radius: 15px;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    h1.headline {
+      color: #fff;
+      margin-top: 25px;
+      margin-bottom: 0;
+      text-shadow: 0 0 4px rgba(14, 14, 14, 0.45);
+      font-weight: 400;
     }
   }
 }
@@ -143,19 +151,12 @@ div.featured-articles {
 article.blog {
   margin: 25px 0;
   overflow: auto;
-  h1 {
-    margin: 10px 0;
-  }
+
   div.featured-image {
     img {
       width: 100%;
       height: auto;
     }
-  }
-
-  div.article-container {
-    float: left;
-    width: 66%;
   }
 
   div.sidebar {
@@ -165,11 +166,24 @@ article.blog {
     margin-top: 15px;
   }
 
+  div.content {
+    float: left;
+    width: 66%;
+  }
+
   div.content p {
     font-size: 17px;
     font-family: $font-body;
     line-height: 1.6em;
     margin-bottom: 30px;
+    max-width: 585px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  ul.social {
+    margin: 25px 0;
   }
 }
 
