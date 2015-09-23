@@ -22,6 +22,7 @@
 @import 'modules/article/embeds';
 @import 'modules/article/comments_bar';
 @import 'modules/article/gallery';
+@import 'modules/social';
 
 @import 'modules/author';
 
@@ -74,9 +75,6 @@ div.caption {
 span.credit {
   font-style: italic;
   color: #969696;
-}
-
-div.slide {
 }
 
 img.article-attachment:hover {

@@ -2,12 +2,12 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Dispatch imports
-from dispatch.apps.content.models import Article, Section
+from dispatch.apps.content.models import Article, Page, Section
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
@@ -76,7 +76,7 @@ class UbysseyTheme(DefaultTheme):
 
         return render(request, 'homepage/base.html', context)
 
-    def article(self, request, section=False, slug=False):
+    def article(self, request, section=None, slug=None):
 
         article = self.find_article(request, section, slug)
 
@@ -96,9 +96,24 @@ class UbysseyTheme(DefaultTheme):
         t = loader.select_template(["%s/%s" % (article.section.slug, article.get_template()), article.get_template()])
         return HttpResponse(t.render(context))
 
-    def section(self, request, section):
+    def page(self, request, slug=None):
 
-        section = Section.objects.get(slug=section)
+        page = self.find_page(request, slug)
+        page.add_view()
+
+        context = {
+            'page': page,
+        }
+
+        return render(request, 'page/base.html', context)
+
+    def section(self, request, slug=None):
+
+        try:
+            section = Section.objects.get(slug=slug)
+        except:
+            return self.page(request, slug)
+
         articles = Article.objects.filter(status=Article.PUBLISHED, section=section).order_by('-published_at')
 
         context = {

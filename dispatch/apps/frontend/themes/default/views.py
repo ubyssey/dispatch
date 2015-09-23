@@ -2,13 +2,25 @@ from django.shortcuts import render, render_to_response, redirect
 from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 
-from dispatch.apps.content.models import Article
+from dispatch.apps.content.models import Article, Page
 from .forms import RegistrationForm
 
 class DefaultTheme():
 
     def home(self, request):
         return render_to_response('index.html')
+
+    def article(self, request, section=None, slug=None):
+
+        return None
+
+    def page(self, request, slug=None):
+
+        return None
+
+    def section(self, request, section=None):
+
+        return None
 
     def register(self, request):
 
@@ -41,24 +53,30 @@ class DefaultTheme():
         return redirect(self.home)
 
     def find_article(self, request, section, slug):
-        if slug and section:
-            preview = request.GET.get("preview", False)
-            if preview and request.user.is_staff:
-                try:
-                    if preview == 'latest':
-                        article = Article.objects.filter(slug=slug, section__name=section).order_by('-pk')[0]
-                    else:
-                        article = Article.objects.get_revision(pk=int(preview))
-                except Article.DoesNotExist:
-                    raise Http404("Invalid preview ID.")
-            else:
-                try:
-                    article = Article.objects.get(slug=slug, section__name=section, head=True)#is_published=True)
-                except Article.DoesNotExist:
-                    raise Http404("This article does not exist.")
+        if request.user.is_staff:
+            try:
+                article = Article.objects.get(slug=slug, section__name=section, head=True)
+            except Article.DoesNotExist:
+                raise Http404("This article does not exist.")
+        else:
+            try:
+                article = Article.objects.get(slug=slug, section__name=section, head=True, status=Article.PUBLISHED)
+            except Article.DoesNotExist:
+                raise Http404("This article does not exist.")
         return article
 
-
+    def find_page(self, request, slug):
+        if request.user.is_staff:
+            try:
+                page = Page.objects.get(slug=slug, head=True)
+            except Article.DoesNotExist:
+                raise Http404("This page does not exist.")
+        else:
+            try:
+                page = Page.objects.get(slug=slug, head=True, status=Article.PUBLISHED)
+            except Page.DoesNotExist:
+                raise Http404("This page does not exist.")
+        return page
 
     def article(self, request, section=False, slug=False):
 

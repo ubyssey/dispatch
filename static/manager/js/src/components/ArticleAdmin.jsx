@@ -93,6 +93,14 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
             }
         }
     },
+    getPreviewURL: function(){
+        return dispatch.settings.base_url + (this.state.instance ? this.state.instance.section.slug + "/" : "") + this.state.instance.slug;
+    },
+    renderPreviewButton: function(){
+        if(this.state.instance.section){
+            return (<button onClick={this.handlePreview} className="dis-button" href={dispatch.settings.base_url + (this.state.instance ? this.state.instance.section.slug + "/" : "") + this.state.instance.slug } target="dispatch_preview">Preview</button>);
+        }
+    },
     render: function(){
         if(!this.state.instance){
             return (<header className="secondary"></header>);

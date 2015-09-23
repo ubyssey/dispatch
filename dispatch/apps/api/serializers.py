@@ -391,7 +391,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             action = 'publish'
 
         # Update all the basic fields
-        instance.title = validated_data.get('title', instance.long_headline)
+        instance.title = validated_data.get('title', instance.title)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.template = validated_data.get('template', instance.template)
@@ -403,8 +403,6 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
 
         instance.content = validated_data.get('content_json', instance.content)
-
-        instance.est_reading_time = instance.calc_est_reading_time()
 
         # Process article attachments
         instance.save_attachments()

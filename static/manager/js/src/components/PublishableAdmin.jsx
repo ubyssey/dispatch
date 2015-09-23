@@ -158,8 +158,7 @@ var PublishableAdmin = function(component) {
            }
         },
         loadPreview: function(){
-            var url = dispatch.settings.base_url + (this.state.instance ? this.state.instance.section.slug + "/" : "") + this.state.instance.slug;
-            var win = window.open(url, '_dispatch_' + this.state.instance.parent);
+            var win = window.open(this.getPreviewURL(), '_dispatch_' + this.state.instance.parent);
             win.focus();
         },
         saveCallback: function(instance, callback){
@@ -177,11 +176,6 @@ var PublishableAdmin = function(component) {
                     callback();
             });
             this.animateLoader();
-        },
-        renderPreviewButton: function(){
-            if(this.state.instance.section){
-                return (<button onClick={this.handlePreview} className="dis-button" href={dispatch.settings.base_url + (this.state.instance ? this.state.instance.section.slug + "/" : "") + this.state.instance.slug } target="dispatch_preview">Preview</button>);
-            }
         },
         renderLoader: function(){
             return ( <div className={'load-status' + (this.state.saving ? ' saving' : "")}><div className="loader"></div><div className="load-success"><i className="fa fa-check"></i></div></div> );
