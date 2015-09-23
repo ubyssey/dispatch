@@ -192,7 +192,6 @@ def section(request, section):
 
     unpublished = article_list.exclude(status=Article.PUBLISHED).count()
 
-
     paginator = Paginator(article_list, 15) # Show 15 articles per page
 
     page = request.GET.get('page')

@@ -104,7 +104,7 @@ class Publishable(Model):
     content = TextField()
     snippet = TextField(null=True)
 
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
 
     def add_view(self):
@@ -208,11 +208,14 @@ class Publishable(Model):
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
+        if self.created_at is None:
+            self.created_at = datetime.datetime.now()
+
         super(Publishable, self).save(*args, **kwargs)
 
         if not self.parent:
             self.parent = self
-            super(Publishable, self).save(update_fields=['parent'])
+            super(Publishable, self).save(update_fields=['created_at', 'parent'])
 
         return self
 
