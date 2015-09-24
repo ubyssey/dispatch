@@ -99,9 +99,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         queryset = queryset.order_by('-published_at')
 
-        tag = self.request.QUERY_PARAMS.get('tag', None)
-        q = self.request.QUERY_PARAMS.get('q', None)
-        section = self.request.QUERY_PARAMS.get('section', None)
+        tag = self.request.query_params.get('tag', None)
+        q = self.request.query_params.get('q', None)
+        section = self.request.query_params.get('section', None)
 
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
@@ -117,7 +117,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         queryset = self.filter_queryset(self.get_queryset())
 
-        drafts = self.request.QUERY_PARAMS.get('drafts', False)
+        drafts = self.request.query_params.get('drafts', False)
 
         if not drafts:
             queryset = queryset.filter(status=Article.PUBLISHED)
@@ -152,7 +152,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):
-        revision_id = request.QUERY_PARAMS.get('revision_id', None)
+        revision_id = request.query_params.get('revision_id', None)
         filter_kwargs = {
             'parent_id': parent_id,
             'revision_id': revision_id,
@@ -232,7 +232,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
         queryset = queryset.order_by('-published_at')
 
-        q = self.request.QUERY_PARAMS.get('q', None)
+        q = self.request.query_params.get('q', None)
 
         if q is not None:
             queryset = queryset.filter(long_headline__icontains=q)
@@ -265,7 +265,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Person.objects.all()
-        q = self.request.QUERY_PARAMS.get('q', None)
+        q = self.request.query_params.get('q', None)
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
@@ -298,7 +298,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Tag.objects.all()
-        q = self.request.QUERY_PARAMS.get('q', None)
+        q = self.request.query_params.get('q', None)
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
@@ -325,7 +325,7 @@ class TopicViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Topic.objects.order_by('-last_used')
-        q = self.request.QUERY_PARAMS.get('q', None)
+        q = self.request.query_params.get('q', None)
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
@@ -393,7 +393,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Image.objects.all()
-        q = self.request.QUERY_PARAMS.get('q', None)
+        q = self.request.query_params.get('q', None)
         if q is not None:
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset
