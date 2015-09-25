@@ -208,6 +208,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
+
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -232,6 +234,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'section',
             'section_id',
             'published_at',
+            'is_published',
+            'published_version',
             'importance',
             'reading_time',
             'slug',
