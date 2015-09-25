@@ -208,6 +208,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
+
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -215,8 +217,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'parent',
-            'long_headline',
-            'short_headline',
+            'headline',
             'featured_image',
             'featured_image_json',
             'snippet',
@@ -232,6 +233,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'section',
             'section_id',
             'published_at',
+            'is_published',
+            'published_version',
             'importance',
             'reading_time',
             'slug',
@@ -270,8 +273,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             action = 'publish'
 
         # Update all the basic fields
-        instance.long_headline = validated_data.get('long_headline', instance.long_headline)
-        instance.short_headline = validated_data.get('short_headline', instance.short_headline)
+        instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)

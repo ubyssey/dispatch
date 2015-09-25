@@ -218,7 +218,7 @@ class ArticleForm(ModelForm):
         widgets = {
             'revision_id': HiddenInput(),
             'is_published': HiddenInput(),
-            'long_headline': Textarea(attrs={
+            'headline': Textarea(attrs={
                 'placeholder': 'Enter a headline',
                 'class': 'headline',
                 'rows': '1',

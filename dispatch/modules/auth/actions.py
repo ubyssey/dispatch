@@ -41,9 +41,9 @@ def list_actions(count=25):
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
                 if count == 1:
-                    text = '%s %s <a href="%s">%s</a>' % (action.person.full_name, SINGULAR[action.action], article.get_absolute_url(), article.long_headline)
+                    text = '%s %s <a href="%s">%s</a>' % (action.person.full_name, SINGULAR[action.action], article.get_absolute_url(), article.headline)
                 else:
-                    text = '%s made %d %s to <a href="%s">%s</a>' % (action.person.full_name, count, PLURAL[action.action], article.get_absolute_url(), article.long_headline)
+                    text = '%s made %d %s to <a href="%s">%s</a>' % (action.person.full_name, count, PLURAL[action.action], article.get_absolute_url(), article.headline)
             except:
                 continue
 

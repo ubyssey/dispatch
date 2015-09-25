@@ -7,7 +7,7 @@
         {% if header_layout == 'right-image'  %}
             <div class="header-container">
                 <div class="headline-container left">
-                    <h1 class="headline">{{ article.long_headline }}</h1>
+                    <h1 class="headline">{{ article.headline }}</h1>
                     <p class="fw-description">{{ article.template_fields.description }}</p>
                     <div class="article-byline">
                         <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
@@ -28,7 +28,7 @@
                     <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-url="{{ article.featured_image.image.get_absolute_url }}" data-credit="{{ article.featured_image.get_credit }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
                 </div>
                 <div class="headline-container">
-                    <h1 class="headline">{{ article.long_headline }}</h1>
+                    <h1 class="headline">{{ article.headline }}</h1>
                     <p class="fw-description">{{ article.template_fields.description }}</p>
                     <div class="article-byline">
                         <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
@@ -40,7 +40,7 @@
                 <div class="backdrop" style="background-image: url('{{ article.featured_image.image.get_absolute_url }}');"></div>
                 <div class="headline-container">
                     <div class="container padded">
-                        <h1 class="headline">{{ article.long_headline }}</h1>
+                        <h1 class="headline">{{ article.headline }}</h1>
                         <p class="fw-description">{{ article.template_fields.description }}</p>
                         <div class="article-byline">
                             <span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>

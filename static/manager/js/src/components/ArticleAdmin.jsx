@@ -39,8 +39,7 @@ var IMPORTANCE_OPTIONS = [
 
 var ArticleAdmin = React.createClass(PublishableAdmin({
      requiredFields: [
-        'long_headline',
-        'short_headline',
+        'headline',
         'section',
         'authors',
         'slug',
@@ -60,8 +59,7 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
         this.updateModelField('content', this.refs.content.save(), false);
         if(!this.missingFields()){
             var values = {
-                long_headline: this.state.instance.long_headline,
-                short_headline: this.state.instance.short_headline,
+                headline: this.state.instance.headline,
                 featured_image_json: JSON.stringify(this.state.instance.featured_image),
                 slug: this.state.instance.slug,
                 snippet: this.state.instance.snippet,
@@ -112,7 +110,7 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                     <div className={"content panel" + (this.state.showOptions ? "" : " expanded")}>
                         <div className="inner">
                             <div className="field-row headline">
-                                <Textarea rows={1} placeholder="Enter a headline" className={"headline " + this.errorClass("long_headline")} value={this.state.instance.long_headline} onChange={this.updateField.bind(this,'long_headline')}></Textarea>
+                                <Textarea rows={1} placeholder="Enter a headline" className={"headline " + this.errorClass("headline")} value={this.state.instance.headline} onChange={this.updateField.bind(this,'headline')}></Textarea>
                             </div>
                             <div className="field-row content">
                                 <QuillEditor key="quill-editor" imageManager={this.props.imageManager} galleryManager={this.props.galleryManager} article={this.state.instance} ref="content"/>
@@ -130,10 +128,6 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                                 <Tab><i className="fa fa-bullhorn"></i> SEO</Tab>
                             </TabList>
                             <TabPanel>
-                                <div className="field full">
-                                    <label>Short Headline</label>
-                                    <input type="text" value={this.state.instance.short_headline} className={this.errorClass("short_headline")} tabIndex={1} onChange={this.updateField.bind(this,'short_headline')} />
-                                </div>
                                 <div className="field full">
                                     <label>Slug</label>
                                     <SlugField url={dispatch.settings.base_url + (this.state.instance && this.state.instance.section ? this.state.instance.section.slug + "/" : "") } value={this.state.instance.slug ? this.state.instance.slug : ""} tabIndex={2} errorClass={this.errorClass("slug")} onChange={this.updateField.bind(this,'slug')} />

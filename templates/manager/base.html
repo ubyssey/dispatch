@@ -65,7 +65,7 @@
                                 <div class="sidebox list">
                                     <ul class="actions">
                                         {% for article in recent %}
-                                            <li><a href="{% url 'apps.manager.views.article_edit' article.parent_id %}">{{ article.long_headline }}</a></li>
+                                            <li><a href="{% url 'apps.manager.views.article_edit' article.parent_id %}">{{ article.headline }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
