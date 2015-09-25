@@ -21,7 +21,7 @@
                         <span class="author">By {{ article.get_author_url|safe }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
                     </div>
                     <ul class="social top">
-                        <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span> {% if article.comment_count == 0 %}Post a comment{% else %}{{ article.comment_count }}comments{% endif %}</span></a></li>
+                        {% comment %}<li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span> {% if article.comment_count == 0 %}Post a comment{% else %}{{ article.comment_count }}comments{% endif %}</span></a></li>{% endcomment %}
                         <li><a class="facebook" href="#" data-url="{{ article.get_absolute_url }}"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
                         <li><a class="twitter" href="#" data-url="{{ article.get_absolute_url }}" data-title="{{ article.headline }}"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
                     </ul>
