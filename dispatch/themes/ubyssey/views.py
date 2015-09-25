@@ -78,7 +78,10 @@ class UbysseyTheme(DefaultTheme):
 
     def article(self, request, section=None, slug=None):
 
-        article = self.find_article(request, section, slug)
+        try:
+            article = self.find_article(request, section, slug)
+        except:
+            raise Http404("Article could not be found.")
 
         article.add_view()
 
@@ -98,7 +101,11 @@ class UbysseyTheme(DefaultTheme):
 
     def page(self, request, slug=None):
 
-        page = self.find_page(request, slug)
+        try:
+            page = self.find_page(request, slug)
+        except:
+            raise Http404("Page could not be found.")
+
         page.add_view()
 
         context = {
@@ -139,7 +146,11 @@ class UbysseyTheme(DefaultTheme):
 
     def author(self, request, slug=None):
 
-        person = Person.objects.get(slug=slug)
+        try:
+            person = Person.objects.get(slug=slug)
+        except:
+            raise Http404("Author could not be found.")
+
         articles = Article.objects.filter(authors=person, is_published=True)[:6]
 
         context = {
@@ -152,7 +163,10 @@ class UbysseyTheme(DefaultTheme):
 
     def author_articles(self, request, slug=None):
 
-        person = Person.objects.get(slug=slug)
+        try:
+            person = Person.objects.get(slug=slug)
+        except:
+            raise Http404("Author could not be found.")
 
         order = request.GET.get('order', 'newest')
 
@@ -194,6 +208,7 @@ class UbysseyTheme(DefaultTheme):
     def search(self, request):
 
         query = request.GET.get('q', None)
+        
         if query == "":
             query = None
 
