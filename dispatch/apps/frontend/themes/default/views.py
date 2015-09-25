@@ -60,7 +60,7 @@ class DefaultTheme():
                 raise Http404("This article does not exist.")
         else:
             try:
-                article = Article.objects.get(slug=slug, section__name=section, head=True, status=Article.PUBLISHED)
+                article = Article.objects.get(slug=slug, section__name=section, is_published=True)
             except Article.DoesNotExist:
                 raise Http404("This article does not exist.")
         return article
@@ -73,7 +73,7 @@ class DefaultTheme():
                 raise Http404("This page does not exist.")
         else:
             try:
-                page = Page.objects.get(slug=slug, head=True, status=Article.PUBLISHED)
+                page = Page.objects.get(slug=slug, head=True, is_published=True)
             except Page.DoesNotExist:
                 raise Http404("This page does not exist.")
         return page
