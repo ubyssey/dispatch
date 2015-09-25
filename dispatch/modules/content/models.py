@@ -64,6 +64,8 @@ class Publishable(Model):
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
+    is_published = BooleanField(default=False)
+
     is_active = BooleanField(default=True)
     slug = SlugField(max_length=255)
 
@@ -129,9 +131,6 @@ class Publishable(Model):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template(article_id=self.id).field_data_as_json()
 
-    def is_published(self):
-        return self.status == self.PUBLISHED
-
     def get_status(self):
         for status in self.STATUS_CHOICES:
             if status[0] == self.status:
@@ -187,37 +186,71 @@ class Publishable(Model):
         except ValueError:
             return self.content
 
+    def is_parent(self):
+        return self.parent is None
+
+    def publish(self):
+        # Unpublish last published version
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False)
+        self.is_published = True
+        self.save(revision=False)
+        return self
+
+    def unpublish(self):
+        self.is_published = False
+        self.save(revision=False)
+        return self
+
     # Overriding
     def save(self, revision=True, *args, **kwargs):
 
         if revision:
+            # If this is a revision, set it to be the head of the list and increment the revision id.
             self.head = True
             self.revision_id += 1
 
-            if self.parent:
-                type(self).objects.filter(parent=self.parent,head=True).update(head=False)
-                # Both fields required for this to work -- something to do with model inheritance.
+            previous_revision = self.get_previous_revision()
+
+            if not self.is_parent():
+                # If this is a revision, delete the old head of the list.
+                type(self).objects.filter(parent=self.parent, head=True).update(head=False)
+
+                # Clear the instance id to force Django to save a new instance.
+                # Both fields (pk, id) required for this to work -- something to do with model inheritance.
                 self.pk = None
                 self.id = None
+                self.is_published = False
 
-            if self.is_published():
-                type(self).objects.filter(parent=self.parent,status=Publishable.PUBLISHED).update(status=Publishable.DRAFT)
-                if self.get_previous_revision().status != Publishable.PUBLISHED:
+            if self.is_published:
+                # If instance is being published, unpublish earlier drafts.
+                type(self).objects.filter(parent=self.parent, status=Publishable.PUBLISHED).update(status=Publishable.DRAFT)
+
+                if previous_revision.status != Publishable.PUBLISHED:
                     self.published_at = datetime.datetime.now()
 
+        # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
+        # Set created_at to now, but only for first version
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
+        # Update the parent foreign key
         if not self.parent:
             self.parent = self
-            super(Publishable, self).save(update_fields=['created_at', 'parent'])
+            super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def get_published_version(self):
+        try:
+            published = type(self).objects.get(parent=self.parent, is_published=True)
+            return published.revision_id
+        except:
+            return None
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -246,7 +279,7 @@ class ArticleManager(PublishableManager):
 
         if reading_times is None:
             reading_times = {
-                'morning_start': '11:00:00',
+                'morning_start': '9:00:00',
                 'midday_start': '11:00:00',
                 'midday_end': '16:00:00',
                 'evening_start': '16:00:00',
@@ -520,7 +553,6 @@ class Article(Publishable):
         for node in json.loads(self.content):
             if type(node) is unicode:
                 words += count_words(node)
-                print words
 
         return int(words / 200) # Average reading speed = 200 wpm
 
@@ -757,8 +789,8 @@ class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, blank=True, null=True, related_name='page')
-
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
+
     caption = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
