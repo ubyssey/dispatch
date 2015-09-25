@@ -11,6 +11,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.utils.functional import cached_property
+from django.utils import timezone
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -193,6 +194,7 @@ class Publishable(Model):
         # Unpublish last published version
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False)
         self.is_published = True
+        self.published_at = datetime.datetime.now()
         self.save(revision=False)
         return self
 
@@ -221,20 +223,13 @@ class Publishable(Model):
                 self.id = None
                 self.is_published = False
 
-            if self.is_published:
-                # If instance is being published, unpublish earlier drafts.
-                type(self).objects.filter(parent=self.parent, status=Publishable.PUBLISHED).update(status=Publishable.DRAFT)
-
-                if previous_revision.status != Publishable.PUBLISHED:
-                    self.published_at = datetime.datetime.now()
-
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
         # Set created_at to now, but only for first version
         if self.created_at is None:
-            self.created_at = datetime.datetime.now()
+            self.created_at = timezone.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -272,10 +267,12 @@ class Publishable(Model):
 
 class ArticleManager(PublishableManager):
 
-    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, status=None):
+    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, is_published=False):
 
-        if status is None:
-            status = Article.PUBLISHED
+        if is_published:
+            is_published = 1
+        else:
+            is_published = 0
 
         if reading_times is None:
             reading_times = {
@@ -291,7 +288,7 @@ class ArticleManager(PublishableManager):
             'excluded': ",".join(map(str, exclude)),
             'sections': ",".join(sections),
             'limit': limit,
-            'status': status
+            'is_published': is_published
         }
 
         context.update(reading_times)
@@ -308,7 +305,7 @@ class ArticleManager(PublishableManager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -323,7 +320,7 @@ class ArticleManager(PublishableManager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = %(status)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -339,7 +336,7 @@ class ArticleManager(PublishableManager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -354,7 +351,7 @@ class ArticleManager(PublishableManager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -368,7 +365,7 @@ class ArticleManager(PublishableManager):
         sections = Section.objects.all()
 
         for section in sections:
-            articles = self.exclude(id__in=frontpage).filter(section=section,status=Article.PUBLISHED)[:5]
+            articles = self.exclude(id__in=frontpage).filter(section=section,is_published=True)[:5]
             if len(articles) > 0:
                 results[section.slug] = {
                     'first': articles[0],
@@ -386,9 +383,9 @@ class ArticleManager(PublishableManager):
                 time = datetime.datetime.now() - datetime.timedelta(days=7)
 
         if time:
-            articles = Article.objects.filter(status=Article.PUBLISHED, updated_at__gt=time).order_by('-views')
+            articles = Article.objects.filter(is_published=True, updated_at__gt=time).order_by('-views')
         else:
-            articles = Article.objects.filter(status=Article.PUBLISHED).order_by('-views')
+            articles = Article.objects.filter(is_published=True).order_by('-views')
 
         return articles
 
@@ -452,7 +449,7 @@ class Article(Publishable):
         return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
     def get_related(self):
-        return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True)[:5]
 
     def get_reading_list(self, ref=None, dur=None):
         if ref is not None:

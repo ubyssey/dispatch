@@ -114,7 +114,7 @@ class UbysseyTheme(DefaultTheme):
         except:
             return self.page(request, slug)
 
-        articles = Article.objects.filter(is_published=True, section=section).order_by('-published_at')
+        articles = Article.objects.filter(section=section, is_published=True).order_by('-published_at')
 
         context = {
             'meta': {
