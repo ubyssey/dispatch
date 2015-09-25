@@ -20,11 +20,7 @@ var STATUS_ITEMS = [
     {
         value: 4,
         label: 'To be managed'
-    },
-    {
-        value: 1,
-        label: 'Published'
-    },
+    }
 ];
 
 var PublishableAdmin = function(component) {
@@ -85,7 +81,6 @@ var PublishableAdmin = function(component) {
                 instance: instance,
             });
         },
-
         updateField: function(field, event){
             var instance = this.state.instance;
             instance[field] = event.target.value;
@@ -108,7 +103,6 @@ var PublishableAdmin = function(component) {
                 instance: instance,
             });
         },
-
         errorClass: function(field){
             return this.state.errors.indexOf(field) != -1 ? "error" : "";
         },
@@ -137,6 +131,18 @@ var PublishableAdmin = function(component) {
         handleSave: function(event){
             event.preventDefault();
             return this.save();
+        },
+        handlePublish: function(publish, event){
+            event.preventDefault();
+            if(publish){
+                dispatch.publish(this.props.model, this.state.instance.id, function(data){
+                    this.setState({ instance: data });
+                }.bind(this));
+            } else {
+                dispatch.unpublish(this.props.model, this.state.instance.id, function(data){
+                   this.setState({ instance: data });
+                }.bind(this));
+            }
         },
         toggleOptions: function(){
             this.setState({
@@ -180,10 +186,20 @@ var PublishableAdmin = function(component) {
         renderLoader: function(){
             return ( <div className={'load-status' + (this.state.saving ? ' saving' : "")}><div className="loader"></div><div className="load-success"><i className="fa fa-check"></i></div></div> );
         },
+        renderStatusDropdown: function(){
+            return (
+                <DropdownButton push="left" selectItem={this.updateStatus} items={STATUS_ITEMS}>
+                    {this.state.instance.status ? this.getStatus(this.state.instance.status) : 'Draft'}
+                </DropdownButton>
+                );
+        },
         renderVersions: function(){
             var versions = [];
             for(var i = this.state.head; i > 0; i--){
-                versions.push({ value: i, label: i });
+                versions.push({
+                    value: i,
+                    label: this.state.instance.published_version == i ? i + " (published)" : i,
+                });
             }
             return versions;
         },
@@ -201,9 +217,8 @@ var PublishableAdmin = function(component) {
                     <div className="header-buttons">
                         {this.renderLoader()}
                         <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
-                        <DropdownButton push="left" selectItem={this.updateStatus} items={STATUS_ITEMS}>
-                        {this.state.instance.status ? this.getStatus(this.state.instance.status) : 'Draft'}
-                        </DropdownButton>
+                        {!this.state.instance.is_published ? this.renderStatusDropdown() : null}
+                        <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.instance.is_published)}>{this.state.instance.is_published ? 'Unpublish' : 'Publish'}</button>
                         {this.renderPreviewButton()}
                         <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
                         {'Version ' + this.state.version}

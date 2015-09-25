@@ -35,6 +35,12 @@
                 },
                 'rendered': {
                     'actions': ['GET',]
+                },
+                'publish': {
+                    'actions': ['GET',]
+                },
+                'unpublish': {
+                    'actions': ['GET',]
                 }
             },
         },
@@ -91,7 +97,7 @@
 
     PRODUCTION_SETTINGS = {
         'base_url': 'http://dev.ubyssey.ca/',
-        'api_url': 'http://dev.ubyssey.ca/api/',
+        'api_url': '/api/',
         'api_format': 'json',
     }
 
@@ -176,6 +182,19 @@
         if (!validAction(model, 'DELETE')) throw InvalidActionError(model);
         return dispatch.delete(getModelRoute(model, id), callback);
     }
+
+    dispatch.publish = function(model, id, callback) {
+        if (!validAction(model, 'GET')) throw InvalidActionError(model);
+        var route = model + '.publish';
+        return dispatch.get(getModelRoute(route, id), {}, callback);
+    }
+
+    dispatch.unpublish = function(model, id, callback) {
+        if (!validAction(model, 'GET')) throw InvalidActionError(model);
+        var route = model + '.unpublish';
+        return dispatch.get(getModelRoute(route, id), {}, callback);
+    }
+
 
     dispatch.bulkRemove = function(model, ids, callback) {
         if (!validAction(model, 'DELETE')) throw InvalidActionError(model);

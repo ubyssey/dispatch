@@ -20,30 +20,19 @@ router.register(r'templates', views.TemplateViewSet, base_name='templates')
 router.register(r'comments', views.CommentViewSet, base_name='comments')
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
 
-section_frontpage = views.SectionViewSet.as_view({
-    'get': 'frontpage',
-})
+section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
-topic_articles = views.TopicViewSet.as_view({
-    'get': 'articles',
-})
+topic_articles = views.TopicViewSet.as_view({ 'get': 'articles' })
 
 component = views.ComponentViewSet.as_view({
     'get': 'detail',
     'post': 'update',
 })
 
-person_bulk_delete = views.PersonViewSet.as_view({
-    'post': 'bulk_delete',
-})
+person_bulk_delete = views.PersonViewSet.as_view({ 'post': 'bulk_delete' })
 
-article_bulk_delete = views.ArticleViewSet.as_view({
-    'post': 'bulk_delete',
-})
-
-article_comments = views.CommentViewSet.as_view({
-    'get': 'article',
-})
+article_bulk_delete = views.ArticleViewSet.as_view({ 'post': 'bulk_delete' })
+article_comments = views.CommentViewSet.as_view({ 'get': 'article' })
 
 urlpatterns = format_suffix_patterns([
     # Extra section routes

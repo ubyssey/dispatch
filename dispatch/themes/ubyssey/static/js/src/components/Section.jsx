@@ -58,7 +58,7 @@ var Section = React.createClass({
     },
     render: function(){
         var articles = this.state.articles.map(function(article, i){
-            var headline = { '__html': article.long_headline };
+            var headline = { '__html': article.headline };
             return (
                 <article key={i}>
                     { article.featured_image ? this.renderImage(article) : null }
