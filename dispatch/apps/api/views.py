@@ -131,22 +131,25 @@ class ArticleViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @detail_route(methods=['get'],)
+    def publish(self, request, parent_id=None):
+        queryset = Article.objects.all()
+        instance = get_object_or_404(queryset, pk=parent_id)
 
-    def update(self, request, *args, **kwargs):
-        """
-        Custom update method.
-        """
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
+        instance.publish()
 
-        schedule = request.data.get('schedule', None)
-        if schedule is not None and schedule:
-            publish_at = request.data.get('publish_at', None)
-            instance.schedule(publish_at, commit=False)
+        serializer = self.get_serializer(instance)
 
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'],)
+    def unpublish(self, request, parent_id=None):
+        queryset = Article.objects.all()
+        instance = get_object_or_404(queryset, pk=parent_id)
+
+        instance.unpublish()
+
+        serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
 
