@@ -267,7 +267,7 @@ class Publishable(Model):
 
 class ArticleManager(PublishableManager):
 
-    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, is_published=False):
+    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, is_published=True):
 
         if is_published:
             is_published = 1
