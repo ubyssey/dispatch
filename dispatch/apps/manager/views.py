@@ -186,7 +186,7 @@ def section(request, section):
 
     q = request.GET.get('q', False)
     if q:
-        article_list = article_list.filter(long_headline__icontains=q)
+        article_list = article_list.filter(headline__icontains=q)
     else:
         q = ""
 

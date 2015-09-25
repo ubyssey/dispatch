@@ -28,7 +28,7 @@ class UbysseyTheme(DefaultTheme):
             image = None
 
         return {
-            'title': article.long_headline,
+            'title': article.headline,
             'description': article.seo_description if article.seo_description is not None else article.snippet,
             'url': article.get_absolute_url,
             'image': image,
@@ -86,7 +86,7 @@ class UbysseyTheme(DefaultTheme):
         dur = request.GET.get('dur', None)
 
         context = {
-            'title': "%s - %s" % (article.long_headline, self.SITE_TITLE),
+            'title': "%s - %s" % (article.headline, self.SITE_TITLE),
             'meta': self.get_article_meta(article),
             'article': article,
             'reading_list': article.get_reading_list(ref=ref, dur=dur),
@@ -114,7 +114,7 @@ class UbysseyTheme(DefaultTheme):
         except:
             return self.page(request, slug)
 
-        articles = Article.objects.filter(status=Article.PUBLISHED, section=section).order_by('-published_at')
+        articles = Article.objects.filter(section=section, is_published=True).order_by('-published_at')
 
         context = {
             'meta': {
@@ -140,7 +140,7 @@ class UbysseyTheme(DefaultTheme):
     def author(self, request, slug=None):
 
         person = Person.objects.get(slug=slug)
-        articles = Article.objects.filter(authors=person, status=Article.PUBLISHED)[:6]
+        articles = Article.objects.filter(authors=person, is_published=True)[:6]
 
         context = {
             'meta': self.get_author_meta(person),
@@ -163,10 +163,10 @@ class UbysseyTheme(DefaultTheme):
 
         query = request.GET.get('q', False)
 
-        article_list = Article.objects.filter(authors=person, status=Article.PUBLISHED).order_by(order_by)
+        article_list = Article.objects.filter(authors=person, is_published=True).order_by(order_by)
 
         if query:
-            article_list = article_list.filter(long_headline__icontains=query)
+            article_list = article_list.filter(headline__icontains=query)
 
         paginator = Paginator(article_list, 15) # Show 15 articles per page
 
@@ -213,7 +213,7 @@ class UbysseyTheme(DefaultTheme):
 
             title = 'Search results for "%s"' % query
 
-            article_list = Article.objects.filter(status=Article.PUBLISHED, long_headline__icontains=query).order_by(order_by)
+            article_list = Article.objects.filter(is_published=True, headline__icontains=query).order_by(order_by)
 
             paginator = Paginator(article_list, 15) # Show 15 articles per page
 

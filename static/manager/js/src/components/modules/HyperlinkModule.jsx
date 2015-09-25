@@ -29,7 +29,7 @@ var HyperlinkModule = function(quill, options) {
                             position: this.getPosition(anchor),
                             article: {
                                 'id': anchor.getAttribute('data-id'),
-                                'long_headline': anchor.getAttribute('data-headline'),
+                                'headline': anchor.getAttribute('data-headline'),
                                 'url': anchor.href
                             },
                             href: null,
@@ -136,7 +136,7 @@ var HyperlinkModule = function(quill, options) {
                 if(anchor){
                     anchor.href = url;
                     anchor.setAttribute('data-id', this.state.article.parent);
-                    anchor.setAttribute('data-headline', this.state.article.long_headline);
+                    anchor.setAttribute('data-headline', this.state.article.headline);
                 }
             }
         },

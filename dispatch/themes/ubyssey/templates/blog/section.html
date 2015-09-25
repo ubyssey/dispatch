@@ -11,7 +11,7 @@
                 <div class="meta">
                     <div class="container">
                         {% if article.topic %}<span class="category">{{ article.topic.name }}</span>{% endif %}
-                        <h1 class="headline">{{ article.long_headline|safe }}</h1>
+                        <h1 class="headline">{{ article.headline|safe }}</h1>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         </a>
                     </div>
                     <div>
-                        <a class="article" href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline|safe }}</h2></a>
+                        <a class="article" href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.headline|safe }}</h2></a>
                         <p class="snippet">{{ article.snippet }}</p>
                     </div>
                 </article>

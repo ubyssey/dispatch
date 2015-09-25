@@ -11,6 +11,7 @@ from django.db.models import (
 from django.core.validators import MaxValueValidator
 from django.conf import settings
 from django.utils.functional import cached_property
+from django.utils import timezone
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -63,6 +64,8 @@ class Publishable(Model):
     preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
+
+    is_published = BooleanField(default=False)
 
     is_active = BooleanField(default=True)
     slug = SlugField(max_length=255)
@@ -129,9 +132,6 @@ class Publishable(Model):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template(article_id=self.id).field_data_as_json()
 
-    def is_published(self):
-        return self.status == self.PUBLISHED
-
     def get_status(self):
         for status in self.STATUS_CHOICES:
             if status[0] == self.status:
@@ -187,37 +187,65 @@ class Publishable(Model):
         except ValueError:
             return self.content
 
+    def is_parent(self):
+        return self.parent is None
+
+    def publish(self):
+        # Unpublish last published version
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False)
+        self.is_published = True
+        self.published_at = datetime.datetime.now()
+        self.save(revision=False)
+        return self
+
+    def unpublish(self):
+        self.is_published = False
+        self.save(revision=False)
+        return self
+
     # Overriding
     def save(self, revision=True, *args, **kwargs):
 
         if revision:
+            # If this is a revision, set it to be the head of the list and increment the revision id.
             self.head = True
             self.revision_id += 1
 
-            if self.parent:
-                type(self).objects.filter(parent=self.parent,head=True).update(head=False)
-                # Both fields required for this to work -- something to do with model inheritance.
+            previous_revision = self.get_previous_revision()
+
+            if not self.is_parent():
+                # If this is a revision, delete the old head of the list.
+                type(self).objects.filter(parent=self.parent, head=True).update(head=False)
+
+                # Clear the instance id to force Django to save a new instance.
+                # Both fields (pk, id) required for this to work -- something to do with model inheritance.
                 self.pk = None
                 self.id = None
+                self.is_published = False
 
-            if self.is_published():
-                type(self).objects.filter(parent=self.parent,status=Publishable.PUBLISHED).update(status=Publishable.DRAFT)
-                if self.get_previous_revision().status != Publishable.PUBLISHED:
-                    self.published_at = datetime.datetime.now()
-
+        # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
+        # Set created_at to now, but only for first version
         if self.created_at is None:
-            self.created_at = datetime.datetime.now()
+            self.created_at = timezone.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
+        # Update the parent foreign key
         if not self.parent:
             self.parent = self
-            super(Publishable, self).save(update_fields=['created_at', 'parent'])
+            super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def get_published_version(self):
+        try:
+            published = type(self).objects.get(parent=self.parent, is_published=True)
+            return published.revision_id
+        except:
+            return None
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -239,14 +267,16 @@ class Publishable(Model):
 
 class ArticleManager(PublishableManager):
 
-    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, status=None):
+    def get_frontpage(self, reading_times=None, section=None, section_id=None, sections=[], exclude=[], limit=7, is_published=False):
 
-        if status is None:
-            status = Article.PUBLISHED
+        if is_published:
+            is_published = 1
+        else:
+            is_published = 0
 
         if reading_times is None:
             reading_times = {
-                'morning_start': '11:00:00',
+                'morning_start': '9:00:00',
                 'midday_start': '11:00:00',
                 'midday_end': '16:00:00',
                 'evening_start': '16:00:00',
@@ -258,7 +288,7 @@ class ArticleManager(PublishableManager):
             'excluded': ",".join(map(str, exclude)),
             'sections': ",".join(sections),
             'limit': limit,
-            'status': status
+            'is_published': is_published
         }
 
         context.update(reading_times)
@@ -275,7 +305,7 @@ class ArticleManager(PublishableManager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -290,7 +320,7 @@ class ArticleManager(PublishableManager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = %(status)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -306,7 +336,7 @@ class ArticleManager(PublishableManager):
                 END as reading
                 FROM content_article
                 INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -321,7 +351,7 @@ class ArticleManager(PublishableManager):
                      ELSE 0.5
                 END as reading
                 FROM content_article
-                WHERE head = 1 AND status = %(status)s AND parent_id NOT IN (%(excluded)s)
+                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
                 ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
                 LIMIT %(limit)s
             """
@@ -335,7 +365,7 @@ class ArticleManager(PublishableManager):
         sections = Section.objects.all()
 
         for section in sections:
-            articles = self.exclude(id__in=frontpage).filter(section=section,status=Article.PUBLISHED)[:5]
+            articles = self.exclude(id__in=frontpage).filter(section=section,is_published=True)[:5]
             if len(articles) > 0:
                 results[section.slug] = {
                     'first': articles[0],
@@ -353,9 +383,9 @@ class ArticleManager(PublishableManager):
                 time = datetime.datetime.now() - datetime.timedelta(days=7)
 
         if time:
-            articles = Article.objects.filter(status=Article.PUBLISHED, updated_at__gt=time).order_by('-views')
+            articles = Article.objects.filter(is_published=True, updated_at__gt=time).order_by('-views')
         else:
-            articles = Article.objects.filter(status=Article.PUBLISHED).order_by('-views')
+            articles = Article.objects.filter(is_published=True).order_by('-views')
 
         return articles
 
@@ -373,8 +403,7 @@ class Article(Publishable):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
-    long_headline = CharField(max_length=255)
-    short_headline = CharField(max_length=255)
+    headline = CharField(max_length=255)
     section = ForeignKey('Section')
     authors = ManyToManyField(Person, through="Author")
     topic = ForeignKey('Topic', null=True)
@@ -398,7 +427,7 @@ class Article(Publishable):
     objects = ArticleManager()
 
     def __str__(self):
-        return self.long_headline
+        return self.headline
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))
@@ -419,7 +448,7 @@ class Article(Publishable):
         return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
     def get_related(self):
-        return Article.objects.exclude(pk=self.id).filter(section=self.section,status=Article.PUBLISHED)[:5]
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True)[:5]
 
     def get_reading_list(self, ref=None, dur=None):
         if ref is not None:
@@ -520,7 +549,6 @@ class Article(Publishable):
         for node in json.loads(self.content):
             if type(node) is unicode:
                 words += count_words(node)
-                print words
 
         return int(words / 200) # Average reading speed = 200 wpm
 
@@ -757,8 +785,8 @@ class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, blank=True, null=True, related_name='page')
-
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
+
     caption = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
