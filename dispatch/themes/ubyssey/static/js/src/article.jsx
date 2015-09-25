@@ -23,7 +23,7 @@ if($('main.article').length){
 
     var firstArticle = {
         id: articleId,
-        long_headline: articleHeadline,
+        headline: articleHeadline,
         url: articleURL
     };
 

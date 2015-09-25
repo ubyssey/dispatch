@@ -11,11 +11,11 @@
         <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
     </div>
     {% endblock %}
-    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ reading_list.ids }}" data-list-name="{{ reading_list.name }}" data-headline="{{ article.long_headline }}" data-url="{{ article.get_absolute_url }}">
+    <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ reading_list.ids }}" data-list-name="{{ reading_list.name }}" data-headline="{{ article.headline }}" data-url="{{ article.get_absolute_url }}">
         {% block banner %}
         <div class="container">
             <div class="headline-container">
-                <h1 class="headline">{{ article.long_headline|safe }}</h1>
+                <h1 class="headline">{{ article.headline|safe }}</h1>
                 <div class="article-info row">
                     <div class="article-byline">
                         <span class="author">By {{ article.get_author_url|safe }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span>
@@ -23,7 +23,7 @@
                     <ul class="social top">
                         <li><a href="#" class="open-comments"><i class="fa fa-comment"></i><span> {% if article.comment_count == 0 %}Post a comment{% else %}{{ article.comment_count }}comments{% endif %}</span></a></li>
                         <li><a class="facebook" href="#" data-url="{{ article.get_absolute_url }}"><i class="fa fa-facebook-square"></i><span>Share</span></a></li>
-                        <li><a class="twitter" href="#" data-url="{{ article.get_absolute_url }}" data-title="{{ article.long_headline }}"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
+                        <li><a class="twitter" href="#" data-url="{{ article.get_absolute_url }}" data-title="{{ article.headline }}"><i class="fa fa-twitter"></i><span>Tweet</span></a></li>
                     </ul>
                 </div>
             </div>
