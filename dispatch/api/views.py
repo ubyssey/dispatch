@@ -95,7 +95,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if self.request.user.is_authenticated():
             queryset = Article.objects.filter(head=True)
         else:
-            queryset = Article.objects.filter(head=True, status=Article.PUBLISHED)
+            queryset = Article.objects.filter(head=True, is_published=True)
 
         queryset = queryset.order_by('-published_at')
 
@@ -120,7 +120,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         drafts = self.request.query_params.get('drafts', False)
 
         if not drafts:
-            queryset = queryset.filter(status=Article.PUBLISHED)
+            queryset = queryset.filter(is_published=True)
 
         page = self.paginate_queryset(queryset)
 
