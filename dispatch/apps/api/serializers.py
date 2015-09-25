@@ -372,7 +372,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
         # Instantiate the superclass normally
         super(PageSerializer, self).__init__(*args, **kwargs)
 
-        template_fields = self.context['request'].QUERY_PARAMS.get('template_fields', False)
+        template_fields = self.context['request'].query_params.get('template_fields', False)
 
         if self.context['request'].method == 'GET' and not template_fields:
             self.fields.pop('template_fields')
