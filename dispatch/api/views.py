@@ -106,7 +106,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
         if q is not None:
-            queryset = queryset.filter(long_headline__icontains=q)
+            queryset = queryset.filter(headline__icontains=q)
         if section is not None:
             queryset = queryset.filter(section_id=section)
 
@@ -189,7 +189,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         data = {
             'id': article.parent_id,
-            'long_headline': article.long_headline,
+            'headline': article.headline,
             'url': article.get_absolute_url(),
             'html': render_to_string(article.get_template(), context)
         }
@@ -238,7 +238,7 @@ class PageViewSet(viewsets.ModelViewSet):
         q = self.request.query_params.get('q', None)
 
         if q is not None:
-            queryset = queryset.filter(long_headline__icontains=q)
+            queryset = queryset.filter(headline__icontains=q)
 
         return queryset
 

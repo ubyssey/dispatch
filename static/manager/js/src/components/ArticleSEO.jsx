@@ -6,8 +6,8 @@ var ArticleSEO = React.createClass({
         this.props.updateHandler(field, event);
     },
     containsHeadline: function() {
-        if( this.props.instance.long_headline && this.props.instance.seo_keyword) {
-            var h = this.props.instance.long_headline.toLowerCase();
+        if( this.props.instance.headline && this.props.instance.seo_keyword) {
+            var h = this.props.instance.headline.toLowerCase();
             var k = this.props.instance.seo_keyword.toLowerCase();
             var splitHeadline = h.split(' ');
             var splitKeyword  = k.split(' ');

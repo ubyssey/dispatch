@@ -4,7 +4,7 @@
             <article class="section-xl">
             {% with articles.0 as article %}
                 <img class="featured" src="{{ article.featured_image.image.get_medium_url }}" />
-                <h3 class="headline">{{ article.long_headline }}</h3>
+                <h3 class="headline">{{ article.headline }}</h3>
                 <p class="snippet">{{ article.snippet }}</p>
             {% endwith %}
             </article>
@@ -13,7 +13,7 @@
     <div class="right col-4">
         <div class="inner">
         {% for article in articles %}
-            <h4 class="headline">{{ article.long_headline }}</h4>
+            <h4 class="headline">{{ article.headline }}</h4>
             <p class="snippet">{{ article.snippet }}</p>
         {% endfor %}
         </div>

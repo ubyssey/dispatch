@@ -4,7 +4,7 @@
     <ul class="article-list basic">
         {% for article in articles %}
         <li>
-            <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.long_headline }}</h2></a>
+            <a href="{{ article.get_absolute_url }}"><h2 class="headline">{{ article.headline }}</h2></a>
             <span class="byline"><span class="author">By {{ article.get_author_string }}</span> &nbsp;&middot;&nbsp; <span class="published">{{ article.published_at }}</span></span>
             <p class="snippet"><span class="timestamp">{{ article.published_at|naturaltime }}</span>{{ article.snippet }}</p>
         </li>
