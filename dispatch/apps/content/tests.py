@@ -25,8 +25,7 @@ class ArticleTests(TestCase):
     #         last_name="Doe")
     #
     #     self.A1 = {
-    #         "long_headline": "Buchanan Tower Rated Uglier Than One Yonge Street",
-    #         "short_headline": "BuTo Strikes Fear",
+    #         "headline": "Buchanan Tower Rated Uglier Than One Yonge Street",
     #         "section": sCulture,
     #         "published_at": timezone.now(),
     #         "slug": "buto-strikes-fear",

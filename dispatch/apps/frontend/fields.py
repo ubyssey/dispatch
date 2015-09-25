@@ -33,7 +33,7 @@ class SelectField(BaseField):
 class ModelField(BaseField):
 
     KEY = 'parent'
-    DISPLAY = 'long_headline'
+    DISPLAY = 'headline'
 
     def __init__(self, model, many=False):
         self.model = model

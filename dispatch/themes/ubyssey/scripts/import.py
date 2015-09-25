@@ -110,8 +110,7 @@ class WordpressImporter:
         article = Article()
 
         title = str(BeautifulSoup(data['title'], 'html.parser'))
-        article.long_headline = title
-        article.short_headline = title
+        article.headline = title
 
         article.slug = slug
         article.snippet = data['description']
@@ -120,7 +119,8 @@ class WordpressImporter:
 
         date = dateutil.parser.parse(data['date'])
 
-        article.status = Article.PUBLISHED
+        article.status = Article.DRAFT
+        article.is_published = True
         article.published_at = date
 
         try:
@@ -140,6 +140,8 @@ class WordpressImporter:
             article.featured_image = self.save_attachment(data['featured_image'], article)
 
         article.save(revision=False)
+
+        print article.headline
 
     def save_content(self, content, article):
         lines = [s.strip() for s in content.splitlines()]
@@ -226,4 +228,4 @@ class WordpressImporter:
 
 importer = WordpressImporter()
 importer.load('results.json')
-importer.save()
+importer.save(5)

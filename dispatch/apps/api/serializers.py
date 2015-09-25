@@ -217,8 +217,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'parent',
-            'long_headline',
-            'short_headline',
+            'headline',
             'featured_image',
             'featured_image_json',
             'snippet',
@@ -274,8 +273,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             action = 'publish'
 
         # Update all the basic fields
-        instance.long_headline = validated_data.get('long_headline', instance.long_headline)
-        instance.short_headline = validated_data.get('short_headline', instance.short_headline)
+        instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)

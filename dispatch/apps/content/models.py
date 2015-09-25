@@ -403,8 +403,7 @@ class Article(Publishable):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
-    long_headline = CharField(max_length=255)
-    short_headline = CharField(max_length=255)
+    headline = CharField(max_length=255)
     section = ForeignKey('Section')
     authors = ManyToManyField(Person, through="Author")
     topic = ForeignKey('Topic', null=True)
@@ -428,7 +427,7 @@ class Article(Publishable):
     objects = ArticleManager()
 
     def __str__(self):
-        return self.long_headline
+        return self.headline
 
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))

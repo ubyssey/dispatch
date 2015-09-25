@@ -8,7 +8,7 @@
     <div class="container">
         <article class="blog">
             <div class="article-container">
-                <h1 class="headline">{{ article.long_headline|safe }}</h1>
+                <h1 class="headline">{{ article.headline|safe }}</h1>
                 <p class="snippet">{{ article.snippet }}</p>
                 <div class="byline">By {{ article.get_author_url }}</div>
                 <ul class="social dots">
@@ -31,7 +31,7 @@
                                 <article class="related">
                                     <a class="article" href="{{ article.get_absolute_url }}">
                                         <img src="{{ article.featured_image.image.get_absolute_url }}" />
-                                        <h3 class="headline">{{ article.long_headline|safe }}</h3>
+                                        <h3 class="headline">{{ article.headline|safe }}</h3>
                                     </a>
                                 </article>
                             {% endfor %}
