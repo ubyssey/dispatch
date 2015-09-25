@@ -179,8 +179,7 @@ var HyperlinkModule = function(quill, options) {
             return (<input type="text" placeholder="Enter a URL" value={this.state.href} onChange={this.updateHref}></input>);
         },
         renderArticle: function(){
-            return (<ModelDropdown model="article" item_key="parent" display="long_headline" name="article" data={this.state.article} updateHandler={this.updateArticle} />
-);
+            return (<ModelDropdown model="article" item_key="parent" display="headline" name="article" data={this.state.article} updateHandler={this.updateArticle} />);
         },
         render: function(){
             var style = {
