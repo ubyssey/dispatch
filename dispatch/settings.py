@@ -86,7 +86,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'dispatch.urls'
-
+APPEND_SLASH = True
 WSGI_APPLICATION = 'dispatch.wsgi.application'
 
 
