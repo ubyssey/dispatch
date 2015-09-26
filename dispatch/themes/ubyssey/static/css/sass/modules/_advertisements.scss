@@ -1,13 +1,15 @@
 .advertisement {
 
-  // Leaderboard ad
+  // Desktop leaderboard ad
   &.leaderboard {
     &.homepage {
       padding-bottom: 0;
     }
+
     display: none;
     padding: 25px 0;
     text-align: center;
+
     @media($bp-larger-than-mobile){
       display: block;
       &.homepage {
@@ -20,6 +22,17 @@
         display: block;
       }
     }
+  }
+
+  // Mobile leaderboard
+  &.mobile-leaderboard {
+    @media(min-width: 768px){
+      display: none;
+    }
+  }
+
+  .adslot {
+    margin: 0 auto;
   }
 
   // Full-width article ads
