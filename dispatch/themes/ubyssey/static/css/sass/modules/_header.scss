@@ -13,6 +13,7 @@ header.main, header.topbar {
 div.branding {
   margin: 20px 0;
   height: 50px;
+  overflow: hidden;
 
   .left, .middle, .right {
     display: inline-block;
