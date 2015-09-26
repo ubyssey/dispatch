@@ -20,9 +20,10 @@ $(document).ready(function(){
 			googletag.enableServices();
 
 			$(dfpslots).each(function(){
-                console.log($(this).attr('id'));
 				googletag.display($(this).attr('id'));
 			});
 		});
 	}
+    // Collapse empty ad divs
+    googletag.pubads().collapseEmptyDivs();
 });

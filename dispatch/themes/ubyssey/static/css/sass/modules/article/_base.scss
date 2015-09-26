@@ -193,11 +193,12 @@ div.right-column {
     }
 
     div.sidebar {
+      display: block;
       position: absolute;
       right: 0;
       width: 300px;
       &.offset {
-        margin-top: 4em;
+        margin-top: 3em;
       }
     }
   }
