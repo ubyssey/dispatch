@@ -227,5 +227,5 @@ class WordpressImporter:
         return len(self.articles)
 
 importer = WordpressImporter()
-importer.load('results.json')
-importer.save(5)
+importer.load('results-2015-sports.json')
+importer.save()
