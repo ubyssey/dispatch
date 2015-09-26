@@ -7,8 +7,8 @@
 {% block content %}
 <main id="article-{{ article.parent_id }}" class="article {{ article.template }}">
     {% block banner_ad %}
-    <div class="advertisement leaderboard">
-        <img src="{% static 'img/sample-leaderboard-ad.png' %}" />
+    <div class="advertisement homepage leaderboard">
+        <div class="adslot" data-size="leaderboard" data-dfp="Front_leaderboard_728x90" id="div-gpt-ad-1400538648567-10"></div>
     </div>
     {% endblock %}
     <article {% if user.is_authenticated %}data-user-id="{{ user.id }}"{% endif %} data-id="{{ article.parent_id }}" data-list="{{ reading_list.ids }}" data-list-name="{{ reading_list.name }}" data-headline="{{ article.headline }}" data-url="{{ article.get_absolute_url }}">
@@ -43,7 +43,9 @@
                 {% else %}
                 <div class="sidebar">
                 {% endif %}
-                    <img src="{% static 'img/sample-box-ad.png' %}" />
+                    <div class="advertisement box">
+                        <div class="adslot" id="div-gpt-ad-1400538648567-8" data-size="box" data-dfp="Front_BoxA_300x250"></div>
+                    </div>
                 </div>
             </div>
             {% endblock %}

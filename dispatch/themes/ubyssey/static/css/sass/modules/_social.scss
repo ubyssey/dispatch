@@ -4,20 +4,19 @@ ul.social {
   margin-top: 25px;
   margin-bottom: 0;
 
-
   padding: 0;
   list-style-type: none;
 
   li a {
     font-family: $font-default;
-    font-size: 14px;
+    font-size: $font-size-14px;
     font-weight: 500;
     i, span {
       vertical-align: middle;
     }
     i {
+      font-size: $font-size-18px;
       margin-right: 8px;
-      font-size: 16px;
     }
   }
 
@@ -38,7 +37,7 @@ ul.social {
       margin-right: 5px;
       display: inline-block;
       a {
-        font-size: 18px;
+        font-size: $font-size-18px;
         display: block;
         width: 40px;
         height: 40px;

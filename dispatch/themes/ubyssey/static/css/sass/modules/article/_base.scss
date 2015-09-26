@@ -18,8 +18,11 @@ div.article-slide {
   }
   .advertisement.leaderboard {
     background: #F5F5F5;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     border-bottom: 1px solid #DADADA;
+  }
+  @media($bp-larger-than-tablet){
+    margin-bottom: 50px;
   }
 }
 
@@ -34,23 +37,40 @@ div.indicator {
 // Article
 
 main.article.default {
+
   h1.headline {
-    line-height: 38px;
+    line-height: 1.185em;
     margin-bottom: 15px;
   }
+
+  div.article-info {
+    color: #222222;
+  }
+
   @media($bp-larger-than-mobile){
+    h1.headline {
+      font-size: 2.5em;
+      margin: 0;
+    }
     div.article-byline {
       float: left;
+    }
+    div.article-info {
+      margin: 20px 0;
     }
   }
 
   @media($bp-larger-than-tablet){
     h1.headline {
-      line-height: 46px;
+      font-size: $font-size-36px;
+      line-height: 1.277em;
       padding: 25px 0;
       margin: 0;
       border-top: 2px solid #3E3E3E;
       border-bottom: 1px solid #D2D2D2;
+    }
+    div.article-info {
+      margin: 25px 0;
     }
   }
 
@@ -74,9 +94,25 @@ h1.headline {
 }
 
 div.article-content p, div.article-content div.caption {
-  max-width: 585px;
-  @media(max-width: 625px){
-    padding: 0 20px;
+  padding: 0 20px;
+  @media($bp-larger-than-mobile){
+    padding: 0;
+  }
+  @media($bp-larger-than-tablet){
+    max-width: 585px;
+  }
+}
+
+div.caption {
+  margin-top: 6px;
+  font-family: $font-headline;
+  font-size: 15px;
+  color: #5A5A5A;
+  line-height: 19px;
+
+  padding: 0 20px;
+  @media($bp-larger-than-phablet){
+    padding: 0;
   }
 }
 
@@ -88,6 +124,7 @@ div.article-content {
     color: #333333;
     line-height: 26px;
     margin-top: 20px;
+
     &:first-child {
         margin-top: 5px;
     }
@@ -106,9 +143,7 @@ div.article-content {
   }
 
 }
-div.article-info {
-  color: #222222;
-}
+
 div.article-byline {
   font-size: 14px;
   line-height: 17px;
@@ -127,15 +162,11 @@ div.article-byline {
   div.headline-container {
     padding: 0;
   }
-  div.article-info {
-    padding: 25px 0;
-  }
 }
 
 // Right column
 
 div.right-column {
-
 
   img {
     width: 100%;
@@ -146,7 +177,6 @@ div.right-column {
   }
 
   div.featured-image {
-    display: none;
     margin-bottom: 20px;
   }
 
