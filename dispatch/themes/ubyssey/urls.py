@@ -7,7 +7,7 @@ theme = UbysseyTheme()
 theme_urls = patterns('',
     url(r'^search/?', theme.search, name='search'),
     url(r'^(?P<section>[-\w]+)/(?P<slug>[-\w]+)/?', theme.article, name='article'),
-    url(r'^(?P<slug>[-\w]+)/?', theme.section, name='section'),
+    url(r'^(?P<slug>[-\w]+)/?', theme.section, name='page'),
     #url(r'^login/?', theme.login),
     #url(r'^logout/?', theme.logout),
     #url(r'^register/?', theme.register),

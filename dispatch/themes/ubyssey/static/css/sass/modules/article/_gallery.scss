@@ -1,5 +1,17 @@
 div.slideshow {
 
+  display: none;
+  z-index: $z-scale-3;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(15, 15, 15, 0.99);
+  &.visible {
+    display: block;
+  }
+
   -webkit-animation: fadein 0.25s; /* Safari, Chrome and Opera > 12.1 */
    -moz-animation: fadein 0.25s; /* Firefox < 16 */
     -ms-animation: fadein 0.25s; /* Internet Explorer */
