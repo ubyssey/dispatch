@@ -122,7 +122,7 @@ div.frontpage {
           display: none;
         }
         h2 {
-          font-size: 18px;
+          font-size: 1.125em;
           margin: 0;
         }
         .image {
@@ -320,7 +320,7 @@ h1.section, h2.title, h2.block-title {
   text-align: center;
   font-family: $font-secondary;
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 1.125em;
   border-style: solid;
   border-color: #DDD;
   border-width: 1px 0;
@@ -444,7 +444,7 @@ article.col {
     }
     h4.headline {
       margin: 0;
-      font-size: 18px;
+      font-size: 1.125em;
     }
   }
 }
@@ -556,7 +556,7 @@ div.sidebar-home {
   }
 }
 
-div.advert {
+div.advertisement {
   border-top: 1px solid #E6E6E6;
   padding: 25px 0;
   &.box {

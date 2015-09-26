@@ -47,11 +47,11 @@ def list_actions(count=25):
             except:
                 continue
 
-        results.append({
-            'icon': ICONS[action.action],
-            'text': text,
-            'timestamp': action.timestamp
-        })
+            results.append({
+                'icon': ICONS[action.action],
+                'text': text,
+                'timestamp': action.timestamp
+            })
 
         count = 0
 
