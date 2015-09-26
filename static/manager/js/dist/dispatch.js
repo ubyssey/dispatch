@@ -96,7 +96,7 @@
     }
 
     PRODUCTION_SETTINGS = {
-        'base_url': 'http://dev.ubyssey.ca/',
+        'base_url': 'http://http://104.236.185.191/',
         'api_url': '/api/',
         'api_format': 'json',
     }
