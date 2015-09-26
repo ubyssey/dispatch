@@ -7,8 +7,8 @@ from dispatch.helpers import ThemeHelper
 from dispatch.apps.manager import urls as adminurls
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(adminurls)),
-    url(r'^api/', include(api_patterns)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^admin/?', include(adminurls)),
+    url(r'^api/?', include(api_patterns)),
+    url(r'^api-auth/?', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include(ThemeHelper.get_theme_urls())),
 )
