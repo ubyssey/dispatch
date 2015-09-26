@@ -1,5 +1,12 @@
 .advertisement {
 
+
+  &.leaderboard, &.box {
+    .adslot {
+      margin: 0 auto;
+    }
+  }
+
   // Desktop leaderboard ad
   &.leaderboard {
     &.homepage {
@@ -22,6 +29,11 @@
         display: block;
       }
     }
+
+    .adslot {
+      width: 728px;
+      height: 90px;
+    }
   }
 
   // Mobile leaderboard
@@ -31,8 +43,15 @@
     }
   }
 
-  .adslot {
-    margin: 0 auto;
+  // Desktop box
+  &.box {
+    .adslot {
+      width: 300px;
+      height: 250px;
+    }
+    &.sidebar {
+      padding: 0;
+    }
   }
 
   // Full-width article ads
