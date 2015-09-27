@@ -194,7 +194,8 @@ class Publishable(Model):
         # Unpublish last published version
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False)
         self.is_published = True
-        self.published_at = datetime.datetime.now()
+        if self.published_at is None:
+            self.published_at = datetime.datetime.now()
         self.save(revision=False)
         return self
 

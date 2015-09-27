@@ -3,7 +3,7 @@
 {% load humanize %}
 {% block content %}
 <div class="advertisement homepage leaderboard">
-    <img src="{% static 'img/sample-leaderboard-ad.png' %}">
+    <div class="adslot" data-size="leaderboard" data-dfp="Front_leaderboard_728x90" id="div-gpt-ad-1443288719995-12"></div>
 </div>
 {% include 'headers/main.html' %}
 {% include 'headers/mobile.html' %}
@@ -60,8 +60,8 @@
             {% include 'homepage/blocks/section_2.html' with section="features" articles=sections.features %}
         </div>
         <div class="sidebar-home">
-            <div class="advert box sidebar-block">
-                <img src="{% static 'img/sample-box-ad.png' %}" />
+            <div class="advertisement box sidebar-block">
+                <div class="adslot" id="div-gpt-ad-1443288719995-10" data-size="box" data-dfp="Front_BoxA_300x250"></div>
             </div>
             <div class="popular sidebar-block">
                 <h2 class="block-title">Most popular this week</h2>
@@ -71,8 +71,8 @@
                     {% endfor %}
                 </ol>
             </div>
-            <div class="advert box sidebar-block">
-                <img src="{% static 'img/sample-box-ad.png' %}" />
+            <div class="advertisement box sidebar-block">
+                <div class="adslot" id="div-gpt-ad-1443288719995-11" data-size="box" data-dfp="Front_BoxB_300x250"></div>
             </div>
             <div class="article-list blog sidebar-block">
                 <h2 class="block-title">From the blog</h2>

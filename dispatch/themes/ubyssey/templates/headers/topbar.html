@@ -5,17 +5,17 @@
         <nav>
             <ul>
                 <li {% if section == 'news' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'news' %}">News</a>
+                    <a href="{% url 'page' 'news' %}">News</a>
                 </li><li {% if section == 'culture' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'culture' %}">Culture</a>
+                    <a href="{% url 'page' 'culture' %}">Culture</a>
                 </li><li {% if section == 'opinion' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'opinion' %}">Opinion</a>
+                    <a href="{% url 'page' 'opinion' %}">Opinion</a>
                 </li><li {% if section == 'features' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'features' %}">Features</a>
+                    <a href="{% url 'page' 'features' %}">Features</a>
                 </li><li {% if section == 'sports' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'sports' %}">Sports</a>
+                    <a href="{% url 'page' 'sports' %}">Sports</a>
                 </li><li {% if section == 'blog' %}class="current"{% endif %}>
-                    <a href="{% url 'section' 'blog' %}">Blog</a>
+                    <a href="{% url 'page' 'blog' %}">Blog</a>
                 </li>
             </ul>
         </nav>

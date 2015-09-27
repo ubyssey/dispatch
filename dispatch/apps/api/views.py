@@ -361,7 +361,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     model = Image
     serializer_class = ImageSerializer
-    paginate_by = 30
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
 
@@ -426,14 +425,18 @@ class ComponentViewSet(viewsets.GenericViewSet):
 
         page = self.pages.get(slug)
 
-        instance = ComponentSet.objects.get(slug=slug)
-        for component in instance.components.all():
-            component_class = self.components.get(component.slug)
-            component_obj = component_class(instance=component)
-            saved_dict[component.spot] = {
-                'slug': component.slug,
-                'fields': component_obj.field_data_as_json(),
-            }
+        try:
+            instance = ComponentSet.objects.get(slug=slug)
+
+            for component in instance.components.all():
+                component_class = self.components.get(component.slug)
+                component_obj = component_class(instance=component)
+                saved_dict[component.spot] = {
+                    'slug': component.slug,
+                    'fields': component_obj.field_data_as_json(),
+                }
+        except:
+            pass
 
         for spot, name in page.component_spots:
             options = []
@@ -445,6 +448,7 @@ class ComponentViewSet(viewsets.GenericViewSet):
                 if component.SLUG not in components_dict:
                     component_obj = component()
                     components_dict[component.SLUG] = component_obj.fields_as_json()
+
             spots_list.append({
                 'name': name,
                 'slug': spot,

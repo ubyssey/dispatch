@@ -5,12 +5,12 @@
 
 html {
   -webkit-font-smoothing: antialiased;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.004)
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 
 body {
   font-family: $font-default;
-  font-size: 14px;
+  font-size: 16px;
   padding: 0;
   margin: 0;
   &.no-scroll {
@@ -26,8 +26,7 @@ body {
   box-sizing: border-box;
 
   &.padded {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px;
   }
 
   &.large {

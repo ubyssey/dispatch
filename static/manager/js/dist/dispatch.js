@@ -96,12 +96,12 @@
     }
 
     PRODUCTION_SETTINGS = {
-        'base_url': 'http://dev.ubyssey.ca/',
+        'base_url': 'http://ubyssey.ca/',
         'api_url': '/api/',
         'api_format': 'json',
     }
 
-    dispatch.settings = LOCAL_SETTINGS;
+    dispatch.settings = PRODUCTION_SETTINGS;
     dispatch.version = '0.1.11';
 
     // Errors

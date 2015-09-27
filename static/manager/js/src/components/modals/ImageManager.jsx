@@ -69,7 +69,7 @@ var ImageManager = React.createClass({
     },
     open: function(){
         if(!this.state.initialized){
-            dispatch.search("image", {'ordering': '-created_at'}, function(data){
+            dispatch.search("image", {'ordering': '-created_at', 'limit': 30}, function(data){
                 this.ImageStore.dump(data.results);
                 this.setState({
                     images: this.ImageStore,
