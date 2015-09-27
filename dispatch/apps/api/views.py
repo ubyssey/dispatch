@@ -361,7 +361,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     model = Image
     serializer_class = ImageSerializer
-    paginate_by = 30
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
 
