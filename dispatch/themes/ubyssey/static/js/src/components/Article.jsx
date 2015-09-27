@@ -9,6 +9,7 @@ var Article = React.createClass({
     componentDidMount: function(){
         // Setup galleries after DOM is loaded
         this.setState({ galleries: this.setupGalleries() });
+        refreshAdvertisements();
     },
     setupGalleries: function(){
 
