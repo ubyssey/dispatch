@@ -11,7 +11,7 @@ div.profile-image {
   margin-bottom: 30px;
 }
 
-div.profile, div.article-search, div.filter, div.list article {
+div.profile, div.filter, div.list article {
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -83,6 +83,7 @@ div.article-archive {
   margin-bottom: 20px;
 
   div.filter {
+    font-size: $font-size-14px;
     h3 {
       float: left;
     }
@@ -167,6 +168,7 @@ div.article-archive {
   }
 
   div.pagination {
+    font-size: $font-size-14px;
     text-align: center;
     span.current {
       margin: 0 10px;

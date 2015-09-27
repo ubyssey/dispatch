@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% block header %}{% include 'blog/header.html' %}{% endblock %}
+{% block content %}
+    <div class="blog-header">
+        <div class="image" style="background-image: url('{{ article.featured_image.image.get_absolute_url }}');"></div>
+    </div>
+    <div class="container">
+        <article class="blog">
+            <div class="article-container">
+                <h1 class="headline">{{ article.headline|safe }}</h1>
+                <p class="snippet">{{ article.snippet }}</p>
+                <div class="byline">By {{ article.get_author_url }}</div>
+                <ul class="social dots">
+                    <li><a class="facebook"><i class="fa fa-facebook"></i></a></li>
+                    <li><a class="twitter"><i class="fa fa-twitter"></i></a></li>
+                    <li><a class="pinterest"><i class="fa fa-pinterest"></i></a></li>
+                    <li><a><i class="fa fa-envelope"></i></a></li>
+                </ul>
+                <div class="row">
+                    <div class="content">
+                        {{ article.get_html|safe }}
+                    </div>
+                    <div class="sidebar">
+                        <div class="advert box sidebar-block">
+                            <img src="{% static 'img/sample-box-ad.png' %}" />
+                        </div>
+                        <div class="related">
+                            <h4 class="caps">Related Posts</h4>
+                            {% for article in article.get_related|slice:":2" %}
+                                <article class="related">
+                                    <a class="article" href="{{ article.get_absolute_url }}">
+                                        <img src="{{ article.featured_image.image.get_absolute_url }}" />
+                                        <h3 class="headline">{{ article.headline|safe }}</h3>
+                                    </a>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+{% endblock %}

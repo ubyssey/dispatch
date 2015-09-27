@@ -22,23 +22,23 @@
                 </div>
                 <div class="middle">
                     <ul class="sections">
-                        <li><a href="{% url 'section' 'news' %}">News</a></li>
-                        <li><a href="{% url 'section' 'culture' %}">Culture</a></li>
-                        <li><a href="{% url 'section' 'features' %}">Features</a></li>
-                        <li><a href="{% url 'section' 'opinion' %}">Opinion</a></li>
-                        <li><a href="{% url 'section' 'sports' %}">Sports</a></li>
-                        <li><a href="{% url 'section' 'blog' %}">Blog</a></li>
+                        <li><a href="{% url 'page' 'news' %}">News</a></li>
+                        <li><a href="{% url 'page' 'culture' %}">Culture</a></li>
+                        <li><a href="{% url 'page' 'features' %}">Features</a></li>
+                        <li><a href="{% url 'page' 'opinion' %}">Opinion</a></li>
+                        <li><a href="{% url 'page' 'sports' %}">Sports</a></li>
+                        <li><a href="{% url 'page' 'blog' %}">Blog</a></li>
                     </ul>
                 </div>
                 <div class="right">
                     <ul class="meta large">
-                        <li>Volunteer</li>
-                        <li>About</li>
-                        <li>Contact</li>
+                        <li><a href="{% url 'page' 'volunteer' %}">Volunteer</a></li>
+                        <li><a href="{% url 'page' 'about' %}">About</a></li>
+                        <li><a href="{% url 'page' 'contact' %}">Contact</a></li>
                     </ul>
                     <ul class="meta small">
-                        <li>Volunteer</li>
-                        <li>About</li>
+                        <li><a href="{% url 'page' 'volunteer' %}">Volunteer</a></li>
+                        <li><a href="{% url 'page' 'about' %}">About</a></li>
                     </ul>
                 </div>
             </div>
