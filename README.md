@@ -8,15 +8,18 @@ v 0.1
 
 * Press the fork button and create your own version of Dispatch
 * Clone your new repository locally onto your computer with `git clone https://github.com/yourusername/dispatch.git`
+* (Optional, but recommended) Create a [virtualenv][1] for Dispatch's dependencies with `virtualenv dispatch-env`, and activate it with `. dispatch-env/bin/activate`.
 * Once downloaded you can run `pip install -r requirements.txt` in the root of the `dispatch` directory to install the required Python dependencies
 
 Before going much further it would be a good time to check you have a recent version of Python and Django running. You can install Django with `pip install Django` if you don't have it.
 
-Running `Python 2.7.8` or higher, and `Django 1.7.2` or higher should be fine for this project.
+Running `Python 2.7.8` or higher (Dispatch is tested on Python 2.x), and `Django 1.7.2` or higher should be fine for this project.
+
+[1]: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
 ### MySQL
 
-If you don't have MySQL already installed it can be installed with homebrew by running `brew install mysql`.
+If you don't have MySQL already installed it can be installed on OS X with homebrew by running `brew install mysql`.
 
 Once installed: 
 
