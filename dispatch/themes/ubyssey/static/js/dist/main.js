@@ -50,6 +50,7 @@
                 $('a.menu').removeClass('active');
             }
             $searchform.show();
+            $('#search-bar').focus();
             $(this).addClass('active');
         }
     });
