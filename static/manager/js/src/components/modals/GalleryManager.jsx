@@ -50,7 +50,7 @@ var GalleryManager = React.createClass({
     },
     open: function(){
         if(!this.state.initialized){
-            dispatch.search("gallery", {'ordering': '-created_at'}, function(data){
+            dispatch.search("gallery", {'ordering': '-created_at', 'limit': 30}, function(data){
                 this.GalleryStore.dump(data.results);
                 this.setState({
                     galleries: this.GalleryStore,
