@@ -3,10 +3,10 @@
 {% block header %}
 {% endblock %}
 {% block content %}
-<div id="page-editor" data-slug="{{ slug }}"></div>
+<div id="component-editor" data-slug="{{ slug }}"></div>
 {% endblock %}
 {% block scripts %}
-    {% with 'manager/js/dist/page-'|add:version|add:'.js' as article_url %}
+    {% with 'manager/js/dist/component-'|add:version|add:'.js' as article_url %}
     <script src="{% static article_url %}" type="application/javascript"></script>
     {% endwith %}
 {% endblock %}
