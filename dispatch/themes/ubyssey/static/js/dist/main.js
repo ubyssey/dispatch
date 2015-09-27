@@ -1,5 +1,6 @@
 (function() {
-    var $searchform = $('#search-form');
+    var $searchform = $('#search-form'),
+        $document = $(document);
 
     $('.dropdown > a').click(function(e){
         e.preventDefault();
@@ -12,7 +13,7 @@
         return false;
     });
 
-    $(document).on('click', function(){
+    $document.on('click', function(){
         $('.dropdown ul').hide();
     });
 
@@ -28,6 +29,13 @@
             }
             $('nav.mobile').show();
             $(this).addClass('active');
+        }
+    });
+
+    $document.on('keyup', function(e) {
+        var ESCAPE = 27;
+        if (e.keyCode == ESCAPE) {
+            $searchform.is(':visible') && $searchform.hide();
         }
     });
 
