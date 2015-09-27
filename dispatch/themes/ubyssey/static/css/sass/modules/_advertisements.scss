@@ -1,13 +1,22 @@
 .advertisement {
 
-  // Leaderboard ad
+
+  &.leaderboard, &.box {
+    .adslot {
+      margin: 0 auto;
+    }
+  }
+
+  // Desktop leaderboard ad
   &.leaderboard {
     &.homepage {
       padding-bottom: 0;
     }
+
     display: none;
     padding: 25px 0;
     text-align: center;
+
     @media($bp-larger-than-mobile){
       display: block;
       &.homepage {
@@ -19,6 +28,29 @@
       &.homepage {
         display: block;
       }
+    }
+
+    .adslot {
+      width: 728px;
+      height: 90px;
+    }
+  }
+
+  // Mobile leaderboard
+  &.mobile-leaderboard {
+    @media(min-width: 768px){
+      display: none;
+    }
+  }
+
+  // Desktop box
+  &.box {
+    .adslot {
+      width: 300px;
+      height: 250px;
+    }
+    &.sidebar {
+      padding: 0;
     }
   }
 

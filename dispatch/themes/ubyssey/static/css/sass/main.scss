@@ -30,20 +30,6 @@
 
 //////
 
-div.slideshow {
-    display: none;
-    z-index: 100;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(15, 15, 15, 0.99);
-    &.visible {
-      display: block;
-    }
-}
-
 div.image-container {
     height: 100%;
     display: table;
@@ -62,14 +48,6 @@ p.slide-caption {
     font-size: 13px;
     color: #fff;
     line-height: 19px;
-}
-
-div.caption {
-  margin-top: 6px;
-  font-family: $font-headline;
-  font-size: 15px;
-  color: #5A5A5A;
-  line-height: 19px;
 }
 
 span.credit {
