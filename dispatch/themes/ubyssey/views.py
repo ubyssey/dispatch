@@ -23,7 +23,7 @@ class UbysseyTheme(DefaultTheme):
     def get_article_meta(self, article):
 
         try:
-            image = article.featured_image.image.get_absolute_url(),
+            image = article.featured_image.image.get_absolute_url()
         except:
             image = None
 
