@@ -537,30 +537,24 @@ class Article(Publishable):
         """
         Returns list of authors as a comma-separated string (with 'and' before last author).
         """
-        author_str = ""
-        authors = self.authors.order_by('author__order')
-        n = 1
-        for author in authors:
-            if author.slug and links:
-                author = '<a href="/author/%s/">%s</a>' % (author.slug, author.full_name)
-            else:
-                author = author.full_name
+        def format_author(author):
+            if links and author.slug:
+                return '<a href="/author/%s/">%s</a>' % (author.slug, author.full_name)
+            return author.full_name
 
-            if len(authors) > 0 and n + 1 == len(authors):
-                # If this is the second last author in the list, follow author name with an 'and'
-                author_str = author_str + author + " and "
-            elif n == len(authors):
-                # If this is the last author or only author in the list, just return author name
-                author_str = author_str + author
-            else:
-                # If author is somewhere in the middle of the list, follow author name with a comma
-                author_str = author_str + author + ", "
-            n = n + 1
-        return author_str
+        authors = map(format_author, self.authors.order_by('author__order'))
+
+        if not authors:
+            return ""
+        elif len(authors) == 1:
+            # If this is the only author, just return author name
+            return authors[0]
+
+        return ", ".join(authors[:-1]) + " and " + authors[-1]
 
     def get_author_url(self):
         """
-        Returns list of authors (inlcuding hyperlinks) as a comma-separated string (with 'and' before last author).
+        Returns list of authors (including hyperlinks) as a comma-separated string (with 'and' before last author).
         """
         return self.get_author_string(True)
 
