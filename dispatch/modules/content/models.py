@@ -294,68 +294,35 @@ class ArticleManager(PublishableManager):
 
         context.update(reading_times)
 
+        query = """
+        SELECT *,
+            TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
+            CASE reading_time
+                 WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
+                 WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
+                 WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
+                 ELSE 0.5
+            END as reading
+            FROM content_article
+        """
+
+        query_where = "WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s) "
+
         if section is not None:
-            query = """
-            SELECT *,
-                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
-                CASE reading_time
-                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
-                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
-                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
-                     ELSE 0.5
-                END as reading
-                FROM content_article
+            query += """
                 INNER JOIN content_section on content_article.section_id = content_section.id AND content_section.slug = %(section)s
-                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
-                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT %(limit)s
             """
         elif section_id is not None:
-            query = """
-            SELECT *,
-                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
-                CASE reading_time
-                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
-                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
-                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
-                     ELSE 0.5
-                END as reading
-                FROM content_article
-                WHERE head = 1 AND is_published = %(is_published)s AND section_id = %(section_id)s AND parent_id NOT IN (%(excluded)s)
-                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT %(limit)s
-            """
+            query_where += " AND section_id = %(section_id)s "
         elif sections:
-            query = """
-            SELECT *,
-                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
-                CASE reading_time
-                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
-                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
-                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
-                     ELSE 0.5
-                END as reading
-                FROM content_article
+            query += """
                 INNER JOIN content_section on content_article.section_id = content_section.id AND FIND_IN_SET(content_section.slug, %(sections)s)
-                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
-                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT %(limit)s
             """
-        else:
-            query = """
-            SELECT *,
-                TIMESTAMPDIFF(SECOND, published_at, NOW()) as age,
-                CASE reading_time
-                     WHEN 'morning' THEN IF( CURTIME() < %(morning_start)s, 1, 0 )
-                     WHEN 'midday'  THEN IF( CURTIME() >= %(midday_start)s AND CURTIME() < %(midday_end)s, 1, 0 )
-                     WHEN 'evening' THEN IF( CURTIME() >= %(evening_start)s, 1, 0 )
-                     ELSE 0.5
-                END as reading
-                FROM content_article
-                WHERE head = 1 AND is_published = %(is_published)s AND parent_id NOT IN (%(excluded)s)
-                ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
-                LIMIT %(limit)s
-            """
+
+        query += query_where + """
+            ORDER BY reading DESC, ( age * ( 1 / ( 4 * importance ) ) ) ASC
+            LIMIT %(limit)s
+        """
 
         return self.raw(query, context)
 
@@ -384,11 +351,11 @@ class ArticleManager(PublishableManager):
                 time = datetime.datetime.now() - datetime.timedelta(days=7)
 
         if time:
-            articles = Article.objects.filter(is_published=True, updated_at__gt=time).order_by('-views')
+            articles = Article.objects.filter(is_published=True, updated_at__gt=time)
         else:
-            articles = Article.objects.filter(is_published=True).order_by('-views')
+            articles = Article.objects.filter(is_published=True)
 
-        return articles
+        return articles.order_by('-views')
 
 class Comment(Model):
     article = ForeignKey('Article')
