@@ -14,7 +14,7 @@
             {% if q %}
             <div class="article-archive">
                 <div class="filter clearfix">
-                    {% if articles|length > 0 %}<h3 class="basic uppercase">{{ count }} result{% if count > 1 %}s{% endif %} for “{{ q }}”</h2>{% endif %}
+                    {% if articles|length > 0 %}<h3 class="basic uppercase">{{ count }} result{% if count != 1 %}s{% endif %} for “{{ q }}”</h2>{% endif %}
                     <div class="dropdown">
                         <a href="#">{{ order|title }} <i class="fa fa-caret-down"></i></a>
                         <ul>
