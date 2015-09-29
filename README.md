@@ -54,7 +54,7 @@ Now open `http://localhost:8000/` in your browser.
 
 **CSS** is written in [Sass][] with [Compass][]. To compile the CSS, navigate to `dispatch/themes/ubyssey/static/css` and run `compass compile`. Or, run `compass watch` to update as you edit files.
 
-**Javascript/JSX** is managed with [Gulp][]. To compile, navigate to `dispatch/themes/ubyssey/static/js` and run `gulp article` (if you're using a virtualenv, make sure it's activated for this). To install, first install NPM if necessary, then run `npm install` in that directory.
+**Javascript/JSX** is managed with [Gulp][]. To compile, navigate to `dispatch/themes/ubyssey/static/js` and run `gulp article` (if you're using a virtualenv, make sure it's activated for this). To setup Gulp, first install NPM if necessary, then run `npm install` in that directory.
 
 [Sass]: http://sass-lang.com
 [Compass]: http://compass-style.org
