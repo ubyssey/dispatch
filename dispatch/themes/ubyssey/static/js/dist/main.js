@@ -11,6 +11,7 @@ $('.dropdown > a').click(function(e){
 
 $(document).on('click', function(){
     $('.dropdown ul').hide();
+		$('#search-form').hide();
 });
 
 $('a.menu').click(function(e){
