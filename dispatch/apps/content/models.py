@@ -500,6 +500,8 @@ class Article(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
+        if 'credit' in data:
+            attachment.custom_credit = data['credit']
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
@@ -641,6 +643,8 @@ class Page(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
+        if 'credit' in data:
+            attachment.custom_credit = data['credit']
         attachment.page = self
         attachment.save()
         self.featured_image = attachment
@@ -789,17 +793,21 @@ class ImageAttachment(Model):
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
 
     caption = TextField(blank=True, null=True)
+    custom_credit = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
     type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
     order = PositiveIntegerField(null=True)
 
     def get_credit(self):
-        try:
-            author = self.image.authors.all()[0]
-            types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
-            return "%s %s" % (types[self.type], author)
-        except:
-            return None
+        if self.custom_credit is not None:
+            return self.custom_credit
+        else:
+            try:
+                author = self.image.authors.all()[0]
+                types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
+                return "%s %s" % (types[self.type], author)
+            except:
+                return None
 
     class EmbedController:
         @staticmethod
