@@ -21,7 +21,7 @@ var QuillEditor = React.createClass({
     componentDidMount: function(){
         Quill.registerEmbed('image', EditorImage);
         Quill.registerEmbed('gallery', EditorGallery);
-        //Quill.registerEmbed('code', EditorCode);
+        Quill.registerEmbed('code', EditorCode);
         Quill.registerEmbed('video', EditorVideo);
         Quill.registerEmbed('advertisement', EditorAdvertisement);
         Quill.registerEmbed('quote', EditorPullQuote);
@@ -34,7 +34,7 @@ var QuillEditor = React.createClass({
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
-        //this.quill.addEmbed('code');
+        this.quill.addEmbed('code');
         this.quill.addEmbed('video');
         this.quill.addEmbed('advertisement');
         this.quill.addEmbed('quote');
