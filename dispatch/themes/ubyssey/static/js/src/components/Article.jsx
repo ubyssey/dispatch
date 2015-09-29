@@ -9,7 +9,10 @@ var Article = React.createClass({
     componentDidMount: function(){
         // Setup galleries after DOM is loaded
         this.setState({ galleries: this.setupGalleries() });
-        refreshAdvertisements();
+        if (typeof refreshAdvertisements !== 'undefined') {
+            // Adblock might have prevented this from being defined (in dfp.js)
+            refreshAdvertisements();
+        }
     },
     setupGalleries: function(){
 
