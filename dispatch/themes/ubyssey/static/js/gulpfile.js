@@ -27,7 +27,7 @@ gulp.task('default', function () {
 });
 
 function _processor(path_jsx, path_src) {
-    return function(path_jsx, path_src) {
+    return function() {
         return browserify(path_jsx)
             .transform({ global: true }, reactify)
             .bundle()
