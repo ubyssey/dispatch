@@ -1,5 +1,5 @@
 {% load humanize %}
-<h1 class="section"><a href={% url 'section' {{ section|title }} %}>{{ section|title }}</a></h1>
+<h1 class="section"><a href={% url 'page' section %}>{{ section|title }}</a></h1>
 <section class="{{ section }} homepage section-1">
     <div class="left">
         <article class="section-xl padded">
