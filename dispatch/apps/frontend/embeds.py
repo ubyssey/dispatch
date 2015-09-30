@@ -91,13 +91,12 @@ class CodeController:
         
     @staticmethod
     def render(data):
-        if(data['mode'] == 'html'):
-            return data['content']
-        else:
-            html = '<script type="text/%s">' % data['mode']
-            html += data['content']
-            html += "</script>"
-            return html
+        if data['mode'] == 'css':
+            return '<style type="text/%s">%s</style>' % (data['mode'], data['content'])
+        elif data['mode'] == 'javascript':
+            return '<script type="text/%s">%s</script>' % (data['mode'], data['content'])
+        return data['content']
+
         
 
 embedlib.register('quote', PullQuoteController)
