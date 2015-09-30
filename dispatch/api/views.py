@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.db.models import Q
 
-from rest_framework import viewsets, generics, mixins, filters, status
+from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, detail_route, list_route
+from rest_framework.decorators import detail_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException
 
