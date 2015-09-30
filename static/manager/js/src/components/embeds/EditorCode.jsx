@@ -8,9 +8,14 @@ require('brace/mode/css');
 require('brace/theme/chrome');
 
 var EditorCode = React.createClass({
+    getInitialState: function(){
+        return {
+            mode: this.props.data.mode ? this.props.data.mode : "javascript"
+        };
+    },
     componentDidMount: function(){
         this.editor = ace.edit(React.findDOMNode(this.refs.codeEditor));
-        this.changeMode(this.props.data.mode ? this.props.data.mode : "javascript");
+        this.changeMode(this.state.mode);
         this.editor.setTheme('ace/theme/chrome');
         this.editor.$blockScrolling = Infinity;
         this.editor.setOptions({ maxLines: 100 });
@@ -20,29 +25,41 @@ var EditorCode = React.createClass({
         return {
             type: 'code',
             data: {
-                mode: this.mode,
+                mode: this.state.mode,
                 content: this.editor.getValue()
             }
         }
     },
-    changeMode: function(mode){
-        this.mode = mode;
-        this.editor.getSession().setMode('ace/mode/' + this.mode);
+    updateMode: function(event){
+        this.setState({ mode: event.target.value });
+        this.changeMode();
+    },
+    changeMode: function(){
+        this.editor.getSession().setMode('ace/mode/' + this.state.mode);
     },
     render: function(){
         return (
-            <div>
-                <div className="code-editor-wrapper">
-                    <div className="code-editor" ref="codeEditor" ></div>
+            <div className="code basic">
+                <div className="header">
+                    <div className="pull-left">
+                        <h4>Code Snippet</h4>
+                    </div>
+                    <div className="pull-right">
+                        <button onClick={this.removeGallery}><i className="fa fa-trash-o"></i> Remove</button>
+                    </div>
                 </div>
-                <div className="meta">
-                    <ul className="controls">
-                        <li onClick={this.changeMode.bind(this, 'html')}>HTML</li>
-                        <li onClick={this.changeMode.bind(this, 'css')}>CSS</li>
-                        <li onClick={this.changeMode.bind(this, 'python')}>Python</li>
-                        <li onClick={this.changeMode.bind(this, 'javascript')}>Javascript</li>
-                        <li onClick={this.props.remove}>Remove</li>
-                    </ul>
+                <div className="body">
+                    <div className="field full">
+                        <div className="code-editor" ref="codeEditor"></div>
+                    </div>
+                    <div className="field full">
+                        <label>Mode</label>
+                        <select onChange={this.updateMode} value={this.state.mode}>
+                            <option value="javascript">Javascript</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                        </select>
+                    </div>
                 </div>
             </div>
            );

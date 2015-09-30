@@ -84,7 +84,23 @@ class PullQuoteController:
         c = Context(data)
         return template.render(c)
 
+class CodeController:
+    @staticmethod
+    def json(data):
+        return data
+        
+    @staticmethod
+    def render(data):
+        if data['mode'] == 'css':
+            return '<style type="text/%s">%s</style>' % (data['mode'], data['content'])
+        elif data['mode'] == 'javascript':
+            return '<script type="text/%s">%s</script>' % (data['mode'], data['content'])
+        return data['content']
+
+        
+
 embedlib.register('quote', PullQuoteController)
+embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
