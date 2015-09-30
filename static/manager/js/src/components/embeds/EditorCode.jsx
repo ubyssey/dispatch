@@ -45,7 +45,7 @@ var EditorCode = React.createClass({
                         <h4>Code Snippet</h4>
                     </div>
                     <div className="pull-right">
-                        <button onClick={this.removeGallery}><i className="fa fa-trash-o"></i> Remove</button>
+                        <button onClick={this.props.remove}><i className="fa fa-trash-o"></i> Remove</button>
                     </div>
                 </div>
                 <div className="body">
