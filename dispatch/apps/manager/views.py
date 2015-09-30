@@ -14,12 +14,6 @@ from django.contrib.auth.models import Group
 
 @staff_member_required
 def home(request):
-    q = request.GET.get('q', False)
-    if q:
-        users = users.filter(full_name__icontains=q)
-    else:
-        q = ""
-
     return render_to_response(
         "manager/base.html",
         {
@@ -41,11 +35,9 @@ def login(request):
 @staff_member_required
 def users(request):
     users = Person.objects.filter(is_admin=True).order_by('full_name')
-    q = request.GET.get('q', False)
+    q = request.GET.get('q', '')
     if q:
         users = users.filter(full_name__icontains=q)
-    else:
-        q = ""
 
     paginator = Paginator(users, 15) # Show 15 articles per page
 
@@ -181,11 +173,9 @@ def section(request, section):
     section = Section.objects.get(name=section)
     article_list = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
 
-    q = request.GET.get('q', False)
+    q = request.GET.get('q', '')
     if q:
         article_list = article_list.filter(headline__icontains=q)
-    else:
-        q = ""
 
     unpublished = article_list.exclude(status=Article.PUBLISHED).count()
 
@@ -309,11 +299,9 @@ def article_delete(request, id):
 def pages(request):
     page_list = Page.objects.filter(is_active=True, head=True).order_by('-created_at')
 
-    q = request.GET.get('q', False)
+    q = request.GET.get('q', '')
     if q:
         page_list = page_list.filter(title__icontains=q)
-    else:
-        q = ""
 
     paginator = Paginator(page_list, 15) # Show 15 articles per page
 
