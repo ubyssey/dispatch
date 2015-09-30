@@ -41,14 +41,17 @@ Now for the fun bit, getting Dispatch serving pages!
 
 #### Static files
 
-Although the Django development server is capabable of serving static files, we find it's faster to deliver them separately. 
+Although the Django development server is capable of serving static files, we find it's faster to deliver them separately.
 
 * Open the `dispatch` directory in another shell window and run `python manage.py collectstatic` to collect all of Dispatch's static files into one directory.
 * Run `python -m SimpleHTTPServer 8888` from the same directory to start a basic static file server.
+* You may run into problems with `Cross-Origin Resource Sharing` on localhost, since the port is different. In that case, download [this CORS-patched version][CORS gist] of the above with `curl https://gist.githubusercontent.com/blx/1f8e0c42f36b2ad093f1/raw/c3de2d58c36745fc76c9d90e42aa6bb5f36c219a/assetserver.py > assetserver.py` and run it with `python assetserver.py 8888` instead.
 
 *Note: this is one of many ways to configure static files for a Django project, and may not be the best configuration for your system. [More information on serving static files with Django.](https://docs.djangoproject.com/en/1.8/howto/static-files/#serving-static-files-during-development)*
 
 Now open `http://localhost:8000/` in your browser.
+
+[CORS gist]: https://gist.github.com/blx/1f8e0c42f36b2ad093f1
 
 #### Building static assets
 
