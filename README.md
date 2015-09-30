@@ -41,7 +41,7 @@ Now for the fun bit, getting Dispatch serving pages!
 
 #### Static files
 
-Although the Django development server is capabable of serving static files, we find it's faster to deliver them separately. 
+Although the Django development server is capable of serving static files, we find it's faster to deliver them separately.
 
 * Open the `dispatch` directory in another shell window and run `python manage.py collectstatic` to collect all of Dispatch's static files into one directory.
 * Run `python -m SimpleHTTPServer 8888` from the same directory to start a basic static file server.
