@@ -8,15 +8,18 @@ v 0.1
 
 * Press the fork button and create your own version of Dispatch
 * Clone your new repository locally onto your computer with `git clone https://github.com/yourusername/dispatch.git`
+* (Optional, but recommended) Create a [virtualenv][1] for Dispatch's dependencies with `virtualenv dispatch-env`, and activate it with `. dispatch-env/bin/activate` before running any Python commands related to Dispatch
 * Once downloaded you can run `pip install -r requirements.txt` in the root of the `dispatch` directory to install the required Python dependencies
 
 Before going much further it would be a good time to check you have a recent version of Python and Django running. You can install Django with `pip install Django` if you don't have it.
 
-Running `Python 2.7.8` or higher, and `Django 1.7.2` or higher should be fine for this project.
+Running `Python 2.7.8` or higher (Dispatch is tested on Python 2), and `Django 1.7.2` or higher should be fine for this project.
+
+[1]: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
 ### MySQL
 
-If you don't have MySQL already installed it can be installed with homebrew by running `brew install mysql`.
+If you don't have MySQL already installed it can be installed on OS X with homebrew by running `brew install mysql`.
 
 Once installed: 
 
@@ -46,6 +49,16 @@ Although the Django development server is capabable of serving static files, we 
 *Note: this is one of many ways to configure static files for a Django project, and may not be the best configuration for your system. [More information on serving static files with Django.](https://docs.djangoproject.com/en/1.8/howto/static-files/#serving-static-files-during-development)*
 
 Now open `http://localhost:8000/` in your browser.
+
+#### Building static assets
+
+**CSS** is written in [Sass][] with [Compass][]. To compile the CSS, navigate to `dispatch/themes/ubyssey/static/css` and run `compass compile`. Or, run `compass watch` to update as you edit files.
+
+**Javascript/JSX** is managed with [Gulp][]. To compile, navigate to `dispatch/themes/ubyssey/static/js` and run `gulp article` (if you're using a virtualenv, make sure it's activated for this). To setup Gulp, first install NPM if necessary, then run `npm install` in that directory.
+
+[Sass]: http://sass-lang.com
+[Compass]: http://compass-style.org
+[Gulp]: http://gulpjs.com/
 
 ### Troubleshooting
 
