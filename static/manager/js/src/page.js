@@ -14,14 +14,11 @@ var galleryManager = React.render(
     document.getElementById('gallery-manager')
 );
 
-var pageId = $('#article-admin').data('id');
-pageId = pageId ? pageId : false;
-var sectionId = $('#article-admin').data('section-id');
-sectionId = sectionId ? sectionId : false;
-var sectionName = $('#article-admin').data('section-name');
-sectionName = sectionName ? sectionName : false;
-var sectionSlug = $('#article-admin').data('section-slug');
-sectionSlug = sectionSlug ? sectionSlug : false;
+var $articleadmin = $('#article-admin');
+var pageId = $articleadmin.data('id') || false;
+var sectionId = $articleadmin.data('section-id') || false;
+var sectionName = $articleadmin.data('section-name') || false;
+var sectionSlug = $articleadmin.data('section-slug') || false;
 
 var pageAdmin = React.render(
     <PageAdmin imageManager={imageManager} galleryManager={galleryManager} model="page" instanceId={pageId} />,
