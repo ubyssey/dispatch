@@ -92,7 +92,7 @@ var PublishableAdmin = function(component) {
                 instance: instance,
             });
         },
-        updateModelField: function(field, data, unsaved){
+        updateModelField: function(field, data){
             var instance = this.state.instance;
             instance[field] = data;
             if(data){

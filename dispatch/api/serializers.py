@@ -77,6 +77,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='image.get_thumbnail_url', read_only=True)
     credit = serializers.CharField(source='get_credit')
+    custom_credit = serializers.BooleanField(source='is_custom_credit', read_only=True)
     width = serializers.IntegerField(source='image.width')
     height = serializers.IntegerField(source='image.height')
 
@@ -89,6 +90,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'thumb',
             'caption',
             'credit',
+            'custom_credit',
             'type',
             'width',
             'height'
@@ -344,6 +346,8 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
+
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -358,6 +362,8 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             'content',
             'content_json',
             'published_at',
+            'is_published',
+            'published_version',
             'slug',
             'revision_id',
             'url',
