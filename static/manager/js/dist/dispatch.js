@@ -195,7 +195,6 @@
         return dispatch.get(getModelRoute(route, id), {}, callback);
     }
 
-
     dispatch.bulkRemove = function(model, ids, callback) {
         if (!validAction(model, 'DELETE')) throw InvalidActionError(model);
         var route = model + '.delete';
