@@ -344,6 +344,8 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     parent = serializers.ReadOnlyField(source='parent.id')
 
+    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
+
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -358,6 +360,8 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             'content',
             'content_json',
             'published_at',
+            'is_published',
+            'published_version',
             'slug',
             'revision_id',
             'url',
