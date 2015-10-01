@@ -142,7 +142,7 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                                 </div>
                             </TabPanel>
                             <TabPanel>
-                                <FeaturedImage name="featured_image" data={this.state.instance.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
+                                <FeaturedImage name="featured_image" featured_image={this.state.instance.featured_image} manager={this.props.imageManager} updateHandler={this.updateModelField}/>
                             </TabPanel>
                             <TabPanel>
                                 <SelectField label="Importance" options={IMPORTANCE_OPTIONS} value={this.state.instance.importance} updateHandler={this.updateField.bind(this, 'importance')} />
