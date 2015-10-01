@@ -40,7 +40,7 @@ var IMPORTANCE_OPTIONS = [
 ];
 
 var PageAdmin = React.createClass(PublishableAdmin({
-     requiredFields: [
+    requiredFields: [
         'title',
         'slug',
     ],
