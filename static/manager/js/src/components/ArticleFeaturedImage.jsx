@@ -35,7 +35,7 @@ var ArticleFeaturedImage = React.createClass({
                 </div>
                 <div className="field full">
                     <label>Custom credit</label>
-                    <Textarea rows={2} value={this.props.featured_image.custom_credit ? this.props.featured_image.credit : null} onChange={this.updateCredit}></Textarea>
+                    <input type="text" value={this.props.featured_image.custom_credit ? this.props.featured_image.credit : null} onChange={this.updateCredit} />
                 </div>
             </div>
             );

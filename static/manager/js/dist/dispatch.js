@@ -47,6 +47,17 @@
         'page': {
             'route': 'pages',
             'actions': ['GET', 'POST', 'DELETE'],
+            'sub_routes': {
+                'revision': {
+                    'actions': ['GET',]
+                },
+                'publish': {
+                    'actions': ['GET',]
+                },
+                'unpublish': {
+                    'actions': ['GET',]
+                }
+            },
         },
         'tag': {
             'route': 'tags',
@@ -184,15 +195,15 @@
     }
 
     dispatch.publish = function(model, id, callback) {
+        model += '.publish';
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
-        var route = model + '.publish';
-        return dispatch.get(getModelRoute(route, id), {}, callback);
+        return dispatch.get(getModelRoute(model, id), {}, callback);
     }
 
     dispatch.unpublish = function(model, id, callback) {
+        model += '.unpublish';
         if (!validAction(model, 'GET')) throw InvalidActionError(model);
-        var route = model + '.unpublish';
-        return dispatch.get(getModelRoute(route, id), {}, callback);
+        return dispatch.get(getModelRoute(model, id), {}, callback);
     }
 
     dispatch.bulkRemove = function(model, ids, callback) {
