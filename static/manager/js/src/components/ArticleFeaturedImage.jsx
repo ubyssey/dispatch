@@ -2,9 +2,6 @@ var React = require('react');
 var Textarea = require('react-textarea-autosize');
 
 var ArticleFeaturedImage = React.createClass({
-    getInitialState: function(){
-       return this.props.data ? this.props.data : {};
-    },
     selectImage: function(e){
         e.preventDefault();
         this.props.manager.openWithCallback(function(items){
@@ -12,43 +9,46 @@ var ArticleFeaturedImage = React.createClass({
         }.bind(this));
     },
     updateImage: function(image){
-        this.setState({
-            id: image.id,
-            url: image.url,
-        }, function(){
-            this.save();
-        })
-    },
-    save: function(){
-        return this.props.updateHandler(this.props.name, this.state);
+        var feat_image = this.props.featured_image;
+        feat_image.id = image.id;
+        feat_image.url = image.url;
+        return this.props.updateHandler(this.props.name, feat_image);
     },
     updateCaption: function(event){
-        this.setState({
-            caption: event.target.value,
-        }, function(){
-            this.save();
-        });
+        return this.update('caption', event.target.value);
+    },
+    updateCredit: function(event){
+        return this.update('credit', event.target.value);
+    },
+    update: function(field, data){
+        var feat_image = this.props.featured_image;
+        feat_image[field] = data;
+        return this.props.updateHandler(this.props.name, feat_image);
     },
     renderImage: function(){
         return (
             <div className="featured-image">
-                <img onClick={this.selectImage} src={this.state.url} />
+                <img onClick={this.selectImage} src={this.props.featured_image.url} />
                 <div className="field full">
                     <label>Caption</label>
-                    <Textarea rows={2} placeholder="Add a caption"  value={this.state.caption} onChange={this.updateCaption}></Textarea>
+                    <Textarea rows={2} placeholder="Add a caption" value={this.props.featured_image.caption} onChange={this.updateCaption}></Textarea>
+                </div>
+                <div className="field full">
+                    <label>Custom credit</label>
+                    <input type="text" value={this.props.featured_image.custom_credit ? this.props.featured_image.credit : null} onChange={this.updateCredit} />
                 </div>
             </div>
-            )
+            );
     },
     render: function(){
-        if(this.state.url){
+        if(this.props.featured_image){
             return this.renderImage();
         } else {
             return (
                 <div>
                     <button onClick={this.selectImage}>Set featured image</button>
                 </div>
-                )
+                );
         }
     }
 });
