@@ -264,6 +264,18 @@ class PageViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+    @detail_route(methods=['get'],)
+    def revision(self, request, parent_id=None):
+        revision_id = request.query_params.get('revision_id', None)
+        filter_kwargs = {
+            'parent_id': parent_id,
+            'revision_id': revision_id,
+        }
+        queryset = Page.objects.all()
+        instance = get_object_or_404(queryset, **filter_kwargs)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 class CommentViewSet(viewsets.ModelViewSet):
 
     serializer_class = CommentSerializer
