@@ -77,6 +77,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.CharField(source='image.get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='image.get_thumbnail_url', read_only=True)
     credit = serializers.CharField(source='get_credit')
+    custom_credit = serializers.BooleanField(source='is_custom_credit', read_only=True)
     width = serializers.IntegerField(source='image.width')
     height = serializers.IntegerField(source='image.height')
 
@@ -89,6 +90,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'thumb',
             'caption',
             'credit',
+            'custom_credit',
             'type',
             'width',
             'height'

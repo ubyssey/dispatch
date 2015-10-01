@@ -500,7 +500,8 @@ class Article(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
-        if 'credit' in data:
+        if 'credit' in data and data['credit'] is not None:
+            # Save custom credit if set and not blank
             attachment.custom_credit = data['credit']
         attachment.article = self
         attachment.save()
@@ -809,6 +810,9 @@ class ImageAttachment(Model):
             except:
                 return None
 
+    def is_custom_credit(self):
+        return self.custom_credit is not None
+
     class EmbedController:
         @staticmethod
         def json(data):
@@ -822,7 +826,6 @@ class ImageAttachment(Model):
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'custom_credit': data['custom_credit'] if 'custom_credit' in data else None,
                 'credit': attach.get_credit(),
                 'width': attach.image.width,
                 'height': attach.image.height,
