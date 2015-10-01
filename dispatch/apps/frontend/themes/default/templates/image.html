@@ -2,7 +2,7 @@
     <img class="article-attachment" data-id="{{ id }}" data-caption="{{ caption }}" data-credit="{{ credit }}" data-url="{{ src }}" src="{{ src }}" alt="{{ caption }}" />
     {% if caption %}
         <div class="caption">
-            {{ caption|safe }} <span class="credit">{{ credit }} / The Ubyssey</span>
+            {{ caption|safe }} <span class="credit">{% if credit %}{{ credit }} / The Ubyssey{% endif %}</span>
         </div>
     {% endif %}
 </div>
