@@ -14,7 +14,7 @@
     <div class="video-container" id="video-{{ id }}"></div>
     {% if caption or credit %}
     <div class="caption">
-        {{ caption }} <span class="credit">{{ credit }}</span>
+        {{ caption|safe }} <span class="credit">{{ credit }}</span>
     </div>
     {% endif %}
 </div>

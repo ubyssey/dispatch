@@ -8,15 +8,18 @@ v 0.1
 
 * Press the fork button and create your own version of Dispatch
 * Clone your new repository locally onto your computer with `git clone https://github.com/yourusername/dispatch.git`
+* (Optional, but recommended) Create a [virtualenv][1] for Dispatch's dependencies with `virtualenv dispatch-env`, and activate it with `. dispatch-env/bin/activate` before running any Python commands related to Dispatch
 * Once downloaded you can run `pip install -r requirements.txt` in the root of the `dispatch` directory to install the required Python dependencies
 
 Before going much further it would be a good time to check you have a recent version of Python and Django running. You can install Django with `pip install Django` if you don't have it.
 
-Running `Python 2.7.8` or higher, and `Django 1.7.2` or higher should be fine for this project.
+Running `Python 2.7.8` or higher (Dispatch is tested on Python 2), and `Django 1.7.2` or higher should be fine for this project.
+
+[1]: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
 ### MySQL
 
-If you don't have MySQL already installed it can be installed with homebrew by running `brew install mysql`.
+If you don't have MySQL already installed it can be installed on OS X with homebrew by running `brew install mysql`.
 
 Once installed: 
 
@@ -38,14 +41,27 @@ Now for the fun bit, getting Dispatch serving pages!
 
 #### Static files
 
-Although the Django development server is capabable of serving static files, we find it's faster to deliver them separately. 
+Although the Django development server is capable of serving static files, we find it's faster to deliver them separately.
 
 * Open the `dispatch` directory in another shell window and run `python manage.py collectstatic` to collect all of Dispatch's static files into one directory.
 * Run `python -m SimpleHTTPServer 8888` from the same directory to start a basic static file server.
+* You may run into problems with `Cross-Origin Resource Sharing` on localhost, since the port is different. In that case, download [this CORS-patched version][CORS gist] of the above with `curl https://gist.githubusercontent.com/blx/1f8e0c42f36b2ad093f1/raw/c3de2d58c36745fc76c9d90e42aa6bb5f36c219a/assetserver.py > assetserver.py` and run it with `python assetserver.py 8888` instead.
 
 *Note: this is one of many ways to configure static files for a Django project, and may not be the best configuration for your system. [More information on serving static files with Django.](https://docs.djangoproject.com/en/1.8/howto/static-files/#serving-static-files-during-development)*
 
 Now open `http://localhost:8000/` in your browser.
+
+[CORS gist]: https://gist.github.com/blx/1f8e0c42f36b2ad093f1
+
+#### Building static assets
+
+**CSS** is written in [Sass][] with [Compass][]. To compile the CSS, navigate to `dispatch/themes/ubyssey/static/css` and run `compass compile`. Or, run `compass watch` to update as you edit files.
+
+**Javascript/JSX** is managed with [Gulp][]. To compile, navigate to `dispatch/themes/ubyssey/static/js` and run `gulp article` (if you're using a virtualenv, make sure it's activated for this). To setup Gulp, first install NPM if necessary, then run `npm install` in that directory.
+
+[Sass]: http://sass-lang.com
+[Compass]: http://compass-style.org
+[Gulp]: http://gulpjs.com/
 
 ### Troubleshooting
 
