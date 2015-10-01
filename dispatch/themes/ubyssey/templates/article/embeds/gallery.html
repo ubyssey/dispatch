@@ -15,6 +15,6 @@
         {% for attachment in thumbs %}<li><div class="gallery-thumb" data-id="{{ attachment.id }}" style="background-image: url('{{ attachment.image.get_thumbnail_url }}');" /></div></li>{% endfor %}
     </ul>
     <div class="images">
-        {% for attachment in images %}<div class="gallery-image" data-id="{{ attachment.id }}" data-url="{{ attachment.image.get_absolute_url }}" data-caption="{{ attachment.caption }}"></div>{% endfor %}
+        {% for attachment in images %}<div class="gallery-image" data-id="{{ attachment.id }}" data-url="{{ attachment.image.get_absolute_url }}" data-caption="{{ attachment.caption|safe }}"></div>{% endfor %}
     </div>
 </div>

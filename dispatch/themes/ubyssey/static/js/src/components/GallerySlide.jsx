@@ -3,7 +3,7 @@ var GallerySlide = React.createClass({
         var slideStyle = { width: this.props.width };
         var imageStyle = { backgroundImage: "url('" + this.props.src + "')" };
 
-        var caption = (<p className="slide-caption">{this.props.caption}</p>);
+        var caption = (<p className="slide-caption" dangerouslySetInnerHTML={{__html: this.props.caption}}></p>);
         return (
             <li className="slide" style={slideStyle}>
                 <div className="inner">
