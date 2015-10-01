@@ -231,7 +231,7 @@ class PageViewSet(viewsets.ModelViewSet):
         if self.request.user.is_authenticated():
             queryset = Page.objects.filter(head=True)
         else:
-            queryset = Page.objects.filter(head=True, status=Article.PUBLISHED)
+            queryset = Page.objects.filter(head=True, status=Page.PUBLISHED)
 
         queryset = queryset.order_by('-published_at')
 
@@ -241,6 +241,28 @@ class PageViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(headline__icontains=q)
 
         return queryset
+        
+    @detail_route(methods=['get'],)
+    def publish(self, request, parent_id=None):
+        queryset = Page.objects.all()
+        instance = get_object_or_404(queryset, pk=parent_id)
+
+        instance.publish()
+
+        serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'],)
+    def unpublish(self, request, parent_id=None):
+        queryset = Page.objects.all()
+        instance = get_object_or_404(queryset, pk=parent_id)
+
+        instance.unpublish()
+
+        serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
 
