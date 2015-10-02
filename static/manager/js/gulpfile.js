@@ -16,9 +16,8 @@ var path = {
   SRC: './src/',
 };
 
-var file, dev;
-file = typeof argv.i === 'undefined' ? 'article' : argv.i;
-dev = typeof argv.d === 'undefined' ? false : true;
+var file = argv.i || 'article';
+var dev = !!argv.d || false;
 
 var reactTask = function(obj){
     return obj.transform({ global: true }, reactify)
