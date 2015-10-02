@@ -49,19 +49,14 @@ class ModelField(BaseField):
         }
 
     def data_as_json(self):
-        ids = [int(id) for id in self.value.split(',')]
-        articles = list(Article.objects.filter(parent__in=ids,head=True))
-        articles.sort(key=lambda article: ids.index(article.parent.id))
+        articles = self.context()
         return [
             {'id': getattr(a, self.KEY).id, self.DISPLAY: getattr(a, self.DISPLAY)}
-            for a in articles
+            for a in articles or []
         ]
 
     def context(self):
-        ids = [int(id) for id in self.value.split(',')]
-        articles = list(Article.objects.filter(parent__in=ids,head=True))
+        ids = map(int, self.value.split(','))
+        articles = list(Article.objects.filter(parent__in=ids, head=True))
         articles.sort(key=lambda article: ids.index(article.parent.id))
-        try:
-            return articles
-        except:
-            return None
+        return articles or None

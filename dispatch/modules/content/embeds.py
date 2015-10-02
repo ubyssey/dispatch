@@ -1,9 +1,9 @@
 from django.template import loader, Context
 
-class EmbedLibrary():
+class EmbedLibrary(object):
 
     def __init__(self):
-        self.library = dict()
+        self.library = {}
 
     def register(self, name, function):
         self.library[name] = function
@@ -24,80 +24,71 @@ class EmbedLibrary():
 
 embedlib = EmbedLibrary()
 
-class ListController:
+
+def tag(tag, content):
+    return "<{tag}>{content}</{tag}>".format(tag=tag, content=content)
+
+def maptag(tagname, contents):
+    """Returns the HTML produced from enclosing each item in
+    `contents` in a tag of type `tagname`"""
+    return ''.join(tag(tagname, item) for item in contents)
+
+
+class AbstractController(object):
 
     @staticmethod
     def json(data):
         return data
 
-    @staticmethod
-    def render(data):
-        html = "<ul>"
-        for item in data:
-            html += "<li>%s</li>" % item
-        html += "</ul>"
-        return html
+class AbstractTemplateRenderController(AbstractController):
 
-class HeaderController:
-
-    @staticmethod
-    def json(data):
-        return data
+    TEMPLATE = None
 
     @staticmethod
     def render(data):
-        return "<h1>%s</h1>" % data['content']
-
-class VideoController:
-
-    @staticmethod
-    def json(data):
-        return data
-
-    @staticmethod
-    def render(data):
-        template = loader.get_template("article/embeds/video.html")
+        template = loader.get_template(self.TEMPLATE)
         c = Context(data)
         return template.render(c)
 
-class AdvertisementController:
 
-    @staticmethod
-    def json(data):
-        return data
+class ListController(AbstractController):
 
     @staticmethod
     def render(data):
-        template = loader.get_template("article/embeds/advertisement.html")
-        c = Context(data)
-        return template.render(c)
+        return tag("ul", maptag("li", data))
 
-class PullQuoteController:
-
-    @staticmethod
-    def json(data):
-        return data
+class HeaderController(AbstractController):
 
     @staticmethod
     def render(data):
-        template = loader.get_template("article/embeds/quote.html")
-        c = Context(data)
-        return template.render(c)
+        return tag("h1", data['content'])
 
-class CodeController:
-    @staticmethod
-    def json(data):
-        return data
-        
+class CodeController(AbstractController):
+
     @staticmethod
     def render(data):
-        if data['mode'] == 'css':
-            return '<style type="text/%s">%s</style>' % (data['mode'], data['content'])
-        elif data['mode'] == 'javascript':
-            return '<script type="text/%s">%s</script>' % (data['mode'], data['content'])
-        return data['content']
+        tags = {
+            'css': 'style',
+            'javascript': 'script'
+        }
+        try:
+            return tag(tags[data['mode']], data['content'])
+        except KeyError:
+            return data['content']
 
-        
+class VideoController(AbstractTemplateRenderController):
+
+    TEMPLATE = "article/embeds/video.html"
+
+class AdvertisementController(AbstractTemplateRenderController):
+
+    TEMPLATE = "article/embeds/advertisement.html"
+
+class PullQuoteController(AbstractTemplateRenderController):
+
+    TEMPLATE = "article/embeds/quote.html"
+
+
 
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
