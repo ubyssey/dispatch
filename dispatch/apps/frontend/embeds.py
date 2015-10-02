@@ -28,6 +28,11 @@ embedlib = EmbedLibrary()
 def tag(tag, content):
     return "<{tag}>{content}</{tag}>".format(tag=tag, content=content)
 
+def maptag(tagname, contents):
+    """Returns the HTML produced from enclosing each item in
+    `contents` in a tag of type `tagname`"""
+    return ''.join(tag(tagname, item) for item in contents)
+
 
 class AbstractController(object):
 
@@ -50,7 +55,7 @@ class ListController(AbstractController):
 
     @staticmethod
     def render(data):
-        return tag("ul", ''.join(tag("li", item) for item in data))
+        return tag("ul", maptag("li", data))
 
 class HeaderController(AbstractController):
 
@@ -62,11 +67,14 @@ class CodeController(AbstractController):
 
     @staticmethod
     def render(data):
-        if data['mode'] == 'css':
-            return tag("style", data['content'])
-        elif data['mode'] == 'javascript':
-            return tag("script", data['content'])
-        return data['content']
+        tags = {
+            'css': 'style',
+            'javascript': 'script'
+        }
+        try:
+            return tag(tags[data['mode']], data['content'])
+        except KeyError:
+            return data['content']
 
 class VideoController(AbstractTemplateRenderController):
 
@@ -81,7 +89,6 @@ class PullQuoteController(AbstractTemplateRenderController):
     TEMPLATE = "article/embeds/quote.html"
 
 
-        
 
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
