@@ -34,8 +34,8 @@ var reactTask = function(obj){
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
     entries: [path.SRC + file + '.js'],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true
+    debug: dev,
+    cache: {}, packageCache: {}, fullPaths: false
   }));
 
   return reactTask(watcher.on('update', function () {
