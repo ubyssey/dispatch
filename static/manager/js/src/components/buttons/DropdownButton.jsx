@@ -7,35 +7,21 @@ var DropdownButton = React.createClass({
         }
     },
     componentDidMount: function(){
-      window.addEventListener("mousedown", this.pageClick, false);
+      window.addEventListener("click", this.pageClick, false);
     },
-    pageClick: function(e) {
-        if (this.mouseIsDownOnField){
-            if(this.state.active)
-                this.toggleActive(true);
-        } else {
-            this.toggleActive(false);
-        }
-    },
-    toggleActive: function(active){
+    pageClick: function() {
+        // Clicking outside button/ul closes it.
+        // Clicking inside gets handled by toggleActive, which then stops
+        // the click from bubbling up to here.
+
         this.setState({
-            active: (typeof active === 'undefined') ? !this.state.active : active,
+            active: false
         });
     },
-    mouseDownHandler: function () {
-        this.mouseIsDownOnField = true;
-    },
-    mouseUpHandler: function () {
-        this.mouseIsDownOnField = false;
-    },
-    toggleDropdown: function(){
-        var show;
-        if(this.state.showDropdown)
-            show = false;
-        else
-            show = true;
+    toggleActive: function(e){
+        e.stopPropagation();
         this.setState({
-            showDropdown: show,
+            active: !this.state.active
         });
     },
     selectItem: function(value){
@@ -49,7 +35,7 @@ var DropdownButton = React.createClass({
             return ( <li key={i} onClick={this.selectItem.bind(this, item.value)}>{item.label}</li> );
         }.bind(this));
         return (
-            <ul onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler} className="dropdown-panel items">
+            <ul className="dropdown-panel items">
                 {items}
             </ul>
             );
