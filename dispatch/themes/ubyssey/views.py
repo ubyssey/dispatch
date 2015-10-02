@@ -44,12 +44,15 @@ class UbysseyTheme(DefaultTheme):
 
         sections = Article.objects.get_sections(exclude=('blog',),frontpage=frontpage_ids)
 
-        articles = {
-            'primary': frontpage[0],
-            'secondary': frontpage[1],
-            'thumbs': frontpage[2:4],
-            'bullets': frontpage[4:6],
-         }
+        try:
+            articles = {
+                'primary': frontpage[0],
+                'secondary': frontpage[1],
+                'thumbs': frontpage[2:4],
+                'bullets': frontpage[4:6],
+             }
+        except IndexError:
+            raise Exception("Not enough articles to populate the frontpage!")
 
         component_set = Homepage()
 

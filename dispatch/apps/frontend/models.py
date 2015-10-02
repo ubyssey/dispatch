@@ -1,4 +1,4 @@
-from django.db.models import Model, IntegerField, CharField, TextField, FileField, ForeignKey, ManyToManyField, SlugField
+from django.db.models import Model, IntegerField, CharField, TextField, FileField, ManyToManyField, SlugField
 
 class ComponentSet(Model):
     slug = SlugField()
@@ -23,7 +23,7 @@ class FileResource(Model):
     name = CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return self.name if self.name else self.filename
+        return self.name or self.filename
 
 class Snippet(FileResource):
     source = FileField(upload_to='snippets')

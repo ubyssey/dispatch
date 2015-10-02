@@ -15,8 +15,10 @@ var derequire = require('gulp-derequire');
 var gulpif = require('gulp-if');
 var argv = require('minimist')(process.argv.slice(2));
 
-var dev;
-dev = typeof argv.d === 'undefined' ? false : true;
+var dev = typeof argv.d !== 'undefined';
+
+var collectstatic = 'python ../../../../../manage.py collectstatic -i node_modules --noinput';
+
 
 gulp.task('default', function () {
     return gulp.src('src/article.jsx')
@@ -24,40 +26,22 @@ gulp.task('default', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('search', function(){
-    return browserify('./src/search.jsx')
-        .transform({ global: true }, reactify)
-        .bundle()
-        .pipe(source('search.js'))
-        .pipe(derequire())
-        .pipe(gulpif(!dev, buffer()))
-        .pipe(gulpif(!dev, uglify()))
-        .pipe(gulp.dest('dist'))
-        .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
-});
+function _processor(path_jsx, path_src) {
+    return function() {
+        return browserify(path_jsx)
+            .transform({ global: true }, reactify)
+            .bundle()
+            .pipe(source(path_src))
+            .pipe(derequire())
+            .pipe(gulpif(!dev, buffer()))
+            .pipe(gulpif(!dev, uglify()))
+            .pipe(gulp.dest('dist'))
+            .pipe(shell(collectstatic));
+    };
+}
 
-gulp.task('article', function(){
-    return browserify('./src/article.jsx')
-        .transform({ global: true }, reactify)
-        .bundle()
-        .pipe(source('article.js'))
-        .pipe(derequire())
-        .pipe(gulpif(!dev, buffer()))
-        .pipe(gulpif(!dev, uglify()))
-        .pipe(gulp.dest('dist'))
-        .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
-});
+gulp.task('search', _processor('./src/search.jsx', 'search.js'));
+gulp.task('article', _processor('./src/article.jsx', 'article.js'));
+gulp.task('section', _processor('./src/section.js', 'section.js'));
 
-gulp.task('section', function(){
-    return browserify('./src/section.js')
-        .transform({ global: true }, reactify)
-        .bundle()
-        .pipe(source('section.js'))
-        .pipe(derequire())
-        .pipe(gulpif(!dev, buffer()))
-        .pipe(gulpif(!dev, uglify()))
-        .pipe(gulp.dest('dist'))
-        .pipe(shell('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
-});
-
-gulp.task('static', shell.task('python ../../../../../manage.py collectstatic -i node_modules --noinput'));
+gulp.task('static', shell.task(collectstatic));
