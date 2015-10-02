@@ -3,7 +3,7 @@ from django.template import loader, Context
 class EmbedLibrary(object):
 
     def __init__(self):
-        self.library = dict()
+        self.library = {}
 
     def register(self, name, function):
         self.library[name] = function
