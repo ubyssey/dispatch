@@ -20,7 +20,7 @@ class EmbedLibrary(object):
 
     def render(self, type, data):
         if type in self.library:
-            return self.library[type].render(data)
+            return self.library[type].render(self.library[type], data)
 
 embedlib = EmbedLibrary()
 
@@ -43,9 +43,9 @@ class AbstractController(object):
 class AbstractTemplateRenderController(AbstractController):
 
     TEMPLATE = None
-
+    
     @staticmethod
-    def render(data):
+    def render(self, data):
         template = loader.get_template(self.TEMPLATE)
         c = Context(data)
         return template.render(c)
@@ -54,19 +54,19 @@ class AbstractTemplateRenderController(AbstractController):
 class ListController(AbstractController):
 
     @staticmethod
-    def render(data):
+    def render(self, data):
         return tag("ul", maptag("li", data))
 
 class HeaderController(AbstractController):
 
     @staticmethod
-    def render(data):
+    def render(self, data):
         return tag("h1", data['content'])
 
 class CodeController(AbstractController):
 
     @staticmethod
-    def render(data):
+    def render(self, data):
         tags = {
             'css': 'style',
             'javascript': 'script'
