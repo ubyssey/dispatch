@@ -46,7 +46,6 @@ class AbstractTemplateRenderController(AbstractController):
     
     @staticmethod
     def render(self, data):
-        print data
         template = loader.get_template(self.TEMPLATE)
         c = Context(data)
         return template.render(c)
