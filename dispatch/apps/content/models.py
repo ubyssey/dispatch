@@ -468,12 +468,11 @@ class Article(Publishable):
         if 'caption' in data:
             attachment.caption = data['caption']
         if 'custom_credit' in data:
-            if data['custom_credit'].strip() != "":
-                # Save custom credit if set and not blank
-                attachment.custom_credit = data['custom_credit']
-            else:
+            if data['custom_credit'] is None or data['custom_credit'].strip() == "":
                 # Remove custom credit if blank
                 attachment.custom_credit = None
+            else:
+                attachment.custom_credit = data['custom_credit']
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
