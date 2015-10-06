@@ -23,8 +23,8 @@ var ArticleFeaturedImage = React.createClass({
     updateCaption: function(event){
         return this.update('caption', event.target.value);
     },
-    updateCredit: function(event){
-        return this.update('credit', event.target.value);
+    updateCustomCredit: function(event){
+        return this.update('custom_credit', event.target.value);
     },
     update: function(field, data){
         var feat_image = this.props.featured_image;
@@ -41,7 +41,7 @@ var ArticleFeaturedImage = React.createClass({
                 </div>
                 <div className="field full">
                     <label>Custom credit</label>
-                    <input type="text" value={this.props.featured_image.custom_credit ? this.props.featured_image.credit : null} onChange={this.updateCredit} />
+                    <input type="text" value={this.props.featured_image.custom_credit ? this.props.featured_image.custom_credit : null} onChange={this.updateCustomCredit} />
                 </div>
             </div>
             );
