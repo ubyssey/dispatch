@@ -467,9 +467,12 @@ class Article(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
-        if 'credit' in data and data['credit'] is not None:
-            # Save custom credit if set and not blank
-            attachment.custom_credit = data['credit']
+        if 'custom_credit' in data:
+            if data['custom_credit'] is None or data['custom_credit'].strip() == "":
+                # Remove custom credit if blank
+                attachment.custom_credit = None
+            else:
+                attachment.custom_credit = data['custom_credit']
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
@@ -771,7 +774,7 @@ class ImageAttachment(Model):
             except:
                 return None
 
-    def is_custom_credit(self):
+    def has_custom_credit(self):
         return self.custom_credit is not None
 
     class EmbedController:
