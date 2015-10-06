@@ -454,10 +454,10 @@ class Article(Publishable):
                 attachment.caption = node['data']['caption']
                 attachment.image = image
                 attachment.article = self
+                attachment.set_custom_credit(node['data'])
                 attachment.save()
                 node['data'] = {
                     'attachment_id': attachment.id,
-                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
                 }
 
         self.content = json.dumps(nodes)
@@ -467,12 +467,7 @@ class Article(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
-        if 'custom_credit' in data:
-            if data['custom_credit'] is None or data['custom_credit'].strip() == "":
-                # Remove custom credit if blank
-                attachment.custom_credit = None
-            else:
-                attachment.custom_credit = data['custom_credit']
+        attachment.set_custom_credit(data)
         attachment.article = self
         attachment.save()
         self.featured_image = attachment
@@ -593,12 +588,12 @@ class Page(Publishable):
                 else:
                     attachment = ImageAttachment()
                 attachment.caption = node['data']['caption']
+                attachment.set_custom_credit(node['data'])
                 attachment.image = image
                 attachment.page = self
                 attachment.save()
                 node['data'] = {
                     'attachment_id': attachment.id,
-                    'custom_credit': node['data']['custom_credit'] if 'custom_credit' in node['data'] else None
                 }
 
         self.content = json.dumps(nodes)
@@ -608,8 +603,7 @@ class Page(Publishable):
         attachment.image_id = data['id']
         if 'caption' in data:
             attachment.caption = data['caption']
-        if 'credit' in data:
-            attachment.custom_credit = data['credit']
+        attachment.set_custom_credit(data)
         attachment.page = self
         attachment.save()
         self.featured_image = attachment
@@ -776,6 +770,14 @@ class ImageAttachment(Model):
 
     def has_custom_credit(self):
         return self.custom_credit is not None
+
+    def set_custom_credit(self, data):
+        if 'custom_credit' in data and data['custom_credit'] is not None:
+            if data['custom_credit'].strip() == "":
+                # Remove custom credit if blank
+                self.custom_credit = None
+            else:
+                self.custom_credit = data['custom_credit']
 
     class EmbedController:
         @staticmethod
