@@ -366,7 +366,7 @@ class ArticleManager(PublishableManager):
         sections = Section.objects.all()
 
         for section in sections:
-            articles = self.exclude(id__in=frontpage).filter(section=section,is_published=True)[:5]
+            articles = self.exclude(id__in=frontpage).filter(section=section,is_published=True).order_by('-published_at')[:5]
             if len(articles) > 0:
                 results[section.slug] = {
                     'first': articles[0],
