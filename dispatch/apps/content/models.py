@@ -792,7 +792,7 @@ class ImageAttachment(Model):
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'credit': attach.get_credit(),
+                'custom_credit': attach.custom_credit,
                 'width': attach.image.width,
                 'height': attach.image.height,
             }
@@ -806,7 +806,8 @@ class ImageAttachment(Model):
                 'id': attach.id,
                 'src': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'credit': data['custom_credit'] if 'custom_credit' in data and data['custom_credit'] is not None else attach.get_credit()
+                'credit': attach.get_credit(),
+                'has_custom_credit': attach.has_custom_credit()
             })
             return template.render(c)
 
