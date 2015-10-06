@@ -14,7 +14,7 @@
         <div class="inner">
         {% for article in articles %}
             <h4 class="headline">{{ article.headline|safe }}</h4>
-            <p class="snippet">{{ article.snippet }}</p>
+            <p class="snippet">{{ article.snippet|safe }}</p>
         {% endfor %}
         </div>
     </div>

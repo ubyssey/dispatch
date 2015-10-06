@@ -32,13 +32,10 @@ class BaseTemplate:
         return output
 
     def fields_as_json(self):
-        data = []
-        for field, label, field_class in self.fields:
-            field_json = field_class.as_json()
-            field_json['name'] = field
-            field_json['label'] = label
-            data.append(field_json)
-        return data
+        return [dict(field_class.as_json(),
+                     name=field, label=label)
+                for field, label, field_class in self.fields]
+
 
 class Default(BaseTemplate):
 
