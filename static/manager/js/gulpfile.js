@@ -16,9 +16,8 @@ var path = {
   SRC: './src/',
 };
 
-var file, dev;
-file = typeof argv.i === 'undefined' ? 'article' : argv.i;
-dev = typeof argv.d === 'undefined' ? false : true;
+var file = argv.i || 'article';
+var dev = !!argv.d || false;
 
 var reactTask = function(obj){
     return obj.transform({ global: true }, reactify)
@@ -34,8 +33,8 @@ var reactTask = function(obj){
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
     entries: [path.SRC + file + '.js'],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true
+    debug: dev,
+    cache: {}, packageCache: {}, fullPaths: false
   }));
 
   return reactTask(watcher.on('update', function () {

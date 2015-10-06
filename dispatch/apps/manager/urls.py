@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
 from . import views
-from django.contrib.admin.views.decorators import staff_member_required
 
 urlpatterns = patterns('',
     url(r'^$', views.home),
