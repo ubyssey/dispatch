@@ -1,9 +1,6 @@
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
-
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Author, Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
