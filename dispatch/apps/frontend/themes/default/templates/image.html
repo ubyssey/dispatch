@@ -1,8 +1,8 @@
 <div class="image-attachment attachment">
     <img class="article-attachment" data-id="{{ id }}" data-caption="{{ caption }}" data-credit="{{ credit }}" data-url="{{ src }}" src="{{ src }}" alt="{{ caption }}" />
-    {% if caption %}
+    {% if caption or credit %}
         <div class="caption">
-            {{ caption|safe }} <span class="credit">{% if credit %}{{ credit }} / The Ubyssey{% endif %}</span>
+            {{ caption|safe }} <span class="credit">{% if credit %}{{ credit }}{% if not has_custom_credit %} / The Ubyssey{% endif %}{% endif %}</span>
         </div>
     {% endif %}
 </div>
