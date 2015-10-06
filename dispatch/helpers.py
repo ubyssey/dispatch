@@ -1,7 +1,5 @@
 import importlib
-from apps.core.models import Setting
 from django.conf import settings
-import os
 
 class ThemeHelper():
 

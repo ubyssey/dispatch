@@ -9,7 +9,13 @@ var ArticleFeaturedImage = React.createClass({
         }.bind(this));
     },
     updateImage: function(image){
-        var feat_image = this.props.featured_image;
+        var feat_image;
+        if(this.props.featured_image) {
+            feat_image = this.props.featured_image;
+        }
+        else {
+            feat_image = {};
+        }
         feat_image.id = image.id;
         feat_image.url = image.url;
         return this.props.updateHandler(this.props.name, feat_image);

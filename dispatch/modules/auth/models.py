@@ -11,7 +11,7 @@ class UserManager(BaseUserManager):
         if not self.is_valid_password(password):
             raise ValueError('Password is invalid')
 
-        user = User(email=email,is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
+        user = User(email=email, is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
 
         person = Person.objects.create()
@@ -38,8 +38,8 @@ class User(AbstractBaseUser):
     person = OneToOneField('Person', blank=True, null=True, related_name='person')
     groups = ManyToManyField(Group, verbose_name=('groups'),
         blank=True, help_text=('The groups this user belongs to. A user will '
-                                'get all permissions granted to each of '
-                                'their groups.'),
+                               'get all permissions granted to each of '
+                               'their groups.'),
         related_name="user_set", related_query_name="user")
     user_permissions = ManyToManyField(Permission,
         verbose_name=('user permissions'), blank=True,
