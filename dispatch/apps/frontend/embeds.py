@@ -26,12 +26,12 @@ embedlib = EmbedLibrary()
 
 
 def tag(tag, content):
-    return "<{tag}>{content}</{tag}>".format(tag=tag, content=content)
+    return u"<{tag}>{content}</{tag}>".format(tag=tag, content=content)
 
 def maptag(tagname, contents):
     """Returns the HTML produced from enclosing each item in
     `contents` in a tag of type `tagname`"""
-    return ''.join(tag(tagname, item) for item in contents)
+    return u"".join(tag(tagname, item) for item in contents)
 
 
 class AbstractController(object):
