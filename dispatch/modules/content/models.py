@@ -416,7 +416,7 @@ class Article(Publishable):
         return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
     def get_related(self):
-        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True)[:5]
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
 
     def get_reading_list(self, ref=None, dur=None):
         if ref is not None:
