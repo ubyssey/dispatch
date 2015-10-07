@@ -35,9 +35,11 @@
                 {% if article.featured_image %}
                 <div class="featured-image">
                     <img class="article-attachment" data-id="{{ article.featured_image.id }}" data-caption="{{ article.featured_image.caption }}" data-credit="{{ article.featured_image.get_credit }}" data-url="{{ article.featured_image.image.get_absolute_url }}" src="{{ article.featured_image.image.get_absolute_url }}"/>
+                    {% if article.featured_image.caption or article.featured_image.get_credit %}
                     <div class="caption">
-                        {{ article.featured_image.caption }} {% if article.featured_image.get_credit %}<span class="credit">{{ article.featured_image.get_credit }}{% if not article.featured_image.has_custom_credit %} / The Ubyssey{% endif %}</span>{% endif %}
+                        {% if article.featured_image.caption %}{{ article.featured_image.caption }}{% endif %} {% if article.featured_image.get_credit %}<span class="credit">{{ article.featured_image.get_credit }}{% if not article.featured_image.has_custom_credit %} / The Ubyssey{% endif %}</span>{% endif %}
                     </div>
+                    {% endif %}
                 </div>
                 <div class="sidebar offset">
                 {% else %}
