@@ -1,0 +1,13 @@
+// Breakpoints
+$bp-larger-than-mobile    : "min-width: 401px" !default;
+$bp-smaller-than-mobile   : "max-width: 400px" !default;
+
+$bp-larger-than-phablet   : "min-width: 550px" !default;
+$bp-larger-than-tablet    : "min-width: 960px" !default;
+$bp-larger-than-desktop   : "min-width: 1000px" !default;
+$bp-larger-than-desktophd : "min-width: 1200px" !default;
+
+$bp-phablet               : "550px";
+$bp-tablet                : "960px";
+
+$bp-960px                 : "min-width: 960px" !default;

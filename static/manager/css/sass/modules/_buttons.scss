@@ -1,0 +1,168 @@
+// Button colors
+
+$green-bg: #60b044;
+$green-border: #5ca941;
+$green-grad: (#8add6d, #60b044);
+$green-hover-bg: #569e3d;
+$green-hover-border: #4a993e;
+$green-hover-grad: (#79d858, #569e3d);
+
+$grey-bg: #eee;
+$grey-border: #d5d5d5;
+$grey-grad: (#fcfcfc, #eee);
+$grey-hover-bg: #ddd;
+$grey-hover-border: #ccc;
+$grey-hover-grad: (#eee, #ddd);
+
+$blue-grad: (#6D77DD, #4445B0);
+
+button.dis-button, a.dis-button, div.dis-button > button {
+  display: inline-block;
+  border-radius: 3px;
+  color: #666;
+  font-family: $ui-font-helvetica;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 30px;
+  padding: 0 12px;
+  border-width: 1px;
+  border-style: solid;
+  text-decoration: none;
+
+  background-color: $grey-bg;
+  border-color: $grey-border;
+  @include background-image(linear-gradient(nth($grey-grad, 1), nth($grey-grad, 2)));
+
+  &.small {
+    line-height: 30px;
+  }
+
+  &.green, &.red {
+    color: #fff;
+  }
+
+  &.green {
+    background-color: $green-bg;
+    border-color: $green-border;
+    @include background-image(linear-gradient(nth($green-grad, 1), nth($green-grad, 2)));
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    background-color: $grey-hover-bg;
+    border-color: $grey-hover-border;
+    @include background-image(linear-gradient(nth($grey-hover-grad, 1), nth($grey-hover-grad, 2)));
+
+    &.green {
+      @include background-image(linear-gradient(nth($green-hover-grad, 1), nth($green-hover-grad, 2)));
+      background-color: $green-hover-bg;
+      border-color: $green-hover-border;
+    }
+  }
+  &:active, &:focus {
+    outline: none;
+  }
+
+  &:disabled, &:disabled:hover {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+div.dropdown-button {
+  button {
+    float: none;
+    position: relative;
+    i {
+      margin-left: 5px;
+    }
+  }
+  .dropdown-panel {
+    left: 15px;
+    right: 15px;
+
+    position: absolute;
+    line-height: normal;
+    padding: 5px 12px;
+    z-index: 600;
+    background: #fff;
+    border: 1px solid #cacaca;
+    border-radius: 2px;
+    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
+  }
+  ul.items {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    max-height: 300px;
+    overflow: scroll;
+    li {
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid #cacaca;
+      font-size: 13px;
+      height: 34px;
+      line-height: 34px;
+      padding: 0 8px;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+        background: rgb(242, 242, 242);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media($bp-larger-than-mobile){
+  div.dropdown-button {
+    position: relative;
+    &.left .items {
+      right: 0;
+    }
+    .dropdown-panel {
+      left: inherit;
+      right: inherit;
+      width: 250px;
+    }
+  }
+}
+
+div.combo-buttons {
+  display: inline-block;
+  button.dis-button, a.dis-button {
+    display: inline-block;
+    border-radius: 0;
+    border-width: 1px 0 1px 1px;
+    &:first-child {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    &:last-child {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-width: 1px;
+    }
+  }
+  div.dropdown-button {
+    display: inline-block;
+    button {
+      display: inline-block;
+      border-radius: 0;
+      border-width: 1px 0 1px 1px;
+    }
+    &:first-child button {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    &:last-child button {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      border-width: 1px;
+    }
+
+  }
+
+}
