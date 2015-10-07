@@ -1,0 +1,364 @@
+@import "compass/css3/box-shadow";
+@import "utilities/fonts";
+
+
+.article-form {
+  display: none;
+}
+
+$text-padding: 60px;
+
+textarea.headline {
+  border-radius: 3px;
+  padding: 0px 10px;
+  font-size: 28px;
+  color: #000000;
+  line-height: 40px;
+  height: 40px;
+  font-weight: 600;
+  width: 100%;
+  resize: none;
+  border-color: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  &:focus {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+div.field-row {
+  &.headline {
+    margin-bottom: 15px;
+  }
+}
+
+ul.author-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0;
+  li {
+    padding: 8px 0;
+    span {
+      cursor: move;
+      background: white;
+      padding: 6px 9px;
+      border: solid 1px grey;
+      border-radius: 2px;
+      font-size: 12px;
+      a {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+.ui-state-highlight { height: 1em; line-height: 1em; }
+
+div.manage-authors {
+  display: none;
+}
+
+div.panel.options {
+  border-left: 1px solid rgb(228, 228, 228);
+  position: absolute;
+  width: 600px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+
+  &.expanded {
+    right: -600px;
+  }
+
+  @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
+  @include transition(right 0.3s ease-in-out);
+
+  div.fieldset {
+    div.col:first-child {
+      margin-right: 15px;
+    }
+  }
+}
+
+
+
+div.featured-image {
+  img {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+div.react-tabs > ul, nav.edit-tabs ul {
+  border-bottom: 1px solid #D9D9D9;
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+  li {
+    display: inline-block;
+    padding: 0 15px;
+    font-family: $ui-font-helvetica;
+    font-size: 13px;
+    color: #A2A2A2;
+
+    height: 46px;
+    line-height: 46px;
+
+    min-width: 60px;
+    text-align: center;
+
+    border-width: 0 1px;
+    border-style: solid;
+    border-color: transparent;
+    text-decoration: none;
+    &:visited {
+      color: #A2A2A2;
+    }
+    &:hover {
+      color: rgb(110, 110, 110);
+      cursor: pointer;
+    }
+    &:active, &:focus {
+      outline: none;
+    }
+
+    &.ui-state-active, &[selected='selected'] {
+      background: rgb(250, 250, 250);
+      border-color: rgb(217, 217, 217);
+      color: rgb(110, 110, 110);
+    }
+
+    &:first-child {
+      border-left: none;
+    }
+
+    * {
+      pointer-events: none;
+    }
+
+    i.fa {
+      margin-right: 3px;
+    }
+    i, span {
+      vertical-align: middle;
+    }
+  }
+}
+
+div.fieldset.tab, div[role="tabpanel"] {
+  position: absolute;
+  top: 47px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: scroll;
+  padding: 10px 20px;
+  &.list {
+    padding: 0;
+    .row {
+      padding: 20px 35px;
+      border-bottom: 1px solid #C6C6C6;
+      &.active {
+        background: rgba(74, 144, 226, 0.05);
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+
+
+div.field-row.content {
+  textarea.content {
+    width: 100%;
+    display: none;
+  }
+}
+
+button.embed-button {
+  border: 1px solid rgb(200, 200, 200);
+  background: none;
+  border-radius: 25px;
+  color: rgb(137, 137, 137);
+  font-size: 10px;
+  padding: 0 9px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 5px;
+  &:hover {
+    cursor: pointer;
+    border-color: grey;
+    color: grey;
+  }
+  &:active {
+    outline: none;
+  }
+}
+
+input.add-box {
+  display: none;
+}
+
+ul.tags {
+  list-style-type: none;
+  padding: 0;
+  li {
+    display: inline-block;
+    border: 1px solid black;
+    background: white;
+    padding: 4px;
+    margin-right: 5px;
+  }
+}
+
+ul.tagList {
+  list-style-type: none;
+  padding: 0;
+  li {
+    display: inline-block;
+    border: 1px solid black;
+    background: white;
+    padding: 4px;
+    margin-right: 5px;
+  }
+}
+.image-manager img {
+  height: auto;
+}
+
+.images-list {
+  list-style-type: none;
+  padding: 0;
+  li {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 0 5px 5px 0;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+}
+
+img.featured-image {
+  width: 100%;
+  max-width: 300px;
+}
+
+div.tab {
+  display: none;
+  position: absolute;
+  top: 52px;
+  width: 100%;
+  bottom: 0;
+  overflow-y: auto;
+  &.active {
+    display: block;
+  }
+}
+
+@media($bp-smaller-than-mobile){
+  div.top-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500;
+
+    background: #FAFAFA;
+    border-top: 1px solid rgb(228, 228, 228);
+    height: $toolbar-width;
+    line-height: 40px;
+    box-sizing: border-box;
+    padding: 0 15px;
+  }
+}
+
+
+
+div.header-buttons {
+  line-height: 50px;
+  vertical-align: middle;
+  > a, > button, > div.dis-button, > div.combo-buttons {
+    display: inline-block;
+    margin: 0 5px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .load-status {
+    display: none;
+  }
+  .load-status .loader {
+    border-left: 5px solid #FAFAFA;
+    left: inherit;
+    display: none;
+  }
+  @media($bp-larger-than-mobile){
+    float: right;
+
+    .load-status {
+      display: inline-block;
+    }
+    .load-status.saving .loader {
+      display: block;
+    }
+  }
+}
+
+input.full {
+  width: 100%;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;
+}
+
+input.image-search {
+  width: 250px;
+}
+
+.image-meta {
+  .fa-check{
+    display: none;
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+    text-align: center;
+    color: rgba(128, 128, 128, 0.5);
+  }
+}
+
+div.attachment-thumb {
+  width: 110px;
+  height: 110px;
+  background-size: auto 100%;
+  background-position: center;
+}
+
+#attachments-form {
+  input {
+    min-width: 300px;
+  }
+}
+
+.code-editor-wrapper {
+  position: relative;
+  .code-editor {
+    border: 1px solid #e4e4e4;
+    width: 100%;
+    min-height: 96px;
+  }
+}
+
+.load-status {
+  display: inline-block;
+  padding: 0 5px;
+}
+.load-success {
+  display: none;
+  color: rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,263 @@
+// Styles for form elements used in the admin panel
+
+/* Contents
+ *
+ * 1.0 -- Fields & Inputs
+ *     1.2 -- Slug Field
+ *
+ */
+
+input, select {
+  font-size: 14px;
+}
+
+form {
+  h2 {
+    margin: 25px 0;
+    font-size: 18px;
+  }
+}
+
+// 1.0 -- Fields & Inputs
+
+div.field {
+  // Wrapper DIV for field + label combos.
+  padding: 8px 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 300px;
+  &.full {
+    // Full-width field
+    max-width: none;
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: $ui-font-helvetica;
+  }
+  input, textarea {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  input {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+input, textarea {
+  // Base styles for inputs and textareas.
+  box-sizing: border-box;
+  font-family: $ui-font-helvetica;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+  padding: 8px 10px;
+  font-size: 14px;
+
+  &.plain {
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+  }
+
+  &:focus {
+    &.plain {
+      box-shadow: none;
+    }
+    border-color: #51a7e8;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(81,167,232,0.5);
+  }
+}
+
+// Error style
+input.error, textarea.error, div.field-container.error {
+  border-color: #E85151 !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(232, 81, 81, 0.5);
+}
+
+.header input {
+  line-height: 30px;
+  vertical-align: middle;
+  padding: 0 10px;
+}
+
+textarea {
+  line-height: 1.5em;
+  display: block;
+}
+
+select {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+// 1.2 -- Slug Field
+
+div.slug-field {
+  display: table;
+  margin-bottom: 5px;
+  width: 100%;
+  div.url {
+    display: table-cell;
+    width: 1px;
+    white-space: nowrap;
+    font-size: 13px;
+    padding: 9px 10px;
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(204, 204, 204);
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+  }
+  input {
+    display: table-cell;
+    margin: 0;
+    border-radius: 0 2px 2px 0;
+  }
+}
+
+form.search-bar {
+  display: inline-block;
+  input {
+    height: 32px;
+    line-height: 32px;
+    font-size: 13px;
+    min-width: 250px;
+    margin: 0 10px;
+  }
+}
+
+
+div.model-dropdown {
+  div.field-container, div.search-field {
+    border: 1px solid rgb(202, 202, 202);
+    border-radius: 2px;
+    position: relative;
+  }
+  &.active div.field-container, {
+    border-color: rgb(218, 218, 218);
+  }
+  div.search-container {
+    position: relative;
+    width: 100%;
+    padding-right: 2px;
+    z-index: 600;
+    top: -34px;
+  }
+  div.model-label {
+    background: #FFFFFF;
+    font-size: 13px;
+    border-radius: 2px;
+    position: relative;
+    cursor: default;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 8px;
+    overflow: hidden;
+    div.left {
+      margin-right: 25px;
+    }
+    &:hover {
+      cursor: pointer;
+      div.icon.drop {
+        opacity: 0.5;
+      }
+    }
+    div.icon {
+      right: 8px;
+      bottom: 0;
+      top: 0;
+      text-align: center;
+      width: 20px;
+      position: absolute;
+      &.delete:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+  &.many {
+    div.items {
+      border-radius: 2px 2px 0 0;
+      border-bottom: none;
+      div.model-label {
+        border: 1px solid rgb(202, 202, 202);
+        border-bottom: none;
+        border-radius: 0;
+        background: #FDFDFD;
+        &:last-child {
+          border-bottom: 1px solid rgb(202,202,202);
+        }
+      }
+    }
+    div.field-container, div.search-field {
+      border-radius: 0 0 2px 2px;
+    }
+    div.field-container {
+      margin-top: 5px;
+      div.model-label .left {
+        color: rgb(144, 144, 144);
+      }
+    }
+  }
+
+  div.config{
+    padding: 0 8px;
+    a {
+      font-size: 12px;
+    }
+  }
+  div.search-field {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 100%;
+    background: #fff;
+    box-sizing: border-box;
+    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      line-height: 18px;
+      padding: 8px;
+      font-size: 13px;
+      background: white;
+      color: gray;
+      margin: 0;
+      &:focus {
+        color: black;
+      }
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      li {
+        font-size: 13px;
+        line-height: 18px;
+        padding: 8px;
+        border-bottom: 1px solid rgb(218, 218, 218);
+        &:last-child {
+          border: none;
+        }
+        &:first-child {
+          border-top: 1px solid rgb(218, 218, 218);
+        }
+        &:hover {
+          background: rgb(242, 242, 242);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
