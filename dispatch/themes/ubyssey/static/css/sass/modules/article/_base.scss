@@ -119,11 +119,11 @@ div.caption {
 div.article-content {
 
   > p {
-    font-family: $font-body;
-    font-size: 16px;
-    color: #333333;
-    line-height: 26px;
-    margin-top: 20px;
+    font-family: $font-body !important;
+    font-size: 16px !important;
+    color: #333333 !important;
+    line-height: 26px !important;
+    margin-top: 20px !important;
 
     &:first-child {
         margin-top: 5px;
