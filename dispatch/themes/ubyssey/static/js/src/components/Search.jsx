@@ -4,6 +4,7 @@ var Search = React.createClass({
     getInitialState: function(){
         return {
             results: [],
+            cache: {},  // entries are {q: results}
             q: "",
         }
     },
@@ -14,10 +15,19 @@ var Search = React.createClass({
         this.setState({ q: event.target.value }, this.search);
     },
     search: function(){
-        if(this.state.q.length > 0){
-            dispatch.search('article', {q: this.state.q}, function(data){
-                this.setState({ results: data.results });
-            }.bind(this));
+        var q = this.state.q;
+        if (q.length > 0){
+            if (typeof this.state.cache[q] !== 'undefined'){
+                this.setState({ results: this.state.cache[q] });
+            } else {
+                dispatch.search('article', {q: q}, function(data){
+                    this.setState(function(prevState, props){
+                        prevState.results = data.results;
+                        prevState.cache[q] = data.results;
+                        return prevState;
+                    });
+                }.bind(this));
+            }
         } else {
             this.setState({ results: [] });
         }
