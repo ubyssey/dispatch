@@ -15,7 +15,7 @@ var ArticleHeader = React.createClass({
                         <span>{this.props.name}</span>
                     </div>
                     |
-                    <h1 className="nav-headline" dangerouslySetInnerHTML={formatHeadline(this.props.headline)}></h1>
+                    <h1 className="nav-headline" dangerouslySetInnerHTML={formatHeadline(this.props.headline)|safe}></h1>
                 </div>
             </header>
         );

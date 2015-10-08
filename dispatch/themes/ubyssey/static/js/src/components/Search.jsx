@@ -26,7 +26,7 @@ var Search = React.createClass({
 
         var results = this.state.results.map(function(item, i){
             return (
-                <li><a href={item.url} >{item.headline}</a></li>
+                <li><a href={item.url} >{item.headline|safe}</a></li>
             );
         });
 
