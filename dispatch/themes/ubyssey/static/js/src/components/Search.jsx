@@ -25,6 +25,12 @@ var Search = React.createClass({
     search: function(){
         var q = this.state.q;
         if (q.length > 0){
+            if (q.length > 1 && this.state.results.length == 0) {
+                // We've already typed one char and got no results, so
+                // adding more chars to query (making it more specific) cannot help.
+                return;
+            }
+
             if (this.state.cache.has(q)) {
                 this.setState({ results: this.state.cache.get(q) });
             } else {
