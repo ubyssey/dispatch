@@ -1,10 +1,18 @@
 var key = require('keymaster');
+var LRU = require('lru-cache');
 
 var Search = React.createClass({
+    getDefaultProps: function(){
+        return {
+            cacheOptions: {
+                max: 150,
+            },
+        }
+    },
     getInitialState: function(){
         return {
             results: [],
-            cache: {},  // entries are {q: results}
+            cache: LRU(this.props.cacheOptions),  // entries are {q: results}
             q: "",
         }
     },
@@ -17,13 +25,13 @@ var Search = React.createClass({
     search: function(){
         var q = this.state.q;
         if (q.length > 0){
-            if (typeof this.state.cache[q] !== 'undefined'){
-                this.setState({ results: this.state.cache[q] });
+            if (this.state.cache.has(q)) {
+                this.setState({ results: this.state.cache.get(q) });
             } else {
                 dispatch.search('article', {q: q}, function(data){
                     this.setState(function(prevState, props){
                         prevState.results = data.results;
-                        prevState.cache[q] = data.results;
+                        prevState.cache.set(q, data.results);
                         return prevState;
                     });
                 }.bind(this));
