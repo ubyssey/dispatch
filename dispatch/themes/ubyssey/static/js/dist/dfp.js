@@ -7,20 +7,16 @@ var sizes = {
 var adslots = [];
 
 function initAds(){
-    googletag.cmd.push(function() {
+    // Infinite scroll requires SRA
+    googletag.pubads().enableSingleRequest();
 
-        // Infinite scroll requires SRA
-        googletag.pubads().enableSingleRequest();
+    // Disable initial load, we will use refresh() to fetch ads.
+    // Calling this function means that display() calls just
+    // register the slot as ready, but do not fetch ads for it.
+    googletag.pubads().disableInitialLoad();
 
-        // Disable initial load, we will use refresh() to fetch ads.
-        // Calling this function means that display() calls just
-        // register the slot as ready, but do not fetch ads for it.
-        googletag.pubads().disableInitialLoad();
-
-        // Enable services
-        googletag.enableServices();
-    });
-
+    // Enable services
+    googletag.enableServices();
 };
 
 function collectAds(element){
