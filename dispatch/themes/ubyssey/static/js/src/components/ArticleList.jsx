@@ -119,6 +119,8 @@ var ArticleList = React.createClass({
         // Google analytics pageview
         ga('set', 'dimension1', "Peter Siemens");
         ga('send', 'pageview');
+        // refresh ads 
+        googletag.pubads().refresh();
 
         this.setState({ active: this.state.active.next }, this.updateURL);
     },
