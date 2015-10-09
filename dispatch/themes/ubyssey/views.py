@@ -38,7 +38,7 @@ class UbysseyTheme(DefaultTheme):
 
     def home(self, request):
 
-        frontpage = Article.objects.get_frontpage(sections=('news', 'culture', 'opinion', 'sports', 'features'))
+        frontpage = Article.objects.get_frontpage(sections=('news', 'culture', 'opinion', 'sports', 'features', 'science'))
 
         frontpage_ids = [int(a.id) for a in frontpage[:2]]
 
