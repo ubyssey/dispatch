@@ -32,11 +32,9 @@ function collectAds(element){
 }
 
 function refreshAds(){
-    googletag.cmd.push(function(){
-        $.each(adslots, function(i, slot){
-            googletag.display(slot[0]);
-            googletag.pubads().refresh([slot[1]]);
-        });
+    $.each(adslots, function(i, slot){
+        googletag.display(slot[0]);
+        googletag.pubads().refresh([slot[1]]);
     });
 };
 
