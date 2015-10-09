@@ -26,6 +26,23 @@ SECRET_KEY = '&t7b#38ncrab5lmpe#pe#41coa-8ctwuy@tm0!x8*n_r38x_m*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        }
+    },
+}
+
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.17']
