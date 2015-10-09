@@ -9,9 +9,13 @@ var Article = React.createClass({
     componentDidMount: function(){
         // Setup galleries after DOM is loaded
         this.setState({ galleries: this.setupGalleries() });
-        if (typeof refreshAdvertisements !== 'undefined') {
+
+        if (this.props.html && typeof collectAds !== 'undefined') {
+            // Only collect ads for AJAX-loaded stories
             // Adblock might have prevented this from being defined (in dfp.js)
-            refreshAdvertisements();
+            var element = this.refs.article.getDOMNode();
+            googletag.cmd.push(function() { collectAds(element); });
+            googletag.cmd.push(function() { refreshAds(); });
         }
     },
     setupGalleries: function(){
@@ -70,7 +74,7 @@ var Article = React.createClass({
     },
     renderHTML: function(){
         var html = {'__html': this.props.html};
-        return (<div className="article-html" dangerouslySetInnerHTML={html}></div>);
+        return (<div ref="article"  className="article-html" dangerouslySetInnerHTML={html}></div>);
     },
     render: function(){
         var html = {'__html': this.props.html};

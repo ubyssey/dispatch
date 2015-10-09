@@ -4,36 +4,42 @@ var sizes = {
     'mobile-leaderboard': [300, 50]
 };
 
-function loadAdvertisements(){
-    var dfpslots=$(document).find(".adslot").filter(":visible"),
-    i=0,
-    slot = new Array();
+var adslots = [];
 
+function initAds(){
+    // Infinite scroll requires SRA
+    googletag.pubads().enableSingleRequest();
 
+    // Disable initial load, we will use refresh() to fetch ads.
+    // Calling this function means that display() calls just
+    // register the slot as ready, but do not fetch ads for it.
+    googletag.pubads().disableInitialLoad();
 
-    if (dfpslots.length) {
-        googletag.cmd.push(function() {
-            $(dfpslots).each(function(){
-                console.log($(this).attr('id'));
-                slot[i] = googletag.defineSlot('/61222807/'+$(this).data('dfp'), sizes[$(this).data('size')], $(this).attr('id')).addService(googletag.pubads());
-                i++
-            });
-
-            //googletag.pubads().enableSingleRequest(); // Breaks channel reporting
-            googletag.enableServices();
-
-            $(dfpslots).each(function(){
-                console.log($(this).attr('id'));
-                googletag.display($(this).attr('id'));
-            });
-        });
-    }
+    // Enable services
+    googletag.enableServices();
 };
 
-function refreshAdvertisements(){
-    loadAdvertisements();
+function collectAds(element){
+    var dfpslots = $(element).find(".adslot").filter(":visible");
+    $(dfpslots).each(function(){
+        var slotName = $(this).attr('id');
+        adslots.push([
+            slotName,
+            googletag.defineSlot('/61222807/'+$(this).data('dfp'), sizes[$(this).data('size')], slotName)
+                .addService(googletag.pubads())
+            ]);
+    });
+}
+
+function refreshAds(){
+    $.each(adslots, function(i, slot){
+        googletag.display(slot[0]);
+        googletag.pubads().refresh([slot[1]]);
+    });
 };
 
 $(document).ready(function(){
-    loadAdvertisements();
+    googletag.cmd.push(function() { initAds() });
+    googletag.cmd.push(function() { collectAds(document); });
+    googletag.cmd.push(function() { refreshAds() });
 });

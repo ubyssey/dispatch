@@ -45,8 +45,8 @@ class AbstractTemplateRenderController(AbstractController):
     TEMPLATE = None
     
     @classmethod
-    def render(cls, data):
-        template = loader.get_template(cls.TEMPLATE)
+    def render(self, data):
+        template = loader.get_template(self.TEMPLATE)
         c = Context(data)
         return template.render(c)
 
@@ -54,19 +54,19 @@ class AbstractTemplateRenderController(AbstractController):
 class ListController(AbstractController):
 
     @classmethod
-    def render(cls, data):
+    def render(self, data):
         return tag("ul", maptag("li", data))
 
 class HeaderController(AbstractController):
 
     @classmethod
-    def render(cls, data):
+    def render(self, data):
         return tag("h1", data['content'])
 
 class CodeController(AbstractController):
 
     @classmethod
-    def render(cls, data):
+    def render(self, data):
         tags = {
             'css': 'style',
             'javascript': 'script'

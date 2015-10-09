@@ -64,7 +64,7 @@ var Section = React.createClass({
                     { article.featured_image ? this.renderImage(article) : null }
                     <a href={ article.url }><h2 className="headline" dangerouslySetInnerHTML={headline}></h2></a>
                     <span className="byline"><span className="author">By { article.authors_string }</span> &nbsp;·&nbsp; <span className="published">{ article.published_at }</span></span>
-                    <p className="snippet">{ article.snippet }</p>
+                    <p className="snippet">{ article.snippet|safe }</p>
                 </article>
                 );
         }.bind(this));
