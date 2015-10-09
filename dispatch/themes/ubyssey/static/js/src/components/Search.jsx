@@ -14,18 +14,22 @@ var Search = React.createClass({
             results: [],
             cache: LRU(this.props.cacheOptions),  // entries are {q: results}
             q: "",
+            prevQ: "",
         }
     },
     componentDidMount: function(){
         this.refs.search.getDOMNode().focus();
     },
     updateQuery: function(event){
-        this.setState({ q: event.target.value }, this.search);
+        this.setState({
+            prevQ: this.state.q,
+            q: event.target.value
+        }, this.search);
     },
     search: function(){
         var q = this.state.q;
         if (q.length > 0){
-            if (q.length > 1 && this.state.results.length == 0) {
+            if (q.length > 1 && q.length > this.state.prevQ.length && this.state.results.length == 0) {
                 // We've already typed one char and got no results, so
                 // adding more chars to query (making it more specific) cannot help.
                 return;
