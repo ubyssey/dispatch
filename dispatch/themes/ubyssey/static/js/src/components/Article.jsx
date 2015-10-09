@@ -10,10 +10,11 @@ var Article = React.createClass({
         // Setup galleries after DOM is loaded
         this.setState({ galleries: this.setupGalleries() });
 
-        if (typeof collectAds !== 'undefined') {
+        if (this.props.html && typeof collectAds !== 'undefined') {
+            // Only collect ads for AJAX-loaded stories
             // Adblock might have prevented this from being defined (in dfp.js)
-            var element = this.props.html ? this.refs.article.getDOMNode() : document;
-            googletag.cmd.push(function() { collectAds(element); }.bind(this));
+            var element = this.refs.article.getDOMNode();
+            googletag.cmd.push(function() { collectAds(element); });
             googletag.cmd.push(function() { refreshAds(); });
         }
     },

@@ -20,6 +20,7 @@ function initAds(){
         // Enable services
         googletag.enableServices();
     });
+
 };
 
 function collectAds(element){
@@ -44,5 +45,7 @@ function refreshAds(){
 };
 
 $(document).ready(function(){
-    initAds();
+    googletag.cmd.push(function() { initAds() });
+    googletag.cmd.push(function() { collectAds(document); });
+    googletag.cmd.push(function() { refreshAds() });
 });
