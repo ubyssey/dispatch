@@ -85,12 +85,11 @@ var Section = React.createClass({
     render: function(){
         var articles = this.state.articles.map(function(article, i){
             var headline = { '__html': article.headline };
-            var pubDate = this.renderPubDate(article.published_at);
             return (
                 <article key={i}>
                     { article.featured_image ? this.renderImage(article) : null }
                     <a href={ article.url }><h2 className="headline" dangerouslySetInnerHTML={headline}></h2></a>
-                    <span className="byline"><span className="author">By { article.authors_string }</span> &nbsp;·&nbsp; <span className="published">{ pubDate }</span></span>
+                    <span className="byline"><span className="author">By { article.authors_string }</span> &nbsp;·&nbsp; <span className="published">{ this.renderPubDate(article.published_at) }</span></span>
                     <p className="snippet">{ article.snippet }</p>
                 </article>
                 );
