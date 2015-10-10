@@ -48,6 +48,30 @@ var Section = React.createClass({
             this.setState({ articles: this.state.articles.concat(data.results), loading: false });
         }.bind(this));
     },
+    renderPubDate: function(pubDate) {
+        var dateObj = new Date(pubDate);
+        var months = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+        var retString = months[dateObj.getMonth()] + " " + dateObj.getDate() + ", " + dateObj.getFullYear() + ", ";
+        var formattedTime = "";
+        var ampm, hour, minute;
+        if(dateObj.getHours() == 0) {
+            ampm = "a.m.";
+            hour = "12";
+        else if(dateObj.getHours() < 12) {
+            ampm = "a.m.";
+            hour = String(dateObj.getHours());
+        else {
+            ampm = "p.m.";
+            hour = String(dateObj.getHours() - 11);
+        }
+        if(dateObj.getMinutes() < 10 {
+           minute = "0" + String(dateObj.getMinutes());
+        }
+        else {
+            minute = String(dateObj.getMinutes());
+        }
+        return retString + hour + ":" + minutes + " " + ampm;
+    },
     renderImage: function(article){
         var style = { backgroundImage: "url('" + article.featured_image.url + "')" };
         return (
@@ -63,8 +87,8 @@ var Section = React.createClass({
                 <article key={i}>
                     { article.featured_image ? this.renderImage(article) : null }
                     <a href={ article.url }><h2 className="headline" dangerouslySetInnerHTML={headline}></h2></a>
-                    <span className="byline"><span className="author">By { article.authors_string }</span> &nbsp;·&nbsp; <span className="published">{ article.published_at }</span></span>
-                    <p className="snippet">{ article.snippet|safe }</p>
+                    <span className="byline"><span className="author">By { article.authors_string }</span> &nbsp;·&nbsp; <span className="published">{ renderPubDate(article.published_at) }</span></span>
+                    <p className="snippet">{ article.snippet }</p>
                 </article>
                 );
         }.bind(this));
