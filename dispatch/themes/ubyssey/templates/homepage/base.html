@@ -80,12 +80,12 @@
                 <ul class="article-list">
                     {% for article in blog %}
                     <li>
-                        <a class="clearfix" href="{{ article.get_absolute_url }}">
-                            <div class="featured-image-container">
-                                <img class="featured" src="{{ article.featured_image.image.get_medium_url }}" />
-                            </div>
-                            <h4 class="headline">{{ article.headline|safe }}</h4>
-                        </a>
+												<a class="clearfix" href="{{ article.get_absolute_url }}">
+	                          <div class="featured-image-container">
+	                              <img class="featured" src="{{ article.featured_image.image.get_medium_url }}" />
+	                          </div>
+	                          <h4 class="headline">{{ article.headline|safe }}</h4>
+	                      </a>
                     </li>
                     {% endfor %}
                 </ul>
