@@ -70,6 +70,7 @@ main.article.fw-story {
       margin-bottom: 40px;
       div.banner-image {
         position: relative;
+        height: 300px;
         .backdrop {
           display: block;
             position: absolute;
@@ -107,8 +108,10 @@ main.article.fw-story {
           margin-bottom: 15px;
         }
       }
-      div.banner-image {
-        height: 500px;
+      @media($bp-larger-than-mobile) {
+        div.banner-image {
+          height: 500px;
+        }
       }
       .headline-container {
         position: absolute;
