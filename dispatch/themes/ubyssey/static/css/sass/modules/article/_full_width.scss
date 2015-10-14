@@ -71,7 +71,13 @@ main.article.fw-story {
       div.banner-image {
         position: relative;
         .backdrop {
-          display: none;
+          display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
         }
       }
       .headline-container {
@@ -101,22 +107,10 @@ main.article.fw-story {
           margin-bottom: 15px;
         }
       }
-      @media($bp-larger-than-mobile){
+      //@media($bp-larger-than-mobile){
         margin-bottom: 40px;
         div.banner-image {
           height: 500px;
-          .backdrop {
-            display: block;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
-          }
-        }
-        .featured-image {
-          display: none;
         }
         .headline-container {
           position: absolute;
@@ -137,7 +131,7 @@ main.article.fw-story {
           span.author, span.published {
             font-weight: 300;
           }
-        }
+        //}
 
       }
     }
