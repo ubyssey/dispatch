@@ -80,12 +80,6 @@ div.headline-container {
   padding: 25px 20px 30px 20px;
 }
 
-@media($bp-larger-than-tablet){
-  div.featured-image {
-    display: none;
-  }
-}
-
 h1.headline {
   font-family: $font-headline;
   font-size: 32px;
