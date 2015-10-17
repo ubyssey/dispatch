@@ -17,8 +17,8 @@ var Article = React.createClass({
             googletag.cmd.push(function() { collectAds(element); });
             googletag.cmd.push(function() { refreshAds(); });
         }
-        console.log(window.ajaxLoadingHasBegun);
-        if(window.ajaxLoadedArticles > 1) {
+        console.log(window.ajaxLoadedArticles);
+        if(window.ajaxLoadedArticles >= 1) {
           var scripts = document.getElementsByTagName("script");
           for (var i=0;i<scripts.length;i++) {
             if(!scripts[i].src && scripts[i].className == "ajax-loaded") {
