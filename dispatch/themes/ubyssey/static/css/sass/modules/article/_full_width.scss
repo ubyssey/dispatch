@@ -1,7 +1,7 @@
 @import 'modules/fonts';
 @import 'modules/variables';
 
-main.article.fw-story {
+main.article.fw-story, div.container.clearfix.fw-story {
   .fw-banner {
     overflow: auto;
     .header-container {
@@ -144,16 +144,14 @@ main.article.fw-story {
   
   div.article-social {
     overflow: hidden;
-    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 585px;
     height: auto;
   }
 
   div.article-content {
-    p {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    div.caption, div.attachment, div.attachment {
+    p, h1, h2, h3, div.caption, div.attachment, div.attachment {
       max-width: 585px;
       margin-left: auto;
       margin-right: auto;
