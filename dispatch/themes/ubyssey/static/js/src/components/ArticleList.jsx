@@ -131,6 +131,7 @@ var ArticleList = React.createClass({
         if(this.state.loading || this.isLoaded(article_id))
             return;
         this.loadArticle(article_id);
+        window.ajaxLoadingHasBegun = true;
     },
     isLoaded: function(id){
         var id = parseInt(id);
