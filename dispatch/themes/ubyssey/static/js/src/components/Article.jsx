@@ -17,16 +17,17 @@ var Article = React.createClass({
             googletag.cmd.push(function() { collectAds(element); });
             googletag.cmd.push(function() { refreshAds(); });
         }
-        console.log(window.ajaxLoadedArticles);
-        if(window.ajaxLoadedArticles >= 1) {
-          var scripts = document.getElementsByTagName("script");
-          for (var i=0;i<scripts.length;i++) {
-            if(!scripts[i].src) {
-              eval(scripts[i].innerHTML);
-            }
+        this.executeAJAXLoadedScripts();
+    },
+    executeAJAXLoadedScripts: function() {
+        var scripts = $("#article-list").find("script");
+        for (var i=0;i<scripts.length;i++) {
+          console.log(scripts[i]);
+          if(!scripts[i].src) {
+            eval(scripts[i].innerHTML);
           }
         }
-    },
+    },  
     setupGalleries: function(){
 
         var gatherImages = function(gallery){
