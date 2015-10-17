@@ -87,7 +87,7 @@ h1.headline {
   margin: 0;
 }
 
-div.article-content p, div.article-content div.caption {
+div.article-content p, div.article-content div.caption, div.article-content h1, div.article-content h2, div.article-content h3 {
   padding: 0 20px;
   @media($bp-larger-than-mobile){
     padding: 0;
