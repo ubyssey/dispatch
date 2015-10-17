@@ -17,6 +17,12 @@ var Article = React.createClass({
             googletag.cmd.push(function() { collectAds(element); });
             googletag.cmd.push(function() { refreshAds(); });
         }
+        var scripts = document.getElementsByTagName("script");
+        for (var i=0;i<scripts.length;i++) {
+          if(!scripts[i].src && scripts[i].className == "ajax-loaded") {
+            eval(scripts[i].innerHTML);
+          }
+        }
     },
     setupGalleries: function(){
 
