@@ -24,7 +24,10 @@ var DropdownButton = React.createClass({
             active: !this.state.active
         });
     },
-    selectItem: function(value){
+    selectItem: function(value, e){
+        // If multiple dropdowns are open, selecting an item only closes
+        // this one (doesn't bubble up to the page).
+        e.stopPropagation();
         this.setState({
             active: false,
         });
