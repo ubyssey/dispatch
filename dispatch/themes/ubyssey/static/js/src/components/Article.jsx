@@ -21,7 +21,7 @@ var Article = React.createClass({
         if(window.ajaxLoadedArticles >= 1) {
           var scripts = document.getElementsByTagName("script");
           for (var i=0;i<scripts.length;i++) {
-            if(!scripts[i].src && scripts[i].className == "ajax-loaded") {
+            if(!scripts[i].src) {
               eval(scripts[i].innerHTML);
             }
           }
