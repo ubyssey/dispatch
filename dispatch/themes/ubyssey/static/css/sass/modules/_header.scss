@@ -181,7 +181,7 @@ header.topbar {
 
   nav {
     display: none;
-    @media($bp-larger-than-mobile){
+    @media($bp-larger-than-phablet){
       display: inline-block;
     }
 
@@ -213,6 +213,8 @@ header.topbar {
 
   h1.nav-headline {
     display: inline-block;
+    position: fixed;
+    top: 16px;
     white-space: nowrap;
     font-family: $font-default;
     font-size: 14px;
