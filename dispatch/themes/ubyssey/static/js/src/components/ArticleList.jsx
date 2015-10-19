@@ -35,7 +35,11 @@ var ArticleList = React.createClass({
         } else if (topPos < 50 && window.articleHeader){
             window.articleHeader = false;
             $('.header-article').hide();
-            $('.header-site').show();
+            // Only display site header if width > $bp-larger-than-tablet
+            console.log($(window).width());
+            if($(window).width() > 960) {
+              $('.header-site').show();
+            }
         }
 
     },
