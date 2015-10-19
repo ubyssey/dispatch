@@ -458,9 +458,11 @@ article.col {
     height: 72px;
     margin-right: 12px;
     margin-bottom: 5px;
-    img {
+    div.featured {
       width: auto;
       height: 100%;
+      background-position: center;
+      background-size: cover;
     }
   }
 }
