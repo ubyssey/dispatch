@@ -21,7 +21,7 @@
                     <div class="inner">
                         <div class="row">
                             <div class="featured-image-container">
-                                <a href="{{ article.get_absolute_url }}"><img class="featured" src="{{ article.featured_image.image.get_medium_url }}" /></a>
+                                <a href="{{ article.get_absolute_url }}"><div class="featured" style="background-image: url('{{ article.featured_image.image.get_medium_url }}');"></div></a>
                             </div>
                             <h4 class="headline"><a href="{{ article.get_absolute_url }}">{{ article.headline|safe }}</a></h4>
                         </div>
