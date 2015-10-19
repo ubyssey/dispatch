@@ -5,7 +5,7 @@
 {% if article %}<meta name="author" content="{{ meta.author }}" />{% endif %}
 
 <!-- Open Graph data -->
-<meta property="og:title" content="{{ meta.title|safe }}" />
+<meta property="og:title" content="{{ meta.title }}" />
 <meta property="og:type" content="{% if article %}article{% else %}website{% endif %}" />
 <meta property="og:url" content="{{ meta.url }}" />
 <meta property="og:image" content="{% if meta.image %}{{ meta.image }}{% else %}{% static 'img/ubyssey-logo-square.png' %}{% endif %}" />
@@ -16,7 +16,7 @@
 <!-- Twitter Card data -->
 <meta name="twitter:card" content="{{ meta.description }}">
 <meta name="twitter:site" content="@ubyssey">
-<meta name="twitter:title" content="{{ meta.title|safe }}">
+<meta name="twitter:title" content="{{ meta.title }}">
 <meta name="twitter:description" content="{{ meta.description }}">
 <!-- <meta name="twitter:creator" content=""> -->
 <!-- Twitter Summary card images must be at least 120x120px -->
