@@ -139,10 +139,16 @@ div.article-archive {
 
     box-sizing: border-box;
     padding: 0 10px 30px 10px;
-    //width: 33.33%;
+      // v uncommented this
+    min-width: 100%;
     flex: 0 0 33.33%;
     -webkit-flex: 0 0 33.33%;
     //float: left;
+      
+      // added this v
+    @media($bp-larger-than-phablet) {
+        min-width: 33.33%
+    }
 
     a.image {
       margin-bottom: 15px;
