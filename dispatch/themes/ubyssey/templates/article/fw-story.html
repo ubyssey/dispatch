@@ -60,7 +60,7 @@
 {% endblock %}
 
 {% if article.template_fields.header_layout == 'banner-image' %}
-    {% block banner_ad %}{% endblock %}
+{% block banner_ad %}{% endblock %}
 {% endif %}
 
 {% block pre-content %}
@@ -72,8 +72,12 @@
             {% comment %}<li><a href="#"><i class="fa fa-envelope"></i><span>Email</span></a></li>{% endcomment %}
         </ul>
     </div>
-    <div class="advertisement fw-story top"><img src="{% static 'img/sample-box-ad.png' %}" /></div>
 {% endblock %}
 
 {% block right-column %}
+									<div class="sidebar">
+                    <div class="advertisement box fw-story top sidebar">
+                        <div class="adslot" id="div-gpt-ad-1443288719995-15-{{ article.id }}" data-size="box" data-dfp="News_BoxA_300x250"></div>
+                    </div>
+									</div>
 {% endblock %}
