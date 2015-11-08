@@ -60,20 +60,27 @@
       margin-top: 10px;
       margin-bottom: 10px;
     }
-    &.right, &.top {
-      float: right;
-      padding-left: 40px;
-    }
-    &.left {
-      float: left;
-      padding-right: 30px;
-    }
-    &.top {
+    &.right, &.left, &.top {
+      margin: 0 auto;
       display: none;
+    }
+    @media($bp-larger-than-phablet) {
+      padding-top: 50px;
+      &.right, &.top {
+        float: right;
+        padding-left: 40px;
+      }
+      &.left {
+        float: left;
+        padding-right: 30px;
+      }
+      &.top {
+        display: none;
+      }  
     }
 
     @media($bp-larger-than-mobile){
-      &.top {
+      &.right, &.left, &.top {
         display: block;
       }
     }

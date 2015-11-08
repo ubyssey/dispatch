@@ -30,7 +30,9 @@ var QuillEditor = React.createClass({
         Quill.registerModule('inline-toolbar', InlineToolbar);
         Quill.registerModule('hyperlinks', HyperlinkModule)
 
-        this.quill = new Quill('#article-editor');
+        this.quill = new Quill('#article-editor', {
+		  formats: ['bold', 'italic', 'underline', 'link', 'bullet', 'list']
+		});
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
