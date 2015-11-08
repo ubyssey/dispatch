@@ -14,8 +14,6 @@ from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, T
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
                                            
-from django.views.decorators.csrf import csrf_exempt
-
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
     Viewset for frontpage views.
@@ -397,7 +395,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
     
-    @csrf_exempt
     def create(self, request, *args, **kwargs):
         authors = request.POST.get('authors', None)
         if authors is None:
