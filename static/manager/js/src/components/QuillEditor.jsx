@@ -58,8 +58,18 @@ var QuillEditor = React.createClass({
             });
         }
     },
+  	removeTrailingWhitespace : function(article) {
+	  	var index = article.length-1;
+	  	var toRemove = 0;
+	  	while(article[index] === '<br>') {
+		  index--;
+		  toRemove++;
+		}
+	  	article.splice(index, toRemove);
+	  	return article;
+	},
     save: function(){
-        return JSON.stringify(this.quill.getJSON());
+		return JSON.stringify(this.removeTrailingWhitespace(this.quill.getJSON()));
     },
     render: function(){
         return (
