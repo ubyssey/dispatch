@@ -30,7 +30,9 @@ var QuillEditor = React.createClass({
         Quill.registerModule('inline-toolbar', InlineToolbar);
         Quill.registerModule('hyperlinks', HyperlinkModule)
 
-        this.quill = new Quill('#article-editor');
+        this.quill = new Quill('#article-editor', {
+		  formats: ['bold', 'italic', 'underline', 'link', 'bullet', 'list']
+		});
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
@@ -56,8 +58,20 @@ var QuillEditor = React.createClass({
             });
         }
     },
+  	removeTrailingWhitespace : function(article) {
+	  	var index = article.length;
+	  	var toRemove = 0;
+	  	while(article[index-1] === '<br>') {
+		  index--;
+		  toRemove++;
+		}
+	  	if(toRemove > 0) {
+	  		article.splice(index, toRemove);
+		}
+	  	return article;
+	},
     save: function(){
-        return JSON.stringify(this.quill.getJSON());
+		return JSON.stringify(this.removeTrailingWhitespace(this.quill.getJSON()));
     },
     render: function(){
         return (
