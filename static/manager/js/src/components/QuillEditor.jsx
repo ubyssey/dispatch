@@ -65,7 +65,9 @@ var QuillEditor = React.createClass({
 		  index--;
 		  toRemove++;
 		}
-	  	article.splice(index, toRemove);
+	  	if(toRemove > 0) {
+	  		article.splice(index, toRemove);
+		}
 	  	return article;
 	},
     save: function(){
