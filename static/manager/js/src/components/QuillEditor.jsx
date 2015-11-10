@@ -58,20 +58,67 @@ var QuillEditor = React.createClass({
             });
         }
     },
+	/*
+	  Remove any nodes at the end of the article JSON that
+	  contain only whitespace
+	*/
   	removeTrailingWhitespace : function(article) {
 	  	var index = article.length;
 	  	var toRemove = 0;
-	  	while(article[index-1] === '<br>') {
-		  index--;
-		  toRemove++;
+		while(article[index-1].match(/\s*<br>/)) {
+	  	//while(article[index-1] === '<br>') {
+		  	index--;
+		  	toRemove++;
 		}
 	  	if(toRemove > 0) {
 	  		article.splice(index, toRemove);
 		}
 	  	return article;
 	},
+	/*
+	  Insert an inline ad after a certain number of words iff 
+	  there is an available position such that:
+	    - the inserted ad is not adjacent to other media
+		  (image/gallery/video/ad)
+		- there are a certain number of words after the ad
+	*/
+	insertInlineAds : function(article) {
+		var WORDS_BEFORE_AD = 400;
+		var WORDS_AFTER_AD = 200;
+		var INVALID_AD_ADJACENT_TYPES = ['advertisement','image','gallery','video'];
+		var beforeWordCount = 0;
+		var afterWordCount = 0;
+		for(var index = 0; index < article.length; index++) {
+			if(typeof article[index] === 'string') {
+				beforeWordCount += article[index].length/6;
+			}
+			if(beforeWordCount > WORD_LIMIT_BEFORE_AD) {
+				// check to ensure that adjacent nodes are not image/gallery/video/ad
+				// check to ensure that there are more than 200 words after this node
+				for(var inner = index; inner < article.length; inner++) {
+					if(typeof article[index] === 'string') {
+						afterWordCount += article[index].length/6;
+					}
+				}
+				if(afterWordCount < WORDS_AFTER_AD) {
+					return article;
+				}
+				else if(!INVALID_AD_ADJACENT_TYPES.includes(article[index-1]) &&
+				   		!INVALID_AD_ADJACENT_TYPES.includes(article[index+1]) &&
+				   		afterWordCount > WORDS_AFTER_AD) {
+					article.splice(index, 0, {type:'advertisement',data:{}});
+						return article;
+					}
+				}
+				
+			}
+		}
+	},
     save: function(){
-		return JSON.stringify(this.removeTrailingWhitespace(this.quill.getJSON()));
+		console.log(JSON.stringify(this.quill.getJSON()));
+		return JSON.stringify(
+			this.insertInlineAds(
+			this.removeTrailingWhitespace(this.quill.getJSON())));
     },
     render: function(){
         return (
