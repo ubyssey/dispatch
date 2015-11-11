@@ -76,41 +76,38 @@ var QuillEditor = React.createClass({
 	  	return article;
 	},
 	/*
-	  Insert an inline ad after a certain number of words iff 
+	  Insert an inline ad after a certain number of chars iff 
 	  there is an available position such that:
 	    - the inserted ad is not adjacent to other media
 		  (image/gallery/video/ad)
-		- there are a certain number of words after the ad
+		- there are a certain number of chars after the ad
 	*/
 	insertInlineAds : function(article) {
-		var WORDS_BEFORE_AD = 400;
-		var WORDS_AFTER_AD = 200;
+		var CHARS_BEFORE_AD = 3000;
+		var CHARS_AFTER_AD = 1500;
+		var CENTERED_AD = {type:'advertisement',data:{alignment: 'center'}};
 		var INVALID_AD_ADJACENT_TYPES = ['advertisement','image','gallery','video'];
-		var beforeWordCount = 0;
-		var afterWordCount = 0;
+		var beforeCharCount = 0;
+		var afterCharCount = 0;
 		for(var index = 0; index < article.length; index++) {
 			if(typeof article[index] === 'string') {
-				beforeWordCount += article[index].length/6;
+				beforeCharCount += article[index].length;
 			}
-			if(beforeWordCount > WORD_LIMIT_BEFORE_AD) {
-				// check to ensure that adjacent nodes are not image/gallery/video/ad
-				// check to ensure that there are more than 200 words after this node
+			if(beforeCharCount > CHARS_BEFORE_AD) {
 				for(var inner = index; inner < article.length; inner++) {
 					if(typeof article[index] === 'string') {
-						afterWordCount += article[index].length/6;
+						afterCharCount += article[index].length;
 					}
 				}
-				if(afterWordCount < WORDS_AFTER_AD) {
+				if(afterCharCount < CHARS_AFTER_AD) {
 					return article;
 				}
-				else if(!INVALID_AD_ADJACENT_TYPES.includes(article[index-1]) &&
-				   		!INVALID_AD_ADJACENT_TYPES.includes(article[index+1]) &&
-				   		afterWordCount > WORDS_AFTER_AD) {
-					article.splice(index, 0, {type:'advertisement',data:{}});
-						return article;
-					}
+				else if(!INVALID_AD_ADJACENT_TYPES.includes(article[index-1].type) &&
+				   		!INVALID_AD_ADJACENT_TYPES.includes(article[index+1].type) &&
+				   		afterCharCount > CHARS_AFTER_AD) {
+					article.splice(index, 0, CENTERED_AD);
+					return article;
 				}
-				
 			}
 		}
 	},
