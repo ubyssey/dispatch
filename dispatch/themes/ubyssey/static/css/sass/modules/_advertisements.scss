@@ -53,13 +53,27 @@
       padding: 0;
     }
   }
+	
+	&.inline {
+		display: none;
+		margin-top: 10px;
+		margin-bottom: 10px;
+			
+		&.center {
+			margin: 0 auto;
+		}
+		
+		&.left {
+			float: left;
+		}
+		
+		&.right {
+			float: right;
+		}
+	}
 
   // Full-width article ads
   &.fw-story {
-    &.inline {
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
     &.right, &.left, &.top {
       margin: 0 auto;
       display: none;
