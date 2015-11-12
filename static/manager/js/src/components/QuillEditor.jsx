@@ -66,7 +66,6 @@ var QuillEditor = React.createClass({
 	  	var index = article.length;
 	  	var toRemove = 0;
 		while(article[index-1].match(/\s*<br>/)) {
-	  	//while(article[index-1] === '<br>') {
 		  	index--;
 		  	toRemove++;
 		}
@@ -83,36 +82,85 @@ var QuillEditor = React.createClass({
 		- there are a certain number of chars after the ad
 	*/
 	insertInlineAds : function(article) {
-		var CHARS_BEFORE_AD = 3000;
-		var CHARS_AFTER_AD = 1500;
+		console.log("new");
+		var MIN_CHAR_LENGTH = 6000;
 		var CENTERED_AD = {type:'advertisement',data:{alignment: 'center'}};
-		var INVALID_AD_ADJACENT_TYPES = ['advertisement','image','gallery','video'];
+		var INVALID_AD_ADJACENT_TYPES = ['advertisement','image','gallery','video','code'];
 		var beforeCharCount = 0;
-		var afterCharCount = 0;
-		for(var index = 0; index < article.length; index++) {
+		var articleCharLength = 0;
+			
+		for(var index in article) {
+			// Only one inline ad per article
+			if(article[index].type === 'advertisement') {
+				return article;
+			}
 			if(typeof article[index] === 'string') {
+				articleCharLength += article[index].length;
+			}
+		}
+		if(articleCharLength < MIN_CHAR_LENGTH) {
+				// article is too short for an inline ad
+				return article;
+		}
+		
+		for(var index = 0; index < article.length; index++) {
+			if(typeof article[index]) === 'string' {
 				beforeCharCount += article[index].length;
 			}
-			if(beforeCharCount > CHARS_BEFORE_AD) {
-				for(var inner = index; inner < article.length; inner++) {
-					if(typeof article[index] === 'string') {
-						afterCharCount += article[index].length;
+			if(beforeCharCount > (articleCharLength*0.4)) {
+				if(beforeCharCount < (articleCharLength*0.6)) {
+					if(!INVALID_AD_ADJACENT_TYPES.includes(article[index].type) &&
+					 	 		!INVALID_AD_ADJACENT_TYPES.includes(article[index-1].type)) { 
+						article.splice(index, 0, CENTERED_AD);
+						return article;
 					}
 				}
-				if(afterCharCount < CHARS_AFTER_AD) {
+				else {
+					// Ad not added, no good locations
 					return article;
 				}
-				else if(!INVALID_AD_ADJACENT_TYPES.includes(article[index-1].type) &&
-				   		!INVALID_AD_ADJACENT_TYPES.includes(article[index+1].type) &&
-				   		afterCharCount > CHARS_AFTER_AD) {
-					article.splice(index, 0, CENTERED_AD);
-					return article;
+		}
+		return article;
+			
+		/*for(var index = 0; index < article.length; index++) {
+			if(typeof article[index] === 'string') {
+				beforeCharCount += article[index].length;
+				console.log(article[index]);
+				console.log(article[index].length);
+			}
+			if(article[index].type === 'advertisement') {
+					beforeCharCount = 0;
+			}
+			if(beforeCharCount > CHARS_BEFORE_AD) {
+				afterCharCount = 0;
+				for(var inner = index; inner < article.length; inner++) {
+					if(typeof article[inner] === 'string') {
+						afterCharCount += article[inner].length;
+					}
+					if(afterCharCount > CHARS_AFTER_AD) {
+						if(!INVALID_AD_ADJACENT_TYPES.includes(article[index-1].type) &&
+				 			 !INVALID_AD_ADJACENT_TYPES.includes(article[index].type)) {
+							console.log('beforeCharCount: ' + beforeCharCount);
+							console.log('afterCharCount:' + afterCharCount);
+							console.dir(article[index]);
+							console.dir(article[index+1]);
+							article.splice(index, 0, CENTERED_AD);
+							beforeCharCount = 0;
+							break;
+						}
+					}
+					if(article[inner].type === 'advertisement') {
+						index = inner;
+						beforeCharCount = 0;
+						break;
+					}
 				}
 			}
 		}
+		return article;*/
 	},
     save: function(){
-		console.log(JSON.stringify(this.quill.getJSON()));
+		//console.log(JSON.stringify(this.quill.getJSON()));
 		return JSON.stringify(
 			this.insertInlineAds(
 			this.removeTrailingWhitespace(this.quill.getJSON())));
