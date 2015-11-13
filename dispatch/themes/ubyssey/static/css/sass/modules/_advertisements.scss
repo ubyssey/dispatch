@@ -1,6 +1,5 @@
 .advertisement {
 
-
   &.leaderboard, &.box {
     .adslot {
       margin: 0 auto;
@@ -52,25 +51,25 @@
     &.sidebar {
       padding: 0;
     }
-  }
 	
-	&.inline {
-		display: none;
-		margin-top: 10px;
-		margin-bottom: 10px;
-			
-		&.center {
-			margin: 0 auto;
-		}
+		&.inline {
+			display: block;
+			margin-top: 10px;
+			margin-bottom: 10px;
+				
+			&.center {
+				margin: 0 auto;
+			}
 		
-		&.left {
-			float: left;
-		}
+			&.left {
+				float: left;
+			}
 		
-		&.right {
-			float: right;
+			&.right {
+				float: right;
+			}
 		}
-	}
+  }
 
   // Full-width article ads
   &.fw-story {
