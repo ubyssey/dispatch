@@ -103,7 +103,7 @@ var QuillEditor = React.createClass({
 				}
 				
 				for(var index = 0; index < article.length; index++) {
-						if(typeof article[index]) === 'string' {
+						if(typeof(article[index]) === 'string') {
 								beforeCharCount += article[index].length;
 						}
 						if(beforeCharCount > (articleCharLength*0.4)) {
