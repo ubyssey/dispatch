@@ -59,6 +59,10 @@
 				
 			&.center {
 				margin: 0 auto;
+				@media($bp-larger-than-tablet) {
+					margin: 40px 0;
+					max-width: 585px;
+				}
 			}
 		
 			&.left {
