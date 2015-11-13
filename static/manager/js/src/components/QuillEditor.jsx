@@ -58,26 +58,80 @@ var QuillEditor = React.createClass({
             });
         }
     },
+		/*
+	    Remove any nodes at the end of the article JSON that
+	    contain only whitespace
+		*/
   	removeTrailingWhitespace : function(article) {
-	  	var index = article.length;
-	  	var toRemove = 0;
-	  	while(article[index-1] === '<br>') {
-		  index--;
-		  toRemove++;
+	  		var index = article.length;
+	  		var toRemove = 0;
+				while(article[index-1].match(/\s*<br>/)) {
+		  			index--;
+		  			toRemove++;
+				}
+	  		if(toRemove > 0) {
+	  				article.splice(index, toRemove);
+				}
+	  		return article;
+		},
+		/*
+	    Insert an inline ad after a certain number of chars iff 
+	    there is an available position such that:
+	      - the inserted ad is not adjacent to other media
+		      (image/gallery/video/ad)
+		    - the ad will be in the middle 20% of chars
+		*/
+		insertInlineAds : function(article) {
+				var MIN_CHAR_LENGTH = 6000;
+				var CENTERED_AD = {type:'advertisement',data:{alignment: 'center'}};
+				var INVALID_AD_ADJACENT_TYPES = ['advertisement','image','gallery','video','code'];
+				var beforeCharCount = 0;
+				var articleCharLength = 0;
+					
+				for(var index in article) {
+						// Only one inline ad per article
+						if(article[index].type === 'advertisement') {
+								return article;
+						}
+						if(typeof article[index] === 'string') {
+								articleCharLength += article[index].length;
+						}
+				}
+				if(articleCharLength < MIN_CHAR_LENGTH) {
+						// article is too short for an inline ad
+						return article;
+				}
+				
+				for(var index = 0; index < article.length; index++) {
+						if(typeof(article[index]) === 'string') {
+								beforeCharCount += article[index].length;
+						}
+						if(beforeCharCount > (articleCharLength*0.4)) {
+								if(beforeCharCount < (articleCharLength*0.6)) {
+										if(!INVALID_AD_ADJACENT_TYPES.includes(article[index].type) &&
+									 	 			!INVALID_AD_ADJACENT_TYPES.includes(article[index-1].type)) { 
+												article.splice(index, 0, CENTERED_AD);
+												return article;
+										}
+								}
+								else {
+										// Ad not added, no good locations
+										return article;
+								}
+						}
+				}
+				return article;
+		},
+  	save: function(){
+				return JSON.stringify(
+						this.insertInlineAds(
+						this.removeTrailingWhitespace(this.quill.getJSON())));
+		},
+		render: function(){
+				return (
+						<div id="article-editor"></div>
+				)
 		}
-	  	if(toRemove > 0) {
-	  		article.splice(index, toRemove);
-		}
-	  	return article;
-	},
-    save: function(){
-		return JSON.stringify(this.removeTrailingWhitespace(this.quill.getJSON()));
-    },
-    render: function(){
-        return (
-            <div id="article-editor"></div>
-            )
-    }
 });
 
 module.exports = QuillEditor;
