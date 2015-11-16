@@ -23,6 +23,7 @@ class PrintIssueDefault(BaseComponent):
 
     fields = (
         ('url', 'Issue link', TextField()),
+        ('cover_url', 'Cover Image Link', TextField()),
     )
 
 theme_components.register(ReadingList)
