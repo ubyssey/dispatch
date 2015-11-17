@@ -15,6 +15,9 @@ from dispatch.apps.frontend.helpers import templates
 # Ubyssey imports
 from .pages import Homepage
 
+# Python imports
+from datetime import datetime
+
 class UbysseyTheme(DefaultTheme):
 
     SITE_TITLE = 'The Ubyssey'
@@ -61,7 +64,7 @@ class UbysseyTheme(DefaultTheme):
         blog = Article.objects.get_frontpage(section='blog', limit=5)
 
         title = "%s - UBC's official student newspaper" % self.SITE_TITLE
-
+            
         context = {
             'title': title,
             'meta': {
@@ -75,6 +78,7 @@ class UbysseyTheme(DefaultTheme):
             'popular':  popular,
             'blog': blog,
             'components': component_set.components(),
+            'day_of_week': datetime.now().weekday(),
         }
 
         return render(request, 'homepage/base.html', context)
