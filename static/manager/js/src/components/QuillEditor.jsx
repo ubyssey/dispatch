@@ -65,9 +65,17 @@ var QuillEditor = React.createClass({
   	removeTrailingWhitespace : function(article) {
 	  		var index = article.length;
 	  		var toRemove = 0;
-				while(article[index-1].match(/\s*<br>/)) {
-		  			index--;
-		  			toRemove++;
+				if(index === 0) {
+						return article;
+				}
+				while(typeof article[index-1] === 'string') {
+						if(article[index-1].match(/\s*<br>/)) {
+		  					index--;
+		  					toRemove++;
+						}
+						else {
+								break;
+						}
 				}
 	  		if(toRemove > 0) {
 	  				article.splice(index, toRemove);
