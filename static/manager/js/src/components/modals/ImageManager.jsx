@@ -169,10 +169,11 @@ var ImageManager = React.createClass({
             activeImage: false,
             query: event.target.value,
         });
-        dispatch.search("image", {'q': event.target.value, 'ordering': '-created_at'}, function(data){
+        dispatch.search("image", {'q': event.target.value, 'ordering': '-created_at', 'limit': 30}, function(data){
             this.ImageStore.dump(data.results);
             this.setState({
                 images: this.ImageStore,
+								nextImages: data.next,
             });
         }.bind(this));
     },
