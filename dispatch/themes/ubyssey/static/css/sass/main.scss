@@ -49,6 +49,13 @@ p.slide-caption {
     line-height: 19px;
 }
 
+p.slide-credit {
+		font-family: $font-default;
+		font-size: 13px;
+		color: #9c9c9c;
+		font-style: italic;
+}
+
 span.credit {
   font-style: italic;
   color: #969696;
