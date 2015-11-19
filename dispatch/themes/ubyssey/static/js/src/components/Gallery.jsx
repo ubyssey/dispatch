@@ -331,7 +331,7 @@ var Gallery = React.createClass({
         }
 
         var slides = this.props.images.map(function(image, i){
-            return (<GallerySlide key={i} index={i} width={this.state.slide_width} src={image.url} caption={image.caption} />);
+            return (<GallerySlide key={i} index={i} width={this.state.slide_width} src={image.url} caption={image.caption} credit={image.credit} />);
         }.bind(this));
 
         var prev = (<div onClick={this.prevSlide} className="prev"><div><i className="fa fa-chevron-left"></i></div></div>);
