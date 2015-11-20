@@ -34,19 +34,17 @@ var QuillEditor = React.createClass({
 		  			formats: ['bold', 'italic', 'underline', 'link', 'bullet', 'list']
 				});
         
-        var unsavedChangesAlertHandler = function(event) {
-            var event = event || window.event,
-                message = "You have unsaved changes. Are you sure you want to leave?";
-            // For IE and Firefox
-            if (event) {
-                event.returnValue = message;
-            }
-            return message;
-        }
-        
         this.quill.on('text-change', function(delta, source) {
             if(source !== 'api') {
-                $(window).on('beforeunload', unsavedChangesAlertHandler);    
+                $(window).on('beforeunload', function(event) {
+                    var event = event || window.event,
+                        message = "You have unsaved changes. Are you sure you want to leave?";
+                    // For IE and Firefox
+                    if (event) {
+                        event.returnValue = message;
+                    }
+                    return message;
+                });    
             }
         });
 
