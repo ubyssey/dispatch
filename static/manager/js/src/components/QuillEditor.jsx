@@ -31,8 +31,22 @@ var QuillEditor = React.createClass({
         Quill.registerModule('hyperlinks', HyperlinkModule)
 
         this.quill = new Quill('#article-editor', {
-		  formats: ['bold', 'italic', 'underline', 'link', 'bullet', 'list']
-		});
+		  			formats: ['bold', 'italic', 'underline', 'link', 'bullet', 'list']
+				});
+        
+        this.quill.on('text-change', function(delta, source) {
+            if(source !== 'api') {
+                $(window).on('beforeunload', function(event) {
+                    var event = event || window.event,
+                        message = "You have unsaved changes. Are you sure you want to leave?";
+                    // For IE and Firefox
+                    if (event) {
+                        event.returnValue = message;
+                    }
+                    return message;
+                });    
+            }
+        });
 
         this.quill.addEmbed('image', {manager: this.props.imageManager})
         this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
@@ -131,6 +145,8 @@ var QuillEditor = React.createClass({
 				return article;
 		},
   	save: function(){
+        // Remove unsaved changes alert
+        $(window).off('beforeunload');
 				return JSON.stringify(
 						this.insertInlineAds(
 						this.removeTrailingWhitespace(this.quill.getJSON())));
