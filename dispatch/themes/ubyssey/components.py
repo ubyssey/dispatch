@@ -25,6 +25,18 @@ class PrintIssueDefault(BaseComponent):
         ('url', 'Issue link', TextField()),
         ('cover_url', 'Cover Image Link', TextField()),
     )
+    
+class ScoreBoard(BaseComponent):
+    NAME = 'Live Scoreboard'
+    SLUG = 'live_scoreboard'
+    
+    compatible_spots = ('multi_zone',)
+    
+    fields = (
+        ('home_team_score', 'Home Team Score', TextField()),
+        ('away_team_score', 'Away Team Score', TextField()),
+    )
 
 theme_components.register(ReadingList)
 theme_components.register(PrintIssueDefault)
+theme_components.register(ScoreBoard)
