@@ -24,7 +24,7 @@ var TextField = React.createClass({
         return (
             <div className="field">
                 <label>{this.props.field.label}</label>
-                <input onChange={this.updateText} value={this.state.text} type="text" />
+                <input onChange={this.updateText} value={this.state.data} type="text" /> // text -> data
             </div>
             )
     }
