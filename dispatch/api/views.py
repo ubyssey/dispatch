@@ -397,6 +397,12 @@ class ImageViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         authors = request.POST.get('authors', None)
+        filename = request.POST.get('img', None)
+        
+        # If filename is not valid ASCII, don't add to DB and send error
+        if not all(ord(c) < 128 for c in request.data.get('img').name):
+            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
         if authors is None:
             # Set author to current user if no authors are passed
             authors = [request.user.id]
