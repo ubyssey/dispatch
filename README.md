@@ -65,7 +65,7 @@ Now open `http://localhost:8000/` in your browser.
 
 ### Troubleshooting
 
-If you run into problems serving up the site because of migration issues, it may help to run the following before the `syncdb` command:
+If you run into problems serving up the site because of migration issues, it may help to run the following before the `syncdb` command: 
 
 `python manage.py makemigrations`
 
