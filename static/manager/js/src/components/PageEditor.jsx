@@ -24,7 +24,7 @@ var TextField = React.createClass({
         return (
             <div className="field">
                 <label>{this.props.field.label}</label>
-                <input onChange={this.updateText} value={this.state.data} type="text" /> // text -> data
+                <input onChange={this.updateText} value={this.props.data} type="text"></input>
             </div>
             )
     }
@@ -35,7 +35,6 @@ var ComponentEditor = React.createClass({
         this.fields = {};
     },
     saveComponent: function(){
-        console.log(this.fields);
         dispatch.saveComponent(this.props.page, this.props.component, this.props.spot, this.fields, function(data){
             console.log(data);
             console.log(this.fields);

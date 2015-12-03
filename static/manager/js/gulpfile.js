@@ -44,6 +44,23 @@ gulp.task('watch', function() {
 
 });
 
+gulp.task('file', function() {
+	browserify({
+		entries: [path.SRC + file + '.js'],
+		debug: dev,
+		cache: {},
+		packageCache: {},
+		fullPaths: false
+	})
+	.transform({global: true}, reactify)
+	.bundle()
+	.pipe(source(file + '.js'))
+	.pipe(gulpif(!dev, buffer()))
+	.pipe(gulpif(!dev, uglify()))
+	.pipe(rename(file + '-' + dispatch.version + '.js'))
+	.pipe(gulp.dest(path.DEST));	
+});
+
 gulp.task('list', function(){
     gulp.src(path.SRC + 'list.js')
     .pipe(uglify())
