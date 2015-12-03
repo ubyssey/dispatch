@@ -21,8 +21,6 @@ var TextField = React.createClass({
         }, this.updateField);
     },
     render: function(){
-        //console.log("Rendering TextField(). this.props.data=" + this.props.data);
-        //console.log("this.state.data=" + this.state.data);
         return (
             <div className="field">
                 <label>{this.props.field.label}</label>
