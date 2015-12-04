@@ -18,15 +18,25 @@ footer {
     ul.sections {
       display: inline-block;
       margin-left: 15px;
+      width: 90%; //
+      float: left; //
     }
-    a.home-link, ul.light {
+    a.home-link {
       display: inline-block;
+      float: left;
+    }
+    ul.light {
+      display: inline-block;
+      float: left; //
+      width: 200px; //
     }
     div.left {
       float: left;
+      width: 60%; //
     }
     div.right {
       float: right;
+      width: 360px; //
     }
     div.copyright {
       display: inline-block;
