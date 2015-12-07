@@ -70,6 +70,11 @@ ul.social {
   }
 
   &.top {
+    width: 90px;
+    @media($bp-larger-than-phablet) {
+      width: 166px;
+    }
+    
     li {
       display: inline-block;
       margin-right: 15px;
