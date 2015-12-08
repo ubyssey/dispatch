@@ -143,13 +143,13 @@ main.article.fw-story, div.container.clearfix.fw-story {
   }
   
   div.article-social {
-    overflow: hidden;
     margin-left: auto;
     margin-right: auto;
     width: auto;
-    height: auto;
-    @media($bp-larger-than-tablet) {
+    height: 36px;
+    @media($bp-larger-than-phablet) {
       width: 585px;
+      height: 54px;
     }
   }
 
