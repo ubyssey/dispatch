@@ -89,9 +89,6 @@ h1.headline {
 
 div.article-content p, div.article-content div.caption, div.article-content h1, div.article-content h2, div.article-content h3 {
   padding: 0 10px;
-  @media($bp-larger-than-mobile){
-    padding: 10px;
-  }
   @media($bp-larger-than-tablet){
     max-width: 585px;
   }
