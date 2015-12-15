@@ -23,6 +23,22 @@ var STATUS_ITEMS = [
     }
 ];
 
+var FIELD_VALIDATORS = {
+	hasTextValidator: function(fieldName, instance) {
+	    if(!instance.hasOwnProperty(fieldName) || instance[fieldName] == "")
+	        return false;
+		return true;
+	},
+	hasCharRangeValidator: function(fieldName, instance) {
+		var LOW_THRESHOLD = 200;
+		var HIGH_THRESHOLD = 250;
+		var charLength = instance[fieldName].length;
+		if(charLength < LOW_THRESHOLD || charLength > HIGH_THRESHOLD || !instance.hasOwnProperty(fieldName))
+			return false;
+		return true;
+	}
+};
+
 var PublishableAdmin = function(component) {
     var prototype = {
         getInitialState: function(){
@@ -118,10 +134,11 @@ var PublishableAdmin = function(component) {
             var errors = [];
             for(var i = 0; i < this.requiredFields.length; i++){
                 var field = this.requiredFields[i];
-                if(!this.state.instance.hasOwnProperty(field) || this.state.instance[field] == "")
-                    errors.push(field);
+				if(!FIELD_VALIDATORS[field.validator](field.name, this.state.instance)) {
+					errors.push(field.name);
+				}
             }
-            if ( errors.length != 0 ){
+            if(errors.length != 0) {
                 this.setState({ errors: errors });
                 return errors;
             } else {

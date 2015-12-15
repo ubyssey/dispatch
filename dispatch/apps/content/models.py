@@ -8,7 +8,7 @@ from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, SlugField, SET_NULL, Manager, permalink)
 
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinLengthValidator, MaxLengthValidator
 from django.conf import settings
 from django.utils.functional import cached_property
 from django.utils import timezone
@@ -105,7 +105,7 @@ class Publishable(Model):
     snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
 
     content = TextField()
-    snippet = TextField(null=True)
+    snippet = TextField(null=True, validators=[MinLengthValidator(limit_value=200), MaxLengthValidator(limit_value=250)])
 
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
