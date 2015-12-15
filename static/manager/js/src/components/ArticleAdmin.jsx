@@ -38,12 +38,12 @@ var IMPORTANCE_OPTIONS = [
 ];
 
 var ArticleAdmin = React.createClass(PublishableAdmin({
-     requiredFields: [
-        'headline',
-        'section',
-        'authors',
-        'slug',
-        'snippet'
+	requiredFields: [
+		{name: 'headline', validator: 'hasTextValidator'},
+        {name: 'section', validator: 'hasTextValidator'},
+        {name: 'authors', validator: 'hasTextValidator'},
+        {name: 'slug', validator: 'hasTextValidator'},
+        {name: 'snippet', validator: 'hasCharRangeValidator'}
     ],
     createTag: function(tag_name, callback){
         dispatch.add('tag', {name: tag_name}, callback);
@@ -139,6 +139,7 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                                 <div className="field full">
                                     <label>Snippet</label>
                                     <Textarea rows={4} value={this.state.instance.snippet} className={this.errorClass("snippet")} onChange={this.updateField.bind(this,'snippet')}></Textarea>
+									<div>Snippet must be 200-250 characters. {250 - (this.state.instance.snippet ? this.state.instance.snippet.length : 0)} chars left.</div>
                                 </div>
                             </TabPanel>
                             <TabPanel>
