@@ -11,3 +11,9 @@ npm-debug.log
 node_modules/
 .DS_Store
 dispatch/apps/**/migrations/
+
+lib/
+bin/
+.Python
+include/
+pip-selfcheck.json
