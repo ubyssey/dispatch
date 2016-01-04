@@ -41,8 +41,8 @@ var IMPORTANCE_OPTIONS = [
 
 var PageAdmin = React.createClass(PublishableAdmin({
     requiredFields: [
-        'title',
-        'slug',
+        {name: 'title', validator: 'hasTextValidator'},
+        {name: 'slug', validator: 'hasTextValidator'}
     ],
     save: function(options, callback){
         var options = typeof options !== 'undefined' ? options : {};
