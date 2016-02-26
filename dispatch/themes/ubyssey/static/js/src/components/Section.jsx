@@ -43,7 +43,10 @@ var Section = React.createClass({
 
         this.setState({ loading: true });
 
-        dispatch.search("article", { section: this.props.id, offset: 7 + (6 * this.loaded), limit: 6 }, function(data){
+        var query = { offset: 7 + (6 * this.loaded), limit: 6 }
+        query[this.props.type] = this.props.id;
+
+        dispatch.search("article", query, function(data){
             this.loaded++;
             this.setState({ articles: this.state.articles.concat(data.results), loading: false });
         }.bind(this));
