@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Dispatch imports
-from dispatch.apps.content.models import Article, Page, Section
+from dispatch.apps.content.models import Article, Page, Section, Topic
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.themes.default import DefaultTheme
 from dispatch.apps.frontend.helpers import templates
@@ -135,6 +135,7 @@ class UbysseyTheme(DefaultTheme):
                 'title': section.name
             },
             'section': section,
+            'type': 'section',
             'articles': {
                 'first': articles[0],
                 'rest': articles[1:9]
@@ -265,6 +266,27 @@ class UbysseyTheme(DefaultTheme):
 
         return render(request, 'search.html', context)
 
+    def topic(self, request, pk=None):
 
+        try:
+            topic = Topic.objects.get(id=pk)
+        except Topic.DoesNotExist:
+            raise Http404("Topic does not exist.")
+
+        articles = Article.objects.filter(topic=topic, is_published=True).order_by('-published_at')
+
+        context = {
+            'meta': {
+                'title': topic.name
+            },
+            'section': topic,
+            'type': 'topic',
+            'articles': {
+                'first': articles[0] if articles else None,
+                'rest': articles[1:9]
+            }
+        }
+
+        return render(request, 'section.html', context)
 
 
