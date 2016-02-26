@@ -698,7 +698,7 @@ class Image(Model):
     def save_thumbnail(self, image, size, name, label):
         width, height = size
         (imw, imh) = image.size
-        if (imw > width) or (imh > height) :
+        if (imw > width) or (imh > height):
             image.thumbnail(size, Img.ANTIALIAS)
         name = "%s-%s.jpg" % (name, label)
         output = os.path.join(settings.MEDIA_ROOT, name)

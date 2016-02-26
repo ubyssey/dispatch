@@ -99,6 +99,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         tag = self.request.query_params.get('tag', None)
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
+        topic = self.request.query_params.get('topic', None)
 
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
@@ -106,6 +107,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(headline__icontains=q)
         if section is not None:
             queryset = queryset.filter(section_id=section)
+        if topic is not None:
+            queryset = queryset.filter(topic_id=topic)
 
         return queryset
 
