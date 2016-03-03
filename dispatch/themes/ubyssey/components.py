@@ -37,6 +37,27 @@ class ScoreBoard(BaseComponent):
         ('away_team_score', 'Away Team Score', TextField()),
     )
 
+class Elections(BaseComponent):
+    NAME = 'elections'
+    SLUG = 'elections'
+    
+    compatible_spots = ('multi_zone',)
+    
+    fields = (
+        ('president', 'President', TextField()),
+        ('vp_admin', 'VP Admin', TextField()),
+        ('vp_academic', 'VP Academic', TextField()),
+        ('vp_finance', 'VP Finance', TextField()),
+        ('vp_external', 'VP External', TextField()),
+        ('bog', 'Board', TextField()),
+        ('senate', 'Senate', TextField()),
+
+    )
+theme_components.register(ReadingList)
+theme_components.register(PrintIssueDefault)
+theme_components.register(ScoreBoard)
+theme_components.register(Elections)    
+
 theme_components.register(ReadingList)
 theme_components.register(PrintIssueDefault)
 theme_components.register(ScoreBoard)
