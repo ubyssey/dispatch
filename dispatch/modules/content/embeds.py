@@ -61,7 +61,9 @@ class HeaderController(AbstractController):
 
     @classmethod
     def render(self, data):
-        return tag("h1", data['content'])
+        size = data.get('size').lower()
+        return tag(size if size in ['h1', 'h2', 'h3'] else 'h1',
+                   data['content'])
 
 class CodeController(AbstractController):
 
