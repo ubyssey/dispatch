@@ -47,11 +47,7 @@
                 {% endwith %}
             </div>
             <div class="multi-zone cell right">
-                {% if day_of_week == 5 or day_of_week == 6 %}
                     {{ components.multi_zone|safe }}
-                {% else %}
-                    {{ components.print_issue|safe }}
-                {% endif %}
             </div>
         </div>
     </div>
@@ -95,11 +91,7 @@
                 </ul>
             </div>
             <div class="multi-zone cell right">
-                {% if day_of_week == 5 or day_of_week == 6 %}
                     {{ components.print_issue|safe }}
-                {% else %}
-                    {{ components.multi_zone|safe }}
-                {% endif %}
             </div>
         </div>
     </div>

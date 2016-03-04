@@ -56,8 +56,4 @@ class Elections(BaseComponent):
 theme_components.register(ReadingList)
 theme_components.register(PrintIssueDefault)
 theme_components.register(ScoreBoard)
-theme_components.register(Elections)    
-
-theme_components.register(ReadingList)
-theme_components.register(PrintIssueDefault)
-theme_components.register(ScoreBoard)
+theme_components.register(Elections)
