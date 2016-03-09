@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import sys
 
-BASE_DISPATCH_DIR = os.environ['DISPATCH_BASE_DIR']
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_SITE_DIR = os.environ.get('DISPATCH_BASE_SITE_DIR', BASE_DIR)
+
 BASE_URL = 'http://localhost:8000/'
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -55,7 +56,7 @@ AUTH_USER_MODEL = 'core.User'
 CURRENT_THEME = 'ubyssey'
 
 TEMPLATE_DIRS = [
-    os.path.join(BASE_DISPATCH_DIR, CURRENT_THEME + '/templates'),
+    os.path.join(BASE_SITE_DIR, CURRENT_THEME + '/templates'),
     os.path.join(BASE_DIR, 'dispatch/templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
     ]
@@ -151,12 +152,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 BASE_STATIC_URL = 'http://localhost:8888/'
 
-STATIC_ROOT = os.path.join(BASE_DISPATCH_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_SITE_DIR, 'static')
 STATIC_URL = BASE_STATIC_URL + 'static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DISPATCH_DIR, CURRENT_THEME + '/static'),
+    os.path.join(BASE_SITE_DIR, CURRENT_THEME + '/static'),
 )
 
-MEDIA_ROOT = os.path.join(BASE_DISPATCH_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_SITE_DIR, 'media')
 MEDIA_URL = BASE_STATIC_URL + 'media/'
