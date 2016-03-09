@@ -53,7 +53,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.17']
 AUTH_USER_MODEL = 'core.User'
 
 # Dispatch settings
-CURRENT_THEME = 'default'
+CURRENT_THEME = 'dispatch.apps.frontend.themes.default'
 
 TEMPLATE_DIRS = [
     os.path.join(BASE_SITE_DIR, CURRENT_THEME + '/templates'),
