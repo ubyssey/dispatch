@@ -1,16 +1,11 @@
 *.pyc
 .idea/
-media/
-resources/
-dispatch/production_settings/
-/static/*
-!/static/manager/
 .sass-cache/
 npm-debug.log
 *.module-cache/
 node_modules/
 .DS_Store
-dispatch/apps/**/migrations/
+apps/**/migrations/
 
 lib/
 bin/
