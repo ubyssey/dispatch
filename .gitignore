@@ -1,14 +1,8 @@
 *.pyc
-.idea/
-.sass-cache/
-npm-debug.log
 *.module-cache/
-node_modules/
-.DS_Store
-apps/**/migrations/
+*.egg-info
 
-lib/
-bin/
+.DS_Store
 .Python
-include/
-pip-selfcheck.json
+
+apps/**/migrations/
