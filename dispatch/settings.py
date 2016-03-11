@@ -53,10 +53,11 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.17']
 AUTH_USER_MODEL = 'core.User'
 
 # Dispatch settings
-CURRENT_THEME = 'dispatch.apps.frontend.themes.default'
+# CURRENT_THEME = 'dispatch.apps.frontend.themes.default'
+CURRENT_THEME = os.environ.get('DISPATCH_PROJECT_MODULE')
 
 TEMPLATE_DIRS = [
-    os.path.join(BASE_SITE_DIR, CURRENT_THEME + '/templates'),
+    os.path.join(BASE_SITE_DIR, CURRENT_THEME, 'templates'),
     os.path.join(BASE_DIR, 'dispatch/templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
     ]
@@ -156,7 +157,7 @@ STATIC_ROOT = os.path.join(BASE_SITE_DIR, 'static')
 STATIC_URL = BASE_STATIC_URL + 'static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_SITE_DIR, CURRENT_THEME + '/static'),
+    os.path.join(BASE_SITE_DIR, CURRENT_THEME, 'static'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_SITE_DIR, 'media')
