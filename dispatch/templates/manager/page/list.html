@@ -23,7 +23,7 @@
              <form class="search-bar" method="GET">
                 <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button green" href="{% url 'apps.manager.views.page_add' %}">New page</a>
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.page_add' %}">New page</a>
         </div>
     </header>
     <div class="list-container">
@@ -41,7 +41,7 @@
                     {% endif %}
                 </div>
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.page_edit' page.parent.id %}">{{ page.title|safe }}</a>
+                    <a href="{% url 'dispatch.apps.manager.views.page_edit' page.parent.id %}">{{ page.title|safe }}</a>
                 </div>
                 <div class="cell">
                     <span>{{ page.updated_at }}</span>

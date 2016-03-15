@@ -7,7 +7,7 @@
 {% block content %}
     <header class="secondary list-header clearfix">
         <div class="header-buttons">
-            <a class="dis-button green" href="{% url 'apps.manager.views.file_add' %}">New file</a>
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.file_add' %}">New file</a>
         </div>
     </header>
     <div class="list-container">
@@ -15,7 +15,7 @@
         {% for file in files %}
             <div class="item">
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.file_edit' file.id %}">{{ file.name }}</a>
+                    <a href="{% url 'dispatch.apps.manager.views.file_edit' file.id %}">{{ file.name }}</a>
                 </div>
                 <div class="cell">
                     {{ file.updated_at }}

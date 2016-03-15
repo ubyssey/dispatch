@@ -7,7 +7,7 @@
 {% block content %}
     <header class="secondary list-header clearfix">
         <div class="header-buttons">
-            <a class="dis-button green" href="{% url 'apps.manager.views.section_add' %}">New section</a>
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.section_add' %}">New section</a>
         </div>
     </header>
     <div class="list-container">
@@ -15,7 +15,7 @@
         {% for section in sections %}
             <div class="item">
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.section_edit' section.id %}">{{ section.name }}</a>
+                    <a href="{% url 'dispatch.apps.manager.views.section_edit' section.id %}">{{ section.name }}</a>
                 </div>
                 <div class="title cell">
                     {{ section.slug }}
