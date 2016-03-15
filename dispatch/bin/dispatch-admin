@@ -22,7 +22,7 @@ def replace_in_file(path, before, after):
             outfile.write(line)
 
 def start_project(name):
-    template_path = os.path.join(PACKAGE_DIR, 'management/templates/project.tar.gz')
+    template_path = os.path.join(PACKAGE_DIR, 'core/management/templates/project.tar.gz')
 
     # Use temporary directory to prepare new project files
     tmp_dir = tempfile.mkdtemp()

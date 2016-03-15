@@ -1,19 +1,17 @@
 """
-Django settings for Dispatch project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+Default Dispatch settings
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-BASE_SITE_DIR = os.environ.get('DISPATCH_BASE_SITE_DIR', BASE_DIR)
+from django.conf.global_settings import *
+
+DISPATCH_PROJECT_MODULE = os.environ.get('DISPATCH_PROJECT_MODULE')
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+BASE_PROJECT_DIR = os.environ.get('DISPATCH_PROJECT_DIR', BASE_DIR)
 
 BASE_URL = 'http://localhost:8000/'
 
@@ -21,12 +19,6 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&t7b#38ncrab5lmpe#pe#41coa-8ctwuy@tm0!x8*n_r38x_m*'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 LOGGING = {
     'version': 1,
@@ -52,12 +44,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.17']
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
-# Dispatch settings
-# CURRENT_THEME = 'dispatch.apps.frontend.themes.default'
-CURRENT_THEME = os.environ.get('DISPATCH_PROJECT_MODULE')
-
 TEMPLATE_DIRS = [
-    os.path.join(BASE_SITE_DIR, CURRENT_THEME, 'templates'),
+    os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
     os.path.join(BASE_DIR, 'dispatch/templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
     ]
@@ -107,22 +95,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'dispatch.urls'
 APPEND_SLASH = True
-WSGI_APPLICATION = 'dispatch.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dispatch',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    }
-}
+WSGI_APPLICATION = '%s.wsgi.application' % DISPATCH_PROJECT_MODULE
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -153,12 +126,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 BASE_STATIC_URL = 'http://localhost:8888/'
 
-STATIC_ROOT = os.path.join(BASE_SITE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
 STATIC_URL = BASE_STATIC_URL + 'static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_SITE_DIR, CURRENT_THEME, 'static'),
+    os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'static'),
 )
 
-MEDIA_ROOT = os.path.join(BASE_SITE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')
 MEDIA_URL = BASE_STATIC_URL + 'media/'
