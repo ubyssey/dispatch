@@ -18,7 +18,7 @@
             {% endfor %}
             <button type="submit" class="dis-button">Submit</button>
             {% if file %}
-            <a class="dis-button" href="{% url 'apps.manager.views.file_delete' file.id %}">Delete</a>
+            <a class="dis-button" href="{% url 'dispatch.apps.manager.views.file_delete' file.id %}">Delete</a>
             {% endif %}
         </form>
     </div>
