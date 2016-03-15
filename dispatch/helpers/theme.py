@@ -5,7 +5,7 @@ class ThemeHelper():
 
     @staticmethod
     def get_current_theme():
-        return settings.CURRENT_THEME
+        return settings.DISPATCH_PROJECT_MODULE
 
     @staticmethod
     def get_theme_templates(theme_name=False):
