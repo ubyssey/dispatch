@@ -19,7 +19,7 @@
              <form class="search-bar" method="GET">
                 <input placeholder="Search roles" type="text" value="{{ query }}" name="q">
             </form>
-            <a class="dis-button small" href="{% url 'apps.manager.views.role_add' %}">New role</a>
+            <a class="dis-button small" href="{% url 'dispatch.apps.manager.views.role_add' %}">New role</a>
         </div>
     </header>
     <div class="list-container">
@@ -30,7 +30,7 @@
                     <input class="item-checkbox" type="checkbox">
                 </div>
                 <div class="title cell">
-                    <a href="{% url 'apps.manager.views.role_edit' role.id %}">{{ role.name }}</a>
+                    <a href="{% url 'dispatch.apps.manager.views.role_edit' role.id %}">{{ role.name }}</a>
                 </div>
             </div>
         {% endfor %}
