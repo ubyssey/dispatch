@@ -10,8 +10,7 @@ setup(name='dispatch',
       packages=['dispatch'],
       scripts=['dispatch/bin/dispatch-admin'],
       install_requires=[
-        'mysql-python == 1.2.5',
-        'django == 1.8.2',
+        'django == 1.9.4',
         'djangorestframework == 3.2.4',
         'pillow'
       ],
