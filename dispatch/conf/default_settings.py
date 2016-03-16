@@ -2,7 +2,6 @@
 Default Dispatch settings
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
 
@@ -16,9 +15,6 @@ BASE_PROJECT_DIR = os.environ.get('DISPATCH_PROJECT_DIR', BASE_DIR)
 BASE_URL = 'http://localhost:8000/'
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 LOGGING = {
     'version': 1,
@@ -121,17 +117,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "dispatch.helpers.context_processors.static"
 )
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-BASE_STATIC_URL = 'http://localhost:8888/'
-
 STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
-STATIC_URL = BASE_STATIC_URL + 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'static'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')
-MEDIA_URL = BASE_STATIC_URL + 'media/'
+MEDIA_URL = '/media/'
