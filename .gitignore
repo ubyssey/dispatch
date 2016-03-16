@@ -5,4 +5,5 @@
 .DS_Store
 .Python
 
-apps/**/migrations/
+dispatch/apps/**/migrations/
+dist/
