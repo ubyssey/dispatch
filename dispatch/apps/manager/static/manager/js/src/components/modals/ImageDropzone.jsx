@@ -1,4 +1,5 @@
 var React = require('react');
+var Dropzone = require('dropzone');
 var Image = require('./Image.jsx');
 
 var ImageDropzone = React.createClass({
