@@ -1,0 +1,129 @@
+<!DOCTYPE html>{% load staticfiles %}{% load humanize %}
+<html>
+<head>
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="{% static 'manager/css/admin.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'manager/css/dropzone.css' %}" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header class="main">
+            <div class="dispatch-logo">
+                <a href="{% url 'dispatch.apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+            </div>
+            <ul>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'news' %}">News</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'sports' %}">Sports</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'culture' %}">Culture</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'opinion' %}">Opinion</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'features' %}">Features</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'science' %}">Science</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'blog' %}">Blog</a></li>
+             </ul>
+             <ul class="right">
+                 <li class="dropdown">
+                     <a>Manage<i class="fa fa-caret-down left"></i></a>
+                     <ul>
+                         <li><a href="{% url 'dispatch.apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                     </ul>
+                <li class="dropdown">
+                    <a><i class="fa fa-user right"></i>{{ user.get_username }}</a>
+                    <ul>
+                        <li><a href="{% url 'dispatch.apps.manager.views.profile' %}">manage profile</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <header class="mobile">
+            <div class="dispatch-logo">
+                <a href="{% url 'dispatch.apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+            </div>
+            <ul>
+                <li class="dropdown">
+                    <a>Sections<i class="fa fa-caret-down left"></i></a>
+                    <ul>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'news' %}">News</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'sports' %}">Sports</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'culture' %}">Culture</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'opinion' %}">Opinion</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'features' %}">Features</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'science' %}">Science</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'blog' %}">Blog</a></li>
+                    </ul>
+                </li>
+             </ul>
+             <ul class="right">
+                 <li class="dropdown">
+                     <a>Manage<i class="fa fa-caret-down left"></i></a>
+                     <ul>
+                         <li><a href="{% url 'dispatch.apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                     </ul>
+                <li class="dropdown">
+                    <a><i class="fa fa-user right"></i>{{ user.get_username }}</a>
+                    <ul>
+                        <li><a href="{% url 'dispatch.apps.manager.views.profile' %}">manage profile</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+
+        {% block main %}
+        <main>
+            {% block content %}
+                <div class="inner scroll">
+                    <div class="home container">
+                        <div class="row">
+                            <div class="seven columns">
+                                <h3>Latest Activity</h3>
+                                <ul class="activity">
+                                {% for action in actions %}
+                                    <li><i class="fa fa-{{ action.icon }}"></i><div>{{ action.text|safe }} <span class="timestamp">{{ action.timestamp|naturaltime }}</span></div></li>
+                                {% endfor %}
+                                </ul>
+                            </div><div class="five columns">
+                                <h3>Quick Actions</h3>
+                                <div class="sidebox actions">
+                                    <ul class="actions">
+                                        <li><a href="{% url 'dispatch.apps.manager.views.article_add' %}">New Article</a></li>
+                                    </ul>
+                                </div>
+                                {% if recent %}
+                                <h3>Your Recent Articles</h3>
+                                <div class="sidebox list">
+                                    <ul class="actions">
+                                        {% for article in recent %}
+                                            <li><a href="{% url 'dispatch.apps.manager.views.article_edit' article.parent_id %}">{{ article.headline }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </main>
+        {% endblock %}
+    </div>
+    {% block modals %}
+    {% endblock %}
+    {% comment %}<script src="{% static 'js/vendor/react.js' %}" type="text/javascript"></script>{% endcomment %}
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="{% static 'manager/js/dist/dispatch.js' %}" type="text/javascript"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

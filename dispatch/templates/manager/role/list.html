@@ -1,0 +1,43 @@
+{% extends 'manager/base.html' %}
+{% load staticfiles %}
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <header class="secondary list-header clearfix">
+        <div class="checkbox cell">
+            <input type="checkbox">
+        </div>
+        <div class="actions cell">
+            <div class="selected-items"></div>
+            <button class="delete-items dis-button small">Delete</button>
+        </div>
+
+        <div class="header-buttons">
+             <form class="search-bar" method="GET">
+                <input placeholder="Search roles" type="text" value="{{ query }}" name="q">
+            </form>
+            <a class="dis-button small" href="{% url 'dispatch.apps.manager.views.role_add' %}">New role</a>
+        </div>
+    </header>
+    <div class="list-container">
+        <div class="item-list">
+        {% for role in roles %}
+            <div id="item-{{ role.id }}" data-id="{{ role.id }}" class="item">
+                <div class="checkbox cell">
+                    <input class="item-checkbox" type="checkbox">
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'dispatch.apps.manager.views.role_edit' role.id %}">{{ role.name }}</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'manager/js/src/list.js' %}" type="text/javascript"></script>
+{% endblock %}

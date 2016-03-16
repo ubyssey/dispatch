@@ -1,0 +1,30 @@
+{% extends 'manager/base.html' %}
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <header class="secondary list-header clearfix">
+        <div class="header-buttons">
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.file_add' %}">New file</a>
+        </div>
+    </header>
+    <div class="list-container">
+        <div class="item-list">
+        {% for file in files %}
+            <div class="item">
+                <div class="title cell">
+                    <a href="{% url 'dispatch.apps.manager.views.file_edit' file.id %}">{{ file.name }}</a>
+                </div>
+                <div class="cell">
+                    {{ file.updated_at }}
+                </div>
+                <div class="cell">
+                    {{ file.tag }}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
