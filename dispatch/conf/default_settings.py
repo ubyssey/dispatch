@@ -39,7 +39,7 @@ LOGGING = {
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.17']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
