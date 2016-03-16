@@ -1,0 +1,3 @@
+recursive-include dispatch/templates *
+recursive-include dispatch/apps *
+include dispatch/core/management/templates/*

@@ -9,6 +9,7 @@ setup(name='dispatch',
       license='GPL',
       packages=['dispatch'],
       scripts=['dispatch/bin/dispatch-admin'],
+      include_package_data=True,
       install_requires=[
         'django == 1.9.4',
         'djangorestframework == 3.2.4',
