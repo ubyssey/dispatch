@@ -1,0 +1,60 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+    <header class="secondary list-header clearfix">
+        <div class="checkbox cell">
+            <input type="checkbox">
+        </div>
+        <div class="actions cell">
+        </div>
+        <div class="header-buttons">
+            <div class="pagination">
+                <span class="step-links">
+                    {% if pages.paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ pages.number }} of {{ pages.paginator.num_pages }}
+                    </span>
+                    {% endif %}
+
+                    <div class="combo-buttons">
+                        {% if pages.has_previous %}<a class="dis-button" href="?page={{ pages.previous_page_number }}"><i class="fa fa-chevron-left"></i></a>{% endif %}{% if pages.has_next %}<a class="dis-button" href="?page={{ pages.next_page_number }}"><i class="fa fa-chevron-right"></i></a>{% endif %}
+                    </div>
+                </span>
+            </div>
+             <form class="search-bar" method="GET">
+                <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
+            </form>
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.page_add' %}">New page</a>
+        </div>
+    </header>
+    <div class="list-container">
+        <div class="item-list">
+        {% for page in pages %}
+            <div data-id="{{ page.parent.id }}" class="item">
+                <div class="checkbox cell">
+                    <input class="item-checkbox" type="checkbox">
+                </div>
+                <div class="status cell">
+                    {% if page.is_published %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                         <i class="fa fa-warning"></i>
+                    {% endif %}
+                </div>
+                <div class="title cell">
+                    <a href="{% url 'dispatch.apps.manager.views.page_edit' page.parent.id %}">{{ page.title|safe }}</a>
+                </div>
+                <div class="cell">
+                    <span>{{ page.updated_at }}</span>
+                </div>
+                <div class="cell">
+                    <span>{{ page.get_status }}</span>
+                </div>
+                <div class="cell">
+                    <span>{{ page.revision_id }} revisions</span>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

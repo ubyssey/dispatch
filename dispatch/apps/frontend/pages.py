@@ -1,5 +1,5 @@
 from dispatch.apps.frontend.models import ComponentSet
-from dispatch.helpers import ThemeHelper
+from dispatch.helpers.theme import ThemeHelper
 
 class BasePage:
 

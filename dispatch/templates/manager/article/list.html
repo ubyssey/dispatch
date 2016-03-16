@@ -1,0 +1,71 @@
+{% extends 'manager/base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="list" data-model="article">
+        <header class="secondary list-header clearfix">
+            <div class="checkbox cell">
+                <input type="checkbox">
+            </div>
+            <div class="actions cell">
+                <div class="selected-items"></div>
+                <button class="delete-items dis-button small">Delete</button>
+            </div>
+            <div class="header-buttons">
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if article_list.paginator.num_pages > 1 %}
+                        <span class="current">
+                            Page {{ article_list.number }} of {{ article_list.paginator.num_pages }}
+                        </span>
+                        {% endif %}
+
+                        <div class="combo-buttons">
+                            {% if article_list.has_previous %}<a class="dis-button" href="?page={{ article_list.previous_page_number }}"><i class="fa fa-chevron-left"></i></a>{% endif %}{% if article_list.has_next %}<a class="dis-button" href="?page={{ article_list.next_page_number }}"><i class="fa fa-chevron-right"></i></a>{% endif %}
+                        </div>
+                    </span>
+                </div>
+                 <form class="search-bar" method="GET">
+                    <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
+                </form>
+                <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
+            </div>
+        </header>
+        <div class="list-container">
+            <div class="item-list">
+            {% for article in article_list %}
+                <div id="item-{{ article.parent.id }}" data-id="{{ article.parent.id }}" class="item">
+                    <div class="checkbox cell">
+                        <input class="item-checkbox" type="checkbox">
+                    </div>
+                    <div class="status cell">
+                        {% if article.is_published %}
+                            <i class="fa fa-check-circle"></i>
+                        {% else %}
+                             <i class="fa fa-warning"></i>
+                        {% endif %}
+                    </div>
+                    <div class="title cell">
+                        <a href="{% url 'dispatch.apps.manager.views.article_edit' article.parent.id %}">{{ article.headline|safe }}</a>
+                    </div>
+                    <div class="cell">
+                        <span>{{ article.get_author_string }}</span>
+                    </div>
+                    <div class="cell">
+                        <span>{{ article.updated_at }}</span>
+                    </div>
+                    <div class="cell">
+                        <span>{{ article.get_status }}</span>
+                    </div>
+                    <div class="cell">
+                        <span>{{ article.revision_id }} revisions</span>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'manager/js/dist/list.js' %}" type="text/javascript"></script>
+{% endblock %}

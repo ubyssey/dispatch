@@ -1,0 +1,26 @@
+{% extends 'manager/base.html' %}
+{% block header %}
+    <div class="title">
+        <h1>File</h1>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="inner scroll">
+    <div class="container">
+        <form class="section-form"  action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field">
+                    {{ field.errors }}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="dis-button">Submit</button>
+            {% if file %}
+            <a class="dis-button" href="{% url 'dispatch.apps.manager.views.file_delete' file.id %}">Delete</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

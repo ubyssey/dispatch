@@ -7,13 +7,13 @@ from rest_framework.decorators import detail_route
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException
 
-from dispatch.helpers import ThemeHelper
+from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
-                                           
+
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
     Viewset for frontpage views.
@@ -241,7 +241,7 @@ class PageViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(headline__icontains=q)
 
         return queryset
-        
+
     @detail_route(methods=['get'],)
     def publish(self, request, parent_id=None):
         queryset = Page.objects.all()
@@ -397,10 +397,10 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
-    
+
     def create(self, request, *args, **kwargs):
         authors = request.POST.get('authors', None)
-        
+
         # If filename is not valid ASCII, don't add to DB and send error
         if not all(ord(c) < 128 for c in request.data.get('img').name):
             return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)

@@ -17,7 +17,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.template import loader, Context
 
-from dispatch.helpers import ThemeHelper
+from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
