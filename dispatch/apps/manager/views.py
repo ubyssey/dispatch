@@ -9,7 +9,7 @@ from dispatch.apps.core.models import User, Person
 from dispatch.apps.core.actions import list_actions, recent_articles
 from datetime import datetime
 from .forms import PersonForm, ProfileForm, SectionForm, RoleForm, FileForm
-from dispatch.helpers import ThemeHelper
+from dispatch.helpers.theme import ThemeHelper
 from django.contrib.auth.models import Group
 
 @staff_member_required

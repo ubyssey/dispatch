@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from . import views
+from dispatch.apps.manager import views
 
 urlpatterns = patterns('',
     url(r'^$', views.home),

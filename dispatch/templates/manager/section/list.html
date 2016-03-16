@@ -1,0 +1,27 @@
+{% extends 'manager/base.html' %}
+{% block header %}
+    <div class="title">
+        <h1>{{ list_title|title }}</h1>
+    </div>
+{% endblock %}
+{% block content %}
+    <header class="secondary list-header clearfix">
+        <div class="header-buttons">
+            <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.section_add' %}">New section</a>
+        </div>
+    </header>
+    <div class="list-container">
+        <div class="item-list">
+        {% for section in sections %}
+            <div class="item">
+                <div class="title cell">
+                    <a href="{% url 'dispatch.apps.manager.views.section_edit' section.id %}">{{ section.name }}</a>
+                </div>
+                <div class="title cell">
+                    {{ section.slug }}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

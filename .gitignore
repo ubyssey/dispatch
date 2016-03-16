@@ -1,19 +1,9 @@
 *.pyc
-.idea/
-media/
-resources/
-dispatch/production_settings/
-/static/*
-!/static/manager/
-.sass-cache/
-npm-debug.log
 *.module-cache/
-node_modules/
-.DS_Store
-dispatch/apps/**/migrations/
+*.egg-info
 
-lib/
-bin/
+.DS_Store
 .Python
-include/
-pip-selfcheck.json
+
+dispatch/apps/**/migrations/
+dist/
