@@ -9,7 +9,7 @@ var gulpif = require('gulp-if');
 var derequire = require('gulp-derequire');
 var rename = require('gulp-rename');
 var argv = require('minimist')(process.argv.slice(2));
-var dispatch = require('./dist/dispatch.js');
+var dispatch = require('./dispatch.js');
 
 var path = {
   DEST: 'dist',
@@ -58,7 +58,7 @@ gulp.task('file', function() {
 	.pipe(gulpif(!dev, buffer()))
 	.pipe(gulpif(!dev, uglify()))
 	.pipe(rename(file + '-' + dispatch.version + '.js'))
-	.pipe(gulp.dest(path.DEST));	
+	.pipe(gulp.dest(path.DEST));
 });
 
 gulp.task('list', function(){
