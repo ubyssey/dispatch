@@ -1,6 +1,6 @@
 {
   "name": "dispatch",
-  "version": "0.2.1",
+  "version": "0.2.7",
   "description": "The frontend framework for the Dispatch publishing platform.",
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "http://ubyssey.ca",
@@ -10,15 +10,16 @@
   "devDependencies": {
     "babel": "^5.1.0",
     "brace": "^0.5.1",
-    "browserify": "^10.2.4",
+    "browserify": "^13.0.0",
     "deep-diff": "^0.3.2",
+    "dropzone": "^4.3.0",
     "gulp": "^3.9.0",
     "gulp-derequire": "^2.1.0",
-    "gulp-if": "^1.2.5",
+    "gulp-if": "^2.0.0",
     "gulp-react": "^3.0.1",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.2.0",
-    "minimist": "^1.1.1",
+    "gulp-uglify": "^1.5.3",
+    "minimist": "^1.2.0",
     "moment": "^2.10.3",
     "quill": "https://github.com/psiemens/quill-npm/tarball/master",
     "react": "~0.13.3",
@@ -29,7 +30,7 @@
     "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.2"
+    "watchify": "^3.7.0"
   },
   "engines": {
     "node": ">=0.10"
