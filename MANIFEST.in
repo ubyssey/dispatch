@@ -1,3 +1,4 @@
 recursive-include dispatch/templates *
 recursive-include dispatch/apps *
 include dispatch/core/management/templates/*
+recursive-exclude dispatch/apps/manager/static/manager/js/node_modules *
