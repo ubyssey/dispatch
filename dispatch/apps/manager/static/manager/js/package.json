@@ -1,6 +1,6 @@
 {
   "name": "dispatch",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "The frontend framework for the Dispatch publishing platform.",
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "http://ubyssey.ca",
@@ -19,6 +19,7 @@
     "gulp-react": "^3.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3",
+    "lodash": "^4.6.1",
     "minimist": "^1.2.0",
     "moment": "^2.10.3",
     "quill": "https://github.com/psiemens/quill-npm/tarball/master",
