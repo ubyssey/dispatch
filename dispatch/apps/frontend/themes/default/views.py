@@ -52,15 +52,22 @@ class DefaultTheme():
         logout(request)
         return redirect(self.home)
 
-    def find_article(self, request, section, slug):
+    def find_article(self, request, slug, section=None):
+
+        def _find_article(slug, section=None):
+            if section is not None:
+                return Article.objects.get(slug=slug, section__name=section, head=True)
+            else:
+                return Article.objects.get(slug=slug, head=True)
+
         if request.user.is_staff:
             try:
-                article = Article.objects.get(slug=slug, section__name=section, head=True)
+                article = _find_article(slug, section)
             except Article.DoesNotExist:
                 raise Http404("This article does not exist.")
         else:
             try:
-                article = Article.objects.get(slug=slug, section__name=section, is_published=True)
+                article = _find_article(slug, section)
             except Article.DoesNotExist:
                 raise Http404("This article does not exist.")
         return article
