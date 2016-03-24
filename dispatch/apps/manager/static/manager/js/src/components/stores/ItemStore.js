@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var ItemStore = function(data){
     return {
         items: data ? data : [],
