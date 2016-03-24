@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var ImageStore = function(){
     return {
         images: [],
