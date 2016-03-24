@@ -403,6 +403,10 @@ class Article(Publishable):
     def __str__(self):
         return self.headline
 
+    @property
+    def title(self):
+        return self.headline
+
     def tags_list(self):
         return ",".join(self.tags.values_list('name', flat=True))
 
@@ -577,7 +581,9 @@ class Page(Publishable):
     parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
-
+    def get_author_string(self):
+        return None
+        
     def save_attachments(self):
         """
         Saves all attachments embedded in article content.
