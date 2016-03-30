@@ -8,12 +8,19 @@ var uglify = require('gulp-uglify');
 var gulpif = require('gulp-if');
 var derequire = require('gulp-derequire');
 var rename = require('gulp-rename');
+var sass = require('gulp-sass');
 var argv = require('minimist')(process.argv.slice(2));
-var dispatch = require('./dispatch.js');
+var dispatch = require('./js/dispatch.js');
 
 var path = {
-  DEST: 'dist',
-  SRC: './src/',
+  css: {
+    SRC: './css/sass',
+    DEST: './css'
+  },
+  js: {
+    SRC: './js/src',
+    DEST: './js/dist'
+  }
 };
 
 var file = argv.i || 'article';
@@ -27,26 +34,26 @@ var reactTask = function(obj){
     .pipe(gulpif(!dev, buffer()))
     .pipe(gulpif(!dev, uglify()))
     .pipe(rename(file + '-' + dispatch.version + '.js'))
-    .pipe(gulp.dest(path.DEST));
+    .pipe(gulp.dest(path.js.DEST));
 }
 
 gulp.task('watch', function() {
   var watcher  = watchify(browserify({
-    entries: [path.SRC + file + '.js'],
+    entries: [path.js.SRC + '/' + file + '.js'],
     debug: dev,
     cache: {}, packageCache: {}, fullPaths: false
   }));
 
   return reactTask(watcher.on('update', function () {
-      reactTask(watcher);
-      console.log('updated');
+    reactTask(watcher);
+    console.log('updated');
   }));
 
 });
 
 gulp.task('file', function() {
 	browserify({
-		entries: [path.SRC + file + '.js'],
+		entries: [path.js.SRC + '/' + file + '.js'],
 		debug: dev,
 		cache: {},
 		packageCache: {},
@@ -58,13 +65,19 @@ gulp.task('file', function() {
 	.pipe(gulpif(!dev, buffer()))
 	.pipe(gulpif(!dev, uglify()))
 	.pipe(rename(file + '-' + dispatch.version + '.js'))
-	.pipe(gulp.dest(path.DEST));
+	.pipe(gulp.dest(path.js.DEST));
 });
 
 gulp.task('list', function(){
-    gulp.src(path.SRC + 'list.js')
+    gulp.src(path.js.SRC + '/list.js')
     .pipe(uglify())
-    .pipe(gulp.dest(path.DEST));
+    .pipe(gulp.dest(path.js.DEST));
+});
+
+gulp.task('sass', function () {
+  gulp.src(path.css.SRC + '/**/*.scss')
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(gulp.dest(path.css.DEST));
 });
 
 gulp.task('default', ['watch']);
