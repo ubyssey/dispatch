@@ -1,4 +1,3 @@
-@import "compass/css3/box-shadow";
 @import "utilities/fonts";
 
 
@@ -71,8 +70,8 @@ div.panel.options {
     right: -600px;
   }
 
-  @include box-shadow(rgba(0, 0, 0, 0.13) 0px 0px 5px);
-  @include transition(right 0.3s ease-in-out);
+  box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
+  transition: right 0.3s ease-in-out;
 
   div.fieldset {
     div.col:first-child {
