@@ -222,7 +222,7 @@ div.model-dropdown {
     width: 100%;
     background: #fff;
     box-sizing: border-box;
-    @include box-shadow(0 3px 12px rgba(0,0,0,0.15));
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
     input {
       width: 100%;
       box-sizing: border-box;
@@ -260,4 +260,3 @@ div.model-dropdown {
     }
   }
 }
-
