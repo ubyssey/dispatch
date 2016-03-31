@@ -108,3 +108,27 @@ $column-margin: 4% !default; // space between columns
 
 
 }
+
+// Make admin mobile-friendly
+@media (#{$bp-the-size-of-mobile}) {
+  div.options.panel {
+    position: relative !important;
+    height: 300px;
+  }
+  div.container {
+        padding-left: 5px
+    }
+  div.field input,
+    div.field textarea {
+        width: 300px !important;
+    }  
+
+     div.panel.content div.toggle-options, div.panel.content.expanded div.toggle-options {
+        position: static !important;
+        background: #FAFAFA !important;
+    }
+    .ql-editor {
+        margin-left: 10px !important
+    }  
+
+}

@@ -60,8 +60,7 @@
                     </ul>
                 </li>
              </ul>
-             <ul class="right">
-                 <li class="dropdown">
+            <li class="dropdown">
                      <a>Manage<i class="fa fa-caret-down left"></i></a>
                      <ul>
                          <li><a href="{% url 'dispatch.apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
@@ -69,15 +68,11 @@
                          <li><a href="{% url 'dispatch.apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
                          <li><a href="{% url 'dispatch.apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
                          <li><a href="{% url 'dispatch.apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
                      </ul>
-                <li class="dropdown">
-                    <a><i class="fa fa-user right"></i>{{ user.get_username }}</a>
-                    <ul>
-                        <li><a href="{% url 'dispatch.apps.manager.views.profile' %}">manage profile</a></li>
-                        <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
-                    </ul>
-                </li>
+                 </li>
             </ul>
+         </ul>   
         </header>
 
         {% block main %}
