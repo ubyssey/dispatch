@@ -12,51 +12,51 @@
     <div class="wrapper">
         <header class="main">
             <div class="dispatch-logo">
-                <a href="{% url 'apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+                <a href="{% url 'dispatch.apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
             </div>
             <ul>
-                <li><a href="{% url 'apps.manager.views.section' 'news' %}">News</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'sports' %}">Sports</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'culture' %}">Culture</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'opinion' %}">Opinion</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'features' %}">Features</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'science' %}">Science</a></li>
-                <li><a href="{% url 'apps.manager.views.section' 'blog' %}">Blog</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'news' %}">News</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'sports' %}">Sports</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'culture' %}">Culture</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'opinion' %}">Opinion</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'features' %}">Features</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'science' %}">Science</a></li>
+                <li><a href="{% url 'dispatch.apps.manager.views.section' 'blog' %}">Blog</a></li>
              </ul>
              <ul class="right">
                  <li class="dropdown">
                      <a>Manage<i class="fa fa-caret-down left"></i></a>
                      <ul>
-                         <li><a href="{% url 'apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
-                         <li><a href="{% url 'apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
-                         <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
-                         <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
-                         <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
                      </ul>
                 <li class="dropdown">
                     <a><i class="fa fa-user right"></i>{{ user.get_username }}</a>
                     <ul>
-                        <li><a href="{% url 'apps.manager.views.profile' %}">manage profile</a></li>
-                        <li><a href="{% url 'apps.manager.views.logout' %}">logout</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.profile' %}">manage profile</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
                     </ul>
                 </li>
             </ul>
         </header>
         <header class="mobile">
             <div class="dispatch-logo">
-                <a href="{% url 'apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
+                <a href="{% url 'dispatch.apps.manager.views.home'%}"><i class="fa fa-circle"></i>dispatch</a>
             </div>
             <ul>
                 <li class="dropdown">
                     <a>Sections<i class="fa fa-caret-down left"></i></a>
                     <ul>
-                        <li><a href="{% url 'apps.manager.views.section' 'news' %}">News</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'sports' %}">Sports</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'culture' %}">Culture</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'opinion' %}">Opinion</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'features' %}">Features</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'science' %}">Science</a></li>
-                        <li><a href="{% url 'apps.manager.views.section' 'blog' %}">Blog</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'news' %}">News</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'sports' %}">Sports</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'culture' %}">Culture</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'opinion' %}">Opinion</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'features' %}">Features</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'science' %}">Science</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.section' 'blog' %}">Blog</a></li>
                     </ul>
                 </li>
              </ul>
@@ -64,18 +64,18 @@
                 <li class="dropdown">
                     <a>Admin<i class="fa fa-caret-down left"></i></a>
                     <ul>
-                        <li><a href="{% url 'apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
-                         <li><a href="{% url 'apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
-                         <li><a href="{% url 'apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
-                         <li><a href="{% url 'apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
-                         <li><a href="{% url 'apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
-                         <li><a href="{% url 'apps.manager.views.profile' %}">manage profile</a></li>
-                        <li><a href="{% url 'apps.manager.views.logout' %}">logout</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.components' %}"><i class="fa fa-wrench right"></i>components</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.files' %}"><i class="fa fa-file-o right"></i>files</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.pages' %}"><i class="fa fa-file-text-o right"></i>pages</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.sections' %}"><i class="fa fa-list right"></i>sections</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.users' %}"><i class="fa fa-users right"></i>people</a></li>
+                         <li><a href="{% url 'dispatch.apps.manager.views.profile' %}">manage profile</a></li>
+                        <li><a href="{% url 'dispatch.apps.manager.views.logout' %}">logout</a></li>
                     </ul>
                 </li>
              </ul>
         </header>
-        
+
         {% block main %}
         <main>
             {% block content %}
@@ -93,7 +93,7 @@
                                 <h3>Quick Actions</h3>
                                 <div class="sidebox actions">
                                     <ul class="actions">
-                                        <li><a href="{% url 'apps.manager.views.article_add' %}">New Article</a></li>
+                                        <li><a href="{% url 'dispatch.apps.manager.views.article_add' %}">New Article</a></li>
                                     </ul>
                                 </div>
                                 {% if recent %}
@@ -101,7 +101,7 @@
                                 <div class="sidebox list">
                                     <ul class="actions">
                                         {% for article in recent %}
-                                            <li><a href="{% url 'apps.manager.views.article_edit' article.parent_id %}">{{ article.headline }}</a></li>
+                                            <li><a href="{% url 'dispatch.apps.manager.views.article_edit' article.parent_id %}">{{ article.headline }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
