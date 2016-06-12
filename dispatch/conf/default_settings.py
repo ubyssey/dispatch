@@ -122,7 +122,7 @@ STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static/dist'),
+    os.path.join(BASE_DIR, 'dispatch/static/dist'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')
