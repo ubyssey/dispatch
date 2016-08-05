@@ -71,15 +71,20 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                 reading_time: this.state.instance.reading_time,
                 importance: this.state.instance.importance,
                 template: this.state.instance.template,
-                template_fields: this.refs.template.save(),
                 seo_keyword: this.state.instance.seo_keyword,
                 seo_description: this.state.instance.seo_description
             }
 
-            if(this.state.instance.topic)
+            if (this.state.instance.topic) {
                 values['topic_id'] = this.state.instance.topic.id;
+            }
+
+            if (this.refs.template) {
+              values['template_fields'] = this.refs.template.save();
+            }
 
             this.setState({ saving: true, });
+
             if(this.state.firstSave){
                 dispatch.add(this.props.model, values, function(instance){
                     this.saveCallback(instance, callback)
