@@ -87,6 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 )
 
 ROOT_URLCONF = 'dispatch.urls'
@@ -121,7 +122,7 @@ STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'static'),
+    os.path.join(BASE_DIR, 'dispatch/static/dist'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')

@@ -13,6 +13,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinLengthValidator, MaxLengthValidator
 from django.utils.functional import cached_property
 from django.utils import timezone
+from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -603,11 +604,23 @@ class Image(Model):
     def save_thumbnail(self, image, size, name, label):
         width, height = size
         (imw, imh) = image.size
+
+        # If image is larger than thumbnail size, resize image
         if (imw > width) or (imh > height):
             image.thumbnail(size, Img.ANTIALIAS)
+
+        # Attach new thumbnail label to image filename
         name = "%s-%s.jpg" % (name, label)
-        output = os.path.join(settings.MEDIA_ROOT, name)
-        image.save(output, format='JPEG', quality=75)
+
+        # Write new thumbnail to StringIO object
+        image_io = StringIO.StringIO()
+        image.save(image_io, format='JPEG', quality=75)
+
+        # Convert StringIO object to Django File object
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
+
+        # Save the new file to the default storage system
+        default_storage.save(name, thumb_file)
 
     def save_authors(self, authors):
         Author.objects.filter(image_id=self.id).delete()
