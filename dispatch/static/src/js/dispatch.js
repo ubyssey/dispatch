@@ -1,5 +1,5 @@
 // var version = require('../../package.json').version;
-var version = '0.2.13';
+var version = '0.2.15';
 
 var settings = {
   'base_url': '/',

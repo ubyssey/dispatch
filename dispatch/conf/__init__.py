@@ -4,7 +4,7 @@ from dispatch.conf import default_settings
 
 class DispatchSettings(object):
 
-    COMBINE_SETTINGS = ('STATICFILES_DIRS',)
+    COMBINE_SETTINGS = ('INSTALLED_APPS', 'STATICFILES_DIRS',)
 
     def configure(self):
 
