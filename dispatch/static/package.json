@@ -16,6 +16,7 @@
     "deep-diff": "^0.3.2",
     "dropzone": "^4.3.0",
     "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.2",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "lodash": "^4.6.1",
