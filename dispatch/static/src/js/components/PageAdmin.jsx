@@ -56,9 +56,12 @@ var PageAdmin = React.createClass(PublishableAdmin({
                 content_json: this.refs.content.save(),
                 status: this.state.instance.status,
                 template: this.state.instance.template,
-                template_fields: this.refs.template.save(),
                 seo_keyword: this.state.instance.seo_keyword,
                 seo_description: this.state.instance.seo_description
+            }
+
+            if (this.refs.template) {
+              values['template_fields'] = this.refs.template.save();
             }
 
             this.setState({ saving: true, });
