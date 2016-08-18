@@ -57,8 +57,7 @@ class ArticleManager(PublishableManager):
         query_where = """
             WHERE head = 1 AND
             is_published = %(is_published)s AND
-            parent_id NOT IN (%(excluded)s) AND
-            @age < 604800
+            parent_id NOT IN (%(excluded)s)
         """
 
         if section is not None:
