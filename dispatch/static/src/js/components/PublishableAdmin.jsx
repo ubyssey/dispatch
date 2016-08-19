@@ -54,7 +54,11 @@ var PublishableAdmin = function(component) {
                showVersions: false,
                showOptions: window.innerWidth > 400,
                unsaved: false,
+               selectedIndex: 0
             };
+        },
+        handleSelect: function(index, last) {
+          this.setState({selectedIndex: index});
         },
         newInstance: function(){
             if(this.props.model == 'article' && this.props.sectionId){
