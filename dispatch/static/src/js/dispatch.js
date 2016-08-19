@@ -1,4 +1,4 @@
-var version = '0.2.20';
+var version = '0.2.21';
 
 var settings = {
   'base_url': '/',
