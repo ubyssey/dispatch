@@ -124,7 +124,7 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
                         <div className="toggle-options" onClick={this.toggleOptions}><i className={"fa fa-angle-double-" + (this.state.showOptions ? "right" : "left")}></i>{this.state.showOptions ? null : "open options"}</div>
                     </div>
                     <div className={"options panel" + (this.state.showOptions ? "" : " expanded")} >
-                        <Tabs onSelect={this.handleSelected} selectedIndex={0}>
+                        <Tabs onSelect={this.handleSelect} selectedIndex={this.state.selectedIndex}>
                             <TabList>
                                 <Tab><i className="fa fa-info"></i> Basic Fields</Tab>
                                 <Tab><i className="fa fa-camera"></i> Featured Image</Tab>
