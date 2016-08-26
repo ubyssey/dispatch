@@ -12,17 +12,20 @@ from .forms import PersonForm, ProfileForm, SectionForm, RoleForm, FileForm
 from dispatch.helpers.theme import ThemeHelper
 from django.contrib.auth.models import Group
 
-@staff_member_required
+# @staff_member_required
+# def home(request):
+#     return render_to_response(
+#         "manager/index.html",
+#         {
+#             'title': "Dashboard",
+#             'actions': list_actions(25),
+#             'recent': recent_articles(request.user.person),
+#         },
+#         RequestContext(request, {}),
+#     )
+
 def home(request):
-    return render_to_response(
-        "manager/base.html",
-        {
-            'title': "Dashboard",
-            'actions': list_actions(25),
-            'recent': recent_articles(request.user.person),
-        },
-        RequestContext(request, {}),
-    )
+    return render_to_response('manager/index.html', {})
 
 def logout(request, next_page=None):
     from django.contrib.auth.views import logout
