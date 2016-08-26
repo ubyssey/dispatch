@@ -1,18 +1,21 @@
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException
+from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -589,3 +592,48 @@ class TrendingViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data)
+
+# @api_view(['POST'])
+# @permission_classes((AllowAny,))
+# def user_register(request):
+#
+#     name = request.data.get('name', None)
+#     username = request.data.get('username', None)
+#     email = request.data.get('email', None)
+#     password = request.data.get('password', None)
+#
+#     try:
+#         user = User.objects.create_user(username, email, password, name=name)
+#         token = Token.objects.create(user=user)
+#
+#         user_serializer = UserSerializer(user)
+#
+#         data = {
+#             'user': user_serializer.data,
+#             'token': unicode(token)
+#         }
+#         return Response(data, status=status.HTTP_201_CREATED)
+#     except:
+#         return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def user_authenticate(request):
+
+    email = request.data.get('email', None)
+    password = request.data.get('password', None)
+    
+    user = authenticate(username=email, password=password)
+
+    if user is not None and user.is_active:
+
+        (token, created) = Token.objects.get_or_create(user=user)
+
+        data = {
+            'token': unicode(token)
+        }
+
+        return Response(data, status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
