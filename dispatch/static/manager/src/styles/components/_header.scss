@@ -1,0 +1,29 @@
+.c-header {
+  background: $color-steel-blue;
+  color: white;
+  font-family: $font-default;
+  font-size: 13px;
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+
+.c-header__logo {
+  font-weight: 500;
+  float: left;
+  margin-right: 15px;
+  color: #fff;
+  display: block;
+  opacity: 0.6;
+  text-decoration: none;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 15px;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.c-header__logo-icon {
+  margin-right: 5px;
+}
