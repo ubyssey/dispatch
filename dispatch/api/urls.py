@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -47,4 +47,6 @@ urlpatterns = format_suffix_patterns([
     # Article routes
     url(r'^articles/delete/$', article_bulk_delete, name='article-bulk-delete'),
     url(r'^articles/(?P<pk>[0-9]+)/comments/$', article_comments, name='article-comments'),
+    # User authorization
+    url(r'^auth/token', views.user_authenticate, name='user-token'),
 ]) + router.urls
