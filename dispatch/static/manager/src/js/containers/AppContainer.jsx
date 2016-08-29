@@ -14,7 +14,7 @@ class App extends React.Component {
   }
 
   isAuthenticated() {
-    return !!this.props.token
+    return !!this.props.auth.token
   }
 
   render() {
