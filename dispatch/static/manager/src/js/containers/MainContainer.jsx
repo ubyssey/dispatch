@@ -1,14 +1,24 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as sectionActions from '../actions/SectionActions'
+
 import Header from '../components/Header.jsx'
 
 class Main extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    if ( !props.sections.isLoaded ) {
+      props.fetchSections()
+    }
+  }
+
   render() {
     return (
       <div>
-        <Header sections={this.props.sections} user={this.props.user} />
+        <Header sections={this.props.sections.data} email={this.props.email} />
         {this.props.children}
       </div>
     )
@@ -18,10 +28,21 @@ class Main extends React.Component {
 const mapStateToProps = (state) => {
   return {
     sections: state.app.sections,
-    user: state.app.user
+    email: state.app.auth.email
   }
 }
 
-const MainContainer = connect(mapStateToProps)(Main)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchSections: () => {
+      dispatch(sectionActions.fetchSections())
+    }
+  }
+}
+
+const MainContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main)
 
 export default MainContainer
