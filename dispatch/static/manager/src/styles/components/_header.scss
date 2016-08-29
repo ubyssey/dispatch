@@ -1,4 +1,7 @@
 .c-header {
+  display: flex;
+  flex-direction: row;
+
   background: $color-steel-blue;
   color: white;
   font-family: $font-default;
@@ -7,9 +10,16 @@
   padding: 0 20px;
 }
 
+.c-header__sections {
+  flex: 1;
+}
+
+.c-header__right {
+  align-items: flex-end;
+}
+
 .c-header__logo {
   font-weight: 500;
-  float: left;
   margin-right: 15px;
   color: #fff;
   display: block;
@@ -26,4 +36,51 @@
 
 .c-header__logo-icon {
   margin-right: 5px;
+}
+
+.c-header__link, .c-header__dropdown, .c-header__dropdown__link {
+  cursor: pointer;
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+
+  > a {
+    display: block;
+    line-height: 40px;
+    padding: 0 15px;
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      background: rgba(0,0,0,0.25);
+    }
+  }
+}
+
+.c-header__dropdown__link {
+  display: block;
+}
+
+.c-header__dropdown {
+  position: relative;
+  z-index: 500;
+
+  &:hover {
+    ul {
+      display: block;
+    }
+
+    > a {
+      background: rgba(0,0,0,0.25);
+    }
+  }
+
+  ul {
+    background: rgb(49, 99, 148);
+    padding: 0;
+    position: absolute;
+    left: 0;
+    width: 150px;
+    display: none;
+  }
 }
