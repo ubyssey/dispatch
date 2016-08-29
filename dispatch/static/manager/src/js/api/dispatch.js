@@ -3,7 +3,14 @@ import fetch from 'isomorphic-fetch';
 const API_URL = 'http://localhost:8000/api/';
 
 const ROUTES = {
-  'auth/token': ['POST']
+  'auth/token': ['POST'],
+
+  // Sections
+  'sections': ['GET']
+}
+
+const DEFAULT_HEADERS = {
+  'Content-Type': 'application/json'
 }
 
 function isValidRoute(route, method) {
@@ -18,14 +25,22 @@ function buildRoute(route, method) {
   }
 }
 
+function getRequest(route) {
+  return fetch(
+    buildRoute(route, 'GET'),
+    {
+      method: 'GET',
+      headers: DEFAULT_HEADERS
+    }
+  )
+}
+
 function postRequest(route, payload) {
   return fetch(
     buildRoute(route, 'POST'),
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: DEFAULT_HEADERS,
       body: JSON.stringify(payload)
     }
   )
@@ -41,6 +56,11 @@ var DispatchAPI = {
       }
 
       return postRequest('auth/token', payload)
+    }
+  },
+  sections: {
+    fetchSections: () => {
+      return getRequest('sections')
     }
   }
 }
