@@ -1,4 +1,9 @@
+// User actions
 export const AUTH_REQUIRED = 'AUTH_REQUIRED'
 export const AUTH_REQUEST_TOKEN = 'AUTH_REQUEST_TOKEN'
 export const AUTH_RECEIVE_TOKEN = 'AUTH_RECEIVE_TOKEN'
 export const AUTH_FAILURE_TOKEN = 'AUTH_FAILURE_TOKEN'
+
+// Section actions
+export const SECTIONS_REQUEST = 'SECTIONS_FETCH'
+export const SECTIONS_RECEIVE = 'SECTIONS_RECEIVE'
