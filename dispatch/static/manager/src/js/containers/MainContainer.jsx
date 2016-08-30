@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import LoadingBar from 'react-redux-loading-bar'
 
 import * as sectionActions from '../actions/SectionActions'
 
@@ -19,6 +20,7 @@ class Main extends React.Component {
     return (
       <div>
         <Header sections={this.props.sections.data} email={this.props.email} />
+        <LoadingBar />
         {this.props.children}
       </div>
     )

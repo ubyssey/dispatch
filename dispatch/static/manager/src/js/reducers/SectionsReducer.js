@@ -8,16 +8,16 @@ const initialState = {
 
 export default function sectionsReducer(state = initialState, action) {
   switch (action.type) {
-    case types.SECTIONS_REQUEST:
+    case types.FETCH_SECTIONS + '_PENDING':
       return Object.assign({}, state, {
         isLoading: true,
         isLoaded: false
       })
-    case types.SECTIONS_RECEIVE:
+    case types.FETCH_SECTIONS + '_FULFILLED':
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,
-        data: action.sections
+        data: action.payload
       })
     default:
       return state
