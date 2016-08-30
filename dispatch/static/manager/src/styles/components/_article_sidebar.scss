@@ -1,11 +1,8 @@
 .c-article-sidebar {
-  border-left: 1px solid rgb(228, 228, 228);
-  position: absolute;
-  width: 600px;
-  right: 0;
-  bottom: 0;
-  top: 0;
+  flex: 1;
 
+  border-left: 1px solid rgb(228, 228, 228);
+  
   &.expanded {
     right: -600px;
   }

@@ -26,8 +26,10 @@ export default class ArticlePageComponent extends React.Component {
     return (
       <div className='u-container-main'>
         <ArticleToolbar article={this.props.article.data} />
-        <ArticleEditor article={this.props.article.data} />
-        <ArticleSidebar article={this.props.article.data} />
+        <div className='u-container-editor'>
+          <ArticleEditor article={this.props.article.data} />
+          <ArticleSidebar article={this.props.article.data} />
+        </div>
       </div>
     )
   }

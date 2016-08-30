@@ -1,11 +1,19 @@
-.u-container-root, .u-container-root > div {
+.u-container-root {
   height: 100%;
+  > div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 .u-container-main {
-  position: absolute;
-  top: 55px;
-  bottom: 0;
-  width: 100%;
-  overflow-x: hidden;
+  flex: 1;
+  overflow: hidden;
+}
+
+.u-container-editor {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
