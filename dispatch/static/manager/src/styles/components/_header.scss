@@ -1,13 +1,15 @@
 .c-header {
-  display: flex;
-  flex-direction: row;
-
   background: $color-steel-blue;
   color: white;
   font-family: $font-default;
   font-size: 13px;
   box-sizing: border-box;
   padding: 0 20px;
+}
+
+.c-header__inner {
+  display: flex;
+  flex-direction: row;
 }
 
 .c-header__sections {
