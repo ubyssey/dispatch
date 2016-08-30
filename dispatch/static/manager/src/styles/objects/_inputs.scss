@@ -1,0 +1,17 @@
+.o-input {
+
+  &--headline {
+    border-radius: 3px;
+    padding: 0px 10px;
+    font-size: 28px;
+    color: #000000;
+    line-height: 40px;
+    height: 40px;
+    font-weight: 600;
+    width: 100%;
+    resize: none;
+    border-color: transparent;
+    box-shadow: none;
+    overflow: hidden;
+  }
+}
