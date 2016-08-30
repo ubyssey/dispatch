@@ -1,0 +1,29 @@
+.c-list {
+  padding: 0 50px;
+
+  ul {
+    display: table;
+    width: 100%;
+  }
+}
+
+.c-list__item {
+  display: table-row;
+}
+
+.c-list__item__cell {
+  display: table-cell;
+
+  padding: 20px 0 20px 20px;
+  border-bottom: thin solid $color-border-gray;
+  font-size: 13px;
+  color: $color-gray;
+
+  &--title {
+    a {
+      font-weight: 600;
+      color: black;
+      font-size: 15px;
+    }
+  }
+}
