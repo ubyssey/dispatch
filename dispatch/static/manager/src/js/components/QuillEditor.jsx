@@ -68,7 +68,8 @@ export default class QuillEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.article.revision_id != this.state.article.revision_id){
+    if( (nextProps.article.id !== this.state.article.id) ||
+        (nextProps.article.revision_id !== this.state.article.revision_id )) {
       this.quill.setJSON(nextProps.article.content);
       this.setState({
         article: nextProps.article,
