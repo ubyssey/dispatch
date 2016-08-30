@@ -8,9 +8,7 @@ import ArticleList from '../components/ArticleList.jsx';
 
 export default class ArticlesPageComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
+  componentWillMount() {
     // Fetch articles
     this.props.fetchArticles({section: this.props.location.query.section})
   }

@@ -9,8 +9,7 @@ import ArticleSidebar from '../components/ArticleSidebar.jsx'
 
 export default class ArticlePageComponent extends React.Component {
 
-  componentDidMount() {
-
+  componentWillMount() {
     // Fetch article
     this.props.fetchArticle(this.props.params.articleId)
   }
