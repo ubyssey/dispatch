@@ -9,6 +9,7 @@ module.exports = {
     path: __dirname + '/dist/js',
     filename: '[name]-' + version + '.js'
   },
+  devtool: 'source-map',
   module: {
     loaders: [
       {test: /\.jsx|.js$/, include: __dirname + '/src/js', loader: 'babel-loader'},
