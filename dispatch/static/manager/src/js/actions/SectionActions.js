@@ -19,7 +19,6 @@ export function fetchSections() {
     dispatch(requestSections())
 
     return DispatchAPI.sections.fetchSections()
-      .then( response => response.json() )
       .then( json => dispatch(receiveSections(json.results)) )
   }
 }

@@ -6,7 +6,7 @@ export default function Header(props) {
   const sections = props.sections.map( section => {
     return (
       <li className='c-header__link' key={section.id}>
-        <Link to={'/sections/' + section.slug}>{section.name}</Link>
+        <Link to={{ pathname: '/articles/', query: { section: section.id }}}>{section.name}</Link>
       </li>
     )
   })
