@@ -37,10 +37,12 @@ export function authenticateUser(email, password, nextPath = '/') {
     dispatch(requestToken())
 
     return DispatchAPI.auth.fetchToken(email, password)
-      .then( response => response.json() )
       .then( json => {
         dispatch(receiveToken(json.token, email))
         dispatch(push(nextPath))
+      })
+      .catch(function(err) {
+        console.log('error', err);
       })
   }
 }
