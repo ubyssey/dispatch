@@ -4,6 +4,12 @@ export const AUTH_REQUEST_TOKEN = 'AUTH_REQUEST_TOKEN'
 export const AUTH_RECEIVE_TOKEN = 'AUTH_RECEIVE_TOKEN'
 export const AUTH_FAILURE_TOKEN = 'AUTH_FAILURE_TOKEN'
 
-// Section actions
+// Sections actions
 export const SECTIONS_REQUEST = 'SECTIONS_FETCH'
 export const SECTIONS_RECEIVE = 'SECTIONS_RECEIVE'
+
+// Articles actions
+export const ARTICLES_REQUEST = 'ARTICLES_FETCH'
+export const ARTICLES_RECEIVE = 'ARTICLES_RECEIVE'
+export const ARTICLE_REQUEST = 'ARTICLE_FETCH'
+export const ARTICLE_RECEIVE = 'ARTICLE_RECEIVE'
