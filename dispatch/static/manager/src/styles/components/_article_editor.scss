@@ -18,7 +18,8 @@
 .c-article-editor {
   // Content panel
 
-  position: relative;
+  flex: 1.4;
+  
   background: white;
   height: 100%;
   overflow: scroll;
@@ -146,9 +147,6 @@ div.field-row.headline {
 
 @media($bp-larger-than-mobile){
   .c-article-editor {
-    margin-right: 600px;
-    border-right: 1px solid #DEDEDE;
-
     transition: margin-right 0.3s ease-in-out;
 
     .c-article-editor__inner {
