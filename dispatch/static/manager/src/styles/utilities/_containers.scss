@@ -1,0 +1,11 @@
+.u-container-root, .u-container-root > div {
+  height: 100%;
+}
+
+.u-container-main {
+  position: absolute;
+  top: 55px;
+  bottom: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
