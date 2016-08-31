@@ -56,7 +56,7 @@ export default class QuillEditor extends React.Component {
     this.quill.addEmbed('advertisement');
     this.quill.addEmbed('quote');
 
-    //this.quill.addModule('toolbar', { container: '#full-toolbar' });
+    this.quill.addModule('toolbar', { container: '#full-toolbar' });
     this.quill.addModule('inline-toolbar', true);
     this.quill.addModule('headers', true);
     this.quill.addModule('hyperlinks', true);
