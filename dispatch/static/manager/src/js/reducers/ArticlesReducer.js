@@ -11,7 +11,7 @@ const initialState = {
   article: {
     isLoading: false,
     isLoaded: false,
-    data: {}
+    data: null
   }
 }
 
@@ -21,11 +21,11 @@ function articlesReducer(state = initialState.articles, action) {
       return Object.assign({}, state, {
         isLoading: true
       })
-      case types.FETCH_ARTICLES + '_FULFILLED':
+    case types.FETCH_ARTICLES + '_FULFILLED':
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,
-        data: action.payload
+        data: action.payload.result,
       })
     default:
       return state
@@ -42,7 +42,7 @@ function articleReducer(state = initialState.article, action) {
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,
-        data: action.payload
+        data: action.payload.result
       })
     default:
       return state

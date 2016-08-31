@@ -32,16 +32,14 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   renderArticles() {
-    let articles = this.props.articles.data.map( article => {
-      return ( <li key={article.id}>{article.headline}</li> )
-    })
+    const articles = this.props.articles.data.map( id => this.props.entities[id] )
 
     return (
       <div>
         <Toolbar>
           test
         </Toolbar>
-        <ArticleList articles={this.props.articles.data} />
+        <ArticleList articles={articles} />
       </div>
     )
   }
@@ -50,7 +48,8 @@ export default class ArticlesPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    articles: state.app.articles.articles
+    articles: state.app.articles.articles,
+    entities: state.app.entities.articles
   }
 }
 
