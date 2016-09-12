@@ -170,7 +170,7 @@ def role_edit(request, pk=None):
 
 @staff_member_required
 def section(request, section):
-    section = Section.objects.get(name=section)
+    section = Section.objects.get(slug=section)
     article_list = Article.objects.filter(section=section,is_active=True,head=True).order_by('-created_at')
 
     q = request.GET.get('q', '')

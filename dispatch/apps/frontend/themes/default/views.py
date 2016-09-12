@@ -56,7 +56,7 @@ class DefaultTheme():
 
         def _find_article(slug, section=None):
             if section is not None:
-                return Article.objects.get(slug=slug, section__name=section, head=True)
+                return Article.objects.get(slug=slug, section__slug=section, head=True)
             else:
                 return Article.objects.get(slug=slug, head=True)
 
