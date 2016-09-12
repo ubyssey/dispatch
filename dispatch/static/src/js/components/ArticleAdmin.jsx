@@ -81,6 +81,8 @@ var ArticleAdmin = React.createClass(PublishableAdmin({
 
             if (this.refs.template) {
               values['template_fields'] = this.refs.template.save();
+            } else {
+              values['template_fields'] = JSON.stringify(this.state.instance.template_fields);
             }
 
             this.setState({ saving: true, });
