@@ -14,52 +14,6 @@ from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, T
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer)
 
-class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    """
-    Viewset for frontpage views.
-    """
-    serializer_class = ArticleSerializer
-    def fetch_frontpage(self, section_id=None, section_slug=None):
-        """
-        Return serialized frontpage listing, optionally filtered by section.
-        """
-        if section_id is not None:
-            # Filter queryset by section_id if set
-            queryset = Article.objects.get_frontpage(section_id=int(section_id))
-        elif section_slug is not None:
-            # Filter queryset by section_slug if set
-            queryset = Article.objects.get_frontpage(section=section_slug)
-        else:
-            # Don't filter the results
-            queryset = Article.objects.get_frontpage()
-
-        # Cast RawQuerySet as list for pagination to work
-        return list(queryset)
-
-    def list(self, request):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage()
-        return super(FrontpageViewSet, self).list(self, request)
-
-    def section(self, request, pk=None, slug=None):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos in the given section
-        for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with filtered frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage(section_id=pk, section_slug=slug)
-        return super(FrontpageViewSet, self).list(self, request)
-
-
 class SectionViewSet(viewsets.ModelViewSet):
     """
     Viewset for Section model views.
@@ -67,14 +21,6 @@ class SectionViewSet(viewsets.ModelViewSet):
     serializer_class = SectionSerializer
 
     queryset = Section.objects.all()
-
-    def frontpage(self, request, pk=None, slug=None):
-        """
-        Extra method to return frontpage listing for the section.
-        Uses FrontpageViewSet.section() to perform request.
-        """
-        view = FrontpageViewSet.as_view({'get': 'section'})
-        return view(request, pk=pk, slug=slug)
 
 class ArticleViewSet(viewsets.ModelViewSet):
     """
@@ -380,14 +326,6 @@ class TopicViewSet(viewsets.ModelViewSet):
             status_code = status.HTTP_200_OK
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
-
-    def articles(self, request, pk=None):
-        """
-        Extra method to return frontpage listing for the topic.
-        Uses FrontpageViewSet.topic() to perform request.
-        """
-        view = ArticleViewSet.as_view({'get': 'topic'})
-        return view(request, pk=pk)
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
