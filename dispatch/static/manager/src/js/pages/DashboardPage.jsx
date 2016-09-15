@@ -1,10 +1,13 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 export default class DashboardPage extends React.Component {
 
   render() {
     return (
-      <div>this is the dashboard</div>
+      <DocumentTitle title='Dashboard'>
+        <div>this is the dashboard</div>
+      </DocumentTitle>
     )
   }
 

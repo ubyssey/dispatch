@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import DocumentTitle from 'react-document-title';
 
 import * as articlesActions from '../actions/ArticlesActions'
 
@@ -30,13 +31,15 @@ export default class ArticlePageComponent extends React.Component {
     }
 
     return (
-      <div className='u-container-main'>
-        <ArticleToolbar article={article} />
-        <div className='u-container-editor'>
-          <ArticleEditor article={article} />
-          <ArticleSidebar article={article} />
+      <DocumentTitle title={`Edit - ${article.headline}`}>
+        <div className='u-container-main'>
+          <ArticleToolbar article={article} />
+          <div className='u-container-editor'>
+            <ArticleEditor article={article} />
+            <ArticleSidebar article={article} />
+          </div>
         </div>
-      </div>
+      </DocumentTitle>
     )
   }
 
