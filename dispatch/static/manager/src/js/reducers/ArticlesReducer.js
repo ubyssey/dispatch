@@ -6,6 +6,7 @@ const initialState = {
   articles: {
     isLoading: false,
     isLoaded: false,
+    selected: [],
     data: []
   },
   article: {
