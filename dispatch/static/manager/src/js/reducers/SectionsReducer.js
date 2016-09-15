@@ -17,7 +17,7 @@ export default function sectionsReducer(state = initialState, action) {
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,
-        data: action.payload
+        data: action.payload.result
       })
     default:
       return state

@@ -1,9 +1,13 @@
 import * as types from '../constants/ActionTypes'
+import { sectionSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-export function fetchSections() {
+import { normalize, arrayOf } from 'normalizr'
+
+export function fetchSections(params) {
   return {
     type: types.FETCH_SECTIONS,
-    payload: DispatchAPI.sections.fetchSections().then(json => json.results)
+    payload: DispatchAPI.sections.fetchSections()
+      .then( json => normalize(json.results, arrayOf(sectionSchema)) )
   }
 }
