@@ -16,9 +16,11 @@ class Main extends React.Component {
   }
 
   render() {
+    const sections = this.props.sections.data.map( id => this.props.entities.sections[id] )
+
     return (
       <div>
-        <Header sections={this.props.sections.data} email={this.props.email} />
+        <Header sections={sections} email={this.props.email} />
         {this.props.children}
       </div>
     )
@@ -28,7 +30,10 @@ class Main extends React.Component {
 const mapStateToProps = (state) => {
   return {
     sections: state.app.sections,
-    email: state.app.auth.email
+    email: state.app.auth.email,
+    entities: {
+      sections: state.app.entities.sections
+    }
   }
 }
 

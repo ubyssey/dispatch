@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import DocumentTitle from 'react-document-title';
 
 import * as articlesActions from '../actions/ArticlesActions'
 
@@ -14,7 +15,6 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-
     // Fetch articles
     if (prevProps.location.query.section !== this.props.location.query.section) {
       this.props.fetchArticles({section: this.props.location.query.section})
@@ -32,15 +32,18 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   renderArticles() {
-    const articles = this.props.articles.data.map( id => this.props.entities[id] )
+    const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
+    const section = this.props.entities.sections[this.props.location.query.section]
 
     return (
-      <div>
-        <Toolbar>
-          test
-        </Toolbar>
-        <ArticleList articles={articles} />
-      </div>
+      <DocumentTitle title={`${section.name} - Articles`}>
+        <div>
+          <Toolbar>
+            test
+          </Toolbar>
+          <ArticleList articles={articles} />
+        </div>
+      </DocumentTitle>
     )
   }
 
@@ -49,7 +52,10 @@ export default class ArticlesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     articles: state.app.articles.articles,
-    entities: state.app.entities.articles
+    entities: {
+      articles: state.app.entities.articles,
+      sections: state.app.entities.sections
+    }
   }
 }
 
