@@ -24,7 +24,8 @@ export default class ArticlePageComponent extends React.Component {
   }
 
   render() {
-    const article = this.props.entities[this.props.params.articleId] || false
+    const article = this.props.entities.article[this.props.params.articleId] ||
+      this.props.entities.articles[this.props.params.articleId] || false
 
     if (!article) {
       return (<div>loading</div>)
@@ -48,7 +49,10 @@ export default class ArticlePageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.article,
-    entities: state.app.entities.articles
+    entities: {
+      articles: state.app.entities.articles,
+      article: state.app.entities.article
+    }
   }
 }
 
