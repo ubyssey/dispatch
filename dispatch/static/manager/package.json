@@ -16,6 +16,7 @@
     "jquery": "^3.1.0",
     "js-cookie": "^2.1.2",
     "normalizr": "^2.2.1",
+    "ramda": "^0.22.1",
     "react": "^15.3.1",
     "react-document-title": "^2.0.2",
     "react-dom": "^15.3.1",

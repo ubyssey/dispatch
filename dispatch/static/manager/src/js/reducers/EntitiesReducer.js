@@ -10,6 +10,10 @@ export default function entitiesReducer(state = initialState, action) {
   switch (action.type) {
 
     // Articles
+    case types.FETCH_ARTICLES + '_PENDING':
+      return Object.assign({}, state, {
+        articles: {}
+      })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return Object.assign({}, state, {
         articles: Object.assign({}, state.articles, action.payload.entities.articles)
