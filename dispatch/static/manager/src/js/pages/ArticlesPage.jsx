@@ -27,9 +27,10 @@ export default class ArticlesPageComponent extends React.Component {
   render() {
     const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
     const section = this.props.entities.sections[this.props.location.query.section]
+    const title = section ? `${section.name} - Articles` : 'Articles'
 
     return (
-      <DocumentTitle title={`test - Articles`}>
+      <DocumentTitle title={title}>
         <div>
           <ArticleListHeader
             articles={this.props.articles}
