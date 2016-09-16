@@ -10,7 +10,7 @@ function ArticleListItem(props) {
   }
 
   return (
-    <li className='c-list__item'>
+    <li className={'c-list__item' + (props.selected ? ' c-list__item--selected' : '')}>
       <div className='c-list__item__cell c-list__item__cell--checkbox' onClick={handleChange}>
         <input type='checkbox' checked={props.selected} />
       </div>
