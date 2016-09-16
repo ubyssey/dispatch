@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import { Link } from 'react-router'
+import PlaceholderBar from './PlaceholderBar.jsx'
 
 function ArticleListItem(props) {
 
@@ -10,8 +11,8 @@ function ArticleListItem(props) {
 
   return (
     <li className='c-list__item'>
-      <div className='c-list__item__cell c-list__item__cell--checkbox'>
-        <input type='checkbox' checked={props.selected} onChange={handleChange} />
+      <div className='c-list__item__cell c-list__item__cell--checkbox' onClick={handleChange}>
+        <input type='checkbox' checked={props.selected} />
       </div>
       <div className='c-list__item__cell c-list__item__cell--title'>
         <Link to={`/articles/${props.article.id}`} dangerouslySetInnerHTML={{__html: props.article.headline}} />
@@ -23,22 +24,64 @@ function ArticleListItem(props) {
   )
 }
 
+function ArticleListItemPlaceholder(props) {
+  return (
+    <li className='c-list__item'>
+      <div className='c-list__item__cell c-list__item__cell--checkbox'>
+        <input type='checkbox' disabled={true} checked={false} />
+      </div>
+      <div className='c-list__item__cell c-list__item__cell--title'>
+        <PlaceholderBar />
+      </div>
+      <div className='c-list__item__cell'>
+        <PlaceholderBar />
+      </div>
+      <div className='c-list__item__cell'>
+        <PlaceholderBar />
+      </div>
+      <div className='c-list__item__cell'>
+        <PlaceholderBar />
+      </div>
+    </li>
+  )
+}
+
 export default function ArticleList(props) {
 
-  const articles = props.articles.map( (article) => {
+  if (props.isLoading) {
     return (
-      <ArticleListItem
-        key={article.id}
-        article={article}
-        selected={R.contains(article.id, props.selected)}
-        toggleArticle={props.toggleArticle} />
+      <div className='c-list'>
+        <ul>
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+          <ArticleListItemPlaceholder />
+        </ul>
+      </div>
     )
-  })
+  } else {
 
-  return (
-    <div className='c-list'>
-      <ul>{articles}</ul>
-    </div>
-  )
+    const articles = props.articles.map( (article) => {
+      return (
+        <ArticleListItem
+          key={article.id}
+          article={article}
+          selected={R.contains(article.id, props.selected)}
+          toggleArticle={props.toggleArticle} />
+      )
+    })
+
+    return (
+      <div className='c-list'>
+        <ul>{articles}</ul>
+      </div>
+    )
+  }
 
 }

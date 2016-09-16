@@ -13,17 +13,55 @@
 
 .c-list__item__cell {
   display: table-cell;
-
-  padding: 20px 0 20px 20px;
-  border-bottom: thin solid $color-border-gray;
-  font-size: 13px;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 7px;
+  border-bottom: thin solid $color-gray-light;
+  font-size: 14px;
   color: $color-gray;
 
+  &--checkbox {
+    width: 50px;
+    text-align: center;
+    padding-left: 0;
+  }
+
   &--title {
+    width: 45%;
+
     a {
       font-weight: 600;
       color: black;
       font-size: 15px;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
+}
+
+.c-list-header {
+  display: flex;
+}
+
+.c-list-header__left {
+  height: 50px;
+  line-height: 50px;
+}
+
+.c-list-header__right {
+  flex: 1;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  color: $color-gray;
+}
+
+.c-list-header__checkbox {
+  width: 50px;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 7px;
 }

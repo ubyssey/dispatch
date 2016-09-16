@@ -1,18 +1,14 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'react-document-title'
 
 import * as articlesActions from '../actions/ArticlesActions'
 
-import Toolbar from '../components/Toolbar.jsx';
-import ArticleList from '../components/ArticleList.jsx';
+import Toolbar from '../components/Toolbar.jsx'
+import ArticleList from '../components/ArticleList.jsx'
+import ArticleListHeader from '../components/ArticleListHeader.jsx'
 
 export default class ArticlesPageComponent extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.handleToggleAllArticles = this.handleToggleAllArticles.bind(this)
-  }
 
   componentWillMount() {
     // Fetch articles
@@ -29,33 +25,18 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   render() {
-    return this.props.articles.isLoaded ? this.renderArticles() : this.renderLoading()
-  }
-
-  renderLoading() {
-    return (
-      <div>loading!</div>
-    )
-  }
-
-  handleToggleAllArticles() {
-    this.props.toggleAllArticles(this.props.articles.data)
-  }
-
-  renderArticles() {
     const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
     const section = this.props.entities.sections[this.props.location.query.section]
 
     return (
-      <DocumentTitle title={`${section.name} - Articles`}>
+      <DocumentTitle title={`test - Articles`}>
         <div>
-          <Toolbar>
-            <input type='checkbox'
-              checked={this.props.articles.isAllSelected}
-              onChange={this.handleToggleAllArticles} />
-          </Toolbar>
+          <ArticleListHeader
+            articles={this.props.articles}
+            toggleAllArticles={this.props.toggleAllArticles} />
           <ArticleList
             articles={articles}
+            isLoading={this.props.articles.isLoading}
             selected={this.props.articles.selected}
             toggleArticle={this.props.toggleArticle} />
         </div>

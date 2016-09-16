@@ -23,6 +23,7 @@ function articlesReducer(state = initialState.articles, action) {
     case types.FETCH_ARTICLES + '_PENDING':
       return Object.assign({}, state, {
         isLoading: true,
+        isLoaded: false,
         data: []
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
@@ -45,7 +46,7 @@ function articlesReducer(state = initialState.articles, action) {
       return Object.assign({}, state, {
         selected: [],
         isAllSelected: false
-      }) 
+      })
     default:
       return state
   }
