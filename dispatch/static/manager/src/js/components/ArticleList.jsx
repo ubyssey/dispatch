@@ -1,10 +1,18 @@
 import React from 'react'
+import R from 'ramda'
 import { Link } from 'react-router'
 
 function ArticleListItem(props) {
+
+  function handleChange() {
+    return props.toggleArticle(props.article.id)
+  }
+
   return (
     <li className='c-list__item'>
-      <div className='c-list__item__cell c-list__item__cell--checkbox'></div>
+      <div className='c-list__item__cell c-list__item__cell--checkbox'>
+        <input type='checkbox' checked={props.selected} onChange={handleChange} />
+      </div>
       <div className='c-list__item__cell c-list__item__cell--title'>
         <Link to={`/articles/${props.article.id}`} dangerouslySetInnerHTML={{__html: props.article.headline}} />
       </div>
@@ -16,8 +24,15 @@ function ArticleListItem(props) {
 }
 
 export default function ArticleList(props) {
-  let articles = props.articles.map( article => {
-    return ( <ArticleListItem key={article.id} article={article} /> )
+
+  const articles = props.articles.map( (article) => {
+    return (
+      <ArticleListItem
+        key={article.id}
+        article={article}
+        selected={R.contains(article.id, props.selected)}
+        toggleArticle={props.toggleArticle} />
+    )
   })
 
   return (
@@ -25,4 +40,5 @@ export default function ArticleList(props) {
       <ul>{articles}</ul>
     </div>
   )
+
 }

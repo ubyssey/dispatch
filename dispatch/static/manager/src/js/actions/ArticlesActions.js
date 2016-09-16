@@ -12,17 +12,30 @@ export function fetchArticles(params) {
   }
 }
 
-export function setArticle(articleId) {
-  return {
-    type: types.SET_ARTICLE,
-    id: articleId
-  }
-}
-
 export function fetchArticle(articleId) {
   return {
     type: types.FETCH_ARTICLE,
     payload: DispatchAPI.articles.fetchArticle(articleId)
       .then( json => normalize(json, articleSchema) )
+  }
+}
+
+export function toggleArticle(articleId) {
+  return {
+    type: types.TOGGLE_ARTICLE,
+    id: articleId
+  }
+}
+
+export function toggleAllArticles(articleIds) {
+  return {
+    type: types.TOGGLE_ALL_ARTICLES,
+    ids: articleIds
+  }
+}
+
+export function clearSelectedArticles() {
+  return {
+    type: types.CLEAR_SELECTED_ARTICLES
   }
 }
