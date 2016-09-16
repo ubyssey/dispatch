@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import R from 'ramda';
 
 import * as types from '../constants/ActionTypes'
 
@@ -7,6 +8,7 @@ const initialState = {
     isLoading: false,
     isLoaded: false,
     selected: [],
+    isAllSelected: false,
     data: []
   },
   article: {
@@ -20,7 +22,8 @@ function articlesReducer(state = initialState.articles, action) {
   switch (action.type) {
     case types.FETCH_ARTICLES + '_PENDING':
       return Object.assign({}, state, {
-        isLoading: true
+        isLoading: true,
+        data: []
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return Object.assign({}, state, {
@@ -28,6 +31,21 @@ function articlesReducer(state = initialState.articles, action) {
         isLoaded: true,
         data: action.payload.result,
       })
+    case types.TOGGLE_ARTICLE:
+      let index = R.findIndex(R.equals(action.id), state.selected);
+      return Object.assign({}, state, {
+        selected: index > -1 ? R.remove(index, 1, state.selected) : R.append(action.id, state.selected)
+      })
+    case types.TOGGLE_ALL_ARTICLES:
+      return Object.assign({}, state, {
+        selected: state.isAllSelected ? [] : action.ids,
+        isAllSelected: !state.isAllSelected
+      })
+    case types.CLEAR_SELECTED_ARTICLES:
+      return Object.assign({}, state, {
+        selected: [],
+        isAllSelected: false
+      }) 
     default:
       return state
   }

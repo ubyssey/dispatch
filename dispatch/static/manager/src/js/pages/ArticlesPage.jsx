@@ -9,15 +9,22 @@ import ArticleList from '../components/ArticleList.jsx';
 
 export default class ArticlesPageComponent extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.handleToggleAllArticles = this.handleToggleAllArticles.bind(this)
+  }
+
   componentWillMount() {
     // Fetch articles
     this.props.fetchArticles({section: this.props.location.query.section})
+    this.props.clearSelectedArticles()
   }
 
   componentDidUpdate(prevProps) {
     // Fetch articles
     if (prevProps.location.query.section !== this.props.location.query.section) {
       this.props.fetchArticles({section: this.props.location.query.section})
+      this.props.clearSelectedArticles()
     }
   }
 
@@ -31,6 +38,10 @@ export default class ArticlesPageComponent extends React.Component {
     )
   }
 
+  handleToggleAllArticles() {
+    this.props.toggleAllArticles(this.props.articles.data)
+  }
+
   renderArticles() {
     const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
     const section = this.props.entities.sections[this.props.location.query.section]
@@ -39,9 +50,14 @@ export default class ArticlesPageComponent extends React.Component {
       <DocumentTitle title={`${section.name} - Articles`}>
         <div>
           <Toolbar>
-            test
+            <input type='checkbox'
+              checked={this.props.articles.isAllSelected}
+              onChange={this.handleToggleAllArticles} />
           </Toolbar>
-          <ArticleList articles={articles} />
+          <ArticleList
+            articles={articles}
+            selected={this.props.articles.selected}
+            toggleArticle={this.props.toggleArticle} />
         </div>
       </DocumentTitle>
     )
@@ -63,6 +79,15 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchArticles: (query) => {
       dispatch(articlesActions.fetchArticles(query))
+    },
+    toggleArticle: (articleId) => {
+      dispatch(articlesActions.toggleArticle(articleId))
+    },
+    toggleAllArticles: (articleIds) => {
+      dispatch(articlesActions.toggleAllArticles(articleIds))
+    },
+    clearSelectedArticles: () => {
+      dispatch(articlesActions.clearSelectedArticles())
     }
   }
 }
