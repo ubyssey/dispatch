@@ -7,6 +7,10 @@ export default function ArticleListHeader(props) {
     props.toggleAllArticles(props.articles.data)
   }
 
+  function handleDeleteArticles() {
+    props.deleteArticles(props.articles.selected)
+  }
+
   return (
     <Toolbar>
       <div className='c-list-header'>
@@ -16,9 +20,10 @@ export default function ArticleListHeader(props) {
               checked={props.articles.isAllSelected}
               onChange={handleToggleAllArticles} />
           </div>
+          {`${props.articles.selected.length} articles selected`}
+          <button className='c-list-header__delete' onClick={handleDeleteArticles} disabled={!props.articles.selected.length}>Delete</button>
         </div>
         <div className='c-list-header__right'>
-        {`${props.articles.selected.length} articles selected`}
         </div>
       </div>
     </Toolbar>
