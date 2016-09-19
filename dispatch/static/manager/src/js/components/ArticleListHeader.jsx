@@ -8,7 +8,7 @@ export default function ArticleListHeader(props) {
   }
 
   function handleDeleteArticles() {
-    props.deleteArticles(props.articles.selected)
+    return props.deleteArticles(props.articles.selected)
   }
 
   return (

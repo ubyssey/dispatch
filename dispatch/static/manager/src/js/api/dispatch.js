@@ -3,34 +3,33 @@ import url from 'url'
 
 const API_URL = 'http://localhost:8000/api/'
 
-const ROUTES = {
-  'auth/token': ['POST'],
-
-  // Sections
-  'sections': ['GET'],
-
-  // Articles
-  'articles': ['GET'],
-}
-
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 }
 
-function isValidRoute(route, method) {
-  return ROUTES.hasOwnProperty(route)
+function buildRoute(route, method, id) {
+  let fullRoute = API_URL + route
+
+  if (id) {
+    fullRoute += `/${id}`
+  }
+
+  // Append slash to all urls
+  let lastCharacter = fullRoute.slice(-1)
+
+  if (lastCharacter !== '/') {
+    fullRoute += '/'
+  }
+
+  return fullRoute
 }
 
-function buildRoute(route, method, id) {
-  if ( isValidRoute(route, method) ) {
-    let fullRoute = API_URL + route
-    if (id) {
-      fullRoute += `/${id}`
-    }
-    return fullRoute
-  } else {
-    // TODO: Raise exception
+function buildHeaders(token) {
+  let headers = DEFAULT_HEADERS
+  if (token) {
+    headers['Authorization'] = `Token ${token}`
   }
+  return headers
 }
 
 function handleError(response) {
@@ -44,25 +43,25 @@ function parseJSON(response) {
   return response.json()
 }
 
-function getRequest(route, id=null, query={}) {
+function getRequest(route, id=null, query={}, token=null) {
   let urlString = buildRoute(route, 'GET', id) + url.format({query: query})
   return fetch(
     urlString,
     {
       method: 'GET',
-      headers: DEFAULT_HEADERS
+      headers: buildHeaders(token)
     }
   )
   .then(handleError)
   .then(parseJSON)
 }
 
-function postRequest(route, id=null, payload={}) {
+function postRequest(route, id=null, payload={}, token=null) {
   return fetch(
     buildRoute(route, 'POST', id),
     {
       method: 'POST',
-      headers: DEFAULT_HEADERS,
+      headers: buildHeaders(token),
       body: JSON.stringify(payload)
     }
   )
@@ -93,6 +92,9 @@ var DispatchAPI = {
     },
     fetchArticle: (articleId) => {
       return getRequest('articles', articleId)
+    },
+    deleteArticles: (token, articleIds) => {
+      return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
     }
   }
 }
