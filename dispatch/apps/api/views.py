@@ -202,13 +202,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def bulk_delete(self, request):
         deleted = []
         ids = self.request.data.get('ids', None)
-        print ids
+
         if ids is not None:
             ids = ids.split(',')
             for id in ids:
                 try:
                     Article.objects.filter(parent_id=id).delete()
-                    deleted.append(id)
+                    deleted.append(int(id))
                 except:
                     pass
 
@@ -623,7 +623,7 @@ def user_authenticate(request):
 
     email = request.data.get('email', None)
     password = request.data.get('password', None)
-    
+
     user = authenticate(username=email, password=password)
 
     if user is not None and user.is_active:

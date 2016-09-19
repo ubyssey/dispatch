@@ -39,3 +39,11 @@ export function clearSelectedArticles() {
     type: types.CLEAR_SELECTED_ARTICLES
   }
 }
+
+export function deleteArticles(token, articleIds) {
+  return {
+    type: types.DELETE_ARTICLES,
+    payload: DispatchAPI.articles.deleteArticles(token, articleIds)
+      .then( json => json.deleted )
+  }
+}

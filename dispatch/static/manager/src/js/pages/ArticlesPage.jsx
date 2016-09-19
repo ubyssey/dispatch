@@ -10,6 +10,12 @@ import ArticleListHeader from '../components/ArticleListHeader.jsx'
 
 export default class ArticlesPageComponent extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.handleDeleteArticles = this.handleDeleteArticles.bind(this)
+  }
+
   componentWillMount() {
     // Fetch articles
     this.props.fetchArticles({section: this.props.location.query.section})
@@ -24,6 +30,11 @@ export default class ArticlesPageComponent extends React.Component {
     }
   }
 
+  handleDeleteArticles(articleIds) {
+    this.props.deleteArticles(this.props.token, articleIds)
+    this.props.clearSelectedArticles()
+  }
+
   render() {
     const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
     const section = this.props.entities.sections[this.props.location.query.section]
@@ -34,10 +45,11 @@ export default class ArticlesPageComponent extends React.Component {
         <div>
           <ArticleListHeader
             articles={this.props.articles}
-            toggleAllArticles={this.props.toggleAllArticles} />
+            toggleAllArticles={this.props.toggleAllArticles}
+            deleteArticles={this.handleDeleteArticles} />
           <ArticleList
             articles={articles}
-            isLoading={this.props.articles.isLoading}
+            isLoaded={this.props.articles.isLoaded}
             selected={this.props.articles.selected}
             toggleArticle={this.props.toggleArticle} />
         </div>
@@ -49,6 +61,7 @@ export default class ArticlesPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    token: state.app.auth.token,
     articles: state.app.articles.articles,
     entities: {
       articles: state.app.entities.articles,
@@ -70,6 +83,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearSelectedArticles: () => {
       dispatch(articlesActions.clearSelectedArticles())
+    },
+    deleteArticles: (token, articleIds) => {
+      dispatch(articlesActions.deleteArticles(token, articleIds))
     }
   }
 }
