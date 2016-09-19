@@ -47,6 +47,13 @@ function articlesReducer(state = initialState.articles, action) {
         selected: [],
         isAllSelected: false
       })
+    case types.DELETE_ARTICLES + '_FULFILLED':
+      console.log(state.data)
+      console.log(action.payload)
+      console.log(R.without(action.payload, state.data))
+      return Object.assign({}, state, {
+        data: R.without(action.payload, state.data)
+      })
     default:
       return state
   }
