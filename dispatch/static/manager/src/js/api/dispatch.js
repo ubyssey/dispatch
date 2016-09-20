@@ -87,8 +87,8 @@ var DispatchAPI = {
     }
   },
   articles: {
-    fetchArticles: ({section: section}) => {
-      return getRequest('articles', null, {section: section})
+    fetchArticles: (query) => {
+      return getRequest('articles', null, query)
     },
     fetchArticle: (articleId) => {
       return getRequest('articles', articleId)
