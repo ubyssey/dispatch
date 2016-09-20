@@ -16,16 +16,23 @@ export default class ArticlesPageComponent extends React.Component {
     this.handleDeleteArticles = this.handleDeleteArticles.bind(this)
   }
 
+  getQuery() {
+    return {
+      section: this.props.location.query.section,
+      limit: 15
+    }
+  }
+
   componentWillMount() {
     // Fetch articles
-    this.props.fetchArticles({section: this.props.location.query.section})
+    this.props.fetchArticles(this.getQuery())
     this.props.clearSelectedArticles()
   }
 
   componentDidUpdate(prevProps) {
     // Fetch articles
     if (prevProps.location.query.section !== this.props.location.query.section) {
-      this.props.fetchArticles({section: this.props.location.query.section})
+      this.props.fetchArticles(this.getQuery())
       this.props.clearSelectedArticles()
     }
   }
@@ -42,14 +49,14 @@ export default class ArticlesPageComponent extends React.Component {
 
     return (
       <DocumentTitle title={title}>
-        <div>
+        <div className='u-flex u-flex--col'>
           <ArticleListHeader
             articles={this.props.articles}
             toggleAllArticles={this.props.toggleAllArticles}
             deleteArticles={this.handleDeleteArticles} />
           <ArticleList
             articles={articles}
-            isLoaded={this.props.articles.isLoaded}
+            isLoading={this.props.articles.isLoading}
             selected={this.props.articles.selected}
             toggleArticle={this.props.toggleArticle} />
         </div>
