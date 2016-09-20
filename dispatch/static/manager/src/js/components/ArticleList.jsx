@@ -48,7 +48,7 @@ function ArticleListItemPlaceholder(props) {
 
 export default function ArticleList(props) {
 
-  if (props.isLoaded) {
+  if (props.isLoading) {
     return (
       <div className='c-list'>
         <ul>
