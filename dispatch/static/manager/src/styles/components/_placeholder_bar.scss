@@ -1,8 +1,11 @@
 .c-placeholder-bar {
-  width: 100%;
-  height: 20px;
-  background: $color-gray-light;
-  min-width: 100px;
+  // Structure
   display: inline-block;
+  height: 20px;
+  width: 100%;
+  min-width: 100px;
   vertical-align: middle;
+
+  // Background
+  background: $color-text-gray-light;
 }

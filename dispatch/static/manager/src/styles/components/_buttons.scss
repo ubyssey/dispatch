@@ -1,0 +1,41 @@
+// Component: Button
+// Component: LinkButton
+.c-button {
+  // Structure
+  display: inline-block;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  // Border
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  border-color: $color-border-gray;
+
+  // Background
+  background-color: $color-bg-gray;
+  background-image: linear-gradient($color-bg-gray-light, $color-bg-gray);
+
+  // Text
+  font-family: $font-family-default;
+  font-size: 13px;
+  font-weight: $font-weight-bold;
+  color: $color-text-gray;
+  line-height: 30px;
+  text-decoration: none;
+
+  // State: hover
+  &:hover {
+    // Border
+    border-color: $color-border-gray-dark;
+
+    // Background
+    background-color: $color-bg-gray-dark;
+    background-image: linear-gradient($color-bg-gray, $color-bg-gray-dark);
+
+    // Extra
+    cursor: pointer;
+  }
+}
