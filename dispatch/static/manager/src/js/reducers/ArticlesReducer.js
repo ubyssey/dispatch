@@ -9,6 +9,7 @@ const initialState = {
     isLoaded: false,
     selected: [],
     isAllSelected: false,
+    count: null,
     data: []
   },
   article: {
@@ -24,13 +25,15 @@ function articlesReducer(state = initialState.articles, action) {
       return Object.assign({}, state, {
         isLoading: true,
         isLoaded: false,
+        count: null,
         data: []
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,
-        data: action.payload.result,
+        count: action.payload.count,
+        data: action.payload.results.result
       })
     case types.TOGGLE_ARTICLE:
       let index = R.findIndex(R.equals(action.id), state.selected);
@@ -48,9 +51,6 @@ function articlesReducer(state = initialState.articles, action) {
         isAllSelected: false
       })
     case types.DELETE_ARTICLES + '_FULFILLED':
-      console.log(state.data)
-      console.log(action.payload)
-      console.log(R.without(action.payload, state.data))
       return Object.assign({}, state, {
         data: R.without(action.payload, state.data)
       })
