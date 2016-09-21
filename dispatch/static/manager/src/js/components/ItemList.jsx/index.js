@@ -12,6 +12,7 @@ export default function ItemList(props) {
       <ItemListHeader
         data={props.data}
         selected={props.selected}
+        isLoaded={props.isLoaded}
         isLoading={props.isLoading}
         section={props.section}
         currentPage={props.currentPage}
