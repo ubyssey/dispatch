@@ -1,8 +1,15 @@
 .c-toolbar {
+  // Structure
   overflow: hidden;
   padding: 0 50px;
+
+  // Border
   border-bottom: thin solid $color-border-gray;
-  background: $color-gray-light;
-  color: $color-gray;
+
+  // Background
+  background: $color-text-gray-light;
+
+  // Text
+  color: $color-text-gray;
   font-size: 14px;
 }

@@ -1,5 +1,15 @@
-.c-list {
+// Component: ItemList
+.c-item-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+// Component: ItemListTable
+.c-item-list__table {
   padding: 0 50px;
+  flex: 1;
+  overflow: scroll;
 
   ul {
     display: table;
@@ -7,18 +17,18 @@
   }
 }
 
-.c-list__item {
+.c-item-list__item {
   display: table-row;
 }
 
-.c-list__item__cell {
+.c-item-list__item__cell {
   display: table-cell;
   height: 50px;
   line-height: 50px;
   padding-left: 7px;
-  border-bottom: thin solid $color-gray-light;
+  border-bottom: thin solid $color-text-gray-light;
   font-size: 14px;
-  color: $color-gray;
+  color: $color-text-gray;
 
   &--checkbox {
     width: 50px;
@@ -42,31 +52,39 @@
   }
 }
 
-.c-list-header {
+// Component: ItemListHeader
+.c-item-list__header {
   display: flex;
 }
 
-.c-list-header__left {
+.c-item-list__header__left {
   height: 50px;
   line-height: 50px;
 }
 
-.c-list-header__right {
+.c-item-list__header__right {
+  // Structure
   flex: 1;
   height: 50px;
-  line-height: 50px;
+
+  // Text
   font-size: 14px;
-  color: $color-gray;
+  line-height: 50px;
+  color: $color-text-gray;
+  text-align: right;
 }
 
-.c-list-header__checkbox {
+.c-item-list__header__checkbox {
+  // Structure
   display: inline-block;
   width: 50px;
-  text-align: center;
   padding-left: 0;
   padding-right: 7px;
+
+  // Text
+  text-align: center;
 }
 
-.c-list-header__delete {
+.c-item-list__header__delete {
   margin-left: 15px;
 }

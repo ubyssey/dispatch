@@ -19,7 +19,7 @@
   // Content panel
 
   flex: 1.4;
-  
+
   background: white;
   height: 100%;
   overflow: scroll;
@@ -81,7 +81,7 @@ div.field-row.headline {
   margin-bottom: 30px;
   div.authors {
     padding: 10px 0;
-    font-family: $font-default;
+    font-family: $font-family-default;
     font-weight: 600;
     font-size: 16px;
     color: #7E7E7E;
@@ -113,7 +113,7 @@ div.field-row.headline {
   min-height: 200px;
   padding: 0;
   div.ql-line, li.ql-line {
-    font-family: $font-body;
+    font-family: $font-family-body;
     font-size: 16px;
     color: #2F2F2F;
     line-height: 26px;
@@ -126,7 +126,7 @@ div.field-row.headline {
     margin-bottom: 0;
   }
   h1, h2, h3 {
-    font-family: $font-default;
+    font-family: $font-family-default;
     font-weight: 600;
   }
   h1 {
