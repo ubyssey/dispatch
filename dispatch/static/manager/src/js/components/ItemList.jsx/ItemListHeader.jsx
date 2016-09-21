@@ -29,7 +29,13 @@ export default function ItemListHeader(props) {
   }
 
   function renderPagination() {
-    return `Page ${props.currentPage} of ${props.totalPages}`
+    return (
+      <div>
+        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage - 1 ) }}>Prev</LinkButton>
+        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage + 1 ) }}>Prev</LinkButton>
+        {`Page ${props.currentPage} of ${props.totalPages}`}
+      </div>
+    )
   }
 
   return (
@@ -45,9 +51,7 @@ export default function ItemListHeader(props) {
           <Button onClick={handleDeleteItems} disabled={!props.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
-        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage - 1 ) }}>Prev</LinkButton>
-        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage + 1 ) }}>Prev</LinkButton>
-        {props.isLoading ? null : renderPagination()}
+        {props.isLoaded ? renderPagination() : null}
         </div>
       </div>
     </Toolbar>

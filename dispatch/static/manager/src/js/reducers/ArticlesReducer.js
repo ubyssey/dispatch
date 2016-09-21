@@ -23,10 +23,7 @@ function articlesReducer(state = initialState.articles, action) {
   switch (action.type) {
     case types.FETCH_ARTICLES + '_PENDING':
       return Object.assign({}, state, {
-        isLoading: true,
-        isLoaded: false,
-        count: null,
-        data: []
+        isLoading: true
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return Object.assign({}, state, {
@@ -34,6 +31,12 @@ function articlesReducer(state = initialState.articles, action) {
         isLoaded: true,
         count: action.payload.count,
         data: action.payload.results.result
+      })
+    case types.CLEAR_ARTICLES:
+      return Object.assign({}, state, {
+        isLoaded: false,
+        count: null,
+        data: []
       })
     case types.TOGGLE_ARTICLE:
       let index = R.findIndex(R.equals(action.id), state.selected);
