@@ -52,3 +52,9 @@ export function deleteArticles(token, articleIds) {
       .then( json => json.deleted )
   }
 }
+
+export function clearArticles() {
+  return {
+    type: types.CLEAR_ARTICLES
+  }
+}

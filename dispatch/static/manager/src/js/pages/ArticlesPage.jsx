@@ -41,22 +41,34 @@ export default class ArticlesPageComponent extends React.Component {
 
   componentWillMount() {
     // Fetch articles
-    this.props.fetchArticles(this.getQuery())
+    this.props.clearArticles()
     this.props.clearSelectedArticles()
+    this.props.fetchArticles(this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
-    if (this.isNewPage(prevProps, this.props)) {
+
+    if (this.isNewSection(prevProps, this.props)) {
+      this.props.clearArticles()
+      this.props.clearSelectedArticles()
+      this.props.fetchArticles(this.getQuery())
+    }
+
+    else if (this.isNewPage(prevProps, this.props)) {
       // Fetch articles
       this.props.fetchArticles(this.getQuery())
       this.props.clearSelectedArticles()
     }
   }
 
+  isNewSection(prevProps, props) {
+    // Returns true if section has changed
+    return prevProps.location.query.section !== props.location.query.section
+  }
+
   isNewPage(prevProps, props) {
-    // If page number or section have changed
-    return prevProps.location.query.section !== props.location.query.section ||
-      prevProps.location.query.page !== props.location.query.page
+    // Returns true if page number has changed
+    return prevProps.location.query.page !== props.location.query.page
   }
 
   handleDeleteArticles(articleIds) {
@@ -77,6 +89,7 @@ export default class ArticlesPageComponent extends React.Component {
           totalPages={this.getTotalPages()}
           entities={this.props.entities.articles}
           selected={this.props.articles.selected}
+          isLoaded={this.props.articles.isLoaded}
           isLoading={this.props.articles.isLoading}
           isAllSelected={this.props.articles.isAllSelected}
           toggleItem={this.props.toggleArticle}
@@ -115,6 +128,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteArticles: (token, articleIds) => {
       dispatch(articlesActions.deleteArticles(token, articleIds))
+    },
+    clearArticles: () => {
+      dispatch(articlesActions.clearArticles())
     }
   }
 }
