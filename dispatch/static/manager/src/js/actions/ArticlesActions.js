@@ -8,7 +8,12 @@ export function fetchArticles(params) {
   return {
     type: types.FETCH_ARTICLES,
     payload: DispatchAPI.articles.fetchArticles(params)
-      .then( json => normalize(json.results, arrayOf(articleSchema)) )
+      .then( function(json) {
+        return {
+          count: json.count,
+          results: normalize(json.results, arrayOf(articleSchema))
+        }
+      } )
   }
 }
 

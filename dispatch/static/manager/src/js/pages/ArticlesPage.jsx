@@ -4,9 +4,9 @@ import DocumentTitle from 'react-document-title'
 
 import * as articlesActions from '../actions/ArticlesActions'
 
-import Toolbar from '../components/Toolbar.jsx'
-import ArticleList from '../components/ArticleList.jsx'
-import ArticleListHeader from '../components/ArticleListHeader.jsx'
+import ItemList from '../components/ItemList.jsx'
+
+const DEFAULT_LIMIT = 15
 
 export default class ArticlesPageComponent extends React.Component {
 
@@ -17,10 +17,26 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   getQuery() {
-    return {
-      section: this.props.location.query.section,
-      limit: 15
+    var query = {
+      limit: DEFAULT_LIMIT,
+      offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
+
+    if (this.props.location.query.section) {
+      query.section = this.props.location.query.section
+    }
+
+    return query
+  }
+
+  getCurrentPage() {
+    return parseInt(this.props.location.query.page, 10) || 1
+  }
+
+  getTotalPages() {
+    return Math.ceil(
+      parseInt(this.props.articles.count, 10) / DEFAULT_LIMIT
+    )
   }
 
   componentWillMount() {
@@ -30,11 +46,17 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Fetch articles
-    if (prevProps.location.query.section !== this.props.location.query.section) {
+    if (this.isNewPage(prevProps, this.props)) {
+      // Fetch articles
       this.props.fetchArticles(this.getQuery())
       this.props.clearSelectedArticles()
     }
+  }
+
+  isNewPage(prevProps, props) {
+    // If page number or section have changed
+    return prevProps.location.query.section !== props.location.query.section ||
+      prevProps.location.query.page !== props.location.query.page
   }
 
   handleDeleteArticles(articleIds) {
@@ -43,23 +65,23 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   render() {
-    const articles = this.props.articles.data.map( id => this.props.entities.articles[id] )
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
 
     return (
       <DocumentTitle title={title}>
-        <div className='u-flex u-flex--col'>
-          <ArticleListHeader
-            articles={this.props.articles}
-            toggleAllArticles={this.props.toggleAllArticles}
-            deleteArticles={this.handleDeleteArticles} />
-          <ArticleList
-            articles={articles}
-            isLoading={this.props.articles.isLoading}
-            selected={this.props.articles.selected}
-            toggleArticle={this.props.toggleArticle} />
-        </div>
+        <ItemList
+          data={this.props.articles.data}
+          section={this.props.location.query.section}
+          currentPage={this.getCurrentPage()}
+          totalPages={this.getTotalPages()}
+          entities={this.props.entities.articles}
+          selected={this.props.articles.selected}
+          isLoading={this.props.articles.isLoading}
+          isAllSelected={this.props.articles.isAllSelected}
+          toggleItem={this.props.toggleArticle}
+          toggleAllItems={this.props.toggleAllArticles}
+          deleteItems={this.handleDeleteArticles} />
       </DocumentTitle>
     )
   }
