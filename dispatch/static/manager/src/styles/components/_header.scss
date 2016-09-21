@@ -1,42 +1,58 @@
+// Component: Header
 .c-header {
-  background: $color-steel-blue;
-  color: white;
-  font-family: $font-default;
-  font-size: 13px;
+  // Structure
   box-sizing: border-box;
+
+  // Background
+  background: $color-steel-blue;
+
+  // Text
+  font-family: $font-family-default;
+  font-size: 13px;
+  color: white;
 }
 
 .c-header__inner {
+  // Structure
   display: flex;
   flex-direction: row;
-  padding: 0 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .c-header__sections {
+  // Structure
   flex: 1;
 }
 
 .c-header__right {
+  // Structure
   align-items: flex-end;
 }
 
 .c-header__logo {
-  font-weight: 500;
-  margin-right: 15px;
-  color: #fff;
+  // Structure
   display: block;
-  opacity: 0.6;
-  text-decoration: none;
   height: 40px;
-  line-height: 40px;
-  padding: 0 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: 15px;
+  opacity: 0.6;
 
+  // Text
+  font-weight: 500;
+  text-decoration: none;
+  line-height: 40px;
+  color: #fff;
+
+  // State: hover
   &:hover {
     opacity: 1;
   }
 }
 
 .c-header__logo-icon {
+  // Structure
   margin-right: 5px;
 }
 
