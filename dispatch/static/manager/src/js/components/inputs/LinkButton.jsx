@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-export default function Button(props) {
+export default function LinkButton(props) {
   return (
     <Link
       className='c-button'
