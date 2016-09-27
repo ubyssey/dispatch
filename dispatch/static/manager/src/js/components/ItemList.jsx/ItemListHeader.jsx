@@ -3,8 +3,10 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import Toolbar from '../Toolbar.jsx'
+import { Button, LinkButton } from '../inputs'
 
-import { Button, LinkButton } from '../buttons'
+import ItemListPagination from './ItemListPagination.jsx'
+import ItemListSearchBar from './ItemListSearchBar.jsx'
 
 export default function ItemListHeader(props) {
 
@@ -16,25 +18,9 @@ export default function ItemListHeader(props) {
     return props.deleteItems(props.selected)
   }
 
-  function getPageQuery(page) {
-    let query = {
-      page: page
-    }
-
-    if (props.section) {
-      query.section = props.section
-    }
-
-    return query
-  }
-
   function renderPagination() {
     return (
-      <div>
-        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage - 1 ) }}>Prev</LinkButton>
-        <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage + 1 ) }}>Prev</LinkButton>
-        {`Page ${props.currentPage} of ${props.totalPages}`}
-      </div>
+      <ItemListPagination currentPage={props.currentPage} totalPages={props.totalPages} section={props.section} />
     )
   }
 
@@ -52,6 +38,7 @@ export default function ItemListHeader(props) {
         </div>
         <div className='c-item-list__header__right'>
         {props.isLoaded ? renderPagination() : null}
+        <ItemListSearchBar />
         </div>
       </div>
     </Toolbar>
