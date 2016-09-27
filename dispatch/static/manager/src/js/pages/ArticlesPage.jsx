@@ -22,8 +22,14 @@ export default class ArticlesPageComponent extends React.Component {
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
 
+    // If section is present, add to query
     if (this.props.location.query.section) {
       query.section = this.props.location.query.section
+    }
+
+    // If search query is present, add to query
+    if (this.props.location.query.q) {
+      query.q = this.props.location.query.q
     }
 
     return query
