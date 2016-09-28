@@ -8,15 +8,6 @@ export default function ItemListItemPlaceholder(props) {
       <div className='c-item-list__item__cell c-item-list__item__cell--checkbox'>
         <input type='checkbox' disabled={true} checked={false} />
       </div>
-      <div className='c-item-list__item__cell c-list__item__cell--title'>
-        <PlaceholderBar />
-      </div>
-      <div className='c-item-list__item__cell'>
-        <PlaceholderBar />
-      </div>
-      <div className='c-item-list__item__cell'>
-        <PlaceholderBar />
-      </div>
       <div className='c-item-list__item__cell'>
         <PlaceholderBar />
       </div>

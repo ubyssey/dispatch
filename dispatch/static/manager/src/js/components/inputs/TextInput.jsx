@@ -5,6 +5,8 @@ export default function TextInput(props) {
     <input
       className='c-text-input'
       type='text'
-      placeholder={props.placeholder} />
+      value={props.value}
+      placeholder={props.placeholder}
+      onChange={props.onChange} />
   )
 }
