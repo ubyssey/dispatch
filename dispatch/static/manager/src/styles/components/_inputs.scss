@@ -39,3 +39,42 @@
     cursor: pointer;
   }
 }
+
+// Component: TextInput
+.c-text-input {
+  // Structure
+  height: 30px;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+
+  // Border
+  border: 1px solid $color-border-gray-dark;
+  border-radius: 2px;
+
+  // Text
+  @include font-size(13);
+  line-height: 30px;
+
+  // Extras
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+
+  &:focus {
+    outline: none;
+    border-color: $color-border-blue;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 5px rgba(81,167,232,0.5);
+  }
+}
+
+// Component: InputGroup
+.c-input-group {
+  // Structure
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  .c-button {
+    margin-left: 2px;
+    margin-right: 2px;
+  }
+}

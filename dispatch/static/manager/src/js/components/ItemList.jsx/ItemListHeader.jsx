@@ -38,7 +38,7 @@ export default function ItemListHeader(props) {
         </div>
         <div className='c-item-list__header__right'>
         {props.isLoaded ? renderPagination() : null}
-        <ItemListSearchBar />
+        <ItemListSearchBar searchItems={props.searchItems} />
         </div>
       </div>
     </Toolbar>
