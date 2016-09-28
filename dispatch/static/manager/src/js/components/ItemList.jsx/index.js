@@ -18,6 +18,7 @@ export default function ItemList(props) {
         currentPage={props.currentPage}
         totalPages={props.totalPages}
         deleteItems={props.deleteItems}
+        searchItems={props.searchItems}
         toggleAllItems={props.toggleAllItems} />
       <ItemListTable
         items={items}

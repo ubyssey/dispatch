@@ -14,6 +14,7 @@ export default class ArticlesPageComponent extends React.Component {
     super(props)
 
     this.handleDeleteArticles = this.handleDeleteArticles.bind(this)
+    this.handleSearchArticles = this.handleSearchArticles.bind(this)
   }
 
   getQuery() {
@@ -54,7 +55,7 @@ export default class ArticlesPageComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
 
-    if (this.isNewSection(prevProps, this.props)) {
+    if (this.isNewSection(prevProps, this.props) || this.isNewQuery(prevProps, this.props)) {
       this.props.clearArticles()
       this.props.clearSelectedArticles()
       this.props.fetchArticles(this.getQuery())
@@ -72,6 +73,10 @@ export default class ArticlesPageComponent extends React.Component {
     return prevProps.location.query.section !== props.location.query.section
   }
 
+  isNewQuery(prevProps, props) {
+    return prevProps.location.query.q !== props.location.query.q
+  }
+
   isNewPage(prevProps, props) {
     // Returns true if page number has changed
     return prevProps.location.query.page !== props.location.query.page
@@ -82,7 +87,12 @@ export default class ArticlesPageComponent extends React.Component {
     this.props.clearSelectedArticles()
   }
 
+  handleSearchArticles(query) {
+    this.props.searchArticles(this.props.location.query.section, query)
+  }
+
   render() {
+    console.log('location', this.props.location);
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
 
@@ -100,7 +110,8 @@ export default class ArticlesPageComponent extends React.Component {
           isAllSelected={this.props.articles.isAllSelected}
           toggleItem={this.props.toggleArticle}
           toggleAllItems={this.props.toggleAllArticles}
-          deleteItems={this.handleDeleteArticles} />
+          deleteItems={this.handleDeleteArticles}
+          searchItems={this.handleSearchArticles} />
       </DocumentTitle>
     )
   }
@@ -137,6 +148,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearArticles: () => {
       dispatch(articlesActions.clearArticles())
+    },
+    searchArticles: (section, query) => {
+      dispatch(articlesActions.searchArticles(section, query))
     }
   }
 }

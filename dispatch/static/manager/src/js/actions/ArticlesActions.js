@@ -1,4 +1,5 @@
 import { normalize, arrayOf } from 'normalizr'
+import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
@@ -56,5 +57,22 @@ export function deleteArticles(token, articleIds) {
 export function clearArticles() {
   return {
     type: types.CLEAR_ARTICLES
+  }
+}
+
+export function searchArticles(section, query) {
+
+  var queryObj = {}
+
+  if (query) {
+    queryObj.q = query
+  }
+
+  if (section) {
+    queryObj.section = section
+  }
+
+  return function(dispatch) {
+    dispatch(push({ pathname: '/articles/', query: queryObj }))
   }
 }

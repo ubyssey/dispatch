@@ -86,5 +86,28 @@
 }
 
 .c-item-list__header__delete {
+  // Structure
   margin-left: 15px;
+}
+
+// Component: ItemListPagination
+.c-item-list__pagination {
+  // Structure
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.c-item-list__pagination__text {
+  // Structure
+  display: inline-block;
+  margin-left: 5px;
+}
+
+// Component: ItemListSearchBar
+.c-item-list__searchbar {
+  display: inline-block;
+
+  .c-text-input {
+    width: 225px;
+  }
 }
