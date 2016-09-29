@@ -37,8 +37,8 @@ export default function ItemListHeader(props) {
           <Button onClick={handleDeleteItems} disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
-        {props.items.isLoaded ? renderPagination() : null}
-        <ItemListSearchBar searchItems={props.actions.searchItems} />
+        {props.items.isLoaded && props.items.data.length ? renderPagination() : null}
+        <ItemListSearchBar query={props.location.query.q} searchItems={props.actions.searchItems} />
         </div>
       </div>
     </Toolbar>
