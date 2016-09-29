@@ -7,11 +7,15 @@ export default class ItemListSearchBar extends React.Component {
     super(props)
 
     this.state = {
-      query: ''
+      query: this.props.query || ''
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ query: nextProps.query || '' })
   }
 
   handleSubmit(e) {
