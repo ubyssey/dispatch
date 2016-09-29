@@ -6,7 +6,7 @@ import ItemListItemPlaceholder from './ItemListItemPlaceholder.jsx'
 
 export default function ItemListTable(props) {
 
-  if (props.isLoading) {
+  if (props.items.isLoading) {
     return (
       <div className='c-item-list__table'>
         <ul>
@@ -25,13 +25,14 @@ export default function ItemListTable(props) {
     )
   } else {
 
-    const items = props.items.map( (item) => {
+    const items = props.items.data.map( id => {
+      let item = props.entities[id];
       return (
         <ItemListItem
           key={item.id}
           item={item}
-          selected={R.contains(item.id, props.selected)}
-          toggleItem={props.toggleItem} />
+          isSelected={R.contains(item.id, props.items.selected)}
+          toggleItem={props.actions.toggleItem} />
       )
     })
 

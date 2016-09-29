@@ -1,31 +1,27 @@
 import React from 'react'
+import R from 'ramda'
 import { LinkButton, InputGroup } from '../inputs'
 
-function getPageQuery(page, section) {
-  let query = {
-    page: page
-  }
+function getPath(location, page) {
+  let query = R.clone(location.query)
 
-  if (section) {
-    query.section = section
-  }
+  query.page = page
 
-  return query
+  return {
+    pathname: location.pathname,
+    query: query
+  }
 }
 
 function prevButton(props) {
   return (
-    <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage - 1, props.section) }}>
-      Prev
-    </LinkButton>
+    <LinkButton to={getPath(props.location, props.currentPage - 1)}>Prev</LinkButton>
   )
 }
 
 function nextButton(props) {
   return (
-    <LinkButton to={{ pathname: '/articles/', query: getPageQuery(props.currentPage + 1, props.section) }}>
-      Next
-    </LinkButton>
+    <LinkButton to={getPath(props.location, props.currentPage + 1)}>Next</LinkButton>
   )
 }
 
