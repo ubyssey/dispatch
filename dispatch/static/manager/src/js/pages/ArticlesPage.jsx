@@ -92,26 +92,28 @@ export default class ArticlesPageComponent extends React.Component {
   }
 
   render() {
-    console.log('location', this.props.location);
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
 
     return (
       <DocumentTitle title={title}>
         <ItemList
-          data={this.props.articles.data}
-          section={this.props.location.query.section}
+          location={this.props.location}
+
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
+
+          items={this.props.articles}
           entities={this.props.entities.articles}
-          selected={this.props.articles.selected}
-          isLoaded={this.props.articles.isLoaded}
-          isLoading={this.props.articles.isLoading}
-          isAllSelected={this.props.articles.isAllSelected}
-          toggleItem={this.props.toggleArticle}
-          toggleAllItems={this.props.toggleAllArticles}
-          deleteItems={this.handleDeleteArticles}
-          searchItems={this.handleSearchArticles} />
+
+          actions={{
+            toggleItem: this.props.toggleArticle,
+            toggleAllItems: this.props.toggleAllArticles,
+            deleteItems: this.handleDeleteArticles,
+            searchItems: this.handleSearchArticles
+          }}
+
+          />
       </DocumentTitle>
     )
   }

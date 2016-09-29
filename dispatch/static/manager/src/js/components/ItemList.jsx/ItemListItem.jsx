@@ -9,9 +9,9 @@ export default function ItemListItem(props) {
   }
 
   return (
-    <li className={'c-item-list__item' + (props.selected ? ' c-item-list__item--selected' : '')}>
+    <li className={'c-item-list__item' + (props.isSelected ? ' c-item-list__item--selected' : '')}>
       <div className='c-item-list__item__cell c-item-list__item__cell--checkbox' onClick={handleChange}>
-        <input type='checkbox' checked={props.selected} />
+        <input type='checkbox' checked={props.isSelected} />
       </div>
       <div className='c-item-list__item__cell c-item-list__item__cell--title'>
         <Link to={`/articles/${props.item.id}`} dangerouslySetInnerHTML={{__html: props.item.headline}} />
