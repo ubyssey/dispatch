@@ -5,26 +5,18 @@ import ItemListTable from './ItemListTable.jsx'
 
 export default function ItemList(props) {
 
-  const items = props.data.map( id => props.entities[id] )
-
   return (
     <div className='c-item-list'>
       <ItemListHeader
-        data={props.data}
-        selected={props.selected}
-        isLoaded={props.isLoaded}
-        isLoading={props.isLoading}
-        section={props.section}
+        items={props.items}
+        location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
-        deleteItems={props.deleteItems}
-        searchItems={props.searchItems}
-        toggleAllItems={props.toggleAllItems} />
+        actions={props.actions} />
       <ItemListTable
-        items={items}
-        selected={props.selected}
-        isLoading={props.isLoading}
-        toggleItem={props.toggleItem} />
+        items={props.items}
+        entities={props.entities}
+        actions={props.actions} />
     </div>
   )
 
