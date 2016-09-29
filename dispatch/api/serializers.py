@@ -212,7 +212,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     topic_id = serializers.IntegerField(write_only=True, required=False)
 
     url = serializers.CharField(source='get_absolute_url',read_only=True)
-    parent = serializers.ReadOnlyField(source='parent.id')
+    id = serializers.ReadOnlyField(source='parent.id')
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
 
@@ -222,7 +222,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         model = Article
         fields = (
             'id',
-            'parent',
             'headline',
             'featured_image',
             'featured_image_json',
