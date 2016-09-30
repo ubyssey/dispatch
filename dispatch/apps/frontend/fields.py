@@ -57,6 +57,6 @@ class ModelField(BaseField):
 
     def context(self):
         ids = map(int, self.value.split(','))
-        articles = list(Article.objects.filter(parent__in=ids, head=True))
+        articles = list(Article.objects.filter(parent__in=ids, head=True).select_related())
         articles.sort(key=lambda article: ids.index(article.parent.id))
         return articles or None

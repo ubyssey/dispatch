@@ -4,6 +4,7 @@ from django.template import loader, Context
 class BaseComponent:
 
     def __init__(self, data=None, **kwargs):
+        self.rendered = False
 
         if 'instance' in kwargs:
             self.instance = kwargs['instance']
@@ -18,28 +19,29 @@ class BaseComponent:
             for name, label, field_class in self.fields:
                 self.data[name] = data.get('fields['+name+']', None)
 
-        elif self.instance is not None:
-            self.context = {}
-            self.saved_fields = {}
-            for field in self.instance.fields.all():
-                self.saved_fields[field.name] = field
-            for name, label, field_obj in self.fields:
-                if name in self.saved_fields:
-                    saved_field = self.saved_fields[name]
-                    field_obj.set_value(saved_field.value)
-                    self.context[name] = field_obj.context()
-
+    def fetch_data(self):
+        self.context = {}
+        self.saved_fields = {}
+        for field in self.instance.fields.all():
+            self.saved_fields[field.name] = field
+        for name, label, field_obj in self.fields:
+            if name in self.saved_fields:
+                saved_field = self.saved_fields[name]
+                field_obj.set_value(saved_field.value)
+                self.context[name] = field_obj.context()
 
     def __str__(self):
-        template = loader.get_template("components/"+self.SLUG+".html")
-        c = Context(self.context)
-        return template.render(c).encode('utf-8')
+        # Attempt to render cached version
+        if not self.rendered:
+            self.fetch_data()
+            template = loader.get_template("components/"+self.SLUG+".html")
+            c = Context(self.context)
+            self.rendered = template.render(c).encode('utf-8')
 
-    def __iter__(self):
-        if self.instance is not None:
-            return self.rendered.__iter__()
+        return self.rendered
 
     def field_data_as_json(self):
+        self.fetch_data()
         output = {}
         for name, label, field_obj in self.fields:
             if name in self.saved_fields:
@@ -82,5 +84,3 @@ class BaseComponent:
         self.instance.save()
 
         return self.instance
-
-
