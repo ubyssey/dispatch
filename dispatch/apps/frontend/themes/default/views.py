@@ -54,20 +54,26 @@ class DefaultTheme():
 
     def find_article(self, request, slug, section=None):
 
-        def _find_article(slug, section=None):
+        def _find_preview(slug, section=None):
             if section is not None:
                 return Article.objects.get(slug=slug, section__slug=section, head=True)
             else:
                 return Article.objects.get(slug=slug, head=True)
 
+        def _find_published(slug, section=None):
+            if section is not None:
+                return Article.objects.get(slug=slug, section__slug=section, head=True, is_published=True)
+            else:
+                return Article.objects.get(slug=slug, head=True, is_published=True)
+
         if request.user.is_staff:
             try:
-                article = _find_article(slug, section)
+                article = _find_preview(slug, section)
             except Article.DoesNotExist:
                 raise Http404("This article does not exist.")
         else:
             try:
-                article = _find_article(slug, section)
+                article = _find_published(slug, section)
             except Article.DoesNotExist:
                 raise Http404("This article does not exist.")
         return article
