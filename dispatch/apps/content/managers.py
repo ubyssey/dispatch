@@ -16,26 +16,6 @@ class PublishableManager(Manager):
 
 class ArticleManager(PublishableManager):
 
-    def get_sections(self, exclude=[]):
-
-        from dispatch.apps.content.models import Section
-
-        results = {}
-
-        sections = Section.objects.all()
-
-        for section in sections:
-            articles = self.exclude(id__in=exclude).filter(section=section,is_published=True).order_by('-published_at')[:5]
-            if len(articles) > 0:
-                results[section.slug] = {
-                    'first': articles[0],
-                    'stacked': articles[1:3],
-                    'bullets': articles[3:],
-                    'rest': articles[1:4],
-                }
-
-        return results
-
     def get_popular(self, dur='week'):
 
         durations = {
