@@ -106,6 +106,10 @@ export default class ArticlesPageComponent extends React.Component {
           items={this.props.articles}
           entities={this.props.entities.articles}
 
+          createMessage='Create article'
+          emptyMessage={'You haven\'t created any articles yet.'}
+          createRoute='articles/new'
+
           actions={{
             toggleItem: this.props.toggleArticle,
             toggleAllItems: this.props.toggleAllArticles,
