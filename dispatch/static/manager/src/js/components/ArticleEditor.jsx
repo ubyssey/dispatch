@@ -6,7 +6,7 @@ export default function ArticleEditor(props) {
   return (
     <div className='c-article-editor'>
       <div className='c-article-editor__inner'>
-        <ArticleHeadline headline={props.article.headline} />
+        <ArticleHeadline update={props.update} headline={props.article.headline} />
         <div className='c-article-editor__body'>
           <QuillEditor article={props.article} />
         </div>

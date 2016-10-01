@@ -1,3 +1,4 @@
+import R from 'ramda'
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
@@ -11,29 +12,30 @@ export default function entitiesReducer(state = initialState, action) {
 
     // Articles
     case types.FETCH_ARTICLES + '_PENDING':
-      return Object.assign({}, state, {
+      return R.merge(state, {
         articles: {}
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
-      return Object.assign({}, state, {
+      return R.merge(state, {
         articles: Object.assign({}, state.articles, action.payload.results.entities.articles)
       })
 
     // Article
     case types.FETCH_ARTICLE + '_PENDING':
-      return Object.assign({}, state, {
+      return R.merge(state, {
         article: {}
       })
-    case types.FETCH_ARTICLE  + '_FULFILLED':
-      return Object.assign({}, state, {
-        articles: Object.assign({}, state.articles, action.payload.entities.articles),
-        article: action.payload.entities.articles
+    case types.FETCH_ARTICLE + '_FULFILLED':
+    case types.SET_ARTICLE:
+      return R.merge(state, {
+        articles: R.merge(state.articles, action.payload.entities.articles),
+        article: R.merge(state.article, action.payload.entities.articles)
       })
 
     // Sections
     case types.FETCH_SECTIONS + '_FULFILLED':
-      return Object.assign({}, state, {
-        sections: Object.assign({}, state.sections, action.payload.entities.sections)
+      return R.merge(state, {
+        sections: R.merge(state.sections, action.payload.entities.sections)
       })
     default:
       return state

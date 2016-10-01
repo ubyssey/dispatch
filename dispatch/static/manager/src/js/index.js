@@ -37,6 +37,7 @@ render((
         <Route component={Containers.Main}>
           <IndexRoute component={Pages.Dashboard} />
           <Route path="/articles" component={Pages.Articles} />
+          <Route path="/articles/new" component={Pages.NewArticle} />
           <Route path="/articles/:articleId" component={Pages.Article} />
         </Route>
 
