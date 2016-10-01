@@ -3,6 +3,7 @@ import R from 'ramda'
 
 import ItemListItem from './ItemListItem.jsx'
 import ItemListItemPlaceholder from './ItemListItemPlaceholder.jsx'
+import ItemListEmpty from './ItemListEmpty.jsx'
 
 export default function ItemListTable(props) {
 
@@ -22,6 +23,14 @@ export default function ItemListTable(props) {
           <ItemListItemPlaceholder />
         </ul>
       </div>
+    )
+  } else if (!props.items.data.length) {
+    return (
+      <ItemListEmpty
+        query={props.location.query.q}
+        createMessage={props.createMessage}
+        createRoute={props.createRoute}
+        emptyMessage={props.emptyMessage} />
     )
   } else {
 
