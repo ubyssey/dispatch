@@ -8,7 +8,7 @@ import ItemList from '../components/ItemList.jsx'
 
 const DEFAULT_LIMIT = 15
 
-export default class ArticlesPageComponent extends React.Component {
+class ArticlesPageComponent extends React.Component {
 
   constructor(props) {
     super(props)

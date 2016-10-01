@@ -8,7 +8,7 @@ import ArticleToolbar from '../components/ArticleToolbar.jsx';
 import ArticleEditor from '../components/ArticleEditor.jsx'
 import ArticleSidebar from '../components/ArticleSidebar.jsx'
 
-export default class ArticlePageComponent extends React.Component {
+class ArticlePageComponent extends React.Component {
 
   componentWillMount() {
     // Fetch article
@@ -47,6 +47,7 @@ export default class ArticlePageComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state.app)
   return {
     article: state.app.articles.article,
     entities: {

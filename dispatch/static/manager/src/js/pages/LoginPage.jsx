@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import * as userActions from '../actions/UserActions'
 
-export default class LoginPageComponent extends React.Component {
+class LoginPageComponent extends React.Component {
 
   constructor(props) {
     super(props)
