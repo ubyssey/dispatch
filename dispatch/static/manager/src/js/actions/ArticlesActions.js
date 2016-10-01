@@ -26,6 +26,13 @@ export function fetchArticle(articleId) {
   }
 }
 
+export function setArticle(article) {
+  return {
+    type: types.SET_ARTICLE,
+    payload: normalize(article, articleSchema)
+  }
+}
+
 export function toggleArticle(articleId) {
   return {
     type: types.TOGGLE_ARTICLE,
