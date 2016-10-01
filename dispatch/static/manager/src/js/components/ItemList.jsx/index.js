@@ -16,6 +16,10 @@ export default function ItemList(props) {
       <ItemListTable
         items={props.items}
         entities={props.entities}
+        location={props.location}
+        createMessage={props.createMessage}
+        emptyMessage={props.emptyMessage}
+        createRoute={props.createRoute}
         actions={props.actions} />
     </div>
   )

@@ -111,3 +111,27 @@
     width: 225px;
   }
 }
+
+// Component: ItemListEmpty
+.c-item-list-empty {
+  // Structure
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.c-item-list-empty__container {
+  // Structure
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 400px;
+
+  // Text
+  text-align: center;
+
+  p {
+    margin-bottom: 1em;
+    @include font-size(20);
+  }
+}
