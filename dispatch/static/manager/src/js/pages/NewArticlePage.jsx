@@ -2,6 +2,7 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import {EditorState} from 'draft-js';
 
 import * as articlesActions from '../actions/ArticlesActions'
 
@@ -22,7 +23,8 @@ export default class NewArticlePageComponent extends React.Component {
   componentWillMount() {
     // Fetch article
     this.props.setArticle({
-      id: NEW_ARTICLE_ID
+      id: NEW_ARTICLE_ID,
+      content: EditorState.createEmpty()
     })
   }
 
@@ -63,7 +65,6 @@ export default class NewArticlePageComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.app);
   return {
     article: state.app.articles.article,
     entities: {
