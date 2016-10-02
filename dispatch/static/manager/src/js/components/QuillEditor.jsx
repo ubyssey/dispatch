@@ -36,6 +36,9 @@ export default class QuillEditor extends React.Component {
 		});
 
     this.quill.on('text-change', function(delta, source) {
+
+      this.props.update('content', this.quill.getJSON());
+
       if(source !== 'api') {
         $(window).on('beforeunload', function(event) {
           var event = event || window.event,
@@ -47,7 +50,7 @@ export default class QuillEditor extends React.Component {
           return message;
         });
       }
-    });
+    }.bind(this));
 
     this.quill.addEmbed('image', {manager: this.props.imageManager})
     this.quill.addEmbed('gallery', {imageManager: this.props.imageManager, galleryManager: this.props.galleryManager})
