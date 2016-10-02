@@ -1,19 +1,24 @@
 import React from 'react'
-import QuillEditor from './QuillEditor.jsx'
+
+// import QuillEditor from './QuillEditor.jsx'
 import ArticleHeadline from './ArticleHeadline.jsx'
+import ContentEditor from './ContentEditor.jsx'
 
 export default function ArticleEditor(props) {
+
   return (
     <div className='c-article-editor'>
       <div className='c-article-editor__inner'>
         <ArticleHeadline update={props.update} headline={props.article.headline} />
         <div className='c-article-editor__body'>
-          <QuillEditor article={props.article} />
+          <ContentEditor update={props.update} content={props.article.content} />
         </div>
       </div>
     </div>
   )
 }
+
+// <QuillEditor update={props.update} article={props.article} />
 
 // <div className={"content panel" + (this.state.showOptions ? "" : " expanded")}>
 //     <div className="inner">

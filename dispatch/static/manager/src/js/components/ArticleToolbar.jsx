@@ -13,3 +13,11 @@ export default function ArticleToolbar(props) {
     </Toolbar>
   )
 }
+
+// <button className={"dis-button" + (this.state.unsaved ? " green" : "")} onClick={this.handleSave}>{this.state.firstSave ? 'Save' : 'Update'}</button>
+// {!this.state.instance.is_published ? this.renderStatusDropdown() : null}
+// <button className="dis-button" onClick={this.handlePublish.bind(this, !this.state.instance.is_published)}>{this.state.instance.is_published ? 'Unpublish' : 'Publish'}</button>
+// {this.renderPreviewButton()}
+// <DropdownButton push="left" selectItem={this.loadRevision} items={this.renderVersions()}>
+// {'Version ' + this.state.version}
+// </DropdownButton>
