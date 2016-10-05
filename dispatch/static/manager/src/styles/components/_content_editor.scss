@@ -1,0 +1,44 @@
+// Component: ContentEditor
+.c-content-editor {
+  position: relative;
+}
+
+.c-content-editor__editor {
+  margin-left: 50px;
+
+
+  div[data-block=true] {
+    margin-bottom: 20px;
+  }
+
+  span[data-text=true] {
+    font-family: Georgia;
+    font-size: 16px;
+    color: #2F2F2F;
+    line-height: 26px;
+  }
+}
+
+// Component: ContentEditorEmbedToolbar
+.c-content-editor__embed-toolbar {
+  position: absolute;
+}
+
+.c-content-editor__embed-toolbar__button {
+  // Structure
+  width: 28px;
+  height: 28px;
+
+  // Border
+  border: 1px solid $color-border-gray;
+  border-radius: 28px;
+
+  // Text
+  font-size: 28px;
+  text-align: center;
+
+  // Extra
+  &:hover {
+    cursor: pointer;
+  }
+}
