@@ -7,6 +7,12 @@ Made with :heart: by _The Ubyssey_, the University of British Columbia's student
 
 ## Installation
 
+If using Mac OSX, run this beforehand
+
+```
+brew install libjpeg zlib
+```
+
 ```
 pip install dispatch
 ```
