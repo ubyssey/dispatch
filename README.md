@@ -10,7 +10,7 @@ Made with :heart: by _The Ubyssey_, the University of British Columbia's student
 If using Mac OSX, run this beforehand
 
 ```
-brew install libjpeg zlib
+brew install libjpeg lzlib
 ```
 
 ```
