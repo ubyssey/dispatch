@@ -47,6 +47,11 @@ gulp.task('sass:build-dev', ['clean:css'], function() {
     .pipe(gulp.dest('./dist/css/'));
 });
 
+gulp.task('copy:images', ['clean:images'], function() {
+  return gulp.src('./src/images/**/*')
+    .pipe(gulp.dest('./dist/images/'));
+});
+
 gulp.task('clean:js', function() {
   return gulp.src('./dist/js/', {read: false})
     .pipe(clean());
@@ -57,11 +62,17 @@ gulp.task('clean:css', function() {
     .pipe(clean());
 });
 
-gulp.task('build', ['webpack:build', 'sass:build']);
+gulp.task('clean:images', function() {
+  return gulp.src('./dist/images/', {read: false})
+    .pipe(clean());
+});
 
-gulp.task('build-dev', ['webpack:build-dev', 'sass:build-dev']);
+gulp.task('build', ['webpack:build', 'sass:build', 'copy:images']);
+
+gulp.task('build-dev', ['webpack:build-dev', 'sass:build-dev', 'copy:images']);
 
 gulp.task('default', ['build-dev'], function() {
   gulp.watch(['./src/js/**/*'],     ['webpack:build-dev']);
   gulp.watch(['./src/styles/**/*'], ['sass:build-dev']);
+  gulp.watch(['./src/images/**/*'], ['copy:images']);
 });
