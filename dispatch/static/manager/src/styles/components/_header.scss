@@ -81,7 +81,7 @@
 
 .c-header__dropdown {
   position: relative;
-  z-index: 500;
+  z-index: $z-index-2;
 
   &:hover {
     ul {
