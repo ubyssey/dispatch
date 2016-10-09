@@ -1,6 +1,8 @@
 import React from 'react'
 
-export default class ImageEmbed extends React.Component {
+import ImageManager from '../../modals/ImageManager.jsx'
+
+class ImageEmbedComponent extends React.Component {
 
   constructor(props) {
     super(props)
@@ -26,4 +28,14 @@ export default class ImageEmbed extends React.Component {
     )
   }
 
+}
+
+export default {
+  type: 'IMAGE',
+  component: ImageEmbedComponent,
+  modal: ImageManager,
+  modalCallback: (data) => {
+    console.log(data)
+    return {}
+  }
 }

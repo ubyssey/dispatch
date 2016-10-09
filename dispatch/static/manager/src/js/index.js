@@ -9,11 +9,12 @@ import { createHistory } from 'history'
 import { loadingBarReducer, loadingBarMiddleware } from 'react-redux-loading-bar'
 import promiseMiddleware from 'redux-promise-middleware'
 
-import * as Pages from './pages';
-import * as Containers from './containers';
+import * as Pages from './pages'
+import * as Containers from './containers'
 import appReducer from './reducers/AppReducer'
+import modalReducer from './reducers/ModalReducer'
 
-const BASE_PATH = '/admin';
+const BASE_PATH = '/admin'
 
 const browserHistory = useRouterHistory(createHistory)({ basename: BASE_PATH })
 const router = routerMiddleware(browserHistory)
@@ -22,7 +23,8 @@ const store = createStore(
   combineReducers({
     app: appReducer,
     routing: routerReducer,
-    loadingBar: loadingBarReducer
+    loadingBar: loadingBarReducer,
+    modal: modalReducer
   }),
   applyMiddleware(thunk, router, promiseMiddleware(), loadingBarMiddleware())
 )

@@ -4,7 +4,11 @@ from dispatch.conf import default_settings
 
 class DispatchSettings(object):
 
-    COMBINE_SETTINGS = ('INSTALLED_APPS', 'STATICFILES_DIRS',)
+    COMBINE_SETTINGS = (
+        'INSTALLED_APPS',
+        'STATICFILES_DIRS',
+        'MIDDLEWARE_CLASSES'
+    )
 
     def configure(self):
 
@@ -24,7 +28,7 @@ class DispatchSettings(object):
                     setting = getattr(project_settings_module, key)
                     if key in self.COMBINE_SETTINGS:
                         default_setting = getattr(default_settings, key)
-                        project_settings[key] = default_setting + setting
+                        project_settings[key] = setting + default_setting
                     else:
                         project_settings[key] = setting
         except:

@@ -2,9 +2,9 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
-import {EditorState} from 'draft-js';
 
 import * as articlesActions from '../actions/ArticlesActions'
+import * as modalActions from '../actions/ModalActions'
 
 import ArticleToolbar from '../components/ArticleToolbar.jsx'
 import ArticleEditor from '../components/ArticleEditor.jsx'
@@ -23,8 +23,7 @@ export default class NewArticlePageComponent extends React.Component {
   componentWillMount() {
     // Fetch article
     this.props.setArticle({
-      id: NEW_ARTICLE_ID,
-      content: EditorState.createEmpty()
+      id: NEW_ARTICLE_ID
     })
   }
 
@@ -51,8 +50,14 @@ export default class NewArticlePageComponent extends React.Component {
           <div className='u-container-main'>
             <ArticleToolbar article={article} />
             <div className='u-container-editor'>
-              <ArticleEditor article={article} update={this.handleUpdate} />
-              <ArticleSidebar article={article} update={this.handleUpdate} />
+              <ArticleEditor
+                article={article}
+                update={this.handleUpdate}
+                openModal={this.props.openModal}
+                closeModal={this.props.closeModal} />
+              <ArticleSidebar
+                article={article}
+                update={this.handleUpdate} />
             </div>
           </div>
         </DocumentTitle>
@@ -77,6 +82,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setArticle: (article) => {
       dispatch(articlesActions.setArticle(article))
+    },
+    openModal: (component, props) => {
+      dispatch(modalActions.openModal(component, props))
+    },
+    closeModal: () => {
+      dispatch(modalActions.closeModal())
     }
   }
 }

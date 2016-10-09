@@ -5,13 +5,12 @@
 
 .c-content-editor__editor {
   margin-left: 50px;
+}
 
+.c-content-editor__editor__block {
+  margin-bottom: 20px;
 
-  div[data-block=true] {
-    margin-bottom: 20px;
-  }
-
-  span[data-text=true] {
+  &--unstyled {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
@@ -26,19 +25,42 @@
 
 .c-content-editor__embed-toolbar__button {
   // Structure
-  width: 28px;
-  height: 28px;
+  display: inline-block;
+  width: 31px;
+  height: 31px;
 
   // Border
-  border: 1px solid $color-border-gray;
+  border: 1px solid $color-black;
   border-radius: 28px;
 
+  // Background
+  background-image: url('../images/icon-cross.png');
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+
   // Text
-  font-size: 28px;
-  text-align: center;
+  vertical-align: middle;
 
   // Extra
+  transition: transform 0.2s;
+  opacity: 0.35;
+
   &:hover {
     cursor: pointer;
+    opacity: 0.65;
   }
+
+  &--active {
+    transform: rotate(45deg);
+  }
+}
+
+.c-content-editor__embed-toolbar__buttons {
+  // Structure
+  display: inline-block;
+  margin-left: 15px;
+
+  // Text
+  vertical-align: middle;
 }
