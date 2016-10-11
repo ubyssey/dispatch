@@ -4,7 +4,8 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   articles: {},
   article: {},
-  sections: {}
+  sections: {},
+  images: {}
 }
 
 export default function entitiesReducer(state = initialState, action) {
@@ -17,7 +18,7 @@ export default function entitiesReducer(state = initialState, action) {
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return R.merge(state, {
-        articles: Object.assign({}, state.articles, action.payload.results.entities.articles)
+        articles: R.merge(state.articles, action.payload.results.entities.articles)
       })
 
     // Article
@@ -37,6 +38,17 @@ export default function entitiesReducer(state = initialState, action) {
       return R.merge(state, {
         sections: R.merge(state.sections, action.payload.entities.sections)
       })
+
+    // Images
+    // case types.FETCH_IMAGES + '_PENDING':
+    //   return R.merge(state, {
+    //     images: {}
+    //   })
+    case types.FETCH_IMAGES + '_FULFILLED':
+      return R.merge(state, {
+        images: R.merge(state.images, action.payload.results.entities.images)
+      })
+
     default:
       return state
   }
