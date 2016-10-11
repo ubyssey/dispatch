@@ -1,12 +1,13 @@
 // Component: Button
 // Component: LinkButton
-.c-button {
+.c-input--button {
   // Structure
   display: inline-block;
   padding-left: 12px;
   padding-right: 12px;
   margin-left: 5px;
   margin-right: 5px;
+  vertical-align: middle;
 
   // Border
   border-width: 1px;
@@ -41,12 +42,16 @@
 }
 
 // Component: TextInput
-.c-text-input {
+.c-input--text {
   // Structure
   height: 30px;
+  width: 200px;
   padding-left: 8px;
   padding-right: 8px;
+  margin-left: 5px;
+  margin-right: 5px;
   box-sizing: border-box;
+  vertical-align: middle;
 
   // Border
   border: 1px solid $color-border-gray-dark;
@@ -77,4 +82,27 @@
     margin-left: 2px;
     margin-right: 2px;
   }
+}
+
+// Component: FormInput
+.c-form-input {
+  // Structure
+  margin-bottom: 15px;
+
+  // Extras
+  .c-input {
+    // Structure
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.c-form-input__label {
+  // Structure
+  display: block;
+  margin-bottom: 7px;
+
+  // Text
+  font-weight: $font-weight-bold;
 }

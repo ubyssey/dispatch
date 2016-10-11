@@ -12,7 +12,7 @@ import ArticleSidebar from '../components/ArticleSidebar.jsx'
 
 const NEW_ARTICLE_ID = 'new'
 
-export default class NewArticlePageComponent extends React.Component {
+class NewArticlePageComponent extends React.Component {
 
   constructor(props) {
     super(props)
