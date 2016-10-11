@@ -20,3 +20,9 @@ export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
 // Modal actions
 export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'
+
+// Image actions
+export const FETCH_IMAGES = 'FETCH_IMAGES'
+export const DELETE_IMAGE = 'DELETE_IMAGE'
+export const SEARCH_IMAGES = 'SEARCH_IMAGES'
+export const SELECT_IMAGE = 'SELECT_IMAGE'

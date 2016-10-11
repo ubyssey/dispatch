@@ -1,0 +1,53 @@
+// Component: ImageManager
+.c-image-manager {
+  // Structure
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.c-image-manager__header {
+  // Structure
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+
+  // Extras
+  box-shadow: rgba(0,0,0,0.05) 0px 1px 1px;
+}
+
+.c-image-manager__header__left,
+.c-image-manager__header__right {
+  // Structure
+  height: 60px;
+  line-height: 60px;
+}
+
+.c-image-manager__header__left {
+  // Structure
+  flex: 1;
+}
+
+.c-image-manager__body {
+  // Structure
+  display: flex;
+  flex: 1;
+}
+
+.c-image-manager__images {
+  // Structure
+  padding: 15px;
+  flex: 2;
+}
+
+.c-image-manager__active {
+  // Structure
+  flex: 1;
+  overflow: scroll;
+
+  // Border
+  border-left: 1px solid $color-border-gray;
+}

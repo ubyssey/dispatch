@@ -1,0 +1,35 @@
+// Component: ImageThumb
+.c-image-thumb {
+  // Structure
+  position: relative;
+  width: 20%;
+  float: left;
+
+  // Extras
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: 100%;
+  }
+
+  &--selected .c-image-thumb__inner {
+    outline: 2px solid red;
+  }
+}
+
+.c-image-thumb__inner {
+  // Structure
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+
+  // Extras
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
