@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
+import { FormInput, TextInput, MultiSelectInput } from '../inputs'
 
 export default function ImagePanel(props) {
   return (
@@ -12,7 +12,9 @@ export default function ImagePanel(props) {
           <TextInput />
         </FormInput>
         <FormInput label='Photographers'>
-          <TextInput />
+          <MultiSelectInput
+            values={props.image.authors}
+            attribute='full_name' />
         </FormInput>
       </form>
     </div>
