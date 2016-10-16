@@ -1,13 +1,28 @@
 .c-image-panel {
+  // Structure
   padding: 15px;
 }
 
 .c-image-panel__image {
+  // Structure
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .c-image-panel__filename {
+  // Structure
   padding-top: 10px;
   padding-bottom: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-bottom: 15px;
+
+  // border
+  border: 1px solid $color-border-gray;
+  border-top: none;
+
+  // Text
+  @include font-size(13);
+  color: $color-black;
 }
