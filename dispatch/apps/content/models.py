@@ -111,10 +111,7 @@ class Publishable(Model):
         return self.template_fields_data
 
     def get_template(self):
-        if self.template != 'default':
-            return 'article/%s.html' % self.template
-        else:
-            return 'article/base.html'
+        return 'article/%s.html' % self.template
 
     def save_template_fields(self, template_fields):
         return TemplateManager.save_fields(self.id, self.template, template_fields)
