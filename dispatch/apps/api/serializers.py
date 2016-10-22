@@ -34,22 +34,31 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     authors = PersonSerializer(many=True, read_only=True)
     filename = serializers.CharField(read_only=True)
 
+    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+
     class Meta:
         model = Image
         fields = (
             'id',
-            'img',
             'filename',
             'title',
             'authors',
+            'author_ids',
             'url',
             'thumb',
             'created_at',
         )
-        write_only_fields = (
-            'img',
-        )
 
+    def update(self, instance, validated_data):
+
+        # Save properties
+        instance.text = validated_data.get('text')
+        instance.save()
+
+        # Save relationships
+        instance.save_authors(validated_data.get('author_ids'))
+
+        return instance
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     """
