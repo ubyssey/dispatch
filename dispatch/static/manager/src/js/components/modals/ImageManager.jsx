@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import * as imagesActions from '../../actions/ImagesActions'
+import * as personsActions from '../../actions/PersonsActions'
 
 import { Button, TextInput } from '../inputs'
 import ImageThumb from './ImageThumb.jsx'
@@ -9,8 +10,42 @@ import ImagePanel from './ImagePanel.jsx'
 
 class ImageManagerComponent extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.updateImage = this.updateImage.bind(this)
+    this.fetchPersons = this.fetchPersons.bind(this)
+  }
+
   componentDidMount() {
     this.props.fetchImages({ordering: '-created_at'})
+  }
+
+  updateImage(id, data) {
+    this.props.updateImage(this.props.token, id, data)
+  }
+
+  fetchPersons(query) {
+    this.props.fetchPersons(this.props.token)
+  }
+
+  renderImagePanel() {
+    const image = this.props.entities.images[this.props.image.data]
+
+    const persons = this.props.persons.data.map( id => {
+      return this.props.entities.persons[id]
+    })
+
+    if (image) {
+      return (
+        <ImagePanel
+          image={image}
+          persons={persons}
+          updateImage={this.updateImage}
+          fetchPersons={this.fetchPersons} />
+      )
+    } else {
+      return null
+    }
   }
 
   render() {
@@ -26,7 +61,6 @@ class ImageManagerComponent extends React.Component {
       )
     })
 
-    const image = this.props.entities.images[this.props.image.data]
 
     return (
       <div className='c-image-manager'>
@@ -41,7 +75,7 @@ class ImageManagerComponent extends React.Component {
         <div className='c-image-manager__body'>
           <div className='c-image-manager__images'>{images}</div>
           <div className='c-image-manager__active'>
-          {image ? <ImagePanel image={image} /> : null}
+          {this.renderImagePanel()}
           </div>
         </div>
         <div className='c-image-manager__footer'></div>
@@ -55,9 +89,12 @@ const mapStateToProps = (state) => {
   return {
     images: state.app.images.images,
     image: state.app.images.image,
+    persons: state.app.persons,
     entities: {
-      images: state.app.entities.images
-    }
+      images: state.app.entities.images,
+      persons: state.app.entities.persons
+    },
+    token: state.app.auth.token
   }
 }
 
@@ -68,6 +105,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
+    },
+    updateImage: (token, imageId, data) => {
+      dispatch(imagesActions.updateImage(token, imageId, data))
+    },
+    fetchPersons: (token) => {
+      dispatch(personsActions.fetchPersons(token))
     }
   }
 }
