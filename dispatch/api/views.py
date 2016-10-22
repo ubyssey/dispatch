@@ -400,6 +400,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
+    update_fields = ('title', 'authors')
 
     def create(self, request, *args, **kwargs):
         authors = request.POST.get('authors', None)
@@ -420,18 +421,21 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
 
-        authors = request.data.get('author_ids', False)
+        # Filter data to only include updatable fields
+        data = { key: request.data.get(key) for key in self.update_fields }
 
-        partial = kwargs.pop('partial', False)
+        # Pluck ids from author list
+        if 'authors' in data:
+            data['author_ids'] = [a['id'] for a in data['authors']]
+
+        print 'data'
+        print data
 
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
 
-        resource = serializer.save()
-
-        if authors:
-            resource.save_authors(authors)
+        serializer.save()
 
         return Response(serializer.data)
 

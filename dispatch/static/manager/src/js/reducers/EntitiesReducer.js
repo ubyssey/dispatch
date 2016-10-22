@@ -5,7 +5,8 @@ const initialState = {
   articles: {},
   article: {},
   sections: {},
-  images: {}
+  images: {},
+  persons: {}
 }
 
 export default function entitiesReducer(state = initialState, action) {
@@ -40,13 +41,23 @@ export default function entitiesReducer(state = initialState, action) {
       })
 
     // Images
-    // case types.FETCH_IMAGES + '_PENDING':
-    //   return R.merge(state, {
-    //     images: {}
-    //   })
     case types.FETCH_IMAGES + '_FULFILLED':
       return R.merge(state, {
         images: R.merge(state.images, action.payload.results.entities.images)
+      })
+    case types.UPDATE_IMAGE + '_FULFILLED':
+      return R.merge(state, {
+        images: R.merge(state.images, action.payload.entities.images)
+      })
+
+    // Persons
+    case types.FETCH_PERSONS + '_PENDING':
+      return R.merge(state, {
+        persons: {}
+      })
+    case types.FETCH_PERSONS + '_FULFILLED':
+      return R.merge(state, {
+        persons: R.merge(state.persons, action.payload.results.entities.persons)
       })
 
     default:

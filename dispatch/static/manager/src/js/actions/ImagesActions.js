@@ -39,6 +39,14 @@ export function searchImages(query) {
   }
 }
 
+export function updateImage(token, imageId, data) {
+  return {
+    type: types.UPDATE_IMAGE,
+    payload: DispatchAPI.images.updateImage(token, imageId, data)
+      .then( json => normalize(json, imageSchema) )
+  }
+}
+
 export function selectImage(imageId) {
   return {
     type: types.SELECT_IMAGE,
