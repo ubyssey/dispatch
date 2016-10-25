@@ -31,9 +31,10 @@ class ImageManagerComponent extends React.Component {
   renderImagePanel() {
     const image = this.props.entities.images[this.props.image.data]
 
-    const persons = this.props.persons.data.map( id => {
-      return this.props.entities.persons[id]
-    })
+    const persons = {
+      results: this.props.persons.data,
+      entities: this.props.entities.persons
+    }
 
     if (image) {
       return (
