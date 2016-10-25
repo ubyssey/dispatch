@@ -25,7 +25,14 @@ class ImageManagerComponent extends React.Component {
   }
 
   fetchPersons(query) {
-    this.props.fetchPersons(this.props.token)
+
+    let queryObj = {}
+
+    if (query) {
+      queryObj['q'] = query
+    }
+
+    this.props.fetchPersons(this.props.token, queryObj)
   }
 
   renderImagePanel() {
@@ -61,7 +68,6 @@ class ImageManagerComponent extends React.Component {
           selectImage={this.props.selectImage} />
       )
     })
-
 
     return (
       <div className='c-image-manager'>
@@ -110,8 +116,8 @@ const mapDispatchToProps = (dispatch) => {
     updateImage: (token, imageId, data) => {
       dispatch(imagesActions.updateImage(token, imageId, data))
     },
-    fetchPersons: (token) => {
-      dispatch(personsActions.fetchPersons(token))
+    fetchPersons: (token, query) => {
+      dispatch(personsActions.fetchPersons(token, query))
     }
   }
 }

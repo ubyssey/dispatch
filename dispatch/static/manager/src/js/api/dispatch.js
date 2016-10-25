@@ -119,8 +119,8 @@ var DispatchAPI = {
     }
   },
   persons: {
-    fetchPersons: (token) => {
-      return getRequest('people', null, null, token)
+    fetchPersons: (token, query) => {
+      return getRequest('people', null, query, token)
     }
   }
 }
