@@ -10,18 +10,20 @@ export default class MultiSelectInput extends React.Component {
     super(props)
     this.removeValue = this.removeValue.bind(this)
     this.pageClick = this.pageClick.bind(this)
-    this.mouseDownHandler = this.mouseDownHandler.bind(this)
-    this.mouseUpHandler = this.mouseUpHandler.bind(this)
+    this.handleMouseDown = this.handleMouseDown.bind(this)
+    this.handleMouseUp = this.handleMouseUp.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
 
     this.mouseIsDownOnField = false;
 
     this.state = {
-      isActive: false
+      isActive: false,
+      query: ''
     }
   }
   componentDidMount() {
     window.addEventListener('mousedown', this.pageClick, false)
-    this.fetchResults('')
+    this.fetchResults()
   }
 
   pageClick(e) {
@@ -32,16 +34,21 @@ export default class MultiSelectInput extends React.Component {
     }
   }
 
-  mouseDownHandler() {
+  handleMouseDown() {
     this.mouseIsDownOnField = true
   }
 
-  mouseUpHandler() {
+  handleMouseUp() {
     this.mouseIsDownOnField = false
   }
 
-  fetchResults(query) {
-    this.props.fetchResults(query)
+  handleInputChange(e) {
+    e.preventDefault();
+    this.setState({ query: e.target.value }, this.fetchResults)
+  }
+
+  fetchResults() {
+    this.props.fetchResults(this.state.query)
   }
 
   removeValue(id) {
@@ -61,9 +68,6 @@ export default class MultiSelectInput extends React.Component {
   }
 
   render() {
-    console.log('selected', this.props.selected);
-    console.log('entities', this.props.entities);
-
     const selected = this.props.selected.map( id => {
       const value = this.props.entities[id];
       return (
@@ -96,13 +100,15 @@ export default class MultiSelectInput extends React.Component {
     return (
       <div
         className='c-input c-input--multi-select'
-        onMouseDown={this.mouseDownHandler}
-        onMouseUp={this.mouseUpHandler}>
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}>
         <ul className='c-input--multi-select__values'>
           {selected}
         </ul>
         <div className={dropdownClassName}>
-          <TextInput placeholder='Add new' />
+          <TextInput
+            onChange={this.handleInputChange}
+            placeholder='Add new' />
           <ul className='c-input--multi-select__results'>
             {results}
           </ul>
