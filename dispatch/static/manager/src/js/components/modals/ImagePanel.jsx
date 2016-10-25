@@ -6,7 +6,10 @@ import { FormInput, TextInput, MultiSelectInput } from '../inputs'
 export default function ImagePanel(props) {
 
   function updateAuthors(authors) {
-    let newImage = R.merge(props.image, { authors: authors })
+    let authorEntities = authors.map(id => {
+      return props.persons.entities[id]
+    })
+    let newImage = R.merge(props.image, { authors: authorEntities })
     props.updateImage(props.image.id, newImage)
   }
 
@@ -20,8 +23,9 @@ export default function ImagePanel(props) {
         </FormInput>
         <FormInput label='Photographers'>
           <MultiSelectInput
-            values={props.image.authors}
-            results={props.persons}
+            selected={props.image.authors}
+            results={props.persons.results}
+            entities={props.persons.entities}
             fetchResults={props.fetchPersons}
             attribute='full_name'
             onUpdate={updateAuthors} />

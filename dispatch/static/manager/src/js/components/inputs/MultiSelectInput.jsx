@@ -46,18 +46,26 @@ export default class MultiSelectInput extends React.Component {
 
   removeValue(id) {
     let newValues = R.remove(
-      R.findIndex(R.propEq('id', id), this.props.values),
+      R.findIndex(R.equals(id), this.props.selected),
       1,
-      this.props.values
+      this.props.selected
     )
 
     this.props.onUpdate(newValues)
   }
 
-  render() {
-    const values = this.props.values || []
+  addValue(id) {
+    let newValues = R.append(id, this.props.selected)
 
-    const selected = this.props.values.map( value => {
+    this.props.onUpdate(newValues)
+  }
+
+  render() {
+    console.log('selected', this.props.selected);
+    console.log('entities', this.props.entities);
+
+    const selected = this.props.selected.map( id => {
+      const value = this.props.entities[id];
       return (
         <li
           className='c-input--multi-select__value'
@@ -72,11 +80,13 @@ export default class MultiSelectInput extends React.Component {
       )
     })
 
-    const results = this.props.results.map( value => {
+    const results = this.props.results.map( id => {
+      const value = this.props.entities[id];
       return (
         <li
+          key={value.id}
           className='c-input--multi-select__result'
-          key={value.id}>{value[this.props.attribute]}</li>
+          onClick={() => this.addValue(value.id)}>{value[this.props.attribute]}</li>
       )
     })
 
