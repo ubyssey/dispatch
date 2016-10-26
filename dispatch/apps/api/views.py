@@ -1,4 +1,3 @@
-from django.template.loader import render_to_string
 from django.db.models import Q
 
 from rest_framework import viewsets, mixins, filters, status
@@ -122,25 +121,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def rendered(self, request, parent_id=None):
-
-        article = Article.objects.get(parent_id=parent_id, head=True)
-
-        context = {
-            'article': article,
-            'base_template': 'blank.html',
-        }
-
-        data = {
-            'id': article.parent_id,
-            'headline': article.headline,
-            'url': article.get_absolute_url(),
-            'html': render_to_string(article.get_template(), context)
-        }
-
-        return Response(data)
 
     def bulk_delete(self, request):
         deleted = []
