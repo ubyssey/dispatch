@@ -14,7 +14,6 @@ export default function personsReducer(state = initialState, action) {
         isLoaded: false
       })
     case types.FETCH_PERSONS + '_FULFILLED':
-      console.log('payload', action.payload)
       return Object.assign({}, state, {
         isLoading: false,
         isLoaded: true,

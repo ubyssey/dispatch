@@ -5,12 +5,16 @@ import { FormInput, TextInput, MultiSelectInput } from '../inputs'
 
 export default function ImagePanel(props) {
 
-  function updateAuthors(authors) {
-    let authorEntities = authors.map(id => {
-      return props.persons.entities[id]
-    })
-    let newImage = R.merge(props.image, { authors: authorEntities })
-    props.updateImage(props.image.id, newImage)
+  function addAuthor(id) {
+    props.addAuthor(props.image, id)
+  }
+
+  function removeAuthor(id) {
+    props.removeAuthor(props.image, id)
+  }
+
+  function createAuthor(fullName) {
+    props.createAuthor(props.image, fullName)
   }
 
   return (
@@ -26,9 +30,11 @@ export default function ImagePanel(props) {
             selected={props.image.authors}
             results={props.persons.results}
             entities={props.persons.entities}
+            addValue={addAuthor}
+            removeValue={removeAuthor}
+            createValue={createAuthor}
             fetchResults={props.fetchPersons}
-            attribute='full_name'
-            onUpdate={updateAuthors} />
+            attribute='full_name' />
         </FormInput>
       </form>
     </div>

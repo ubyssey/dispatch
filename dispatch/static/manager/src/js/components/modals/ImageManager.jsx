@@ -12,7 +12,10 @@ class ImageManagerComponent extends React.Component {
 
   constructor(props) {
     super(props)
-    this.updateImage = this.updateImage.bind(this)
+    this.addAuthor = this.addAuthor.bind(this)
+    this.removeAuthor = this.removeAuthor.bind(this)
+    this.createAuthor = this.createAuthor.bind(this)
+
     this.fetchPersons = this.fetchPersons.bind(this)
   }
 
@@ -22,6 +25,19 @@ class ImageManagerComponent extends React.Component {
 
   updateImage(id, data) {
     this.props.updateImage(this.props.token, id, data)
+  }
+
+  addAuthor(image, id) {
+    return this.props.addAuthorToImage(this.props.token, image, id)
+  }
+
+  removeAuthor(image, id) {
+    return this.props.removeAuthorFromImage(this.props.token, image, id)
+
+  }
+
+  createAuthor(image, fullName) {
+    return this.props.createAndAddAuthorToImage(this.props.token, image, fullName)
   }
 
   fetchPersons(query) {
@@ -48,7 +64,9 @@ class ImageManagerComponent extends React.Component {
         <ImagePanel
           image={image}
           persons={persons}
-          updateImage={this.updateImage}
+          addAuthor={this.addAuthor}
+          removeAuthor={this.removeAuthor}
+          createAuthor={this.createAuthor}
           fetchPersons={this.fetchPersons} />
       )
     } else {
@@ -113,8 +131,14 @@ const mapDispatchToProps = (dispatch) => {
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
     },
-    updateImage: (token, imageId, data) => {
-      dispatch(imagesActions.updateImage(token, imageId, data))
+    addAuthorToImage(token, image, id) {
+      dispatch(imagesActions.addAuthorToImage(token, image, id))
+    },
+    removeAuthorFromImage(token, image, id) {
+      dispatch(imagesActions.removeAuthorFromImage(token, image, id))
+    },
+    createAndAddAuthorToImage(token, image, fullName) {
+      dispatch(imagesActions.createAndAddAuthorToImage(token, image, fullName))
     },
     fetchPersons: (token, query) => {
       dispatch(personsActions.fetchPersons(token, query))

@@ -56,6 +56,10 @@ export default function entitiesReducer(state = initialState, action) {
       return R.merge(state, {
         persons: R.merge(state.persons, action.payload.results.entities.persons)
       })
+    case types.CREATE_PERSON + '_FULFILLED':
+      return R.merge(state, {
+        persons: R.merge(state.persons, action.payload.entities.persons)
+      })
 
     default:
       return state
