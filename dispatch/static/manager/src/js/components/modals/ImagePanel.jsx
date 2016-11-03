@@ -17,13 +17,21 @@ export default function ImagePanel(props) {
     props.createAuthor(props.image, fullName)
   }
 
+  function updateTitle(title) {
+    let newImage = R.assoc('title', title, props.image)
+    props.updateImage(newImage)
+  }
+
   return (
     <div className='c-image-panel'>
       <img className='c-image-panel__image' src={props.image.thumb} />
       <div className='c-image-panel__filename'>{props.image.filename}</div>
       <form>
         <FormInput label='Title'>
-          <TextInput />
+          <TextInput
+            value={props.image.title || ''}
+            onChange={e => updateTitle(e.target.value)}
+            updateDelay={500} />
         </FormInput>
         <FormInput label='Photographers'>
           <MultiSelectInput
