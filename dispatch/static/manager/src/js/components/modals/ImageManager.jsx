@@ -13,6 +13,7 @@ class ImageManagerComponent extends React.Component {
   constructor(props) {
     super(props)
     this.updateImage = this.updateImage.bind(this)
+    this.saveImage = this.saveImage.bind(this)
     this.addAuthor = this.addAuthor.bind(this)
     this.removeAuthor = this.removeAuthor.bind(this)
     this.createAuthor = this.createAuthor.bind(this)
@@ -38,7 +39,6 @@ class ImageManagerComponent extends React.Component {
 
   removeAuthor(image, id) {
     return this.props.removeAuthorFromImage(this.props.token, image, id)
-
   }
 
   createAuthor(image, fullName) {
@@ -70,6 +70,7 @@ class ImageManagerComponent extends React.Component {
           image={image}
           persons={persons}
           updateImage={this.updateImage}
+          saveImage={this.saveImage}
           addAuthor={this.addAuthor}
           removeAuthor={this.removeAuthor}
           createAuthor={this.createAuthor}
