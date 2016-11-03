@@ -24,6 +24,7 @@ export const CLOSE_MODAL = 'CLOSE_MODAL'
 // Image actions
 export const FETCH_IMAGES = 'FETCH_IMAGES'
 export const DELETE_IMAGE = 'DELETE_IMAGE'
+export const SAVE_IMAGE = 'SAVE_IMAGE'
 export const UPDATE_IMAGE = 'UPDATE_IMAGE'
 export const SEARCH_IMAGES = 'SEARCH_IMAGES'
 export const SELECT_IMAGE = 'SELECT_IMAGE'

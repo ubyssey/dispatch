@@ -12,6 +12,7 @@ class ImageManagerComponent extends React.Component {
 
   constructor(props) {
     super(props)
+    this.updateImage = this.updateImage.bind(this)
     this.addAuthor = this.addAuthor.bind(this)
     this.removeAuthor = this.removeAuthor.bind(this)
     this.createAuthor = this.createAuthor.bind(this)
@@ -23,8 +24,12 @@ class ImageManagerComponent extends React.Component {
     this.props.fetchImages({ordering: '-created_at'})
   }
 
-  updateImage(id, data) {
-    this.props.updateImage(this.props.token, id, data)
+  saveImage(image) {
+    this.props.saveImage(this.props.token, image.id, image)
+  }
+
+  updateImage(image) {
+    this.props.updateImage(image.id, image)
   }
 
   addAuthor(image, id) {
@@ -52,7 +57,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   renderImagePanel() {
-    const image = this.props.entities.images[this.props.image.data]
+    const image = this.props.entities.image[this.props.image.data]
 
     const persons = {
       results: this.props.persons.data,
@@ -64,6 +69,7 @@ class ImageManagerComponent extends React.Component {
         <ImagePanel
           image={image}
           persons={persons}
+          updateImage={this.updateImage}
           addAuthor={this.addAuthor}
           removeAuthor={this.removeAuthor}
           createAuthor={this.createAuthor}
@@ -117,6 +123,7 @@ const mapStateToProps = (state) => {
     persons: state.app.persons,
     entities: {
       images: state.app.entities.images,
+      image: state.app.entities.image,
       persons: state.app.entities.persons
     },
     token: state.app.auth.token
@@ -131,13 +138,19 @@ const mapDispatchToProps = (dispatch) => {
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
     },
-    addAuthorToImage(token, image, id) {
+    updateImage: (imageId, image) => {
+      dispatch(imagesActions.updateImage(imageId, image))
+    },
+    saveImage: (token, imageId, image) => {
+      dispatch(imagesActions.saveImage(token, imageId, image))
+    },
+    addAuthorToImage: (token, image, id) => {
       dispatch(imagesActions.addAuthorToImage(token, image, id))
     },
-    removeAuthorFromImage(token, image, id) {
+    removeAuthorFromImage: (token, image, id) => {
       dispatch(imagesActions.removeAuthorFromImage(token, image, id))
     },
-    createAndAddAuthorToImage(token, image, fullName) {
+    createAndAddAuthorToImage: (token, image, fullName) => {
       dispatch(imagesActions.createAndAddAuthorToImage(token, image, fullName))
     },
     fetchPersons: (token, query) => {
