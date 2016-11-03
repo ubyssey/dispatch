@@ -5,10 +5,10 @@ import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-export function fetchArticles(params) {
+export function fetchArticles(query) {
   return {
     type: types.FETCH_ARTICLES,
-    payload: DispatchAPI.articles.fetchArticles(params)
+    payload: DispatchAPI.articles.fetchArticles(query)
       .then( function(json) {
         return {
           count: json.count,

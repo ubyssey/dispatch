@@ -7,7 +7,7 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 }
 
-function buildRoute(route, method, id) {
+function buildRoute(route, id) {
   let fullRoute = API_URL + route
 
   if (id) {
@@ -44,7 +44,7 @@ function parseJSON(response) {
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  let urlString = buildRoute(route, 'GET', id) + url.format({query: query})
+  let urlString = buildRoute(route, id) + url.format({query: query})
   return fetch(
     urlString,
     {
@@ -58,9 +58,22 @@ function getRequest(route, id=null, query={}, token=null) {
 
 function postRequest(route, id=null, payload={}, token=null) {
   return fetch(
-    buildRoute(route, 'POST', id),
+    buildRoute(route, id),
     {
       method: 'POST',
+      headers: buildHeaders(token),
+      body: JSON.stringify(payload)
+    }
+  )
+  .then(handleError)
+  .then(parseJSON)
+}
+
+function patchRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
       headers: buildHeaders(token),
       body: JSON.stringify(payload)
     }
@@ -101,6 +114,17 @@ var DispatchAPI = {
     fetchImages: (query) => {
       return getRequest('images', null, query)
     },
+    updateImage: (token, imageId, data) => {
+      return patchRequest('images', imageId, data, token)
+    }
+  },
+  persons: {
+    fetchPersons: (token, query) => {
+      return getRequest('people', null, query, token)
+    },
+    createPerson: (token, fullName) => {
+      return postRequest('people', null, {full_name: fullName}, token)
+    }
   }
 }
 
