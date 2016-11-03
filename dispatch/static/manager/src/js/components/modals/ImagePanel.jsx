@@ -22,6 +22,10 @@ export default function ImagePanel(props) {
     props.updateImage(newImage)
   }
 
+  function save() {
+    props.saveImage(props.image)
+  }
+
   return (
     <div className='c-image-panel'>
       <img className='c-image-panel__image' src={props.image.thumb} />
@@ -31,7 +35,8 @@ export default function ImagePanel(props) {
           <TextInput
             value={props.image.title || ''}
             onChange={e => updateTitle(e.target.value)}
-            updateDelay={500} />
+            onDelayedSave={save}
+            saveDelay={500} />
         </FormInput>
         <FormInput label='Photographers'>
           <MultiSelectInput
