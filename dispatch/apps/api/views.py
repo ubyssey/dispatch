@@ -424,12 +424,8 @@ class ImageViewSet(viewsets.ModelViewSet):
         # Filter data to only include updatable fields
         data = { key: request.data.get(key) for key in self.update_fields }
 
-        # Pluck ids from author list
         if 'authors' in data:
-            data['author_ids'] = [a['id'] for a in data['authors']]
-
-        print 'data'
-        print data
+            data['author_ids'] = data['authors']
 
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=data, partial=True)

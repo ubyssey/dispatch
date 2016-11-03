@@ -30,3 +30,4 @@ export const SELECT_IMAGE = 'SELECT_IMAGE'
 
 // Person actions
 export const FETCH_PERSONS = 'FETCH_PERSONS'
+export const CREATE_PERSON = 'CREATE_PERSON'

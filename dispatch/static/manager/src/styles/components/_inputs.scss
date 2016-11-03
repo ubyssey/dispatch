@@ -4,6 +4,7 @@ $input-text-padding: 8px;
 $input-button-border-radius: 3px;
 $input-text-border-radius: 2px;
 $input-font-size: 13;
+$input-color-highlight: $color-steel-blue;
 
 // Component: Button
 // Component: LinkButton
@@ -88,8 +89,20 @@ $input-font-size: 13;
   margin-bottom: 5px;
 }
 
+.c-input--multi-select__results {
+  // Structure
+  display: none;
+  margin-top: 5px;
+}
+
+.c-input--multi-select__no-results {
+  // Text
+  color: $color-text-gray;
+}
+
 .c-input--multi-select__value,
-.c-input--multi-select__result {
+.c-input--multi-select__result,
+.c-input--multi-select__no-results {
   // Structure
   height: $input-height;
   padding-left: $input-text-padding;
@@ -148,6 +161,16 @@ $input-font-size: 13;
   }
 }
 
+.c-input--multi-select__result {
+  // Extra
+  cursor: pointer;
+
+  &:hover {
+    background: $input-color-highlight;
+    color: $color-white;
+  }
+}
+
 .c-input--multi-select__add {
   // // Structure
   // height: $input-height;
@@ -189,10 +212,6 @@ $input-font-size: 13;
       display: block;
     }
   }
-}
-
-.c-input--multi-select__results {
-  display: none;
 }
 
 // Component: InputGroup
