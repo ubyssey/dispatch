@@ -432,17 +432,13 @@ class Article(Publishable):
         return int(words / 200) # Average reading speed = 200 wpm
 
     def save_authors(self, authors):
-        Author.objects.filter(article_id=self.id).delete()
-        n=0
-        if type(authors) is not list:
-            authors = authors.split(",")
-        for author in authors:
-            try:
-                person = Person.objects.get(id=author)
-                Author.objects.create(article=self,person=person,order=n)
-                n = n + 1
-            except Person.DoesNotExist:
-                pass
+        # Clear current authors
+        Author.objects.filter(article=self).delete()
+
+        # Create a new author for each person in list
+        # Use `n` to save authors in correct order
+        for n, person_id in enumerate(authors):
+            Author.objects.create(article=self, person_id=person_id, order=n)
 
     def get_author_string(self, links=False):
         """
@@ -583,15 +579,17 @@ class Image(Model):
         return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
 
     #Overriding
-    def save(self, thumbnails=True, **kwargs):
+    def save(self, **kwargs):
         """
         Custom save method to process thumbnails and save image dimensions.
         """
 
         # Call super method
-        super(Image, self).save()
+        super(Image, self).save(**kwargs)
 
-        if self.img and thumbnails:
+        update_fields = kwargs.get('update_fields', [])
+
+        if 'img' in update_fields and self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
@@ -623,17 +621,10 @@ class Image(Model):
         default_storage.save(name, thumb_file)
 
     def save_authors(self, authors):
-        Author.objects.filter(image_id=self.id).delete()
-        n=0
-        if type(authors) is not list:
-            authors = authors.split(",")
-        for author in authors:
-            try:
-                person = Person.objects.get(id=author)
-                Author.objects.create(image=self,person=person,order=n)
-                n = n + 1
-            except Person.DoesNotExist:
-                pass
+        Author.objects.filter(image=self).delete()
+
+        for n, person_id in enumerate(authors):
+            Author.objects.create(image=self, person_id=person_id, order=n)
 
     @receiver(post_delete)
     def delete_images(sender, instance, **kwargs):
