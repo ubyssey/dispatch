@@ -7,6 +7,7 @@ export default function TextInput(props) {
       type='text'
       value={props.value}
       placeholder={props.placeholder}
-      onChange={props.onChange} />
+      onChange={props.onChange}
+      onKeyPress={props.onKeyPress} />
   )
 }

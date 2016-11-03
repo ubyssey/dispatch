@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import * as imagesActions from '../../actions/ImagesActions'
+import * as personsActions from '../../actions/PersonsActions'
 
 import { Button, TextInput } from '../inputs'
 import ImageThumb from './ImageThumb.jsx'
@@ -9,8 +10,68 @@ import ImagePanel from './ImagePanel.jsx'
 
 class ImageManagerComponent extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.addAuthor = this.addAuthor.bind(this)
+    this.removeAuthor = this.removeAuthor.bind(this)
+    this.createAuthor = this.createAuthor.bind(this)
+
+    this.fetchPersons = this.fetchPersons.bind(this)
+  }
+
   componentDidMount() {
     this.props.fetchImages({ordering: '-created_at'})
+  }
+
+  updateImage(id, data) {
+    this.props.updateImage(this.props.token, id, data)
+  }
+
+  addAuthor(image, id) {
+    return this.props.addAuthorToImage(this.props.token, image, id)
+  }
+
+  removeAuthor(image, id) {
+    return this.props.removeAuthorFromImage(this.props.token, image, id)
+
+  }
+
+  createAuthor(image, fullName) {
+    return this.props.createAndAddAuthorToImage(this.props.token, image, fullName)
+  }
+
+  fetchPersons(query) {
+
+    let queryObj = {}
+
+    if (query) {
+      queryObj['q'] = query
+    }
+
+    this.props.fetchPersons(this.props.token, queryObj)
+  }
+
+  renderImagePanel() {
+    const image = this.props.entities.images[this.props.image.data]
+
+    const persons = {
+      results: this.props.persons.data,
+      entities: this.props.entities.persons
+    }
+
+    if (image) {
+      return (
+        <ImagePanel
+          image={image}
+          persons={persons}
+          addAuthor={this.addAuthor}
+          removeAuthor={this.removeAuthor}
+          createAuthor={this.createAuthor}
+          fetchPersons={this.fetchPersons} />
+      )
+    } else {
+      return null
+    }
   }
 
   render() {
@@ -26,8 +87,6 @@ class ImageManagerComponent extends React.Component {
       )
     })
 
-    const image = this.props.entities.images[this.props.image.data]
-
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
@@ -41,7 +100,7 @@ class ImageManagerComponent extends React.Component {
         <div className='c-image-manager__body'>
           <div className='c-image-manager__images'>{images}</div>
           <div className='c-image-manager__active'>
-          {image ? <ImagePanel image={image} /> : null}
+          {this.renderImagePanel()}
           </div>
         </div>
         <div className='c-image-manager__footer'></div>
@@ -55,9 +114,12 @@ const mapStateToProps = (state) => {
   return {
     images: state.app.images.images,
     image: state.app.images.image,
+    persons: state.app.persons,
     entities: {
-      images: state.app.entities.images
-    }
+      images: state.app.entities.images,
+      persons: state.app.entities.persons
+    },
+    token: state.app.auth.token
   }
 }
 
@@ -68,6 +130,18 @@ const mapDispatchToProps = (dispatch) => {
     },
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
+    },
+    addAuthorToImage(token, image, id) {
+      dispatch(imagesActions.addAuthorToImage(token, image, id))
+    },
+    removeAuthorFromImage(token, image, id) {
+      dispatch(imagesActions.removeAuthorFromImage(token, image, id))
+    },
+    createAndAddAuthorToImage(token, image, fullName) {
+      dispatch(imagesActions.createAndAddAuthorToImage(token, image, fullName))
+    },
+    fetchPersons: (token, query) => {
+      dispatch(personsActions.fetchPersons(token, query))
     }
   }
 }
