@@ -29,6 +29,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
     """
+    title = serializers.CharField(allow_blank=True, trim_whitespace=False)
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
@@ -52,7 +53,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
 
         # Save properties
-        instance.text = validated_data.get('text')
+        instance.title = validated_data.get('title')
         instance.save()
 
         # Save relationships
