@@ -114,7 +114,7 @@ var DispatchAPI = {
     fetchImages: (query) => {
       return getRequest('images', null, query)
     },
-    updateImage: (token, imageId, data) => {
+    saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     }
   },

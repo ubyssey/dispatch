@@ -41,17 +41,24 @@ export function searchImages(query) {
   }
 }
 
-export function updateImage(token, imageId, data) {
+export function saveImage(token, imageId, data) {
+  return {
+    type: types.SAVE_IMAGE,
+    payload: DispatchAPI.images.saveImage(token, imageId, data)
+      .then( json => normalize(json, imageSchema) )
+  }
+}
+
+export function updateImage(imageId, image) {
   return {
     type: types.UPDATE_IMAGE,
-    payload: DispatchAPI.images.updateImage(token, imageId, data)
-      .then( json => normalize(json, imageSchema) )
+    payload: normalize(image, imageSchema)
   }
 }
 
 export function addAuthorToImage(token, image, authorId) {
   let newAuthors = R.append(authorId, image.authors)
-  return updateImage(token, image.id, { authors: newAuthors })
+  return saveImage(token, image.id, { authors: newAuthors })
 }
 
 export function removeAuthorFromImage(token, image, authorId) {
@@ -61,7 +68,7 @@ export function removeAuthorFromImage(token, image, authorId) {
     image.authors
   )
 
-  return updateImage(token, image.id, { authors: newAuthors })
+  return saveImage(token, image.id, { authors: newAuthors })
 }
 
 export function createAndAddAuthorToImage(token, image, authorName) {
