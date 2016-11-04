@@ -12,6 +12,7 @@ class ImageManagerComponent extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.updateImage = this.updateImage.bind(this)
     this.saveImage = this.saveImage.bind(this)
     this.addAuthor = this.addAuthor.bind(this)
@@ -110,7 +111,10 @@ class ImageManagerComponent extends React.Component {
           {this.renderImagePanel()}
           </div>
         </div>
-        <div className='c-image-manager__footer'></div>
+        <div className='c-image-manager__footer'>
+          <div className='c-image-manger__footer__selected'></div>
+          <Button>Insert</Button>
+        </div>
       </div>
     )
   }
