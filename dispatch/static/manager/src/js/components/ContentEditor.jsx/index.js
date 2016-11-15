@@ -21,7 +21,7 @@ function buildEmbedMap(embeds) {
   let embedMap = {}
 
   for(var i = 0; i < embeds.length; i++) {
-    embedMap[embeds[i].type] = embeds[i].component
+    embedMap[embeds[i].type] = embeds[i]
   }
 
   return embedMap
@@ -161,15 +161,20 @@ export default class ContentEditor extends React.Component {
 
     if (type === 'atomic') {
       const embedType = Entity.get(contentBlock.getEntityAt(0)).getType()
+      const embed = this.embedMap[embedType]
 
       return {
         component: ContentEditorEmbed,
         editable: false,
         props: {
           type: embedType,
-          embedComponent: this.embedMap[embedType],
+          embedComponent: embed.component,
           onFocus: this.startEditingEntity,
-          onBlur: this.stopEditingEntity
+          onBlur: this.stopEditingEntity,
+          openModal: this.props.openModal,
+          closeModal: this.props.closeModal,
+          modal: embed.modal,
+          modalCallback: embed.modalCallback
         }
       }
     }
