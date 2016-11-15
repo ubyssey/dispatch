@@ -21,8 +21,6 @@ export default class ContentEditorEmbedToolbar extends React.Component {
   insertEmbed(e, embed) {
     e.preventDefault()
 
-    console.log('embed', embed)
-
     if (embed.modal) {
       this.props.openModal(embed.modal, {
         onSubmit: function(data) {
