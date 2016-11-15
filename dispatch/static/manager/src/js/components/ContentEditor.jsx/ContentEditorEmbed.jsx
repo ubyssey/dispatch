@@ -10,6 +10,7 @@ export default class ContentEditorEmbed extends React.Component {
     this.startEditing = this.startEditing.bind(this)
     this.stopEditing = this.stopEditing.bind(this)
     this.updateField = this.updateField.bind(this)
+    this.updateEmbed = this.updateEmbed.bind(this)
 
     this.state = {
       editMode: false,
@@ -17,7 +18,24 @@ export default class ContentEditorEmbed extends React.Component {
     }
   }
 
-  changeEmbed() {
+  updateEmbed(e) {
+
+    this.props.blockProps.openModal(this.props.blockProps.modal, {
+      onSubmit: function(data) {
+
+        this.props.blockProps.closeModal()
+
+        let newData = R.merge(
+          this.state.data,
+          this.props.blockProps.modalCallback(data)
+        )
+
+        // Update entity and state
+        Entity.mergeData(this.props.block.getEntityAt(0), newData)
+        this.setState({ data: newData }, this.render)
+
+      }.bind(this)
+    })
 
   }
 
@@ -58,7 +76,7 @@ export default class ContentEditorEmbed extends React.Component {
         <div className='o-embed-container__header'>
           <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
           <ul className='o-embed-container__header__options'>
-            <li onClick={this.}>Change</li>
+            <li onClick={this.updateEmbed}>Change</li>
             <li>Remove</li>
           </ul>
         </div>
