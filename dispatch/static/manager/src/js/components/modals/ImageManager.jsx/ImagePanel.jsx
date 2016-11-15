@@ -1,7 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, TextInput, MultiSelectInput } from '../inputs'
+import { FormInput, TextInput, MultiSelectInput } from '../../inputs'
 
 export default function ImagePanel(props) {
 
