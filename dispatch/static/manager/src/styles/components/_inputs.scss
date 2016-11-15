@@ -36,7 +36,7 @@ $input-color-highlight: $color-steel-blue;
   text-decoration: none;
 
   // State: hover
-  &:hover {
+  &:hover:not(.c-input--disabled) {
     // Border
     border-color: $color-border-gray-dark;
 
@@ -46,6 +46,13 @@ $input-color-highlight: $color-steel-blue;
 
     // Extra
     cursor: pointer;
+  }
+
+  // State: disabled
+  &.c-input--disabled {
+    // Extras
+    opacity: 0.65;
+    cursor: default;
   }
 }
 
