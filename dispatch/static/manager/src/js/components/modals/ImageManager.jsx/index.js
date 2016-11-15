@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import * as imagesActions from '../../actions/ImagesActions'
-import * as personsActions from '../../actions/PersonsActions'
+import * as imagesActions from '../../../actions/ImagesActions'
+import * as personsActions from '../../../actions/PersonsActions'
 
-import { Button, TextInput } from '../inputs'
+import { Button, TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb.jsx'
 import ImagePanel from './ImagePanel.jsx'
 
