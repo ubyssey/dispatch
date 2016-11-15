@@ -7,32 +7,36 @@ export default class ContentEditorEmbed extends React.Component {
   constructor(props) {
     super(props)
 
-    this._startEditing = this._startEditing.bind(this)
-    this._stopEditing = this._stopEditing.bind(this)
-    this._updateField = this._updateField.bind(this)
+    this.startEditing = this.startEditing.bind(this)
+    this.stopEditing = this.stopEditing.bind(this)
+    this.updateField = this.updateField.bind(this)
 
     this.state = {
       editMode: false,
-      data: this._getData()
+      data: this.getData()
     }
   }
 
-  _updateField(field, value) {
+  changeEmbed() {
+
+  }
+
+  updateField(field, value) {
     this.setState({
       data: R.assoc(field, value, this.state.data)
     })
   }
 
-  _getData() {
+  getData() {
     return Entity.get(this.props.block.getEntityAt(0)).getData()
   }
 
-  _startEditing() {
+  startEditing() {
     this.setState({ editMode: true })
     this.props.blockProps.onFocus()
   }
 
-  _stopEditing() {
+  stopEditing() {
 
     Entity.mergeData(this.props.block.getEntityAt(0), this.state.data)
 
@@ -42,19 +46,19 @@ export default class ContentEditorEmbed extends React.Component {
 
   render() {
     const embedProps = {
-      data: this.state.editMode ? this.state.data : this._getData(),
-      updateField: this._updateField
+      data: this.state.editMode ? this.state.data : this.getData(),
+      updateField: this.updateField
     }
 
     return (
       <div
         className='o-embed-container'
-        onFocus={this._startEditing}
-        onBlur={this._stopEditing} >
+        onFocus={this.startEditing}
+        onBlur={this.stopEditing} >
         <div className='o-embed-container__header'>
           <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
           <ul className='o-embed-container__header__options'>
-            <li>Change</li>
+            <li onClick={this.}>Change</li>
             <li>Remove</li>
           </ul>
         </div>
