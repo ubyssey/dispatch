@@ -20,6 +20,7 @@ class ImageManagerComponent extends React.Component {
     this.createAuthor = this.createAuthor.bind(this)
 
     this.fetchPersons = this.fetchPersons.bind(this)
+    this.insertImage = this.insertImage.bind(this)
   }
 
   componentDidMount() {
@@ -55,6 +56,11 @@ class ImageManagerComponent extends React.Component {
     }
 
     this.props.fetchPersons(this.props.token, queryObj)
+  }
+
+  insertImage() {
+    const image = this.props.entities.images[this.props.image.data]
+    this.props.onSubmit(image)
   }
 
   renderImagePanel() {
@@ -113,7 +119,9 @@ class ImageManagerComponent extends React.Component {
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
-          <Button>Insert</Button>
+          <Button
+            disabled={!this.props.image.data}
+            onClick={this.insertImage}>Insert</Button>
         </div>
       </div>
     )
