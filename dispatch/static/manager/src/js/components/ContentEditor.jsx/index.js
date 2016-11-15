@@ -50,6 +50,7 @@ export default class ContentEditor extends React.Component {
     this.startEditingEntity = this.startEditingEntity.bind(this)
     this.stopEditingEntity = this.stopEditingEntity.bind(this)
     this.insertEmbed = this.insertEmbed.bind(this)
+    this.removeEmbed = this.removeEmbed.bind(this)
 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
@@ -148,6 +149,25 @@ export default class ContentEditor extends React.Component {
 
   }
 
+  removeEmbed(blockKey) {
+
+    // Fetch editorState and contentState
+    let editorState = this.state.editorState
+    let contentState = editorState.getCurrentContent()
+
+    // Remove the block from the blockMap
+    let blockMap = contentState.getBlockMap()
+    contentState = contentState.set('blockMap', blockMap.delete(blockKey))
+
+    // Update editorState with new contentState
+    editorState = EditorState.set(
+      editorState,
+      {currentContent: contentState}
+    )
+
+    this.onChange(editorState)
+  }
+
   startEditingEntity() {
     this.setState({ readOnly: true })
   }
@@ -171,6 +191,7 @@ export default class ContentEditor extends React.Component {
           embedComponent: embed.component,
           onFocus: this.startEditingEntity,
           onBlur: this.stopEditingEntity,
+          removeEmbed: this.removeEmbed,
           openModal: this.props.openModal,
           closeModal: this.props.closeModal,
           modal: embed.modal,
