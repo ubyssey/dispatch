@@ -166,6 +166,7 @@ export default class ContentEditor extends React.Component {
         component: ContentEditorEmbed,
         editable: false,
         props: {
+          type: embedType,
           embedComponent: this.embedMap[embedType],
           onFocus: this.startEditingEntity,
           onBlur: this.stopEditingEntity

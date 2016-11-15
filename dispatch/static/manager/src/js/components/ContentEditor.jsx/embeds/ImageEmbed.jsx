@@ -2,28 +2,43 @@ import React from 'react'
 
 import ImageManager from '../../modals/ImageManager.jsx'
 
+import { FormInput, TextInput } from '../../inputs'
+
 class ImageEmbedComponent extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.onChange = this.onChange.bind(this)
+    this.handleCaptionChange = this.handleCaptionChange.bind(this)
+    this.handleCreditChange = this.handleCreditChange.bind(this)
   }
 
-  onChange(e) {
+  handleCaptionChange(e) {
     e.preventDefault()
     this.props.updateField('caption', e.target.value)
   }
 
+  handleCreditChange(e) {
+    e.preventDefault()
+    this.props.updateField('credit', e.target.value)
+  }
+
   render() {
     return (
-      <div>
-        <img style={{width: '100%', height: 'auto'}} src={this.props.data.src} />
-        <input
-          type='text'
-          placeholder='Caption'
-          value={this.props.data.caption}
-          onChange={this.onChange} />
+      <div className='o-embed o-embed--image'>
+        <img className='o-embed--image__image' src={this.props.data.url} />
+        <form>
+          <FormInput label='Caption'>
+            <TextInput
+              value={this.props.data.caption}
+              onChange={this.handleCaptionChange} />
+          </FormInput>
+          <FormInput label='Custom Credit'>
+            <TextInput
+              value={this.props.data.credit || ''}
+              onChange={this.handleCreditChange} />
+          </FormInput>
+        </form>
       </div>
     )
   }
@@ -34,8 +49,7 @@ export default {
   type: 'IMAGE',
   component: ImageEmbedComponent,
   modal: ImageManager,
-  modalCallback: (data) => {
-    console.log(data)
-    return {}
+  modalCallback: (image) => {
+    return image
   }
 }

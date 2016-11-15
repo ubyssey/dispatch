@@ -1,0 +1,36 @@
+$embed-border-radius: 5px;
+$embed-header-height: 40px;
+$embed-padding: 10px;
+
+.o-embed-container {
+  // Border
+  border-radius: $embed-border-radius;
+}
+
+.o-embed-container__header {
+  // Structure
+  height: $embed-header-height;
+  background: $color-dark-gray;
+
+  // Border
+  border-top-left-radius: $embed-border-radius;
+  border-top-right-radius: $embed-border-radius;
+
+  // Text
+  color: $color-white;
+  line-height: $embed-header-height;
+}
+
+.o-embed-container__body {
+  // Structure
+  padding: $embed-padding;
+
+  // Border
+  border-style: solid;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-color: $color-border-gray;
+  border-bottom-left-radius: $embed-border-radius;
+  border-bottom-right-radius: $embed-border-radius;
+}
