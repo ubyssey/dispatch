@@ -46,7 +46,7 @@ class ImageEmbedComponent extends React.Component {
 }
 
 export default {
-  type: 'IMAGE',
+  type: 'Image',
   component: ImageEmbedComponent,
   modal: ImageManager,
   modalCallback: (image) => {
