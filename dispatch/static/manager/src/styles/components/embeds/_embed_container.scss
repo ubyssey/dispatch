@@ -1,6 +1,6 @@
 $embed-border-radius: 5px;
 $embed-header-height: 40px;
-$embed-padding: 10px;
+$embed-padding: 1rem;
 
 .o-embed-container {
   // Border
@@ -9,8 +9,11 @@ $embed-padding: 10px;
 
 .o-embed-container__header {
   // Structure
+  display: flex;
   height: $embed-header-height;
   background: $color-dark-gray;
+  padding-left: $embed-padding;
+  padding-right: $embed-padding;
 
   // Border
   border-top-left-radius: $embed-border-radius;
@@ -19,6 +22,23 @@ $embed-padding: 10px;
   // Text
   color: $color-white;
   line-height: $embed-header-height;
+}
+
+.o-embed-container__header__title {
+  // Structure
+  flex: 1;
+}
+
+.o-embed-container__header__options {
+  li {
+    // Structure
+    display: inline-block;
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .o-embed-container__body {
