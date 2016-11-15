@@ -29,8 +29,12 @@ export default class MultiSelectInput extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('mousedown', this.pageClick, false)
+    this.pageListener = window.addEventListener('mousedown', this.pageClick, false)
     this.fetchResults()
+  }
+
+  componentWillUnmount() {
+    delete this.pageListener;
   }
 
   pageClick(e) {
