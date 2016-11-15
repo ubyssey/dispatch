@@ -52,8 +52,8 @@ export default class ContentEditorEmbed extends React.Component {
         onFocus={this._startEditing}
         onBlur={this._stopEditing} >
         <div className='o-embed-container__header'>
-          <div className='o-embed-container__title'>{this.props.type}</div>
-          <ul className='o-embed-container__options'>
+          <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
+          <ul className='o-embed-container__header__options'>
             <li>Change</li>
             <li>Remove</li>
           </ul>
