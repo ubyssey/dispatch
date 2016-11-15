@@ -11,12 +11,12 @@ export function fetchImages(params) {
   return {
     type: types.FETCH_IMAGES,
     payload: DispatchAPI.images.fetchImages(params)
-      .then( function(json) {
+      .then( json => {
         return {
           count: json.count,
           results: normalize(json.results, arrayOf(imageSchema))
         }
-      } )
+      })
   }
 }
 
@@ -32,12 +32,12 @@ export function searchImages(query) {
   return {
     type: types.SEARCH_IMAGES,
     payload: DispatchAPI.images.searchImages(token, query)
-      .then( function(json) {
+      .then( json => {
         return {
           count: json.count,
           results: normalize(json.results, arrayOf(imageSchema))
         }
-      } )
+      })
   }
 }
 
@@ -49,16 +49,11 @@ export function saveImage(token, imageId, data) {
   }
 }
 
-export function updateImage(imageId, image) {
-  return {
-    type: types.UPDATE_IMAGE,
-    payload: normalize(image, imageSchema)
-  }
-}
-
 export function addAuthorToImage(token, image, authorId) {
   let newAuthors = R.append(authorId, image.authors)
-  return saveImage(token, image.id, { authors: newAuthors })
+  let newImage = R.assoc('authors', newAuthors, image)
+
+  return saveImage(token, image.id, newImage)
 }
 
 export function removeAuthorFromImage(token, image, authorId) {
@@ -67,8 +62,9 @@ export function removeAuthorFromImage(token, image, authorId) {
     1,
     image.authors
   )
+  let newImage = R.assoc('authors', newAuthors, image)
 
-  return saveImage(token, image.id, { authors: newAuthors })
+  return saveImage(token, image.id, newImage)
 }
 
 export function createAndAddAuthorToImage(token, image, authorName) {
@@ -78,6 +74,13 @@ export function createAndAddAuthorToImage(token, image, authorName) {
         dispatch(createPersonHelper(person))
         dispatch(addAuthorToImage(token, image, person.id))
       })
+  }
+}
+
+export function updateImage(imageId, image) {
+  return {
+    type: types.UPDATE_IMAGE,
+    payload: normalize(image, imageSchema)
   }
 }
 
