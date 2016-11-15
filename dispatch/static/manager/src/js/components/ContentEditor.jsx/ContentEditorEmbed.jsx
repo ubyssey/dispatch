@@ -48,10 +48,19 @@ export default class ContentEditorEmbed extends React.Component {
 
     return (
       <div
-        style={{padding: 20, borderColor: 'gray', borderWidth: 1, borderStyle: 'solid'}}
+        className='o-embed-container'
         onFocus={this._startEditing}
         onBlur={this._stopEditing} >
-        <this.props.blockProps.embedComponent {...embedProps} />
+        <div className='o-embed-container__header'>
+          <div className='o-embed-container__title'>{this.props.type}</div>
+          <ul className='o-embed-container__options'>
+            <li>Change</li>
+            <li>Remove</li>
+          </ul>
+        </div>
+        <div className='o-embed-container__body'>
+          <this.props.blockProps.embedComponent {...embedProps} />
+        </div>
       </div>
     )
   }
