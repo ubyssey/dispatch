@@ -53,11 +53,13 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
 
         # Save properties
-        instance.title = validated_data.get('title')
+        instance.title = validated_data.get('title', instance.title)
         instance.save()
 
         # Save relationships
-        instance.save_authors(validated_data.get('author_ids'))
+        author_ids = validated_data.get('author_ids', None)
+        if author_ids is not None:
+            instance.save_authors(author_ids)
 
         return instance
 
