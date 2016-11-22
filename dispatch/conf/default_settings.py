@@ -33,23 +33,31 @@ LOGGING = {
     },
 }
 
-TEMPLATE_DEBUG = False
-
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
-TEMPLATE_DIRS = [
-    os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
-    os.path.join(BASE_DIR, 'dispatch/templates'),
-    os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
-    ]
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
+            os.path.join(BASE_DIR, 'dispatch/templates'),
+            os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
+        ],
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                "dispatch.helpers.context_processors.static"
+            ]
+        }
+    },
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
@@ -105,18 +113,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "dispatch.helpers.context_processors.static"
-)
 
 STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
 STATIC_URL = '/static/'

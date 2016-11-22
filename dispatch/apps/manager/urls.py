@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from dispatch.apps.manager import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.home),
 
     url(r'^logout/?$', views.logout),
@@ -38,4 +38,4 @@ urlpatterns = patterns('',
 
     url(r'^components/$', views.components),
     url(r'^component/edit/(?P<slug>[-\w]+)/?$', views.component_edit),
-)
+]
