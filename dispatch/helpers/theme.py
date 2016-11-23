@@ -14,7 +14,7 @@ class ThemeHelper():
         try:
             templates = importlib.import_module(theme_name + ".templates")
             templates = templates.templates.all()
-        except:
+        except ImportError:
             templates = []
         return templates
 
@@ -25,7 +25,7 @@ class ThemeHelper():
         try:
             templates = importlib.import_module(theme_name + ".templates")
             template = templates.templates.get(template_slug)
-        except:
+        except ImportError:
             template = None
         return template
 
