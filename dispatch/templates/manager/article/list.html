@@ -27,7 +27,7 @@
                  <form class="search-bar" method="GET">
                     <input placeholder="Search {{ title|lower }}" type="text" value="{{ query }}" name="q">
                 </form>
-                <a class="dis-button green" href="{% url 'dispatch.apps.manager.views.article_add' %}?section={{ section.id }}">New article</a>
+                <a class="dis-button green" href="{% url 'manager:article_add' %}?section={{ section.id }}">New article</a>
             </div>
         </header>
         <div class="list-container">
@@ -45,7 +45,7 @@
                         {% endif %}
                     </div>
                     <div class="title cell">
-                        <a href="{% url 'dispatch.apps.manager.views.article_edit' article.parent.id %}">{{ article.headline|safe }}</a>
+                        <a href="{% url 'manager:article_edit' article.parent.id %}">{{ article.headline|safe }}</a>
                     </div>
                     <div class="cell">
                         <span>{{ article.get_author_string }}</span>

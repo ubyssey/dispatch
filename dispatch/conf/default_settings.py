@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'dispatch.apps.frontend',
     'dispatch.apps.manager',
 )
+LOGIN_REDIRECT_URL = '/admin/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

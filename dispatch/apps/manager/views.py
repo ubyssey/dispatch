@@ -15,13 +15,13 @@ from django.contrib.auth.models import Group
 @staff_member_required
 def home(request):
     return render_to_response(
-        "manager/base.html",
+        'manager/base.html',
         {
             'title': "Dashboard",
             'actions': list_actions(25),
             'recent': recent_articles(request.user.person),
         },
-        RequestContext(request, {}),
+        RequestContext(request)
     )
 
 def logout(request, next_page=None):
@@ -128,6 +128,7 @@ def roles(request):
     context = {
         'roles': Group.objects.all()
     }
+
     return render(request, 'manager/role/list.html', context)
 
 @staff_member_required
