@@ -35,42 +35,6 @@ LOGGING = {
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Replace default user model
-AUTH_USER_MODEL = 'core.User'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'DIRS': [
-            os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
-            os.path.join(BASE_DIR, 'dispatch/templates'),
-            os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
-        ],
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                "dispatch.helpers.context_processors.static"
-            ]
-        }
-    },
-]
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
-    'UNICODE_JSON': True,
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
-}
-
-LOGIN_REDIRECT_URL = 'dispatch.apps.manager.views.home'
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -87,6 +51,41 @@ INSTALLED_APPS = (
     'dispatch.apps.frontend',
     'dispatch.apps.manager',
 )
+
+# Replace default user model
+AUTH_USER_MODEL = 'core.User'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
+            os.path.join(BASE_DIR, 'dispatch/templates'),
+            os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
+        ],
+        'OPTIONS': {
+            'context_processors': [
+                'dispatch.helpers.context_processors.static',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages'
+            ]
+        }
+    },
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+    'UNICODE_JSON': True,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
+
 LOGIN_REDIRECT_URL = '/admin/'
 
 MIDDLEWARE_CLASSES = (
