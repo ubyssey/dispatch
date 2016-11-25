@@ -12,9 +12,9 @@ import {
   convertToRaw
 } from 'draft-js';
 
-import applyInlineStyles from './applyInlineStyles'
 import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar.jsx'
 import ContentEditorEmbed from './ContentEditorEmbed.jsx'
+import ContentStateHelper from './ContentStateHelper'
 
 // Helper functions
 function buildEmbedMap(embeds) {
@@ -54,39 +54,22 @@ export default class ContentEditor extends React.Component {
 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
+    console.log(ContentStateHelper.fromJSON(this.props.content))
+
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createWithContent(
+        ContentStateHelper.fromJSON(this.props.content)
+      ),
       readOnly: false,
       showEmbedToolbar: false,
       embedToolbarOffset: 0,
       activeBlock: null
     }
+
   }
 
-  getJSON() {
-
-    function parseBlock(block) {
-      const type = block.getType()
-
-      if (type === 'atomic') {
-        const entity = Entity.get(block.getEntityAt(0))
-        return {
-          type: entity.getType(),
-          data: entity.getData()
-        }
-      } else {
-        return {
-          type: 'PARAGRAPH',
-          data: applyInlineStyles(block)
-        }
-      }
-
-    }
-
-    return this.state.editorState.getCurrentContent().getBlockMap()
-      .map(parseBlock)
-      .toList()
-      .toJS()
+  toJSON() {
+    return ContentStateHelper.toJSON(this.state.editorState.getCurrentContent());
   }
 
   onChange(editorState) {
