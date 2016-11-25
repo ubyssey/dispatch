@@ -204,8 +204,13 @@ export default class ContentEditor extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     let contentState = this.state.editorState.getCurrentContent()
     let key = this.state.editorState.getSelection().getStartKey()
+    let block = contentState.getBlockForKey(key)
 
-    if (!contentState.getBlockForKey(key).getText()) {
+    if (!block) {
+      return;
+    }
+
+    if (!block.getText()) {
       let blockNode = qwery(`div[data-offset-key="${key}-0-0"]`)[0]
 
       if (!blockNode) {

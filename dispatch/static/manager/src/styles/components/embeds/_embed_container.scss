@@ -38,6 +38,19 @@ $embed-padding: 1rem;
     &:last-child {
       margin-right: 0;
     }
+
+    a {
+      // Extras
+      cursor: pointer;
+
+      &:hover {
+        // Text
+        text-decoration: underline;
+
+        // Extras
+        opacity: 0.75;
+      }
+    }
   }
 }
 
