@@ -37,7 +37,7 @@ export function setArticle(article) {
 
 export function saveArticle(token, articleId, data) {
   // Convert article contentState to JSON array
-  data.content = ContentStateHelper.toJSON(data._content)
+  data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
 
   // Delete old content state
   delete data._content
@@ -50,7 +50,7 @@ export function saveArticle(token, articleId, data) {
 
 export function createArticle(token, data) {
   // Convert article contentState to JSON array
-  data.content = ContentStateHelper.toJSON(data._content)
+  data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
 
   // Delete old content state
   delete data._content

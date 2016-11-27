@@ -1,21 +1,22 @@
 import React from 'react'
-import Textarea from 'react-textarea-autosize'
+
+import { EditableText } from '@blueprintjs/core'
 
 export default function ArticleHeadline(props) {
 
-  function handleUpdate(e) {
-    props.update('headline', e.target.value)
+  function handleUpdate(value) {
+    props.update('headline', value)
   }
 
   return (
     <div className='c-article-headline'>
-      <Textarea
-        className='o-input o-input--headline'
-        rows={1}
+      <EditableText
+        multiline={true}
+        minLines={1}
+        maxLines={4}
         placeholder='Enter a headline'
         value={props.headline}
-        onChange={handleUpdate}>
-      </Textarea>
+        onChange={handleUpdate} />
     </div>
   )
 }
