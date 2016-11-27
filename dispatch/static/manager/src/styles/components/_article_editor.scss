@@ -6,12 +6,19 @@
 // 3.0 - Inline Toolbar
 
 
-
 #full-toolbar {
   margin: 0;
   float: left;
 }
 
+$header-height: 55px;
+
+.c-toolbar__article-buttons {
+  // Structure
+  flex: 1;
+  line-height: $header-height;
+  align-items: right;
+}
 
 // 1.0 - Main content editor
 
