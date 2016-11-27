@@ -100,11 +100,14 @@ var DispatchAPI = {
     }
   },
   articles: {
-    fetchArticles: (query) => {
-      return getRequest('articles', null, query)
+    fetchArticles: (token, query) => {
+      return getRequest('articles', null, query, token)
     },
-    fetchArticle: (articleId) => {
-      return getRequest('articles', articleId)
+    fetchArticle: (token, articleId) => {
+      return getRequest('articles', articleId, null, token)
+    },
+    saveArticle: (token, articleId, data) => {
+      return patchRequest('articles', articleId, data, token)
     },
     deleteArticles: (token, articleIds) => {
       return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
