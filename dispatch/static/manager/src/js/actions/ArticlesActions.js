@@ -36,7 +36,6 @@ export function setArticle(article) {
 }
 
 export function saveArticle(token, articleId, data) {
-
   // Convert article contentState to JSON array
   data.content = ContentStateHelper.toJSON(data._content)
 
@@ -46,6 +45,19 @@ export function saveArticle(token, articleId, data) {
   return {
     type: types.SAVE_ARTICLE,
     payload: DispatchAPI.articles.saveArticle(token, articleId, data)
+  }
+}
+
+export function createArticle(token, data) {
+  // Convert article contentState to JSON array
+  data.content = ContentStateHelper.toJSON(data._content)
+
+  // Delete old content state
+  delete data._content
+
+  return {
+    type: types.CREATE_ARTICLE,
+    payload: DispatchAPI.articles.createArticle(token, data)
   }
 }
 

@@ -51,7 +51,7 @@ class ArticleEditorComponent extends React.Component {
 
   handleSave() {
     if (this.props.isNew) {
-      this.props.createArticle(this.props.token, {})
+      this.props.createArticle(this.props.token, this.getArticle())
     } else {
       this.props.saveArticle(
         this.props.token,
@@ -120,6 +120,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     saveArticle: (token, articleId, data) => {
       dispatch(articlesActions.saveArticle(token, articleId, data))
+    },
+    createArticle: (token, data) => {
+      dispatch(articlesActions.createArticle(token, data))
     },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))

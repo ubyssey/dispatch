@@ -1,8 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Position, Toaster } from '@blueprintjs/core';
 
 import * as sectionActions from '../actions/SectionActions'
 import * as modalActions from '../actions/ModalActions'
+import * as toasterActions from '../actions/ToasterActions'
 
 import Header from '../components/Header.jsx'
 import ModalContainer from '../components/ModalContainer.jsx'
@@ -15,6 +17,10 @@ class Main extends React.Component {
     if ( !props.sections.isLoaded ) {
       props.fetchSections()
     }
+  }
+
+  componentDidMount() {
+    this.props.setupToaster(this.refs.toaster)
   }
 
   renderModal() {
@@ -30,6 +36,7 @@ class Main extends React.Component {
 
     return (
       <div>
+        <Toaster position={Position.TOP} ref='toaster' />
         <Header sections={sections} email={this.props.email} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
@@ -56,6 +63,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())
+    },
+    setupToaster: (toaster) => {
+      dispatch(toasterActions.setupToaster(toaster))
     }
   }
 }

@@ -12,6 +12,7 @@ export const FETCH_ARTICLES = 'FETCH_ARTICLES'
 export const FETCH_ARTICLE = 'FETCH_ARTICLE'
 export const SET_ARTICLE = 'SET_ARTICLE'
 export const SAVE_ARTICLE = 'SAVE_ARTICLE'
+export const CREATE_ARTICLE = 'CREATE_ARTICLE'
 export const TOGGLE_ARTICLE = 'TOGGLE_ARTICLE'
 export const TOGGLE_ALL_ARTICLES = 'TOGGLE_ALL_ARTICLES'
 export const CLEAR_SELECTED_ARTICLES = 'CLEAR_SELECTED_ARTICLES'
@@ -33,3 +34,6 @@ export const SELECT_IMAGE = 'SELECT_IMAGE'
 // Person actions
 export const FETCH_PERSONS = 'FETCH_PERSONS'
 export const CREATE_PERSON = 'CREATE_PERSON'
+
+// Toaster actions
+export const SETUP_TOASTER = 'SETUP_TOASTER'
