@@ -50,7 +50,7 @@ class ArticlesPageComponent extends React.Component {
     // Fetch articles
     this.props.clearArticles()
     this.props.clearSelectedArticles()
-    this.props.fetchArticles(this.getQuery())
+    this.props.fetchArticles(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
@@ -58,12 +58,12 @@ class ArticlesPageComponent extends React.Component {
     if (this.isNewSection(prevProps, this.props) || this.isNewQuery(prevProps, this.props)) {
       this.props.clearArticles()
       this.props.clearSelectedArticles()
-      this.props.fetchArticles(this.getQuery())
+      this.props.fetchArticles(this.props.token, this.getQuery())
     }
 
     else if (this.isNewPage(prevProps, this.props)) {
       // Fetch articles
-      this.props.fetchArticles(this.getQuery())
+      this.props.fetchArticles(this.props.token, this.getQuery())
       this.props.clearSelectedArticles()
     }
   }
@@ -88,7 +88,7 @@ class ArticlesPageComponent extends React.Component {
   }
 
   handleSearchArticles(query) {
-    this.props.searchArticles(this.props.location.query.section, query)
+    this.props.searchArticles(this.props.token, this.props.location.query.section, query)
   }
 
   render() {
@@ -137,8 +137,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchArticles: (query) => {
-      dispatch(articlesActions.fetchArticles(query))
+    fetchArticles: (token, query) => {
+      dispatch(articlesActions.fetchArticles(token, query))
     },
     toggleArticle: (articleId) => {
       dispatch(articlesActions.toggleArticle(articleId))
@@ -155,7 +155,7 @@ const mapDispatchToProps = (dispatch) => {
     clearArticles: () => {
       dispatch(articlesActions.clearArticles())
     },
-    searchArticles: (section, query) => {
+    searchArticles: (token, section, query) => {
       dispatch(articlesActions.searchArticles(section, query))
     }
   }

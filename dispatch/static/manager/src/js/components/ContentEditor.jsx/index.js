@@ -54,12 +54,12 @@ export default class ContentEditor extends React.Component {
 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
-    console.log(ContentStateHelper.fromJSON(this.props.content))
-
     this.state = {
-      editorState: EditorState.createWithContent(
-        ContentStateHelper.fromJSON(this.props.content)
-      ),
+      editorState: this.props.isNew ?
+        EditorState.createEmpty() :
+        EditorState.createWithContent(
+          ContentStateHelper.fromJSON(this.props.content)
+        ),
       readOnly: false,
       showEmbedToolbar: false,
       embedToolbarOffset: 0,
@@ -76,6 +76,8 @@ export default class ContentEditor extends React.Component {
     this.setState({
       editorState: editorState
     })
+
+    this.props.update(editorState.getCurrentContent())
   }
 
   handleKeyCommand(command) {
