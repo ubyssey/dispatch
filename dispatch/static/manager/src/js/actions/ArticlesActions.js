@@ -5,23 +5,25 @@ import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-export function fetchArticles(query) {
+import ContentStateHelper from '../components/ContentEditor.jsx/ContentStateHelper'
+
+export function fetchArticles(token, query) {
   return {
     type: types.FETCH_ARTICLES,
-    payload: DispatchAPI.articles.fetchArticles(query)
-      .then( function(json) {
+    payload: DispatchAPI.articles.fetchArticles(token, query)
+      .then(function(json) {
         return {
           count: json.count,
           results: normalize(json.results, arrayOf(articleSchema))
         }
-      } )
+      })
   }
 }
 
-export function fetchArticle(articleId) {
+export function fetchArticle(token, articleId) {
   return {
     type: types.FETCH_ARTICLE,
-    payload: DispatchAPI.articles.fetchArticle(articleId)
+    payload: DispatchAPI.articles.fetchArticle(token, articleId)
       .then( json => normalize(json, articleSchema) )
   }
 }
@@ -30,6 +32,20 @@ export function setArticle(article) {
   return {
     type: types.SET_ARTICLE,
     payload: normalize(article, articleSchema)
+  }
+}
+
+export function saveArticle(token, articleId, data) {
+
+  // Convert article contentState to JSON array
+  data.content = ContentStateHelper.toJSON(data._content)
+
+  // Delete old content state
+  delete data._content
+
+  return {
+    type: types.SAVE_ARTICLE,
+    payload: DispatchAPI.articles.saveArticle(token, articleId, data)
   }
 }
 

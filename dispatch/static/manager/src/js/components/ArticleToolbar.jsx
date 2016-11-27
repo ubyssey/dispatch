@@ -13,9 +13,11 @@ export default function ArticleToolbar(props) {
 
   return (
     <Toolbar>
-      <div className="c-toolbar__editor-buttons" dangerouslySetInnerHTML={toolbar} />
-      <div className="c-toolbar__article-buttons">
-        <Button onClick={saveArticle}>Update</Button>
+      <div className="c-article-editor__toolbar">
+        <div className="c-article-editor__toolbar__editor-buttons" dangerouslySetInnerHTML={toolbar} />
+        <div className="c-article-editor__toolbar__article-buttons">
+          <Button onClick={saveArticle}>Update</Button>
+        </div>
       </div>
     </Toolbar>
   )
