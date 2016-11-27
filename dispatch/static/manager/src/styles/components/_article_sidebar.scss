@@ -19,3 +19,22 @@
     }
   }
 }
+
+.c-article-sidebar__tablist {
+  // Border
+  border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+.c-article-sidebar__tab {
+  // Structure
+  height: 3rem;
+  line-height: 3rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.c-article-sidebar__panel {
+  // Structure
+  margin-top: 0;
+  padding: 1rem;
+}
