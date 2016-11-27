@@ -20,6 +20,7 @@ class ArticlesPageComponent extends React.Component {
   getQuery() {
     var query = {
       limit: DEFAULT_LIMIT,
+      drafts: true,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
 
