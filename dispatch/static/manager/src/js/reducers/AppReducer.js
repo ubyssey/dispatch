@@ -6,6 +6,7 @@ import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
 import imagesReducer from './ImagesReducer'
 import personsReducer from './PersonsReducer'
+import toasterReducer from './ToasterReducer';
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
   sections: sectionsReducer,
   articles: articlesReducer,
   images: imagesReducer,
-  persons: personsReducer
+  persons: personsReducer,
+  toaster: toasterReducer
 })
