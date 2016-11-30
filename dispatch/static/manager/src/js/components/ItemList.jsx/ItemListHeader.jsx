@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router'
 
 import Toolbar from '../Toolbar.jsx'
-import { Button, LinkButton } from '../inputs'
+import { Button } from '@blueprintjs/core'
 
 import ItemListPagination from './ItemListPagination.jsx'
 import ItemListSearchBar from './ItemListSearchBar.jsx'
