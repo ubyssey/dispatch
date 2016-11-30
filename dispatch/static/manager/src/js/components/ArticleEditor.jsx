@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title';
 
 import * as articlesActions from '../actions/ArticlesActions'
+import * as editorActions from '../actions/EditorActions'
 import * as modalActions from '../actions/ModalActions'
 
 import ArticleToolbar from './ArticleToolbar.jsx';
@@ -19,6 +20,7 @@ class ArticleEditorComponent extends React.Component {
 
     this.handleSave = this.handleSave.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.toggleStyle = this.toggleStyle.bind(this)
   }
 
   componentWillMount() {
@@ -61,6 +63,10 @@ class ArticleEditorComponent extends React.Component {
     }
   }
 
+  toggleStyle(style) {
+    this.props.toggleEditorStyle(style)
+  }
+
   handleUpdate(field, value) {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
@@ -79,13 +85,18 @@ class ArticleEditorComponent extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ArticleToolbar
-            save={this.handleSave}
+            actions={{
+              save: this.handleSave,
+              onBold: () => this.toggleStyle('BOLD'),
+              onItalic: () => this.toggleStyle('ITALIC'),
+              onUnderline: () => this.toggleStyle('UNDERLINE')
+            }}
             article={article} />
           <div className='u-container-editor'>
             <ArticleContentEditor
-              isNew={this.props.isNew}
               article={article}
-              update={this.handleUpdate}
+              isNew={this.props.isNew}
+              onUpdate={this.handleUpdate}
               openModal={this.props.openModal}
               closeModal={this.props.closeModal} />
             <ArticleSidebar
@@ -129,6 +140,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())
+    },
+    toggleEditorStyle: (style) => {
+      dispatch(editorActions.toggleEditorStyle(style))
     }
   }
 }

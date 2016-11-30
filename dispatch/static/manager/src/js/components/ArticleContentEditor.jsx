@@ -10,26 +10,36 @@ const embeds = [
   ImageEmbed
 ]
 
-export default function ArticleContentEditor(props) {
+export default class ArticleContentEditor extends React.Component {
 
-  function update(contentState) {
-    return props.update('_content', contentState)
+  constructor(props) {
+    super(props)
+
+    this.handleContentUpdate = this.handleContentUpdate.bind(this)
   }
 
-  return (
-    <div className='c-article-editor'>
-      <div className='c-article-editor__inner'>
-        <ArticleHeadline update={props.update} headline={props.article.headline} />
-        <div className='c-article-editor__body'>
-          <ContentEditor
-            isNew={props.isNew}
-            update={update}
-            openModal={props.openModal}
-            closeModal={props.closeModal}
-            content={props.article.content}
-            embeds={embeds} />
+  handleContentUpdate(contentState) {
+    this.props.onUpdate('_content', contentState)
+  }
+
+  render() {
+    return (
+      <div className='c-article-editor'>
+        <div className='c-article-editor__inner'>
+          <ArticleHeadline
+            onUpdate={this.props.onUpdate}
+            headline={this.props.article.headline} />
+          <div className='c-article-editor__body'>
+            <ContentEditor
+              content={this.props.article.content}
+              isNew={this.props.isNew}
+              onUpdate={this.handleContentUpdate}
+              openModal={this.props.openModal}
+              closeModal={this.props.closeModal}
+              embeds={embeds} />
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
