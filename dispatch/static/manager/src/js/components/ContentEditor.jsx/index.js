@@ -1,5 +1,6 @@
 import React from 'react'
 import qwery from 'qwery'
+import { connect } from 'react-redux'
 
 import {
   Editor,
@@ -8,9 +9,10 @@ import {
   RichUtils,
   AtomicBlockUtils,
   Entity,
-  Modifier,
-  convertToRaw
+  Modifier
 } from 'draft-js';
+
+import * as editorActions from '../../actions/EditorActions'
 
 import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar.jsx'
 import ContentEditorEmbed from './ContentEditorEmbed.jsx'
@@ -39,7 +41,7 @@ function blockStyleFn(contentBlock) {
   }
 }
 
-export default class ContentEditor extends React.Component {
+class ContentEditorComponent extends React.Component {
 
   constructor(props) {
     super(props)
@@ -55,33 +57,37 @@ export default class ContentEditor extends React.Component {
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = {
-      editorState: this.props.isNew ?
-        EditorState.createEmpty() :
-        EditorState.createWithContent(
-          ContentStateHelper.fromJSON(this.props.content)
-        ),
       readOnly: false,
       showEmbedToolbar: false,
       embedToolbarOffset: 0,
       activeBlock: null
     }
 
+    this.initializeEditor()
+
   }
 
-  toJSON() {
-    return ContentStateHelper.toJSON(this.state.editorState.getCurrentContent());
+  initializeEditor() {
+    if (this.props.isNew) {
+      this.props.updateEditor(
+        EditorState.createEmpty()
+      )
+    } else {
+      this.props.updateEditor(
+        EditorState.createWithContent(
+          ContentStateHelper.fromJSON(this.props.content)
+        )
+      )
+    }
   }
 
   onChange(editorState) {
-    this.setState({
-      editorState: editorState
-    })
-
-    this.props.update(editorState.getCurrentContent())
+    this.props.updateEditor(editorState)
+    this.props.onUpdate(editorState.getCurrentContent())
   }
 
   handleKeyCommand(command) {
-    const newState = RichUtils.handleKeyCommand(this.state.editorState, command)
+    const newState = RichUtils.handleKeyCommand(this.props.editorState, command)
     if (newState) {
       this.onChange(newState)
       return 'handled'
@@ -98,7 +104,7 @@ export default class ContentEditor extends React.Component {
     const entityKey = Entity.create(type, 'IMMUTABLE', data)
 
     // Fetch editorState and contentState
-    let editorState = this.state.editorState
+    let editorState = this.props.editorState
     let contentState = editorState.getCurrentContent()
 
     // Add entity to contentState
@@ -137,7 +143,7 @@ export default class ContentEditor extends React.Component {
   removeEmbed(blockKey) {
 
     // Fetch editorState and contentState
-    let editorState = this.state.editorState
+    let editorState = this.props.editorState
     let contentState = editorState.getCurrentContent()
 
     // Remove the block from the blockMap
@@ -187,8 +193,8 @@ export default class ContentEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let contentState = this.state.editorState.getCurrentContent()
-    let key = this.state.editorState.getSelection().getStartKey()
+    let contentState = this.props.editorState.getCurrentContent()
+    let key = this.props.editorState.getSelection().getStartKey()
     let block = contentState.getBlockForKey(key)
 
     if (!block) {
@@ -227,7 +233,7 @@ export default class ContentEditor extends React.Component {
         <div className='c-content-editor__editor'>
           <Editor
             readOnly={this.state.readOnly}
-            editorState={this.state.editorState}
+            editorState={this.props.editorState}
             handleKeyCommand={this.handleKeyCommand}
             blockRendererFn={this.blockRenderer}
             blockStyleFn={blockStyleFn}
@@ -244,3 +250,23 @@ export default class ContentEditor extends React.Component {
     )
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return { editorState: state.app.editor }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateEditor: (editorState) => {
+      dispatch(editorActions.updateEditor(editorState))
+    }
+  }
+}
+
+const ContentEditor = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContentEditorComponent)
+
+export default ContentEditor
