@@ -24,13 +24,14 @@ export default class ArticleContentEditor extends React.Component {
 
   render() {
     return (
-      <div className='c-article-editor'>
+      <div ref='container' className='c-article-editor'>
         <div className='c-article-editor__inner'>
           <ArticleHeadline
             onUpdate={this.props.onUpdate}
             headline={this.props.article.headline} />
           <div className='c-article-editor__body'>
             <ContentEditor
+              scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
               content={this.props.article.content}
               isNew={this.props.isNew}
               onUpdate={this.handleContentUpdate}
