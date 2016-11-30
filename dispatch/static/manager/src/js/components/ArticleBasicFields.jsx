@@ -1,35 +1,36 @@
 import React from 'react'
 
+import { FormInput, TextInput, TextAreaInput } from './inputs'
 import { Label, InputGroup } from '@blueprintjs/core'
+
+import AuthorSelectInput from './AuthorSelectInput.jsx'
 
 export default function ArticleBasicFields(props) {
 
   return (
     <div>
-      <label className='pt-label'>
-        Slug
-        <input
-          className='pt-input pt-fill'
-          type='text'
+
+      <FormInput label='Slug'>
+        <TextInput
           placeholder='Slug'
           value={props.slug}
           onChange={ e => props.update('slug', e.target.value) } />
-      </label>
+      </FormInput>
 
-      <label className='pt-label'>
-        Section
-        <InputGroup placeholder='Section' />
-      </label>
+      <FormInput label='Authors'>
+        <AuthorSelectInput
+          authors={props.authors}
+          update={ authors => props.update('authors', authors) } />
+      </FormInput>
 
-      <label className='pt-label'>
-        Snippet
-        <textarea
-          className='pt-input pt-fill'
+      <FormInput label='Slug'>
+        <TextAreaInput
           placeholder='Snippet'
           value={props.snippet}
           rows='5'
           onChange={ e => props.update('snippet', e.target.value) } />
-      </label>
+      </FormInput>
+
     </div>
   )
 

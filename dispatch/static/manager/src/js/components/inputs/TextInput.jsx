@@ -32,7 +32,7 @@ export default class TextInput extends React.Component {
   render() {
     return (
       <input
-        className='c-input c-input--text'
+        className='pt-input pt-fill'
         type='text'
         value={this.props.value}
         placeholder={this.props.placeholder}

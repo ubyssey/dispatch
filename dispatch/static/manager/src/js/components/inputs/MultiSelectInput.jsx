@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
-import { MdClose } from 'react-icons/lib/md'
+
+import { Popover, Menu, MenuItem, Button, Position } from '@blueprintjs/core'
 
 import TextInput from './TextInput.jsx'
 
@@ -14,7 +15,6 @@ export default class MultiSelectInput extends React.Component {
     this.handleMouseDown = this.handleMouseDown.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleKeyPress = this.handleKeyPress.bind(this)
 
     this.renderSelected = this.renderSelected.bind(this)
     this.renderResult = this.renderResult.bind(this)
@@ -31,7 +31,7 @@ export default class MultiSelectInput extends React.Component {
   componentDidMount() {
     // Add page click event listener
     window.addEventListener('mousedown', this.pageClick, false)
-    
+
     this.fetchResults()
   }
 
@@ -65,12 +65,6 @@ export default class MultiSelectInput extends React.Component {
       },
       this.fetchResults
     )
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.createValue(this.state.query.trim())
-    }
   }
 
   fetchResults() {
@@ -137,45 +131,82 @@ export default class MultiSelectInput extends React.Component {
     return (
       <li
         className='c-input--multi-select__value'
-        key={value.id}>
-        {value[this.props.attribute]}
-          <div
-            className='c-input--multi-select__value__icon'
-            onClick={() => this.removeValue(value.id)}>
-            <MdClose size={18} />
-          </div>
-        </li>
+        key={value.id}>{value[this.props.attribute]}</li>
     )
   }
 
+  isSelected(id) {
+    return R.contains(id, this.props.selected)
+  }
+
   isNotSelected(id) {
-    return !R.contains(id, this.props.selected)
+    return !this.isSelected(id)
   }
 
   renderResult(id) {
     const value = this.props.entities[id]
-    return (
-      <li
-        key={value.id}
-        className='c-input--multi-select__result'
-        onClick={() => this.addValue(value.id)}>{value[this.props.attribute]}</li>
-    )
+    const isSelected = this.isSelected(id)
+
+    if (isSelected) {
+      return (
+        <li
+          key={value.id}
+          className='c-input--multi-select__result c-input--multi-select__result--selected'
+          onClick={() => this.removeValue(value.id)}>
+            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-small-tick'></span>
+            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
+            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-cross'></span>
+        </li>
+      )
+    } else {
+      return (
+        <li
+          key={value.id}
+          className='c-input--multi-select__result'
+          onClick={() => this.addValue(value.id)}>
+            <span className='c-input--multi-select__result__icon'></span>
+            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
+            <span className='c-input--multi-select__result__icon'></span>
+        </li>
+      )
+    }
+
   }
 
   renderNoResults() {
     return (
-      <div className='c-input--multi-select__no-results'>
-        {`Press enter to create "${this.state.query.trim()}"`}
+      <li
+        className='c-input--multi-select__result'
+        onClick={() => this.createValue(this.state.query.trim()) }>
+        <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-add'></span>
+        <span className='c-input--multi-select__result__text'>{`Create "${this.state.query.trim()}"`}</span>
+        <span className='c-input--multi-select__result__icon'></span>
+      </li>
+    )
+  }
+
+  renderMenu() {
+    const selected = R.map(this.renderResult, this.props.selected)
+    const results = R.map(this.renderResult, R.filter(this.isNotSelected, this.props.results))
+
+    return (
+      <div className='c-input--multi-select__dropdown'>
+        <div className='c-input--multi-select__search'>
+          <TextInput
+            onChange={this.handleInputChange}
+            value={this.state.query}
+            placeholder='Search' />
+        </div>
+        <ul className='c-input--multi-select__results'>
+          {selected.length ? selected : null}
+          {results.length ? results : this.renderNoResults()}
+        </ul>
       </div>
     )
   }
 
   render() {
     const selected = R.map(this.renderSelected, this.props.selected)
-    const results = R.map(this.renderResult, R.filter(this.isNotSelected, this.props.results))
-
-    const dropdownBaseClassName = 'c-input--multi-select__dropdown'
-    const dropdownClassName = dropdownBaseClassName + (this.state.isActive ? ` ${dropdownBaseClassName}--active` : '')
 
     return (
       <div
@@ -183,20 +214,9 @@ export default class MultiSelectInput extends React.Component {
         <ul className='c-input--multi-select__values'>
           {selected}
         </ul>
-        <div
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}>
-          <div className={dropdownClassName}>
-            <TextInput
-              onChange={this.handleInputChange}
-              onKeyPress={this.handleKeyPress}
-              value={this.state.query}
-              placeholder='Add new' />
-            <ul className='c-input--multi-select__results'>
-              {results.length ? results : this.renderNoResults()}
-            </ul>
-          </div>
-        </div>
+        <Popover content={this.renderMenu()} position={Position.BOTTOM_LEFT}>
+          <a href="#">{this.props.editMessage}</a>
+        </Popover>
       </div>
     )
   }
