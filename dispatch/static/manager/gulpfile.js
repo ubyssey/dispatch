@@ -52,6 +52,11 @@ gulp.task('copy:images', ['clean:images'], function() {
     .pipe(gulp.dest('./dist/images/'));
 });
 
+gulp.task('copy:fonts', ['clean:fonts'], function() {
+  return gulp.src('./node_modules/@blueprintjs/core/resources/icons/**/*')
+    .pipe(gulp.dest('./dist/fonts/'));
+});
+
 gulp.task('clean:js', function() {
   return gulp.src('./dist/js/', {read: false})
     .pipe(clean());
@@ -67,9 +72,14 @@ gulp.task('clean:images', function() {
     .pipe(clean());
 });
 
-gulp.task('build', ['webpack:build', 'sass:build', 'copy:images']);
+gulp.task('clean:fonts', function() {
+  return gulp.src('./dist/fonts/', {read: false})
+    .pipe(clean());
+});
 
-gulp.task('build-dev', ['webpack:build-dev', 'sass:build-dev', 'copy:images']);
+gulp.task('build', ['webpack:build', 'sass:build', 'copy:images', 'copy:fonts']);
+
+gulp.task('build-dev', ['webpack:build-dev', 'sass:build-dev', 'copy:images', 'copy:fonts']);
 
 gulp.task('default', ['build-dev'], function() {
   gulp.watch(['./src/js/**/*'],     ['webpack:build-dev']);
