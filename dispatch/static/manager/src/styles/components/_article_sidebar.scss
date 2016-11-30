@@ -29,12 +29,14 @@
   // Structure
   height: 3rem;
   line-height: 3rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+
+  // Text
+  font-weight: $font-weight-bold;
 }
 
 .c-article-sidebar__panel {
   // Structure
   margin-top: 0;
-  padding: 1rem;
 }

@@ -20,7 +20,8 @@ export default function entitiesReducer(state = initialState, action) {
       })
     case types.FETCH_ARTICLES + '_FULFILLED':
       return R.merge(state, {
-        articles: R.merge(state.articles, action.payload.results.entities.articles)
+        articles: R.merge(state.articles, action.payload.results.entities.articles),
+        persons: R.merge(state.persons, action.payload.results.entities.persons)
       })
 
     // Article
@@ -32,7 +33,8 @@ export default function entitiesReducer(state = initialState, action) {
     case types.SET_ARTICLE:
       return R.merge(state, {
         articles: R.merge(state.articles, action.payload.entities.articles),
-        article:  R.merge(state.article, action.payload.entities.articles)
+        article:  R.merge(state.article, action.payload.entities.articles),
+        persons: R.merge(state.persons, action.payload.entities.persons)
       })
 
     // Sections
