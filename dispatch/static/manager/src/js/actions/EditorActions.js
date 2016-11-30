@@ -13,3 +13,10 @@ export function toggleEditorStyle(style) {
     style: style
   }
 }
+
+export function editorKeyCommand(command) {
+  return {
+    type: types.EDITOR_KEY_COMMAND,
+    command: command
+  }
+}
