@@ -50,14 +50,12 @@ class ContentEditorComponent extends React.Component {
     super(props)
 
     this.onChange = this.onChange.bind(this)
-    this.handleKeyCommand = this.handleKeyCommand.bind(this)
     this.blockRenderer = this.blockRenderer.bind(this)
     this.startEditingEntity = this.startEditingEntity.bind(this)
     this.stopEditingEntity = this.stopEditingEntity.bind(this)
     this.insertEmbed = this.insertEmbed.bind(this)
     this.removeEmbed = this.removeEmbed.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
-
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this)
 
     this.embedMap = buildEmbedMap(this.props.embeds)
@@ -92,15 +90,6 @@ class ContentEditorComponent extends React.Component {
   onChange(editorState) {
     this.props.updateEditor(editorState)
     this.props.onUpdate(editorState.getCurrentContent())
-  }
-
-  handleKeyCommand(command) {
-    const newState = RichUtils.handleKeyCommand(this.props.editorState, command)
-    if (newState) {
-      this.onChange(newState)
-      return 'handled'
-    }
-    return 'not-handled'
   }
 
   insertEmbed(type, data={}) {
@@ -176,8 +165,6 @@ class ContentEditorComponent extends React.Component {
   }
 
   handleMouseUp(e) {
-
-    console.log('mouseup', e)
 
     function getSelected() {
        var t = ''
@@ -321,7 +308,7 @@ class ContentEditorComponent extends React.Component {
             ref='editor'
             readOnly={this.state.readOnly}
             editorState={this.props.editorState}
-            handleKeyCommand={this.handleKeyCommand}
+            handleKeyCommand={this.props.editorKeyCommand}
             blockRendererFn={this.blockRenderer}
             blockStyleFn={blockStyleFn}
             onChange={this.onChange} />
@@ -348,7 +335,6 @@ class ContentEditorComponent extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   return { editorState: state.app.editor }
 }
@@ -360,6 +346,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     toggleEditorStyle: (style) => {
       dispatch(editorActions.toggleEditorStyle(style))
+    },
+    editorKeyCommand: (command) => {
+      dispatch(editorActions.editorKeyCommand(command))
     }
   }
 }
