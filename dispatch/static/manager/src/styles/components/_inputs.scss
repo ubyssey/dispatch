@@ -2,93 +2,18 @@ $input-height: 30px;
 $input-button-padding: 12px;
 $input-text-padding: 8px;
 $input-button-border-radius: 3px;
-$input-text-border-radius: 2px;
+$input-text-border-radius: 3px;
 $input-font-size: 13;
-$input-color-highlight: $color-steel-blue;
+$input-color-highlight: rgb(248, 248, 248);
 
-// Component: Button
-// Component: LinkButton
-.c-input--button {
-  // Structure
-  display: inline-block;
-  padding-left: $input-button-padding;
-  padding-right: $input-button-padding;
-  margin-left: 5px;
-  margin-right: 5px;
-  vertical-align: middle;
-
-  // Border
-  border-width: 1px;
-  border-style: solid;
-  border-radius: $input-button-border-radius;
-  border-color: $color-border-gray;
-
-  // Background
-  background-color: $color-bg-gray;
-  background-image: linear-gradient($color-bg-gray-light, $color-bg-gray);
-
-  // Text
-  @include font-size($input-font-size);
-  font-family: $font-family-default;
-  font-weight: $font-weight-bold;
-  color: $color-text-gray;
-  line-height: $input-height;
-  text-decoration: none;
-
-  // State: hover
-  &:hover:not(.c-input--disabled) {
-    // Border
-    border-color: $color-border-gray-dark;
-
-    // Background
-    background-color: $color-bg-gray-dark;
-    background-image: linear-gradient($color-bg-gray, $color-bg-gray-dark);
-
-    // Extra
-    cursor: pointer;
-  }
-
-  // State: disabled
-  &.c-input--disabled {
-    // Extras
-    opacity: 0.65;
-    cursor: default;
-  }
-}
-
-// Component: TextInput
-.c-input--text {
-  // Structure
-  height: $input-height;
-  width: 200px;
-  padding-left: $input-text-padding;
-  padding-right: $input-text-padding;
-  margin-left: 5px;
-  margin-right: 5px;
-  box-sizing: border-box;
-  vertical-align: middle;
-
-  // Border
-  border: 1px solid $color-border-gray-dark;
-  border-radius: $input-text-border-radius;
-
-  // Text
-  @include font-size($input-font-size);
-  line-height: $input-height;
-
-  // Extras
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
-
-  &:focus {
-    outline: none;
-    border-color: $color-border-blue;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 5px rgba(81,167,232,0.5);
-  }
+label.pt-label .pt-input, label.pt-label .pt-select {
+  margin-top: 10px;
 }
 
 // Component: MultiSelectInput
 .c-input--multi-select {
-
+  // Structure
+  margin-top: 10px;
 }
 
 .c-input--multi-select__values {
@@ -97,9 +22,6 @@ $input-color-highlight: $color-steel-blue;
 }
 
 .c-input--multi-select__results {
-  // Structure
-  display: none;
-  margin-top: 5px;
 }
 
 .c-input--multi-select__no-results {
@@ -108,7 +30,6 @@ $input-color-highlight: $color-steel-blue;
 }
 
 .c-input--multi-select__value,
-.c-input--multi-select__result,
 .c-input--multi-select__no-results {
   // Structure
   height: $input-height;
@@ -117,33 +38,22 @@ $input-color-highlight: $color-steel-blue;
 
   // Text
   @include font-size($input-font-size);
-  line-height: $input-height;
+  line-height: $input-height - 2;
 }
 
 .c-input--multi-select__value {
   // Structure
   position: relative;
+  display: inline-block;
+  margin-right: 0.35rem;
+  margin-bottom: 0.5rem;
 
   // Border
-  border-top: 1px solid $color-border-gray-dark;
-  border-left: 1px solid $color-border-gray-dark;
-  border-right: 1px solid $color-border-gray-dark;
+  border: 1px solid $color-border-gray-dark;
+  border-radius: $input-text-border-radius;
 
-  // Extras
-  &:first-of-type {
-    border-top-left-radius: $input-text-border-radius;
-    border-top-right-radius: $input-text-border-radius;
-  }
-
-  &:last-of-type {
-    border-bottom-left-radius: $input-text-border-radius;
-    border-bottom-right-radius: $input-text-border-radius;
-    border-bottom: 1px solid $color-border-gray-dark;
-  }
-
-  &:hover .c-input--multi-select__value__icon {
-    display: block;
-  }
+  // Exrtas
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1);
 }
 
 .c-input--multi-select__value__icon {
@@ -169,56 +79,60 @@ $input-color-highlight: $color-steel-blue;
 }
 
 .c-input--multi-select__result {
+  // Structure
+  display: flex;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+
   // Extra
   cursor: pointer;
 
-  &:hover {
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+
+  // Text
+  font-weight: 600;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover, &--selected {
     background: $input-color-highlight;
-    color: $color-white;
   }
 }
 
-.c-input--multi-select__add {
-  // // Structure
-  // height: $input-height;
-  // padding-left: $input-text-padding;
-  // padding-right: $input-text-padding;
-  //
-  // // Border
-  // border: 1px solid $color-border-gray-dark;
-  // border-radius: $input-text-border-radius;
-  //
-  // // Text
-  // @include font-size($input-font-size);
-  // line-height: $input-height;
+.c-input--multi-select__result__text {
+  // Structure
+  display: block;
+  flex: 1;
 }
+
+.c-input--multi-select__result__icon {
+  // Structure
+  width: 2rem;
+  height: 16px;
+  display: block;
+
+  // Text
+  text-align: center;
+  line-height: inherit;
+}
+
 
 .c-input--multi-select__dropdown {
   // Structure
-  padding-top: 4px;
-  padding-right: 4px;
-  padding-bottom: 4px;
-  padding-left: 4px;
-  margin-left: -4px;
-  margin-right: -4px;
+  width: 350px;
+}
+
+.c-input--multi-select__search {
+  // Structure
+  padding: 0.5rem;
 
   // Border
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent;
-  border-radius: 3px;
-
-  // Extra
-  &--active {
-    // Border
-    border-color: $color-border-gray;
-
-    box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.15);
-
-    .c-input--multi-select__results {
-      display: block;
-    }
-  }
+  border-bottom: 1px solid $color-border-gray;
 }
 
 // Component: InputGroup
@@ -237,7 +151,14 @@ $input-color-highlight: $color-steel-blue;
 // Component: FormInput
 .c-form-input {
   // Structure
-  margin-bottom: 1rem;
+  padding: 1rem;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   // Extras
   .c-input {
@@ -245,6 +166,10 @@ $input-color-highlight: $color-steel-blue;
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  label.pt-label {
+    margin: 0;
   }
 }
 

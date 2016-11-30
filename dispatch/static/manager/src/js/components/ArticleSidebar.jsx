@@ -5,6 +5,9 @@ import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 import ArticleBasicFields from './ArticleBasicFields.jsx'
 
 export default function ArticleSidebar(props) {
+  
+  console.log('article authors', props.article.authors)
+
   return (
     <div className='c-article-sidebar'>
       <Tabs>
@@ -16,9 +19,10 @@ export default function ArticleSidebar(props) {
           <Tab className='c-article-sidebar__tab'>SEO</Tab>
         </TabList>
 
-
         <TabPanel className='c-article-sidebar__panel'>
           <ArticleBasicFields
+            update={props.update}
+            authors={props.article.authors}
             slug={props.article.slug}
             snippet={props.article.snippet} />
         </TabPanel>

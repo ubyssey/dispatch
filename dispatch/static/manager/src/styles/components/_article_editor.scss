@@ -20,15 +20,29 @@ $header-height: 55px;
 }
 
 .c-article-editor__toolbar__editor-buttons {
-  // Structure
-  flex: 1.4;
+  // Text
+  line-height: $header-height;
+
+  .pt-button {
+    // Structure
+    margin-right: 0.5rem;
+
+    .pt-icon-standard {
+      // Structure
+      margin-right: 0;
+    }
+  }
 }
 
 .c-article-editor__toolbar__article-buttons {
   // Structure
   flex: 1;
   line-height: $header-height;
-  align-items: right;
+  text-align: right;
+
+  .pt-button {
+    margin-left: 0.75rem;
+  }
 }
 
 // 1.0 - Main content editor
