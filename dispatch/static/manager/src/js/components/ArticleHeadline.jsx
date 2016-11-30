@@ -5,7 +5,7 @@ import { EditableText } from '@blueprintjs/core'
 export default function ArticleHeadline(props) {
 
   function handleUpdate(value) {
-    props.update('headline', value)
+    props.onUpdate('headline', value)
   }
 
   return (
