@@ -10,6 +10,9 @@ export default function editorReducer(editorState = initialState, action) {
       return action.editorState
     case types.TOGGLE_EDITOR_STYLE:
       return RichUtils.toggleInlineStyle(editorState, action.style)
+    case types.EDITOR_KEY_COMMAND:
+      const newState = RichUtils.handleKeyCommand(editorState, action.command)
+      return newState ? newState : editorState
     default:
       return editorState
   }
