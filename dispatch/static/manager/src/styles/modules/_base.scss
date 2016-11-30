@@ -1,3 +1,9 @@
+* {
+  &:focus {
+    outline: none;
+  }
+}
+
 html, body {
   font-family: $font-family-default;
   font-size: 14px;
