@@ -37,3 +37,7 @@ export const CREATE_PERSON = 'CREATE_PERSON'
 
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
+
+// Editor actions
+export const UPDATE_EDITOR = 'UPDATE_EDITOR'
+export const TOGGLE_EDITOR_STYLE = 'TOGGLE_EDITOR_STYLE'
