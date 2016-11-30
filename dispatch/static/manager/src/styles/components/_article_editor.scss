@@ -100,6 +100,11 @@ $header-height: 55px;
       cursor: pointer;
     }
   }
+
+  .pt-popover-target {
+    display: block;
+    position: static;
+  }
 }
 
 .c-article-editor__body {

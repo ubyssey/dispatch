@@ -64,3 +64,24 @@
   // Text
   vertical-align: middle;
 }
+
+// Component: ContentEditorPopover
+.c-content-editor__popover {
+  // Structure
+  padding: 0.5rem;
+}
+
+.c-content-editor__popover__button {
+  // Structure
+  margin-right: 0.5rem;
+
+  &:last-child {
+    // Structure
+    margin-right: 0;
+  }
+
+  .pt-icon-standard {
+    // Structure
+    margin-right: 0;
+  }
+}

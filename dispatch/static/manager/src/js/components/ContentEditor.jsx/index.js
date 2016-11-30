@@ -2,6 +2,8 @@ import React from 'react'
 import qwery from 'qwery'
 import { connect } from 'react-redux'
 
+import { AnchorButton, Popover, Position } from '@blueprintjs/core'
+
 import {
   Editor,
   EditorState,
@@ -16,6 +18,7 @@ import * as editorActions from '../../actions/EditorActions'
 
 import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar.jsx'
 import ContentEditorEmbed from './ContentEditorEmbed.jsx'
+import ContentEditorPopover from './ContentEditorPopover.jsx'
 import ContentStateHelper from './ContentStateHelper'
 
 // Helper functions
@@ -53,13 +56,18 @@ class ContentEditorComponent extends React.Component {
     this.stopEditingEntity = this.stopEditingEntity.bind(this)
     this.insertEmbed = this.insertEmbed.bind(this)
     this.removeEmbed = this.removeEmbed.bind(this)
+    this.handleMouseUp = this.handleMouseUp.bind(this)
+
+    this.toggleInlineStyle = this.toggleInlineStyle.bind(this)
 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = {
       readOnly: false,
       showEmbedToolbar: false,
+      showPopover: false,
       embedToolbarOffset: 0,
+      popover: {},
       activeBlock: null
     }
 
@@ -167,6 +175,60 @@ class ContentEditorComponent extends React.Component {
     this.setState({ readOnly: false })
   }
 
+  handleMouseUp(e) {
+
+    console.log('mouseup', e)
+
+    function getSelected() {
+       var t = ''
+       if (window.getSelection) {
+          t = window.getSelection()
+       } else if (document.getSelection) {
+          t = document.getSelection()
+       } else if (document.selection) {
+          t = document.selection.createRange().text
+       }
+       return t
+    }
+
+    setTimeout(()=> {
+      var selection = this.props.editorState.getSelection()
+      if (selection.isCollapsed()) {
+        this.setState({
+          showPopover: false
+        }, this.refs.editor.focus)
+      } else {
+        var selected = getSelected(),
+            rect = selected.getRangeAt(0).getBoundingClientRect()
+
+        var position,
+            left = rect.left - this.refs.container.offsetLeft,
+            center = left + (rect.width / 2),
+            third = this.refs.container.offsetWidth / 3
+
+        if (center > 2 * third) {
+          position = Position.TOP_RIGHT
+          left = left - 600 + (rect.width / 2) + 20
+        } else if (center > third ) {
+          position = Position.TOP
+          left = left - 300 + (rect.width / 2)
+        } else {
+          position = Position.TOP_LEFT
+        }
+
+        this.setState({
+          showPopover: true,
+          popover: {
+            top: rect.top - this.refs.container.offsetTop + this.props.scrollOffset,
+            left: left,
+            position: position
+          }
+        }, this.refs.editor.focus)
+      }
+    }, 1)
+
+  }
+
   blockRenderer(contentBlock) {
     const type = contentBlock.getType()
 
@@ -227,17 +289,52 @@ class ContentEditorComponent extends React.Component {
     }
   }
 
+  toggleInlineStyle(style) {
+    this.props.toggleEditorStyle(style)
+  }
+
+  focusEditor() {
+    this.refs.editor.focus()
+  }
+
   render() {
+
+    const popoverContainerStyle = {
+      position: 'absolute',
+      top: this.state.popover.top,
+      width: 600,
+      left: this.state.popover.left
+    }
+
+    const popoverContent = (
+        <ContentEditorPopover
+          toggleStyle={this.toggleInlineStyle}
+          focusEditor={() => this.focusEditor() } /> )
+
     return (
-      <div className='c-content-editor'>
+      <div
+        ref='container'
+        className='c-content-editor'
+        onMouseUp={this.handleMouseUp}>
         <div className='c-content-editor__editor'>
           <Editor
+            ref='editor'
             readOnly={this.state.readOnly}
             editorState={this.props.editorState}
             handleKeyCommand={this.handleKeyCommand}
             blockRendererFn={this.blockRenderer}
             blockStyleFn={blockStyleFn}
             onChange={this.onChange} />
+        </div>
+        <div style={popoverContainerStyle}>
+          <Popover
+            isOpen={this.state.showPopover}
+            inline={true}
+            content={popoverContent}
+            position={this.state.popover.position}
+            enforceFocus={false}>
+            <div></div>
+          </Popover>
         </div>
         <ContentEditorEmbedToolbar
           embeds={this.props.embeds}
@@ -260,6 +357,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     updateEditor: (editorState) => {
       dispatch(editorActions.updateEditor(editorState))
+    },
+    toggleEditorStyle: (style) => {
+      dispatch(editorActions.toggleEditorStyle(style))
     }
   }
 }
