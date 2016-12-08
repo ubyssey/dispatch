@@ -23,6 +23,8 @@ import ContentEditorPopover from './ContentEditorPopover.jsx'
 import ContentEditorLinkPopover from './ContentEditorLinkPopover.jsx'
 import ContentStateHelper from './ContentStateHelper'
 
+import LinkEntity from './entities/Link'
+
 // Helper functions
 function buildEmbedMap(embeds) {
   let embedMap = {}
@@ -80,10 +82,7 @@ class ContentEditorComponent extends React.Component {
   initializeEditor() {
 
     const decorator = new CompositeDecorator([
-      {
-        strategy: findLinkEntities,
-        component: Link,
-      },
+      LinkEntity
     ])
 
     if (this.props.isNew) {
@@ -254,9 +253,6 @@ class ContentEditorComponent extends React.Component {
             center = left + (rect.width / 2),
             third = this.refs.container.offsetWidth / 3
 
-        console.log('third', third)
-        console.log('center', center)
-
         if (center > 2 * third) {
           position = Position.TOP_RIGHT
           left = left - 600 + (rect.width / 2) + 15
@@ -420,28 +416,6 @@ class ContentEditorComponent extends React.Component {
       </div>
     )
   }
-}
-
-function findLinkEntities(contentBlock, callback) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity()
-      return (
-        entityKey !== null &&
-        Entity.get(entityKey).getType() === 'LINK'
-      )
-    },
-    callback
-  )
-}
-
-const Link = (props) => {
-  const { url } = Entity.get(props.entityKey).getData()
-  return (
-    <a href={url}>
-      {props.children}
-    </a>
-  )
 }
 
 const mapStateToProps = (state) => {

@@ -87,11 +87,6 @@
 }
 
 // Component: ContentEditorLinkPopover
-.c-content-editor__link-popover {
-  // Structure
-  display: flex;
-}
-
 .c-content-editor__link-popover__input {
   // Structure
   width: 275px;
@@ -113,4 +108,11 @@
 .c-content-editor__link-popover__remove {
   // Structure
   margin-left: 0.5rem;
+}
+
+// Entities
+
+.c-content-editor__entity--link {
+  // Text
+  text-decoration: underline;
 }
