@@ -29,10 +29,15 @@ export default class TextInput extends React.Component {
     this.saveNextUpdate = true
   }
 
+  focus() {
+    this.refs.input.focus()
+  }
+
   render() {
     return (
       <input
-        className='pt-input pt-fill'
+        ref='input'
+        className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
         type='text'
         value={this.props.value}
         placeholder={this.props.placeholder}

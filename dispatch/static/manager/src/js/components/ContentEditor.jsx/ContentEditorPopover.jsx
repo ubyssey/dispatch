@@ -1,55 +1,91 @@
 import React from 'react'
 import { AnchorButton } from '@blueprintjs/core'
 
-export default function ContentEditorPopover(props) {
+import ContentEditorLinkEditor from './ContentEditorLinkEditor.jsx'
 
-  function toggleStyle(e, style) {
-    e.stopPropagation()
-    props.focusEditor()
-    props.toggleStyle(style)
+const LINK_INPUT_WIDTH = 365
+
+export default class ContentEditorPopover extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showLinkInput: false
+    }
   }
 
-  function handleMouseUp(e) {
+  toggleStyle(e, style) {
     e.stopPropagation()
+    this.props.focusEditor()
+    this.props.toggleStyle(style)
   }
 
-  return (
-    <div
-      className='c-content-editor__popover'
-      onMouseUp={handleMouseUp}>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        onClick={ e => toggleStyle(e, 'BOLD') }
-        title='Bold'>
-        <span className='pt-icon-standard pt-icon-bold'></span>
-      </AnchorButton>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        onClick={ e => toggleStyle(e, 'ITALIC') }
-        title='Italic'>
-        <span className='pt-icon-standard pt-icon-italic'></span>
-      </AnchorButton>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        onClick={ e => toggleStyle(e, 'UNDERLINE') }
-        title='Underline'>
-        <span className='pt-icon-standard pt-icon-underline'></span>
-      </AnchorButton>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        title='Header'>
-        <span className='pt-icon-standard pt-icon-header'></span>
-      </AnchorButton>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        title='List'>
-        <span className='pt-icon-standard pt-icon-properties'></span>
-      </AnchorButton>
-      <AnchorButton
-        className='c-content-editor__popover__button'
-        title='Link'>
-        <span className='pt-icon-standard pt-icon-link'></span>
-      </AnchorButton>
-    </div>
-  )
+  showLinkInput(e) {
+    this.props.focusEditor()
+    this.setState({ showLinkInput: true })
+  }
+
+  renderLinkInput() {
+    return (
+      <ContentEditorLinkEditor
+        close={ e => this.setState({ showLinkInput: false})}
+        insertLink={this.props.insertLink} />
+    )
+  }
+
+  renderButtons() {
+    return (
+      <div>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          onClick={ e => this.toggleStyle(e, 'BOLD') }
+          title='Bold'>
+          <span className='pt-icon-standard pt-icon-bold'></span>
+        </AnchorButton>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          onClick={ e => this.toggleStyle(e, 'ITALIC') }
+          title='Italic'>
+          <span className='pt-icon-standard pt-icon-italic'></span>
+        </AnchorButton>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          onClick={ e => this.toggleStyle(e, 'UNDERLINE') }
+          title='Underline'>
+          <span className='pt-icon-standard pt-icon-underline'></span>
+        </AnchorButton>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          title='Header'>
+          <span className='pt-icon-standard pt-icon-header'></span>
+        </AnchorButton>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          title='List'>
+          <span className='pt-icon-standard pt-icon-properties'></span>
+        </AnchorButton>
+        <AnchorButton
+          className='c-content-editor__popover__button'
+          onClick={e => this.showLinkInput()}
+          title='Link'>
+          <span className='pt-icon-standard pt-icon-link'></span>
+        </AnchorButton>
+      </div>
+    )
+  }
+
+  render() {
+    const style = this.state.showLinkInput ? {width: LINK_INPUT_WIDTH} : {}
+
+    return (
+      <div
+        className='c-content-editor__popover'
+        onMouseUp={e => e.stopPropagation()}
+        style={style}>
+        { this.state.showLinkInput ? this.renderLinkInput() : this.renderButtons() }
+      </div>
+    )
+  }
+
 }

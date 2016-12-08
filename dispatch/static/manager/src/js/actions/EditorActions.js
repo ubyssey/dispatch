@@ -20,3 +20,11 @@ export function editorKeyCommand(command) {
     command: command
   }
 }
+
+export function insertLink(url, selection) {
+  return {
+    type: types.EDITOR_INSERT_LINK,
+    url: url,
+    selection: selection
+  }
+}

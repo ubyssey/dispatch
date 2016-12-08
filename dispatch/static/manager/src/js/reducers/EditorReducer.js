@@ -1,4 +1,4 @@
-import { EditorState, RichUtils } from 'draft-js'
+import { EditorState, RichUtils, Entity, Modifier } from 'draft-js'
 
 import * as types from '../constants/ActionTypes'
 
@@ -13,6 +13,18 @@ export default function editorReducer(editorState = initialState, action) {
     case types.EDITOR_KEY_COMMAND:
       const newState = RichUtils.handleKeyCommand(editorState, action.command)
       return newState ? newState : editorState
+    case types.EDITOR_INSERT_LINK:
+      // Create new link entity
+      const entityKey = Entity.create('LINK', 'IMMUTABLE', { url: action.url })
+
+      const selectionState = action.selection ? action.selection : editorState.getSelection()
+
+      return RichUtils.toggleLink(
+        editorState,
+        selectionState,
+        entityKey
+      )
+
     default:
       return editorState
   }

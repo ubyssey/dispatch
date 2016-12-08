@@ -14,6 +14,7 @@ export default function ArticleBasicFields(props) {
         <TextInput
           placeholder='Slug'
           value={props.slug}
+          fill={true}
           onChange={ e => props.update('slug', e.target.value) } />
       </FormInput>
 
