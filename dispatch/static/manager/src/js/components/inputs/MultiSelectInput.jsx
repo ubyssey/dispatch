@@ -195,6 +195,7 @@ export default class MultiSelectInput extends React.Component {
           <TextInput
             onChange={this.handleInputChange}
             value={this.state.query}
+            fill={true}
             placeholder='Search' />
         </div>
         <ul className='c-input--multi-select__results'>
