@@ -6,8 +6,6 @@ import ArticleBasicFields from './ArticleBasicFields.jsx'
 
 export default function ArticleSidebar(props) {
   
-  console.log('article authors', props.article.authors)
-
   return (
     <div className='c-article-sidebar'>
       <Tabs>

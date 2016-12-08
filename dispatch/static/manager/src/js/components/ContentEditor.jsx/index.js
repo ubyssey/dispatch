@@ -11,7 +11,8 @@ import {
   RichUtils,
   AtomicBlockUtils,
   Entity,
-  Modifier
+  Modifier,
+  CompositeDecorator
 } from 'draft-js';
 
 import * as editorActions from '../../actions/EditorActions'
@@ -19,6 +20,7 @@ import * as editorActions from '../../actions/EditorActions'
 import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar.jsx'
 import ContentEditorEmbed from './ContentEditorEmbed.jsx'
 import ContentEditorPopover from './ContentEditorPopover.jsx'
+import ContentEditorLinkPopover from './ContentEditorLinkPopover.jsx'
 import ContentStateHelper from './ContentStateHelper'
 
 // Helper functions
@@ -65,7 +67,9 @@ class ContentEditorComponent extends React.Component {
       showEmbedToolbar: false,
       showPopover: false,
       embedToolbarOffset: 0,
-      popover: {},
+      popover: {
+        renderContent: this.renderPopover.bind(this)
+      },
       activeBlock: null
     }
 
@@ -74,14 +78,23 @@ class ContentEditorComponent extends React.Component {
   }
 
   initializeEditor() {
+
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findLinkEntities,
+        component: Link,
+      },
+    ])
+
     if (this.props.isNew) {
       this.props.updateEditor(
-        EditorState.createEmpty()
+        EditorState.createEmpty(decorator)
       )
     } else {
       this.props.updateEditor(
         EditorState.createWithContent(
-          ContentStateHelper.fromJSON(this.props.content)
+          ContentStateHelper.fromJSON(this.props.content),
+          decorator
         )
       )
     }
@@ -166,25 +179,73 @@ class ContentEditorComponent extends React.Component {
 
   handleMouseUp(e) {
 
+    const contentState = this.props.editorState.getCurrentContent()
+
     function getSelected() {
-       var t = ''
-       if (window.getSelection) {
-          t = window.getSelection()
-       } else if (document.getSelection) {
-          t = document.getSelection()
-       } else if (document.selection) {
-          t = document.selection.createRange().text
-       }
-       return t
+      var t = ''
+      if (window.getSelection) {
+        t = window.getSelection()
+      } else if (document.getSelection) {
+        t = document.getSelection()
+      } else if (document.selection) {
+        t = document.selection.createRange().text
+      }
+      return t
+    }
+
+    function getLinkEntity(selection) {
+      const contentBlock = contentState.getBlockForKey(selection.getStartKey())
+      const entityKey = contentBlock.getEntityAt(selection.getStartOffset())
+
+      const isLinkEntity =
+        entityKey !== null &&
+        Entity.get(entityKey).getType() === 'LINK'
+
+      // If there is no entity at this offset or the entity is not a link, return null
+      if (!isLinkEntity) {
+        return
+      }
+
+      let entityRange = null
+
+      contentBlock.findEntityRanges(
+        (character) => {
+          // Find range for the current link entity
+          return character.getEntity() === entityKey
+        },
+        (start, end) => {
+          // Set entityRange to be the range of the current link entity
+          entityRange = [start, end]
+        }
+      )
+
+      if (entityRange) {
+
+        // Create new SelectionState instance
+        let selectionState = SelectionState.createEmpty(contentBlock.getKey())
+
+        // Update the selection state to match the current entity range
+        selectionState = selectionState.merge({
+          anchorOffset: entityRange[0],
+          focusOffset: entityRange[1]
+        })
+
+        // Return the entity and selection state
+        return {
+          entity: Entity.get(entityKey),
+          selection: selectionState
+        }
+      }
     }
 
     setTimeout(()=> {
-      var selection = this.props.editorState.getSelection()
-      if (selection.isCollapsed()) {
-        this.setState({
-          showPopover: false
-        }, this.refs.editor.focus)
-      } else {
+      const selection = this.props.editorState.getSelection(),
+            isCollapsed = selection.isCollapsed(),
+            linkEntity = getLinkEntity(selection),
+            showLinkPopover = isCollapsed && linkEntity
+
+      if ( !isCollapsed || showLinkPopover ) {
+
         var selected = getSelected(),
             rect = selected.getRangeAt(0).getBoundingClientRect()
 
@@ -193,13 +254,19 @@ class ContentEditorComponent extends React.Component {
             center = left + (rect.width / 2),
             third = this.refs.container.offsetWidth / 3
 
+        console.log('third', third)
+        console.log('center', center)
+
         if (center > 2 * third) {
           position = Position.TOP_RIGHT
-          left = left - 600 + (rect.width / 2) + 20
+          left = left - 600 + (rect.width / 2) + 15
         } else if (center > third ) {
           position = Position.TOP
           left = left - 300 + (rect.width / 2)
         } else {
+          if (rect.width == 0) {
+            left = left - 15
+          }
           position = Position.TOP_LEFT
         }
 
@@ -208,10 +275,16 @@ class ContentEditorComponent extends React.Component {
           popover: {
             top: rect.top - this.refs.container.offsetTop + this.props.scrollOffset,
             left: left,
-            position: position
+            position: position,
+            renderContent: showLinkPopover ? this.renderLinkPopover.bind(this) : this.renderPopover.bind(this),
+            linkEntity: linkEntity
           }
         }, this.refs.editor.focus)
+
+      } else {
+        this.setState({ showPopover: false }, this.refs.editor.focus)
       }
+
     }, 1)
 
   }
@@ -284,6 +357,24 @@ class ContentEditorComponent extends React.Component {
     this.refs.editor.focus()
   }
 
+  renderPopover() {
+    return (
+      <ContentEditorPopover
+        insertLink={this.props.insertLink}
+        toggleStyle={this.toggleInlineStyle}
+        focusEditor={() => this.focusEditor() } />
+    )
+  }
+
+  renderLinkPopover(linkEntity) {
+    return (
+      <ContentEditorLinkPopover
+        url={linkEntity.entity.get('data').url}
+        selection={linkEntity.selection}
+        insertLink={this.props.insertLink} />
+    )
+  }
+
   render() {
 
     const popoverContainerStyle = {
@@ -292,11 +383,6 @@ class ContentEditorComponent extends React.Component {
       width: 600,
       left: this.state.popover.left
     }
-
-    const popoverContent = (
-        <ContentEditorPopover
-          toggleStyle={this.toggleInlineStyle}
-          focusEditor={() => this.focusEditor() } /> )
 
     return (
       <div
@@ -317,8 +403,9 @@ class ContentEditorComponent extends React.Component {
           <Popover
             isOpen={this.state.showPopover}
             inline={true}
-            content={popoverContent}
+            content={this.state.popover.renderContent(this.state.popover.linkEntity)}
             position={this.state.popover.position}
+            useSmartArrowPositioning={false}
             enforceFocus={false}>
             <div></div>
           </Popover>
@@ -328,11 +415,33 @@ class ContentEditorComponent extends React.Component {
           showToolbar={this.state.showEmbedToolbar}
           offset={this.state.embedToolbarOffset}
           insertEmbed={this.insertEmbed}
-          openModal={this.props.openModal}
+          openMeodal={this.props.openModal}
           closeModal={this.props.closeModal} />
       </div>
     )
   }
+}
+
+function findLinkEntities(contentBlock, callback) {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity()
+      return (
+        entityKey !== null &&
+        Entity.get(entityKey).getType() === 'LINK'
+      )
+    },
+    callback
+  )
+}
+
+const Link = (props) => {
+  const { url } = Entity.get(props.entityKey).getData()
+  return (
+    <a href={url}>
+      {props.children}
+    </a>
+  )
 }
 
 const mapStateToProps = (state) => {
@@ -349,6 +458,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     editorKeyCommand: (command) => {
       dispatch(editorActions.editorKeyCommand(command))
+    },
+    insertLink: (url, selection) => {
+      dispatch(editorActions.insertLink(url, selection))
     }
   }
 }
