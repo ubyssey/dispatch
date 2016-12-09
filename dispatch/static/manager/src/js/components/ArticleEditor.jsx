@@ -86,10 +86,7 @@ class ArticleEditorComponent extends React.Component {
         <div className='u-container-main'>
           <ArticleToolbar
             actions={{
-              save: this.handleSave,
-              onBold: () => this.toggleStyle('BOLD'),
-              onItalic: () => this.toggleStyle('ITALIC'),
-              onUnderline: () => this.toggleStyle('UNDERLINE')
+              save: this.handleSave
             }}
             article={article} />
           <div className='u-container-editor'>
