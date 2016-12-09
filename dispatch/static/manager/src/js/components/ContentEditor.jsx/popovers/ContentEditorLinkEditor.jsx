@@ -60,7 +60,6 @@ export default class ContentEditorLinkEditor extends React.Component {
         <AnchorButton
           className='c-content-editor__link-popover__remove'
           intent={Intent.DANGER}
-          disabled={!this.state.urlValue.length}
           onClick={e => this.removeLink()}>
           <span className='pt-icon-standard pt-icon-trash' />
         </AnchorButton>
