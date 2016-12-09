@@ -83,10 +83,16 @@ export default class ContentEditorEmbed extends React.Component {
           <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
           <ul className='o-embed-container__header__options'>
             <li>
-              <a onClick={this.updateEmbed}>Change</a>
+              <a onClick={this.updateEmbed}>
+                <span className='pt-icon-standard pt-icon-edit'></span>
+                <span>Edit</span>
+              </a>
             </li>
             <li>
-              <a onClick={this.removeEmbed}>Remove</a>
+              <a onClick={this.removeEmbed}>
+                <span className='pt-icon-standard pt-icon-trash'></span>
+                <span>Remove</span>
+              </a>
             </li>
           </ul>
         </div>
