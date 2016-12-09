@@ -9,6 +9,8 @@ export default class ContentEditorLinkEditor extends React.Component {
   constructor(props) {
     super(props)
 
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+
     this.state = {
       urlValue: props.url || ''
     }
@@ -47,6 +49,12 @@ export default class ContentEditorLinkEditor extends React.Component {
     )
   }
 
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.props.close()
+    }
+  }
+
   render() {
     return (
       <div className='c-content-editor__link-popover'>
@@ -55,6 +63,7 @@ export default class ContentEditorLinkEditor extends React.Component {
           className='c-content-editor__link-popover__input'
           ref='textInput'
           value={this.state.urlValue}
+          onKeyPress={this.handleKeyPress}
           onChange={ e => this.updateLink(e.target.value)}
           placeholder='Enter a URL here' />
         <AnchorButton
