@@ -40,6 +40,9 @@ $embed-padding: 1rem;
     }
 
     a {
+      // Text
+      color: $color-text-gray-light;
+      
       // Extras
       cursor: pointer;
 
@@ -52,12 +55,14 @@ $embed-padding: 1rem;
       }
     }
   }
+
+  .pt-icon-standard {
+    margin-right: 0.25rem;
+  }
+
 }
 
 .o-embed-container__body {
-  // Structure
-  padding: $embed-padding;
-
   // Border
   border-style: solid;
   border-left-width: 1px;
