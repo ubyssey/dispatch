@@ -30,11 +30,13 @@ class ImageEmbedComponent extends React.Component {
         <form>
           <FormInput label='Caption'>
             <TextInput
+              fill={true}
               value={this.props.data.caption}
               onChange={this.handleCaptionChange} />
           </FormInput>
           <FormInput label='Custom Credit'>
             <TextInput
+              fill={true}
               value={this.props.data.credit || ''}
               onChange={this.handleCreditChange} />
           </FormInput>
