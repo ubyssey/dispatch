@@ -167,6 +167,7 @@ class ContentEditorComponent extends React.Component {
     )
 
     this.onChange(editorState)
+    this.focusEditor()
   }
 
   startEditingEntity() {
@@ -355,8 +356,7 @@ class ContentEditorComponent extends React.Component {
   }
 
   closePopover() {
-    this.setState({ showPopover: false })
-    this.focusEditor()
+    this.setState({ showPopover: false }, this.focusEditor)
   }
 
   renderPopover() {
