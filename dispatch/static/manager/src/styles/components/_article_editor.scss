@@ -5,7 +5,6 @@
 // 2.0 - Top Toolbar
 // 3.0 - Inline Toolbar
 
-
 #full-toolbar {
   margin: 0;
   float: left;
@@ -38,7 +37,6 @@ $header-height: 55px;
   // Structure
   flex: 1;
   line-height: $header-height;
-  text-align: right;
 
   .pt-button {
     margin-left: 0.75rem;
