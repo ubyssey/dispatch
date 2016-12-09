@@ -19,11 +19,11 @@ import * as editorActions from '../../actions/EditorActions'
 
 import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar.jsx'
 import ContentEditorEmbed from './ContentEditorEmbed.jsx'
-import ContentEditorPopover from './ContentEditorPopover.jsx'
-import ContentEditorLinkPopover from './ContentEditorLinkPopover.jsx'
+import ContentEditorPopover from './popovers/ContentEditorPopover.jsx'
+import ContentEditorLinkPopover from './popovers/ContentEditorLinkPopover.jsx'
 import ContentStateHelper from './ContentStateHelper'
 
-import LinkEntity from './entities/Link'
+import LinkEntity from './entities/LinkEntity'
 
 // Helper functions
 function buildEmbedMap(embeds) {
@@ -357,6 +357,7 @@ class ContentEditorComponent extends React.Component {
     return (
       <ContentEditorPopover
         insertLink={this.props.insertLink}
+        removeLink={this.props.removeLink}
         toggleStyle={this.toggleInlineStyle}
         focusEditor={() => this.focusEditor() } />
     )
@@ -367,7 +368,9 @@ class ContentEditorComponent extends React.Component {
       <ContentEditorLinkPopover
         url={linkEntity.entity.get('data').url}
         selection={linkEntity.selection}
-        insertLink={this.props.insertLink} />
+        insertLink={this.props.insertLink}
+        removeLink={this.props.removeLink}
+        close={e => this.setState({ showPopover: false })} />
     )
   }
 
@@ -435,6 +438,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     insertLink: (url, selection) => {
       dispatch(editorActions.insertLink(url, selection))
+    },
+    removeLink: (selection) => {
+      dispatch(editorActions.removeLink(selection))
     }
   }
 }
