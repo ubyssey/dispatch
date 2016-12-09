@@ -421,7 +421,7 @@ class ContentEditorComponent extends React.Component {
           showToolbar={this.state.showEmbedToolbar}
           offset={this.state.embedToolbarOffset}
           insertEmbed={this.insertEmbed}
-          openMeodal={this.props.openModal}
+          openModal={this.props.openModal}
           closeModal={this.props.closeModal} />
       </div>
     )
