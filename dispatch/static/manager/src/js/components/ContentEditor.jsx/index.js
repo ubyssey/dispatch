@@ -61,6 +61,7 @@ class ContentEditorComponent extends React.Component {
     this.removeEmbed = this.removeEmbed.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this)
+    this.closePopover = this.closePopover.bind(this)
 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
@@ -353,13 +354,19 @@ class ContentEditorComponent extends React.Component {
     this.refs.editor.focus()
   }
 
+  closePopover() {
+    this.setState({ showPopover: false })
+    this.focusEditor()
+  }
+
   renderPopover() {
     return (
       <ContentEditorPopover
         insertLink={this.props.insertLink}
         removeLink={this.props.removeLink}
         toggleStyle={this.toggleInlineStyle}
-        focusEditor={() => this.focusEditor() } />
+        focusEditor={() => this.focusEditor() }
+        close={this.closePopover} />
     )
   }
 
@@ -370,7 +377,7 @@ class ContentEditorComponent extends React.Component {
         selection={linkEntity.selection}
         insertLink={this.props.insertLink}
         removeLink={this.props.removeLink}
-        close={e => this.setState({ showPopover: false })} />
+        close={this.closePopover} />
     )
   }
 
