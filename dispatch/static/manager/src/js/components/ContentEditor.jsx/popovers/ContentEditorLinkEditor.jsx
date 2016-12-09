@@ -2,7 +2,7 @@ import React from 'react'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
-import { TextInput } from '../inputs'
+import { TextInput } from '../../inputs'
 
 export default class ContentEditorLinkEditor extends React.Component {
 
@@ -32,11 +32,16 @@ export default class ContentEditorLinkEditor extends React.Component {
     this.setState({ urlValue: urlValue })
   }
 
-  renderCloseButton() {
+  removeLink() {
+    this.props.removeLink(this.props.selection)
+    this.props.close()
+  }
+
+  renderBackButton() {
     return (
       <AnchorButton
         className='c-content-editor__link-popover__back'
-        onClick={this.props.close}>
+        onClick={this.props.back}>
         <span className='pt-icon-standard pt-icon-arrow-left' />
       </AnchorButton>
     )
@@ -45,7 +50,7 @@ export default class ContentEditorLinkEditor extends React.Component {
   render() {
     return (
       <div className='c-content-editor__link-popover'>
-        {this.props.close ? this.renderCloseButton() : null}
+        {this.props.back ? this.renderBackButton() : null}
         <TextInput
           className='c-content-editor__link-popover__input'
           ref='textInput'
@@ -54,7 +59,9 @@ export default class ContentEditorLinkEditor extends React.Component {
           placeholder='Enter a URL here' />
         <AnchorButton
           className='c-content-editor__link-popover__remove'
-          intent={Intent.DANGER}>
+          intent={Intent.DANGER}
+          disabled={!this.state.urlValue.length}
+          onClick={e => this.removeLink()}>
           <span className='pt-icon-standard pt-icon-trash' />
         </AnchorButton>
       </div>

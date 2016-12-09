@@ -15,8 +15,10 @@ export default function ContentEditorPopover(props) {
       style={style}>
       <ContentEditorLinkEditor
         url={props.url}
+        close={props.close}
         selection={props.selection}
-        insertLink={props.insertLink} />
+        insertLink={props.insertLink}
+        removeLink={props.removeLink} />
     </div>
   )
 
