@@ -28,3 +28,10 @@ export function insertLink(url, selection) {
     selection: selection
   }
 }
+
+export function removeLink(selection) {
+  return {
+    type: types.EDITOR_REMOVE_LINK,
+    selection: selection
+  }
+}

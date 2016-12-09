@@ -29,8 +29,9 @@ export default class ContentEditorPopover extends React.Component {
   renderLinkInput() {
     return (
       <ContentEditorLinkEditor
-        close={ e => this.setState({ showLinkInput: false})}
-        insertLink={this.props.insertLink} />
+        back={ e => this.setState({ showLinkInput: false})}
+        insertLink={this.props.insertLink}
+        removeLink={this.props.removeLink} />
     )
   }
 
