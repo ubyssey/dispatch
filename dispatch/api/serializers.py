@@ -53,7 +53,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
 
         # Save properties
-        instance.title = validated_data.get('title', instance.title)        
+        instance.title = validated_data.get('title', instance.title)
         instance.save()
 
         # Save relationships
@@ -213,8 +213,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     content = serializers.ReadOnlyField(source='get_json')
     content_json = serializers.CharField(write_only=True)
 
-    authors = PersonSerializer(many=True)
-    author_ids = serializers.CharField(write_only=True)
+    authors = PersonSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)
