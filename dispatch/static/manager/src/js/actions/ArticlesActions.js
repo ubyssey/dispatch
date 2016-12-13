@@ -36,8 +36,12 @@ export function setArticle(article) {
 }
 
 export function saveArticle(token, articleId, data) {
-  // Convert article contentState to JSON array
-  data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
+  
+  if (data._content) {
+    // Convert article contentState to JSON array
+    data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
+  }
+
   // Set author ids to authors
   data.author_ids = data.authors
 
@@ -51,8 +55,12 @@ export function saveArticle(token, articleId, data) {
 }
 
 export function createArticle(token, data) {
-  // Convert article contentState to JSON array
-  data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
+
+  if (data._content) {
+    // Convert article contentState to JSON array
+    data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
+  }
+
   // Set author ids to authors
   data.author_ids = data.authors
 
