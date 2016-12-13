@@ -9,32 +9,13 @@ import {
 
 import { List } from 'immutable';
 
-import applyInlineStyles from './applyInlineStyles'
-
-function genPlainText(html) {
-  // TODO: strip out HTML
-  return html;
-}
-
-function genCharacterList(html) {
-  // TODO: convert inline styles to CharacterMetadata records
-  return new List(
-    html.split('').map( character => {
-      return CharacterMetadata.create()
-    })
-  )
-}
+import convertToHTML from './helpers/convertToHTML'
+import convertFromHTML from './helpers/convertFromHTML'
 
 function createBlock(jsonBlock) {
 
   if (jsonBlock.type == 'paragraph') {
-    return new ContentBlock({
-      key: genKey(),
-      type: 'unstyled',
-      depth: 1,
-      text: genPlainText(jsonBlock.data),
-      characterList: genCharacterList(jsonBlock.data)
-    })
+    return convertFromHTML(jsonBlock.data)
   } else {
     return new ContentBlock({
       key: genKey(),
@@ -59,7 +40,7 @@ function parseBlock(block) {
   } else {
     return {
       type: 'paragraph',
-      data: applyInlineStyles(block)
+      data: convertToHTML(block)
     }
   }
 
