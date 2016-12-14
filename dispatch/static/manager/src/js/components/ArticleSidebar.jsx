@@ -20,6 +20,7 @@ export default function ArticleSidebar(props) {
         <TabPanel className='c-article-sidebar__panel'>
           <ArticleBasicFields
             update={props.update}
+            section={props.article.section}
             authors={props.article.authors || []}
             topic={props.article.topic}
             slug={props.article.slug}

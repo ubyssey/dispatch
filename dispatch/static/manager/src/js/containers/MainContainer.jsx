@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Position, Toaster } from '@blueprintjs/core';
 
-import * as sectionActions from '../actions/SectionActions'
+import * as sectionsActions from '../actions/SectionsActions'
 import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
 
@@ -15,7 +15,7 @@ class Main extends React.Component {
     super(props)
 
     if ( !props.sections.isLoaded ) {
-      props.fetchSections()
+      props.fetchSections(this.props.token)
     }
   }
 
@@ -52,14 +52,15 @@ const mapStateToProps = (state) => {
     entities: {
       sections: state.app.entities.sections
     },
-    modal: state.modal
+    modal: state.modal,
+    token: state.app.auth.token
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSections: () => {
-      dispatch(sectionActions.fetchSections())
+    fetchSections: (token) => {
+      dispatch(sectionsActions.fetchSections(token))
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())

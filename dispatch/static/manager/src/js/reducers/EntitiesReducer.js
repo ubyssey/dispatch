@@ -44,7 +44,7 @@ export default function entitiesReducer(state = initialState, action) {
     // Sections
     case types.FETCH_SECTIONS + '_FULFILLED':
       return R.merge(state, {
-        sections: R.merge(state.sections, action.payload.entities.sections)
+        sections: R.merge(state.sections, action.payload.results.entities.sections)
       })
 
     // Images
@@ -85,7 +85,7 @@ export default function entitiesReducer(state = initialState, action) {
       return R.merge(state, {
         topics: R.merge(state.topics, action.payload.results.entities.topics)
       })
-    case types.CREATE_TOPICS + '_FULFILLED':
+    case types.CREATE_TOPIC + '_FULFILLED':
       return R.merge(state, {
         topics: R.merge(state.topics, action.payload.entities.topics)
       })
