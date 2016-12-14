@@ -8,9 +8,9 @@
     "Ben Cook <b@bencook.ca>"
   ],
   "devDependencies": {
+    "@blueprintjs/core": "^1.1.0",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-react": "^6.11.1",
-    "@blueprintjs/core": "^1.1.0",
     "draft-js": "^0.9.1",
     "es6-promise": "^3.2.1",
     "gulp": "^3.9.0",

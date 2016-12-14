@@ -131,6 +131,14 @@ var DispatchAPI = {
     createPerson: (token, fullName) => {
       return postRequest('people', null, {full_name: fullName}, token)
     }
+  },
+  topics: {
+    fetchTopics: (token, query) => {
+      return getRequest('topics', null, query, token)
+    },
+    createTopic: (token, name) => {
+      return postRequest('topics', null, {name: name}, token)
+    }
   }
 }
 

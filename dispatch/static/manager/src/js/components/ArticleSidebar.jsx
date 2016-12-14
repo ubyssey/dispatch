@@ -21,6 +21,7 @@ export default function ArticleSidebar(props) {
           <ArticleBasicFields
             update={props.update}
             authors={props.article.authors || []}
+            topic={props.article.topic}
             slug={props.article.slug}
             snippet={props.article.snippet} />
         </TabPanel>

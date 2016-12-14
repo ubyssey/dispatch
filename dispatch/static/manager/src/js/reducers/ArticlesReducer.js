@@ -69,6 +69,7 @@ function articleReducer(state = initialState.article, action) {
         isLoading: true
       })
     case types.FETCH_ARTICLE + '_FULFILLED':
+    case types.SAVE_ARTICLE + '_FULFILLED':
     case types.SET_ARTICLE:
       return R.merge(state, {
         isLoading: false,

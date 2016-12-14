@@ -6,6 +6,7 @@ import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
 import imagesReducer from './ImagesReducer'
 import personsReducer from './PersonsReducer'
+import topicsReducer from './TopicsReducer'
 import toasterReducer from './ToasterReducer'
 import editorReducer from './EditorReducer'
 
@@ -16,6 +17,7 @@ export default combineReducers({
   articles: articlesReducer,
   images: imagesReducer,
   persons: personsReducer,
+  topics: topicsReducer,
   toaster: toasterReducer,
   editor: editorReducer
 })

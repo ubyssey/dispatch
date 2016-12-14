@@ -1,13 +1,13 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'react-document-title'
 
 import * as articlesActions from '../actions/ArticlesActions'
 import * as editorActions from '../actions/EditorActions'
 import * as modalActions from '../actions/ModalActions'
 
-import ArticleToolbar from './ArticleToolbar.jsx';
+import ArticleToolbar from './ArticleToolbar.jsx'
 import ArticleContentEditor from './ArticleContentEditor.jsx'
 import ArticleSidebar from './ArticleSidebar.jsx'
 

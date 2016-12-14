@@ -36,21 +36,25 @@ export function setArticle(article) {
 }
 
 export function saveArticle(token, articleId, data) {
-  
+
   if (data._content) {
     // Convert article contentState to JSON array
     data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
   }
 
-  // Set author ids to authors
-  data.author_ids = data.authors
-
   // Delete old content state
   delete data._content
+
+  // Set author_ids to authors
+  data.author_ids = data.authors
+
+  // Set topic_id to topic
+  data.topic_id = data.topic
 
   return {
     type: types.SAVE_ARTICLE,
     payload: DispatchAPI.articles.saveArticle(token, articleId, data)
+      .then( json => normalize(json, articleSchema) )
   }
 }
 
@@ -61,11 +65,14 @@ export function createArticle(token, data) {
     data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
   }
 
-  // Set author ids to authors
-  data.author_ids = data.authors
-
   // Delete old content state
   delete data._content
+
+  // Set author_ids to authors
+  data.author_ids = data.authors
+
+  // Set topic_id to topic
+  data.topic_id = data.topic
 
   return {
     type: types.CREATE_ARTICLE,
