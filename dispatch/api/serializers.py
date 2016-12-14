@@ -221,7 +221,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     topic = TopicSerializer(read_only=True)
-    topic_id = serializers.IntegerField(write_only=True, required=False)
+    topic_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
 
     url = serializers.CharField(source='get_absolute_url',read_only=True)
     id = serializers.ReadOnlyField(source='parent.id')
@@ -271,7 +271,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         template_fields = self.context['request'].query_params.get('template_fields', False)
 
-        if self.context['request'].method == 'GET' and not template_fields:
+        if not template_fields:
             self.fields.pop('template_fields')
 
     def create(self, validated_data):
@@ -333,7 +333,10 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         # If there is a topic, save it
         topic = validated_data.get('topic_id', False)
-        if topic:
+
+        print topic
+        
+        if topic != False:
             instance.save_topic(topic)
 
         # Perform a final save (without revision), update content and featured image

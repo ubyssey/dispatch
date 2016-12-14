@@ -4,6 +4,7 @@ import { FormInput, TextInput, TextAreaInput } from './inputs'
 import { Label, InputGroup } from '@blueprintjs/core'
 
 import AuthorSelectInput from './AuthorSelectInput.jsx'
+import TopicSelectInput from './TopicSelectInput.jsx'
 
 export default function ArticleBasicFields(props) {
 
@@ -24,7 +25,13 @@ export default function ArticleBasicFields(props) {
           update={ authors => props.update('authors', authors) } />
       </FormInput>
 
-      <FormInput label='Slug'>
+      <FormInput label='Topic'>
+        <TopicSelectInput
+          selected={props.topic}
+          update={ topic => props.update('topic', topic) } />
+      </FormInput>
+
+      <FormInput label='Snippet'>
         <TextAreaInput
           placeholder='Snippet'
           value={props.snippet}

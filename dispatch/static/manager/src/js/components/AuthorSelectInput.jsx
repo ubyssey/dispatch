@@ -56,7 +56,7 @@ class AuthorSelectInputComponent extends React.Component {
         createValue={this.createAuthor}
         fetchResults={this.fetchPersons}
         attribute='full_name'
-        editMessage='Edit authors' />
+        editMessage={this.props.authors.length ? 'Edit authors' : 'Add authors'} />
     )
   }
 
