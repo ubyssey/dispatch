@@ -69,7 +69,13 @@ class SectionViewSet(viewsets.ModelViewSet):
     """
     serializer_class = SectionSerializer
 
-    queryset = Section.objects.all()
+    def get_queryset(self):
+        queryset = Section.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
 
     def frontpage(self, request, pk=None, slug=None):
         """
@@ -112,6 +118,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(section_id=section)
         if topic is not None:
             queryset = queryset.filter(topic_id=topic)
+
+        for a in queryset:
+            print a.headline
 
         return queryset
 
