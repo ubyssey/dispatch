@@ -174,15 +174,21 @@ export default class MultiSelectInput extends React.Component {
   }
 
   renderNoResults() {
-    return (
-      <li
-        className='c-input--multi-select__result'
-        onClick={() => this.createValue(this.state.query.trim()) }>
-        <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-add'></span>
-        <span className='c-input--multi-select__result__text'>{`Create "${this.state.query.trim()}"`}</span>
-        <span className='c-input--multi-select__result__icon'></span>
-      </li>
-    )
+    if (this.props.createValue) {
+      return (
+        <li
+          className='c-input--multi-select__result'
+          onClick={() => this.createValue(this.state.query.trim()) }>
+          <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-add'></span>
+          <span className='c-input--multi-select__result__text'>{`Create "${this.state.query.trim()}"`}</span>
+          <span className='c-input--multi-select__result__icon'></span>
+        </li>
+      )
+    } else {
+      return (
+        <li className='c-input--multi-select__result'>No results</li>
+      )
+    }
   }
 
   renderMenu() {

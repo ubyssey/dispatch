@@ -95,8 +95,8 @@ var DispatchAPI = {
     }
   },
   sections: {
-    fetchSections: () => {
-      return getRequest('sections')
+    fetchSections: (token, query) => {
+      return getRequest('sections', null, query, token)
     }
   },
   articles: {

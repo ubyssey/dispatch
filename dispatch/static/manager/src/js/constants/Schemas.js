@@ -9,7 +9,8 @@ export const articleSchema = new Schema('articles')
 
 articleSchema.define({
   authors: arrayOf(personSchema),
-  topic: topicSchema
+  topic: topicSchema,
+  section: sectionSchema
 })
 
 // Image Schema
