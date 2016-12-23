@@ -14,6 +14,11 @@ label.pt-label .pt-input, label.pt-label .pt-select {
 .c-input--multi-select {
   // Structure
   margin-top: 10px;
+
+  .pt-popover {
+    // Structure
+    margin-bottom: 1rem;
+  }
 }
 
 .c-input--multi-select__values {

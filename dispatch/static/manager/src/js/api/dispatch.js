@@ -139,6 +139,14 @@ var DispatchAPI = {
     createTopic: (token, name) => {
       return postRequest('topics', null, {name: name}, token)
     }
+  },
+  tags: {
+    fetchTags: (token, query) => {
+      return getRequest('tags', null, query, token)
+    },
+    createTag: (token, name) => {
+      return postRequest('tags', null, {name: name}, token)
+    }
   }
 }
 

@@ -221,7 +221,10 @@ export default class MultiSelectInput extends React.Component {
         <ul className='c-input--multi-select__values'>
           {selected}
         </ul>
-        <Popover content={this.renderMenu()} position={Position.BOTTOM_LEFT}>
+        <Popover
+          content={this.renderMenu()}
+          inline={true}
+          position={Position.BOTTOM_LEFT}>
           <a href="#">{this.props.editMessage}</a>
         </Popover>
       </div>

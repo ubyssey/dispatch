@@ -48,3 +48,7 @@ export const EDITOR_REMOVE_LINK = 'EDITOR_REMOVE_LINK'
 // Topic actions
 export const FETCH_TOPICS = 'FETCH_TOPICS'
 export const CREATE_TOPIC = 'CREATE_TOPIC'
+
+// Tag actions
+export const FETCH_TAGS = 'FETCH_TAGS'
+export const CREATE_TAG = 'CREATE_TAG'

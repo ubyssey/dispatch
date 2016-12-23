@@ -10,10 +10,12 @@
 .u-container-main {
   flex: 1;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .u-container-editor {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  flex: 1;
 }
