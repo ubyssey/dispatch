@@ -18,15 +18,15 @@ class AuthorSelectInputComponent extends React.Component {
   }
 
   addAuthor(authorId) {
-    let newAuthors = R.append(authorId, this.props.authors)
+    let newAuthors = R.append(authorId, this.props.selected)
     this.props.update(newAuthors)
   }
 
   removeAuthor(authorId) {
     let newAuthors = R.remove(
-      R.findIndex(R.equals(authorId), this.props.authors),
+      R.findIndex(R.equals(authorId), this.props.selected),
       1,
-      this.props.authors
+      this.props.selected
     )
     this.props.update(newAuthors)
   }
@@ -48,7 +48,7 @@ class AuthorSelectInputComponent extends React.Component {
   render() {
     return (
       <MultiSelectInput
-        selected={this.props.authors}
+        selected={this.props.selected}
         results={this.props.persons.data}
         entities={this.props.entities.persons}
         addValue={this.addAuthor}
@@ -56,7 +56,7 @@ class AuthorSelectInputComponent extends React.Component {
         createValue={this.createAuthor}
         fetchResults={this.fetchPersons}
         attribute='full_name'
-        editMessage={this.props.authors.length ? 'Edit authors' : 'Add authors'} />
+        editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
   }
 
