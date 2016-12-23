@@ -5,6 +5,7 @@ import { Label, InputGroup } from '@blueprintjs/core'
 
 import SectionSelectInput from './SectionSelectInput.jsx'
 import AuthorSelectInput from './AuthorSelectInput.jsx'
+import TagSelectInput from './TagSelectInput.jsx'
 import TopicSelectInput from './TopicSelectInput.jsx'
 
 export default function ArticleBasicFields(props) {
@@ -28,8 +29,14 @@ export default function ArticleBasicFields(props) {
 
       <FormInput label='Authors'>
         <AuthorSelectInput
-          authors={props.authors}
+          selected={props.authors}
           update={ authors => props.update('authors', authors) } />
+      </FormInput>
+
+      <FormInput label='Tags'>
+        <TagSelectInput
+          selected={props.tags}
+          update={ tags => props.update('tags', tags) } />
       </FormInput>
 
       <FormInput label='Topic'>

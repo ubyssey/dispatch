@@ -10,13 +10,22 @@
     right: -600px;
   }
 
+  // Extras
   box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
   transition: right 0.3s ease-in-out;
 
   div.fieldset {
     div.col:first-child {
+      // Structure
       margin-right: 15px;
     }
+  }
+
+  .pt-tabs {
+    // Structure
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 }
 
@@ -39,4 +48,8 @@
 .c-article-sidebar__panel {
   // Structure
   margin-top: 0;
+  flex: 1 0;
+
+  // Extras
+  overflow-y: scroll;
 }

@@ -22,6 +22,7 @@ export default function ArticleSidebar(props) {
             update={props.update}
             section={props.article.section}
             authors={props.article.authors || []}
+            tags={props.article.tags || []}
             topic={props.article.topic}
             slug={props.article.slug}
             snippet={props.article.snippet} />

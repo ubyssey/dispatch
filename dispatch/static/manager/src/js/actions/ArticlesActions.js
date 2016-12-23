@@ -48,6 +48,9 @@ export function saveArticle(token, articleId, data) {
   // Set author_ids to authors
   data.author_ids = data.authors
 
+  // Set tag_ids to tags
+  data.tag_ids = data.tags
+
   // Set topic_id to topic
   data.topic_id = data.topic
 
@@ -70,6 +73,9 @@ export function createArticle(token, data) {
 
   // Set author_ids to authors
   data.author_ids = data.authors
+
+  // Set tag_ids to tags
+  data.tag_ids = data.tags
 
   // Set topic_id to topic
   data.topic_id = data.topic
