@@ -186,3 +186,14 @@ label.pt-label .pt-input, label.pt-label .pt-select {
   // Text
   font-weight: $font-weight-bold;
 }
+
+// Component: ImageInput
+
+.c-input--image {
+  img {
+    // Structure
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+}

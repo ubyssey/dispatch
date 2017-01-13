@@ -54,6 +54,10 @@ export function saveArticle(token, articleId, data) {
   // Set topic_id to topic
   data.topic_id = data.topic
 
+  // Set featured_image_json and delete featured_image
+  data.featured_image_json = data.featured_image
+  delete data.featured_image
+
   return {
     type: types.SAVE_ARTICLE,
     payload: DispatchAPI.articles.saveArticle(token, articleId, data)
@@ -79,6 +83,10 @@ export function createArticle(token, data) {
 
   // Set topic_id to topic
   data.topic_id = data.topic
+
+  // Set featured_image_json and delete featured_image
+  data.featured_image_json = data.featured_image
+  delete data.featured_image
 
   return {
     type: types.CREATE_ARTICLE,

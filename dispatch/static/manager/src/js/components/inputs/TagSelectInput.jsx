@@ -2,9 +2,9 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 
-import { MultiSelectInput } from './inputs'
+import MultiSelectInput from './MultiSelectInput.jsx'
 
-import * as tagsActions from '../actions/TagsActions'
+import * as tagsActions from '../../actions/TagsActions'
 
 class TagSelectInputComponent extends React.Component {
 

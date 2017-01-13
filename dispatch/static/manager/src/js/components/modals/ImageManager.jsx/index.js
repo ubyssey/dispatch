@@ -24,7 +24,10 @@ class ImageManagerComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchImages({ordering: '-created_at'})
+    this.props.fetchImages({
+      limit: 20,
+      ordering: '-created_at'
+    })
   }
 
   saveImage(image) {

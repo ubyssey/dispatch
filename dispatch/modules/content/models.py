@@ -96,7 +96,7 @@ class Publishable(Model):
     snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
 
     content = TextField()
-    snippet = TextField(null=True, validators=[MinLengthValidator(limit_value=200), MaxLengthValidator(limit_value=250)])
+    snippet = TextField(null=True)
 
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
@@ -362,9 +362,9 @@ class Article(Publishable):
                 else:
                     attachment = ImageAttachment()
                 attachment.caption = node['data']['caption']
+                attachment.credit = node['data']['credit']
                 attachment.image = image
                 attachment.article = self
-                attachment.set_custom_credit(node['data'])
                 attachment.save()
                 node['data'] = {
                     'attachment_id': attachment.id,
@@ -374,12 +374,14 @@ class Article(Publishable):
 
     def save_featured_image(self, data):
         attachment = ImageAttachment()
-        attachment.image_id = data['id']
-        if 'caption' in data:
-            attachment.caption = data['caption']
-        attachment.set_custom_credit(data)
+
+        attachment.image_id = data['image']
+        attachment.caption = data['caption']
+        attachment.credit = data['credit']
+
         attachment.article = self
         attachment.save()
+
         self.featured_image = attachment
 
     def save_related(self, data):
@@ -390,31 +392,25 @@ class Article(Publishable):
         if authors:
             self.save_authors(authors)
 
-    def save_tags(self, tags):
+    def save_tags(self, tag_ids):
         self.tags.clear()
-        for tag in tags.split(","):
+        for tag_id in tag_ids:
             try:
-                ins = Tag.objects.get(id=int(tag))
-                self.tags.add(ins)
+                tag = Tag.objects.get(id=int(tag_id))
+                self.tags.add(tag)
             except Tag.DoesNotExist:
                 pass
 
     def save_topic(self, topic_id):
-        try:
-            topic = Topic.objects.get(id=int(topic_id))
-            topic.update_timestamp()
-            self.topic = topic
-        except Tag.DoesNotExist:
-            pass
-
-    def save_topics(self, topics):
-        self.topics.clear()
-        for topic in topics.split(","):
+        if topic_id is None:
+            self.topic = None
+        else:
             try:
-                ins = Topic.objects.get(name=topic)
+                topic = Topic.objects.get(id=int(topic_id))
+                topic.update_timestamp()
+                self.topic = topic
             except Topic.DoesNotExist:
-                ins = Topic.objects.create(name=topic)
-            self.topics.add(ins)
+                pass
 
     def calc_est_reading_time(self):
 
@@ -491,12 +487,15 @@ class Page(Publishable):
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image']['id']
                 image = Image.objects.get(id=image_id)
+
                 if node['data']['attachment_id']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
                 else:
                     attachment = ImageAttachment()
+
                 attachment.caption = node['data']['caption']
-                attachment.set_custom_credit(node['data'])
+                attachment.credit = node['data']['credit']
+
                 attachment.image = image
                 attachment.page = self
                 attachment.save()
@@ -509,9 +508,10 @@ class Page(Publishable):
     def save_featured_image(self, data):
         attachment = ImageAttachment()
         attachment.image_id = data['id']
-        if 'caption' in data:
-            attachment.caption = data['caption']
-        attachment.set_custom_credit(data)
+
+        attachment.caption = data['caption']
+        attachment.credit = data['credit']
+
         attachment.page = self
         attachment.save()
         self.featured_image = attachment
@@ -648,51 +648,16 @@ class Image(Model):
                     pass
 
 class ImageAttachment(Model):
-    NORMAL = 'normal'
-    FILE = 'file'
-    COURTESY = 'courtesy'
-    TYPE_CHOICES = (
-        (NORMAL, 'Normal'),
-        (FILE, 'File photo'),
-        (COURTESY, 'Courtesy photo'),
-    )
-    TYPE_DISPLAYS = (
-        (NORMAL, 'Photo'),
-        (FILE, 'File photo'),
-        (COURTESY, 'Photo courtesy'),
-    )
 
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, blank=True, null=True, related_name='page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
 
     caption = TextField(blank=True, null=True)
-    custom_credit = TextField(blank=True, null=True)
+    credit = TextField(blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
-    type = CharField(max_length=255, choices=TYPE_CHOICES, default=NORMAL, null=True)
+
     order = PositiveIntegerField(null=True)
-
-    def get_credit(self):
-        if self.custom_credit is not None:
-            return self.custom_credit
-        else:
-            try:
-                author = self.image.authors.all()[0]
-                types = dict((x, y) for x, y in self.TYPE_DISPLAYS)
-                return "%s %s" % (types[self.type], author)
-            except:
-                return None
-
-    def has_custom_credit(self):
-        return self.custom_credit is not None
-
-    def set_custom_credit(self, data):
-        if 'custom_credit' in data and data['custom_credit'] is not None:
-            if data['custom_credit'].strip() == "":
-                # Remove custom credit if blank
-                self.custom_credit = None
-            else:
-                self.custom_credit = data['custom_credit']
 
     class EmbedController:
         @staticmethod
@@ -707,7 +672,7 @@ class ImageAttachment(Model):
                 'id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'custom_credit': attach.custom_credit,
+                'credit': attach.credit,
                 'width': attach.image.width,
                 'height': attach.image.height,
             }
@@ -721,8 +686,7 @@ class ImageAttachment(Model):
                 'id': attach.id,
                 'src': attach.image.get_absolute_url(),
                 'caption': attach.caption,
-                'credit': attach.get_credit(),
-                'has_custom_credit': attach.has_custom_credit()
+                'credit': attach.credit
             })
             return template.render(c)
 

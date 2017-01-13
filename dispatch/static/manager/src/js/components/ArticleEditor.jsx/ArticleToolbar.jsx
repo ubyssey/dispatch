@@ -1,5 +1,5 @@
 import React from 'react'
-import Toolbar from './Toolbar.jsx'
+import Toolbar from '../Toolbar.jsx'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
