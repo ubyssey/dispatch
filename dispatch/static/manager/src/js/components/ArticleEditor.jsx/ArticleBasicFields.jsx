@@ -1,12 +1,12 @@
 import React from 'react'
 
-import { FormInput, TextInput, TextAreaInput } from './inputs'
+import { FormInput, TextInput, TextAreaInput } from '../inputs'
 import { Label, InputGroup } from '@blueprintjs/core'
 
-import SectionSelectInput from './SectionSelectInput.jsx'
-import AuthorSelectInput from './AuthorSelectInput.jsx'
-import TagSelectInput from './TagSelectInput.jsx'
-import TopicSelectInput from './TopicSelectInput.jsx'
+import SectionSelectInput from '../inputs/SectionSelectInput.jsx'
+import AuthorSelectInput from '../inputs/AuthorSelectInput.jsx'
+import TagSelectInput from '../inputs/TagSelectInput.jsx'
+import TopicSelectInput from '../inputs/TopicSelectInput.jsx'
 
 export default function ArticleBasicFields(props) {
 

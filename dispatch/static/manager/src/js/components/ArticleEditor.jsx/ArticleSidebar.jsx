@@ -3,6 +3,7 @@ import React from 'react'
 import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import ArticleBasicFields from './ArticleBasicFields.jsx'
+import ArticleFeaturedImage from './ArticleFeaturedImage.jsx'
 
 export default function ArticleSidebar(props) {
 
@@ -29,7 +30,10 @@ export default function ArticleSidebar(props) {
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>
-          Second panel
+          <ArticleFeaturedImage
+            update={props.update}
+            featured_image={props.article.featured_image}
+            entities={props.entities} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

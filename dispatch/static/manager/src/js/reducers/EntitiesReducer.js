@@ -24,6 +24,7 @@ export default function entitiesReducer(state = initialState, action) {
       return R.merge(state, {
         articles: R.merge(state.articles, action.payload.results.entities.articles),
         persons: R.merge(state.persons, action.payload.results.entities.persons),
+        images: R.merge(state.images, action.payload.results.entities.images),
         topics: R.merge(state.topics, action.payload.results.entities.topics),
         tags: R.merge(state.tags, action.payload.results.entities.tags)
 
@@ -41,6 +42,7 @@ export default function entitiesReducer(state = initialState, action) {
         articles: R.merge(state.articles, action.payload.entities.articles),
         article: R.merge(state.article, action.payload.entities.articles),
         persons: R.merge(state.persons, action.payload.entities.persons),
+        images: R.merge(state.images, action.payload.entities.images),
         topics: R.merge(state.topics, action.payload.entities.topics),
         tags: R.merge(state.tags, action.payload.entities.tags)
       })
