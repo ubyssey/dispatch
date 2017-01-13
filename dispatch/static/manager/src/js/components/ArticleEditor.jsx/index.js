@@ -3,9 +3,9 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as articlesActions from '../actions/ArticlesActions'
-import * as editorActions from '../actions/EditorActions'
-import * as modalActions from '../actions/ModalActions'
+import * as articlesActions from '../../actions/ArticlesActions'
+import * as editorActions from '../../actions/EditorActions'
+import * as modalActions from '../../actions/ModalActions'
 
 import ArticleToolbar from './ArticleToolbar.jsx'
 import ArticleContentEditor from './ArticleContentEditor.jsx'
@@ -43,12 +43,19 @@ class ArticleEditorComponent extends React.Component {
   }
 
   getArticle() {
+    var article
     if (this.props.isNew) {
-      return this.props.entities.article[NEW_ARTICLE_ID]
+      article = this.props.entities.article[NEW_ARTICLE_ID]
     } else {
-      return this.props.entities.article[this.props.articleId] ||
+      article = this.props.entities.article[this.props.articleId] ||
         this.props.entities.articles[this.props.articleId] || false
     }
+
+    if (!article) {
+      return false
+    }
+
+    return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
   }
 
   handleSave() {
@@ -98,6 +105,7 @@ class ArticleEditorComponent extends React.Component {
               closeModal={this.props.closeModal} />
             <ArticleSidebar
               article={article}
+              entities={this.props.entities}
               update={this.handleUpdate} />
           </div>
         </div>
@@ -110,9 +118,11 @@ class ArticleEditorComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.article,
+    editorState: state.app.editor,
     entities: {
       articles: state.app.entities.articles,
-      article: state.app.entities.article
+      article: state.app.entities.article,
+      images: state.app.entities.images
     },
     token: state.app.auth.token
   }

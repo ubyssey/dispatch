@@ -2,9 +2,9 @@ import React from 'react'
 
 // import QuillEditor from './QuillEditor.jsx'
 import ArticleHeadline from './ArticleHeadline.jsx'
-import ContentEditor from './ContentEditor.jsx'
+import ContentEditor from '../ContentEditor.jsx'
 
-import { ImageEmbed } from './ContentEditor.jsx/embeds'
+import { ImageEmbed } from '../ContentEditor.jsx/embeds'
 
 const embeds = [
   ImageEmbed
@@ -19,7 +19,7 @@ export default class ArticleContentEditor extends React.Component {
   }
 
   handleContentUpdate(contentState) {
-    this.props.onUpdate('_content', contentState)
+    //this.props.onUpdate('_content', contentState)
   }
 
   render() {

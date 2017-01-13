@@ -2,9 +2,9 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 
-import { MultiSelectInput } from './inputs'
+import MultiSelectInput from './MultiSelectInput.jsx'
 
-import * as personsActions from '../actions/PersonsActions'
+import * as personsActions from '../../actions/PersonsActions'
 
 class AuthorSelectInputComponent extends React.Component {
 

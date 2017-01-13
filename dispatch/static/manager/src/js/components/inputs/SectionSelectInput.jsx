@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { MultiSelectInput } from './inputs'
+import MultiSelectInput from './MultiSelectInput.jsx'
 
-import * as sectionsActions from '../actions/SectionsActions'
+import * as sectionsActions from '../../actions/SectionsActions'
 
 class SectionSelectInputComponent extends React.Component {
 

@@ -34,6 +34,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
     filename = serializers.CharField(read_only=True)
+    width = serializers.IntegerField()
+    height = serializers.IntegerField()
 
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
 
@@ -48,6 +50,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'thumb',
             'created_at',
+            'width',
+            'height'
         )
 
     def update(self, instance, validated_data):
@@ -89,27 +93,14 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the ImageAttachment model without including full Image instance.
     """
-    id = serializers.IntegerField(source='image.id')
-    attachment_id = serializers.IntegerField(source='id', read_only=True)
-    url = serializers.CharField(source='image.get_absolute_url', read_only=True)
-    thumb = serializers.CharField(source='image.get_thumbnail_url', read_only=True)
-    credit = serializers.CharField(source='get_credit')
-    width = serializers.IntegerField(source='image.width')
-    height = serializers.IntegerField(source='image.height')
+    image = ImageSerializer()
 
     class Meta:
         model = ImageAttachment
         fields = (
-            'id',
-            'attachment_id',
-            'url',
-            'thumb',
+            'image',
             'caption',
-            'credit',
-            'custom_credit',
-            'type',
-            'width',
-            'height'
+            'credit'
         )
 
 class ImageGallerySerializer(serializers.HyperlinkedModelSerializer):
@@ -218,7 +209,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     authors_string = serializers.CharField(source='get_author_string',read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)
-    tag_ids = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    tag_ids = serializers.ListField(write_only=True, required=False, child=serializers.IntegerField())
 
     topic = TopicSerializer(read_only=True)
     topic_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
@@ -327,17 +318,15 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_authors(authors)
 
         # If there are tags, save them
-        tags = validated_data.get('tag_ids', False)
-        if tags:
-            instance.save_tags(tags)
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
+            instance.save_tags(tag_ids)
 
         # If there is a topic, save it
-        topic = validated_data.get('topic_id', False)
+        topic_id = validated_data.get('topic_id', False)
 
-        print topic
-        
-        if topic != False:
-            instance.save_topic(topic)
+        if topic_id != False:
+            instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image', 'topic', 'est_reading_time'], revision=False)
