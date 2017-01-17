@@ -6,6 +6,7 @@ import InputGroup from './InputGroup.jsx'
 import FormInput from './FormInput.jsx'
 import MultiSelectInput from './MultiSelectInput.jsx'
 import TextAreaInput from './TextAreaInput.jsx'
+import SelectInput from './SelectInput.jsx'
 
 export {
   Button as Button,
@@ -15,5 +16,6 @@ export {
   InputGroup as InputGroup,
   FormInput as FormInput,
   MultiSelectInput as MultiSelectInput,
-  TextAreaInput as TextAreaInput
+  TextAreaInput as TextAreaInput,
+  SelectInput as SelectInput
 }
