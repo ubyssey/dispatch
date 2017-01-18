@@ -12,9 +12,9 @@ export default function SelectInput(props) {
 
   return (
     <div className='pt-select'>
-      <select 
+      <select
         value={props.selected}
-        onChange={e => props.onChange(e.target.value)}>{options}</select>
+        onChange={props.onChange}>{options}</select>
     </div>
   )
 }

@@ -7,6 +7,7 @@ const initialState = {
   sections: {},
   images: {},
   image: {},
+  templates: {},
   persons: {},
   topics: {},
   tags: {}
@@ -26,8 +27,8 @@ export default function entitiesReducer(state = initialState, action) {
         persons: R.merge(state.persons, action.payload.results.entities.persons),
         images: R.merge(state.images, action.payload.results.entities.images),
         topics: R.merge(state.topics, action.payload.results.entities.topics),
-        tags: R.merge(state.tags, action.payload.results.entities.tags)
-
+        tags: R.merge(state.tags, action.payload.results.entities.tags),
+        templates: R.merge(state.templates, action.payload.results.entities.templates)
       })
 
     // Article
@@ -44,7 +45,8 @@ export default function entitiesReducer(state = initialState, action) {
         persons: R.merge(state.persons, action.payload.entities.persons),
         images: R.merge(state.images, action.payload.entities.images),
         topics: R.merge(state.topics, action.payload.entities.topics),
-        tags: R.merge(state.tags, action.payload.entities.tags)
+        tags: R.merge(state.tags, action.payload.entities.tags),
+        templates: R.merge(state.templates, action.payload.entities.templates)
       })
 
     // Sections
@@ -74,6 +76,17 @@ export default function entitiesReducer(state = initialState, action) {
     case types.UPDATE_IMAGE:
       return R.merge(state, {
         image: R.merge(state.image, action.payload.entities.images)
+      })
+
+    // Templates
+    case types.FETCH_TEMPLATE + '_FULFILLED':
+      return R.merge(state, {
+        templates: R.merge(state.templates, action.payload.entities.templates)
+      })
+      
+    case types.FETCH_TEMPLATES + '_FULFILLED':
+      return R.merge(state, {
+        templates: R.merge(state.templates, action.payload.results.entities.templates)
       })
 
     // Persons
