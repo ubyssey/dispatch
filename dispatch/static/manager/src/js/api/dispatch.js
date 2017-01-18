@@ -124,6 +124,14 @@ var DispatchAPI = {
       return patchRequest('images', imageId, data, token)
     }
   },
+  templates: {
+    fetchTemplate: (token, templateId) => {
+      return getRequest('templates', templateId, null, token)
+    },
+    fetchTemplates: (token, query) => {
+      return getRequest('templates', null, query, token)
+    }
+  },
   persons: {
     fetchPersons: (token, query) => {
       return getRequest('people', null, query, token)

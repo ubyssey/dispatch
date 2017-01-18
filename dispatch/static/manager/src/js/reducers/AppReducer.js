@@ -5,6 +5,7 @@ import authReducer from './AuthReducer'
 import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
 import imagesReducer from './ImagesReducer'
+import templatesReducer from './TemplatesReducer'
 import personsReducer from './PersonsReducer'
 import topicsReducer from './TopicsReducer'
 import tagsReducer from './TagsReducer'
@@ -17,6 +18,7 @@ export default combineReducers({
   sections: sectionsReducer,
   articles: articlesReducer,
   images: imagesReducer,
+  templates: templatesReducer,
   persons: personsReducer,
   topics: topicsReducer,
   tags: tagsReducer,

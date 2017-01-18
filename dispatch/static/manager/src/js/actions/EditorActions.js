@@ -22,6 +22,7 @@ export function editorKeyCommand(command) {
 }
 
 export function insertLink(url, selection) {
+  console.log('INSERT LINK', url, selection)
   return {
     type: types.EDITOR_INSERT_LINK,
     url: url,

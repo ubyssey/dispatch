@@ -219,6 +219,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
 
+    template = JSONField(required=False, source='get_template')
+    template_id = serializers.CharField(write_only=True)
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -250,20 +252,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'status',
             'template',
+            'template_id',
             'template_fields',
             'seo_keyword',
             'seo_description',
             'est_reading_time'
         )
-
-    def __init__(self, *args, **kwargs):
-        # Instantiate the superclass normally
-        super(ArticleSerializer, self).__init__(*args, **kwargs)
-
-        template_fields = self.context['request'].query_params.get('template_fields', False)
-
-        if not template_fields:
-            self.fields.pop('template_fields')
 
     def create(self, validated_data):
 
@@ -285,7 +279,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
-        instance.template = validated_data.get('template', instance.template)
+        instance.template = validated_data.get('template_id', instance.template)
         instance.status = status
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
@@ -330,7 +324,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image', 'topic', 'est_reading_time'], revision=False)
-
 
         if instance.parent:
             perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)

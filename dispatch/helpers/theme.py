@@ -8,7 +8,7 @@ class ThemeHelper():
         return settings.DISPATCH_PROJECT_MODULE
 
     @staticmethod
-    def get_theme_templates(theme_name=False):
+    def get_theme_templates(theme_name=None):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:
@@ -19,7 +19,7 @@ class ThemeHelper():
         return templates
 
     @staticmethod
-    def get_theme_template(theme_name=False, template_slug=None):
+    def get_theme_template(theme_name=None, template_slug=None):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:

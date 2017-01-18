@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException
@@ -553,14 +553,23 @@ class ComponentViewSet(viewsets.GenericViewSet):
 
 class TemplateViewSet(viewsets.GenericViewSet):
 
+    permission_classes = (IsAuthenticated,)
+
     def list(self, request):
-        templates = []
-        for template in ThemeHelper.get_theme_templates():
-            templates.append(template().to_json())
+
+        templates = [T().to_json() for T in ThemeHelper.get_theme_templates()]
 
         data = {
             'results': templates
         }
+
+        return Response(data)
+
+    def retrieve(self, request, pk=None):
+
+        Template = ThemeHelper.get_theme_template(template_slug=pk)
+
+        data = Template().to_json()
 
         return Response(data)
 
