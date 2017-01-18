@@ -29,7 +29,7 @@ class ArticleEditorComponent extends React.Component {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
       // Fetch article
-      this.props.fetchArticle(this.props.token, this.props.articleId)
+      this.props.fetchArticle(this.props.token, this.props.articleId, { template_fields: true })
     }
   }
 
@@ -37,7 +37,7 @@ class ArticleEditorComponent extends React.Component {
     if (!this.props.isNew) {
       // Fetch article
       if (prevProps.articleId !== this.props.articleId) {
-        this.props.fetchArticle(this.props.token, this.props.articleId)
+        this.props.fetchArticle(this.props.token, this.props.articleId, { template_fields: true })
       }
     }
   }
@@ -130,8 +130,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchArticle: (token, articleId) => {
-      dispatch(articlesActions.fetchArticle(token, articleId))
+    fetchArticle: (token, articleId, params) => {
+      dispatch(articlesActions.fetchArticle(token, articleId, params))
     },
     setArticle: (article) => {
       dispatch(articlesActions.setArticle(article))

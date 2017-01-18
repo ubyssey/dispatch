@@ -196,7 +196,10 @@ export default class MultiSelectInput extends React.Component {
     const results = R.map(this.renderResult, R.filter(this.isNotSelected, this.props.results))
 
     return (
-      <div className='c-input--multi-select__dropdown'>
+      <div
+        className='c-input--multi-select__dropdown'
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp}>
         <div className='c-input--multi-select__search'>
           <TextInput
             onChange={this.handleInputChange}
@@ -223,9 +226,10 @@ export default class MultiSelectInput extends React.Component {
         </ul>
         <Popover
           content={this.renderMenu()}
+          isOpen={this.state.isActive}
           inline={true}
           position={Position.BOTTOM_LEFT}>
-          <a href="#">{this.props.editMessage}</a>
+          <a href="#" onClick={e => this.setState({ isActive: true })}>{this.props.editMessage}</a>
         </Popover>
       </div>
     )

@@ -16,8 +16,8 @@ class BaseTemplate:
 
     def to_json(self):
         return {
+            'id': self.SLUG,
             'name': self.NAME,
-            'slug': self.SLUG,
             'fields': self.fields_as_json() if hasattr(self, 'fields') else []
         }
 

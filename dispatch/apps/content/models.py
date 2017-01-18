@@ -123,6 +123,10 @@ class Publishable(Model):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template(article_id=self.id).field_data_as_json()
 
+    def get_template(self):
+        Template = ThemeHelper.get_theme_template(template_slug=self.template)
+        return Template().to_json()
+
     def get_status(self):
         for status in self.STATUS_CHOICES:
             if status[0] == self.status:

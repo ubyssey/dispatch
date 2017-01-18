@@ -52,3 +52,7 @@ export const CREATE_TOPIC = 'CREATE_TOPIC'
 // Tag actions
 export const FETCH_TAGS = 'FETCH_TAGS'
 export const CREATE_TAG = 'CREATE_TAG'
+
+// Templates actions
+export const FETCH_TEMPLATES = 'FETCH_TEMPLATES'
+export const FETCH_TEMPLATE = 'FETCH_TEMPLATE'

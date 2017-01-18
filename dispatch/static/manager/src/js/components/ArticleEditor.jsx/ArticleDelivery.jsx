@@ -25,14 +25,14 @@ export default function ArticleDelivery(props) {
         <SelectInput
           options={IMPORTANCE_OPTIONS}
           selected={props.importance}
-          onChange={ value => props.update('importance', value) } />
+          onChange={ e => props.update('importance', e.target.value) } />
       </FormInput>
 
       <FormInput label='Reading Time'>
         <SelectInput
           options={READING_TIME_OPTIONS}
           selected={props.reading_time}
-          onChange={ value => props.update('reading_time', value) } />
+          onChange={ e => props.update('reading_time', e.target.value) } />
       </FormInput>
 
     </div>

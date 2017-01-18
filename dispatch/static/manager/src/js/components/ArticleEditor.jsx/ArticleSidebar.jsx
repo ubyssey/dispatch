@@ -5,6 +5,7 @@ import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 import ArticleBasicFields from './ArticleBasicFields.jsx'
 import ArticleFeaturedImage from './ArticleFeaturedImage.jsx'
 import ArticleDelivery from './ArticleDelivery.jsx'
+import ArticleTemplate from './ArticleTemplate.jsx'
 
 export default function ArticleSidebar(props) {
 
@@ -45,7 +46,10 @@ export default function ArticleSidebar(props) {
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>
-          Fourth panel
+          <ArticleTemplate
+            update={props.update}
+            template={props.article.template}
+            template_fields={props.article.template_fields} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

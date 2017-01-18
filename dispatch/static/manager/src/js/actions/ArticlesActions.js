@@ -58,6 +58,10 @@ export function saveArticle(token, articleId, data) {
   data.featured_image_json = data.featured_image
   delete data.featured_image
 
+  // Set template_id
+  data.template_id = data.template
+  delete data.template
+
   return {
     type: types.SAVE_ARTICLE,
     payload: DispatchAPI.articles.saveArticle(token, articleId, data)
@@ -87,6 +91,10 @@ export function createArticle(token, data) {
   // Set featured_image_json and delete featured_image
   data.featured_image_json = data.featured_image
   delete data.featured_image
+
+  // Set template_id
+  data.template_id = data.template
+  delete data.template
 
   return {
     type: types.CREATE_ARTICLE,
