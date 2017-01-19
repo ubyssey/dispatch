@@ -172,11 +172,15 @@ class Publishable(Model):
                     # If node is a dictionary, append its rendered HTML.
                     data = node['data']
                     # If node is an ad, include section/id info for DFP
-                    if(node['type'] == 'advertisement'):
+                    if node['type'] == 'advertisement':
                         data['id'] = len(html) % 1000
                         data['section'] = self.section
                         data['template'] = self.template
-                    html += embedlib.render(node['type'], data)
+
+                    if node['type'] == 'paragraph':
+                        html += "<p>%s</p>" % node['data']
+                    else:
+                        html += embedlib.render(node['type'], data)
                 else:
                     # If node isn't a dictionary, then it's assumed to be a paragraph.
                     html += "<p>%s</p>" % node
