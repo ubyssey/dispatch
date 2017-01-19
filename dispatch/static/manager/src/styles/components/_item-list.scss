@@ -23,8 +23,8 @@
 
 .c-item-list__item__cell {
   display: table-cell;
-  height: 50px;
-  line-height: 50px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   padding-left: 7px;
   border-bottom: thin solid $color-text-gray-light;
   font-size: 14px;
@@ -44,6 +44,8 @@
       color: $color-black;
       font-size: 15px;
       text-decoration: none;
+      vertical-align: bottom;
+      line-height: 1.35em;
 
       &:hover {
         text-decoration: underline;
