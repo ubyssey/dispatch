@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FormInput, SelectInput } from '../inputs'
+import { FormInput, SelectInput } from '../../inputs'
 
 const IMPORTANCE_OPTIONS = [
   { value: 1, label: 1 },
@@ -16,7 +16,7 @@ const READING_TIME_OPTIONS = [
   { value: 'evening', label: 'Evening' }
 ]
 
-export default function ArticleDelivery(props) {
+export default function DeliveryTab(props) {
 
   return (
     <div>
