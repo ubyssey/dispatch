@@ -162,7 +162,7 @@ class ProfileForm(ModelForm):
         return self.data.get('password1', False) and not self.data.get('password2', False) or not self.data.get('password1', False) and self.data.get('password2', False)
 
     def empty_passwords(self):
-        return not self.data.get('password1', False) or self.data.get('password2', False)
+        return not self.data.get('password1', False) or not self.data.get('password2', False)
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
