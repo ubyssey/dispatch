@@ -110,7 +110,7 @@ class Publishable(Model):
             self.template_fields_data = self.get_template_fields()
         return self.template_fields_data
 
-    def get_template(self):
+    def get_template_path(self):
         if self.template != 'default':
             return 'article/%s.html' % self.template
         else:
