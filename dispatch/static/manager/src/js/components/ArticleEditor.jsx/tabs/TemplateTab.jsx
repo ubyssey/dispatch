@@ -2,16 +2,21 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 
-import * as templatesActions from '../../actions/TemplatesActions'
+import * as templatesActions from '../../../actions/TemplatesActions'
 
-import { FormInput, TextInput, SelectInput } from '../inputs'
+import { FormInput, TextInput, SelectInput } from '../../inputs'
 
-import TemplateSelectInput from '../inputs/TemplateSelectInput.jsx'
+import TemplateSelectInput from '../../inputs/TemplateSelectInput.jsx'
 
 function renderField(field, value, handleOnChange) {
   switch (field.type) {
     case 'text':
-      return ( <TextInput value={value} fill={true} onChange={handleOnChange} /> )
+      return (
+        <TextInput
+          value={value}
+          fill={true}
+          placeholder={field.label}
+          onChange={handleOnChange} /> )
     case 'select':
       let options = field.options.map( option => {
         return { value: option[0], label: option[1] }
@@ -23,7 +28,7 @@ function renderField(field, value, handleOnChange) {
   }
 }
 
-class ArticleTemplateComponent extends React.Component {
+class TemplateTabComponent extends React.Component {
 
   constructor(props) {
     super(props)
@@ -113,9 +118,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const ArticleTemplate = connect(
+const TemplateTab = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ArticleTemplateComponent)
+)(TemplateTabComponent)
 
-export default ArticleTemplate
+export default TemplateTab

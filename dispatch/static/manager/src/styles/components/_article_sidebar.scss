@@ -26,6 +26,11 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    .pt-tab:not(:last-of-type) {
+      // Structure
+      margin-right: 10px;
+    }
   }
 }
 
@@ -43,6 +48,14 @@
 
   // Text
   font-weight: $font-weight-bold;
+
+  .pt-icon-standard {
+    // Structure
+    margin-right: 0.45rem;
+
+    // Text
+    color: inherit;
+  }
 }
 
 .c-article-sidebar__panel {
@@ -52,4 +65,14 @@
 
   // Extras
   overflow-y: scroll;
+}
+
+.c-article-sidebar__confirmation {
+  // Structure
+  margin-top: 1rem;
+
+  .pt-tag {
+    // Structure
+    margin-right: 0.5rem;
+  }
 }
