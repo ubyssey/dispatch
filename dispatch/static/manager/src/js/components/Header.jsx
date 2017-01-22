@@ -24,22 +24,22 @@ export default function Header(props) {
         <nav className='c-header__right'>
           <ul>
             <li className='c-header__dropdown'>
-              <a>Manage<i className='fa fa-caret-down left'></i></a>
+              <a>Manage <i className='fa fa-caret-down left'></i></a>
               <ul>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/components'><i className='fa fa-wrench right'></i>components</Link>
+                  <Link to='/components'><i className='fa fa-wrench right'></i> components</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/files'><i className='fa fa-file-o right'></i>files</Link>
+                  <Link to='/files'><i className='fa fa-file-o right'></i> files</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/pages'><i className='fa fa-file-text-o right'></i>pages</Link>
+                  <Link to='/pages'><i className='fa fa-file-text-o right'></i> pages</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/sections'><i className='fa fa-list right'></i>sections</Link>
+                  <Link to='/sections'><i className='fa fa-list right'></i> sections</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/people'><i className='fa fa-users right'></i>people</Link>
+                  <Link to='/people'><i className='fa fa-users right'></i> people</Link>
                 </li>
               </ul>
             </li>
