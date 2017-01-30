@@ -199,7 +199,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     featured_image = ImageAttachmentSerializer(read_only=True)
-    featured_image_json = JSONField(required=False, write_only=True)
+    featured_image_json = JSONField(required=False, allow_null=True, write_only=True)
 
     content = serializers.ReadOnlyField(source='get_json')
     content_json = serializers.CharField(write_only=True)
