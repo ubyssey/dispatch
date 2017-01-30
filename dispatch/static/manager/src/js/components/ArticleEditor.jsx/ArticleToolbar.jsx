@@ -3,6 +3,8 @@ import Toolbar from '../Toolbar.jsx'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
+import VersionsDropdown from './toolbar/VersionsDropdown.jsx'
+
 export default function ArticleToolbar(props) {
 
   function saveArticle(e) {
@@ -18,7 +20,9 @@ export default function ArticleToolbar(props) {
             onClick={saveArticle}>Update</AnchorButton>
           <AnchorButton>Publish</AnchorButton>
           <AnchorButton>Preview</AnchorButton>
-          <AnchorButton>Version</AnchorButton>
+          <VersionsDropdown
+            revision_id={props.article.revision_id}
+            published_version={props.article.published_version} />
         </div>
       </div>
     </Toolbar>
