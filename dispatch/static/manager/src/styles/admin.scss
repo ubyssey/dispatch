@@ -13,6 +13,7 @@
 
 // Objects
 @import 'objects/inputs';
+@import 'objects/dropdown_list';
 
 // Components
 @import 'components/header';
@@ -28,6 +29,7 @@
 @import 'components/image_manager';
 @import 'components/image_thumb';
 @import 'components/image_panel';
+@import 'components/versions_dropdown';
 
 // Embeds
 @import 'components/embeds/embed_container';

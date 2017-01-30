@@ -151,22 +151,22 @@ export default class MultiSelectInput extends React.Component {
       return (
         <li
           key={value.id}
-          className='c-input--multi-select__result c-input--multi-select__result--selected'
+          className='o-dropdown-list__item o-dropdown-list__item--selected'
           onClick={() => this.removeValue(value.id)}>
-            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-small-tick'></span>
-            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
-            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-cross'></span>
+            <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick'></span>
+            <span className='o-dropdown-list__item__text'>{value[this.props.attribute]}</span>
+            <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross'></span>
         </li>
       )
     } else {
       return (
         <li
           key={value.id}
-          className='c-input--multi-select__result'
+          className='o-dropdown-list__item'
           onClick={() => this.addValue(value.id)}>
-            <span className='c-input--multi-select__result__icon'></span>
-            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
-            <span className='c-input--multi-select__result__icon'></span>
+            <span className='o-dropdown-list__item__icon'></span>
+            <span className='o-dropdown-list__item__text'>{value[this.props.attribute]}</span>
+            <span className='o-dropdown-list__item__icon'></span>
         </li>
       )
     }
@@ -177,16 +177,16 @@ export default class MultiSelectInput extends React.Component {
     if (this.props.createValue) {
       return (
         <li
-          className='c-input--multi-select__result'
+          className='o-dropdown-list__item'
           onClick={() => this.createValue(this.state.query.trim()) }>
-          <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-add'></span>
-          <span className='c-input--multi-select__result__text'>{`Create "${this.state.query.trim()}"`}</span>
-          <span className='c-input--multi-select__result__icon'></span>
+          <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-add'></span>
+          <span className='o-dropdown-list__item__text'>{`Create "${this.state.query.trim()}"`}</span>
+          <span className='o-dropdown-list__item__icon'></span>
         </li>
       )
     } else {
       return (
-        <li className='c-input--multi-select__result'>No results</li>
+        <li className='o-dropdown-list__item'>No results</li>
       )
     }
   }
@@ -207,7 +207,7 @@ export default class MultiSelectInput extends React.Component {
             fill={true}
             placeholder='Search' />
         </div>
-        <ul className='c-input--multi-select__results'>
+        <ul className='o-dropdown-list'>
           {selected.length ? selected : null}
           {results.length ? results : this.renderNoResults()}
         </ul>
