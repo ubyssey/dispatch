@@ -1,11 +1,3 @@
-$input-height: 30px;
-$input-button-padding: 12px;
-$input-text-padding: 8px;
-$input-button-border-radius: 3px;
-$input-text-border-radius: 3px;
-$input-font-size: 13;
-$input-color-highlight: rgb(248, 248, 248);
-
 label.pt-label .pt-input, label.pt-label .pt-select {
   margin-top: 10px;
 }
@@ -24,9 +16,6 @@ label.pt-label .pt-input, label.pt-label .pt-select {
 .c-input--multi-select__values {
   // Structure
   margin-bottom: 5px;
-}
-
-.c-input--multi-select__results {
 }
 
 .c-input--multi-select__no-results {
@@ -82,50 +71,6 @@ label.pt-label .pt-input, label.pt-label .pt-select {
     opacity: 1;
   }
 }
-
-.c-input--multi-select__result {
-  // Structure
-  display: flex;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0.65rem;
-  padding-bottom: 0.65rem;
-
-  // Extra
-  cursor: pointer;
-
-  // Border
-  border-bottom: 1px solid $color-border-gray;
-
-  // Text
-  font-weight: 600;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  &:hover, &--selected {
-    background: $input-color-highlight;
-  }
-}
-
-.c-input--multi-select__result__text {
-  // Structure
-  display: block;
-  flex: 1;
-}
-
-.c-input--multi-select__result__icon {
-  // Structure
-  width: 2rem;
-  height: 16px;
-  display: block;
-
-  // Text
-  text-align: center;
-  line-height: inherit;
-}
-
 
 .c-input--multi-select__dropdown {
   // Structure
