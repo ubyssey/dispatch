@@ -383,9 +383,9 @@ class Article(Publishable):
     def save_featured_image(self, data):
         attachment = ImageAttachment()
 
-        attachment.image_id = data['image']
-        attachment.caption = data['caption']
-        attachment.credit = data['credit']
+        attachment.image_id = data.get('image')
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
 
         attachment.article = self
         attachment.save()
