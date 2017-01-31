@@ -62,9 +62,9 @@ class DefaultTheme():
 
         def _find_published(slug, section=None):
             if section is not None:
-                return Article.objects.get(slug=slug, section__slug=section, head=True, is_published=True)
+                return Article.objects.get(slug=slug, section__slug=section, is_published=True)
             else:
-                return Article.objects.get(slug=slug, head=True, is_published=True)
+                return Article.objects.get(slug=slug, is_published=True)
 
         if request.user.is_staff:
             try:
