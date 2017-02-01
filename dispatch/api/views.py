@@ -11,7 +11,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.core.actions import list_actions
+from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
@@ -580,7 +580,7 @@ class TemplateViewSet(viewsets.GenericViewSet):
 
 class ActionViewSet(viewsets.GenericViewSet):
 
-    #permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def list(self, request):
 
@@ -588,6 +588,19 @@ class ActionViewSet(viewsets.GenericViewSet):
 
         data = {
             'results': actions
+        }
+
+        return Response(data)
+
+class RecentArticlesViewSet(viewsets.GenericViewSet):
+
+    # permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+        recent = recent_articles(request.user)
+
+        data = {
+            'results': recent
         }
 
         return Response(data)
