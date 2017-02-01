@@ -11,6 +11,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
+from dispatch.apps.core.actions import list_actions
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
@@ -574,6 +575,20 @@ class TemplateViewSet(viewsets.GenericViewSet):
         Template = ThemeHelper.get_theme_template(template_slug=pk)
 
         data = Template().to_json()
+
+        return Response(data)
+
+class ActionViewSet(viewsets.GenericViewSet):
+
+    #permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+
+        actions = list_actions()
+
+        data = {
+            'results': actions
+        }
 
         return Response(data)
 
