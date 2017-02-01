@@ -594,10 +594,11 @@ class ActionViewSet(viewsets.GenericViewSet):
 
 class RecentArticlesViewSet(viewsets.GenericViewSet):
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request):
-        recent = recent_articles(request.user)
+
+        recent = recent_articles(request.user.person)
 
         data = {
             'results': recent

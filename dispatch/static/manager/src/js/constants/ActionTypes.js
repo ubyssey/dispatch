@@ -56,3 +56,7 @@ export const CREATE_TAG = 'CREATE_TAG'
 // Templates actions
 export const FETCH_TEMPLATES = 'FETCH_TEMPLATES'
 export const FETCH_TEMPLATE = 'FETCH_TEMPLATE'
+
+// Dashboard actions
+export const FETCH_ACTIONS = 'FETCH_ACTIONS'
+export const FETCH_RECENT = 'FETCH_RECENT'
