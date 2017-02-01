@@ -400,7 +400,6 @@ class ContentEditorComponent extends React.Component {
             ref='editor'
             readOnly={this.state.readOnly}
             editorState={this.props.editorState}
-            handleKeyCommand={this.props.editorKeyCommand}
             blockRendererFn={this.blockRenderer}
             blockStyleFn={blockStyleFn}
             onChange={this.onChange} />
