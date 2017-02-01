@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import * as dashboardActions from '../actions/DashboardActions'
 
-export default class DashboardPageComponent extends React.Component {
+class DashboardPageComponent extends React.Component {
 
   componentWillMount() {
 
