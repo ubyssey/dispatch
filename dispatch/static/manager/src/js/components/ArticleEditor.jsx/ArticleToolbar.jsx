@@ -7,22 +7,20 @@ import VersionsDropdown from './toolbar/VersionsDropdown.jsx'
 
 export default function ArticleToolbar(props) {
 
-  function saveArticle(e) {
-    props.actions.save()
-  }
-
   return (
     <Toolbar>
       <div className='c-article-editor__toolbar'>
         <div className='c-article-editor__toolbar__article-buttons'>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={saveArticle}>Update</AnchorButton>
+            onClick={e => props.saveArticle()}>Update</AnchorButton>
           <AnchorButton>Publish</AnchorButton>
           <AnchorButton>Preview</AnchorButton>
           <VersionsDropdown
-            revision_id={props.article.revision_id}
-            published_version={props.article.published_version} />
+            current_version={props.article.current_version}
+            published_version={props.article.published_version}
+            latest_version={props.article.latest_version}
+            fetchArticleVersion={props.fetchArticleVersion} />
         </div>
       </div>
     </Toolbar>

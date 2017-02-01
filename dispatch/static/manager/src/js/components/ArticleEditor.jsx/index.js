@@ -20,6 +20,7 @@ class ArticleEditorComponent extends React.Component {
 
     this.handleSave = this.handleSave.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.fetchArticleVersion = this.fetchArticleVersion.bind(this)
     this.toggleStyle = this.toggleStyle.bind(this)
   }
 
@@ -29,7 +30,7 @@ class ArticleEditorComponent extends React.Component {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
       // Fetch article
-      this.props.fetchArticle(this.props.token, this.props.articleId, { template_fields: true })
+      this.props.fetchArticle(this.props.token, this.props.articleId)
     }
   }
 
@@ -37,7 +38,7 @@ class ArticleEditorComponent extends React.Component {
     if (!this.props.isNew) {
       // Fetch article
       if (prevProps.articleId !== this.props.articleId) {
-        this.props.fetchArticle(this.props.token, this.props.articleId, { template_fields: true })
+        this.props.fetchArticle(this.props.token, this.props.articleId)
       }
     }
   }
@@ -78,6 +79,14 @@ class ArticleEditorComponent extends React.Component {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
+  fetchArticleVersion(version) {
+    return this.props.fetchArticle(
+      this.props.token,
+      this.props.articleId,
+      { version: version }
+    )
+  }
+
   render() {
 
     const article = this.getArticle()
@@ -92,9 +101,8 @@ class ArticleEditorComponent extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ArticleToolbar
-            actions={{
-              save: this.handleSave
-            }}
+            saveArticle={this.handleSave}
+            fetchArticleVersion={this.fetchArticleVersion}
             article={article} />
           <div className='u-container-editor'>
             <ArticleContentEditor
