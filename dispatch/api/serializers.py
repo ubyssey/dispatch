@@ -218,9 +218,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField(source='parent.id')
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
+    current_version = serializers.IntegerField(read_only=True, source='revision_id')
+    latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
     template = JSONField(required=False, source='get_template')
-    template_id = serializers.CharField(write_only=True)
+    template_id = serializers.CharField(required=False, write_only=True)
     template_fields = JSONField(required=False, source='get_template_fields')
 
     class Meta:
@@ -245,10 +247,11 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'published_at',
             'is_published',
             'published_version',
+            'current_version',
+            'latest_version',
             'importance',
             'reading_time',
             'slug',
-            'revision_id',
             'url',
             'status',
             'template',

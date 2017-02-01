@@ -1,3 +1,11 @@
+.o-dropdown-list {
+  // Structure
+  max-height: 340px;
+
+  // Extras
+  overflow-y: scroll;
+}
+
 .o-dropdown-list__item {
   // Structure
   display: flex;
