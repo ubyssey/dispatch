@@ -103,8 +103,8 @@ var DispatchAPI = {
     fetchArticles: (token, query) => {
       return getRequest('articles', null, query, token)
     },
-    fetchArticle: (token, articleId) => {
-      return getRequest('articles', articleId, null, token)
+    fetchArticle: (token, articleId, params) => {
+      return getRequest('articles', articleId, params, token)
     },
     saveArticle: (token, articleId, data) => {
       return patchRequest('articles', articleId, data, token)
