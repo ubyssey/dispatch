@@ -12,8 +12,12 @@ import {
   AtomicBlockUtils,
   Entity,
   Modifier,
-  CompositeDecorator
+  CompositeDecorator,
+  getDefaultKeyBinding,
+  KeyBindingUtil
 } from 'draft-js';
+
+const {hasCommandModifier} = KeyBindingUtil;
 
 import * as editorActions from '../../actions/EditorActions'
 
@@ -48,6 +52,16 @@ function blockStyleFn(contentBlock) {
   }
 }
 
+function keyBindingFn(e) {
+
+  // CMD + K
+  if (e.keyCode === 75 && hasCommandModifier(e)) {
+    return 'insert-link';
+  }
+
+  return getDefaultKeyBinding(e);
+}
+
 class ContentEditorComponent extends React.Component {
 
   constructor(props) {
@@ -60,6 +74,7 @@ class ContentEditorComponent extends React.Component {
     this.insertEmbed = this.insertEmbed.bind(this)
     this.removeEmbed = this.removeEmbed.bind(this)
     this.handleMouseUp = this.handleMouseUp.bind(this)
+    this.handleKeyCommand = this.handleKeyCommand.bind(this)
     this.toggleInlineStyle = this.toggleInlineStyle.bind(this)
     this.closePopover = this.closePopover.bind(this)
 
@@ -287,6 +302,16 @@ class ContentEditorComponent extends React.Component {
 
   }
 
+  handleKeyCommand(command) {
+    if (command === 'insert-link') {
+      // Implement CMD+K functionality here
+      console.log('insert link');
+      return 'handled';
+    }
+
+    return this.props.editorKeyCommand(command)
+  }
+
   blockRenderer(contentBlock) {
     const type = contentBlock.getType()
 
@@ -400,6 +425,8 @@ class ContentEditorComponent extends React.Component {
             ref='editor'
             readOnly={this.state.readOnly}
             editorState={this.props.editorState}
+            handleKeyCommand={this.handleKeyCommand}
+            keyBindingFn={keyBindingFn}
             blockRendererFn={this.blockRenderer}
             blockStyleFn={blockStyleFn}
             onChange={this.onChange} />
