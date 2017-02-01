@@ -57,7 +57,7 @@ export default class MultiSelectInput extends React.Component {
   }
 
   handleInputChange(e) {
-    e.preventDefault();
+    e.preventDefault()
     this.setState(
       {
         query: e.target.value,
