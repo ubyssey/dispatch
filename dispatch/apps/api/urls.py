@@ -20,6 +20,7 @@ router.register(r'templates', views.TemplateViewSet, base_name='templates')
 router.register(r'comments', views.CommentViewSet, base_name='comments')
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
 router.register(r'actions', views.ActionViewSet, base_name='actions')
+router.register(r'recent', views.RecentArticlesViewSet, base_name='recent')
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
