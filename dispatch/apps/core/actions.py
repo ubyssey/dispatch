@@ -40,16 +40,18 @@ def list_actions(count=25):
         if action.object_type == 'article':
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
-                if count == 1:
-                    text = '%s %s <a href="%s">%s</a>' % (action.person.full_name, SINGULAR[action.action], article.get_absolute_url(), article.headline)
-                else:
-                    text = '%s made %d %s to <a href="%s">%s</a>' % (action.person.full_name, count, PLURAL[action.action], article.get_absolute_url(), article.headline)
+                meta = {}
+                meta['author'] = action.person.full_name
+                meta['headline'] = article.headline
+                meta['article_url'] = article.get_absolute_url()
+                meta['count'] = 1 if count == 1 else count
+                meta['action'] = SINGULAR[action.action] if count == 1 else PLURAL[action.action]
             except:
                 continue
 
             results.append({
                 'icon': ICONS[action.action],
-                'text': text,
+                'meta': meta,
                 'timestamp': action.timestamp
             })
 
