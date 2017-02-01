@@ -74,6 +74,3 @@ def recent_articles(person, count=5):
             pass
 
     return articles
-
-
-
