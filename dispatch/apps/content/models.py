@@ -253,6 +253,13 @@ class Publishable(Model):
         except:
             return None
 
+    def get_latest_version(self):
+        try:
+            head = type(self).objects.get(parent=self.parent, head=True)
+            return head.revision_id
+        except:
+            return None
+
     def get_previous_revision(self):
         if self.parent == self:
             return self
