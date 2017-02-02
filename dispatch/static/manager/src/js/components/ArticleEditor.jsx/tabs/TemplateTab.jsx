@@ -40,12 +40,6 @@ class TemplateTabComponent extends React.Component {
     this.props.fetchTemplate(this.props.token, this.props.template)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.template !== nextProps.template) {
-      this.props.fetchTemplate(this.props.token, nextProps.template)
-    }
-  }
-
   handleFieldChange(field, e) {
     this.props.update(
       'template_fields',
@@ -55,31 +49,37 @@ class TemplateTabComponent extends React.Component {
 
   render() {
 
-    console.log('fields', this.props.template_fields)
+    let template = this.props.entities.templates[this.props.template] || false
 
-    return (
-      <div>
+    if (template) {
 
-        <FormInput label='Template'>
-          <TemplateSelectInput
-            selected={this.props.template}
-            update={ template => this.props.update('template', template) } />
-        </FormInput>
+      return (
+        <div>
 
-        {this.renderTemplateFields()}
+          <FormInput label='Template'>
+            <TemplateSelectInput
+              selected={this.props.template}
+              update={ template => this.props.update('template', template) } />
+          </FormInput>
 
-      </div>
-    )
+          <div>{this.renderTemplateFields(template)}</div>
+
+        </div>
+      )
+
+    } else {
+      return (
+        <div>Loading</div>
+      )
+    }
 
   }
 
-  renderTemplateFields() {
-
-    let template = this.props.entities.templates[this.props.template]
+  renderTemplateFields(template) {
 
     template.fields = template.fields || []
 
-    const fields = template.fields.map( field => {
+    return template.fields.map( field => {
       let value = this.props.template_fields[field.name]
       return (
         <FormInput key={field.name} label={field.label}>
@@ -92,11 +92,6 @@ class TemplateTabComponent extends React.Component {
       )
     })
 
-    if (template) {
-      return (<div>{fields}</div>)
-    } else {
-      return 'loading fields'
-    }
   }
 
 }

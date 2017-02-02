@@ -22,7 +22,6 @@ export function fetchTemplate(token, templateId) {
     type: types.FETCH_TEMPLATE,
     payload: DispatchAPI.templates.fetchTemplate(token, templateId)
       .then( json => {
-        console.log(json)
         return normalize(json, templateSchema)
       })
   }
