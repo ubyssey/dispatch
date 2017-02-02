@@ -58,8 +58,8 @@ export default function ArticleSidebar(props) {
             update={props.update}
             headline={props.article.headline}
             slug={props.article.slug}
-            seo_keyword={props.article.seo_keyword}
-            seo_description={props.article.seo_description} />
+            seo_keyword={props.article.seo_keyword || ''}
+            seo_description={props.article.seo_description || ''} />
         </TabPanel>
       </Tabs>
     </div>
