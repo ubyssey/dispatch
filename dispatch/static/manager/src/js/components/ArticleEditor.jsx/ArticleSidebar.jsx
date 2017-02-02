@@ -49,8 +49,8 @@ export default function ArticleSidebar(props) {
         <TabPanel className='c-article-sidebar__panel'>
           <TemplateTab
             update={props.update}
-            template={props.article.template}
-            template_fields={props.article.template_fields} />
+            template={props.article.template || 'default'}
+            template_fields={props.article.template_fields || {}} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>
@@ -58,8 +58,8 @@ export default function ArticleSidebar(props) {
             update={props.update}
             headline={props.article.headline}
             slug={props.article.slug}
-            seo_keyword={props.article.seo_keyword}
-            seo_description={props.article.seo_description} />
+            seo_keyword={props.article.seo_keyword || ''}
+            seo_description={props.article.seo_description || ''} />
         </TabPanel>
       </Tabs>
     </div>
