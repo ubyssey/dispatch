@@ -3,11 +3,9 @@ import Toolbar from '../Toolbar.jsx'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
-export default function ArticleToolbar(props) {
+import VersionsDropdown from './toolbar/VersionsDropdown.jsx'
 
-  function saveArticle(e) {
-    props.actions.save()
-  }
+export default function ArticleToolbar(props) {
 
   return (
     <Toolbar>
@@ -15,10 +13,14 @@ export default function ArticleToolbar(props) {
         <div className='c-article-editor__toolbar__article-buttons'>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={saveArticle}>Update</AnchorButton>
+            onClick={e => props.saveArticle()}>Update</AnchorButton>
           <AnchorButton>Publish</AnchorButton>
           <AnchorButton>Preview</AnchorButton>
-          <AnchorButton>Version</AnchorButton>
+          <VersionsDropdown
+            current_version={props.article.current_version}
+            published_version={props.article.published_version}
+            latest_version={props.article.latest_version}
+            fetchArticleVersion={props.fetchArticleVersion} />
         </div>
       </div>
     </Toolbar>

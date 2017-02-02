@@ -1,7 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import { Popover, Menu, MenuItem, Button, Position } from '@blueprintjs/core'
+import Dropdown from '../Dropdown.jsx'
 
 import TextInput from './TextInput.jsx'
 
@@ -11,58 +11,23 @@ export default class MultiSelectInput extends React.Component {
     super(props)
 
     this.removeValue = this.removeValue.bind(this)
-    this.pageClick = this.pageClick.bind(this)
-    this.handleMouseDown = this.handleMouseDown.bind(this)
-    this.handleMouseUp = this.handleMouseUp.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-
     this.renderSelected = this.renderSelected.bind(this)
     this.renderResult = this.renderResult.bind(this)
     this.isNotSelected = this.isNotSelected.bind(this)
 
-    this.mouseIsDownOnField = false;
-
     this.state = {
-      isActive: false,
       query: ''
     }
   }
 
   componentDidMount() {
-    // Add page click event listener
-    window.addEventListener('mousedown', this.pageClick, false)
-
     this.fetchResults()
   }
 
-  componentWillUnmount() {
-    // Remove page click event listener
-    window.removeEventListener('mousedown', this.pageClick)
-  }
-
-  pageClick(e) {
-    if (this.mouseIsDownOnField) {
-      this.setState({ isActive: true })
-    } else {
-      this.setState({ isActive: false })
-    }
-  }
-
-  handleMouseDown() {
-    this.mouseIsDownOnField = true
-  }
-
-  handleMouseUp() {
-    this.mouseIsDownOnField = false
-  }
-
   handleInputChange(e) {
-    e.preventDefault();
+    e.preventDefault()
     this.setState(
-      {
-        query: e.target.value,
-        isActive: true
-      },
+      { query: e.target.value },
       this.fetchResults
     )
   }
@@ -120,10 +85,8 @@ export default class MultiSelectInput extends React.Component {
   }
 
   closeDropdown() {
-    this.setState({
-      isActive: false,
-      query: ''
-    })
+    this.refs.dropdown.close()
+    this.setState({ query: '' })
   }
 
   renderSelected(id) {
@@ -151,22 +114,22 @@ export default class MultiSelectInput extends React.Component {
       return (
         <li
           key={value.id}
-          className='c-input--multi-select__result c-input--multi-select__result--selected'
+          className='o-dropdown-list__item o-dropdown-list__item--selected'
           onClick={() => this.removeValue(value.id)}>
-            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-small-tick'></span>
-            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
-            <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-cross'></span>
+            <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick'></span>
+            <span className='o-dropdown-list__item__text'>{value[this.props.attribute]}</span>
+            <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross'></span>
         </li>
       )
     } else {
       return (
         <li
           key={value.id}
-          className='c-input--multi-select__result'
+          className='o-dropdown-list__item'
           onClick={() => this.addValue(value.id)}>
-            <span className='c-input--multi-select__result__icon'></span>
-            <span className='c-input--multi-select__result__text'>{value[this.props.attribute]}</span>
-            <span className='c-input--multi-select__result__icon'></span>
+            <span className='o-dropdown-list__item__icon'></span>
+            <span className='o-dropdown-list__item__text'>{value[this.props.attribute]}</span>
+            <span className='o-dropdown-list__item__icon'></span>
         </li>
       )
     }
@@ -177,21 +140,21 @@ export default class MultiSelectInput extends React.Component {
     if (this.props.createValue) {
       return (
         <li
-          className='c-input--multi-select__result'
+          className='o-dropdown-list__item'
           onClick={() => this.createValue(this.state.query.trim()) }>
-          <span className='c-input--multi-select__result__icon pt-icon-standard pt-icon-add'></span>
-          <span className='c-input--multi-select__result__text'>{`Create "${this.state.query.trim()}"`}</span>
-          <span className='c-input--multi-select__result__icon'></span>
+          <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-add'></span>
+          <span className='o-dropdown-list__item__text'>{`Create "${this.state.query.trim()}"`}</span>
+          <span className='o-dropdown-list__item__icon'></span>
         </li>
       )
     } else {
       return (
-        <li className='c-input--multi-select__result'>No results</li>
+        <li className='o-dropdown-list__item'>No results</li>
       )
     }
   }
 
-  renderMenu() {
+  renderDropdown() {
     const selected = R.map(this.renderResult, this.props.selected)
     const results = R.map(this.renderResult, R.filter(this.isNotSelected, this.props.results))
 
@@ -202,12 +165,12 @@ export default class MultiSelectInput extends React.Component {
         onMouseUp={this.handleMouseUp}>
         <div className='c-input--multi-select__search'>
           <TextInput
-            onChange={this.handleInputChange}
+            onChange={e => this.handleInputChange(e)}
             value={this.state.query}
             fill={true}
             placeholder='Search' />
         </div>
-        <ul className='c-input--multi-select__results'>
+        <ul className='o-dropdown-list'>
           {selected.length ? selected : null}
           {results.length ? results : this.renderNoResults()}
         </ul>
@@ -224,13 +187,14 @@ export default class MultiSelectInput extends React.Component {
         <ul className='c-input--multi-select__values'>
           {selected}
         </ul>
-        <Popover
-          content={this.renderMenu()}
-          isOpen={this.state.isActive}
-          inline={true}
-          position={Position.BOTTOM_LEFT}>
-          <a href="#" onClick={e => this.setState({ isActive: true })}>{this.props.editMessage}</a>
-        </Popover>
+        <Dropdown
+          ref='dropdown'
+          content={this.renderDropdown()}
+          inline={true}>
+          <a onClick={e => this.refs.dropdown.open()}>
+            {this.props.editMessage}
+          </a>
+        </Dropdown>
       </div>
     )
   }
