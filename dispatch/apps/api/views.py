@@ -99,28 +99,34 @@ class ArticleViewSet(viewsets.ModelViewSet):
         """
 
         if self.request.user.is_authenticated():
-            queryset = Article.objects.filter(head=True)
+            queryset = Article.objects
         else:
-            queryset = Article.objects.filter(head=True, is_published=True)
+            queryset = Article.objects.filter(is_published=True)
 
-        queryset = queryset.order_by('-published_at')
+        queryset = queryset.order_by('-updated_at')
 
         tag = self.request.query_params.get('tag', None)
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
         topic = self.request.query_params.get('topic', None)
+        version = self.request.query_params.get('version', None)
 
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
+
         if q is not None:
             queryset = queryset.filter(headline__icontains=q)
+
         if section is not None:
             queryset = queryset.filter(section_id=section)
+
         if topic is not None:
             queryset = queryset.filter(topic_id=topic)
 
-        for a in queryset:
-            print a.headline
+        if version is not None:
+            queryset = queryset.filter(revision_id=version)
+        else:
+            queryset = queryset.filter(head=True)
 
         return queryset
 
@@ -129,11 +135,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         queryset = self.filter_queryset(self.get_queryset())
 
-        drafts = self.request.query_params.get('drafts', False)
-
-        if not drafts:
-            queryset = queryset.filter(is_published=True)
-
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -141,6 +142,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
+
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
@@ -168,10 +170,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):
         revision_id = request.query_params.get('revision_id', None)
+
         filter_kwargs = {
             'parent_id': parent_id,
             'revision_id': revision_id,
         }
+
         queryset = Article.objects.all()
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
