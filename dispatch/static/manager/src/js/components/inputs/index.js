@@ -1,12 +1,12 @@
-import Button from './Button.jsx'
-import LinkButton from './LinkButton.jsx'
-import TextInput from './TextInput.jsx'
-import ImageInput from './ImageInput.jsx'
-import InputGroup from './InputGroup.jsx'
-import FormInput from './FormInput.jsx'
-import MultiSelectInput from './MultiSelectInput.jsx'
-import TextAreaInput from './TextAreaInput.jsx'
-import SelectInput from './SelectInput.jsx'
+import Button from './Button'
+import LinkButton from './LinkButton'
+import TextInput from './TextInput'
+import ImageInput from './ImageInput'
+import InputGroup from './InputGroup'
+import FormInput from './FormInput'
+import MultiSelectInput from './MultiSelectInput'
+import TextAreaInput from './TextAreaInput'
+import SelectInput from './SelectInput'
 
 export {
   Button as Button,
