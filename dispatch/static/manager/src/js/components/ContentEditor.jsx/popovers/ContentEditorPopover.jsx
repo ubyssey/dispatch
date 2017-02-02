@@ -9,6 +9,11 @@ export default class ContentEditorPopover extends React.Component {
 
   constructor(props) {
     super(props)
+
+
+    this.state ={
+      showLinkInput : false
+    }
   }
 
   toggleStyle(e, style) {
@@ -18,17 +23,17 @@ export default class ContentEditorPopover extends React.Component {
   }
 
   showLinkInput(e) {
-    console.log("showlink input should be false: "+this.props.isLinkInputActive())
     this.props.focusEditor()
-    //this.setState({ showLinkInput: true })
-    this.props.openLinkInput()
-    console.log("should be true: "+ this.props.isLinkInputActive())
+    this.setState({ showLinkInput: true })
   }
 //back={ e => this.setState({ showLinkInput: false})}
   renderLinkInput() {
     return (
       <ContentEditorLinkEditor
-        back={this.props.closeLinkInput}
+        back={e => {
+          this.setState({ showLinkInput: false})
+          this.props.closeLinkInput()
+        }}
         close={this.props.close}
         insertLink={this.props.insertLink}
         removeLink={this.props.removeLink} />
@@ -78,14 +83,14 @@ export default class ContentEditorPopover extends React.Component {
 
   render() {
     //const style = this.state.showLinkInput ? {width: LINK_INPUT_WIDTH} : {}
-    const style = this.props.isLinkInputActive() ? {width: LINK_INPUT_WIDTH} : {}
+    const style = this.props.isLinkInputActive() || this.state.showLinkInput? {width: LINK_INPUT_WIDTH} : {}
     console.log("Rendering the popover with " +this.props.isLinkInputActive())
     return (
       <div
         className='c-content-editor__popover'
         onMouseUp={e => e.stopPropagation()}
         style={style}>
-        { this.props.isLinkInputActive() ? this.renderLinkInput() : this.renderButtons() }
+        { this.state.showLinkInput || this.props.isLinkInputActive() ? this.renderLinkInput() : this.renderButtons() }
     </div>
     )
   }

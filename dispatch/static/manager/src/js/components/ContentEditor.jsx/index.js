@@ -297,7 +297,10 @@ class ContentEditorComponent extends React.Component {
 
       } else {
         this.setState({ showPopover: false }, this.refs.editor.focus)
+        this.setState({isLinkInputActive: false})
+
       }
+
 
     }, 1)
 
@@ -307,7 +310,6 @@ class ContentEditorComponent extends React.Component {
     if (command === 'insert-link') {
       // Implement CMD+K functionality here
       this.setState({isLinkInputActive: true})
-      console.log('insert link');
       return 'handled';
     }
 
@@ -384,7 +386,6 @@ class ContentEditorComponent extends React.Component {
 
   closePopover() {
     this.setState({ showPopover: false }, this.focusEditor)
-    this.setState({isLinkInputActive: false})
   }
 
   renderPopover() {
@@ -394,8 +395,7 @@ class ContentEditorComponent extends React.Component {
         removeLink={this.props.removeLink}
         toggleStyle={this.toggleInlineStyle}
         isLinkInputActive={() => this.state.isLinkInputActive}
-        openLinkInput={() => this.setState({isLinkInputActive : true})}
-        closeLinkInput={()=> this.setState({isLinkInputActive : false})}
+        closeLinkInput={() => this.setState({isLinkInputActive : false})}
         focusEditor={() => this.focusEditor() }
         close={this.closePopover} />
     )
