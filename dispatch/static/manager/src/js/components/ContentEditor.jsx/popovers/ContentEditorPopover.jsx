@@ -82,9 +82,7 @@ export default class ContentEditorPopover extends React.Component {
   }
 
   render() {
-    //const style = this.state.showLinkInput ? {width: LINK_INPUT_WIDTH} : {}
     const style = this.props.isLinkInputActive() || this.state.showLinkInput? {width: LINK_INPUT_WIDTH} : {}
-    console.log("Rendering the popover with " +this.props.isLinkInputActive())
     return (
       <div
         className='c-content-editor__popover'
@@ -94,7 +92,4 @@ export default class ContentEditorPopover extends React.Component {
     </div>
     )
   }
-
 }
-//        { this.props.isLinkInputActive ? this.renderLinkInput() : this.renderButtons() }
-//        { this.state.showLinkInput ? this.renderLinkInput() : this.renderButtons() }
