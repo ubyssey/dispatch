@@ -5,7 +5,7 @@ import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-import ContentStateHelper from '../components/ContentEditor.jsx/ContentStateHelper'
+import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
 
 export function fetchArticles(token, query) {
   return {
