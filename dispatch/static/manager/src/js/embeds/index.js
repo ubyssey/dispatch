@@ -1,9 +1,9 @@
-import EditorAdvertisement from './EditorAdvertisement.jsx'
-import EditorCode from './EditorCode.jsx'
-import EditorGallery from './EditorGallery.jsx'
-import EditorImage from './EditorImage.jsx'
-import EditorPullQuote from './EditorPullQuote.jsx'
-import EditorVideo from './EditorVideo.jsx'
+import EditorAdvertisement from './EditorAdvertisement'
+import EditorCode from './EditorCode'
+import EditorGallery from './EditorGallery'
+import EditorImage from './EditorImage'
+import EditorPullQuote from './EditorPullQuote'
+import EditorVideo from './EditorVideo'
 
 export {
   EditorAdvertisement as Advertisement,
