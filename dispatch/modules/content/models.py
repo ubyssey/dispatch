@@ -253,6 +253,13 @@ class Publishable(Model):
         except:
             return None
 
+    def get_latest_version(self):
+        try:
+            head = type(self).objects.get(parent=self.parent, head=True)
+            return head.revision_id
+        except:
+            return None
+
     def get_previous_revision(self):
         if self.parent == self:
             return self
@@ -383,9 +390,9 @@ class Article(Publishable):
     def save_featured_image(self, data):
         attachment = ImageAttachment()
 
-        attachment.image_id = data['image']
-        attachment.caption = data['caption']
-        attachment.credit = data['credit']
+        attachment.image_id = data.get('image')
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
 
         attachment.article = self
         attachment.save()
