@@ -50,15 +50,23 @@ export default class VersionsDropdown extends React.Component {
   }
 
   render() {
-    return (
-      <Dropdown
-        ref='dropdown'
-        content={this.renderDropdown()}>
-        <AnchorButton onClick={e => this.refs.dropdown.open()}>
-          {`Version ${this.props.current_version}`}
-        </AnchorButton>
-      </Dropdown>
-    )
+
+    if (this.props.latest_version) {
+      return (
+        <Dropdown
+          ref='dropdown'
+          content={this.renderDropdown()}>
+          <AnchorButton onClick={e => this.refs.dropdown.open()}>
+            {`Version ${this.props.current_version}`}
+          </AnchorButton>
+        </Dropdown>
+      )
+    } else {
+      return (
+        <AnchorButton disabled={true}>Version 1</AnchorButton>
+      )
+    }
+
   }
 
 }
