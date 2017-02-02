@@ -59,7 +59,10 @@ export default function FeaturedImageTab(props) {
   } else {
     return (
       <div>
-        <AnchorButton>Set featured image</AnchorButton>
+        <FormInput>
+          <ImageInput
+            onUpdate={updateImage} />
+        </FormInput>
       </div>
     )
   }
