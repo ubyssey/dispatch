@@ -26,7 +26,6 @@ export default class ContentEditorPopover extends React.Component {
     this.props.focusEditor()
     this.setState({ showLinkInput: true })
   }
-//back={ e => this.setState({ showLinkInput: false})}
   renderLinkInput() {
     return (
       <ContentEditorLinkEditor
@@ -82,13 +81,13 @@ export default class ContentEditorPopover extends React.Component {
   }
 
   render() {
-    const style = this.props.isLinkInputActive() || this.state.showLinkInput? {width: LINK_INPUT_WIDTH} : {}
+    const style = this.props.isLinkInputActive || this.state.showLinkInput? {width: LINK_INPUT_WIDTH} : {}
     return (
       <div
         className='c-content-editor__popover'
         onMouseUp={e => e.stopPropagation()}
         style={style}>
-        { this.state.showLinkInput || this.props.isLinkInputActive() ? this.renderLinkInput() : this.renderButtons() }
+        { this.state.showLinkInput || this.props.isLinkInputActive ? this.renderLinkInput() : this.renderButtons() }
     </div>
     )
   }
