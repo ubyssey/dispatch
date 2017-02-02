@@ -1,6 +1,6 @@
-import AppContainer from './AppContainer.jsx'
-import BasicContainer from './BasicContainer.jsx'
-import MainContainer from './MainContainer.jsx'
+import AppContainer from './AppContainer'
+import BasicContainer from './BasicContainer'
+import MainContainer from './MainContainer'
 
 export {
   AppContainer as App,
