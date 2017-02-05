@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as articlesActions from '../actions/ArticlesActions'
+import * as articlesActions from '../../actions/ArticlesActions'
 
-import ItemList from '../components/ItemList'
+import ItemList from '../../components/ItemList'
 
 const DEFAULT_LIMIT = 15
 

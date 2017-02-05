@@ -38,15 +38,25 @@ render((
 
         <Route component={Containers.Main}>
           <IndexRoute component={Pages.Dashboard} />
-          <Route path="/articles" component={Pages.Articles} />
-          <Route path="/articles/new" component={Pages.NewArticle} />
-          <Route path="/articles/:articleId" component={Pages.Article} />
-          <Route path='/components' component={Pages.Components} />
-          <Route path='/files' component={Pages.Files} />
-          <Route path='/pages' component={Pages.Pages} />
-          <Route path='/sections' component={Pages.Sections} />
-          <Route path='/people' component={Pages.People} />
-          <Route path='/profile' component={Pages.Profile} />
+
+          <Route path="articles">
+            <IndexRoute component={Pages.Articles.Index} />
+            <Route path="new" component={Pages.Articles.NewArticle} />
+            <Route path=":articleId" component={Pages.Articles.Article} />
+          </Route>
+
+          <Route path='components' component={Pages.Components} />
+          <Route path='files' component={Pages.Files} />
+          <Route path='pages' component={Pages.Pages} />
+          <Route path='sections' component={Pages.Sections} />
+          <Route path='people' component={Pages.People} />
+          <Route path='profile' component={Pages.Profile} />
+
+          <Route path='settings'>
+            <IndexRoute component={Pages.Settings.Index} />
+            <Route path='social' component={Pages.Settings.Social} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>
