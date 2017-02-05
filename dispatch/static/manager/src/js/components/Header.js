@@ -41,6 +41,9 @@ export default function Header(props) {
                 <li className='c-header__dropdown__link'>
                   <Link to='/people'><i className='fa fa-users right'></i> people</Link>
                 </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/settings/social/'>social media</Link>
+                </li>
               </ul>
             </li>
             <li className='c-header__dropdown'>
