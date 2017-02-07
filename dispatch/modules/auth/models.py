@@ -91,5 +91,6 @@ class IntegrationSetting(Model):
     integration_id = CharField(max_length=100)
     key = CharField(max_length=255)
     value = CharField(max_length=255)
+    is_hidden = BooleanField(default=False)
 
     objects = IntegrationSettingManager()

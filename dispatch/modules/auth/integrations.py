@@ -6,14 +6,14 @@ class BaseIntegration(object):
     """Base class for all integrations."""
 
     @classmethod
-    def get_settings(cls):
+    def get_settings(cls, show_hidden=False):
         """Retrieves the settings for this integration as a dictionary."""
-        return IntegrationSetting.objects.get_for_integration(cls.ID)
+        return IntegrationSetting.objects.get_for_integration(cls.ID, show_hidden)
 
     @classmethod
-    def update_setting(cls, key, value):
+    def update_setting(cls, key, value, is_hidden=False):
         """Updates setting for this integration with the given name."""
-        return IntegrationSetting.objects.update_for_integration(cls.ID, key, value)
+        return IntegrationSetting.objects.update_for_integration(cls.ID, key, value, is_hidden)
 
 class FacebookInstantArticlesIntegration(BaseIntegration):
     """Facebook Instant Articles integration."""
