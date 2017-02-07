@@ -31,20 +31,24 @@ class UserManager(BaseUserManager):
 
 class IntegrationSettingManager(Manager):
 
-    def get_for_integration(self, integration_id):
+    def get_for_integration(self, integration_id, show_hidden=False):
         """Return settings for given integration as a dictionary."""
 
         integrations = self.filter(integration_id=integration_id)
 
+        if not show_hidden:
+            integrations = integrations.exclude(is_hidden=True)
+
         return { i.key: i.value for i in integrations }
 
-    def update_for_integration(self, integration_id, key, value):
+    def update_for_integration(self, integration_id, key, value, is_hidden=False):
         """Updates setting for this integration with the given name."""
 
         setting = self.create(
             integration_id=integration_id,
             key=key,
-            value=value
+            value=value,
+            is_hidden=is_hidden
         )
 
         setting.save()

@@ -38,3 +38,18 @@ class IntegrationTestCase(TestCase):
         # Verify that setting_a has been updated to 2
         settings = self.TestIntegration.get_settings()
         self.assertEqual(settings['setting_a'], '2')
+
+    def test_integration_hidden_settings(self):
+
+        self.TestIntegration.update_setting('setting_c', 'c')
+        self.TestIntegration.update_setting('setting_d', 'd', is_hidden=True)
+
+        settings = self.TestIntegration.get_settings()
+
+        self.assertEqual(settings['setting_c'], 'c')
+        self.assertEqual('setting_d' in settings, False)
+
+        settings = self.TestIntegration.get_settings(show_hidden=True)
+
+        self.assertEqual(settings['setting_c'], 'c')
+        self.assertEqual(settings['setting_d'], 'd')
