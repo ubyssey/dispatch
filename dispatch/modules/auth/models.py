@@ -1,34 +1,9 @@
 from django.db.models import Model, CharField, SlugField, TextField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.conf import settings
 
-class UserManager(BaseUserManager):
+from django.contrib.auth.models import AbstractBaseUser, Group, Permission
 
-    def _create_user(self, email, password=None, is_admin=False, is_active=True, is_superuser=False):
-        if not email:
-            raise ValueError('User must have a valid email address')
-
-        if not self.is_valid_password(password):
-            raise ValueError('Password is invalid')
-
-        user = User(email=email, is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
-        user.set_password(password)
-
-        person = Person.objects.create()
-        user.person = person
-
-        user.save()
-
-        return user
-
-    def create_user(self, email, password=None):
-        return self._create_user(email, password)
-
-    def create_superuser(self, email, password):
-        return self._create_user(email, password, True, True, True)
-
-    def is_valid_password(self, password):
-        return len(password) >= 8
+from dispatch.apps.core.managers import UserManager, IntegrationSettingManager
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
@@ -102,10 +77,19 @@ class Setting(Model):
     value = CharField(max_length=255)
 
 class Action(Model):
-
     person = ForeignKey(Person)
     action = CharField(max_length=50)
     object_type = CharField(max_length=50)
     object_id = PositiveIntegerField()
     timestamp = DateTimeField(auto_now=True)
 
+class IntegrationSetting(Model):
+    """
+    Stores information about a Dispatch integration setting.
+    """
+
+    integration_id = CharField(max_length=100)
+    key = CharField(max_length=255)
+    value = CharField(max_length=255)
+
+    objects = IntegrationSettingManager()
