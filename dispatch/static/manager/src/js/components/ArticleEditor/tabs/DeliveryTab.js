@@ -16,6 +16,11 @@ const READING_TIME_OPTIONS = [
   { value: 'evening', label: 'Evening' }
 ]
 
+const INSTANT_ARTICLE_OPTIONS = [
+  { value: true, label: "Yes"},
+  { value: false, label: "No"}
+]
+
 export default function DeliveryTab(props) {
 
   return (
@@ -33,6 +38,13 @@ export default function DeliveryTab(props) {
           options={READING_TIME_OPTIONS}
           selected={props.reading_time}
           onChange={ e => props.update('reading_time', e.target.value) } />
+      </FormInput>
+
+      <FormInput label='Instant Article'>
+        <SelectInput
+          options={INSTANT_ARTICLE_OPTIONS}
+          selected={props.instant_article}
+          onChange={ e => props.update('instant_article', e.target.value) } />
       </FormInput>
 
     </div>
