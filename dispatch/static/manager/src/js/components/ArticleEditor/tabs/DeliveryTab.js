@@ -43,8 +43,8 @@ export default function DeliveryTab(props) {
       <FormInput label='Instant Article'>
         <SelectInput
           options={INSTANT_ARTICLE_OPTIONS}
-          selected={props.instant_article}
-          onChange={ e => props.update('instant_article', e.target.value) } />
+          selected={props.is_instant_article}
+          onChange={ e => props.update('is_instant_article', e.target.value) } />
       </FormInput>
 
     </div>
