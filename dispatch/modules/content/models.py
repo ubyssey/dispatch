@@ -101,6 +101,8 @@ class Publishable(Model):
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
 
+    is_instant_article = BooleanField(default=False)
+
     def add_view(self):
         self.views += 1
         self.save(revision=False)
