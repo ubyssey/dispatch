@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { FormInput, SelectInput } from '../../inputs'
+import { Checkbox } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
   { value: 1, label: 1 },
@@ -40,11 +41,10 @@ export default function DeliveryTab(props) {
           onChange={ e => props.update('reading_time', e.target.value) } />
       </FormInput>
 
-      <FormInput label='Instant Article'>
-        <SelectInput
-          options={INSTANT_ARTICLE_OPTIONS}
-          selected={props.is_instant_article}
-          onChange={ e => props.update('is_instant_article', e.target.value) } />
+      <FormInput label='Enable as Facebook Instant Article'>
+        <Checkbox
+          checked={props.is_instant_article}
+          onChange={ e => props.update('is_instant_article', e.target.checked) } />
       </FormInput>
 
     </div>
