@@ -7,10 +7,11 @@ import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as integrationActions from '../../actions/IntegrationActions'
 
-const DISPATCH_APP_ID = '1747937028850008'
 const DISPTACH_REDIRECT_URI = 'http://localhost:8000/admin/integrations/fb-instant-articles/?callback=1'
 
-const facebookLoginURI = `https://www.facebook.com/v2.8/dialog/oauth?client_id=${DISPATCH_APP_ID}&redirect_uri=${DISPTACH_REDIRECT_URI}&scope=pages_manage_instant_articles,pages_show_list`
+function fbLoginURI(clientId) {
+  return `https://www.facebook.com/v2.8/dialog/oauth?client_id=${clientId}&redirect_uri=${DISPTACH_REDIRECT_URI}&scope=pages_manage_instant_articles,pages_show_list`
+}
 
 class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
@@ -116,7 +117,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
       <FormInput label='Authenticate with Facebook'>
         <br />
         <AnchorButton
-          href={facebookLoginURI}
+          href={fbLoginURI(this.props.integration.settings.client_id)}
           intent={Intent.PRIMARY}>Authenticate with Facebook</AnchorButton>
       </FormInput>
     )
