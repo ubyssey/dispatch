@@ -52,9 +52,8 @@ render((
           <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
 
-          <Route path='settings'>
-            <IndexRoute component={Pages.Settings.Index} />
-            <Route path='social' component={Pages.Settings.Social} />
+          <Route path='integrations' component={Pages.Integrations.Index}>
+            <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
           </Route>
 
         </Route>
