@@ -81,6 +81,8 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
     def callback(cls, user, query):
         """Receive OAuth callback request from Facebook."""
 
+        # TODO: Add error handling for Facebook API errors
+
         # Get settings for this integration
         settings = cls.get_settings(show_hidden=True)
 
@@ -91,11 +93,11 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
             'redirect_uri': cls.REDIRECT_URI
         }
 
+        # TODO: Use https://facebook-sdk.readthedocs.io/ instead of requests
+
         r = requests.get(cls.API_ROOT + 'oauth/access_token', params=payload)
 
         data = r.json()
-
-        print data
 
         access_token = data['access_token']
 
