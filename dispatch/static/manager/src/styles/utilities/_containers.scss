@@ -14,8 +14,17 @@
   flex-direction: column;
 }
 
+.u-container-main--row {
+  flex-direction: row;
+}
+
 .u-container-editor {
   display: flex;
   flex-direction: row;
   flex: 1;
+}
+
+.u-container-body {
+  flex: 1;
+  padding: 2rem;
 }
