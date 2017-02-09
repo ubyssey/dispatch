@@ -3,7 +3,7 @@ from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission
 
-from dispatch.apps.core.managers import UserManager, IntegrationSettingManager
+from dispatch.apps.core.managers import UserManager, IntegrationManager
 
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
@@ -83,14 +83,12 @@ class Action(Model):
     object_id = PositiveIntegerField()
     timestamp = DateTimeField(auto_now=True)
 
-class IntegrationSetting(Model):
+class Integration(Model):
     """
     Stores information about a Dispatch integration setting.
     """
 
-    integration_id = CharField(max_length=100)
-    key = CharField(max_length=255)
-    value = CharField(max_length=255)
-    is_hidden = BooleanField(default=False)
+    integration_id = CharField(unique=True, max_length=100)
+    settings = TextField(default='{}')
 
-    objects = IntegrationSettingManager()
+    objects = IntegrationManager()
