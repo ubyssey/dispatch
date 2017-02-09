@@ -8,7 +8,7 @@ import SectionsPage from './SectionsPage'
 import ProfilePage from './ProfilePage'
 
 import * as Articles from './Articles'
-import * as Settings from './Settings'
+import * as Integrations from './Integrations'
 
 export {
   LoginPage as Login,
@@ -20,5 +20,5 @@ export {
   SectionsPage as Sections,
   ProfilePage as Profile,
   Articles as Articles,
-  Settings as Settings
+  Integrations as Integrations
 }
