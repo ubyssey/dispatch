@@ -27,22 +27,22 @@ export default function Header(props) {
               <a>Manage <i className='fa fa-caret-down left'></i></a>
               <ul>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/components'><i className='fa fa-wrench right'></i> components</Link>
+                  <Link to='/components/'><span className='pt-icon-standard pt-icon-widget' /> components</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/files'><i className='fa fa-file-o right'></i> files</Link>
+                  <Link to='/files/'><span className='pt-icon-standard pt-icon-document' /> files</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/pages'><i className='fa fa-file-text-o right'></i> pages</Link>
+                  <Link to='/pages/'><span className='pt-icon-standard pt-icon-book' /> pages</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/sections'><i className='fa fa-list right'></i> sections</Link>
+                  <Link to='/sections/'><span className='pt-icon-standard pt-icon-properties' /> sections</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/people'><i className='fa fa-users right'></i> people</Link>
+                  <Link to='/people/'><span className='pt-icon-standard pt-icon-person' /> people</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/settings/social/'>social media</Link>
+                  <Link to='/integrations/'><span className='pt-icon-standard pt-icon-box' /> integrations</Link>
                 </li>
               </ul>
             </li>
