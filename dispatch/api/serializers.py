@@ -437,3 +437,17 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             perform_action(self.context['request'].user.person, action, 'page', instance.pk)
 
         return instance
+
+class IntegrationSerializer(serializers.Serializer):
+
+    id = serializers.CharField(source='ID', read_only=True)
+    settings = serializers.JSONField(source='get_settings')
+
+    def save(self):
+
+        settings = self.validated_data.get('get_settings', None)
+
+        if settings:
+            self.instance.save(settings)
+
+        return self.instance

@@ -7,15 +7,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
+from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer)
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -574,6 +575,71 @@ class TemplateViewSet(viewsets.GenericViewSet):
         Template = ThemeHelper.get_theme_template(template_slug=pk)
 
         data = Template().to_json()
+
+        return Response(data)
+
+class IntegrationViewSet(viewsets.GenericViewSet):
+    """
+    Viewset for Dispatch integrations.
+    """
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = IntegrationSerializer
+
+    def get_object_or_404(self, pk=None):
+        try:
+            return integrationLib.get(pk)
+        except IntegrationNotFound:
+            raise NotFound('That integration does not exist')
+
+    def get_paginated_response(seld, data):
+        return Response({
+            'count': len(data),
+            'results': data
+        })
+
+    def list(self, request):
+
+        integrations = integrationLib.list()
+
+        serializer = self.get_serializer(integrations, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+
+        integration = self.get_object_or_404(pk)
+
+        serializer = self.get_serializer(integration)
+
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+
+        integration = self.get_object_or_404(pk)
+
+        serializer = self.get_serializer(integration, data=request.data)
+
+        serializer.is_valid()
+
+        serializer.save()
+
+        return Response(serializer.to_representation(integration))
+
+    def destroy(self, request, pk=None):
+
+        integration = self.get_object_or_404(pk)
+
+        integration.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @detail_route(methods=['get'],)
+    def callback(self, request, pk=None):
+
+        integration = self.get_object_or_404(pk)
+
+        data = integration.callback(request.user, request.GET)
 
         return Response(data)
 
