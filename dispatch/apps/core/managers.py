@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Manager
 from django.contrib.auth.models import BaseUserManager
 
@@ -29,26 +31,35 @@ class UserManager(BaseUserManager):
     def is_valid_password(self, password):
         return len(password) >= 8
 
-class IntegrationSettingManager(Manager):
+class IntegrationManager(Manager):
 
-    def get_for_integration(self, integration_id, show_hidden=False):
+    def get_settings(self, integration_id):
         """Return settings for given integration as a dictionary."""
 
-        integrations = self.filter(integration_id=integration_id)
+        try:
+            integration = self.get(integration_id=integration_id)
+            return json.loads(integration.settings)
+        except self.model.DoesNotExist, ValueError:
+            return {}
 
-        if not show_hidden:
-            integrations = integrations.exclude(is_hidden=True)
+    def update_settings(self, integration_id, settings):
+        """Updates settings for given integration."""
 
-        return { i.key: i.value for i in integrations }
+        (integration, created) = self.get_or_create(integration_id=integration_id)
 
-    def update_for_integration(self, integration_id, key, value, is_hidden=False):
-        """Updates setting for this integration with the given name."""
+        try:
+            current_settings = json.loads(integration.settings)
+        except ValueError:
+            current_settings = {}
 
-        setting = self.create(
-            integration_id=integration_id,
-            key=key,
-            value=value,
-            is_hidden=is_hidden
-        )
+        current_settings.update(settings)
 
-        setting.save()
+        integration.settings = json.dumps(current_settings)
+
+        integration.save()
+
+
+    def delete_integration(self, integration_id):
+        """Deletes all settings for given integration."""
+
+        return self.filter(integration_id=integration_id).delete()

@@ -19,6 +19,7 @@ router.register(r'galleries', views.ImageGalleryViewSet, base_name='galleries')
 router.register(r'templates', views.TemplateViewSet, base_name='templates')
 router.register(r'comments', views.CommentViewSet, base_name='comments')
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
+router.register(r'integrations', views.IntegrationViewSet, base_name='integrations')
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
