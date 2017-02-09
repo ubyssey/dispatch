@@ -1,0 +1,17 @@
+.c-sidebar-nav {
+  // Structure
+  padding-top: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 2rem;
+
+  // Border
+  border-right: thin solid $color-border-gray;
+
+  // Background
+  background: $color-text-gray-light;
+}
+
+.c-sidebar-nav__item {
+
+}
