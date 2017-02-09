@@ -11,6 +11,7 @@ import topicsReducer from './TopicsReducer'
 import tagsReducer from './TagsReducer'
 import toasterReducer from './ToasterReducer'
 import editorReducer from './EditorReducer'
+import integrationsReducer from './IntegrationsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -23,5 +24,6 @@ export default combineReducers({
   topics: topicsReducer,
   tags: tagsReducer,
   toaster: toasterReducer,
-  editor: editorReducer
+  editor: editorReducer,
+  integrations: integrationsReducer
 })
