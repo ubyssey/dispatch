@@ -620,8 +620,8 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         serializer = self.get_serializer(integration, data=request.data)
 
-        serializer.is_valid()
-
+        serializer.is_valid(raise_exception=True):
+        
         serializer.save()
 
         return Response(serializer.to_representation(integration))
