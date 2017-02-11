@@ -39,7 +39,7 @@ class IntegrationManager(Manager):
         try:
             integration = self.get(integration_id=integration_id)
             return json.loads(integration.settings)
-        except self.model.DoesNotExist, ValueError:
+        except (self.model.DoesNotExist, ValueError):
             return {}
 
     def update_settings(self, integration_id, settings):
