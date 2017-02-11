@@ -83,18 +83,18 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     })
   }
 
-  renderFacebookPages(integration) {
+  renderFacebookPages() {
 
     let pageMap = {}
 
-    let options = integration.callback.pages.data.map(page => {
+    const options = integration.callback.pages.data.map(page => {
 
       // Add access token to map
       pageMap[page.id] = page
 
       return {
-        'value': page.id,
-        'label': page.name
+        value: page.id,
+        label: page.name
       }
     })
 
@@ -105,7 +105,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
           options={options}
           onChange={e => this.updateFacebookPage(pageMap[e.target.value])} />
           <AnchorButton
-            onClick={ e => this.props.saveIntegration(this.props.token, INTEGRATION_ID, integration)}
+            onClick={ e => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
             intent={Intent.SUCCESS}>
             Enable Instant Articles
           </AnchorButton>
@@ -125,10 +125,10 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     )
   }
 
-  renderFacebookInstantArticles(integration) {
+  renderFacebookInstantArticles() {
 
-    let settings = integration.settings || {}
-    let callback = integration.callback || {}
+    const settings = this.props.integration.settings
+    const callback = this.props.integration.callback || {}
 
     if (settings.page_configured) {
       return (
@@ -158,13 +158,13 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
             </AnchorButton>
           </FormInput>
 
-          {callback.pages ? this.renderFacebookPages(integration) : this.renderFacebookLogin()}
+          {callback.pages ? this.renderFacebookPages() : this.renderFacebookLogin()}
 
         </div>
       )
     }
 
-    let cancelButton = (
+    const cancelButton = (
       <AnchorButton
         onClick={ e => this.exitEditMode()}>
         Cancel
@@ -192,7 +192,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         <FormInput>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={ e => this.saveIntegration(integration)}>
+            onClick={ e => this.saveIntegration(this.props.integration)}>
             Save settings
           </AnchorButton>
           {this.state.editMode ? cancelButton : null}
@@ -204,12 +204,10 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
   render() {
 
-    let integration = this.props.integration
-
-    if (integration) {
+    if (this.props.integration) {
       return (
         <FormSection title='Facebook Instant Articles'>
-          {this.renderFacebookInstantArticles(integration)}
+          {this.renderFacebookInstantArticles()}
         </FormSection>
       )
     }
