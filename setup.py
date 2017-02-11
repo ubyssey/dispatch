@@ -13,6 +13,7 @@ setup(name='dispatch',
       install_requires=[
         'django == 1.9.4',
         'djangorestframework == 3.2.4',
-        'pillow'
+        'pillow',
+        'requests == 2.6.0'
       ],
       zip_safe=False)

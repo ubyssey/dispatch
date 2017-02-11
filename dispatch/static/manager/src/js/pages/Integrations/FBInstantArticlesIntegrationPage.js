@@ -87,7 +87,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
     let pageMap = {}
 
-    const options = integration.callback.pages.data.map(page => {
+    const options = this.props.integration.callback.pages.data.map(page => {
 
       // Add access token to map
       pageMap[page.id] = page

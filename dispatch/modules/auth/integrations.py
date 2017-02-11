@@ -1,8 +1,11 @@
-import requests
-
 from dispatch.apps.core.models import Integration
 
+from dispatch.vendor.apis import Facebook, FacebookAPIError
+
 class IntegrationNotFound(Exception):
+    pass
+
+class IntegrationCallbackError(Exception):
     pass
 
 class IntegrationLibrary(object):
@@ -57,7 +60,6 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
     """Facebook Instant Articles integration."""
 
     ID = 'fb-instant-articles'
-    API_ROOT = 'https://graph.facebook.com/v2.8/'
     REDIRECT_URI = 'http://localhost:8000/admin/integrations/%s/?callback=1' % ID
 
     HIDDEN_FIELDS = [
@@ -81,10 +83,10 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
     def callback(cls, user, query):
         """Receive OAuth callback request from Facebook."""
 
-        # TODO: Add error handling for Facebook API errors
-
         # Get settings for this integration
         settings = cls.get_settings(show_hidden=True)
+
+        fb = Facebook()
 
         payload = {
             'client_id': settings['client_id'],
@@ -93,21 +95,16 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
             'redirect_uri': cls.REDIRECT_URI
         }
 
-        # TODO: Use https://facebook-sdk.readthedocs.io/ instead of requests
+        try:
 
-        r = requests.get(cls.API_ROOT + 'oauth/access_token', params=payload)
+            # Authenticate with Facebook
+            fb.get_access_token(payload)
 
-        data = r.json()
+            # Fetch pages belonging to authenticated user
+            pages = fb.get_pages('me')
 
-        access_token = data['access_token']
-
-        payload = {
-            'access_token': access_token
-        }
-
-        r = requests.get(cls.API_ROOT + 'me/accounts', params=payload)
-
-        pages = r.json()
+        except FacebookAPIError, e:
+            raise IntegrationCallbackError(e.message)
 
         return {
             'pages': pages

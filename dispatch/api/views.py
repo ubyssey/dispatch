@@ -11,7 +11,7 @@ from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound
+from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
@@ -639,7 +639,10 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         integration = self.get_object_or_404(pk)
 
-        data = integration.callback(request.user, request.GET)
+        try:
+            data = integration.callback(request.user, request.GET)
+        except IntegrationCallbackError, e:
+            return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
