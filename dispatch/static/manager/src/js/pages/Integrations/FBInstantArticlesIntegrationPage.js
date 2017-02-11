@@ -41,7 +41,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (nextProps.integration && nextProps.integration.settings && nextProps.integration.settings.client_configured) {
+    if (R.path(['integration', 'settings', 'client_configured'], nextProps)) {
       this.setState({ editMode: false })
     }
 
