@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import DocumentTitle from 'react-document-title'
 
 import { FormSection, FormInput, TextInput, SelectInput } from '../../components/inputs'
 import { AnchorButton, Intent } from '@blueprintjs/core'
@@ -207,9 +208,11 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
     if (this.props.integration) {
       return (
-        <FormSection title='Facebook Instant Articles'>
-          {this.renderFacebookInstantArticles()}
-        </FormSection>
+        <DocumentTitle title='Integrations - Facebook Instant Articles'>
+          <FormSection title='Facebook Instant Articles'>
+            {this.renderFacebookInstantArticles()}
+          </FormSection>
+        </DocumentTitle>
       )
     }
 
