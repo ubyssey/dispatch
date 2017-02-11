@@ -445,7 +445,7 @@ class IntegrationSerializer(serializers.Serializer):
 
     def save(self):
 
-        settings = self.validated_data.get('get_settings', None)
+        settings = self.validated_data.get('get_settings')
 
         if settings:
             self.instance.save(settings)
