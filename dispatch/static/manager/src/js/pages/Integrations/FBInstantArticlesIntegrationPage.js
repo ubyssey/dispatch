@@ -9,6 +9,8 @@ import * as integrationActions from '../../actions/IntegrationActions'
 
 const DISPATCH_REDIRECT_URI = `${window.location.href}?callback=1`
 
+const INTEGRATION_ID = 'fb-instant-articles'
+
 function fbLoginURI(clientId) {
   return `https://www.facebook.com/v2.8/dialog/oauth?client_id=${clientId}&redirect_uri=${DISPATCH_REDIRECT_URI}&scope=pages_manage_instant_articles,pages_show_list`
 }
@@ -27,12 +29,12 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
   componentWillMount() {
 
-    this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
+    this.props.fetchIntegration(this.props.token, INTEGRATION_ID)
 
     if (this.props.location.query.callback) {
       this.props.integrationCallback(
         this.props.token,
-        'fb-instant-articles',
+        INTEGRATION_ID,
         this.props.location.query
       );
     }
@@ -63,12 +65,12 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
   }
 
   saveIntegration(integration) {
-    this.props.saveIntegration(this.props.token, 'fb-instant-articles', integration)
+    this.props.saveIntegration(this.props.token, INTEGRATION_ID, integration)
   }
 
   updateSettings(settings) {
     return this.props.updateIntegration(
-      'fb-instant-articles',
+      INTEGRATION_ID,
       { settings: R.merge(this.props.integration.settings, settings) }
     )
   }
@@ -103,7 +105,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
           options={options}
           onChange={e => this.updateFacebookPage(pageMap[e.target.value])} />
           <AnchorButton
-            onClick={ e => this.props.saveIntegration(this.props.token, 'fb-instant-articles', integration)}
+            onClick={ e => this.props.saveIntegration(this.props.token, INTEGRATION_ID, integration)}
             intent={Intent.SUCCESS}>
             Enable Instant Articles
           </AnchorButton>
@@ -133,7 +135,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         <FormInput label={`Instant Articles is enabled for ${settings.page_name}`}>
           <br />
           <AnchorButton
-            onClick={e => this.props.deleteIntegration(this.props.token, 'fb-instant-articles')}
+            onClick={e => this.props.deleteIntegration(this.props.token, INTEGRATION_ID)}
             intent={Intent.DANGER}>
             Remove integration
           </AnchorButton>
@@ -222,7 +224,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
 
-  let integration = state.app.integrations.integrations['fb-instant-articles'] || null
+  let integration = state.app.integrations.integrations[INTEGRATION_ID] || null
 
   if (integration) {
     integration.settings = integration.settings || {}
