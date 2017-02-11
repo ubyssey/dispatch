@@ -592,7 +592,7 @@ class IntegrationViewSet(viewsets.GenericViewSet):
         except IntegrationNotFound:
             raise NotFound('That integration does not exist')
 
-    def get_paginated_response(seld, data):
+    def get_paginated_response(self, data):
         return Response({
             'count': len(data),
             'results': data
