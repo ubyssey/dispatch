@@ -38,24 +38,17 @@ function buildHeaders(token) {
   return headers
 }
 
-function handleError(response, test) {
-
-  if (!response.ok) {
-    return response.json()
-      .then(json => {
-        throw Error(json.detail)
-      })
-  }
-
-  return response
+function handleError(response) {
+  return response.ok ? response : Promise.reject(response.statusText)
 }
 
 function parseJSON(response) {
   return response.json()
+    .then(json => response.ok ? json : Promise.reject(json))
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  let urlString = buildRoute(route, id) + url.format({query: query})
+  let urlString = buildRoute(route, id) + url.format({ query: query })
   return fetch(
     urlString,
     {
@@ -63,7 +56,6 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -76,7 +68,6 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -101,7 +92,6 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
