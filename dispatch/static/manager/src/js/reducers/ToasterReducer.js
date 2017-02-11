@@ -25,6 +25,16 @@ export default function toasterReducer(toaster = {}, action) {
         timeout: DEFAULT_TIMEOUT
       })
       break
+
+    // Integrations
+    case types.INTEGRATION_CALLBACK + '_REJECTED':
+      toaster.show({
+        message: action.payload.message,
+        intent: Intent.DANGER,
+        timeout: DEFAULT_TIMEOUT
+      })
+      break
+
   }
   return toaster
 }
