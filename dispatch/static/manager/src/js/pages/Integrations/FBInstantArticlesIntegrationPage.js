@@ -186,6 +186,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
             placeholder='App Secret'
             value={settings.client_secret || ''}
             fill={true}
+            type='password'
             onChange={ e => this.updateSettings({ client_secret: e.target.value }) } />
         </FormInput>
 
