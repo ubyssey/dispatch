@@ -7,10 +7,10 @@ import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as integrationActions from '../../actions/IntegrationActions'
 
-const DISPTACH_REDIRECT_URI = `${window.location.href}?callback=1`
+const DISPATCH_REDIRECT_URI = `${window.location.href}?callback=1`
 
 function fbLoginURI(clientId) {
-  return `https://www.facebook.com/v2.8/dialog/oauth?client_id=${clientId}&redirect_uri=${DISPTACH_REDIRECT_URI}&scope=pages_manage_instant_articles,pages_show_list`
+  return `https://www.facebook.com/v2.8/dialog/oauth?client_id=${clientId}&redirect_uri=${DISPATCH_REDIRECT_URI}&scope=pages_manage_instant_articles,pages_show_list`
 }
 
 class FBInstantArticlesIntegrationPageComponent extends React.Component {
