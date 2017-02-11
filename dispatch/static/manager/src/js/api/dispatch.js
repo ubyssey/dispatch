@@ -38,10 +38,15 @@ function buildHeaders(token) {
   return headers
 }
 
-function handleError(response) {
+function handleError(response, test) {
+
   if (!response.ok) {
-      throw Error(response.statusText)
+    return response.json()
+      .then(json => {
+        throw Error(json.detail)
+      })
   }
+
   return response
 }
 
