@@ -6,12 +6,22 @@ import * as types from '../constants/ActionTypes'
 // export const FETCH_ACTIONS = 'FETCH_ACTIONS'
 // export const FETCH_RECENT = 'FETCH_RECENT'
 
-let DashboardReducer = (state = {}, action) => {
+const initialState = {
+  isLoading: false,
+  isLoaded: false,
+  data: []
+}
+
+let counter = 0
+
+let DashboardReducer = (state = initialState, action) => {
   switch(action.type) {
     case `${types.FETCH_ACTIONS}_PENDING`:
-      return R.merge(state, {isLoading: true})
+      return R.merge(state,{
+        isLoading: true
+      })
     case `${types.FETCH_ACTIONS}_FULFILLED`:
-      return R.merge(state, {
+      return R.merge(state,{
         isLoading: false,
         isLoaded: true,
         data: action.payload.results
