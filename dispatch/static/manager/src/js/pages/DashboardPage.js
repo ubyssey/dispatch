@@ -18,25 +18,27 @@ class DashboardPageComponent extends React.Component {
     let historyList = this.props.actions.isLoaded
     ? this.props.actions.data.map((elem,ind) => (
       <li key={ind}>
+        <i className="fa fa-plus" aria-hidden="true"></i>
         {elem.meta.author}
         {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
         <a href={elem.meta.article_url}>{elem.meta.headline}</a>
-        {` ${moment(elem.timestamp).from(moment())}`}
+        <span>{` ${moment(elem.timestamp).from(moment())}`}</span>
       </li>))
     : <li></li>
 
+    //Returns a list of the user's recent articles if the data is loaded, else returns an empty list element
     let recentArticlesList = this.props.recent.isLoaded
     ? this.props.recent.data.map((elem,ind) => {
       return (
         <li key={ind}>
-          <a href={`/admin/articles/${elem.id}`}>{elem.headline}</a>
+          <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
         </li>)
     })
     : <li></li>
 
     return (
       <DocumentTitle title='Dashboard'>
-        <div>
+        <div className="dashboard_container">
           <div className="dashboard_left">
             <h2>Latest Activity</h2>
             <ul className="dashboard_user_history">
@@ -47,11 +49,12 @@ class DashboardPageComponent extends React.Component {
             <h2>Quick Actions</h2>
             <div className="dashboard_quick_actions">
               <ul>
-                <li><Link to={`/`}>New Article</Link></li>
+                <li><Link to={`/articles/new`}>New Article</Link></li>
                 <li><Link to={`/`}>New Page</Link></li>
               </ul>
             </div>
             <div className="dashboard_recent_articles">
+              <h2>Recent Articles</h2>
               <ul>
                 {recentArticlesList}
               </ul>
@@ -61,7 +64,6 @@ class DashboardPageComponent extends React.Component {
       </DocumentTitle>
     )
   }
-
 }
 
 const mapStateToProps = (state) => ({
