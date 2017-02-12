@@ -3,32 +3,37 @@ import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import * as dashboardActions from '../actions/DashboardActions'
+import moment from 'moment'
 
 class DashboardPageComponent extends React.Component {
 
   componentWillMount() {
-
+    this.props.fetchActions(this.props.token)
   }
 
   render() {
-    // let listItems = dummy_list_data.map(elem => {return (
-    //   <li key=""></li>
-    // )})
-    //
-    // let recentArticles = dummy_articles.map(elem => {return(
-    //   <li key=""></li>
-    // )})
+
+    //returns the user history if the data is loaded, else returns an empty list element
+    let historyList = this.props.actions.isLoaded
+    ? this.props.actions.data.map((elem,ind) => (
+      <li key={ind}>
+        {elem.meta.author}
+        {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
+        <a href={elem.meta.article_url}>{elem.meta.headline}</a>
+        {` ${moment(elem.timestamp).from(moment())}`}
+      </li>))
+    : <li></li>
 
     return (
       <DocumentTitle title='Dashboard'>
         <div>
-          <div className="dashboard_left_side">
+          <div className="dashboard_left">
             <h2>Latest Activity</h2>
-            <ul>
-              {listItems}
+            <ul className="dashboard_user_history">
+              {historyList}
             </ul>
           </div>
-          <div className="dashboard_right_side">
+          <div className="dashboard_right">
             <h2>Quick Actions</h2>
             <div className="dashboard_quick_actions">
               <ul>
@@ -38,7 +43,8 @@ class DashboardPageComponent extends React.Component {
             </div>
             <div className="dashboard_recent_articles">
               <ul>
-                {recentArticles}
+              <li>a</li>
+              <li>b</li>
               </ul>
             </div>
           </div>
@@ -49,37 +55,21 @@ class DashboardPageComponent extends React.Component {
 
 }
 
-const mapStateToProps = (state) => {
-  return {
-    actions: state.app.user.actions,
-    recent: state.app.user.recent
-  }
-}
+const mapStateToProps = (state) => ({
+  actions: state.app.dashboard
+  // recent: state.app.user.recent
+})
 
 const mapDispatchToProps = (dispatch) => {
-  // return {
-  //   fetchArticles: (token, query) => {
-  //     dispatch(articlesActions.fetchArticles(token, query))
-  //   },
-  //   toggleArticle: (articleId) => {
-  //     dispatch(articlesActions.toggleArticle(articleId))
-  //   },
-  //   toggleAllArticles: (articleIds) => {
-  //     dispatch(articlesActions.toggleAllArticles(articleIds))
-  //   },
-  //   clearSelectedArticles: () => {
-  //     dispatch(articlesActions.clearSelectedArticles())
-  //   },
-  //   deleteArticles: (token, articleIds) => {
-  //     dispatch(articlesActions.deleteArticles(token, articleIds))
-  //   },
-  //   clearArticles: () => {
-  //     dispatch(articlesActions.clearArticles())
-  //   },
-  //   searchArticles: (token, section, query) => {
-  //     dispatch(articlesActions.searchArticles(section, query))
-  //   }
-  // }
+  //TODO: get actions action
+  //TODO: get recent articles
+    return {
+      fetchActions: (token) => {
+        console.log(`token`);
+        console.log(token);
+        dispatch(dashboardActions.getUserActions(token))
+      }
+    }
 }
 
 const DashboardPage = connect(
