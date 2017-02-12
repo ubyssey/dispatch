@@ -1,0 +1,38 @@
+.dashboard_container {
+  margin: 2%;
+}
+
+.dashboard_container h2 {
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
+.dashboard_container ul li {
+  margin-top: 20px;
+}
+
+.dashboard_left {
+  float: left;
+  color: #707070;
+  max-width: 60%;
+  font-weight: bold;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.dashboard_left ul li {
+  border-top: 1px solid #969696;
+  padding-top: 20px;
+}
+
+.dashboard_left ul li i {
+  margin: 0px 2%;
+}
+
+.dashboard_left ul li span {
+  color: #9E9E9E;
+}
+
+.dashboard_right {
+  float: right;
+}
