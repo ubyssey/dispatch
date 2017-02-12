@@ -161,7 +161,7 @@ var DispatchAPI = {
       return getRequest('actions', null, {}, token)
     },
     recent: (token) => {
-      return null
+      return getRequest('recent', null, {}, token)
     }
   }
 }
