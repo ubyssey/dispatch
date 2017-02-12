@@ -9,6 +9,7 @@ class DashboardPageComponent extends React.Component {
 
   componentWillMount() {
     this.props.fetchActions(this.props.token)
+    this.props.fetchRecent(this.props.token)
   }
 
   render() {
@@ -22,6 +23,15 @@ class DashboardPageComponent extends React.Component {
         <a href={elem.meta.article_url}>{elem.meta.headline}</a>
         {` ${moment(elem.timestamp).from(moment())}`}
       </li>))
+    : <li></li>
+
+    let recentArticlesList = this.props.recent.isLoaded
+    ? this.props.recent.data.map((elem,ind) => {
+      return (
+        <li key={ind}>
+          <a href={`/admin/articles/${elem.id}`}>{elem.headline}</a>
+        </li>)
+    })
     : <li></li>
 
     return (
@@ -43,8 +53,7 @@ class DashboardPageComponent extends React.Component {
             </div>
             <div className="dashboard_recent_articles">
               <ul>
-              <li>a</li>
-              <li>b</li>
+                {recentArticlesList}
               </ul>
             </div>
           </div>
@@ -56,21 +65,15 @@ class DashboardPageComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  actions: state.app.dashboard
-  // recent: state.app.user.recent
+  token: state.app.auth.token,
+  actions: state.app.dashboard.actions,
+  recent: state.app.dashboard.recent
 })
 
-const mapDispatchToProps = (dispatch) => {
-  //TODO: get actions action
-  //TODO: get recent articles
-    return {
-      fetchActions: (token) => {
-        console.log(`token`);
-        console.log(token);
-        dispatch(dashboardActions.getUserActions(token))
-      }
-    }
-}
+const mapDispatchToProps = (dispatch) => ({
+  fetchActions: (token) => dispatch(dashboardActions.getUserActions(token)),
+  fetchRecent: (token) => dispatch(dashboardActions.getRecentArticles(token))
+})
 
 const DashboardPage = connect(
   mapStateToProps,

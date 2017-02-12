@@ -580,7 +580,7 @@ class TemplateViewSet(viewsets.GenericViewSet):
 
 class ActionViewSet(viewsets.GenericViewSet):
 
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request):
 
@@ -595,13 +595,18 @@ class ActionViewSet(viewsets.GenericViewSet):
 class RecentArticlesViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)
+    serializer_class = ArticleSerializer
 
     def list(self, request):
 
         recent = recent_articles(request.user.person)
 
+        articles = []
+        for x in recent:
+            articles.append(self.get_serializer(x).data)
+
         data = {
-            'results': recent
+            'results': articles
         }
 
         return Response(data)
