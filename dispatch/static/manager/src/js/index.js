@@ -53,6 +53,8 @@ render((
           <Route path='/login' component={Pages.Login} />
         </Route>
 
+        <Route path='/logout' component={Pages.Logout} />
+
       </Route>
     </Router>
   </Provider>
