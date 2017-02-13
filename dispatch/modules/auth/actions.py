@@ -44,7 +44,7 @@ def list_actions(count=25):
                 meta['author'] = action.person.full_name
                 meta['headline'] = article.headline
                 meta['article_url'] = article.get_absolute_url()
-                meta['count'] = 1 if count == 1 else count
+                meta['count'] = count
                 meta['action'] = SINGULAR[action.action] if count == 1 else PLURAL[action.action]
             except:
                 continue
