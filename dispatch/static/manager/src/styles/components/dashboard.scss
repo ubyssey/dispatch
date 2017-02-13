@@ -8,7 +8,7 @@
 }
 
 .dashboard_container ul li {
-  margin-top: 20px;
+
 }
 
 .dashboard_left {
@@ -21,12 +21,13 @@
 }
 
 .dashboard_left ul li {
+  margin-top: 20px;
   border-top: 1px solid #969696;
   padding-top: 20px;
 }
 
 .dashboard_left ul li i {
-  margin: 0px 2%;
+  margin: 0 2%;
 }
 
 .dashboard_left ul li span {
@@ -35,4 +36,29 @@
 
 .dashboard_right {
   float: right;
+  max-width: 38%;
+}
+
+.dashboard_quick_actions ul li{
+  display: inline;
+  padding-right: 1%;
+}
+
+.dashboard_quick_actions {
+  margin-bottom: 2%;
+  padding-top: 2%;
+}
+
+.dashboard_recent_articles {
+  border: 1px solid #9E9E9E;
+}
+
+.dashboard_recent_articles h2 {
+  background-color: #9E9E9E;
+  padding: 2%;
+}
+
+.dashboard_recent_articles ul li {
+  border-top: 1px solid #9E9E9E;
+  padding: 2%;
 }
