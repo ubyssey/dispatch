@@ -9,6 +9,7 @@ import ComponentsPage from './ComponentsPage'
 import PagesPage from './PagesPage'
 import SectionsPage from './SectionsPage'
 import ProfilePage from './ProfilePage'
+import LogoutPage from './LogoutPage'
 
 export {
   LoginPage as Login,
@@ -21,5 +22,6 @@ export {
   ComponentsPage as Components,
   PagesPage as Pages,
   SectionsPage as Sections,
-  ProfilePage as Profile
+  ProfilePage as Profile,
+  LogoutPage as Logout
 }
