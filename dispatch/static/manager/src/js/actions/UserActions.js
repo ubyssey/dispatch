@@ -59,7 +59,5 @@ export function unauthenticateUser(token) {
   return {
     type: types.AUTH_DELETE_TOKEN,
     payload: DispatchAPI.auth.deleteToken(token)
-      .then( json => json )
       .catch((err) => console.log(err))
-  }
 }
