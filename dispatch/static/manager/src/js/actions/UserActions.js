@@ -55,7 +55,7 @@ export function deleteArticles(token, articleIds) {
   }
 }
 
-export function unauthenticateUser(token) {
+export function unauthenticateUser() {
   return {
     type: types.AUTH_DELETE_TOKEN,
     payload: DispatchAPI.auth.deleteToken(token)

@@ -21,11 +21,11 @@ class LogoutPageComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({token: state.app.auth.token})
+const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = dispatch => ({
-  Logout: (token) => {
-    dispatch(userActions.unauthenticateUser(token))
+const mapDispatchToProps = (dispatch) => ({
+  Logout: () => {
+    dispatch(userActions.unauthenticateUser())
   },
   redirect: () => {
     dispatch(push('/login'))
