@@ -7,6 +7,7 @@ import PagesPage from './PagesPage'
 import SectionsPage from './SectionsPage'
 import ProfilePage from './ProfilePage'
 import LogoutPage from './LogoutPage'
+
 import * as Articles from './Articles'
 import * as Integrations from './Integrations'
 
