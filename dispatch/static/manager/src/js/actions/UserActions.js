@@ -46,3 +46,9 @@ export function authenticateUser(email, password, nextPath = '/') {
       })
   }
 }
+
+export function unauthenticateUser() {
+  return {
+    type: types.AUTH_DELETE_TOKEN,
+  }
+}

@@ -17,13 +17,21 @@ export default function authReducer(state = initialState, action) {
   case types.AUTH_RECEIVE_TOKEN:
     Cookies.set('token', action.token) // Persist token in browser cookie
     Cookies.set('email', action.email) // Persist email in browser cookie
-
     return Object.assign({}, state, {
       token: action.token,
       email: action.email,
       nextPath: null
     })
-  default:
-    return state
+  case types.AUTH_DELETE_TOKEN:
+    Cookies.remove('token')
+    Cookies.remove('email')
+
+    return Object.assign({}, state, {
+      token: null,
+      email: null,
+      nextPath: null
+    })
+    default:
+      return state
   }
 }

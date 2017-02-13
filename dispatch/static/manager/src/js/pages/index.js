@@ -6,6 +6,7 @@ import ComponentsPage from './ComponentsPage'
 import PagesPage from './PagesPage'
 import SectionsPage from './SectionsPage'
 import ProfilePage from './ProfilePage'
+import LogoutPage from './LogoutPage'
 
 import * as Articles from './Articles'
 import * as Integrations from './Integrations'
@@ -21,4 +22,5 @@ export {
   ProfilePage as Profile,
   Articles as Articles,
   Integrations as Integrations
+  LogoutPage as Logout
 }
