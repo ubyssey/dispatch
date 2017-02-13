@@ -18,7 +18,7 @@ class DashboardPageComponent extends React.Component {
     let historyList = this.props.actions.isLoaded
     ? this.props.actions.data.map((elem,ind) => (
       <li key={ind}>
-        <i className="fa fa-plus" aria-hidden="true"></i>
+        <i className={`fa fa-${elem.icon}`} aria-hidden="true"></i>
         {elem.meta.author}
         {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
         <a href={elem.meta.article_url}>{elem.meta.headline}</a>
@@ -49,8 +49,8 @@ class DashboardPageComponent extends React.Component {
             <h2>Quick Actions</h2>
             <div className="dashboard_quick_actions">
               <ul>
-                <li><Link to={`/articles/new`}>New Article</Link></li>
-                <li><Link to={`/`}>New Page</Link></li>
+                <li><button className="pt-button"><Link to={`/articles/new`}>New Article</Link></button></li>
+                <li><button className="pt-button"><Link to={`/`}>New Page</Link></button></li>
               </ul>
             </div>
             <div className="dashboard_recent_articles">
