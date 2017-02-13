@@ -10,9 +10,7 @@
 .dashboard_left {
   float: left;
   max-width: 60%;
-  font-weight: bold;
-  white-space: normal;
-  word-wrap: break-word;
+  font-weight: $font-weight-bold;
 }
 
 .dashboard_left ul li {
