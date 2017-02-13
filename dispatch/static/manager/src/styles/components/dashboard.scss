@@ -9,7 +9,6 @@
 
 .dashboard_left {
   float: left;
-  color: #707070;
   max-width: 60%;
   font-weight: bold;
   white-space: normal;
@@ -18,7 +17,7 @@
 
 .dashboard_left ul li {
   margin-top: 20px;
-  border-top: 1px solid #969696;
+  border-top: 1px solid $color-border-gray-dark;
   padding-top: 20px;
 }
 
@@ -27,7 +26,7 @@
 }
 
 .dashboard_left ul li span {
-  color: #9E9E9E;
+  color: $color-text-gray;
 }
 
 .dashboard_right {
@@ -46,15 +45,15 @@
 }
 
 .dashboard_recent_articles {
-  border: 1px solid #9E9E9E;
+  border: 1px solid $color-border-gray-dark;
 }
 
 .dashboard_recent_articles h2 {
-  background-color: #9E9E9E;
+  background-color: $color-bg-gray-dark;
   padding: 2%;
 }
 
 .dashboard_recent_articles ul li {
-  border-top: 1px solid #9E9E9E;
+  border-top: 1px solid $color-border-gray;
   padding: 2%;
 }
