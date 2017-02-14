@@ -21,10 +21,14 @@
 
 .dashboard_left ul li i {
   margin: 0 2%;
+  float: left;
+  // this is a little hacky, the 1px height is to give it some height so the div doesn't overflow underneath the icon.
+  padding: 1px 0px;
 }
 
 .dashboard_left ul li span {
   color: $color-text-gray;
+  white-space: nowrap;
 }
 
 .dashboard_right {
