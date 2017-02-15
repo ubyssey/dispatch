@@ -15,7 +15,7 @@ export function getUserActions(token) {
 
 export function getRecentArticles(token) {
   return {
-    type: types.FETCH_RECENT,
+    type: types.FETCH_RECENT_ARTICLES,
     payload: DispatchAPI.dashboard.recent(token)
       .then(json => {
         return normalize(json.results, arrayOf(articleSchema))

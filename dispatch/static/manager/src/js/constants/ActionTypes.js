@@ -59,4 +59,4 @@ export const FETCH_TEMPLATE = 'FETCH_TEMPLATE'
 
 // Dashboard actions
 export const FETCH_ACTIONS = 'FETCH_ACTIONS'
-export const FETCH_RECENT = 'FETCH_RECENT'
+export const FETCH_RECENT_ARTICLES = 'FETCH_RECENT_ARTICLES'
