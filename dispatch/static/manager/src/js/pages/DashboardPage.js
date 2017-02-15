@@ -2,8 +2,8 @@ import React from 'react';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import * as dashboardActions from '../actions/DashboardActions'
 import moment from 'moment'
+import * as dashboardActions from '../actions/DashboardActions'
 
 class DashboardPageComponent extends React.Component {
 
