@@ -121,6 +121,19 @@ function delRequest(route, id=null, payload={}, token=null) {
   .then(parseJSON)
 }
 
+function delRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'DELETE',
+      headers: buildHeaders(token),
+      body: JSON.stringify(payload)
+    }
+  )
+  .then(handleError)
+  .then(parseJSON)
+}
+
 var DispatchAPI = {
   auth: {
     fetchToken: (email, password) => {
