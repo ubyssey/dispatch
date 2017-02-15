@@ -659,3 +659,27 @@ def user_authenticate(request):
         return Response(data, status=status.HTTP_202_ACCEPTED)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DEL'])
+def user_unauthenticate(request):
+    deleted = []
+    user_token = request.data.get('token', None)
+    if user_token is None:
+        print('couldn\'t find user token')
+        data = {
+            'deleted': None
+        }
+        return data
+    else:
+        print('got\'em')
+        try:
+            Token.objects.get(user_token).delete()
+            deleted.append(user_token)
+        except:
+            pass
+
+        data = {
+            'deleted': deleted
+        }
+        print('token deleted!')
+        return data

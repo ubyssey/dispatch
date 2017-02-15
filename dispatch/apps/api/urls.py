@@ -49,4 +49,5 @@ urlpatterns = format_suffix_patterns([
     url(r'^articles/(?P<pk>[0-9]+)/comments/$', article_comments, name='article-comments'),
     # User authorization
     url(r'^auth/token', views.user_authenticate, name='user-token'),
+    url(r'^auth/delete/token', views.user_unauthenticate, name='delete-user-token'),
 ]) + router.urls

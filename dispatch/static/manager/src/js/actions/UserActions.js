@@ -47,8 +47,18 @@ export function authenticateUser(email, password, nextPath = '/') {
   }
 }
 
-export function unauthenticateUser() {
+export function deleteArticles(token, articleIds) {
+  return {
+    type: types.DELETE_ARTICLES,
+    payload: DispatchAPI.articles.deleteArticles(token, articleIds)
+      .then( json => json.deleted )
+  }
+}
+
+export function unauthenticateUser(token) {
   return {
     type: types.AUTH_DELETE_TOKEN,
+    payload: DispatchAPI.auth.deleteToken(token)
+      .then( json => json )
   }
 }
