@@ -40,12 +40,13 @@ def list_actions(count=25):
         if action.object_type == 'article':
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
-                meta = {}
-                meta['author'] = action.person.full_name
-                meta['headline'] = article.headline
-                meta['article_url'] = article.get_absolute_url()
-                meta['count'] = count
-                meta['action'] = SINGULAR[action.action] if count == 1 else PLURAL[action.action]
+                meta = {
+                    'author': action.person.full_name,
+                    'headline': article.headline,
+                    'article_url': article.get_absolute_url(),
+                    'count': count,
+                    'action': SINGULAR[action.action] if count == 1 else PLURAL[action.action],
+                }
             except:
                 continue
 
