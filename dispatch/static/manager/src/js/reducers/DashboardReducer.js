@@ -35,11 +35,11 @@ let actionsReducer = (state = initialState.actions, action) => {
 
 let recentReducer = (state = initialState.recent, action) => {
   switch (action.type) {
-    case `${types.FETCH_RECENT}_PENDING`:
+    case `${types.FETCH_RECENT_ARTICLES}_PENDING`:
       return R.merge(state, {
         isLoading: true
       })
-    case `${types.FETCH_RECENT}_FULFILLED`:
+    case `${types.FETCH_RECENT_ARTICLES}_FULFILLED`:
       const data = Object.keys(action.payload.entities.articles).map((elem) => ({
         id: elem,
         headline: action.payload.entities.articles[elem].headline
