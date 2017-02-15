@@ -23,9 +23,13 @@ export default function authReducer(state = initialState, action) {
         email: action.email,
         nextPath: null
       })
-    case types.AUTH_DELETE_TOKEN:
+    case `${types.AUTH_DELETE_TOKEN}_PENDING`:
+      break;
+    case `${types.AUTH_DELETE_TOKEN}_FULFILLED`:
       Cookies.remove('token')
       Cookies.remove('email')
+
+      console.log(action)
 
       return Object.assign({}, state, {
         token: null,
