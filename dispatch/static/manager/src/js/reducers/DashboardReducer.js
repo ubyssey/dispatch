@@ -16,7 +16,7 @@ const initialState = {
   }
 }
 
-let actionsReducer = (state = initialState.actions, action) => {
+const actionsReducer = (state = initialState.actions, action) => {
   switch(action.type) {
     case `${types.FETCH_ACTIONS}_PENDING`:
       return R.merge(state,{
@@ -33,7 +33,7 @@ let actionsReducer = (state = initialState.actions, action) => {
   }
 }
 
-let recentReducer = (state = initialState.recent, action) => {
+const recentReducer = (state = initialState.recent, action) => {
   switch (action.type) {
     case `${types.FETCH_RECENT_ARTICLES}_PENDING`:
       return R.merge(state, {

@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import * as dashboardActions from '../actions/DashboardActions'
+import { LinkButton } from '../components/inputs'
 
 class DashboardPageComponent extends React.Component {
 
@@ -15,7 +16,7 @@ class DashboardPageComponent extends React.Component {
   render() {
 
     //returns the user history if the data is loaded, else returns an empty list element
-    let historyList = this.props.actions.isLoaded
+    const historyList = this.props.actions.isLoaded
     ? this.props.actions.data.map((elem,ind) => (
       <li key={ind}>
         <i className={`fa fa-${elem.icon}`} aria-hidden="true"></i>
@@ -27,13 +28,12 @@ class DashboardPageComponent extends React.Component {
     : <li></li>
 
     //Returns a list of the user's recent articles if the data is loaded, else returns an empty list element
-    let recentArticlesList = this.props.recent.isLoaded
-    ? this.props.recent.data.map((elem,ind) => {
-      return (
-        <li key={ind}>
-          <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
-        </li>)
-    })
+    const recentArticlesList = this.props.recent.isLoaded
+    ? this.props.recent.data.map((elem,ind) => (
+      <li key={ind}>
+        <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
+      </li>
+    ))
     : <li></li>
 
     return (
@@ -49,8 +49,8 @@ class DashboardPageComponent extends React.Component {
             <h2>Quick Actions</h2>
             <div className="dashboard_quick_actions">
               <ul>
-                <li><button className="pt-button"><Link to={`/articles/new`}>New Article</Link></button></li>
-                <li><button className="pt-button"><Link to={`/`}>New Page</Link></button></li>
+                <li><LinkButton to={`/articles/new`}>New Article</LinkButton></li>
+                <li><LinkButton to={``}>New Page</LinkButton></li>
               </ul>
             </div>
             <div className="dashboard_recent_articles">
