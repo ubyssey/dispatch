@@ -761,7 +761,7 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     def user_unauthenticate(self, request):
 
         user_token = request.data
-        
+
         if user_token is None:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         else:
