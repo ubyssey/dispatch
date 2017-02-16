@@ -61,10 +61,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
-<<<<<<< HEAD
+
     url(r'^auth/token', authentication_management, name='auth-token'),
-=======
-    url(r'^auth/token', views.user_authenticate, name='user-token'),
-    url(r'^auth/delete/token', views.user_unauthenticate, name='delete-user-token'),
->>>>>>> need to reserach how django routes work so that i can overload /auth/token
+
 ]) + router.urls
