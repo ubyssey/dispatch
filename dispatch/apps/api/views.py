@@ -638,48 +638,49 @@ class TrendingViewSet(viewsets.GenericViewSet):
 #     except:
 #         return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['POST'])
 @permission_classes((AllowAny,))
-def user_authenticate(request):
+class AuthenticationViewSet(viewsets.GenericViewSet):
 
-    email = request.data.get('email', None)
-    password = request.data.get('password', None)
+    def user_authenticate(self, request):
+        print(self)
+        print(request)
 
-    user = authenticate(username=email, password=password)
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
 
-    if user is not None and user.is_active:
+        user = authenticate(username=email, password=password)
 
-        (token, created) = Token.objects.get_or_create(user=user)
+        if user is not None and user.is_active:
 
-        data = {
-            'token': unicode(token)
-        }
+            (token, created) = Token.objects.get_or_create(user=user)
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            data = {
+                'token': unicode(token)
+            }
 
-@api_view(['DEL'])
-def user_unauthenticate(request):
-    deleted = []
-    user_token = request.data.get('token', None)
-    if user_token is None:
-        print('couldn\'t find user token')
-        data = {
-            'deleted': None
-        }
-        return data
-    else:
-        print('got\'em')
-        try:
-            Token.objects.get(user_token).delete()
-            deleted.append(user_token)
-        except:
-            pass
+            return Response(data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
-        data = {
-            'deleted': deleted
-        }
-        print('token deleted!')
-        return data
+    def user_unauthenticate(self, request):
+        deleted = []
+        user_token = request.data.get('token', None)
+        if user_token is None:
+            print('couldn\'t find user token')
+            data = {
+                'deleted': None
+            }
+            return data
+        else:
+            print('got\'em')
+            try:
+                Token.objects.get(user_token).delete()
+                deleted.append(user_token)
+            except:
+                pass
+
+            data = {
+                'deleted': deleted
+            }
+            print('token deleted!')
+            return data
