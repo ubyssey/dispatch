@@ -38,6 +38,11 @@ article_comments = views.CommentViewSet.as_view({ 'get': 'article' })
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
 
+authentication_management = views.AuthenticationViewSet.as_view({
+    'post': 'user_authenticate',
+    'delete': 'user_unauthenticate'
+})
+
 urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
@@ -55,6 +60,5 @@ urlpatterns = format_suffix_patterns([
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
-    url(r'^auth/token', views.user_authenticate, name='user-token'),
-    url(r'^auth/delete/token', views.user_unauthenticate, name='delete-user-token'),
+    url(r'^auth/token', authentication_management, name='authentication_management'),
 ]) + router.urls
