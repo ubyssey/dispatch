@@ -22,7 +22,7 @@ class DashboardPageComponent extends React.Component {
         <i className={`fa fa-${elem.icon}`} aria-hidden="true"></i>
         {elem.meta.author}
         {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
-        <a href={elem.meta.article_url}>{elem.meta.headline}</a>
+        <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}}/>
         <span>{` ${moment(elem.timestamp).from(moment())}`}</span>
       </li>))
     : <li></li>

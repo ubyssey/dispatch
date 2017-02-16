@@ -32,6 +32,7 @@ def list_actions(count=25):
 
     for n, action in enumerate(actions):
         count += 1
+
         if n < len(actions) - 1:
             next_action = actions[n+1]
             if action.person == next_action.person and action.object_type == next_action.object_type and action.object_id == next_action.object_id and action.action == next_action.action:
@@ -40,10 +41,13 @@ def list_actions(count=25):
         if action.object_type == 'article':
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
+                print(article.headline)
+                print(action.object_id)
+                print('\n')
                 meta = {
+                    'id': action.object_id,
                     'author': action.person.full_name,
                     'headline': article.headline,
-                    'article_url': article.get_absolute_url(),
                     'count': count,
                     'action': SINGULAR[action.action] if count == 1 else PLURAL[action.action],
                 }
