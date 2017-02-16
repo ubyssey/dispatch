@@ -1,4 +1,11 @@
+import json
+
+from django.db.models import signals
+from django.template import loader, Context
+
+from dispatch.core.signals import article_post_save
 from dispatch.apps.core.models import Integration
+from dispatch.apps.content.models import Article
 
 from dispatch.vendor.apis import Facebook, FacebookAPIError
 
@@ -110,5 +117,61 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
             'pages': pages
         }
 
+
+    @classmethod
+    def render_article_content(cls, article):
+
+        # TODO: convert JSON array to HTML.
+
+        html = ''
+
+        blocks = json.loads(article.content)
+
+        for block in blocks:
+            print block
+
+
+        # TODO: convert HTML to string and return it.
+
+        return html
+
+    @classmethod
+    def render_article(cls, article):
+
+        template = loader.get_template('instant_article.html')
+
+        context = Context({
+            'article': article,
+            'content': cls.render_article_content(article)
+        })
+
+        return template.render(context)
+
+    @classmethod
+    def update_instant_article(cls, sender, article, **kwargs):
+
+        integration = article.integrations.get('fb-instant-articles', {})
+
+        if integration.get('enabled'):
+            print 'instant articles enabled'
+
+            print cls.render_article(article)
+        else:
+            print 'instant articles disabled'
+
+        # settings = cls.get_settings()
+        #
+        # if settings['page_configured']:
+        #     page_id = settings['page_id']
+        #     page_access_token = settings['page_access_token']
+        #
+        #     fb = Facebook(access_token=page_access_token)
+        #
+        #     print fb.create_instant_article(page_id, 'html source', False, True)
+
+
 # Register integrations
 integrationLib.register(FacebookInstantArticlesIntegration)
+
+# Connect signals
+article_post_save.connect(FacebookInstantArticlesIntegration.update_instant_article, sender=Article)
