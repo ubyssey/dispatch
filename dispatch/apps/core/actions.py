@@ -41,9 +41,6 @@ def list_actions(count=25):
         if action.object_type == 'article':
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
-                print(article.headline)
-                print(action.object_id)
-                print('\n')
                 meta = {
                     'id': action.object_id,
                     'author': action.person.full_name,
