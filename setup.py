@@ -14,6 +14,8 @@ setup(name='dispatch',
         'django == 1.9.4',
         'djangorestframework == 3.2.4',
         'pillow',
-        'requests == 2.6.0'
+        'requests == 2.6.0',
+        'jsonfield',
+        'requests'
       ],
       zip_safe=False)

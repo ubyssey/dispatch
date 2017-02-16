@@ -22,6 +22,17 @@ class Facebook(object):
 
         return data
 
+    def _post(self, uri, params={}):
+
+        r = requests.post(uri, data=params)
+
+        data = r.json()
+
+        if 'error' in data:
+            raise FacebookAPIError(data['error']['message'])
+
+        return data
+
     def get_access_token(self, params):
 
         uri = '%s/oauth/access_token' % self.API_ROOT
@@ -49,3 +60,16 @@ class Facebook(object):
         }
 
         return self._get(uri, params)
+
+    def create_instant_article(self, page_id, html_source, pubilished=False, development_mode=False):
+
+        uri = '%s/%s/instant_articles' % (self.API_ROOT, page_id)
+
+        params = {
+            'access_token': self.access_token,
+            'html_source': html_source,
+            'published': published,
+            'development_mode': development_mode
+        }
+
+        return self._post(uri, params)

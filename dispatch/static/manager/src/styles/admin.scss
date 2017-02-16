@@ -35,3 +35,7 @@
 // Embeds
 @import 'components/embeds/embed_container';
 @import 'components/embeds/image';
+
+.pt-toast-container {
+  z-index: 500 !important;
+}

@@ -20,6 +20,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.template import loader, Context
 
+from dispatch.core.signals import article_post_save
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
 from dispatch.apps.core.models import Person, User
@@ -246,6 +247,9 @@ class Publishable(Model):
         if not self.parent:
             self.parent = self
             super(Publishable, self).save(update_fields=['parent'])
+
+        if revision:
+            article_post_save.send(sender=type(self), article=self)
 
         return self
 
