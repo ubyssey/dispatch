@@ -11,7 +11,7 @@ export default function IntegrationsIndexPage(props) {
   return (
     <DocumentTitle title='Integrations'>
       <div className='u-container-main u-container-main--row'>
-        <SidebarNav items={NAV_ITEMS} />
+        <SidebarNav title='Integrations' items={NAV_ITEMS} />
         <div className='u-container-body'>{props.children}</div>
       </div>
     </DocumentTitle>
