@@ -158,10 +158,10 @@ var DispatchAPI = {
   },
   dashboard: {
     actions: (token) => {
-      return getRequest('actions', null, {}, token)
+      return getRequest('dashboard/actions', null, {}, token)
     },
     recent: (token) => {
-      return getRequest('recent', null, {}, token)
+      return getRequest('dashboard/recent', null, {}, token)
     }
   }
 }

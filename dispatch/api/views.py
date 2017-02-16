@@ -578,11 +578,12 @@ class TemplateViewSet(viewsets.GenericViewSet):
 
         return Response(data)
 
-class ActionViewSet(viewsets.GenericViewSet):
+class DashboardViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)
+    serializer_class = ArticleSerializer
 
-    def list(self, request):
+    def list_actions(self, request):
 
         actions = list_actions()
 
@@ -592,12 +593,7 @@ class ActionViewSet(viewsets.GenericViewSet):
 
         return Response(data)
 
-class RecentArticlesViewSet(viewsets.GenericViewSet):
-
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ArticleSerializer
-
-    def list(self, request):
+    def list_recent_articles(self, request):
 
         recent = recent_articles(request.user.person)
 
