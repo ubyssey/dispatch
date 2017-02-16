@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 
 import { FormInput, SelectInput } from '../../inputs'
 import { Checkbox } from '@blueprintjs/core'
@@ -22,6 +23,24 @@ const INSTANT_ARTICLE_OPTIONS = [
   { value: false, label: "No"}
 ]
 
+function updateInstantArticle(update, integrations, enabled) {
+
+  integrations = R.merge(
+    integrations,
+    {
+      'fb-instant-articles': R.merge(
+        integrations['fb-instant-articles'],
+        {
+          enabled: enabled
+        }
+      )
+    }
+  )
+
+  return update('integrations', integrations)
+
+}
+
 export default function DeliveryTab(props) {
 
   return (
@@ -43,8 +62,8 @@ export default function DeliveryTab(props) {
 
       <FormInput label='Enable as Facebook Instant Article'>
         <Checkbox
-          checked={props.is_instant_article}
-          onChange={ e => props.update('is_instant_article', e.target.checked) } />
+          checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
+          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
       </FormInput>
 
     </div>

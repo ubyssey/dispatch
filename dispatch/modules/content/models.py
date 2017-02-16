@@ -2,6 +2,7 @@ import datetime
 from PIL import Image as Img
 import StringIO, json, os, re
 from string import punctuation
+from jsonfield import JSONField
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -95,13 +96,13 @@ class Publishable(Model):
     stylesheets = ManyToManyField(Stylesheet, related_name='%(class)s_stylesheets')
     snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
 
+    integrations = JSONField(default={})
+
     content = TextField()
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
-
-    is_instant_article = BooleanField(default=False)
 
     def add_view(self):
         self.views += 1
