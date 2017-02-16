@@ -7,7 +7,7 @@ import * as userActions from '../actions/UserActions'
 class LogoutPageComponent extends React.Component {
 
   componentWillMount() {
-    // Start logout procedure here
+    // Start logout procedure hereg
     this.props.Logout()
   }
 
@@ -21,9 +21,9 @@ class LogoutPageComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   Logout: () => {
     dispatch(userActions.unauthenticateUser())
   },
