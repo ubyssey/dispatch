@@ -101,7 +101,7 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
             fb.get_access_token(payload)
 
             # Fetch pages belonging to authenticated user
-            pages = fb.get_pages('me')
+            pages = fb.list_pages('me')
 
         except FacebookAPIError, e:
             raise IntegrationCallbackError(e.message)
