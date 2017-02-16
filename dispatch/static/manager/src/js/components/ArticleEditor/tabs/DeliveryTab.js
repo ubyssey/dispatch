@@ -18,11 +18,6 @@ const READING_TIME_OPTIONS = [
   { value: 'evening', label: 'Evening' }
 ]
 
-const INSTANT_ARTICLE_OPTIONS = [
-  { value: true, label: "Yes"},
-  { value: false, label: "No"}
-]
-
 function updateInstantArticle(update, integrations, enabled) {
 
   integrations = R.merge(
