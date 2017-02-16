@@ -1,61 +1,69 @@
-.dashboard_container {
+.c-dashboard_container {
   margin: 2%;
 }
 
-.dashboard_container h2 {
+.c-dashboard__header {
   font-size: 1.5em;
   font-weight: bolder;
 }
 
-.dashboard_left {
+.c-dashboard_container__left {
   float: left;
   max-width: 60%;
   font-weight: $font-weight-bold;
 }
 
-.dashboard_left ul li {
+.c-dashboard_container__leftlistitem {
   margin-top: 20px;
   border-top: 1px solid $color-border-gray-dark;
   padding-top: 20px;
 }
 
-.dashboard_left ul li i {
-  margin: 0 2%;
-  float: left;
+.c-dashboard_container__leftlisticon {
   // this is a little hacky, the 1px height is to give it some height so the div doesn't overflow underneath the icon.
-  padding: 1px 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-left: 2%;
+  margin-right: 2%;
+  float: left;
 }
 
-.dashboard_left ul li span {
+.c-dashboard_container__leftlistspan {
   color: $color-text-gray;
   white-space: nowrap;
 }
 
-.dashboard_right {
-  float: right;
+.c-dashboard_container__right {
   max-width: 38%;
+  float: right;
 }
 
-.dashboard_quick_actions ul li{
-  display: inline;
-  padding-right: 1%;
-}
-
-.dashboard_quick_actions {
+.c-dashboard_quick_actions {
   margin-bottom: 2%;
   padding-top: 2%;
 }
 
-.dashboard_recent_articles {
+.c-dashboard_quick_actions__listitem {
+  display: inline;
+  padding-right: 1%;
+}
+
+.c-dashboard_recent_articles {
   border: 1px solid $color-border-gray-dark;
 }
 
-.dashboard_recent_articles h2 {
+.c-dashboard_recent_articles__header {
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 2%;
+  padding-bottom: 2%;
   background-color: $color-bg-gray-dark;
-  padding: 2%;
 }
 
-.dashboard_recent_articles ul li {
+.c-dashboard_recent_articles__listitem {
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 2%;
+  padding-bottom: 2%;
   border-top: 1px solid $color-border-gray;
-  padding: 2%;
 }
