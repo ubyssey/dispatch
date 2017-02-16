@@ -30,7 +30,7 @@ class Facebook(object):
 
         self.access_token = data['access_token']
 
-    def get_pages(self, user='me'):
+    def list_pages(self, user='me'):
 
         uri = '%s/%s/accounts' % (self.API_ROOT, user)
 
