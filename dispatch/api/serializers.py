@@ -225,6 +225,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     template_id = serializers.CharField(required=False, write_only=True)
     template_fields = JSONField(required=False, source='get_template_fields')
 
+    integrations = JSONField(required=False)
+
     class Meta:
         model = Article
         fields = (
@@ -260,7 +262,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'seo_keyword',
             'seo_description',
             'est_reading_time',
-            'is_instant_article'
+            'integrations'
         )
 
     def create(self, validated_data):
@@ -289,7 +291,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
-        instance.is_instant_article = validated_data.get('is_instant_article', instance.is_instant_article)
+
+        # Set integrations
+        instance.integrations = validated_data.get('integrations', instance.integrations)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
