@@ -11,6 +11,7 @@ export default function SidebarNav(props) {
 
   return (
     <nav className='c-sidebar-nav'>
+      <h2 className='c-sidebar-nav__title'>{props.title}</h2>
       <ul>{items}</ul>
     </nav>
   )
