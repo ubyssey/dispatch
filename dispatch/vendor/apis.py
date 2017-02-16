@@ -39,3 +39,13 @@ class Facebook(object):
         }
 
         return self._get(uri, params)
+
+    def list_instant_articles(self, page_id):
+
+        uri = '%s/%s/instant_articles' % (self.API_ROOT, page_id)
+
+        params = {
+            'access_token': self.access_token
+        }
+
+        return self._get(uri, params)
