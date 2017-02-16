@@ -1,11 +1,14 @@
 import Cookies from 'js-cookie'
+import R from 'ramda'
 
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
   token: Cookies.get('token'),  // Get token stored in browser cookie
   email: Cookies.get('email'),  // Get email stored in browser cookie
-  nextPath: null
+  nextPath: null,
+  isLoading: false,
+  isLoaded: false
 }
 
 export default function authReducer(state = initialState, action) {
@@ -24,17 +27,19 @@ export default function authReducer(state = initialState, action) {
         nextPath: null
       })
     case `${types.AUTH_DELETE_TOKEN}_PENDING`:
-      break;
+      return R.merge(state, {
+        isLoading: true
+      })
     case `${types.AUTH_DELETE_TOKEN}_FULFILLED`:
       Cookies.remove('token')
       Cookies.remove('email')
 
-      console.log(action)
-
       return Object.assign({}, state, {
         token: null,
         email: null,
-        nextPath: null
+        nextPath: null,
+        isLoading: false,
+        isLoaded: true
       })
     default:
       return state

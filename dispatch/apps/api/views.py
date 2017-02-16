@@ -642,9 +642,6 @@ class TrendingViewSet(viewsets.GenericViewSet):
 class AuthenticationViewSet(viewsets.GenericViewSet):
 
     def user_authenticate(self, request):
-        print(self)
-        print(request)
-
         email = request.data.get('email', None)
         password = request.data.get('password', None)
 
@@ -663,24 +660,13 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
     def user_unauthenticate(self, request):
-        deleted = []
-        user_token = request.data.get('token', None)
+
+        user_token = request.data
         if user_token is None:
-            print('couldn\'t find user token')
-            data = {
-                'deleted': None
-            }
-            return data
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            print('got\'em')
             try:
                 Token.objects.get(user_token).delete()
-                deleted.append(user_token)
             except:
                 pass
-
-            data = {
-                'deleted': deleted
-            }
-            print('token deleted!')
-            return data
+            return Response({}, status=status.HTTP_200_OK)
