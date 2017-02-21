@@ -4,7 +4,7 @@ from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, T
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
-
+from dispatch.core.signals import article_post_save
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -338,6 +338,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)
         else:
             perform_action(self.context['request'].user.person, action, 'article', instance.pk)
+
+        article_post_save.send(sender=Article, article=instance)
 
         return instance
 

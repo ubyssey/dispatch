@@ -134,18 +134,6 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         return contentHTML
 
     @classmethod
-    def render_author(cls, article):
-
-        authorHTML = ''
-
-        blocks = json.loads(article.authors)
-
-        for block in blocks:
-            authorHTML += "<a>%s</a>\n" % block['full_name']
-
-        return authorHTML
-
-    @classmethod
     def render_article(cls, article):
 
         template = loader.get_template('instant_article.html')
@@ -153,7 +141,6 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         context = Context({
             'article': article,
             'content': cls.render_article_content(article)
-            # 'author': cls.render_author(article)
         })
 
         return template.render(context)
