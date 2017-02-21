@@ -123,17 +123,27 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
 
         # TODO: convert JSON array to HTML.
 
-        html = ''
+        contentHTML = ''
 
         blocks = json.loads(article.content)
 
         for block in blocks:
-            print block
+            if block['type'] == 'paragraph':
+                contentHTML += "<p>%s</p>\n" % block['data']
 
+        return contentHTML
 
-        # TODO: convert HTML to string and return it.
+    @classmethod
+    def render_author(cls, article):
 
-        return html
+        authorHTML = ''
+
+        blocks = json.loads(article.authors)
+
+        for block in blocks:
+            authorHTML += "<a>%s</a>\n" % block['full_name']
+
+        return authorHTML
 
     @classmethod
     def render_article(cls, article):
@@ -143,6 +153,7 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         context = Context({
             'article': article,
             'content': cls.render_article_content(article)
+            # 'author': cls.render_author(article)
         })
 
         return template.render(context)
