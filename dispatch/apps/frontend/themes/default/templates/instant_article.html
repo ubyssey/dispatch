@@ -2,7 +2,7 @@
 <html lang="en" prefix="op: http://media.facebook.com/op#">
   <head>
     <meta charset="utf-8">
-    <link rel="canonical" href="http://example.com/article.html">
+    <link rel="canonical" href="{{ article.get_absolute_url }}">
     <meta property="op:markup_version" content="v1.0">
   </head>
   <body>
@@ -19,56 +19,21 @@
 
         <!-- The authors of your article -->
         <address>
-          <a rel="facebook" href="http://facebook.com/brandon.diamond">Brandon Diamond</a>
-          Brandon is a avid zombie hunter.
-        </address>
-        <address>
-          <a>TR Vishwanath</a>
-          Vish is a scholar and a gentleman.
+          <a>{{ article.authors }}</a>
         </address>
 
         <!-- The cover image shown inside your article -->
         <figure>
-          <img src="http://mydomain.com/path/to/img.jpg" />
-          <figcaption>This image is amazing</figcaption>
+          <img src="{{ article.featured_image.image.get_medium_url }}" />
         </figure>
-
-        <!-- A kicker for your article -->
-        <h3 class="op-kicker">
-          This is a kicker
-        </h3>
 
       </header>
 
       <!-- Article body goes here -->
 
       <!-- Body text for your article -->
-      {{ content }}
+      {{ content|safe }}
 
-      <!-- A video within your article -->
-      <figure>
-        <video>
-          <source src="http://mydomain.com/path/to/video.mp4" type="video/mp4" />
-        </video>
-      </figure>
-
-      <!-- An ad within your article -->
-      <figure class="op-ad">
-        <iframe src="https://www.adserver.com/ss;adtype=banner320x50" height="60" width="320"></iframe>
-      </figure>
-
-      <!-- Analytics code for your article -->
-      <figure class="op-tracker">
-          <iframe src="" hidden></iframe>
-      </figure>
-
-      <footer>
-        <!-- Credits for your article -->
-        <aside>Acknowledgements</aside>
-
-        <!-- Copyright details for your article -->
-        <small>Legal notes</small>
-      </footer>
     </article>
   </body>
 </html>
