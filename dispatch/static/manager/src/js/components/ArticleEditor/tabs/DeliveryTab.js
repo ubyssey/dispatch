@@ -2,7 +2,6 @@ import React from 'react'
 import R from 'ramda'
 
 import { FormInput, SelectInput } from '../../inputs'
-import { Checkbox } from '@blueprintjs/core'
 import { Switch } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
