@@ -3,6 +3,7 @@ import R from 'ramda'
 
 import { FormInput, SelectInput } from '../../inputs'
 import { Checkbox } from '@blueprintjs/core'
+import { Switch } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
   { value: 1, label: 1 },
@@ -56,9 +57,10 @@ export default function DeliveryTab(props) {
       </FormInput>
 
       <FormInput label='Enable as Facebook Instant Article'>
-        <Checkbox
+        <Switch
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
-          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
+          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) }
+          label= "Enable" />
       </FormInput>
 
     </div>
