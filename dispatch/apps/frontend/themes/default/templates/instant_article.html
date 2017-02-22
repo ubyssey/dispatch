@@ -4,35 +4,29 @@
     <meta charset="utf-8">
     <link rel="canonical" href="{{ article.get_absolute_url }}">
     <meta property="op:markup_version" content="v1.0">
+    <meta property="fb:article_style" content="The Ubyssey">
   </head>
   <body>
     <article>
       <header>
-        <!-- The title and subtitle shown in your Instant Article -->
         <h1>{{ article.headline }}</h1>
 
-        <!-- The date and time when your article was originally published -->
         <time class="op-published" datetime="2014-11-11T04:44:16Z">{{ article.published_at }}</time>
 
-        <!-- The date and time when your article was last updated -->
         <time class="op-modified" dateTime="2014-12-11T04:44:16Z">{{ article.updated_at }}</time>
 
-        <!-- The authors of your article -->
         <address>
           <a>{{ article.get_author_string }}</a>
         </address>
 
-        <!-- The cover image shown inside your article -->
         <figure>
           <img src="{{ article.featured_image.image.get_medium_url }}" />
         </figure>
 
       </header>
 
-      <!-- Article body goes here -->
 
-      <!-- Body text for your article -->
-      {{ content|safe }}
+      {{ content|escape|safe }}
 
     </article>
   </body>
