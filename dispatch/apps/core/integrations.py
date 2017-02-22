@@ -2,6 +2,7 @@ import json
 
 from django.db.models import signals
 from django.template import loader, Context
+from django.utils.html import escape
 
 from dispatch.core.signals import article_post_save
 from dispatch.apps.core.models import Integration
@@ -121,7 +122,7 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
     @classmethod
     def render_article_content(cls, article):
 
-        # TODO: convert JSON array to HTML.
+        # TODO: convert amp to &amp;
 
         contentHTML = ''
 
@@ -129,7 +130,8 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
 
         for block in blocks:
             if block['type'] == 'paragraph':
-                contentHTML += "<p>%s</p>\n" % block['data']
+                newString = escape(block['data'])
+                contentHTML += "<p>%s</p>\n" % newString
 
         return contentHTML
 
@@ -153,19 +155,16 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         if integration.get('enabled'):
             print 'instant articles enabled'
 
-            print cls.render_article(article)
-        else:
-            print 'instant articles disabled'
+            html = cls.render_article(article)
+            settings = cls.get_settings()
 
-        # settings = cls.get_settings()
-        #
-        # if settings['page_configured']:
-        #     page_id = settings['page_id']
-        #     page_access_token = settings['page_access_token']
-        #
-        #     fb = Facebook(access_token=page_access_token)
-        #
-        #     print fb.create_instant_article(page_id, 'html source', False, True)
+            if settings['page_configured']:
+                page_id = settings['page_id']
+                page_access_token = settings['page_access_token']
+
+                fb = Facebook(access_token=page_access_token)
+
+                print fb.create_instant_article(page_id, html, False, True)
 
 
 # Register integrations
