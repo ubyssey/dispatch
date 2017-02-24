@@ -7,17 +7,9 @@ $ui-font-lft-etica: "lft-etica", "LFT Etica", Helvetica, Arial, sans-serif;
 $font-weight-normal: normal;
 $font-weight-bold: 600;
 
-
 // Font sizes
 $font-size-base: 14;
 
 @mixin font-size($pixels) {
   font-size: ($pixels / $font-size-base) + em;
-}
-
-@font-face {
-  font-family: 'Icons16';
-  src: url('../fonts/icons-16.eot') format('eot'),
-       url('../fonts/icons-16.woff') format('woff'),
-       url('../fonts/icons-16.ttf') format('ttf');
 }
