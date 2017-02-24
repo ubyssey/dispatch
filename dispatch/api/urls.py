@@ -20,6 +20,7 @@ router.register(r'templates', views.TemplateViewSet, base_name='templates')
 router.register(r'comments', views.CommentViewSet, base_name='comments')
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
 router.register(r'integrations', views.IntegrationViewSet, base_name='integrations')
+router.register(r'dashboard', views.DashboardViewSet, base_name='dashboard')
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
@@ -35,6 +36,9 @@ person_bulk_delete = views.PersonViewSet.as_view({ 'post': 'bulk_delete' })
 article_bulk_delete = views.ArticleViewSet.as_view({ 'post': 'bulk_delete' })
 article_comments = views.CommentViewSet.as_view({ 'get': 'article' })
 
+dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
+dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
+
 urlpatterns = format_suffix_patterns([
     # Extra section routes
     url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
@@ -48,6 +52,9 @@ urlpatterns = format_suffix_patterns([
     # Article routes
     url(r'^articles/delete/$', article_bulk_delete, name='article-bulk-delete'),
     url(r'^articles/(?P<pk>[0-9]+)/comments/$', article_comments, name='article-comments'),
+    # Dashboard routes
+    url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
+    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
     url(r'^auth/token', views.user_authenticate, name='user-token'),
 ]) + router.urls

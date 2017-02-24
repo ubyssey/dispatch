@@ -183,6 +183,14 @@ var DispatchAPI = {
     callback: (token, integrationId, query) => {
       return getRequest('integrations.callback', integrationId, query, token)
     }
+  },
+  dashboard: {
+    actions: (token) => {
+      return getRequest('dashboard/actions', null, {}, token)
+    },
+    recent: (token) => {
+      return getRequest('dashboard/recent', null, {}, token)
+    }
   }
 }
 
