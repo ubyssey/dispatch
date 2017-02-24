@@ -1,5 +1,7 @@
 import React from 'react'
 
+require('../../styles/components/modal_container.scss')
+
 export default function ModalContainer(props) {
   return (
     <div className='c-modal-container'>

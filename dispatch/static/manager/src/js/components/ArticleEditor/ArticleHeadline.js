@@ -2,6 +2,8 @@ import React from 'react'
 
 import { EditableText } from '@blueprintjs/core'
 
+require('../../../styles/components/article_headline.scss')
+
 export default function ArticleHeadline(props) {
 
   function handleUpdate(value) {

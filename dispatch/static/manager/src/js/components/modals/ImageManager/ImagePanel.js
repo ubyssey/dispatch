@@ -3,6 +3,8 @@ import R from 'ramda'
 
 import { FormInput, TextInput, MultiSelectInput } from '../../inputs'
 
+require('../../../../styles/components/image_panel.scss')
+
 export default function ImagePanel(props) {
 
   function addAuthor(id) {
