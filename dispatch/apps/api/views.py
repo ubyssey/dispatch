@@ -12,6 +12,7 @@ from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
+from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
@@ -643,6 +644,33 @@ class IntegrationViewSet(viewsets.GenericViewSet):
             data = integration.callback(request.user, request.GET)
         except IntegrationCallbackError, e:
             return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
+
+class DashboardViewSet(viewsets.GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ArticleSerializer
+
+    def list_actions(self, request):
+
+        actions = list_actions()
+
+        data = {
+            'results': actions
+        }
+
+        return Response(data)
+
+    def list_recent_articles(self, request):
+
+        recent = recent_articles(request.user.person)
+
+        articles = []
+        for x in recent:
+            articles.append(self.get_serializer(x).data)
+
+        data = {
+            'results': articles
+        }
 
         return Response(data)
 

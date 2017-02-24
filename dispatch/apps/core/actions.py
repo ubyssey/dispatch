@@ -32,6 +32,7 @@ def list_actions(count=25):
 
     for n, action in enumerate(actions):
         count += 1
+
         if n < len(actions) - 1:
             next_action = actions[n+1]
             if action.person == next_action.person and action.object_type == next_action.object_type and action.object_id == next_action.object_id and action.action == next_action.action:
@@ -40,16 +41,19 @@ def list_actions(count=25):
         if action.object_type == 'article':
             try:
                 article = Article.objects.get(parent_id=action.object_id, head=True)
-                if count == 1:
-                    text = '%s %s <a href="%s">%s</a>' % (action.person.full_name, SINGULAR[action.action], article.get_absolute_url(), article.headline)
-                else:
-                    text = '%s made %d %s to <a href="%s">%s</a>' % (action.person.full_name, count, PLURAL[action.action], article.get_absolute_url(), article.headline)
+                meta = {
+                    'id': action.object_id,
+                    'author': action.person.full_name,
+                    'headline': article.headline,
+                    'count': count,
+                    'action': SINGULAR[action.action] if count == 1 else PLURAL[action.action],
+                }
             except:
                 continue
 
             results.append({
                 'icon': ICONS[action.action],
-                'text': text,
+                'meta': meta,
                 'timestamp': action.timestamp
             })
 
@@ -74,6 +78,3 @@ def recent_articles(person, count=5):
             pass
 
     return articles
-
-
-
