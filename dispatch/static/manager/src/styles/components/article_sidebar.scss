@@ -1,3 +1,7 @@
+@import '~@blueprintjs/core/dist/blueprint.css';
+
+@import '../utilities/fonts';
+
 // Component: ArticleSidebar
 .c-article-sidebar {
   // Structure
@@ -34,12 +38,12 @@
   }
 }
 
-.c-article-sidebar__tablist {
+.c-article-sidebar__tablist.pt-tab-list {
   // Border
   border-bottom: 1px solid rgb(228, 228, 228);
 }
 
-.c-article-sidebar__tab {
+.c-article-sidebar__tab.pt-tab {
   // Structure
   height: 3rem;
   line-height: 3rem;
@@ -58,7 +62,7 @@
   }
 }
 
-.c-article-sidebar__panel {
+.c-article-sidebar__panel.pt-tab-panel {
   // Structure
   margin-top: 0;
   flex: 1 0;

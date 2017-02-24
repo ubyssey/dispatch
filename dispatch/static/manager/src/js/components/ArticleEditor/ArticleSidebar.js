@@ -8,6 +8,8 @@ import DeliveryTab from './tabs/DeliveryTab'
 import TemplateTab from './tabs/TemplateTab'
 import SEOTab from './tabs/SEOTab'
 
+require('../../../styles/components/article_sidebar.scss')
+
 export default function ArticleSidebar(props) {
 
   return (

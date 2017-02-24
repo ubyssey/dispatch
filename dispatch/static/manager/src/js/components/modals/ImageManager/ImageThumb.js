@@ -1,5 +1,7 @@
 import React from 'react'
 
+require('../../../../styles/components/image_thumb.scss')
+
 export default function ImageThumb(props) {
   const style = {
     backgroundImage: `url('${props.image.thumb}')`
