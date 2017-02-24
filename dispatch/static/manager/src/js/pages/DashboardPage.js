@@ -13,51 +13,52 @@ class DashboardPageComponent extends React.Component {
     this.props.fetchRecent(this.props.token)
   }
 
+  renderActivity() {
+    return this.props.actions.data.map(
+      (elem, i) => (
+        <li key={i} className="c-dashboard__activity__item">
+          <div className='c-dashboard__activity__item__icon'>
+            <span className={`pt-icon-standard pt-icon-${elem.icon}`} aria-hidden="true" />
+          </div>
+          <div className='c-dashboard__activity__item__text'>
+            <span className='c-dashboard__activity__item__text__person'>{elem.meta.author}</span>
+            {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
+            <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}}/>
+            <span className="c-dashboard__leftlistspan">{` ${moment(elem.timestamp).from(moment())}`}</span>
+          </div>
+        </li>
+      )
+    )
+  }
+
+  renderRecent() {
+    return this.props.recent.data.map(
+      (elem, i) => (
+        <li key={i} className="c-dashboard_recent-articles__item">
+          <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
+        </li>
+      )
+    )
+  }
+
   render() {
 
-    //returns the user history if the data is loaded, else returns an empty list element
-    const historyList = this.props.actions.isLoaded
-    ? this.props.actions.data.map((elem,ind) => (
-      <li key={ind} className="c-dashboard_container__leftlistitem">
-        <i className={`fa fa-${elem.icon} c-dashboard_container__leftlisticon`} aria-hidden="true"></i>
-        {elem.meta.author}
-        {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
-        <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}}/>
-        <span className="c-dashboard_container__leftlistspan">{` ${moment(elem.timestamp).from(moment())}`}</span>
-      </li>))
-    : <li></li>
-
-    //Returns a list of the user's recent articles if the data is loaded, else returns an empty list element
-    const recentArticlesList = this.props.recent.isLoaded
-    ? this.props.recent.data.map((elem,ind) => (
-      <li key={ind} className="c-dashboard_recent_articles__listitem">
-        <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
-      </li>
-    ))
-    : <li></li>
-
     return (
-      <DocumentTitle title='Dashboard'>
-        <div className="c-dashboard_container">
-          <div className="c-dashboard_container__left">
+      <DocumentTitle title='Dispatch'>
+        <div className="c-dashboard">
+          <div className="c-dashboard__activity">
             <h2 className="c-dashboard__header">Latest Activity</h2>
-            <ul>
-              {historyList}
-            </ul>
+            <ul>{this.props.actions.isLoaded ? this.renderActivity() : null}</ul>
           </div>
-          <div className="c-dashboard_container__right">
+          <div className="c-dashboard__sidebar">
             <h2 className="c-dashboard__header">Quick Actions</h2>
-            <div className="c-dashboard_quick_actions">
-              <ul>
-                <li className="c-dashboard_quick_actions__listitem"><LinkButton to={`/articles/new`}>New Article</LinkButton></li>
-                <li className="c-dashboard_quick_actions__listitem"><LinkButton to={``}>New Page</LinkButton></li>
-              </ul>
-            </div>
-            <div className="c-dashboard_recent_articles">
-              <h2 className="c-dashboard__header c-dashboard_recent_articles__header">Recent Articles</h2>
-              <ul>
-                {recentArticlesList}
-              </ul>
+            <ul className="c-dashboard_quick-actions">
+              <li className="c-dashboard_quick-actions__item"><LinkButton to={`/articles/new`}>New Article</LinkButton></li>
+              <li className="c-dashboard_quick-actions__item"><LinkButton to={``}>New Page</LinkButton></li>
+            </ul>
+            <div className="c-dashboard_recent-articles">
+              <h2 className="c-dashboard__header c-dashboard_recent-articles__header">Recent Articles</h2>
+              <ul>{this.props.recent.isLoaded ? this.renderRecent() : null}</ul>
             </div>
           </div>
         </div>
