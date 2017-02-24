@@ -3,8 +3,11 @@ import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
+
 import * as dashboardActions from '../actions/DashboardActions'
 import { LinkButton } from '../components/inputs'
+
+require('../../styles/components/dashboard.scss')
 
 class DashboardPageComponent extends React.Component {
 
