@@ -1,69 +1,92 @@
-.c-dashboard_container {
-  margin: 2%;
+.c-dashboard {
+  // Structure
+  display: flex;
+  padding: 2rem;
 }
 
 .c-dashboard__header {
-  font-size: 1.5em;
-  font-weight: bolder;
+  // Text
+  @include font-size(16);
+  font-weight: $font-weight-semi-bold;
 }
 
-.c-dashboard_container__left {
-  float: left;
-  max-width: 60%;
-  font-weight: $font-weight-bold;
+.c-dashboard__activity {
+  // Structure
+  flex: 3;
+  padding-right: 2rem;
+
+  // Text
+  @include font-size(13);
 }
 
-.c-dashboard_container__leftlistitem {
-  margin-top: 20px;
-  border-top: 1px solid $color-border-gray-dark;
-  padding-top: 20px;
-}
+.c-dashboard__activity__item {
+  // Structure
+  display: flex;
+  margin-top: 1rem;
+  padding-top: 1rem;
 
-.c-dashboard_container__leftlisticon {
-  // this is a little hacky, the 1px height is to give it some height so the div doesn't overflow underneath the icon.
-  padding-top: 1px;
-  padding-bottom: 1px;
-  margin-left: 2%;
-  margin-right: 2%;
-  float: left;
-}
-
-.c-dashboard_container__leftlistspan {
-  color: $color-text-gray;
-  white-space: nowrap;
-}
-
-.c-dashboard_container__right {
-  max-width: 38%;
-  float: right;
-}
-
-.c-dashboard_quick_actions {
-  margin-bottom: 2%;
-  padding-top: 2%;
-}
-
-.c-dashboard_quick_actions__listitem {
-  display: inline;
-  padding-right: 1%;
-}
-
-.c-dashboard_recent_articles {
-  border: 1px solid $color-border-gray-dark;
-}
-
-.c-dashboard_recent_articles__header {
-  padding-left: 2%;
-  padding-right: 2%;
-  padding-top: 2%;
-  padding-bottom: 2%;
-  background-color: $color-bg-gray-dark;
-}
-
-.c-dashboard_recent_articles__listitem {
-  padding-left: 2%;
-  padding-right: 2%;
-  padding-top: 2%;
-  padding-bottom: 2%;
+  // Border
   border-top: 1px solid $color-border-gray;
+}
+
+.c-dashboard__activity__item__icon {
+  // Structure
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  // Text
+  color: $color-text-gray;
+  line-height: 1.45em;
+}
+
+.c-dashboard__activity__item__text {
+  // Text
+  line-height: 1.45em;
+}
+
+.c-dashboard__activity__item__text__person,
+.c-dashboard__activity__item__text > a {
+  // Text
+  font-weight: $font-weight-semi-bold;
+}
+
+.c-dashboard__sidebar {
+  // Structure
+  flex: 2;
+}
+
+.c-dashboard_quick-actions {
+  // Structure
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.c-dashboard_quick-actions__item {
+  // Structure
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.c-dashboard_recent-articles {
+  // Border
+  border: thin solid $color-border-gray-dark;
+}
+
+.c-dashboard_recent-articles__item,
+.c-dashboard_recent-articles__header {
+  // Structure
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.c-dashboard_recent-articles__header {
+  // Background
+  background: $color-bg-gray-dark;
+}
+
+.c-dashboard_recent-articles__item {
+  // Border
+  border-top: thin solid $color-border-gray;
 }
