@@ -61,7 +61,7 @@ class Facebook(object):
 
         return self._get(uri, params)
 
-    def create_instant_article(self, page_id, html_source, pubilished=False, development_mode=False):
+    def create_instant_article(self, page_id, html_source, published=False, development_mode=False):
 
         uri = '%s/%s/instant_articles' % (self.API_ROOT, page_id)
 

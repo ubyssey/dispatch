@@ -153,9 +153,9 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         integration = article.integrations.get('fb-instant-articles', {})
 
         if integration.get('enabled'):
-            print 'instant articles enabled'
 
             html = cls.render_article(article)
+
             settings = cls.get_settings()
 
             if settings['page_configured']:
