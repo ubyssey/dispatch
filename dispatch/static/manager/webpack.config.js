@@ -10,8 +10,35 @@ module.exports = {
     filename: '[name]-' + version + '.js'
   },
   module: {
-    loaders: [
-      {test: /\.jsx|.js$/, include: __dirname + '/src/js', loader: 'babel-loader'},
+    rules: [
+      {
+        test: /\.js/,
+        include: __dirname + '/src/js',
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.scss$/,
+        include: __dirname + '/src',
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpg|woff|eot|ttf)$/,
+        loader: 'url-loader?limit=100000'
+      }
     ]
   },
   plugins: [
@@ -20,7 +47,6 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin()
   ]
 };

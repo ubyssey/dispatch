@@ -1,5 +1,7 @@
 import React from 'react'
 
+require('../../styles/components/toolbar.scss')
+
 export default function Toolbar(props) {
 
   return (

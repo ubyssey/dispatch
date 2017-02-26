@@ -1,37 +1,24 @@
-// Blueprint
-@import '../../node_modules/@blueprintjs/core/dist/blueprint';
-
 // Utilities
-@import 'utilities/variables';
-@import 'utilities/reset';
 @import 'utilities/fonts';
-@import 'utilities/colors';
+@import 'utilities/reset';
 @import 'utilities/containers';
 
-// Modules
-@import 'modules/base';
+* {
+  &:focus {
+    outline: none;
+  }
+}
 
-// Objects
-@import 'objects/inputs';
-@import 'objects/dropdown_list';
+html, body {
+  font-family: $font-family-default;
+  font-size: 14px;
+  height: 100%;
+}
 
-// Components
-@import 'components/header';
-@import 'components/toolbar';
-@import 'components/item-list';
-@import 'components/inputs';
-@import 'components/article_editor';
-@import 'components/article_sidebar';
-@import 'components/article_headline';
-@import 'components/placeholder_bar';
-@import 'components/content_editor';
-@import 'components/modal_container';
-@import 'components/image_manager';
-@import 'components/image_thumb';
-@import 'components/image_panel';
-@import 'components/versions_dropdown';
-@import 'components/dashboard';
+html {
+    overflow: hidden;
+}
 
-// Embeds
-@import 'components/embeds/embed_container';
-@import 'components/embeds/image';
+body {
+    overflow: auto;
+}
