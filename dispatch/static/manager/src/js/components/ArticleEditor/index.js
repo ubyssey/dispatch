@@ -11,6 +11,8 @@ import ArticleToolbar from './ArticleToolbar'
 import ArticleContentEditor from './ArticleContentEditor'
 import ArticleSidebar from './ArticleSidebar'
 
+require('../../../styles/components/article_editor.scss')
+
 const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {

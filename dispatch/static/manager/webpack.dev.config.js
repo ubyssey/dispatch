@@ -3,8 +3,7 @@ var prodConfig = require('./webpack.config.js');
 
 var devConfig = Object.create(prodConfig);
 
-devConfig.devtool = 'source-map';
-devConfig.debug = true;
+devConfig.devtool = 'eval-cheap-module-source-map';
 devConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {

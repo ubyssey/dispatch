@@ -4,6 +4,8 @@ import { AnchorButton } from '@blueprintjs/core'
 
 import Dropdown from '../../Dropdown'
 
+require('../../../../styles/components/versions_dropdown.scss')
+
 export default class VersionsDropdown extends React.Component {
 
   getVersions() {
