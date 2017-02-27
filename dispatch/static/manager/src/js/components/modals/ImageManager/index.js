@@ -8,6 +8,8 @@ import { Button, TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
 
+require('../../../../styles/components/image_manager.scss')
+
 class ImageManagerComponent extends React.Component {
 
   constructor(props) {

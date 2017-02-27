@@ -3,6 +3,8 @@ import React from 'react'
 import ItemListHeader from './ItemListHeader'
 import ItemListTable from './ItemListTable'
 
+require('../../../styles/components/item_list.scss')
+
 export default function ItemList(props) {
 
   return (

@@ -9,6 +9,8 @@ import { createHistory } from 'history'
 import { loadingBarReducer, loadingBarMiddleware } from 'react-redux-loading-bar'
 import promiseMiddleware from 'redux-promise-middleware'
 
+require('../styles/admin.scss')
+
 import * as Pages from './pages'
 import * as Containers from './containers'
 import appReducer from './reducers/AppReducer'
@@ -26,7 +28,14 @@ const store = createStore(
     loadingBar: loadingBarReducer,
     modal: modalReducer
   }),
-  applyMiddleware(thunk, router, promiseMiddleware(), loadingBarMiddleware())
+  applyMiddleware(
+    thunk,
+    router,
+    promiseMiddleware(),
+    loadingBarMiddleware({
+      promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
+    })
+  )
 )
 
 const history = syncHistoryWithStore(browserHistory, store)

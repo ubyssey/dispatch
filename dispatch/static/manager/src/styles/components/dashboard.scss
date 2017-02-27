@@ -1,0 +1,95 @@
+@import '../utilities/fonts';
+@import '../utilities/colors';
+
+.c-dashboard {
+  // Structure
+  display: flex;
+  padding: 2rem;
+}
+
+.c-dashboard__header {
+  // Text
+  @include font-size(16);
+  font-weight: $font-weight-semi-bold;
+}
+
+.c-dashboard__activity {
+  // Structure
+  flex: 3;
+  padding-right: 2rem;
+
+  // Text
+  @include font-size(13);
+}
+
+.c-dashboard__activity__item {
+  // Structure
+  display: flex;
+  margin-top: 1rem;
+  padding-top: 1rem;
+
+  // Border
+  border-top: 1px solid $color-border-gray;
+}
+
+.c-dashboard__activity__item__icon {
+  // Structure
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  // Text
+  color: $color-text-gray;
+  line-height: 1.45em;
+}
+
+.c-dashboard__activity__item__text {
+  // Text
+  line-height: 1.45em;
+}
+
+.c-dashboard__activity__item__text__person,
+.c-dashboard__activity__item__text > a {
+  // Text
+  font-weight: $font-weight-semi-bold;
+}
+
+.c-dashboard__sidebar {
+  // Structure
+  flex: 2;
+}
+
+.c-dashboard_quick-actions {
+  // Structure
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.c-dashboard_quick-actions__item {
+  // Structure
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.c-dashboard_recent-articles {
+  // Border
+  border: thin solid $color-border-gray-dark;
+}
+
+.c-dashboard_recent-articles__item,
+.c-dashboard_recent-articles__header {
+  // Structure
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.c-dashboard_recent-articles__header {
+  // Background
+  background: $color-bg-gray-dark;
+}
+
+.c-dashboard_recent-articles__item {
+  // Border
+  border-top: thin solid $color-border-gray;
+}
