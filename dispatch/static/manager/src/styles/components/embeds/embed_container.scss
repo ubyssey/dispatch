@@ -1,3 +1,5 @@
+@import '../../utilities/colors';
+
 $embed-border-radius: 5px;
 $embed-header-height: 40px;
 $embed-padding: 1rem;
@@ -42,7 +44,7 @@ $embed-padding: 1rem;
     a {
       // Text
       color: $color-text-gray-light;
-      
+
       // Extras
       cursor: pointer;
 

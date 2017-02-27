@@ -155,6 +155,14 @@ var DispatchAPI = {
     createTag: (token, name) => {
       return postRequest('tags', null, {name: name}, token)
     }
+  },
+  dashboard: {
+    actions: (token) => {
+      return getRequest('dashboard/actions', null, {}, token)
+    },
+    recent: (token) => {
+      return getRequest('dashboard/recent', null, {}, token)
+    }
   }
 }
 
