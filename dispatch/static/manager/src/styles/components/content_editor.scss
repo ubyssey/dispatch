@@ -1,3 +1,5 @@
+@import '../utilities/colors';
+
 // Component: ContentEditor
 .c-content-editor {
   position: relative;
@@ -34,7 +36,7 @@
   border-radius: 28px;
 
   // Background
-  background-image: url('../images/icon-cross.png');
+  background-image: url('../../images/icon-cross.png');
   background-size: 50%;
   background-position: center;
   background-repeat: no-repeat;

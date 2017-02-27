@@ -4,6 +4,8 @@ import ImageManager from '../../modals/ImageManager'
 
 import { FormInput, TextInput } from '../../inputs'
 
+require('../../../../styles/components/embeds/image.scss')
+
 class ImageEmbedComponent extends React.Component {
 
   constructor(props) {
