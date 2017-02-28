@@ -32,7 +32,7 @@ export default function authReducer(state = initialState, action) {
       })
     case `${types.AUTH_DELETE_TOKEN}_FULFILLED`:
       Cookies.remove('token')
-      Cookies.remove('email')
+      Cookies.remove('email') 
 
       return Object.assign({}, state, {
         token: null,
