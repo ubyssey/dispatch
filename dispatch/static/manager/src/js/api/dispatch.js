@@ -133,7 +133,7 @@ var DispatchAPI = {
       return postRequest('auth/token', null, payload)
     },
     deleteToken: (token) => {
-      return delRequest('auth/token', null, token, token)
+      return delRequest('auth/token', null, null, token)
     }
   },
   sections: {
