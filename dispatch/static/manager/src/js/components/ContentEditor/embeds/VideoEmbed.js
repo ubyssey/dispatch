@@ -1,88 +1,77 @@
 import React from 'react'
 
 import { FormInput, TextInput } from '../../inputs'
+import { Button } from '@blueprintjs/core'
+
+require('../../../../styles/components/embeds/video.scss')
+
 
 class VideoEmbedComponent extends React.Component {
-
-  constructor(props){
-    super(props)
-
-    this.handleUrlChange = this.handleUrlChange.bind(this)
-    this.insertVideo = this.insertVideo.bind(this)
-
-    this.state = {
-      inserted: false,
-      validURL: false
-    }
-  }
 
   handleUrlChange(e){
     e.preventDefault()
     this.props.updateField('url', e.target.value)
-    console.log("URL IS: "+this.props.data.url);
-
   }
 
+  handleTitleChange(e){
+    e.preventDefault()
+    this.props.updateField('title', e.target.value)
+  }
 
   insertVideo(){
-    var id = this.validYouTube(this.props.data.url);
+    const id = this.getYoutubeID(this.props.data.url)
     this.props.updateField('id',id)
-    console.log("ID IS: "+this.props.data.id)
 
-    if(this.props.data.id){
-      this.setState({
-        validURL: true,
-        inserted : true
-      })
-    }
   }
 
-  validYouTube(url){
-     var p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/
-     return (url.match(p)) ? RegExp.$1 : false
+  getYoutubeID(url) {
+     const p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/
+     const [, videoId] = url.match(p) || []
+     return videoId
   }
 
 
-  renderInput(){
-    return(
+  renderInput() {
+    return (
       <div>
         <form>
           <FormInput label='URL'>
             <TextInput
               fill={true}
               value={this.props.data.url}
-              onChange={this.handleUrlChange} />
+              onChange={e => this.handleUrlChange(e)} />
           </FormInput>
         </form>
-        <button className="c-input--button"  onClick={this.insertVideo}>Insert</button>
+        <Button onClick={e => this.insertVideo()}>Insert</Button>
       </div>
 
     )
 
   }
-  renderVideo(){
-    return(
+  renderVideo() {
+    return (
       <div>
-        <img className='o-embed--image__image'src={"http://img.youtube.com/vi/" + this.props.data.id + "/0.jpg"}/>
+        <img
+        className='o-embed--video__image'
+        src={`http://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
         <form>
-          <FormInput label='URL'>
+          <FormInput label='Title'>
             <TextInput
               fill={true}
-              value={this.props.data.url}
-              onChange={this.handleUrlChange} />
+              value={this.props.data.title}
+              onChange={e => this.handleTitleChange(e)}
+               />
           </FormInput>
         </form>
       </div>
 
     )
   }
-
 
   render(){
-
     return(
-      <div className='o-embed o-embed--image'>
-        {this.state.inserted ? this.renderVideo() : this.renderInput()}
+      <div className='o-embed o-embed--video'>
+        {this.props.data.id ? this.renderVideo() : this.renderInput()}
       </div>
     )
 
