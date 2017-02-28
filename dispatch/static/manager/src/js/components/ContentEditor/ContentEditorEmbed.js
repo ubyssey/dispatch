@@ -50,7 +50,7 @@ export default class ContentEditorEmbed extends React.Component {
   updateField(field, value) {
     this.setState({
       data: R.assoc(field, value, this.state.data)
-    }, this.updateEntity)
+    })
   }
 
   getData() {
@@ -77,7 +77,8 @@ export default class ContentEditorEmbed extends React.Component {
   render() {
     const embedProps = {
       data: this.state.editMode ? this.state.data : this.getData(),
-      updateField: this.updateField
+      updateField: this.updateField,
+      stopEditing: this.stopEditing
     }
 
     return (
