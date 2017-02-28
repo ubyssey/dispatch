@@ -50,7 +50,7 @@ export default class ContentEditorEmbed extends React.Component {
   updateField(field, value) {
     this.setState({
       data: R.assoc(field, value, this.state.data)
-    })
+    }, this.updateEntity)
   }
 
   getData() {
@@ -68,6 +68,10 @@ export default class ContentEditorEmbed extends React.Component {
 
     this.setState({ editMode: false })
     this.props.blockProps.onBlur()
+  }
+
+  updateEntity() {
+    Entity.mergeData(this.props.block.getEntityAt(0), this.state.data)
   }
 
   render() {
