@@ -759,14 +759,11 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
     def user_unauthenticate(self, request):
+        # Get the token for the current user
+        # In theory this should never 404, but doesn't hurt to include for safety
 
-        user_token = request.data
+        token = get_object_or_404(Token, user=request.user)
 
-        if user_token is None:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            try:
-                Token.objects.get(user_token).delete()
-            except:
-                pass
-            return Response({}, status=status.HTTP_200_OK)
+        token.delete()
+
+        return Response({})
