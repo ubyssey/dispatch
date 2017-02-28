@@ -40,7 +40,7 @@ const recentReducer = (state = initialState.recent, action) => {
         isLoading: true
       })
     case `${types.FETCH_RECENT_ARTICLES}_FULFILLED`:
-      const data = Object.keys(action.payload.entities.articles).map((elem) => ({
+      const data = Object.keys(action.payload.entities.articles || {}).map((elem) => ({
         id: elem,
         headline: action.payload.entities.articles[elem].headline
       }));
