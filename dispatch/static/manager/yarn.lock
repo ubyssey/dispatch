@@ -2834,9 +2834,9 @@ react-dom@^15.3.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react-redux-loading-bar@2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-2.6.6.tgz#f3bbf6bdc0ef6d3ee401839292665c75ee6f133a"
+react-redux-loading-bar@2.6.5:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-2.6.5.tgz#8377d54a875cf8cd99f15ca0e776c54b95545489"
 
 react-redux@^4.4.5:
   version "4.4.6"
