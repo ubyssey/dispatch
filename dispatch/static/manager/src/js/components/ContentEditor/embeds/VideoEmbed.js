@@ -18,9 +18,20 @@ class VideoEmbedComponent extends React.Component {
     this.props.updateField('title', e.target.value)
   }
 
+  handleCaptionChange(e){
+    e.preventDefault()
+    this.props.updateField('caption', e.target.value)
+  }
+
+  handleCreditChange(e){
+    e.preventDefault()
+    this.props.updateField('credit', e.target.value)
+  }
+
   insertVideo(){
     const id = this.getYoutubeID(this.props.data.url)
     this.props.updateField('id',id)
+    this.props.stopEditing()
 
   }
 
@@ -60,6 +71,20 @@ class VideoEmbedComponent extends React.Component {
               fill={true}
               value={this.props.data.title}
               onChange={e => this.handleTitleChange(e)}
+               />
+          </FormInput>
+          <FormInput label='Caption'>
+            <TextInput
+              fill={true}
+              value={this.props.data.caption}
+              onChange={e => this.handleCaptionChange(e)}
+               />
+          </FormInput>
+          <FormInput label='Credit'>
+            <TextInput
+              fill={true}
+              value={this.props.data.credit}
+              onChange={e => this.handleCreditChange(e)}
                />
           </FormInput>
         </form>
