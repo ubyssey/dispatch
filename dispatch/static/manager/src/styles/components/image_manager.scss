@@ -1,0 +1,76 @@
+@import '../utilities/colors';
+
+// Component: ImageManager
+.c-image-manager {
+  // Structure
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+$image-manger-header-padding: 10px;
+$image-manager-header-border: 1px solid $color-border-gray;
+$image-manager-header-box-shadow: rgba(0,0,0,0.05) 0px 1px 1px;
+$image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
+
+.c-image-manager__header {
+  // Structure
+  display: flex;
+  padding-left: $image-manger-header-padding;
+  padding-right: $image-manger-header-padding;
+
+  // Border
+  border-bottom: $image-manager-header-border;
+
+  // Extras
+  box-shadow: $image-manager-header-box-shadow;
+}
+
+.c-image-manager__footer {
+  // Structure
+  padding-left: $image-manger-header-padding;
+  padding-right: $image-manger-header-padding;
+
+  // Border
+  border-top: $image-manager-header-border;
+
+  // Text
+  text-align: right;
+
+  // Extras
+  box-shadow: $image-manager-footer-box-shadow;
+}
+
+.c-image-manager__header__left,
+.c-image-manager__header__right,
+.c-image-manager__footer {
+  // Structure
+  height: 60px;
+  line-height: 60px;
+}
+
+.c-image-manager__header__left {
+  // Structure
+  flex: 1;
+}
+
+.c-image-manager__body {
+  // Structure
+  display: flex;
+  flex: 1;
+}
+
+.c-image-manager__images {
+  // Structure
+  padding: 15px;
+  flex: 2;
+}
+
+.c-image-manager__active {
+  // Structure
+  flex: 1;
+  overflow: scroll;
+
+  // Border
+  border-left: 1px solid $color-border-gray;
+}

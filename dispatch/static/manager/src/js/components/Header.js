@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
 
+require('../../styles/components/header.scss')
+
 export default function Header(props) {
 
   const sections = props.sections.map( section => {
