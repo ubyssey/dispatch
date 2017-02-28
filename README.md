@@ -11,20 +11,20 @@ Made with :heart: by _The Ubyssey_, the University of British Columbia's student
 pip install dispatch
 ```
 
-Create a new project:
-
-```
-dispatch-admin startproject myproject
-cd myproject
-python manage.py runserver
-```
-
 ## Contribute
 
-```
+```bash
+# Install Dispatch in Development Mode
 git clone https://github.com/ubyssey/dispatch.git
 cd dispatch
 python setup.py develop
+
+# Front-end manager app
+cd dispatch/dispatch/static/manager
+
+# Install dependencies
+yarn setup
+
+# Run Webpack in watch mode
+yarn start
 ```
-
-

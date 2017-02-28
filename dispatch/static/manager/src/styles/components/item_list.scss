@@ -1,0 +1,143 @@
+@import '../utilities/variables';
+@import '../utilities/fonts';
+@import '../utilities/colors';
+
+// Component: ItemList
+.c-item-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+// Component: ItemListTable
+.c-item-list__table {
+  padding: 0 50px;
+  flex: 1;
+  overflow: scroll;
+
+  ul {
+    display: table;
+    width: 100%;
+  }
+}
+
+.c-item-list__item {
+  display: table-row;
+}
+
+.c-item-list__item__cell {
+  display: table-cell;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 7px;
+  border-bottom: thin solid $color-text-gray-light;
+  font-size: 14px;
+  color: $color-text-gray;
+
+  &--checkbox {
+    width: 50px;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  &--title {
+    width: 45%;
+
+    a {
+      font-weight: 600;
+      color: $color-black;
+      font-size: 15px;
+      text-decoration: none;
+      vertical-align: bottom;
+      line-height: 1.35em;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Component: ItemListHeader
+.c-item-list__header {
+  display: flex;
+}
+
+.c-item-list__header__left {
+  height: 50px;
+  line-height: 50px;
+}
+
+.c-item-list__header__right {
+  // Structure
+  flex: 1;
+  height: 50px;
+
+  // Text
+  font-size: 14px;
+  line-height: 50px;
+  color: $color-text-gray;
+  text-align: right;
+}
+
+.c-item-list__header__checkbox {
+  // Structure
+  display: inline-block;
+  width: 50px;
+  padding-left: 0;
+  padding-right: 7px;
+
+  // Text
+  text-align: center;
+}
+
+.c-item-list__header__delete {
+  // Structure
+  margin-left: 15px;
+}
+
+// Component: ItemListPagination
+.c-item-list__pagination {
+  // Structure
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.c-item-list__pagination__text {
+  // Structure
+  display: inline-block;
+  margin-left: 5px;
+}
+
+// Component: ItemListSearchBar
+.c-item-list__searchbar {
+  display: inline-block;
+
+  .c-text-input {
+    width: 225px;
+  }
+}
+
+// Component: ItemListEmpty
+.c-item-list-empty {
+  // Structure
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.c-item-list-empty__container {
+  // Structure
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 400px;
+
+  // Text
+  text-align: center;
+
+  p {
+    margin-bottom: 1em;
+    @include font-size(20);
+  }
+}

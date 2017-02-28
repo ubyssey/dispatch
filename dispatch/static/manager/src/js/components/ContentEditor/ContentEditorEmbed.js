@@ -2,6 +2,8 @@ import React from 'react'
 import R from 'ramda'
 import {Entity} from 'draft-js'
 
+require('../../../styles/components/embeds/embed_container.scss')
+
 export default class ContentEditorEmbed extends React.Component {
 
   constructor(props) {

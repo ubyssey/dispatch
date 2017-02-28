@@ -1,0 +1,82 @@
+@import '~@blueprintjs/core/dist/blueprint.css';
+
+@import '../utilities/fonts';
+
+// Component: ArticleSidebar
+.c-article-sidebar {
+  // Structure
+  flex: 1;
+
+  // Border
+  border-left: 1px solid rgb(228, 228, 228);
+
+  &.expanded {
+    right: -600px;
+  }
+
+  // Extras
+  box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
+  transition: right 0.3s ease-in-out;
+
+  div.fieldset {
+    div.col:first-child {
+      // Structure
+      margin-right: 15px;
+    }
+  }
+
+  .pt-tabs {
+    // Structure
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .pt-tab:not(:last-of-type) {
+      // Structure
+      margin-right: 10px;
+    }
+  }
+}
+
+.c-article-sidebar__tablist.pt-tab-list {
+  // Border
+  border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+.c-article-sidebar__tab.pt-tab {
+  // Structure
+  height: 3rem;
+  line-height: 3rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+
+  // Text
+  font-weight: $font-weight-bold;
+
+  .pt-icon-standard {
+    // Structure
+    margin-right: 0.45rem;
+
+    // Text
+    color: inherit;
+  }
+}
+
+.c-article-sidebar__panel.pt-tab-panel {
+  // Structure
+  margin-top: 0;
+  flex: 1 0;
+
+  // Extras
+  overflow-y: scroll;
+}
+
+.c-article-sidebar__confirmation {
+  // Structure
+  margin-top: 1rem;
+
+  .pt-tag {
+    // Structure
+    margin-right: 0.5rem;
+  }
+}
