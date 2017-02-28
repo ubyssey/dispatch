@@ -29,6 +29,8 @@ import ContentStateHelper from './ContentStateHelper'
 
 import LinkEntity from './entities/LinkEntity'
 
+require('../../../styles/components/content_editor.scss')
+
 // Helper functions
 function buildEmbedMap(embeds) {
   let embedMap = {}

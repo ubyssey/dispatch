@@ -82,8 +82,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'dispatch.apps.content',
     'dispatch.apps.core',
-    'dispatch.apps.frontend',
-    'dispatch.apps.manager',
+    'dispatch.apps.frontend'
 )
 
 MIDDLEWARE_CLASSES = (

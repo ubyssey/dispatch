@@ -9,6 +9,8 @@ import MultiSelectInput from './MultiSelectInput'
 import TextAreaInput from './TextAreaInput'
 import SelectInput from './SelectInput'
 
+require('../../../styles/components/inputs.scss')
+
 export {
   Button as Button,
   LinkButton as LinkButton,
