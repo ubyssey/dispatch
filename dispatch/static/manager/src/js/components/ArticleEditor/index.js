@@ -6,6 +6,7 @@ import DocumentTitle from 'react-document-title'
 import * as articlesActions from '../../actions/ArticlesActions'
 import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
+import * as integrationActions from '../../actions/IntegrationActions'
 
 import ArticleToolbar from './ArticleToolbar'
 import ArticleContentEditor from './ArticleContentEditor'
@@ -34,6 +35,8 @@ class ArticleEditorComponent extends React.Component {
       // Fetch article
       this.props.fetchArticle(this.props.token, this.props.articleId)
     }
+
+    this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
   }
 
   componentDidUpdate(prevProps) {
@@ -41,6 +44,8 @@ class ArticleEditorComponent extends React.Component {
       // Fetch article
       if (prevProps.articleId !== this.props.articleId) {
         this.props.fetchArticle(this.props.token, this.props.articleId)
+
+        this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
       }
     }
   }
@@ -116,6 +121,7 @@ class ArticleEditorComponent extends React.Component {
             <ArticleSidebar
               article={article}
               entities={this.props.entities}
+              integrations={this.props.integrations}
               update={this.handleUpdate} />
           </div>
         </div>
@@ -134,6 +140,7 @@ const mapStateToProps = (state) => {
       article: state.app.entities.article,
       images: state.app.entities.images
     },
+    integrations: state.app.integrations.integrations,
     token: state.app.auth.token
   }
 }
@@ -160,6 +167,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     toggleEditorStyle: (style) => {
       dispatch(editorActions.toggleEditorStyle(style))
+    },
+    fetchIntegration: (token, integrationId) => {
+      dispatch(integrationActions.fetchIntegration(token, integrationId))
     }
   }
 }

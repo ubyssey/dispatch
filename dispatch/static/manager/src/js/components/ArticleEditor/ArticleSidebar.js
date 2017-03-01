@@ -46,7 +46,8 @@ export default function ArticleSidebar(props) {
             update={props.update}
             importance={props.article.importance}
             reading_time={props.article.reading_time}
-            integrations={props.article.integrations} />
+            integrations={props.article.integrations}
+            availableIntegrations={props.integrations} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

@@ -36,7 +36,26 @@ function updateInstantArticle(update, integrations, enabled) {
 
 }
 
+function InstantArticles(props) {
+  return (
+    <FormInput label='Enable as Facebook Instant Article'>
+      <Switch
+        checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
+        onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
+    </FormInput>
+  )
+}
+
 export default function DeliveryTab(props) {
+  const isInstantArticlesEnabled = props.availableIntegrations['fb-instant-articles'] && props.availableIntegrations['fb-instant-articles'].settings.page_configured
+
+  let warningMessage = null;
+
+  if (!isInstantArticlesEnabled) {
+    warningMessage = (
+      <div className='pt-callout pt-intent-warning'>Please enable instant articles to use this feature</div>
+    )
+  }
 
   return (
     <div>
@@ -57,9 +76,11 @@ export default function DeliveryTab(props) {
 
       <FormInput label='Enable as Facebook Instant Article'>
         <Switch
+          className='pt-large'
+          disabled={!isInstantArticlesEnabled}
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
-          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) }
-          label= "Enable" />
+          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
+        {warningMessage}
       </FormInput>
 
     </div>
