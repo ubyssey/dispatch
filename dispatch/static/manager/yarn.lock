@@ -2834,9 +2834,9 @@ react-dom@^15.3.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
-react-redux-loading-bar@2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-2.6.6.tgz#f3bbf6bdc0ef6d3ee401839292665c75ee6f133a"
+react-redux-loading-bar@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-2.7.2.tgz#dfbb0c5b182db92572d3433a0d813095b10ea160"
 
 react-redux@^4.4.5:
   version "4.4.6"
@@ -2868,7 +2868,7 @@ react-side-effect@^1.0.2:
     exenv "^1.2.1"
     shallowequal "^0.2.2"
 
-react@^15.3.1:
+react@^15.4.2:
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
   dependencies:

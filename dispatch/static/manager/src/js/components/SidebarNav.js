@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router'
 
+require('../../styles/components/sidebar_nav.scss')
+
 export default function SidebarNav(props) {
 
   let items = props.items.map((item, i) => (
