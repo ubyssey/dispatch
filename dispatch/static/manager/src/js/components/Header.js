@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
 
 require('../../styles/components/header.scss')
+require('../../styles/components/loading_bar.scss')
 
 export default function Header(props) {
 
@@ -62,7 +63,7 @@ export default function Header(props) {
           </ul>
         </nav>
       </div>
-      <LoadingBar />
+      <LoadingBar className='c-loading-bar' />
     </header>
   )
 }
