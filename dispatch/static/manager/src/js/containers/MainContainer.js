@@ -11,15 +11,15 @@ import ModalContainer from '../components/ModalContainer'
 
 class Main extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    if ( !props.sections.isLoaded ) {
-      props.fetchSections(this.props.token)
+  componentWillMount() {
+    // Load sections
+    if ( !this.props.sections.isLoaded ) {
+      this.props.fetchSections(this.props.token)
     }
   }
 
   componentDidMount() {
+    // Initialize toaster reducer with toaster ref
     this.props.setupToaster(this.refs.toaster)
   }
 
