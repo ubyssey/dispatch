@@ -753,7 +753,6 @@ class File(Model):
 
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
-    tag = CharField(max_length=100)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
