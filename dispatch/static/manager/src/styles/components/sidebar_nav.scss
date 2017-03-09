@@ -1,3 +1,7 @@
+@import '../utilities/colors';
+@import '../utilities/variables';
+@import '../utilities/fonts';
+
 .c-sidebar-nav {
   // Border
   border-right: thin solid $color-border-gray;
