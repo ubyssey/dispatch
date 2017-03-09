@@ -14,9 +14,9 @@ from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer)
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, FileSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -405,6 +405,28 @@ class TopicViewSet(viewsets.ModelViewSet):
         """
         view = ArticleViewSet.as_view({'get': 'topic'})
         return view(request, pk=pk)
+
+class FileViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for File model views.
+    """
+    model = File
+    serializer_class = FileSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        # If filename is not valid ASCII, don't add to DB and send error
+        if not all(ord(c) < 128 for c in request.data.get('file').name):
+            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        resource = serializer.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

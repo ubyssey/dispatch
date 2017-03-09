@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
@@ -23,6 +23,21 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id',
             'full_name',
+        )
+
+class FileSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the File model.
+    """
+    filename = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = File
+        fields = (
+            'name',
+            'file',
+            'created_at',
+            'updated_at'
         )
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
