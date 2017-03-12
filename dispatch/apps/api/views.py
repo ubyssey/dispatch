@@ -412,20 +412,7 @@ class FileViewSet(viewsets.ModelViewSet):
     """
     model = File
     serializer_class = FileSerializer
-
-    def create(self, request, *args, **kwargs):
-
-        # If filename is not valid ASCII, don't add to DB and send error
-        if not all(ord(c) < 128 for c in request.data.get('file').name):
-            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        resource = serializer.save()
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    queryset = File.objects.all()
 
 
 class ImageViewSet(viewsets.ModelViewSet):
