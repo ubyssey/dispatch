@@ -4,7 +4,7 @@ from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, T
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
-
+from dispatch.apps.api.exceptions import InvalidFilename
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -25,11 +25,11 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             'full_name',
         )
 
+
 class FileSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the File model.
     """
-    filename = serializers.CharField(read_only=True)
 
     class Meta:
         model = File
@@ -39,6 +39,12 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
             'created_at',
             'updated_at'
         )
+
+    def validate(self, data):
+        if not all(ord(c) < 128 for c in data.get('file').name):
+            raise InvalidFilename()
+        return data
+
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
