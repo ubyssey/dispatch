@@ -118,12 +118,13 @@ class ArticlesTests(DispatchAPITestCase):
 
         article = self._create_article()
 
+        # Generate detail URL
         url = reverse('api-articles-detail', args=[article.data['id']])
 
+        # Successful deletion should return 204
         response = self.client.delete(url, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        # Can't delete an article that has already been deleted
         response = self.client.delete(url, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
