@@ -8,3 +8,5 @@
 dispatch/apps/**/migrations/
 dist/
 node_modules/
+
+.coverage

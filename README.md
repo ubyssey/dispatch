@@ -17,6 +17,7 @@ pip install dispatch
 # Install Dispatch in Development Mode
 git clone https://github.com/ubyssey/dispatch.git
 cd dispatch
+pip install -e .[dev]
 python setup.py develop
 
 # Front-end manager app
