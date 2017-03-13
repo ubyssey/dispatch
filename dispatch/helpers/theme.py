@@ -1,20 +1,22 @@
 import importlib
 from django.conf import settings
 
+DEFAULT_THEME = 'dispatch.apps.frontend.themes.default'
+
 class ThemeHelper():
 
     @staticmethod
     def get_current_theme():
-        return settings.DISPATCH_PROJECT_MODULE
+        return settings.DISPATCH_PROJECT_MODULE or DEFAULT_THEME
 
     @staticmethod
     def get_theme_templates(theme_name=None):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:
-            templates = importlib.import_module(theme_name + ".templates")
+            templates = importlib.import_module(theme_name + '.templates')
             templates = templates.templates.all()
-        except:
+        except ImportError:
             templates = []
         return templates
 
@@ -23,10 +25,11 @@ class ThemeHelper():
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
         try:
-            templates = importlib.import_module(theme_name + ".templates")
+            templates = importlib.import_module(theme_name + '.templates')
             template = templates.templates.get(template_slug)
-        except:
+        except ImportError:
             template = None
+
         return template
 
     @staticmethod
@@ -36,11 +39,11 @@ class ThemeHelper():
         try:
             return ThemeHelper.fetch_theme_urls(theme_name)
         except ImportError:
-            return ThemeHelper.fetch_theme_urls("default")
+            return ThemeHelper.fetch_theme_urls('default')
 
     @staticmethod
     def fetch_theme_urls(theme_name):
-        urls = importlib.import_module(theme_name + ".urls")
+        urls = importlib.import_module(theme_name + '.urls')
         return urls.theme_urls
 
     @staticmethod
@@ -58,11 +61,11 @@ class ThemeHelper():
     @staticmethod
     def get_theme_pages():
         theme_name = ThemeHelper.get_current_theme()
-        pages = importlib.import_module(theme_name + ".pages")
+        pages = importlib.import_module(theme_name + '.pages')
         return pages.theme_pages
 
     @staticmethod
     def get_theme_components():
         theme_name = ThemeHelper.get_current_theme()
-        components = importlib.import_module(theme_name + ".components")
+        components = importlib.import_module(theme_name + '.components')
         return components.theme_components
