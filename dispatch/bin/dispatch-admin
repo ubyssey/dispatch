@@ -63,7 +63,7 @@ def run_tests():
     )
 
     if failures:
-        sys.exit(bool(failures))
+        sys.exit(1)
 
 def coverage_report():
 
