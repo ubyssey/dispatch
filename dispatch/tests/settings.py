@@ -9,7 +9,7 @@ from dispatch.conf.default_settings import (
 SECRET_KEY = 'fake-key'
 BASE_URL = 'http://test.dispatch/'
 
-INSTALLED_APPS = ['tests'] + DEFAULT_INSTALLED_APPS
+INSTALLED_APPS = ['dispatch.tests'] + DEFAULT_INSTALLED_APPS
 
 DATABASES = {
     'default': {
