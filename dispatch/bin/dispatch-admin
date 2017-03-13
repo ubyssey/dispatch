@@ -58,7 +58,9 @@ def run_tests():
     TestRunner = get_runner(settings)
     test_runner = TestRunner()
 
-    failures = test_runner.run_tests(['dispatch/tests'])
+    failures = test_runner.run_tests(
+        [os.path.join(PACKAGE_DIR, 'tests')]
+    )
 
     if failures:
         sys.exit(bool(failures))
@@ -66,7 +68,16 @@ def run_tests():
 def coverage_report():
 
     # Setup coverage
-    cov = coverage.Coverage()
+    cov = coverage.Coverage(
+        branch=True,
+        source=['dispatch'],
+        omit=[
+            os.path.join(PACKAGE_DIR, '*/migrations/*'),
+            os.path.join(PACKAGE_DIR, 'tests/*'),
+            os.path.join(PACKAGE_DIR, 'dispatch/bin/*')
+        ]
+    )
+
     cov.start()
 
     # Run tests
