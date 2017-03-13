@@ -78,6 +78,7 @@ def coverage_report():
         ]
     )
 
+    # Start tracking coverage
     cov.start()
 
     # Run tests
