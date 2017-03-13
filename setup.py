@@ -19,5 +19,5 @@ setup(name='dispatch',
         'dev': [
             'coverage'
         ]
-    }
+    },
     zip_safe=False)

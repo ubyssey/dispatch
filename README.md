@@ -19,7 +19,9 @@ git clone https://github.com/ubyssey/dispatch.git
 cd dispatch
 pip install -e .[dev]
 python setup.py develop
+```
 
+```bash
 # Front-end manager app
 cd dispatch/dispatch/static/manager
 
@@ -28,4 +30,15 @@ yarn setup
 
 # Run Webpack in watch mode
 yarn start
+```
+
+### Testing
+
+```bash
+
+# Run tests
+dispatch-admin test
+
+# Generate coverage report
+dispatch-admin coverage
 ```
