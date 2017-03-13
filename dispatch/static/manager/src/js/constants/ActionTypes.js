@@ -19,6 +19,9 @@ export const CLEAR_SELECTED_ARTICLES = 'CLEAR_SELECTED_ARTICLES'
 export const DELETE_ARTICLES = 'DELETE_ARTICLES'
 export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
 
+// Files actions
+export const FETCH_FILES = 'FETCH_FILES'
+
 // Modal actions
 export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'
