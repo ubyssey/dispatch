@@ -4,6 +4,7 @@ import entitiesReducer from './EntitiesReducer'
 import authReducer from './AuthReducer'
 import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
+import filesReducer from './FilesReducer'
 import imagesReducer from './ImagesReducer'
 import templatesReducer from './TemplatesReducer'
 import personsReducer from './PersonsReducer'
@@ -18,6 +19,7 @@ export default combineReducers({
   auth: authReducer,
   sections: sectionsReducer,
   articles: articlesReducer,
+  files: filesReducer,
   images: imagesReducer,
   templates: templatesReducer,
   persons: personsReducer,

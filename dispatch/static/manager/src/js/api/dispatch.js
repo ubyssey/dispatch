@@ -116,6 +116,11 @@ var DispatchAPI = {
       return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
     }
   },
+  files:{
+    fetchFiles: (query) => {
+      return getRequest('files',null, query)
+    }
+  },
   images: {
     fetchImages: (query) => {
       return getRequest('images', null, query)
