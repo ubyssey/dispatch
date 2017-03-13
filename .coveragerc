@@ -1,4 +1,7 @@
 [run]
 branch = True
 source = dispatch
-omit = */migrations/*
+omit =
+  */migrations/*
+  dispatch/tests/*
+  dispatch/bin/*
