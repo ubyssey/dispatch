@@ -51,7 +51,7 @@ def start_project(name):
 
 def run_tests():
 
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.test_settings'
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.settings'
 
     django.setup()
 
