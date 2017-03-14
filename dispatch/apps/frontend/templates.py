@@ -1,4 +1,3 @@
-from dispatch.apps.frontend.helpers import templates
 from dispatch.apps.frontend.models import TemplateVariable
 
 class TemplateManager:
@@ -10,6 +9,8 @@ class TemplateManager:
 
 
 class BaseTemplate:
+
+    fields = ()
 
     def __init__(self, article_id=None):
         self.article_id = article_id
@@ -35,11 +36,3 @@ class BaseTemplate:
         return [dict(field_class.as_json(),
                      name=field, label=label)
                 for field, label, field_class in self.fields]
-
-
-class Default(BaseTemplate):
-
-    NAME = 'Default'
-    SLUG = 'default'
-
-templates.register(Default)

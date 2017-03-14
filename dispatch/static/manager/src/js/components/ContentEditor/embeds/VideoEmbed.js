@@ -5,7 +5,6 @@ import { Button } from '@blueprintjs/core'
 
 require('../../../../styles/components/embeds/video.scss')
 
-
 class VideoEmbedComponent extends React.Component {
 
   handleUrlChange(e){
@@ -55,10 +54,10 @@ class VideoEmbedComponent extends React.Component {
         </form>
         <Button onClick={e => this.insertVideo()}>Insert</Button>
       </div>
-
     )
 
   }
+
   renderVideo() {
     return (
       <div>

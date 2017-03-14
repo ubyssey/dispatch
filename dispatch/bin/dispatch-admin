@@ -6,6 +6,11 @@ import tempfile
 import shutil
 import fileinput
 import dispatch
+import coverage
+
+import django
+from django.conf import settings
+from django.test.utils import get_runner
 
 PACKAGE_DIR = os.path.dirname(dispatch.__file__)
 
@@ -44,8 +49,62 @@ def start_project(name):
         os.path.join(os.getcwd(), name)
     )
 
+def run_tests():
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.settings'
+
+    django.setup()
+
+    TestRunner = get_runner(settings)
+    test_runner = TestRunner()
+
+    failures = test_runner.run_tests(
+        [os.path.join(PACKAGE_DIR, 'tests')]
+    )
+
+    if failures:
+        sys.exit(1)
+
+
+def run_coverage():
+    # Setup coverage
+    cov = coverage.Coverage(
+        branch=True,
+        source=['dispatch'],
+        omit=[
+            os.path.join(PACKAGE_DIR, '*/migrations/*'),
+            os.path.join(PACKAGE_DIR, 'tests/*'),
+            os.path.join(PACKAGE_DIR, 'bin/*')
+        ]
+    )
+
+    # Start tracking coverage
+    cov.start()
+
+    # Run tests
+    run_tests()
+
+    # Stop tracking coverage
+    cov.stop()
+
+    # Save coverage report
+    cov.save()
+
+    return cov
+
+def coverage_report():
+    # Show report
+    run_coverage().report()
+
+def coverage_html_report():
+    # Show report
+    run_coverage().html_report()
+
 commands = {
-    'startproject': start_project
+    'startproject': start_project,
+    'test': run_tests,
+    'coverage': coverage_report,
+    'coverage_html': coverage_html_report
 }
 
 if __name__ == "__main__":
