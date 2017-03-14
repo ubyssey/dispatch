@@ -33,7 +33,7 @@ export default function ItemListHeader(props) {
               checked={props.actions.isAllSelected}
               onChange={handleToggleAllItems} />
           </div>
-          {`${props.items.selected.length} articles selected`}
+          {`${props.items.selected.length} ${props.type} selected`}
           <Button onClick={handleDeleteItems} disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>

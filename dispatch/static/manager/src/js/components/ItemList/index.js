@@ -11,12 +11,14 @@ export default function ItemList(props) {
     <div className='c-item-list'>
       <ItemListHeader
         items={props.items}
+        type={props.type}
         location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
         actions={props.actions} />
       <ItemListTable
         items={props.items}
+        type={props.type}
         entities={props.entities}
         location={props.location}
         createMessage={props.createMessage}

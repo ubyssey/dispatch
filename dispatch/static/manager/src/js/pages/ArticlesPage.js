@@ -95,11 +95,13 @@ class ArticlesPageComponent extends React.Component {
   render() {
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
-
+    const type = 'Articles'
     return (
       <DocumentTitle title={title}>
         <ItemList
           location={this.props.location}
+
+          type={type}
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
