@@ -34,6 +34,7 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = File
         fields = (
+            'id',
             'name',
             'file',
             'created_at',

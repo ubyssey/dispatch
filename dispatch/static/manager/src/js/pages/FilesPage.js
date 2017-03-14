@@ -13,28 +13,27 @@ class FilesPageComponent extends React.Component {
   componentWillMount() {
     this.props.fetchFiles(this.props.token)
   }
-/*
-<ItemList
-  location={this.props.location}
 
-  currentPage={"currentPage"}
-  totalPages={4}
-
-  items={this.props.files}
-  entities={this.props.entities.files}
-
-  createMessage='Upload File'
-  emptyMessage={'You haven\'t uploaded any files yet.'}
-  createRoute='files/new'
-
-  />
-*/
   render() {
     const title = 'Files'
 
     return (
       <DocumentTitle title={title}>
-      <h1>hihihihihihi</h1>
+        <h1>This is the files page</h1>
+        <ItemList
+          location={this.props.location}
+
+          currentPage={1}
+          totalPages={1}
+
+          items={this.props.articles}
+          entities={this.props.entities.articles}
+
+          createMessage='Upload file'
+          emptyMessage={'You haven\'t uploaded any files yet.'}
+          createRoute='files'
+
+          />
       </DocumentTitle>
     )
   }
