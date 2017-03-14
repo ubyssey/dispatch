@@ -325,23 +325,8 @@ class Article(Publishable):
     def title(self):
         return self.headline
 
-    def tags_list(self):
-        return ",".join(self.tags.values_list('name', flat=True))
-
-    def topics_list(self):
-        return ",".join(self.topics.values_list('name', flat=True))
-
-    def images_list(self):
-        return ",".join([str(i) for i in self.images.values_list('id', flat=True)])
-
-    def comment_count(self):
-        return Comment.objects.filter(article_id=self.parent.id).count()
-
     def get_authors(self):
         return self.authors.order_by('author__order')
-
-    def authors_list(self):
-        return ",".join([str(i) for i in self.get_authors().values_list('id', flat=True)])
 
     def get_related(self):
         return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
@@ -484,7 +469,7 @@ class Article(Publishable):
         """
         Returns article URL.
         """
-        return "%s%s/%s/" % (settings.BASE_URL, self.section.name.lower(), self.slug)
+        return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)

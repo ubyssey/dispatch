@@ -104,6 +104,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
       <FormInput label='Choose a Facebook Page to connect'>
         <SelectInput
           options={options}
+          selected={this.props.integration.settings.page_id}
           onChange={e => this.updateFacebookPage(pageMap[e.target.value])} />
           <AnchorButton
             onClick={ e => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}

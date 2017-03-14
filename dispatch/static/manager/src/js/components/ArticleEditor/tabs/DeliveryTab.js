@@ -1,7 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, SelectInput } from '../../inputs'
+import { FormInput, SelectInput, LinkButton } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
@@ -36,16 +36,6 @@ function updateInstantArticle(update, integrations, enabled) {
 
 }
 
-function InstantArticles(props) {
-  return (
-    <FormInput label='Enable as Facebook Instant Article'>
-      <Switch
-        checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
-        onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
-    </FormInput>
-  )
-}
-
 export default function DeliveryTab(props) {
   const isInstantArticlesEnabled = props.availableIntegrations['fb-instant-articles'] && props.availableIntegrations['fb-instant-articles'].settings.page_configured
 
@@ -53,7 +43,10 @@ export default function DeliveryTab(props) {
 
   if (!isInstantArticlesEnabled) {
     warningMessage = (
-      <div className='pt-callout pt-intent-warning'>Please enable instant articles to use this feature</div>
+      <div className='u-flex pt-callout pt-intent-danger'>
+        <div className='u-flex--fill u-flex--align-middle'>Please enable Facebook Instant Articles to use this feature</div>
+        <div><LinkButton to='integrations/fb-instant-articles'>Enable</LinkButton></div>
+      </div>
     )
   }
 

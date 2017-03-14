@@ -7,7 +7,7 @@ import sys
 
 from django.conf.global_settings import *
 
-DISPATCH_PROJECT_MODULE = os.environ.get('DISPATCH_PROJECT_MODULE')
+DISPATCH_PROJECT_MODULE = os.environ.get('DISPATCH_PROJECT_MODULE', '')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 BASE_PROJECT_DIR = os.environ.get('DISPATCH_PROJECT_DIR', BASE_DIR)
@@ -44,7 +44,7 @@ TEMPLATE_DIRS = [
     os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
     os.path.join(BASE_DIR, 'dispatch/templates'),
     os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
-    ]
+]
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -70,7 +70,7 @@ LOGIN_REDIRECT_URL = 'dispatch.apps.manager.views.home'
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -83,7 +83,7 @@ INSTALLED_APPS = (
     'dispatch.apps.content',
     'dispatch.apps.core',
     'dispatch.apps.frontend'
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

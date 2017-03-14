@@ -34,9 +34,6 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.gen_short_name()
 
-    def __str__(self):
-        return self.gen_short_name()
-
     @property
     def is_superuser(self):
         return self.is_superuser
@@ -63,7 +60,7 @@ class Person(Model):
         return settings.MEDIA_URL + str(self.image)
 
     def __str__(self):
-        return self.full_name
+        return self.full_name or ''
 
     def delete(self):
         try:
