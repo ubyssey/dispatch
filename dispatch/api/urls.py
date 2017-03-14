@@ -7,6 +7,7 @@ from dispatch.apps.api import views
 
 router = routers.DefaultRouter()
 
+
 router.register(r'articles', views.ArticleViewSet, base_name='articles')
 router.register(r'pages', views.PageViewSet, base_name='pages')
 router.register(r'frontpage', views.FrontpageViewSet, base_name='frontpage')
@@ -21,6 +22,7 @@ router.register(r'comments', views.CommentViewSet, base_name='comments')
 router.register(r'trending', views.TrendingViewSet, base_name='trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='dashboard')
 router.register(r'files',views.FileViewSet, base_name='files')
+
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 

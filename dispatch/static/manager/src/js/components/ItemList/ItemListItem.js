@@ -14,7 +14,7 @@ export default function ItemListItem(props) {
         <input type='checkbox' checked={props.isSelected} />
       </div>
       <div className='c-item-list__item__cell c-item-list__item__cell--title'>
-        <Link to={`/articles/${props.item.id}`} dangerouslySetInnerHTML={{__html: props.item.headline}} />
+        <Link to={`/${props.type}/${props.item.id}`} dangerouslySetInnerHTML={{__html: props.item.headline}} />
       </div>
       <div className='c-item-list__item__cell'>{props.item.authors_string}</div>
       <div className='c-item-list__item__cell'>{props.item.published_at}</div>
