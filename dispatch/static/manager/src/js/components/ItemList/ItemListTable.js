@@ -38,6 +38,7 @@ export default function ItemListTable(props) {
       let item = props.entities[id];
       return (
         <ItemListItem
+          type={props.type}
           key={item.id}
           item={item}
           isSelected={R.contains(item.id, props.items.selected)}
