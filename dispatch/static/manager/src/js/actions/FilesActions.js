@@ -11,8 +11,6 @@ export function fetchFiles(token, query) {
     type: types.FETCH_FILES,
     payload: DispatchAPI.files.fetchFiles(token, query)
       .then(function(json) {
-        console.log("Actions: "+JSON.stringify(json.results))
-        console.log("Actions: "+JSON.stringify(normalize(json.results, arrayOf(fileSchema))))
         return {
           results: normalize(json.results, arrayOf(fileSchema))
         }
