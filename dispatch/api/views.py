@@ -645,6 +645,8 @@ class IntegrationViewSet(viewsets.GenericViewSet):
         except IntegrationCallbackError, e:
             return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
 
+        return Response(data)
+
 class DashboardViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)

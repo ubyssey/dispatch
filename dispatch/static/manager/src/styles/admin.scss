@@ -2,6 +2,9 @@
 @import 'utilities/fonts';
 @import 'utilities/reset';
 @import 'utilities/containers';
+@import 'utilities/flex';
+
+@import '~@blueprintjs/core/dist/blueprint.css';
 
 * {
   &:focus {

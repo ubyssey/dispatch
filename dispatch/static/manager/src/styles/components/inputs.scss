@@ -2,10 +2,10 @@
 @import '../utilities/fonts';
 @import '../utilities/colors';
 
-label.pt-label .pt-input,
-label.pt-label .pt-select,
-label.pt-label .pt-button,
-label.pt-label .pt-switch {
+.c-form-input label.pt-label > .pt-input,
+.c-form-input label.pt-label > .pt-select,
+.c-form-input label.pt-label > .pt-button,
+.c-form-input label.pt-label > .pt-switch {
   margin-top: 10px;
 }
 

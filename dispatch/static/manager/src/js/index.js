@@ -9,6 +9,7 @@ import { createHistory } from 'history'
 import { loadingBarReducer, loadingBarMiddleware } from 'react-redux-loading-bar'
 import promiseMiddleware from 'redux-promise-middleware'
 
+// Base CSS styles
 require('../styles/admin.scss')
 
 import * as Pages from './pages'
