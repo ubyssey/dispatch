@@ -1,0 +1,15 @@
+.u-flex {
+  // Structure
+  display: flex;
+}
+
+.u-flex--fill {
+  // Structure
+  flex: 1;
+}
+
+.u-flex--align-middle {
+  // Structure
+  display: flex;
+  align-items: center;
+}
