@@ -65,8 +65,8 @@ def run_tests():
     if failures:
         sys.exit(1)
 
-def coverage_report():
 
+def run_coverage():
     # Setup coverage
     cov = coverage.Coverage(
         branch=True,
@@ -74,7 +74,7 @@ def coverage_report():
         omit=[
             os.path.join(PACKAGE_DIR, '*/migrations/*'),
             os.path.join(PACKAGE_DIR, 'tests/*'),
-            os.path.join(PACKAGE_DIR, 'dispatch/bin/*')
+            os.path.join(PACKAGE_DIR, 'bin/*')
         ]
     )
 
@@ -86,15 +86,25 @@ def coverage_report():
 
     # Stop tracking coverage
     cov.stop()
+
+    # Save coverage report
     cov.save()
 
+    return cov
+
+def coverage_report():
     # Show report
-    cov.report()
+    run_coverage().report()
+
+def coverage_html_report():
+    # Show report
+    run_coverage().html_report()
 
 commands = {
     'startproject': start_project,
     'test': run_tests,
-    'coverage': coverage_report
+    'coverage': coverage_report,
+    'coverage_html': coverage_html_report
 }
 
 if __name__ == "__main__":
