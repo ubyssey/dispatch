@@ -12,7 +12,7 @@ setup(name='dispatch',
     include_package_data=True,
     install_requires=[
         'django == 1.9.4',
-        'djangorestframework == 3.2.4',
+        'djangorestframework == 3.6.2',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
