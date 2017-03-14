@@ -17,7 +17,7 @@ setup(name='dispatch',
         'requests == 2.6.0',
         'jsonfield',
         'requests'
-      ],
+    ],
     extras_require={
         'dev': [
             'coverage'
