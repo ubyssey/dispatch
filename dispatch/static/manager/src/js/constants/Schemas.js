@@ -9,16 +9,6 @@ export const articleSchema = new Schema('articles')
 export const templateSchema = new Schema('templates')
 
 export const fileSchema = new Schema('files')
-export const nameSchema = new Schema('name')
-export const updatedAtSchema = new Schema('updated_at')
-export const createdAtSchema = new Schema('created_at')
-
-
-const urlSchema = new Schema.Entity('file',{
-  name: nameSchema,
-  createdAt: createdAtSchema,
-  updatedAt: updatedAtSchema
-})
 
 articleSchema.define({
   section: sectionSchema,
@@ -33,7 +23,4 @@ articleSchema.define({
 
 imageSchema.define({
   authors: arrayOf(personSchema)
-})
-fileSchema.define({
-  file: urlSchema
 })
