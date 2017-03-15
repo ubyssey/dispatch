@@ -18,8 +18,8 @@ export default function ItemList(props) {
         actions={props.actions} />
       <ItemListTable
         items={props.items}
-        type={props.type}
         entities={props.entities}
+        columns={props.columns}
         location={props.location}
         createMessage={props.createMessage}
         emptyMessage={props.emptyMessage}
