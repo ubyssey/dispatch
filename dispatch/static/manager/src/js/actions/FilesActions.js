@@ -33,6 +33,7 @@ export function toggleFile(fileId) {
   }
 }
 
+
 export function toggleAllFiles(fileIds) {
   return {
     type: types.TOGGLE_ALL_FILES,
