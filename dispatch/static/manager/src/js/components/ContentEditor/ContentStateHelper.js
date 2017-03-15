@@ -2,31 +2,15 @@ import {
   ContentState,
   ContentBlock,
   CharacterMetadata,
-  DraftInlineStyle,
   Entity,
-  genKey
+  EntityInstance,
+  genKey,
+  convertFromHTML
 } from 'draft-js';
 
-import { List } from 'immutable';
+import { List, OrderedMap } from 'immutable';
 
 import convertToHTML from './helpers/convertToHTML'
-import convertFromHTML from './helpers/convertFromHTML'
-
-function createBlock(jsonBlock) {
-
-  if (jsonBlock.type == 'paragraph') {
-    return convertFromHTML(jsonBlock.data)
-  } else {
-    return new ContentBlock({
-      key: genKey(),
-      type: 'unstyled',
-      depth: 1,
-      text: '',
-      characterList: new List()
-    })
-  }
-
-}
 
 function parseBlock(block) {
   const type = block.getType()
@@ -46,12 +30,71 @@ function parseBlock(block) {
 
 }
 
+function createParagraphBlock(block) {
+  return convertFromHTML(block.data)
+}
+
+function createEntityBlock(block) {
+
+  const entity = new EntityInstance({
+    type: block.type,
+    mutability: 'IMMUTABLE',
+    data: block.data
+  })
+
+  const entityKey = Entity.add(entity)
+  const charData = CharacterMetadata.create({entity: entityKey})
+
+  let contentBlock = new ContentBlock({
+    key: genKey(),
+    type: 'atomic',
+    text: ' ',
+    characterList: List([charData])
+  })
+
+  return {
+    contentBlocks: [contentBlock],
+    entityMap: {entityKey: entity}
+  }
+
+}
+
+function createBlock(acc, block) {
+
+  var blocksFromJSON
+
+  switch (block.type) {
+    case 'paragraph':
+      blocksFromJSON = createParagraphBlock(block)
+      break
+    case 'image':
+      blocksFromJSON = createEntityBlock(block)
+      break
+  }
+
+  if (blocksFromJSON) {
+    acc.contentBlocks = acc.contentBlocks.concat(blocksFromJSON.contentBlocks)
+    acc.entityMap = acc.entityMap.merge(blocksFromJSON.entityMap)
+  }
+
+  return acc
+
+}
+
 const ContentStateHelper = {
 
   fromJSON: (jsonBlocks) => {
-    // Converts from JSON to ContentState
+
+    const blocksFromHTML =
+      jsonBlocks.reduce(
+        createBlock,
+        { contentBlocks: new Array(), entityMap: new OrderedMap() }
+      )
+
+    // Create new ContentState from contentBlocks and entityMap
     return ContentState.createFromBlockArray(
-      jsonBlocks.map(createBlock)
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap
     )
   },
 
