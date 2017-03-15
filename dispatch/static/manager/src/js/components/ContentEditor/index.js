@@ -69,17 +69,6 @@ class ContentEditorComponent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onChange = this.onChange.bind(this)
-    this.blockRenderer = this.blockRenderer.bind(this)
-    this.startEditingEntity = this.startEditingEntity.bind(this)
-    this.stopEditingEntity = this.stopEditingEntity.bind(this)
-    this.insertEmbed = this.insertEmbed.bind(this)
-    this.removeEmbed = this.removeEmbed.bind(this)
-    this.handleMouseUp = this.handleMouseUp.bind(this)
-    this.handleKeyCommand = this.handleKeyCommand.bind(this)
-    this.toggleInlineStyle = this.toggleInlineStyle.bind(this)
-    this.closePopover = this.closePopover.bind(this)
-
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = {
@@ -334,9 +323,9 @@ class ContentEditorComponent extends React.Component {
         props: {
           type: embedType,
           embedComponent: embed.component,
-          onFocus: this.startEditingEntity,
-          onBlur: this.stopEditingEntity,
-          removeEmbed: this.removeEmbed,
+          onFocus: e => this.startEditingEntity(),
+          onBlur: e => this.stopEditingEntity(),
+          removeEmbed: bk => this.removeEmbed(bk),
           openModal: this.props.openModal,
           closeModal: this.props.closeModal,
           modal: embed.modal,
@@ -398,11 +387,11 @@ class ContentEditorComponent extends React.Component {
       <ContentEditorPopover
         insertLink={this.props.insertLink}
         removeLink={this.props.removeLink}
-        toggleStyle={this.toggleInlineStyle}
+        toggleStyle={s => this.toggleInlineStyle(s)}
         isLinkInputActive={this.state.isLinkInputActive}
         closeLinkInput={() => this.setState({isLinkInputActive : false})}
         focusEditor={() => this.focusEditor() }
-        close={this.closePopover} />
+        close={() => this.closePopover} />
     )
   }
 
@@ -430,17 +419,17 @@ class ContentEditorComponent extends React.Component {
       <div
         ref='container'
         className='c-content-editor'
-        onMouseUp={this.handleMouseUp}>
+        onMouseUp={e => this.handleMouseUp(e)}>
         <div className='c-content-editor__editor'>
           <Editor
             ref='editor'
             readOnly={this.state.readOnly}
             editorState={this.props.editorState}
-            handleKeyCommand={this.handleKeyCommand}
+            handleKeyCommand={c => this.handleKeyCommand(c)}
             keyBindingFn={keyBindingFn}
-            blockRendererFn={this.blockRenderer}
+            blockRendererFn={cb => this.blockRenderer(cb)}
             blockStyleFn={blockStyleFn}
-            onChange={this.onChange} />
+            onChange={es => this.onChange(es)} />
         </div>
         <div style={popoverContainerStyle}>
           <Popover
@@ -457,7 +446,7 @@ class ContentEditorComponent extends React.Component {
           embeds={this.props.embeds}
           showToolbar={this.state.showEmbedToolbar}
           offset={this.state.embedToolbarOffset}
-          insertEmbed={this.insertEmbed}
+          insertEmbed={(t, d) => this.insertEmbed(t, d)}
           openModal={this.props.openModal}
           closeModal={this.props.closeModal} />
       </div>

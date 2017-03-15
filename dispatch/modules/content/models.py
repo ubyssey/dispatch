@@ -355,9 +355,9 @@ class Article(Publishable):
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image']['id']
+                image_id = node['data']['image_id']
                 image = Image.objects.get(id=image_id)
-                if node['data']['attachment_id']:
+                if 'attachment_id' in node['data']:
                     attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
                 else:
                     attachment = ImageAttachment()
@@ -485,7 +485,7 @@ class Page(Publishable):
         nodes = json.loads(self.content)
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image']['id']
+                image_id = node['data']['image_id']
                 image = Image.objects.get(id=image_id)
 
                 if node['data']['attachment_id']:
@@ -669,7 +669,7 @@ class ImageAttachment(Model):
                 return
 
             return {
-                'id': attach.image.id,
+                'image_id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
                 'credit': attach.credit,
