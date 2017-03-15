@@ -61,7 +61,7 @@ function createEntityBlock(block) {
 
 function createBlock(acc, block) {
 
-  var blocksFromJSON
+  let blocksFromJSON
 
   switch (block.type) {
     case 'paragraph':
