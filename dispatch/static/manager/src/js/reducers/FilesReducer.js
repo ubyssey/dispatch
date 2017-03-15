@@ -5,9 +5,9 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   isLoading: false,
   isLoaded: false,
-  files: {
-    data:[]
-  }
+  selected: [],
+  isAllSelected: false,
+  data: []
 }
 
 function filesReducer(state = initialState, action) {
@@ -22,6 +22,30 @@ function filesReducer(state = initialState, action) {
         isLoading: false,
         isLoaded: true,
         data: action.payload.results.result
+      })
+    case types.DELETE_FILES + '_FULFILLED':
+      return R.merge(state, {
+        date: R.without(action.payload, state.data)
+      })
+    case types.CLEAR_FILES:
+      return R.merge(state, {
+        isLoaded: false,
+        data: []
+      })
+    case types.TOGGLE_FILE:
+      let index = R.findIndex(R.equals(action.id), state.selected);
+      return R.merge(state, {
+        selected: index > -1 ? R.remove(index, 1, state.selected) : R.append(action.id, state.selected)
+      })
+    case types.TOGGLE_ALL_FILES:
+      return R.merge(state, {
+        selected: state.isAllSelected ? [] : action.ids,
+        isAllSelected: !state.isAllSelected
+      })
+    case types.CLEAR_SELECTED_FILES:
+      return R.merge(state , {
+        selected: [],
+        isAllSelected: false
       })
     default:
       return state

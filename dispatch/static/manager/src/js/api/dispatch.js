@@ -119,6 +119,9 @@ var DispatchAPI = {
   files:{
     fetchFiles: (query) => {
       return getRequest('files',null, query)
+    },
+    deleteFiles: (token, fileIds) => {
+      return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
     }
   },
   images: {
