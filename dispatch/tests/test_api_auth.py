@@ -50,25 +50,52 @@ class AuthenticationTests(DispatchAPITestCase):
         """
         login() -> login fails, 404
         """
-        print("title tk")
+        url = reverse('auth-token')
+
+        data = {}
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_no_email(self):
         """
         login({password}) => login fails, 404
         """
-        print("title tk")
+        url = reverse('auth-token')
+
+        data = {
+            'password': 'testing123'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_no_password(self):
         """
         login({email}) => login fails, 404
         """
-        print("title tk")
+        url = reverse('auth-token')
+
+        data = {
+            'email': 'test@test.com'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_an_account_that_doesnt_exist(self):
         """
         login({email, password}) => login fails, 404
         """
-        print("title tk")
+        url = reverse('auth-token')
+
+        data = {
+            'email': 'test1@test.com',
+            'password': 'thisshouldfail'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_logout_when_no_token_exists(self):
         """
