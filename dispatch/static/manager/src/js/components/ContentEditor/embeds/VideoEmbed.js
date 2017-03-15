@@ -7,31 +7,10 @@ require('../../../../styles/components/embeds/video.scss')
 
 class VideoEmbedComponent extends React.Component {
 
-  handleUrlChange(e){
-    e.preventDefault()
-    this.props.updateField('url', e.target.value)
-  }
-
-  handleTitleChange(e){
-    e.preventDefault()
-    this.props.updateField('title', e.target.value)
-  }
-
-  handleCaptionChange(e){
-    e.preventDefault()
-    this.props.updateField('caption', e.target.value)
-  }
-
-  handleCreditChange(e){
-    e.preventDefault()
-    this.props.updateField('credit', e.target.value)
-  }
-
-  insertVideo(){
+  insertVideo() {
     const id = this.getYoutubeID(this.props.data.url)
-    this.props.updateField('id',id)
+    this.props.updateField('video_id', id)
     this.props.stopEditing()
-
   }
 
   getYoutubeID(url) {
@@ -39,7 +18,6 @@ class VideoEmbedComponent extends React.Component {
      const [, videoId] = url.match(p) || []
      return videoId
   }
-
 
   renderInput() {
     return (
@@ -49,7 +27,7 @@ class VideoEmbedComponent extends React.Component {
             <TextInput
               fill={true}
               value={this.props.data.url}
-              onChange={e => this.handleUrlChange(e)} />
+              onChange={e => this.props.updateField('url', e.target.value)} />
           </FormInput>
         </form>
         <Button onClick={e => this.insertVideo()}>Insert</Button>
@@ -63,28 +41,25 @@ class VideoEmbedComponent extends React.Component {
       <div>
         <img
         className='o-embed--video__image'
-        src={`http://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
+        src={`http://img.youtube.com/vi/${this.props.data.video_id}/0.jpg`} />
         <form>
           <FormInput label='Title'>
             <TextInput
               fill={true}
               value={this.props.data.title}
-              onChange={e => this.handleTitleChange(e)}
-               />
+              onChange={e => this.props.updateField('title', e.target.value)} />
           </FormInput>
           <FormInput label='Caption'>
             <TextInput
               fill={true}
               value={this.props.data.caption}
-              onChange={e => this.handleCaptionChange(e)}
-               />
+              onChange={e => this.props.updateField('caption', e.target.value)} />
           </FormInput>
           <FormInput label='Credit'>
             <TextInput
               fill={true}
               value={this.props.data.credit}
-              onChange={e => this.handleCreditChange(e)}
-               />
+              onChange={e => this.props.updateField('credit', e.target.value)} />
           </FormInput>
         </form>
       </div>
@@ -95,14 +70,20 @@ class VideoEmbedComponent extends React.Component {
   render(){
     return(
       <div className='o-embed o-embed--video'>
-        {this.props.data.id ? this.renderVideo() : this.renderInput()}
+        {this.props.data.video_id ? this.renderVideo() : this.renderInput()}
       </div>
     )
-
   }
 }
 
 export default {
-  type: 'Video',
-  component: VideoEmbedComponent
+  type: 'video',
+  component: VideoEmbedComponent,
+  defaultData: {
+    video_id: null,
+    url: '',
+    title: '',
+    caption: '',
+    credit: ''
+  }
 }

@@ -68,10 +68,10 @@ export default class ContentEditorEmbed extends React.Component {
   }
 
   render() {
-    
+
     const embedProps = {
       data: this.state.editMode ? this.state.data : this.getData(),
-      updateField: (field, value) => this.updateField(field, value)
+      updateField: (field, value) => this.updateField(field, value),
       stopEditing: this.stopEditing
     }
 
