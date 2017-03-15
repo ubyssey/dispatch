@@ -17,3 +17,49 @@ export function fetchFiles(token, query) {
       })
   }
 }
+
+export function deleteFiles(token, fileIds) {
+  return {
+    type: types.DELETE_FILES,
+    payload: DispatchAPI.files.deleteFiles(token, fileIds)
+      .then( json => json.deleted )
+  }
+}
+
+export function toggleFile(fileId) {
+  return {
+    type: types.TOGGLE_FILE,
+    id: fileId
+  }
+}
+
+export function toggleAllFiles(fileIds) {
+  return {
+    type: types.TOGGLE_ALL_FILES,
+    ids: fileIds
+  }
+}
+
+export function clearSelectedFiles() {
+  return {
+    type: types.CLEAR_SELECTED_FILES
+  }
+}
+
+export function clearFiles() {
+  return {
+    type: types.CLEAR_FILES
+  }
+}
+
+export function searchFiles(query) {
+  var queryObj = {}
+
+  if(query) {
+    queryObj.q = query
+  }
+
+  return function(dispatch) {
+    dispatch(push({pathname: '/files/', query: queryObj }))
+  }
+}
