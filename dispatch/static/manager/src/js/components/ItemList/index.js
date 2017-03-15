@@ -11,6 +11,7 @@ export default function ItemList(props) {
     <div className='c-item-list'>
       <ItemListHeader
         items={props.items}
+        type={props.type}
         location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
@@ -18,6 +19,7 @@ export default function ItemList(props) {
       <ItemListTable
         items={props.items}
         entities={props.entities}
+        columns={props.columns}
         location={props.location}
         createMessage={props.createMessage}
         emptyMessage={props.emptyMessage}
