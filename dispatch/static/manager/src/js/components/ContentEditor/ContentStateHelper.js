@@ -68,6 +68,7 @@ function createBlock(acc, block) {
       blocksFromJSON = createParagraphBlock(block)
       break
     case 'image':
+    case 'video':
       blocksFromJSON = createEntityBlock(block)
       break
   }

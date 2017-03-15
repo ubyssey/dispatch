@@ -669,7 +669,7 @@ class ImageAttachment(Model):
                 return
 
             return {
-                'id': attach.image.id,
+                'image_id': attach.image.id,
                 'url': attach.image.get_absolute_url(),
                 'caption': attach.caption,
                 'credit': attach.credit,
