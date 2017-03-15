@@ -7,7 +7,6 @@ export const tagSchema = new Schema('tags')
 export const imageSchema = new Schema('images')
 export const articleSchema = new Schema('articles')
 export const templateSchema = new Schema('templates')
-
 export const fileSchema = new Schema('files')
 
 articleSchema.define({
