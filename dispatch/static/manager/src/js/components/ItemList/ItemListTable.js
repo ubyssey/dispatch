@@ -39,6 +39,7 @@ export default function ItemListTable(props) {
       return (
         <ItemListItem
           key={item.id}
+          columns={props.columns}
           item={item}
           isSelected={R.contains(item.id, props.items.selected)}
           toggleItem={props.actions.toggleItem} />
