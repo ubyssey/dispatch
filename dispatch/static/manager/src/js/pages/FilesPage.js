@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import moment from 'moment'
 
 import * as filesActions from '../actions/FilesActions'
+
+import { Link } from 'react-router'
 
 import ItemList from '../components/ItemList'
 
@@ -27,8 +30,6 @@ class FilesPageComponent extends React.Component {
   render() {
     const title = 'Files'
     const type = 'Files'
-    //console.log("Items: ", this.props.files)
-    console.log("Entities: ", this.props.entities.files)
     return (
       <DocumentTitle title={title}>
         <ItemList
@@ -46,6 +47,12 @@ class FilesPageComponent extends React.Component {
           emptyMessage={'You haven\'t uploaded any files yet.'}
           createRoute='files/new'
 
+
+          columns={[
+            item => (<a href={item.file}>{item.name}</a>),
+            item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
+            item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
+          ]}
           actions={{
             toggleItem: this.props.toggleFile,
             toggleAllItems: this.props.toggleAllFiles,
@@ -59,7 +66,7 @@ class FilesPageComponent extends React.Component {
     )
   }
 }
-
+//item => (<a href={item.file}> {item.name}</a>),
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
