@@ -6,54 +6,45 @@ import { FormInput, TextInput } from '../../inputs'
 
 require('../../../../styles/components/embeds/image.scss')
 
-class ImageEmbedComponent extends React.Component {
+function ImageEmbedComponent(props) {
 
-  constructor(props) {
-    super(props)
-
-    this.handleCaptionChange = this.handleCaptionChange.bind(this)
-    this.handleCreditChange = this.handleCreditChange.bind(this)
-  }
-
-  handleCaptionChange(e) {
-    e.preventDefault()
-    this.props.updateField('caption', e.target.value)
-  }
-
-  handleCreditChange(e) {
-    e.preventDefault()
-    this.props.updateField('credit', e.target.value)
-  }
-
-  render() {
-    return (
-      <div className='o-embed o-embed--image'>
-        <img className='o-embed--image__image' src={this.props.data.url} />
-        <form>
-          <FormInput label='Caption'>
-            <TextInput
-              fill={true}
-              value={this.props.data.caption}
-              onChange={this.handleCaptionChange} />
-          </FormInput>
-          <FormInput label='Custom Credit'>
-            <TextInput
-              fill={true}
-              value={this.props.data.credit || ''}
-              onChange={this.handleCreditChange} />
-          </FormInput>
-        </form>
-      </div>
-    )
-  }
+  return (
+    <div className='o-embed o-embed--image'>
+      <img className='o-embed--image__image' src={props.data.url} />
+      <form>
+        <FormInput label='Caption'>
+          <TextInput
+            fill={true}
+            value={props.data.caption}
+            onChange={e => props.updateField('caption', e.target.value)} />
+        </FormInput>
+        <FormInput label='Custom Credit'>
+          <TextInput
+            fill={true}
+            value={props.data.credit || ''}
+            onChange={e => props.updateField('credit', e.target.value)} />
+        </FormInput>
+      </form>
+    </div>
+  )
 
 }
 
 export default {
-  type: 'Image',
+  type: 'image',
   component: ImageEmbedComponent,
+  defaultData: {
+    image_id: null,
+    attachmend_id: null,
+    caption: '',
+    credit: '',
+    url: null
+  },
   modal: ImageManager,
   modalCallback: (image) => {
-    return image
+    return {
+      image_id: image.id,
+      url: image.url
+    }
   }
 }
