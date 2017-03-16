@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 
 from dispatch.tests.cases import DispatchAPITestCase
 
@@ -23,28 +24,21 @@ class AuthenticationTests(DispatchAPITestCase):
         self.assertIsNotNone(response.data.get("token"))
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
-    def test_logging_in_with_same_user_returns_same_token(self):
-        """
-        Read the name, returns 202
-        """
-        print("title tk")
-
-
-    def test_access_data_while_authenticated(self):
-        # access something that requies auth -> required item is returned.
-        print("title tk")
-
     def test_logout(self):
         """
-        logout -> user logs out successfully, db should no longer have token
+        login(email, password) -> logout -> user logs out successfully, db should no longer have token
         """
         url = reverse('auth-token')
 
-    def test_access_data_while_unauthenticated(self):
-        """
-        access something tha requires auth -> access denied b/c no token was provided
-        """
-        print("title tk")
+        logout_response = self.client.delete(url, {}, format='json')
+        # Try to get the token, if it doesn't exist, return None.
+        user = User.objects.get(email='test@test.com')
+        try:
+            token = Token.objects.get(user_id=user.id)
+        except Token.DoesNotExist:
+            token = None
+
+        self.assertIsNone(token)
 
     def test_login_with_no_params(self):
         """
@@ -101,3 +95,19 @@ class AuthenticationTests(DispatchAPITestCase):
         """
         logout should fail, 404
         """
+        # setup
+        url = reverse('auth-token')
+
+        data = {
+            'email': 'test@test.com',
+            'password': 'testing123'
+        }
+
+        response = self.client.post(url, data, format='json')
+        user = User.objects.get(email='test@test.com')
+        token = Token.objects.get(user_id=user.id)
+        token.delete()
+
+        response = self.client.delete(url, {}, format='json')
+        # TODO: this should return a 404
+        self.assertEqual(response.status_code, status.HTTP_404_BAD_REQUEST)
