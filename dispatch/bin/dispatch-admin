@@ -90,21 +90,24 @@ def run_coverage():
     # Save coverage report
     cov.save()
 
-    return cov
-
 def coverage_report():
     # Show report
-    run_coverage().report()
+    cov = coverage.Coverage()
+    cov.load()
+    cov.report()
 
 def coverage_html_report():
     # Show report
-    run_coverage().html_report()
+    cov = coverage.Coverage()
+    cov.load()
+    cov.html_report()
 
 commands = {
     'startproject': start_project,
     'test': run_tests,
-    'coverage': coverage_report,
-    'coverage_html': coverage_html_report
+    'coverage': run_coverage,
+    'report': coverage_report,
+    'report_html': coverage_html_report
 }
 
 if __name__ == "__main__":
