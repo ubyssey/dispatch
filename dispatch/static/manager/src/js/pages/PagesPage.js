@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-export default function PagesPage(props) {
+export default function PagesPage() {
   return (
     <h1>This is the Pages Page</h1>
   )

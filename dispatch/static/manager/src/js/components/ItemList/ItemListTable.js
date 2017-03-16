@@ -35,7 +35,7 @@ export default function ItemListTable(props) {
   } else {
 
     const items = props.items.data.map( id => {
-      let item = props.entities[id];
+      let item = props.entities[id]
       return (
         <ItemListItem
           key={item.id}

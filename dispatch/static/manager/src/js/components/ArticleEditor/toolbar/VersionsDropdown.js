@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import { AnchorButton } from '@blueprintjs/core'
 
@@ -9,13 +9,13 @@ require('../../../../styles/components/versions_dropdown.scss')
 export default class VersionsDropdown extends React.Component {
 
   getVersions() {
-    let versions = [];
+    let versions = []
 
     for (var i = this.props.latest_version; i > 0; i--) {
-      versions.push(i);
+      versions.push(i)
     }
 
-    return versions;
+    return versions
   }
 
   selectVersion(version) {
@@ -36,7 +36,7 @@ export default class VersionsDropdown extends React.Component {
           <li
             className={`o-dropdown-list__item${selectedClassName}`}
             key={version}
-            onClick={e => this.selectVersion(version)}>
+            onClick={() => this.selectVersion(version)}>
             <span className={`o-dropdown-list__item__icon${selectedIcon}`}></span>
             <span className='o-dropdown-list__item__text'>{`Version ${version}${published}`}</span>
           </li>
@@ -58,7 +58,7 @@ export default class VersionsDropdown extends React.Component {
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}>
-          <AnchorButton onClick={e => this.refs.dropdown.open()}>
+          <AnchorButton onClick={() => this.refs.dropdown.open()}>
             {`Version ${this.props.current_version}`}
           </AnchorButton>
         </Dropdown>
