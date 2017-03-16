@@ -3,9 +3,12 @@ import json
 from django.db.models import Manager
 from django.contrib.auth.models import BaseUserManager
 
-from dispatch.apps.core.models import User, Person
-
 class UserManager(BaseUserManager):
+
+    def __init__(self, personModel):
+        super(BaseUserManager, self).__init__()
+
+        self.personModel = personModel
 
     def _create_user(self, email, password=None, is_admin=False, is_active=True, is_superuser=False):
         if not email:
@@ -14,10 +17,10 @@ class UserManager(BaseUserManager):
         if not self.is_valid_password(password):
             raise ValueError('Password is invalid')
 
-        user = User(email=email, is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
+        user = self.model(email=email, is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
 
-        person = Person.objects.create()
+        person = self.personModel.objects.create()
         user.person = person
 
         user.save()
