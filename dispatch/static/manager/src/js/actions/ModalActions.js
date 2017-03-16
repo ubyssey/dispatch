@@ -8,7 +8,7 @@ export function openModal(component, props) {
   }
 }
 
-export function closeModal(modal) {
+export function closeModal() {
   return {
     type: types.CLOSE_MODAL
   }

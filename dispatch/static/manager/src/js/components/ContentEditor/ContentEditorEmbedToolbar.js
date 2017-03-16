@@ -1,20 +1,17 @@
 import React from 'react'
+import R from 'ramda'
 
 export default class ContentEditorEmbedToolbar extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.toggleButtons = this.toggleButtons.bind(this)
-    this.insertEmbed = this.insertEmbed.bind(this)
-
     this.state = {
       showButtons: false
     }
   }
 
-  toggleButtons(e) {
-    e.preventDefault()
+  toggleButtons() {
     this.setState({ showButtons: !this.state.showButtons })
   }
 
@@ -23,14 +20,22 @@ export default class ContentEditorEmbedToolbar extends React.Component {
 
     if (embed.modal) {
       this.props.openModal(embed.modal, {
-        onSubmit: function(data) {
+        onSubmit: data => {
           this.props.closeModal()
-          this.props.insertEmbed(embed.type, embed.modalCallback(data))
+
+          this.props.insertEmbed(
+            embed.type,
+            R.merge(
+              embed.defaultData,
+              embed.modalCallback(data)
+            )
+          )
+
           this.setState({ showButtons: false })
-        }.bind(this)
+        }
       })
     } else {
-      this.props.insertEmbed(embed.type)
+      this.props.insertEmbed(embed.type, embed.defaultData)
       this.setState({ showButtons: false })
     }
   }
@@ -38,16 +43,16 @@ export default class ContentEditorEmbedToolbar extends React.Component {
   renderButtons() {
     return this.props.embeds.map( embed => {
       return (
-        <button key={embed.type} onClick={e => {this.insertEmbed(e, embed)}}>{embed.type}</button>
+        <button
+          key={embed.type}
+          onClick={e => this.insertEmbed(e, embed)}>{embed.type}</button>
       )
     })
   }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.showToolbar && nextProps.showToolbar) {
-      this.setState({
-        showButtons: false
-      })
+      this.setState({ showButtons: false })
     }
   }
 
@@ -64,7 +69,7 @@ export default class ContentEditorEmbedToolbar extends React.Component {
       <div className='c-content-editor__embed-toolbar' style={style}>
         <div
           className={this.state.showButtons ? `${buttonClass} ${buttonClass}--active` : buttonClass}
-          onClick={this.toggleButtons}></div>
+          onClick={() => this.toggleButtons()}></div>
         <div className='c-content-editor__embed-toolbar__buttons'>
           {this.state.showButtons ? this.renderButtons() : null}
         </div>

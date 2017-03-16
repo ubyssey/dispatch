@@ -37,7 +37,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         this.props.token,
         INTEGRATION_ID,
         this.props.location.query
-      );
+      )
     }
 
   }
@@ -107,7 +107,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
           selected={this.props.integration.settings.page_id}
           onChange={e => this.updateFacebookPage(pageMap[e.target.value])} />
           <AnchorButton
-            onClick={ e => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
+            onClick={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
             intent={Intent.SUCCESS}>
             Enable Instant Articles
           </AnchorButton>
@@ -137,7 +137,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         <FormInput label={`Instant Articles is enabled for ${settings.page_name}`}>
           <br />
           <AnchorButton
-            onClick={e => this.props.deleteIntegration(this.props.token, INTEGRATION_ID)}
+            onClick={()  => this.props.deleteIntegration(this.props.token, INTEGRATION_ID)}
             intent={Intent.DANGER}>
             Remove integration
           </AnchorButton>
@@ -155,7 +155,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
               value={settings.client_id}
               fill={true} />
 
-            <AnchorButton onClick={e => this.enterEditMode()}>
+            <AnchorButton onClick={() => this.enterEditMode()}>
               Change app information
             </AnchorButton>
           </FormInput>
@@ -168,7 +168,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
     const cancelButton = (
       <AnchorButton
-        onClick={ e => this.exitEditMode()}>
+        onClick={() => this.exitEditMode()}>
         Cancel
       </AnchorButton>
     )
@@ -195,7 +195,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         <FormInput>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={ e => this.saveIntegration(this.props.integration)}>
+            onClick={() => this.saveIntegration(this.props.integration)}>
             Save settings
           </AnchorButton>
           {this.state.editMode ? cancelButton : null}

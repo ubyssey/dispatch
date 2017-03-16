@@ -194,4 +194,4 @@ var DispatchAPI = {
   }
 }
 
-export default DispatchAPI;
+export default DispatchAPI
