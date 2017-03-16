@@ -82,8 +82,10 @@ class ContentEditorComponent extends React.Component {
       isLinkInputActive: false
     }
 
-    this.initializeEditor()
+  }
 
+  componentWillMount() {
+    this.initializeEditor()
   }
 
   initializeEditor() {
