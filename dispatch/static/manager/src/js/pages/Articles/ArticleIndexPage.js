@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
+import { Link } from 'react-router'
+
 import * as articlesActions from '../../actions/ArticlesActions'
 
 import ItemList from '../../components/ItemList'
@@ -95,17 +97,26 @@ class ArticlesPageComponent extends React.Component {
   render() {
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
-
+    const type = 'Articles'
     return (
       <DocumentTitle title={title}>
         <ItemList
           location={this.props.location}
+
+          type={type}
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
 
           items={this.props.articles}
           entities={this.props.entities.articles}
+
+          columns={[
+            item => (<Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} />),
+            item => item.authors_string,
+            item => item.published_at,
+            item => item.revision_id + ' revisions'
+          ]}
 
           createMessage='Create article'
           emptyMessage={'You haven\'t created any articles yet.'}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Position, Toaster } from '@blueprintjs/core';
+import { Position, Toaster } from '@blueprintjs/core'
 
 import * as sectionsActions from '../actions/SectionsActions'
 import * as modalActions from '../actions/ModalActions'

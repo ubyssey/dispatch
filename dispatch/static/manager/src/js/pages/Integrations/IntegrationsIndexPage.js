@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import DocumentTitle from 'react-document-title'
 
 import SidebarNav from '../../components/SidebarNav'

@@ -24,7 +24,7 @@ class TopicSelectInputComponent extends React.Component {
     this.props.update(null)
   }
 
-  createTopic(name) {
+  createTopic() {
 
   }
 

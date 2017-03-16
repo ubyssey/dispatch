@@ -2,7 +2,7 @@ import React from 'react'
 
 import PlaceholderBar from '../PlaceholderBar'
 
-export default function ItemListItemPlaceholder(props) {
+export default function ItemListItemPlaceholder() {
   return (
     <li className='c-item-list__item'>
       <div className='c-item-list__item__cell c-item-list__item__cell--checkbox'>

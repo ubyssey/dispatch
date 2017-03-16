@@ -8,23 +8,33 @@ import { FormInput, TextInput, SelectInput } from '../../inputs'
 
 import TemplateSelectInput from '../../inputs/TemplateSelectInput'
 
+function renderSelectField(field, value, handleOnChange) {
+
+  let options = field.options.map( option => {
+    return { value: option[0], label: option[1] }
+  })
+
+  return (
+    <SelectInput
+      options={options}
+      selected={value} onChange={handleOnChange} /> )
+}
+
+function renderTextField(field, value, handleOnChange) {
+  return (
+    <TextInput
+      value={value}
+      fill={true}
+      placeholder={field.label}
+      onChange={handleOnChange} /> )
+}
+
 function renderField(field, value, handleOnChange) {
   switch (field.type) {
-    case 'text':
-      return (
-        <TextInput
-          value={value}
-          fill={true}
-          placeholder={field.label}
-          onChange={handleOnChange} /> )
-    case 'select':
-      let options = field.options.map( option => {
-        return { value: option[0], label: option[1] }
-      })
-      return (
-        <SelectInput
-          options={options}
-          selected={value} onChange={handleOnChange} /> )
+  case 'text':
+    return renderTextField(field, value, handleOnChange)
+  case 'select':
+    return renderSelectField(field, value, handleOnChange)
   }
 }
 

@@ -13,7 +13,7 @@ export default function ArticleToolbar(props) {
         <div className='c-article-editor__toolbar__article-buttons'>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={e => props.saveArticle()}>Update</AnchorButton>
+            onClick={() => props.saveArticle()}>Update</AnchorButton>
           <AnchorButton>Publish</AnchorButton>
           <AnchorButton>Preview</AnchorButton>
           <VersionsDropdown
