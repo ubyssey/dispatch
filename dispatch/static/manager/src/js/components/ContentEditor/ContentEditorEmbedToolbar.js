@@ -69,7 +69,7 @@ export default class ContentEditorEmbedToolbar extends React.Component {
       <div className='c-content-editor__embed-toolbar' style={style}>
         <div
           className={this.state.showButtons ? `${buttonClass} ${buttonClass}--active` : buttonClass}
-          onClick={e => this.toggleButtons()}></div>
+          onClick={() => this.toggleButtons()}></div>
         <div className='c-content-editor__embed-toolbar__buttons'>
           {this.state.showButtons ? this.renderButtons() : null}
         </div>

@@ -1,3 +1,5 @@
+import R from 'ramda'
+
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
@@ -8,18 +10,18 @@ const initialState = {
 
 export default function sectionsReducer(state = initialState, action) {
   switch (action.type) {
-    case types.FETCH_SECTIONS + '_PENDING':
-      return Object.assign({}, state, {
-        isLoading: true,
-        isLoaded: false
-      })
-    case types.FETCH_SECTIONS + '_FULFILLED':
-      return Object.assign({}, state, {
-        isLoading: false,
-        isLoaded: true,
-        data: action.payload.results.result
-      })
-    default:
-      return state
+  case types.FETCH_SECTIONS + '_PENDING':
+    return R.merge(state, {
+      isLoading: true,
+      isLoaded: false
+    })
+  case types.FETCH_SECTIONS + '_FULFILLED':
+    return R.merge(state, {
+      isLoading: false,
+      isLoaded: true,
+      data: action.payload.results.result
+    })
+  default:
+    return state
   }
 }
