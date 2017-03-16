@@ -3,6 +3,8 @@ import json
 from django.db.models import Manager
 from django.contrib.auth.models import BaseUserManager
 
+from dispatch.apps.core.models import User, Person
+
 class UserManager(BaseUserManager):
 
     def _create_user(self, email, password=None, is_admin=False, is_active=True, is_superuser=False):
