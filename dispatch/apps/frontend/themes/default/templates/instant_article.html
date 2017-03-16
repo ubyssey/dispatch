@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" prefix="op: http://media.facebook.com/op#">
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="{{ article.get_absolute_url }}">
+    <meta property="op:markup_version" content="v1.0">
+    <meta property="fb:article_style" content="The Ubyssey">
+  </head>
+  <body>
+    <article>
+      <header>
+        <h1>{{ article.headline }}</h1>
+
+        <time class="op-published" datetime="2014-11-11T04:44:16Z">{{ article.published_at }}</time>
+
+        <time class="op-modified" dateTime="2014-12-11T04:44:16Z">{{ article.updated_at }}</time>
+
+        <address>
+          <a>{{ article.get_author_string }}</a>
+        </address>
+
+        <figure>
+          <img src="{{ article.featured_image.image.get_medium_url }}" />
+        </figure>
+
+      </header>
+
+      {{ content|escape|safe }}
+
+    </article>
+  </body>
+</html>

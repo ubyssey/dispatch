@@ -20,6 +20,7 @@ router.register(r'templates', views.TemplateViewSet, base_name='api-templates')
 router.register(r'comments', views.CommentViewSet, base_name='api-comments')
 router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
+router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
