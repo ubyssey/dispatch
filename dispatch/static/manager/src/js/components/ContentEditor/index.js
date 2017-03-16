@@ -2,22 +2,21 @@ import React from 'react'
 import qwery from 'qwery'
 import { connect } from 'react-redux'
 
-import { AnchorButton, Popover, Position } from '@blueprintjs/core'
+import { Popover, Position } from '@blueprintjs/core'
 
 import {
   Editor,
   EditorState,
   SelectionState,
-  RichUtils,
   AtomicBlockUtils,
   Entity,
   Modifier,
   CompositeDecorator,
   getDefaultKeyBinding,
   KeyBindingUtil
-} from 'draft-js';
+} from 'draft-js'
 
-const {hasCommandModifier} = KeyBindingUtil;
+const {hasCommandModifier} = KeyBindingUtil
 
 import * as editorActions from '../../actions/EditorActions'
 
@@ -43,14 +42,14 @@ function buildEmbedMap(embeds) {
 }
 
 function blockStyleFn(contentBlock) {
-  const type = contentBlock.getType();
+  const type = contentBlock.getType()
   const baseStyle = 'c-content-editor__editor__block c-content-editor__editor__block'
 
   switch(type) {
-    case 'unstyled':
-      return baseStyle + '--unstyled';
-    case 'atomic':
-      return baseStyle + '--embed';
+  case 'unstyled':
+    return baseStyle + '--unstyled'
+  case 'atomic':
+    return baseStyle + '--embed'
   }
 }
 
@@ -58,10 +57,10 @@ function keyBindingFn(e) {
 
   // CMD + K
   if (e.keyCode === 75 && hasCommandModifier(e)) {
-    return 'insert-link';
+    return 'insert-link'
   }
 
-  return getDefaultKeyBinding(e);
+  return getDefaultKeyBinding(e)
 }
 
 class ContentEditorComponent extends React.Component {
@@ -185,7 +184,7 @@ class ContentEditorComponent extends React.Component {
     this.setState({ readOnly: false })
   }
 
-  handleMouseUp(e) {
+  handleMouseUp() {
 
     const contentState = this.props.editorState.getCurrentContent()
 
@@ -248,19 +247,19 @@ class ContentEditorComponent extends React.Component {
 
     setTimeout(()=> {
       const selection = this.props.editorState.getSelection(),
-            isCollapsed = selection.isCollapsed(),
-            linkEntity = getLinkEntity(selection),
-            showLinkPopover = isCollapsed && linkEntity
+        isCollapsed = selection.isCollapsed(),
+        linkEntity = getLinkEntity(selection),
+        showLinkPopover = isCollapsed && linkEntity
 
       if ( !isCollapsed || showLinkPopover ) {
 
         var selected = getSelected(),
-            rect = selected.getRangeAt(0).getBoundingClientRect()
+          rect = selected.getRangeAt(0).getBoundingClientRect()
 
         var position,
-            left = rect.left - this.refs.container.offsetLeft,
-            center = left + (rect.width / 2),
-            third = this.refs.container.offsetWidth / 3
+          left = rect.left - this.refs.container.offsetLeft,
+          center = left + (rect.width / 2),
+          third = this.refs.container.offsetWidth / 3
 
         if (center > 2 * third) {
           position = Position.TOP_RIGHT
@@ -304,7 +303,7 @@ class ContentEditorComponent extends React.Component {
   handleKeyCommand(command) {
     if (command === 'insert-link') {
       this.setState({isLinkInputActive: true})
-      return 'handled';
+      return 'handled'
     }
 
     return this.props.editorKeyCommand(command)
@@ -323,8 +322,8 @@ class ContentEditorComponent extends React.Component {
         props: {
           type: embedType,
           embedComponent: embed.component,
-          onFocus: e => this.startEditingEntity(),
-          onBlur: e => this.stopEditingEntity(),
+          onFocus: () => this.startEditingEntity(),
+          onBlur: () => this.stopEditingEntity(),
           removeEmbed: bk => this.removeEmbed(bk),
           openModal: this.props.openModal,
           closeModal: this.props.closeModal,
@@ -335,13 +334,13 @@ class ContentEditorComponent extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     let contentState = this.props.editorState.getCurrentContent()
     let key = this.props.editorState.getSelection().getStartKey()
     let block = contentState.getBlockForKey(key)
 
     if (!block) {
-      return;
+      return
     }
 
     if (!block.getText()) {

@@ -6,9 +6,9 @@ import {
   EntityInstance,
   genKey,
   convertFromHTML
-} from 'draft-js';
+} from 'draft-js'
 
-import { List, OrderedMap } from 'immutable';
+import { List, OrderedMap } from 'immutable'
 
 import convertToHTML from './helpers/convertToHTML'
 
@@ -64,13 +64,13 @@ function createBlock(acc, block) {
   let blocksFromJSON
 
   switch (block.type) {
-    case 'paragraph':
-      blocksFromJSON = createParagraphBlock(block)
-      break
-    case 'image':
-    case 'video':
-      blocksFromJSON = createEntityBlock(block)
-      break
+  case 'paragraph':
+    blocksFromJSON = createParagraphBlock(block)
+    break
+  case 'image':
+  case 'video':
+    blocksFromJSON = createEntityBlock(block)
+    break
   }
 
   if (blocksFromJSON) {

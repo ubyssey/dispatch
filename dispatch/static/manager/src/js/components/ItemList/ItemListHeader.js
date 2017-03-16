@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Link } from 'react-router'
-
 import Toolbar from '../Toolbar'
 import { Button } from '@blueprintjs/core'
 
