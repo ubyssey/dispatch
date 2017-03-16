@@ -1,7 +1,7 @@
 Dispatch 
 =====================
-[![Travis branch](https://img.shields.io/travis/ubyssey/dispatch/develop.svg)]()
-[![Coveralls](https://img.shields.io/coveralls/ubyssey/dispatch/develop.svg)]()
+[![Travis branch](https://img.shields.io/travis/ubyssey/dispatch/develop.svg)](https://travis-ci.org/ubyssey/dispatch)
+[![Coveralls](https://img.shields.io/coveralls/ubyssey/dispatch/develop.svg)](https://coveralls.io/github/ubyssey/dispatch)
 [![PyPI](https://img.shields.io/pypi/v/dispatch.svg)](https://pypi.python.org/pypi/dispatch)
 
 Dispatch is a publishing platform for modern newspapers and digital publications. Created in tandem by student journalists and developers, it aims to make online news more open, more hackable, and of course, more fun.
