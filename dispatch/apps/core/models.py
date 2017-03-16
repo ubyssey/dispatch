@@ -5,12 +5,26 @@ from django.contrib.auth.models import AbstractBaseUser, Group, Permission
 
 from dispatch.apps.core.managers import UserManager, IntegrationManager
 
+class Person(Model):
+    full_name = CharField(max_length=255, blank=True, null=True)
+    is_admin = BooleanField(default=True)
+
+    image = ImageField(upload_to='images', null=True, blank=True)
+    slug = SlugField(null=True, blank=True)
+    description = TextField(null=True, blank=True)
+
+    def get_image_url(self):
+        return settings.MEDIA_URL + str(self.image)
+
+    def __str__(self):
+        return self.full_name or ''
+
 class User(AbstractBaseUser):
     email = CharField(max_length=255, unique=True)
     is_admin = BooleanField(default=False)
     is_active = BooleanField(default=True)
     is_superuser = BooleanField()
-    person = OneToOneField('Person', blank=True, null=True, related_name='person')
+    person = OneToOneField(Person, blank=True, null=True, related_name='person')
     groups = ManyToManyField(Group, verbose_name=('groups'),
         blank=True, help_text=('The groups this user belongs to. A user will '
                                'get all permissions granted to each of '
@@ -23,7 +37,7 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
 
-    objects = UserManager()
+    objects = UserManager(Person)
 
     def gen_short_name(self):
         if self.person:
@@ -47,27 +61,6 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_admin
-
-class Person(Model):
-    full_name = CharField(max_length=255, blank=True, null=True)
-    is_admin = BooleanField(default=True)
-
-    image = ImageField(upload_to='images', null=True, blank=True)
-    slug = SlugField(null=True, blank=True)
-    description = TextField(null=True, blank=True)
-
-    def get_image_url(self):
-        return settings.MEDIA_URL + str(self.image)
-
-    def __str__(self):
-        return self.full_name or ''
-
-    def delete(self):
-        try:
-            User.objects.get(person=self).delete()
-        except:
-            pass
-        super(Person, self).delete()
 
 class Setting(Model):
     name = CharField(max_length=255)
