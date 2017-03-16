@@ -97,13 +97,13 @@ class ArticlesPageComponent extends React.Component {
   render() {
     const section = this.props.entities.sections[this.props.location.query.section]
     const title = section ? `${section.name} - Articles` : 'Articles'
-    const type = 'Articles'
+
     return (
       <DocumentTitle title={title}>
         <ItemList
           location={this.props.location}
 
-          type={type}
+          type='articles'
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
@@ -112,7 +112,7 @@ class ArticlesPageComponent extends React.Component {
           entities={this.props.entities.articles}
 
           columns={[
-            item => (<Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} />),
+            item => (<strong><Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} /></strong>),
             item => item.authors_string,
             item => item.published_at,
             item => item.revision_id + ' revisions'
