@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-export default function FilesPage(props) {
+export default function FilesPage() {
   return (
     <h1>This is the Files Page</h1>
   )

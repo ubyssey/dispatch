@@ -21,7 +21,7 @@ class ImageInputComponent extends React.Component {
 
           this.props.closeModal()
 
-          this.props.onUpdate(data.id);
+          this.props.onUpdate(data.id)
 
         }.bind(this)
       }
@@ -33,13 +33,13 @@ class ImageInputComponent extends React.Component {
       <div className='c-input c-input--image'>
         {this.props.image ? this.renderImage() : null}
         <AnchorButton
-          onClick={ e => this.chooseImage() }>{this.props.image ? 'Change image' : 'Select image'}</AnchorButton>
+          onClick={() => this.chooseImage() }>{this.props.image ? 'Change image' : 'Select image'}</AnchorButton>
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = () => {
   return {}
 }
 

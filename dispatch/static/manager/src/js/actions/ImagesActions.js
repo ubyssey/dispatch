@@ -1,6 +1,5 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
-import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { imageSchema } from '../constants/Schemas'
@@ -28,7 +27,7 @@ export function deleteImage(token, imageId) {
   }
 }
 
-export function searchImages(query) {
+export function searchImages(token, query) {
   return {
     type: types.SEARCH_IMAGES,
     payload: DispatchAPI.images.searchImages(token, query)
