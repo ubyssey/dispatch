@@ -34,7 +34,7 @@ function buildHeaders(token) {
 
 function handleError(response) {
   if (!response.ok) {
-      throw Error(response.statusText)
+    throw Error(response.statusText)
   }
   return response
 }
@@ -166,4 +166,4 @@ var DispatchAPI = {
   }
 }
 
-export default DispatchAPI;
+export default DispatchAPI

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { FormInput, TextInput, TextAreaInput } from '../../inputs'
-import { Label, InputGroup } from '@blueprintjs/core'
 
 import SectionSelectInput from '../../inputs/SectionSelectInput'
 import AuthorSelectInput from '../../inputs/AuthorSelectInput'

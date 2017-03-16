@@ -11,7 +11,7 @@ export default class TextInput extends React.Component {
     this.saveNextUpdate = false
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.saveNextUpdate) {
       clearTimeout(this.saveTimeout)
 
