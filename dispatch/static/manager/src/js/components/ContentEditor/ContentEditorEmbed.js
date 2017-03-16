@@ -36,7 +36,7 @@ export default class ContentEditorEmbed extends React.Component {
 
   }
 
-  removeEmbed(e) {
+  removeEmbed() {
     this.props.blockProps.removeEmbed(this.props.block.getKey())
   }
 
@@ -78,19 +78,19 @@ export default class ContentEditorEmbed extends React.Component {
     return (
       <div
         className='o-embed-container'
-        onFocus={e => this.startEditing()}
-        onBlur={e => this.stopEditing()} >
+        onFocus={() => this.startEditing()}
+        onBlur={() => this.stopEditing()} >
         <div className='o-embed-container__header'>
           <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
           <ul className='o-embed-container__header__options'>
             <li>
-              <a onClick={e => this.updateEmbed()}>
+              <a onClick={() => this.updateEmbed()}>
                 <span className='pt-icon-standard pt-icon-edit'></span>
                 <span>Edit</span>
               </a>
             </li>
             <li>
-              <a onClick={e => this.removeEmbed()}>
+              <a onClick={() => this.removeEmbed()}>
                 <span className='pt-icon-standard pt-icon-trash'></span>
                 <span>Remove</span>
               </a>

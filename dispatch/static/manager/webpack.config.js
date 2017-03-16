@@ -17,6 +17,14 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
+        test: /\.js/,
+        enforce: 'pre',
+        loader: 'eslint-loader',
+        options: {
+          emitWarning: true,
+        }
+      },
+      {
         test: /\.scss$/,
         include: __dirname + '/src',
         use: [

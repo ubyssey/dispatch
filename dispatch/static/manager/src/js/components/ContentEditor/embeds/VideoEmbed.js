@@ -14,9 +14,9 @@ class VideoEmbedComponent extends React.Component {
   }
 
   getYoutubeID(url) {
-     const p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/
-     const [, videoId] = url.match(p) || []
-     return videoId
+    const p = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?(?=.*v=((\w|-){11}))(?:\S+)?$/
+    const [, videoId] = url.match(p) || []
+    return videoId
   }
 
   renderInput() {
@@ -30,7 +30,7 @@ class VideoEmbedComponent extends React.Component {
               onChange={e => this.props.updateField('url', e.target.value)} />
           </FormInput>
         </form>
-        <Button onClick={e => this.insertVideo()}>Insert</Button>
+        <Button onClick={() => this.insertVideo()}>Insert</Button>
       </div>
     )
 
@@ -40,8 +40,8 @@ class VideoEmbedComponent extends React.Component {
     return (
       <div>
         <img
-        className='o-embed--video__image'
-        src={`http://img.youtube.com/vi/${this.props.data.video_id}/0.jpg`} />
+          className='o-embed--video__image'
+          src={`http://img.youtube.com/vi/${this.props.data.video_id}/0.jpg`} />
         <form>
           <FormInput label='Title'>
             <TextInput
@@ -68,7 +68,7 @@ class VideoEmbedComponent extends React.Component {
   }
 
   render(){
-    return(
+    return (
       <div className='o-embed o-embed--video'>
         {this.props.data.video_id ? this.renderVideo() : this.renderInput()}
       </div>

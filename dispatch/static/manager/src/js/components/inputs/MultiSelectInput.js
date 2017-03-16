@@ -191,7 +191,7 @@ export default class MultiSelectInput extends React.Component {
           ref='dropdown'
           content={this.renderDropdown()}
           inline={true}>
-          <a onClick={e => this.refs.dropdown.open()}>
+          <a onClick={() => this.refs.dropdown.open()}>
             {this.props.editMessage}
           </a>
         </Dropdown>

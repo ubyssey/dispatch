@@ -42,7 +42,7 @@ export function authenticateUser(email, password, nextPath = '/') {
         dispatch(push(nextPath))
       })
       .catch(function(err) {
-        console.log('error', err);
+        console.log('error', err)
       })
   }
 }
