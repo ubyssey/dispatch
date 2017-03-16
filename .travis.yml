@@ -4,4 +4,7 @@ python:
 install:
   - python setup.py install
   - pip install -e .[dev]
-script: dispatch-admin test
+  - pip install coveralls
+script: dispatch-admin coverage
+after_success:
+  coveralls
