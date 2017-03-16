@@ -24,11 +24,12 @@ const TAG_MAP = {
 }
 
 function generateTag(tag, tagType) {
-  if (parseInt(tag, 10)) {
-    let entity = Entity.get(tag)
-    let entityType = entity.getType()
+  if (!isNaN(tag)) {
 
-    let generator = TAG_MAP[entityType][tagType]
+    const entity = Entity.get(tag)
+    const entityType = entity.getType()
+
+    const generator = TAG_MAP[entityType][tagType]
 
     return generator(entity.get('data'))
 
@@ -46,8 +47,15 @@ function removeTag(str, tag) {
 }
 
 function getTagSetAt(contentBlock, i) {
-  let styleSet = contentBlock.getInlineStyleAt(i)
-  let entitySet = Immutable.OrderedSet(contentBlock.getEntityAt(i))
+
+  let entitySet = Immutable.OrderedSet()
+
+  const styleSet = contentBlock.getInlineStyleAt(i)
+  const entity = contentBlock.getEntityAt(i)
+
+  if (entity) {
+    entitySet = entitySet.add(entity)
+  }
 
   return entitySet.concat(styleSet)
 }
@@ -60,7 +68,7 @@ export default function convertToHTML(contentBlock) {
 
   let lastCharacterTags = Immutable.OrderedSet()
 
-  for(var i = 0; i < contentBlock.getLength(); i++) {
+  for (var i = 0; i < contentBlock.getLength(); i++) {
     // Get tags for this character
     let characterTags = getTagSetAt(contentBlock, i)
 

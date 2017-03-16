@@ -39,7 +39,7 @@ function updateInstantArticle(update, integrations, enabled) {
 export default function DeliveryTab(props) {
   const isInstantArticlesEnabled = props.availableIntegrations['fb-instant-articles'] && props.availableIntegrations['fb-instant-articles'].settings.page_configured
 
-  let warningMessage = null;
+  let warningMessage = null
 
   if (!isInstantArticlesEnabled) {
     warningMessage = (

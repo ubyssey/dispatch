@@ -12,13 +12,13 @@ function getSearchMessage(query) {
 
 export default function ItemListEmpty(props) {
 
-  const message = !!props.query ? getSearchMessage(props.query) : props.emptyMessage
+  const message = props.query ? getSearchMessage(props.query) : props.emptyMessage
 
   return (
     <div className='c-item-list-empty'>
       <div className='c-item-list-empty__container'>
         <p>{message}</p>
-        {!!props.query ? null : renderButton(props)}
+        {props.query ? null : renderButton(props)}
       </div>
     </div>
   )

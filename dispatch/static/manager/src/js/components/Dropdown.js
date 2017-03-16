@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import { Popover, Position } from '@blueprintjs/core'
 
@@ -36,7 +36,7 @@ export default class Dropdown extends React.Component {
     window.removeEventListener('mousedown', this.pageClick)
   }
 
-  pageClick(e) {
+  pageClick() {
     this.setState({ isOpen: this.mouseIsDownOnField })
   }
 
@@ -51,8 +51,8 @@ export default class Dropdown extends React.Component {
   renderContent() {
     return (
       <div
-        onMouseDown={e => this.handleMouseDown()}
-        onMouseUp={e => this.handleMouseUp()}>
+        onMouseDown={() => this.handleMouseDown()}
+        onMouseUp={() => this.handleMouseUp()}>
         {this.props.content}
       </div>
     )
