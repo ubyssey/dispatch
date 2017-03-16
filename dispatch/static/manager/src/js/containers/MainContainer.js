@@ -9,6 +9,8 @@ import * as toasterActions from '../actions/ToasterActions'
 import Header from '../components/Header'
 import ModalContainer from '../components/ModalContainer'
 
+require('../../styles/components/toaster.scss')
+
 class Main extends React.Component {
 
   componentWillMount() {
@@ -36,7 +38,7 @@ class Main extends React.Component {
 
     return (
       <div>
-        <Toaster position={Position.TOP} ref='toaster' />
+        <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
         <Header sections={sections} email={this.props.email} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
