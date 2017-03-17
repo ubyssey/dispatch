@@ -21,6 +21,7 @@ class LogoutPageComponent extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({

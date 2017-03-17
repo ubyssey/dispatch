@@ -61,6 +61,5 @@ urlpatterns = format_suffix_patterns([
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
-    url(r'^auth/token', authentication_management, name='auth-token'),
-
+    url(r'^auth/token', authentication_management, name='auth-token')
 ]) + router.urls
