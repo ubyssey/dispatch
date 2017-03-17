@@ -50,7 +50,7 @@ export default function authReducer(state = initialState, action) {
       isLoading: false,
       isLoaded: true
     })
-    default:
-      return state
+  default:
+    return state
   }
 }

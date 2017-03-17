@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 
@@ -21,7 +21,6 @@ class LogoutPageComponent extends React.Component {
   }
 }
 
-<<<<<<< HEAD
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = (dispatch) => ({
