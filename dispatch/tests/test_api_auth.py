@@ -31,6 +31,7 @@ class AuthenticationTests(DispatchAPITestCase):
         url = reverse('auth-token')
 
         logout_response = self.client.delete(url, {}, format='json')
+
         # Try to get the token, if it doesn't exist, return None.
         user = User.objects.get(email='test@test.com')
         try:
@@ -97,17 +98,14 @@ class AuthenticationTests(DispatchAPITestCase):
         """
         # setup
         url = reverse('auth-token')
-
         data = {
             'email': 'test@test.com',
             'password': 'testing123'
         }
-
         response = self.client.post(url, data, format='json')
         user = User.objects.get(email='test@test.com')
         token = Token.objects.get(user_id=user.id)
         token.delete()
 
         response = self.client.delete(url, {}, format='json')
-        # TODO: this should return a 404
-        self.assertEqual(response.status_code, status.HTTP_404_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
