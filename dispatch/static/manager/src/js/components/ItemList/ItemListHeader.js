@@ -32,7 +32,10 @@ export default function ItemListHeader(props) {
               onChange={handleToggleAllItems} />
           </div>
           {`${props.items.selected.length} ${props.type} selected`}
-          <Button onClick={handleDeleteItems} disabled={!props.items.selected.length}>Delete</Button>
+          <Button
+            className='c-item-list__header__delete'
+            onClick={handleDeleteItems}
+            disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
         {props.items.isLoaded && props.items.data.length ? renderPagination() : null}
