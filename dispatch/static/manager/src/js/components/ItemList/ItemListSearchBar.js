@@ -11,7 +11,6 @@ export default class ItemListSearchBar extends React.Component {
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -23,18 +22,14 @@ export default class ItemListSearchBar extends React.Component {
     this.props.searchItems(this.state.query)
   }
 
-  handleChange(e) {
-    this.setState({ query: e.target.value })
-  }
-
   render() {
     return (
       <div className='c-item-list__searchbar'>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={e => this.handleSubmit(e)}>
           <TextInput
             value={this.state.query}
             placeholder='Search'
-            onChange={this.handleChange} />
+            onChange={e => this.setState({ query: e.target.value })} />
         </form>
       </div>
     )
