@@ -3,7 +3,9 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import { FormSection, FormInput, TextInput, SelectInput } from '../../components/inputs'
+import { FormInput, TextInput, SelectInput } from '../../components/inputs'
+import Panel from '../../components/Panel'
+
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as integrationActions from '../../actions/IntegrationActions'
@@ -217,9 +219,9 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     if (this.props.integration) {
       return (
         <DocumentTitle title='Integrations - Facebook Instant Articles'>
-          <FormSection title='Facebook Instant Articles'>
+          <Panel title='Facebook Instant Articles'>
             {this.renderFacebookInstantArticles()}
-          </FormSection>
+          </Panel>
         </DocumentTitle>
       )
     }

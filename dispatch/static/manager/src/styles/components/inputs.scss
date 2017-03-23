@@ -105,36 +105,6 @@
   }
 }
 
-// Component: FormSection
-
-.c-form-section {
-
-  // Border
-  border: 1px solid $color-border-gray;
-  border-radius: 3px;
-
-  // Extras
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-
-}
-
-.c-form-section__title {
-  // Structure
-  padding: 1rem;
-
-  // Border
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  border-bottom: 1px solid $color-border-gray;
-
-  // Background
-  background: $color-text-gray-light;
-
-  // Text
-  font-weight: $font-weight-semi-bold;
-
-}
-
 // Component: FormInput
 .c-form-input {
   // Structure
