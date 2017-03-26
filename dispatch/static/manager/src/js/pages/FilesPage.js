@@ -9,64 +9,130 @@ import { Link } from 'react-router'
 
 import ItemList from '../components/ItemList'
 
+import Dropzone from 'react-dropzone'
+
+require('../../styles/components/files.scss')
+
+const DEFAULT_LIMIT = 30
+
+
 class FilesPageComponent extends React.Component {
+
 
   componentWillMount() {
     this.props.clearFiles()
     this.props.clearSelectedFiles()
-    this.props.fetchFiles(this.props.token)
+    this.props.fetchFiles(this.props.token, this.getQuery())
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.isNewQuery(prevProps, this.props)) {
+      this.props.clearFiles()
+      this.props.clearSelectedFiles()
+      this.props.fetchFiles(this.props.token, this.getQuery())
+    }
+    else if (this.isNewPage(prevProps, this.props)) {
+      this.props.fetchFiles(this.props.token, this.getQuery())
+      this.props.clearSelectedFiles()
+    }
+  }
+
+  getQuery() {
+
+    var query = {
+      limit: DEFAULT_LIMIT,
+      offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
+    }
+
+    if(this.props.location.query.q){
+      query.q = this.props.location.query.q
+    }
+
+    return query
+  }
+
+  getCurrentPage() {
+    return parseInt(this.props.location.query.page, 10) || 1
+  }
+
+  getTotalPages() {
+    return Math.ceil(
+      parseInt(this.props.files.data.length, 10) / DEFAULT_LIMIT
+    )
+  }
+
+  isNewQuery(prevProps, props) {
+    return prevProps.location.query.q !== props.location.query.q
+  }
+
+  isNewPage(prevProps, props) {
+    //Returns true if the page number has changed
+    return prevProps.location.query.page !== props.location.query.page
+  }
 
   handleDeleteFiles(fileIds) {
-    this.props.deleteFiels(this.props.token, fileIds)
+    this.props.deleteFiles(this.props.token, fileIds)
     this.props.clearSelectedFiles()
   }
 
   handleSearchFiles(query) {
-    this.props.searchFiles(this.props.token, query)
+    this.props.searchFiles(this.props.token,query)
   }
+
+  onDrop(files){
+    files.forEach((file)=> {
+          let formData = new FormData();
+          formData.append("file", file, file.name)
+          formData.append('name', file.name)
+          this.props.createFile(this.props.token, formData)
+        })
+  }
+
 
   render() {
     const title = 'Files'
     const type = 'Files'
     return (
       <DocumentTitle title={title}>
-        <ItemList
-          location={this.props.location}
+        <div className='c-files'>
+          <ItemList
+            location={this.props.location}
 
-          type={type}
+            type={type}
 
-          currentPage={1}
-          totalPages={1}
+            currentPage={this.getCurrentPage()}
+            totalPages={this.getTotalPages()}
 
-          items={this.props.files}
-          entities={this.props.entities.files}
+            items={this.props.files}
+            entities={this.props.entities.files}
 
-          createMessage='Upload file'
-          emptyMessage={'You haven\'t uploaded any files yet.'}
-          createRoute='files/new'
+            columns={[
+              item => (<a href={item.file}>{item.name}</a>),
+              item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
+              item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
+            ]}
 
+            createMessage='Upload file'
+            emptyMessage={'You haven\'t uploaded any files yet.'}
+            createRoute='files/new'
 
-          columns={[
-            item => (<a href={item.file}>{item.name}</a>),
-            item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
-            item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
-          ]}
-          actions={{
-            toggleItem: this.props.toggleFile,
-            toggleAllItems: this.props.toggleAllFiles,
-            deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
-            searchItems: (query) => this.handleSearchFiles(query)
-          }}
-
+            actions={{
+              toggleItem: this.props.toggleFile,
+              toggleAllItems: this.props.toggleAllFiles,
+              deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
+              searchItems: (query) => this.handleSearchFiles(query)
+            }}
           />
-
+          <Dropzone onDrop={(files) => this.onDrop(files)}>
+            <div>
+              Drag and drop files here, or click to select files to upload.
+            </div>
+          </Dropzone>
+        </div>
       </DocumentTitle>
     )
   }
 }
-//item => (<a href={item.file}> {item.name}</a>),
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
@@ -85,6 +151,9 @@ const mapDispatchToProps = (dispatch) => {
     toggleFile: (fileId) => {
       dispatch(filesActions.toggleFile(fileId))
     },
+    createFile: (token, file) => {
+      dispatch(filesActions.createFile(token, file))
+    },
     toggleAllFiles: (fileIds) => {
       dispatch(filesActions.toggleAllFiles(fileIds))
     },
@@ -100,8 +169,8 @@ const mapDispatchToProps = (dispatch) => {
     clearFiles: () => {
       dispatch(filesActions.clearFiles())
     },
-    searchFiles: (token, section, query) => {
-      dispatch(filesActions.searchFiles(section, query))
+    searchFiles: (token, query) => {
+      dispatch(filesActions.searchFiles(query))
     }
   }
 }
