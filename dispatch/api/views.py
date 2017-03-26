@@ -412,7 +412,14 @@ class FileViewSet(viewsets.ModelViewSet):
     """
     model = File
     serializer_class = FileSerializer
-    queryset = File.objects.all()
+
+    def get_queryset(self):
+        queryset = File.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
 
 
 class ImageViewSet(viewsets.ModelViewSet):

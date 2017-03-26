@@ -24,8 +24,11 @@ function buildRoute(route, id) {
   return fullRoute
 }
 
-function buildHeaders(token) {
-  let headers = DEFAULT_HEADERS
+function buildHeaders(token, use_file_headers=false) {
+  let headers = {}
+  if(!use_file_headers) {
+    headers = DEFAULT_HEADERS
+  }
   if (token) {
     headers['Authorization'] = `Token ${token}`
   }
@@ -63,6 +66,19 @@ function postRequest(route, id=null, payload={}, token=null) {
       method: 'POST',
       headers: buildHeaders(token),
       body: JSON.stringify(payload)
+    }
+  )
+  .then(handleError)
+  .then(parseJSON)
+}
+
+function postFileRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'POST',
+      headers: buildHeaders(token, true),
+      body: payload
     }
   )
   .then(handleError)
@@ -117,11 +133,14 @@ var DispatchAPI = {
     }
   },
   files:{
-    fetchFiles: (query) => {
-      return getRequest('files',null, query)
+    fetchFiles: (token, query) => {
+      return getRequest('files',null, query, token)
     },
-    deleteFiles: (token, fileIds) => {
-      return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
+    // deleteFiles: (token, fileIds) => {
+    //   return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
+    // },
+    createFile: (token, data) => {
+      return postFileRequest('files', null, data, token)
     }
   },
   images: {
