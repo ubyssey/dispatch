@@ -18,6 +18,13 @@ export function fetchFiles(token, query) {
   }
 }
 
+export function createFile(token, file) {
+  return {
+    type: types.CREATE_FILE,
+    payload: DispatchAPI.files.createFile(token, file)
+  }
+}
+
 export function deleteFiles(token, fileIds) {
   return {
     type: types.DELETE_FILES,
@@ -55,12 +62,11 @@ export function clearFiles() {
 
 export function searchFiles(query) {
   var queryObj = {}
-
   if(query) {
     queryObj.q = query
   }
 
   return function(dispatch) {
-    dispatch(push({pathname: '/files/', query: queryObj }))
+    dispatch(push({ pathname: '/files/', query: queryObj }))
   }
 }
