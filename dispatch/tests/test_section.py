@@ -26,7 +26,7 @@ class SectionsTests(DispatchAPITestCase):
 		tags='test')
 		article.save()
 
-		url = reverse('sections-list')
+		url = reverse('api-sections-list')
 
 		return self.client.post(url, data, format='json')
 
@@ -38,7 +38,7 @@ class SectionsTests(DispatchAPITestCase):
 		# Clear authentication credentials
 		self.client.credentials()
 
-		url = reverse('sections-list')
+		url = reverse('api-sections-list')
 
 		response = self.client.post(url, None, format='json')
 
