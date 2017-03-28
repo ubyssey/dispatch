@@ -420,6 +420,25 @@ class FileViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
+    def bulk_delete(self, request):
+        deleted = []
+        ids = self.request.data.get('ids', None)
+
+        if ids is not None:
+            ids = ids.split(',')
+            for id in ids:
+                try:
+                    File.objects.filter(id=id).delete()
+                    deleted.append(int(id))
+                except:
+                    pass
+
+        data = {
+            'deleted': deleted
+        }
+
+        return Response(data)
+
 
 
 class ImageViewSet(viewsets.ModelViewSet):
