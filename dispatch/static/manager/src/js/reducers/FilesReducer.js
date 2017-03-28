@@ -25,7 +25,7 @@ function filesReducer(state = initialState, action) {
       })
     case types.DELETE_FILES + '_FULFILLED':
       return R.merge(state, {
-        date: R.without(action.payload, state.data)
+        data: R.without(action.payload, state.data)
       })
     case types.CLEAR_FILES:
       return R.merge(state, {

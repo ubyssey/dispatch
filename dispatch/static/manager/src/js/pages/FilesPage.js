@@ -44,7 +44,7 @@ class FilesPageComponent extends React.Component {
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
 
-    if(this.props.location.query.q){
+    if(this.props.location.query.q) {
       query.q = this.props.location.query.q
     }
 
@@ -79,7 +79,7 @@ class FilesPageComponent extends React.Component {
     this.props.searchFiles(this.props.token,query)
   }
 
-  onDrop(files){
+  onDrop(files) {
     files.forEach((file)=> {
           let formData = new FormData();
           formData.append("file", file, file.name)
