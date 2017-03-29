@@ -18,7 +18,7 @@ class SectionsTests(DispatchAPITestCase):
 		person.save()
 
 		# Create test article
-		article = Article.objects.create(parent='test', 
+		article = Article.objects.create(parent='test',
 		headline='test',
 		section='test',
 		authors='test',
@@ -43,14 +43,14 @@ class SectionsTests(DispatchAPITestCase):
 		response = self.client.post(url, None, format='json')
 
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-	
+
 	def test_create_empty_section(self):
 		"""
-        Create section should fail with empty payload
-        """
+		Create section should fail with empty payload
+		"""
+		
+		url = reverse('api-sections-list')
 
-        url = reverse('api-sections-list')
+		response = self.client.post(url, None, format='json')
 
-        response = self.client.post(url, None, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
