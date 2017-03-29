@@ -64,10 +64,6 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     this.setState({ editMode: false })
   }
 
-  saveIntegration(integration) {
-    this.props.saveIntegration(this.props.token, INTEGRATION_ID, integration)
-  }
-
   updateSettings(settings) {
     return this.props.updateIntegration(
       INTEGRATION_ID,
@@ -108,12 +104,12 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     if (settings.client_configured && !this.state.editMode) {
       return (
         <InstantArticlesPageEditor
-          enterEditMode={() => this.enterEditMode()}
           clientId={settings.client_id}
           pages={R.path(['pages', 'data'], callback)}
           pathname={this.props.location.pathname}
           onChange={data => this.updateFacebookPage(data)}
-          onSave={() => this.saveIntegration(this.props.integration)} />
+          onSave={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
+          enterEditMode={() => this.enterEditMode()} />
       )
     }
 
@@ -122,7 +118,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
         clientId={settings.client_id}
         clientSecret={settings.client_secret}
         onChange={data => this.updateSettings(data)}
-        onSave={() => this.saveIntegration(this.props.integration)}
+        onSave={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
         editMode={this.state.editMode}
         exitEditMode={() => this.exitEditMode()}/>
     )
