@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
 
 import Panel from '../../components/Panel'
@@ -84,6 +85,7 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     if (!this.props.integration.settings.page_id && R.path(['callback', 'pages', 'data'], this.props.integration)) {
       const page = this.props.integration.callback.pages.data[0]
       this.updateFacebookPage(page)
+      this.props.resetURI(this.props.location.pathname)
     }
 
   }
@@ -174,6 +176,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateIntegration: (integrationId, data) => {
       dispatch(integrationActions.updateIntegration(integrationId, data))
+    },
+    resetURI: (pathname) => {
+      dispatch(push(pathname))
     }
   }
 }
