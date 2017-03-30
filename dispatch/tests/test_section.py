@@ -18,12 +18,12 @@ class SectionsTests(DispatchAPITestCase):
 		person.save()
 
 		# Create test article
-		article = Article.objects.create(parent='test',
-		headline='test',
-		section='test',
-		authors='test',
-		topic='test',
-		tags='test')
+		article = Article.objects.create(parent='test-parent',
+		headline='test-headline',
+		section='test-section',
+		authors='test-authors',
+		topic='test-topic',
+		tags='test-tags')
 		article.save()
 		
 		data = {
@@ -77,3 +77,16 @@ class SectionsTests(DispatchAPITestCase):
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 		
 		self.assertTrue('slug' in response.data)
+		
+	def test_create_section(self):
+		"""
+		Ensure that section can be created
+		"""
+		
+		response = self._create_section()
+		
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		
+		# Check data 
+		self.assertEqual(response.data['name'], 'Test name')
+		self.assertEqual(response.data['slug'], 'test-section')
