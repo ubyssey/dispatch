@@ -116,12 +116,7 @@ function InstantArticlesPageDropdown(props) {
     return pageMap
   }, {})
 
-  const options = props.pages.map(page => {
-    return {
-      value: page.id,
-      label: page.name
-    }
-  })
+  const options = props.pages.map(page => ({ value: page.id, label: page.name }))
 
   return (
 
