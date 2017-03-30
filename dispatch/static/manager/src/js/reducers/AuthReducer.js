@@ -36,10 +36,7 @@ export default function authReducer(state = initialState, action) {
 
     return Object.assign({}, state, {
       token: null,
-      email: null,
-      nextPath: null,
-      isLoading: false,
-      isLoaded: true
+      email: null
     })
   default:
     return state
