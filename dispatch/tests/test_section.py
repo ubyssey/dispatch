@@ -12,19 +12,6 @@ class SectionsTests(DispatchAPITestCase):
 		"""
 		Create a dummy section instance
 		"""
-
-		# Create test person
-		person = Person.objects.create(full_name='Test Person')
-		person.save()
-
-		# Create test article
-		article = Article.objects.create(parent='test-parent',
-		headline='test-headline',
-		section='test-section',
-		authors='test-authors',
-		topic='test-topic',
-		tags='test-tags')
-		article.save()
 		
 		data = {
 			'name': 'Test name',
