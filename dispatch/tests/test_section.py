@@ -78,6 +78,26 @@ class SectionsTests(DispatchAPITestCase):
 		self.assertEqual(response.data['name'], 'Test name')
 		self.assertEqual(response.data['slug'], 'test-section')
 		
+	def test_update_section(self):
+		"""
+		Ensure that section can be updated
+		"""
+		
+		response = self._create_section()
+		
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		
+		# Check data 
+		self.assertEqual(response.data['name'], 'Test name')
+		self.assertEqual(response.data['slug'], 'test-section')
+		
+		# Update data 
+		response.data['name'] = 'Updated name'
+		response.data['slug'] = 'Updated slug'
+		
+		self.assertEqual(response.data['name'], 'Updated name')
+		self.assertEqual(response.data['slug'], 'Updated slug')
+		
 	def test_delete_section_unauthorized(self):
 		"""
 		Delete section should fail with unauthenticated request
