@@ -77,3 +77,38 @@ class SectionsTests(DispatchAPITestCase):
 		# Check data 
 		self.assertEqual(response.data['name'], 'Test name')
 		self.assertEqual(response.data['slug'], 'test-section')
+		
+	def test_delete_section_unauthorized(self):
+		"""
+		Delete section should fail with unauthenticated request
+		"""
+		
+		# Create a section
+		section = self._create_section()
+		
+		# Clear authentication credentials
+		self.client.credentials()
+		
+		url = reverse('api-sections-detail', args=[section.data['id']])
+		
+		response = self.client.delete(url, format='json')
+		
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+		
+	def test_delete_section(self):
+		"""
+		Ensure that section can be deleted
+		"""
+		
+		section = self._create_section()
+		
+		# Generate detail URL
+		url = reverse('api-sections-detail', args=[section.data['id']])
+
+		# Successful deletion should return 204
+		response = self.client.delete(url, format='json')
+		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+		# Can't delete a section that has already been deleted
+		response = self.client.delete(url, format='json')
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
