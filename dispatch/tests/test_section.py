@@ -78,6 +78,23 @@ class SectionsTests(DispatchAPITestCase):
 		self.assertEqual(response.data['name'], 'Test name')
 		self.assertEqual(response.data['slug'], 'test-section')
 		
+	def test_create_duplicate_section(self):
+		"""
+		Create duplication section should fail
+		"""
+		
+		# Create section
+		response = self._create_section()
+		
+		# Confirm section was created
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		
+		# Create section again
+		response = self._create_section()
+		
+		# Confirm creating duplicate section returns error
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+		
 	def test_update_section(self):
 		"""
 		Ensure that section can be updated
