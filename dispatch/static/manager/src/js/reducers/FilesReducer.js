@@ -1,4 +1,4 @@
-import R from 'ramda';
+import R from 'ramda'
 
 import * as types from '../constants/ActionTypes'
 
@@ -12,43 +12,44 @@ const initialState = {
 
 function filesReducer(state = initialState, action) {
   switch(action.type) {
-    case types.FETCH_FILES + '_PENDING':
-      return R.merge(state, {
-        isLoading: true,
-        isLoaded: false
-      })
-    case types.FETCH_FILES + '_FULFILLED':
-      return R.merge(state, {
-        isLoading: false,
-        isLoaded: true,
-        data: action.payload.results.result
-      })
-    case types.DELETE_FILES + '_FULFILLED':
-      return R.merge(state, {
-        data: R.without(action.payload, state.data)
-      })
-    case types.CLEAR_FILES:
-      return R.merge(state, {
-        isLoaded: false,
-        data: []
-      })
-    case types.TOGGLE_FILE:
-      let index = R.findIndex(R.equals(action.id), state.selected);
-      return R.merge(state, {
-        selected: index > -1 ? R.remove(index, 1, state.selected) : R.append(action.id, state.selected)
-      })
-    case types.TOGGLE_ALL_FILES:
-      return R.merge(state, {
-        selected: state.isAllSelected ? [] : action.ids,
-        isAllSelected: !state.isAllSelected
-      })
-    case types.CLEAR_SELECTED_FILES:
-      return R.merge(state , {
-        selected: [],
-        isAllSelected: false
-      })
-    default:
-      return state
+  case types.FETCH_FILES + '_PENDING':
+    return R.merge(state, {
+      isLoading: true,
+      isLoaded: false
+    })
+  case types.FETCH_FILES + '_FULFILLED':
+    return R.merge(state, {
+      isLoading: false,
+      isLoaded: true,
+      data: action.payload.results.result
+    })
+  case types.DELETE_FILES + '_FULFILLED':
+    return R.merge(state, {
+      data: R.without(action.payload, state.data)
+    })
+  case types.CLEAR_FILES:
+    return R.merge(state, {
+      isLoaded: false,
+      data: []
+    })
+  case types.TOGGLE_FILE:{
+    let index = R.findIndex(R.equals(action.id), state.selected)
+    return R.merge(state, {
+      selected: index > -1 ? R.remove(index, 1, state.selected) : R.append(action.id, state.selected)
+    })
+  }
+  case types.TOGGLE_ALL_FILES:
+    return R.merge(state, {
+      selected: state.isAllSelected ? [] : action.ids,
+      isAllSelected: !state.isAllSelected
+    })
+  case types.CLEAR_SELECTED_FILES:
+    return R.merge(state , {
+      selected: [],
+      isAllSelected: false
+    })
+  default:
+    return state
   }
 }
 

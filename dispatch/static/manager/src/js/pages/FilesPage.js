@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import moment from 'moment'
@@ -81,11 +81,11 @@ class FilesPageComponent extends React.Component {
 
   onDrop(files) {
     files.forEach((file)=> {
-          let formData = new FormData();
-          formData.append("file", file, file.name)
-          formData.append('name', file.name)
-          this.props.createFile(this.props.token, formData)
-        })
+      let formData = new FormData()
+      formData.append('file', file, file.name)
+      formData.append('name', file.name)
+      this.props.createFile(this.props.token, formData)
+    })
   }
 
 
@@ -145,6 +145,7 @@ const mapStateToProps = (state) => {
       files: state.app.entities.files
     }
   }
+}
 
 
 const mapDispatchToProps = (dispatch) => {
@@ -169,9 +170,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteFiles: (token, fileIds) => {
       dispatch(filesActions.deleteFiles(token, fileIds))
-    },
-    clearFiles: () => {
-      dispatch(filesActions.clearFiles())
     },
     searchFiles: (token, query) => {
       dispatch(filesActions.searchFiles(query))
