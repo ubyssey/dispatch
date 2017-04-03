@@ -45,7 +45,9 @@ export default function ArticleSidebar(props) {
           <DeliveryTab
             update={props.update}
             importance={props.article.importance}
-            reading_time={props.article.reading_time} />
+            reading_time={props.article.reading_time}
+            integrations={props.article.integrations}
+            availableIntegrations={props.integrations} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

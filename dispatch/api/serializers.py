@@ -6,6 +6,9 @@ from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
 from dispatch.apps.api.exceptions import InvalidFilename
 
+from dispatch.core.signals import article_post_save
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -247,6 +250,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     template_id = serializers.CharField(required=False, write_only=True)
     template_fields = JSONField(required=False, source='get_template_fields')
 
+    integrations = JSONField(required=False)
+
     class Meta:
         model = Article
         fields = (
@@ -281,7 +286,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'template_fields',
             'seo_keyword',
             'seo_description',
-            'est_reading_time'
+            'est_reading_time',
+            'integrations'
         )
 
     def create(self, validated_data):
@@ -310,6 +316,9 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
+
+        # Set integrations
+        instance.integrations = validated_data.get('integrations', instance.integrations)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
@@ -354,6 +363,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)
         else:
             perform_action(self.context['request'].user.person, action, 'article', instance.pk)
+
+        article_post_save.send(sender=Article, article=instance)
 
         return instance
 
@@ -459,3 +470,17 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             perform_action(self.context['request'].user.person, action, 'page', instance.pk)
 
         return instance
+
+class IntegrationSerializer(serializers.Serializer):
+
+    id = serializers.CharField(source='ID', read_only=True)
+    settings = serializers.JSONField(source='get_settings')
+
+    def save(self):
+
+        settings = self.validated_data.get('get_settings')
+
+        if settings:
+            self.instance.save(settings)
+
+        return self.instance

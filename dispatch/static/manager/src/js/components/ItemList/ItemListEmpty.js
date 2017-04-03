@@ -2,23 +2,19 @@ import React from 'react'
 
 import { LinkButton } from '../inputs'
 
-function renderButton(props) {
-  return <LinkButton to={props.createRoute}>{props.createMessage}</LinkButton>
-}
-
-function getSearchMessage(query) {
-  return `No results for "${query}"`
-}
-
 export default function ItemListEmpty(props) {
 
-  const message = !!props.query ? getSearchMessage(props.query) : props.emptyMessage
+  const message = props.query ? `No results for "${props.query}"` : props.emptyMessage
+
+  const createButton = (
+    <LinkButton to={props.createRoute}>{props.createMessage}</LinkButton>
+  )
 
   return (
     <div className='c-item-list-empty'>
       <div className='c-item-list-empty__container'>
         <p>{message}</p>
-        {!!props.query ? null : renderButton(props)}
+        {props.query ? null : createButton}
       </div>
     </div>
   )

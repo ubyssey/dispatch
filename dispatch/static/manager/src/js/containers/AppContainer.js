@@ -5,9 +5,7 @@ import * as userActions from '../actions/UserActions'
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props)
-
+  componentWillMount() {
     if (!this.isAuthenticated()) {
       this.props.onRequireLogin('/')
     }

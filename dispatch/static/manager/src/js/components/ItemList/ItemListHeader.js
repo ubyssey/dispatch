@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Link } from 'react-router'
-
 import Toolbar from '../Toolbar'
 import { Button } from '@blueprintjs/core'
 
@@ -18,11 +16,9 @@ export default function ItemListHeader(props) {
     props.actions.deleteItems(props.items.selected)
   }
 
-  function renderPagination() {
-    return (
-      <ItemListPagination currentPage={props.currentPage} totalPages={props.totalPages} location={props.location} />
-    )
-  }
+  const pagination = (
+    <ItemListPagination currentPage={props.currentPage} totalPages={props.totalPages} location={props.location} />
+  )
 
   return (
     <Toolbar>
@@ -34,11 +30,16 @@ export default function ItemListHeader(props) {
               onChange={handleToggleAllItems} />
           </div>
           {`${props.items.selected.length} ${props.type} selected`}
-          <Button onClick={handleDeleteItems} disabled={!props.items.selected.length}>Delete</Button>
+          <Button
+            className='c-item-list__header__delete'
+            onClick={handleDeleteItems}
+            disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
-        {props.items.isLoaded && props.items.data.length ? renderPagination() : null}
-        <ItemListSearchBar query={props.location.query.q} searchItems={props.actions.searchItems} />
+          {props.items.isLoaded && props.items.data.length ? pagination : null}
+          <ItemListSearchBar
+            query={props.location.query.q}
+            searchItems={props.actions.searchItems} />
         </div>
       </div>
     </Toolbar>

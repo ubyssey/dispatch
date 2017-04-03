@@ -11,7 +11,7 @@ export default class TextInput extends React.Component {
     this.saveNextUpdate = false
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.saveNextUpdate) {
       clearTimeout(this.saveTimeout)
 
@@ -38,8 +38,9 @@ export default class TextInput extends React.Component {
       <input
         ref='input'
         className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
-        type='text'
+        type={this.props.type || 'text'}
         value={this.props.value}
+        disabled={this.props.disabled}
         placeholder={this.props.placeholder}
         onChange={this.handleOnChange}
         onKeyPress={this.props.onKeyPress} />

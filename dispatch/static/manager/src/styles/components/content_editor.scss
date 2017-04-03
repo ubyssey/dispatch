@@ -81,11 +81,6 @@
     // Structure
     margin-right: 0;
   }
-
-  .pt-icon-standard {
-    // Structure
-    margin-right: 0;
-  }
 }
 
 // Component: ContentEditorLinkPopover
@@ -94,12 +89,9 @@
   width: 275px;
 }
 
-.c-content-editor__link-popover__back,
-.c-content-editor__link-popover__remove {
-  .pt-icon-standard {
-    // Structure
-    margin-right: 0;
-  }
+.c-content-editor__popover .pt-button .pt-icon-standard {
+  // Structure
+  margin-right: 0;
 }
 
 .c-content-editor__link-popover__back {
