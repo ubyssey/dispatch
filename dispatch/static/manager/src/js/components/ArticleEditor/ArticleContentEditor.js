@@ -4,23 +4,14 @@ import React from 'react'
 import ArticleHeadline from './ArticleHeadline'
 import ContentEditor from '../ContentEditor'
 
-import { ImageEmbed } from '../ContentEditor/embeds'
+import { ImageEmbed, VideoEmbed } from '../ContentEditor/embeds'
 
 const embeds = [
-  ImageEmbed
+  ImageEmbed,
+  VideoEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.handleContentUpdate = this.handleContentUpdate.bind(this)
-  }
-
-  handleContentUpdate(contentState) {
-    //this.props.onUpdate('_content', contentState)
-  }
 
   render() {
     return (
@@ -34,7 +25,7 @@ export default class ArticleContentEditor extends React.Component {
               scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
               content={this.props.article.content}
               isNew={this.props.isNew}
-              onUpdate={this.handleContentUpdate}
+              onUpdate={cs => this.props.onUpdate('_content', cs)}
               openModal={this.props.openModal}
               closeModal={this.props.closeModal}
               embeds={embeds} />
@@ -43,4 +34,5 @@ export default class ArticleContentEditor extends React.Component {
       </div>
     )
   }
+
 }

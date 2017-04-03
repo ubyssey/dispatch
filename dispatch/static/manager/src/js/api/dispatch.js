@@ -8,10 +8,16 @@ const DEFAULT_HEADERS = {
 }
 
 function buildRoute(route, id) {
-  let fullRoute = API_URL + route
+  let pieces = route.split('.')
+
+  let fullRoute = API_URL + pieces[0]
 
   if (id) {
-    fullRoute += `/${id}`
+    fullRoute += `/${id}/`
+  }
+
+  if (pieces.length > 1) {
+    fullRoute += pieces[1]
   }
 
   // Append slash to all urls
@@ -36,18 +42,16 @@ function buildHeaders(token, use_file_headers=false) {
 }
 
 function handleError(response) {
-  if (!response.ok) {
-      throw Error(response.statusText)
-  }
-  return response
+  return response.ok ? response : Promise.reject(response.statusText)
 }
 
 function parseJSON(response) {
   return response.json()
+    .then(json => response.ok ? json : Promise.reject(json))
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  let urlString = buildRoute(route, id) + url.format({query: query})
+  let urlString = buildRoute(route, id) + url.format({ query: query })
   return fetch(
     urlString,
     {
@@ -55,7 +59,6 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -68,7 +71,6 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -85,6 +87,18 @@ function postFileRequest(route, id=null, payload={}, token=null) {
   .then(parseJSON)
 }
 
+function deleteRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'DELETE',
+      headers: buildHeaders(token),
+      body: JSON.stringify(payload)
+    }
+  )
+  .then(handleError)
+}
+
 function patchRequest(route, id=null, payload={}, token=null) {
   return fetch(
     buildRoute(route, id),
@@ -94,7 +108,6 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -149,7 +162,8 @@ var DispatchAPI = {
     },
     saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
-    }
+    },
+
   },
   templates: {
     fetchTemplate: (token, templateId) => {
@@ -183,6 +197,20 @@ var DispatchAPI = {
       return postRequest('tags', null, {name: name}, token)
     }
   },
+  integrations: {
+    fetchIntegration: (token, integrationId) => {
+      return getRequest('integrations', integrationId, null, token)
+    },
+    saveIntegration: (token, integrationId, data) => {
+      return patchRequest('integrations', integrationId, data, token)
+    },
+    deleteIntegration: (token, integrationId) => {
+      return deleteRequest('integrations', integrationId, null, token)
+    },
+    callback: (token, integrationId, query) => {
+      return getRequest('integrations.callback', integrationId, query, token)
+    }
+  },
   dashboard: {
     actions: (token) => {
       return getRequest('dashboard/actions', null, {}, token)
@@ -193,4 +221,4 @@ var DispatchAPI = {
   }
 }
 
-export default DispatchAPI;
+export default DispatchAPI

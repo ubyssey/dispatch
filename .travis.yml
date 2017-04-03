@@ -1,0 +1,10 @@
+language: python
+python:
+  - "2.7"
+install:
+  - python setup.py install
+  - pip install -e .[dev]
+  - pip install coveralls
+script: dispatch-admin coverage
+after_success:
+  coveralls

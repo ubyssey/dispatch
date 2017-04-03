@@ -1,8 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, TextInput, TextAreaInput, ImageInput } from '../../inputs'
-import { AnchorButton } from '@blueprintjs/core'
+import { FormInput, TextAreaInput, ImageInput } from '../../inputs'
 
 export default function FeaturedImageTab(props) {
 

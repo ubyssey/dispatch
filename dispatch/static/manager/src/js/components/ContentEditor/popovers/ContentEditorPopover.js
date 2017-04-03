@@ -10,7 +10,6 @@ export default class ContentEditorPopover extends React.Component {
   constructor(props) {
     super(props)
 
-
     this.state ={
       showLinkInput : false
     }
@@ -22,14 +21,14 @@ export default class ContentEditorPopover extends React.Component {
     this.props.toggleStyle(style)
   }
 
-  showLinkInput(e) {
+  showLinkInput() {
     this.props.focusEditor()
     this.setState({ showLinkInput: true })
   }
   renderLinkInput() {
     return (
       <ContentEditorLinkEditor
-        back={e => {
+        back={() => {
           this.setState({ showLinkInput: false})
           this.props.closeLinkInput()
         }}
@@ -72,7 +71,7 @@ export default class ContentEditorPopover extends React.Component {
         </AnchorButton>
         <AnchorButton
           className='c-content-editor__popover__button'
-          onClick={e => this.showLinkInput()}
+          onClick={() => this.showLinkInput()}
           title='Link'>
           <span className='pt-icon-standard pt-icon-link'></span>
         </AnchorButton>

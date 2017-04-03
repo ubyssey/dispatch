@@ -64,12 +64,12 @@ export default class ContentEditorLinkEditor extends React.Component {
           ref='textInput'
           value={this.state.urlValue}
           onKeyPress={this.handleKeyPress}
-          onChange={ e => this.updateLink(e.target.value)}
+          onChange={e => this.updateLink(e.target.value)}
           placeholder='Enter a URL here' />
         <AnchorButton
           className='c-content-editor__link-popover__remove'
           intent={Intent.DANGER}
-          onClick={e => this.removeLink()}>
+          onClick={() => this.removeLink()}>
           <span className='pt-icon-standard pt-icon-trash' />
         </AnchorButton>
       </div>
