@@ -1,11 +1,13 @@
-import React from 'react';
-import DocumentTitle from 'react-document-title';
+import React from 'react'
+import DocumentTitle from 'react-document-title'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import * as dashboardActions from '../actions/DashboardActions'
 import { LinkButton } from '../components/inputs'
+import Panel from '../components/Panel'
+
+import * as dashboardActions from '../actions/DashboardActions'
 
 require('../../styles/components/dashboard.scss')
 
@@ -56,13 +58,12 @@ class DashboardPageComponent extends React.Component {
           <div className='c-dashboard__sidebar'>
             <h2 className='c-dashboard__header'>Quick Actions</h2>
             <ul className='c-dashboard_quick-actions'>
-              <li className='c-dashboard_quick-actions__item'><LinkButton to={`/articles/new`}>New Article</LinkButton></li>
-              <li className='c-dashboard_quick-actions__item'><LinkButton to={``}>New Page</LinkButton></li>
+              <li className='c-dashboard_quick-actions__item'><LinkButton to='/articles/new'>New Article</LinkButton></li>
+              <li className='c-dashboard_quick-actions__item'><LinkButton to=''>New Page</LinkButton></li>
             </ul>
-            <div className='c-dashboard_recent-articles'>
-              <h2 className='c-dashboard__header c-dashboard_recent-articles__header'>Recent Articles</h2>
+            <Panel title='Recent Articles'>
               <ul>{this.props.recent.isLoaded ? this.renderRecent() : null}</ul>
-            </div>
+            </Panel>
           </div>
         </div>
       </DocumentTitle>

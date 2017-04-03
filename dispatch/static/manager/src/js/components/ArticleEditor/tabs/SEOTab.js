@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { FormInput, TextInput, TextAreaInput } from '../../inputs'
-import { Label, InputGroup } from '@blueprintjs/core'
 
 function containsKeyword(field, keyword, divider) {
   if (field && keyword) {
@@ -30,7 +29,7 @@ function ConfirmationTag(props) {
 
 function CharacterCount(props) {
 
-  var intent;
+  let intent
 
   if (props.count <= props.min - props.margin || props.count >= props.max + props.margin) {
     intent = 'danger'

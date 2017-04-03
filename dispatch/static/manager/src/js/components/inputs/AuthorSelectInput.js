@@ -31,8 +31,7 @@ class AuthorSelectInputComponent extends React.Component {
     this.props.update(newAuthors)
   }
 
-  createAuthor(fullName) {
-
+  createAuthor() {
   }
 
   fetchPersons(query) {

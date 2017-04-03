@@ -85,7 +85,7 @@
   display: inline-block;
   width: 50px;
   padding-left: 0;
-  padding-right: 7px;
+  margin-right: 7px;
 
   // Text
   text-align: center;
@@ -93,7 +93,7 @@
 
 .c-item-list__header__delete {
   // Structure
-  margin-left: 15px;
+  margin-left: 1rem;
 }
 
 // Component: ItemListPagination

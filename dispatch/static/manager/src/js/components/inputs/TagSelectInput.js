@@ -31,7 +31,7 @@ class TagSelectInputComponent extends React.Component {
     this.props.update(newTags)
   }
 
-  createTag(name) {
+  createTag() {
 
   }
 

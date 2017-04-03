@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Position, Toaster } from '@blueprintjs/core';
+import { Position, Toaster } from '@blueprintjs/core'
 
 import * as sectionsActions from '../actions/SectionsActions'
 import * as modalActions from '../actions/ModalActions'
@@ -9,17 +9,19 @@ import * as toasterActions from '../actions/ToasterActions'
 import Header from '../components/Header'
 import ModalContainer from '../components/ModalContainer'
 
+require('../../styles/components/toaster.scss')
+
 class Main extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    if ( !props.sections.isLoaded ) {
-      props.fetchSections(this.props.token)
+  componentWillMount() {
+    // Load sections
+    if ( !this.props.sections.isLoaded ) {
+      this.props.fetchSections(this.props.token)
     }
   }
 
   componentDidMount() {
+    // Initialize toaster reducer with toaster ref
     this.props.setupToaster(this.refs.toaster)
   }
 
@@ -36,7 +38,7 @@ class Main extends React.Component {
 
     return (
       <div>
-        <Toaster position={Position.TOP} ref='toaster' />
+        <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
         <Header sections={sections} email={this.props.email} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}

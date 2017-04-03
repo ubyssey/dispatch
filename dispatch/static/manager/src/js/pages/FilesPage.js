@@ -145,7 +145,7 @@ const mapStateToProps = (state) => {
       files: state.app.entities.files
     }
   }
-}
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
