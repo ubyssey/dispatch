@@ -95,39 +95,43 @@ class FilesPageComponent extends React.Component {
     return (
       <DocumentTitle title={title}>
         <div className='c-files'>
-          <ItemList
-            location={this.props.location}
+          <div className='c-files-item-list'>
+            <ItemList
+              location={this.props.location}
 
-            type={type}
+              type={type}
 
-            currentPage={this.getCurrentPage()}
-            totalPages={this.getTotalPages()}
+              currentPage={this.getCurrentPage()}
+              totalPages={this.getTotalPages()}
 
-            items={this.props.files}
-            entities={this.props.entities.files}
+              items={this.props.files}
+              entities={this.props.entities.files}
 
-            columns={[
-              item => (<a href={item.file}>{item.name}</a>),
-              item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
-              item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
-            ]}
+              columns={[
+                item => (<a href={item.file}>{item.name}</a>),
+                item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
+                item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
+              ]}
 
-            createMessage='Upload file'
-            emptyMessage={'You haven\'t uploaded any files yet.'}
-            createRoute='files/new'
+              createMessage='Upload file'
+              emptyMessage={'You haven\'t uploaded any files yet.'}
+              createRoute='files/new'
 
-            actions={{
-              toggleItem: this.props.toggleFile,
-              toggleAllItems: this.props.toggleAllFiles,
-              deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
-              searchItems: (query) => this.handleSearchFiles(query)
-            }}
-          />
-          <Dropzone onDrop={(files) => this.onDrop(files)}>
-            <div>
-              Drag and drop files here, or click to select files to upload.
-            </div>
-          </Dropzone>
+              actions={{
+                toggleItem: this.props.toggleFile,
+                toggleAllItems: this.props.toggleAllFiles,
+                deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
+                searchItems: (query) => this.handleSearchFiles(query)
+              }}
+            />
+          </div>
+          <div className="c-files-dropzone-container">
+            <Dropzone className="c-files-dropzone" onDrop={(files) => this.onDrop(files)}>
+              <div className="c-files-dropzone-text">
+                Drag and drop files here, or click to select files to upload.
+              </div>
+            </Dropzone>
+          </div>
         </div>
       </DocumentTitle>
     )

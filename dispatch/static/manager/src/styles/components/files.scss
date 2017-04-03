@@ -3,3 +3,28 @@
   display: inline-block;
 
 }
+
+.c-files-item-list{
+  float: left;
+  width: 75%;
+}
+
+.c-files-dropzone-container{
+  float: right;
+  width: 25%;
+  top: 100px;
+  bottom: 10px;
+}
+
+.c-files-dropzone{
+  width: 100%;
+  height: 100vh;
+  border-width: 1px;
+  border-color: rgb(102, 102, 102);
+  border-style: double;
+  text-align: center;
+}
+
+.c-files-dropzone-text{
+  padding: 100px;
+}
