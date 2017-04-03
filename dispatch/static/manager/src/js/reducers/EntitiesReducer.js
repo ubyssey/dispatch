@@ -85,25 +85,11 @@ export default function entitiesReducer(state = initialState, action) {
       image: R.merge(state.image, action.payload.entities.images)
     })
 
-<<<<<<< HEAD
-    // Templates
-    case types.FETCH_TEMPLATE + '_FULFILLED':
-      return R.merge(state, {
-        templates: R.merge(state.templates, action.payload.entities.templates)
-      })
-
-    case types.FETCH_TEMPLATES + '_FULFILLED':
-      return R.merge(state, {
-        templates: R.merge(state.templates, action.payload.results.entities.templates)
-      })
-=======
   // Templates
   case types.FETCH_TEMPLATE + '_FULFILLED':
     return R.merge(state, {
       templates: R.merge(state.templates, action.payload.entities.templates)
     })
->>>>>>> develop
-
   case types.FETCH_TEMPLATES + '_FULFILLED':
     return R.merge(state, {
       templates: R.merge(state.templates, action.payload.results.entities.templates)
