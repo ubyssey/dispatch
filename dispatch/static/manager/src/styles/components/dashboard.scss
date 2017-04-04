@@ -70,26 +70,18 @@
   margin-right: 1rem;
 }
 
-.c-dashboard_recent-articles {
-  // Border
-  border: thin solid $color-border-gray-dark;
-}
-
-.c-dashboard_recent-articles__item,
-.c-dashboard_recent-articles__header {
+.c-dashboard_recent-articles__item {
   // Structure
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-}
 
-.c-dashboard_recent-articles__header {
-  // Background
-  background: $color-bg-gray-dark;
-}
-
-.c-dashboard_recent-articles__item {
   // Border
   border-top: thin solid $color-border-gray;
+
+  &:first-child {
+    // Border
+    border-top: none;
+  }
 }
