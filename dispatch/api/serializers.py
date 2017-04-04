@@ -474,7 +474,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
 class IntegrationSerializer(serializers.Serializer):
 
     id = serializers.CharField(source='ID', read_only=True)
-    settings = serializers.JSONField(source='get_settings')
+    settings = JSONField(source='get_settings')
 
     def save(self):
 
