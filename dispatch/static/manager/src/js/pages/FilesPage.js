@@ -5,15 +5,13 @@ import moment from 'moment'
 
 import * as filesActions from '../actions/FilesActions'
 
-import { Link } from 'react-router'
-
 import ItemList from '../components/ItemList'
 
 import Dropzone from 'react-dropzone'
 
 require('../../styles/components/files.scss')
 
-const DEFAULT_LIMIT = 30
+const DEFAULT_LIMIT = 10
 
 
 class FilesPageComponent extends React.Component {
@@ -57,7 +55,7 @@ class FilesPageComponent extends React.Component {
 
   getTotalPages() {
     return Math.ceil(
-      parseInt(this.props.files.data.length, 10) / DEFAULT_LIMIT
+      parseInt(this.props.files.count, 10) / DEFAULT_LIMIT
     )
   }
 
@@ -94,8 +92,8 @@ class FilesPageComponent extends React.Component {
     const type = 'Files'
     return (
       <DocumentTitle title={title}>
-        <div className='c-files'>
-          <div className='c-files-item-list'>
+        <Dropzone className='c-files-dropzone' onDrop={(files) => this.onDrop(files)} disableClick='true' activeClassName='c-files-dropzone-active'>
+
             <ItemList
               location={this.props.location}
 
@@ -124,15 +122,7 @@ class FilesPageComponent extends React.Component {
                 searchItems: (query) => this.handleSearchFiles(query)
               }}
             />
-          </div>
-          <div className="c-files-dropzone-container">
-            <Dropzone className="c-files-dropzone" onDrop={(files) => this.onDrop(files)}>
-              <div className="c-files-dropzone-text">
-                Drag and drop files here, or click to select files to upload.
-              </div>
-            </Dropzone>
-          </div>
-        </div>
+        </Dropzone>
       </DocumentTitle>
     )
   }
