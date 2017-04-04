@@ -22,7 +22,7 @@ router.register(r'comments', views.CommentViewSet, base_name='api-comments')
 router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
-router.register(r'files',views.FileViewSet, base_name='files')
+router.register(r'files',views.FileViewSet, base_name='api-files')
 
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })

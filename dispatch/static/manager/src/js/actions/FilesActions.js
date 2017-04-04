@@ -12,6 +12,7 @@ export function fetchFiles(token, query) {
     payload: DispatchAPI.files.fetchFiles(token, query)
       .then(function(json) {
         return {
+          count: json.count,
           results: normalize(json.results, arrayOf(fileSchema))
         }
       })

@@ -21,6 +21,7 @@ function filesReducer(state = initialState, action) {
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
+      count: action.payload.count,
       data: action.payload.results.result
     })
   case types.DELETE_FILES + '_FULFILLED':
