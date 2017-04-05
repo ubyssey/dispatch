@@ -28,8 +28,7 @@ export default function ItemListTable(props) {
     return (
       <ItemListEmpty
         query={props.location.query.q}
-        createMessage={props.createMessage}
-        createRoute={props.createRoute}
+        createHandler={props.createHandler}
         emptyMessage={props.emptyMessage} />
     )
   } else {
