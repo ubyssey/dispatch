@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import moment from 'moment'
+import { Button } from '@blueprintjs/core'
 
 import * as filesActions from '../actions/FilesActions'
 
@@ -114,9 +115,8 @@ class FilesPageComponent extends React.Component {
               item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
             ]}
 
-            createMessage='Upload file'
             emptyMessage={'You haven\'t uploaded any files yet.'}
-            createRoute='files/new'
+            createHandler={() => (<Button onClick={() => this.onDropzoneClick()}>Upload</Button>)}
 
             actions={{
               toggleItem: this.props.toggleFile,
