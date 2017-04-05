@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import { LinkButton } from '../../components/inputs'
 
 import { Link } from 'react-router'
 
@@ -118,9 +119,9 @@ class ArticlesPageComponent extends React.Component {
             item => item.revision_id + ' revisions'
           ]}
 
-          createMessage='Create article'
+
           emptyMessage={'You haven\'t created any articles yet.'}
-          createRoute='articles/new'
+          createHandler={() => (<LinkButton to={'articles/new'}>Create article</LinkButton>)}
 
           actions={{
             toggleItem: this.props.toggleArticle,
