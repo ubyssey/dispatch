@@ -21,9 +21,8 @@ export default function ItemList(props) {
         entities={props.entities}
         columns={props.columns}
         location={props.location}
-        createMessage={props.createMessage}
         emptyMessage={props.emptyMessage}
-        createRoute={props.createRoute}
+        createHandler={props.createHandler}
         actions={props.actions} />
     </div>
   )
