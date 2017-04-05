@@ -23,6 +23,11 @@ export function createFile(token, file) {
   return {
     type: types.CREATE_FILE,
     payload: DispatchAPI.files.createFile(token, file)
+      .then(function(json) {
+        return {
+          result: json
+        }
+      })
   }
 }
 

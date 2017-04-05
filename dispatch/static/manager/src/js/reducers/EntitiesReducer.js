@@ -61,6 +61,13 @@ export default function entitiesReducer(state = initialState, action) {
     return R.merge(state, {
       files: R.merge(state.files, action.payload.results.entities.files)
     })
+  case types.CREATE_FILE + '_FULFILLED': {
+    let newFile = {}
+    newFile[action.payload.result.id] = action.payload.result
+    return R.merge(state, {
+      files: R.merge(state.files, newFile)
+    })
+  }
   // Images
   case types.FETCH_IMAGES + '_FULFILLED':
     return R.merge(state, {
