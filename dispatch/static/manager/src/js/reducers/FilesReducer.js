@@ -24,6 +24,11 @@ function filesReducer(state = initialState, action) {
       count: action.payload.count,
       data: action.payload.results.result
     })
+  case types.CREATE_FILE + '_FULFILLED':
+    return R.merge(state,{
+      count: state.count++,
+      data: R.append(action.payload.result.id, state.data)
+    })
   case types.DELETE_FILES + '_FULFILLED':
     return R.merge(state, {
       data: R.without(action.payload, state.data)
