@@ -737,24 +737,33 @@ class TrendingViewSet(viewsets.GenericViewSet):
 #     except:
 #         return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['POST'])
 @permission_classes((AllowAny,))
-def user_authenticate(request):
+class AuthenticationViewSet(viewsets.GenericViewSet):
 
-    email = request.data.get('email', None)
-    password = request.data.get('password', None)
+    def user_authenticate(self, request):
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
 
-    user = authenticate(username=email, password=password)
+        user = authenticate(username=email, password=password)
 
-    if user is not None and user.is_active:
+        if user is not None and user.is_active:
 
-        (token, created) = Token.objects.get_or_create(user=user)
+            (token, created) = Token.objects.get_or_create(user=user)
 
-        data = {
-            'token': unicode(token)
-        }
+            data = {
+                'token': unicode(token)
+            }
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+    def user_unauthenticate(self, request):
+        # Get the token for the current user
+        # In theory this should never 404, but doesn't hurt to include for safety
+
+        token = get_object_or_404(Token, user=request.user)
+
+        token.delete()
+
+        return Response({})

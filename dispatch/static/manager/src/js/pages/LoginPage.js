@@ -53,7 +53,7 @@ class LoginPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    nextPath: state.app.nextPath
+    nextPath: state.app.auth.nextPath || '/'
   }
 }
 

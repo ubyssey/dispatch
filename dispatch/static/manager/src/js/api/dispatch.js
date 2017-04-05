@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import url from 'url'
+import R from 'ramda'
 
 const API_URL = 'http://localhost:8000/api/'
 
@@ -31,11 +32,13 @@ function buildRoute(route, id) {
 }
 
 function buildHeaders(token) {
-  let headers = DEFAULT_HEADERS
+  let headers = {}
+
   if (token) {
     headers['Authorization'] = `Token ${token}`
   }
-  return headers
+
+  return R.merge(DEFAULT_HEADERS, headers)
 }
 
 function handleError(response) {
@@ -104,7 +107,10 @@ var DispatchAPI = {
         password: password
       }
 
-      return postRequest('auth/token', null, payload)
+      return postRequest('auth/token', null, payload, null)
+    },
+    deleteToken: (token) => {
+      return deleteRequest('auth/token', null, null, token)
     }
   },
   sections: {
