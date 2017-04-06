@@ -14,9 +14,7 @@ require('../../styles/components/files.scss')
 
 const DEFAULT_LIMIT = 15
 
-
 class FilesPageComponent extends React.Component {
-
 
   componentWillMount() {
     this.props.clearFiles()
@@ -37,16 +35,13 @@ class FilesPageComponent extends React.Component {
   }
 
   getQuery() {
-
     var query = {
       limit: DEFAULT_LIMIT,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
-
     if(this.props.location.query.q) {
       query.q = this.props.location.query.q
     }
-
     return query
   }
 

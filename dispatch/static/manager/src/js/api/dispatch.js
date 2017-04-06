@@ -30,9 +30,9 @@ function buildRoute(route, id) {
   return fullRoute
 }
 
-function buildHeaders(token, use_file_headers=false) {
+function buildHeaders(token, useDefaultHeaders=true) {
   let headers = {}
-  if(!use_file_headers) {
+  if(useDefaultHeaders) {
     headers = DEFAULT_HEADERS
   }
   if (token) {
@@ -74,12 +74,12 @@ function postRequest(route, id=null, payload={}, token=null) {
   .then(parseJSON)
 }
 
-function postFileRequest(route, id=null, payload={}, token=null) {
+function postMultipartRequest(route, id=null, payload={}, token=null) {
   return fetch(
     buildRoute(route, id),
     {
       method: 'POST',
-      headers: buildHeaders(token, true),
+      headers: buildHeaders(token, false),
       body: payload
     }
   )
@@ -153,7 +153,7 @@ var DispatchAPI = {
       return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
     },
     createFile: (token, data) => {
-      return postFileRequest('files', null, data, token)
+      return postMultipartRequest('files', null, data, token)
     }
   },
   images: {
