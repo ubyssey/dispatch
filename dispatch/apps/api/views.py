@@ -418,6 +418,7 @@ class FileViewSet(viewsets.ModelViewSet):
         queryset = File.objects.all()
         q = self.request.query_params.get('q', None)
         if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
