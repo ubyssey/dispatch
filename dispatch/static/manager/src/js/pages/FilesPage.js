@@ -70,7 +70,7 @@ class FilesPageComponent extends React.Component {
   }
 
   handleSearchFiles(query) {
-    this.props.searchFiles(this.props.token,query)
+    this.props.searchFiles(this.props.token, query)
   }
 
   onDrop(files) {
