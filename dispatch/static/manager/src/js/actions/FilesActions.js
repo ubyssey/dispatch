@@ -10,12 +10,11 @@ export function fetchFiles(token, query) {
   return {
     type: types.FETCH_FILES,
     payload: DispatchAPI.files.fetchFiles(token, query)
-      .then(function(json) {
-        return {
-          count: json.count,
-          results: normalize(json.results, arrayOf(fileSchema))
-        }
+      .then( json => ({
+        count: json.count,
+        results: normalize(json.results, arrayOf(fileSchema))
       })
+    )
   }
 }
 
@@ -23,11 +22,10 @@ export function createFile(token, file) {
   return {
     type: types.CREATE_FILE,
     payload: DispatchAPI.files.createFile(token, file)
-      .then(function(json) {
-        return {
-          result: json
-        }
+      .then( json => ({
+        result: json
       })
+    )
   }
 }
 
