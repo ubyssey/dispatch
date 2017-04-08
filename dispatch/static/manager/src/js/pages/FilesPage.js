@@ -92,7 +92,13 @@ class FilesPageComponent extends React.Component {
     const type = 'Files'
     return (
       <DocumentTitle title={title}>
-        <Dropzone ref={(node) => { this.dropzone = node }} className='c-files-dropzone' onDrop={(files) => this.onDrop(files)} disableClick={true} activeClassName='c-files-dropzone-active'>
+        <Dropzone
+          ref={(node) => { this.dropzone = node }}
+          className='c-files-dropzone'
+          onDrop={(files) => this.onDrop(files)}
+          disableClick={true}
+          activeClassName='c-files-dropzone-active'>
+
           <ItemList
             location={this.props.location}
 
