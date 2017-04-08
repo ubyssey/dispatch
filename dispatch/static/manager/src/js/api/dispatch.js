@@ -32,7 +32,7 @@ function buildRoute(route, id) {
 
 function buildHeaders(token, useDefaultHeaders=true) {
   let headers = {}
-  if(useDefaultHeaders) {
+  if (useDefaultHeaders) {
     headers = DEFAULT_HEADERS
   }
   if (token) {

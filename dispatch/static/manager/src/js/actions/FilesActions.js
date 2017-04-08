@@ -23,7 +23,7 @@ export function createFile(token, file) {
     type: types.CREATE_FILE,
     payload: DispatchAPI.files.createFile(token, file)
       .then( json => ({
-        result: json
+        result: normalize(json, fileSchema)
       })
     )
   }
@@ -66,7 +66,7 @@ export function clearFiles() {
 
 export function searchFiles(query) {
   var queryObj = {}
-  if(query) {
+  if (query) {
     queryObj.q = query
   }
 

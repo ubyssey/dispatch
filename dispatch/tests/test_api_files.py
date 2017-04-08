@@ -1,8 +1,11 @@
 import os
 import shutil
 import datetime
-from django.core.urlresolvers import reverse
+
 from rest_framework import status
+
+from django.core.urlresolvers import reverse
+
 from dispatch.tests.cases import DispatchAPITestCase
 
 
@@ -10,11 +13,11 @@ class FileTests(DispatchAPITestCase):
 
     def _upload_file(self):
         """
-        Upload a test file... somehow
+        Upload a test file to server
         """
         url = reverse('api-files-list')
 
-        with open(os.path.join(os.path.dirname(__file__),'input/TestFile.txt')) as fp:
+        with open(os.path.join(os.path.dirname(__file__), 'input/TestFile.txt')) as fp:
             data = {
                 'name': 'TestFile',
                 'file': fp
@@ -26,7 +29,7 @@ class FileTests(DispatchAPITestCase):
         """
         Delete created files and remove directory
         """
-        shutil.rmtree(os.path.join(os.path.dirname(__file__),'media'))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), 'media'))
 
     def test_upload_file_unauthorized(self):
         """
@@ -53,9 +56,6 @@ class FileTests(DispatchAPITestCase):
         self.assertEqual(response.data['name'], 'TestFile')
 
         self._cleanup()
-
-
-
 
     def test_delete_file(self):
         """
