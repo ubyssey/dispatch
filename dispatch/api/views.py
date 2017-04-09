@@ -665,11 +665,9 @@ class DashboardViewSet(viewsets.GenericViewSet):
 
     def list_recent_articles(self, request):
 
-        recent = recent_articles(request.user.person)
+        recent = recent_articles(request.user)
 
-        articles = []
-        for x in recent:
-            articles.append(self.get_serializer(x).data)
+        articles = map(lambda a: self.get_serializer(a).data, recent)
 
         data = {
             'results': articles
