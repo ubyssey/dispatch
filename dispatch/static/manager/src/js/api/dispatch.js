@@ -30,8 +30,11 @@ function buildRoute(route, id) {
   return fullRoute
 }
 
-function buildHeaders(token) {
-  let headers = DEFAULT_HEADERS
+function buildHeaders(token, useDefaultHeaders=true) {
+  let headers = {}
+  if (useDefaultHeaders) {
+    headers = DEFAULT_HEADERS
+  }
   if (token) {
     headers['Authorization'] = `Token ${token}`
   }
@@ -68,6 +71,19 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
+  .then(parseJSON)
+}
+
+function postMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'POST',
+      headers: buildHeaders(token, false),
+      body: payload
+    }
+  )
+  .then(handleError)
   .then(parseJSON)
 }
 
@@ -127,6 +143,17 @@ var DispatchAPI = {
     },
     deleteArticles: (token, articleIds) => {
       return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
+    }
+  },
+  files:{
+    fetchFiles: (token, query) => {
+      return getRequest('files',null, query, token)
+    },
+    deleteFiles: (token, fileIds) => {
+      return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
+    },
+    createFile: (token, data) => {
+      return postMultipartRequest('files', null, data, token)
     }
   },
   images: {

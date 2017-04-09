@@ -1,3 +1,5 @@
+import os
+
 from dispatch.conf.default_settings import (
     ROOT_URLCONF,
     REST_FRAMEWORK,
@@ -17,3 +19,5 @@ DATABASES = {
         'NAME': 'test_dispatch',
     }
 }
+
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
