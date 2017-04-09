@@ -251,16 +251,6 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
-class Comment(Model):
-    article = ForeignKey('Article')
-
-    user = ForeignKey(User)
-    content = TextField()
-
-    votes = PositiveIntegerField(default=0)
-
-    created_at = DateTimeField(auto_now_add=True)
-
 class Article(Publishable):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)

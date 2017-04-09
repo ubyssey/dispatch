@@ -15,10 +15,10 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.api.mixins import DispatchModelViewSet
-from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer,
+                                          ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -222,24 +222,6 @@ class PageViewSet(DispatchModelViewSet):
         instance = self.get_object_or_404(**filter_kwargs)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-class CommentViewSet(DispatchModelViewSet):
-
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.order_by('-created_at')
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def article(self, request, pk=None):
-        self.queryset = Comment.objects.filter(article_id=pk).order_by('-created_at')
-        return self.list(request)
-
-
 
 class PersonViewSet(DispatchModelViewSet):
     """
