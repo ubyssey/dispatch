@@ -2,9 +2,7 @@ from rest_framework import serializers
 
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import User, Person
-from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
-from dispatch.core.signals import article_post_save
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -328,12 +326,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image', 'topic', 'est_reading_time'], revision=False)
 
-        if instance.parent:
-            perform_action(self.context['request'].user.person, action, 'article', instance.parent.id)
-        else:
-            perform_action(self.context['request'].user.person, action, 'article', instance.pk)
-
-        article_post_save.send(sender=Article, article=instance)
 
         return instance
 
@@ -426,10 +418,6 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image'], revision=False)
 
-        if instance.parent:
-            perform_action(self.context['request'].user.person, action, 'page', instance.parent.id)
-        else:
-            perform_action(self.context['request'].user.person, action, 'page', instance.pk)
 
         return instance
 
