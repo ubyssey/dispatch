@@ -7,11 +7,13 @@ const initialState = {
   isLoaded: false,
   selected: [],
   isAllSelected: false,
+  count: 0,
   data: []
 }
 
 function filesReducer(state = initialState, action) {
   switch(action.type) {
+
   case types.FETCH_FILES + '_PENDING':
     return R.merge(state, {
       isLoading: true,
@@ -57,6 +59,7 @@ function filesReducer(state = initialState, action) {
   default:
     return state
   }
+
 }
 
 export default filesReducer

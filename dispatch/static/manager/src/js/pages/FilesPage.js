@@ -1,14 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import Dropzone from 'react-dropzone'
 import moment from 'moment'
 import { Button } from '@blueprintjs/core'
 
 import * as filesActions from '../actions/FilesActions'
 
 import ItemList from '../components/ItemList'
-
-import Dropzone from 'react-dropzone'
 
 require('../../styles/components/files.scss')
 
@@ -88,52 +87,53 @@ class FilesPageComponent extends React.Component {
 
 
   render() {
-    const title = 'Files'
-    const type = 'Files'
     return (
-      <DocumentTitle title={title}>
+      <DocumentTitle title='Files'>
         <Dropzone
           ref={(node) => { this.dropzone = node }}
           className='c-files-dropzone'
           onDrop={(files) => this.onDrop(files)}
           disableClick={true}
-          activeClassName='c-files-dropzone-active'>
+          activeClassName='c-files-dropzone--active'>
 
-          <ItemList
-            location={this.props.location}
+          <div className='c-files-dropzone__list'>
+            <ItemList
+              location={this.props.location}
 
-            type={type}
+              type='files'
 
-            currentPage={this.getCurrentPage()}
-            totalPages={this.getTotalPages()}
+              currentPage={this.getCurrentPage()}
+              totalPages={this.getTotalPages()}
 
-            items={this.props.files}
-            entities={this.props.entities.files}
+              items={this.props.files}
+              entities={this.props.entities.files}
 
-            columns={[
-              item => (<a href={item.file}>{item.name}</a>),
-              item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
-              item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
-            ]}
+              columns={[
+                item => (<a href={item.file}>{item.name}</a>),
+                item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
+                item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
+              ]}
 
-            emptyMessage={'You haven\'t uploaded any files yet.'}
-            createHandler={() => (<Button onClick={() => this.onDropzoneClick()}>Upload</Button>)}
+              emptyMessage={'You haven\'t uploaded any files yet.'}
+              createHandler={() => (<Button onClick={() => this.onDropzoneClick()}>Upload</Button>)}
 
-            actions={{
-              toggleItem: this.props.toggleFile,
-              toggleAllItems: this.props.toggleAllFiles,
-              deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
-              searchItems: (query) => this.handleSearchFiles(query)
-            }}
-          />
-          <div className='c-files-dropzone-text' onClick={() => this.onDropzoneClick()}>
+              actions={{
+                toggleItem: this.props.toggleFile,
+                toggleAllItems: this.props.toggleAllFiles,
+                deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
+                searchItems: (query) => this.handleSearchFiles(query)
+              }}
+            />
+          </div>
+          <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag files into window or click here to upload</p>
           </div>
-      </Dropzone>
+        </Dropzone>
       </DocumentTitle>
     )
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
