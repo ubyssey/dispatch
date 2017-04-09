@@ -16,9 +16,10 @@ from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.mixins import DispatchModelViewSet
-from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer,
-                                          ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -310,7 +311,42 @@ class TopicViewSet(DispatchModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
 
-class ImageViewSet(DispatchModelViewSet):
+class FileViewSet(DispatchModelViewSet):
+    """
+    Viewset for File model views.
+    """
+    model = File
+    serializer_class = FileSerializer
+
+    def get_queryset(self):
+        queryset = File.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+    def bulk_delete(self, request):
+        deleted = []
+        ids = self.request.data.get('ids', None)
+
+        if ids is not None:
+            ids = ids.split(',')
+            for id in ids:
+                try:
+                    File.objects.filter(id=id).delete()
+                    deleted.append(int(id))
+                except:
+                    pass
+
+        data = {
+            'deleted': deleted
+        }
+
+        return Response(data)
+
+
+class ImageViewSet(viewsets.ModelViewSet):
     """
     Viewset for Image model views.
     """

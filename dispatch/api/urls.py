@@ -18,6 +18,7 @@ router.register(r'galleries', views.ImageGalleryViewSet, base_name='api-gallerie
 router.register(r'templates', views.TemplateViewSet, base_name='api-templates')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
+router.register(r'files',views.FileViewSet, base_name='api-files')
 
 component = views.ComponentViewSet.as_view({
     'get': 'detail',
@@ -27,6 +28,8 @@ component = views.ComponentViewSet.as_view({
 person_bulk_delete = views.PersonViewSet.as_view({ 'post': 'bulk_delete' })
 
 article_bulk_delete = views.ArticleViewSet.as_view({ 'post': 'bulk_delete' })
+
+file_bulk_delete = views.FileViewSet.as_view({ 'post': 'bulk_delete'})
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
@@ -43,4 +46,6 @@ urlpatterns = format_suffix_patterns([
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
     url(r'^auth/token', views.user_authenticate, name='user-token'),
+    # File route
+    url(r'^files/delete/$', file_bulk_delete, name='file-bulk-delete'),
 ]) + router.urls
