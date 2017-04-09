@@ -241,7 +241,7 @@ class ArticleSerializer(DispatchModelSerializer):
 
     def update(self, instance, validated_data):
 
-        # Update all the basic fields
+        # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
@@ -251,8 +251,6 @@ class ArticleSerializer(DispatchModelSerializer):
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
-
-        # Set integrations
         instance.integrations = validated_data.get('integrations', instance.integrations)
 
         # Save instance before processing/saving content in order to save associations to correct ID
@@ -263,30 +261,24 @@ class ArticleSerializer(DispatchModelSerializer):
         # Process article attachments
         instance.save_attachments()
 
-        # Save template fields
         template_fields = validated_data.get('get_template_fields')
         if template_fields:
             instance.save_template_fields(template_fields)
 
-        # If there's a featured image, save it
         featured_image = validated_data.get('featured_image_json')
         if featured_image:
             instance.save_featured_image(featured_image)
 
-        # If there are authors, save them
         authors = validated_data.get('author_ids')
         if authors:
             instance.save_authors(authors)
 
-        # If there are tags, save them
-        tag_ids = validated_data.get('tag_ids')
-        if tag_ids:
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
             instance.save_tags(tag_ids)
 
-        # If there is a topic, save it
-        topic_id = validated_data.get('topic_id')
-
-        if topic_id:
+        topic_id = validated_data.get('topic_id', False)
+        if topic_id != False:
             instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
@@ -361,12 +353,10 @@ class PageSerializer(DispatchModelSerializer):
         # Process article attachments
         instance.save_attachments()
 
-        # Save template fields
         template_fields = validated_data.get('get_template_fields')
         if template_fields:
             instance.save_template_fields(template_fields)
 
-        # If there's a featured image, save it
         featured_image = validated_data.get('featured_image_json')
         if featured_image:
             instance.save_featured_image(featured_image)
