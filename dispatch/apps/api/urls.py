@@ -16,7 +16,6 @@ router.register(r'topics', views.TopicViewSet, base_name='api-topics')
 router.register(r'images', views.ImageViewSet, base_name='api-images')
 router.register(r'galleries', views.ImageGalleryViewSet, base_name='api-galleries')
 router.register(r'templates', views.TemplateViewSet, base_name='api-templates')
-router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
 

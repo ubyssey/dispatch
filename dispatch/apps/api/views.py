@@ -577,68 +577,6 @@ class DashboardViewSet(viewsets.GenericViewSet):
 
         return Response(data)
 
-class TrendingViewSet(viewsets.GenericViewSet):
-
-    def list(self, request):
-        data = {
-            "count": 3,
-            "next": None,
-            "previous": None,
-            "results": [
-                {
-                    "source": "instagram",
-                    "name": "University of British Columbia",
-                    "handle": "ubcaplaceofmind",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "https://instagram.com/p/5Z8dWHsDYh/",
-                    "image": "https://scontent-sea1-1.cdninstagram.com/hphotos-xpa1/t51.2885-15/10864817_505702442914268_993541537_n.jpg",
-                    "content": "Sailing on a boat with 120 strangers and no land in sight for 2 months might be a nightmare for some, but for Diane Hanano, Project Manager of the Pacific Centre for Isotopic and Geochemical Research at #UBC Science, the chance to sail on @joides_resolution was a dream come true."
-                },
-                {
-                    "source": "twitter",
-                    "name": "Jean-Francois Caron",
-                    "handle": "jf_bikes",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "https://twitter.com/jf_bikes/status/620705871882924032",
-                    "content": "@ubc_candcp @UBC The whole campus should be no-smoking except in special zones. Why enable an unhealthy & dangerous addiction?"
-                },
-                {
-                    "source": "reddit",
-                    "handle": "bugsahoy",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "http://www.reddit.com/r/UBC/comments/3dvwnp/how_is_first_year_dormcampus_life/",
-                    "title": "How is first year dorm/campus life?",
-                },
-
-            ]
-        }
-
-        return Response(data)
-
-# @api_view(['POST'])
-# @permission_classes((AllowAny,))
-# def user_register(request):
-#
-#     name = request.data.get('name', None)
-#     username = request.data.get('username', None)
-#     email = request.data.get('email', None)
-#     password = request.data.get('password', None)
-#
-#     try:
-#         user = User.objects.create_user(username, email, password, name=name)
-#         token = Token.objects.create(user=user)
-#
-#         user_serializer = UserSerializer(user)
-#
-#         data = {
-#             'user': user_serializer.data,
-#             'token': unicode(token)
-#         }
-#         return Response(data, status=status.HTTP_201_CREATED)
-#     except:
-#         return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
-
-
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def user_authenticate(request):
