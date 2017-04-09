@@ -1,18 +1,19 @@
 import datetime
-from PIL import Image as Img
-import StringIO, json, os, re
-from string import punctuation
+import StringIO
+import json
+import os
+import re
+
 from jsonfield import JSONField
+from PIL import Image as Img
 
 from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
-    SlugField, SET_NULL, permalink)
-
+    SlugField, SET_NULL)
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinLengthValidator, MaxLengthValidator
-from django.utils.functional import cached_property
 from django.utils import timezone
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
