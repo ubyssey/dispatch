@@ -184,9 +184,16 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
+        """
+        Handles the saving/updating of a Publishable instance.
+
+        Arguments:
+        revision - if True, a new version of this Publishable will be created.
+        user - the user that is performing the save
+        """
 
         if revision:
-            # If this is a revision, set it to be the head of the list and increment the revision id.
+            # If this is a revision, set it to be the head of the list and increment the revision id
             self.head = True
             self.revision_id += 1
 
@@ -197,23 +204,25 @@ class Publishable(Model):
                 type(self).objects.filter(parent=self.parent, head=True).update(head=False)
 
                 # Clear the instance id to force Django to save a new instance.
-                # Both fields (pk, id) required for this to work -- something to do with model inheritance.
+                # Both fields (pk, id) required for this to work -- something to do with model inheritance
                 self.pk = None
                 self.id = None
+
+                # New version is unpublished by default
                 self.is_published = False
 
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
-        # Set created_at to now, but only for first version
-        if self.created_at is None:
+        # Set created_at to current time, but only for first version
+        if not self.created_at:
             self.created_at = timezone.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
         # Update the parent foreign key
-        if not self.parent:
+        if self.is_parent():
             self.parent = self
             super(Publishable, self).save(update_fields=['parent'])
 
