@@ -173,7 +173,7 @@ class PageViewSet(DispatchModelViewSet):
 
     def get_queryset(self):
         """
-        Only display unpublished content to authenicated users, filter by query parameter if present.
+        Only display unpublished content to authenticated users, filter by query parameter if present.
         """
 
         if self.request.user.is_authenticated():
