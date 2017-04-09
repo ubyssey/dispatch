@@ -20,52 +20,6 @@ from dispatch.apps.api.mixins import DispatchModelViewSet
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
-class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    """
-    Viewset for frontpage views.
-    """
-    serializer_class = ArticleSerializer
-    def fetch_frontpage(self, section_id=None, section_slug=None):
-        """
-        Return serialized frontpage listing, optionally filtered by section.
-        """
-        if section_id is not None:
-            # Filter queryset by section_id if set
-            queryset = Article.objects.get_frontpage(section_id=int(section_id))
-        elif section_slug is not None:
-            # Filter queryset by section_slug if set
-            queryset = Article.objects.get_frontpage(section=section_slug)
-        else:
-            # Don't filter the results
-            queryset = Article.objects.get_frontpage()
-
-        # Cast RawQuerySet as list for pagination to work
-        return list(queryset)
-
-    def list(self, request):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage()
-        return super(FrontpageViewSet, self).list(self, request)
-
-    def section(self, request, pk=None, slug=None):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos in the given section
-        for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with filtered frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage(section_id=pk, section_slug=slug)
-        return super(FrontpageViewSet, self).list(self, request)
-
-
 class SectionViewSet(DispatchModelViewSet):
     """
     Viewset for Section model views.
@@ -79,14 +33,6 @@ class SectionViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
-
-    def frontpage(self, request, pk=None, slug=None):
-        """
-        Extra method to return frontpage listing for the section.
-        Uses FrontpageViewSet.section() to perform request.
-        """
-        view = FrontpageViewSet.as_view({'get': 'section'})
-        return view(request, pk=pk, slug=slug)
 
 class ArticleViewSet(DispatchModelViewSet):
     """
@@ -178,18 +124,6 @@ class ArticleViewSet(DispatchModelViewSet):
         queryset = Article.objects.all()
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def topic(self, request, pk=None):
-        queryset = Article.objects.filter(topic_id=pk, status=Article.PUBLISHED).order_by('-published_at')
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
@@ -393,14 +327,6 @@ class TopicViewSet(DispatchModelViewSet):
             status_code = status.HTTP_200_OK
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
-
-    def articles(self, request, pk=None):
-        """
-        Extra method to return frontpage listing for the topic.
-        Uses FrontpageViewSet.topic() to perform request.
-        """
-        view = ArticleViewSet.as_view({'get': 'topic'})
-        return view(request, pk=pk)
 
 class ImageViewSet(DispatchModelViewSet):
     """
