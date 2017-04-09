@@ -219,7 +219,7 @@ class Publishable(Model):
         super(Publishable, self).save(*args, **kwargs)
 
         # Update the parent foreign key
-        if self.is_parent():
+        if not self.parent:
             self.parent = self
             super(Publishable, self).save(update_fields=['parent'])
 
