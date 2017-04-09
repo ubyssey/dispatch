@@ -337,14 +337,6 @@ class Article(Publishable):
 
         self.featured_image = attachment
 
-    def save_related(self, data):
-        tags = data["tags-list"]
-        authors = data["authors-list"]
-        if tags:
-            self.save_tags(tags)
-        if authors:
-            self.save_authors(authors)
-
     def save_tags(self, tag_ids):
         self.tags.clear()
         for tag_id in tag_ids:
