@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer
 from dispatch.apps.api.fields import JSONField
