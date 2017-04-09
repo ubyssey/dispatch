@@ -1,11 +1,19 @@
 import datetime
 
+from django.dispatch import receiver
+
+from dispatch.core.signals import post_create, post_update
 from dispatch.apps.core.models import Action
 from dispatch.apps.content.models import Article
 
-def perform_action(person, action, object_type, object_id):
+def perform_action(action, object_type, object_id, user):
 
-    Action.objects.create(person=person, action=action, object_type=object_type, object_id=object_id)
+    Action.objects.create(
+        action=action,
+        object_type=object_type,
+        object_id=object_id,
+        user=user
+    )
 
 def list_actions(count=25):
 
@@ -78,3 +86,11 @@ def recent_articles(person, count=5):
             pass
 
     return articles
+
+@receiver(post_create, sender=Article)
+def action_create_article(sender, instance, user, **kwargs):
+    perform_action('create', 'article', instance.parent_id, user)
+
+@receiver(post_update, sender=Article)
+def action_update_article(sender, instance, user, **kwargs):
+    perform_action('update', 'article', instance.parent_id, user)

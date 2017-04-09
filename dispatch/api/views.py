@@ -16,6 +16,7 @@ from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.api.mixins import DispatchModelViewSet
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
@@ -65,7 +66,7 @@ class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         return super(FrontpageViewSet, self).list(self, request)
 
 
-class SectionViewSet(viewsets.ModelViewSet):
+class SectionViewSet(DispatchModelViewSet):
     """
     Viewset for Section model views.
     """
@@ -87,10 +88,11 @@ class SectionViewSet(viewsets.ModelViewSet):
         view = FrontpageViewSet.as_view({'get': 'section'})
         return view(request, pk=pk, slug=slug)
 
-class ArticleViewSet(viewsets.ModelViewSet):
+class ArticleViewSet(DispatchModelViewSet):
     """
     Viewset for Article model views.
     """
+    model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
 
@@ -131,7 +133,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(head=True)
 
         return queryset
-
 
     def list(self, request, *args, **kwargs):
 
@@ -233,7 +234,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
-class PageViewSet(viewsets.ModelViewSet):
+class PageViewSet(DispatchModelViewSet):
     """
     Viewset for Page model views.
     """
@@ -294,7 +295,7 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(DispatchModelViewSet):
 
     serializer_class = CommentSerializer
     queryset = Comment.objects.order_by('-created_at')
@@ -312,7 +313,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
     """
@@ -345,7 +346,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(DispatchModelViewSet):
     """
     Viewset for Tag model views.
     """
@@ -372,7 +373,7 @@ class TagViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
 
-class TopicViewSet(viewsets.ModelViewSet):
+class TopicViewSet(DispatchModelViewSet):
     """
     Viewset for Topic model views.
     """
@@ -407,7 +408,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         view = ArticleViewSet.as_view({'get': 'topic'})
         return view(request, pk=pk)
 
-class ImageViewSet(viewsets.ModelViewSet):
+class ImageViewSet(DispatchModelViewSet):
     """
     Viewset for Image model views.
     """
@@ -457,7 +458,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset
 
-class ImageGalleryViewSet(viewsets.ModelViewSet):
+class ImageGalleryViewSet(DispatchModelViewSet):
     """
     Viewset for ImageGallery model views.
     """
