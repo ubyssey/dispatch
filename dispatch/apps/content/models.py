@@ -68,9 +68,6 @@ class Publishable(Model):
 
     featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
 
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='%(class)s_images')
-    videos = ManyToManyField('Video', related_name='%(class)s_videos')
-
     template = CharField(max_length=255, default='default')
 
     seo_keyword = CharField(max_length=100, null=True)
