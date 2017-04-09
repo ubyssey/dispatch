@@ -150,23 +150,19 @@ class ArticleViewSet(DispatchModelViewSet):
 
     @detail_route(methods=['get'],)
     def publish(self, request, parent_id=None):
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
-
-        instance.publish()
+        instance = self.get_object_or_404(parent_id)
 
         serializer = self.get_serializer(instance)
+        serializer.publish()
 
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def unpublish(self, request, parent_id=None):
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
-
-        instance.unpublish()
+        instance = self.get_object_or_404(parent_id)
 
         serializer = self.get_serializer(instance)
+        serializer.unpublish()
 
         return Response(serializer.data)
 
@@ -243,28 +239,27 @@ class PageViewSet(DispatchModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned articles by filtering
-        against a `topic` query parameter in the URL.
+        Only display unpublished content to authenicated users, filter by query parameter if present.
         """
 
         if self.request.user.is_authenticated():
             queryset = Page.objects.filter(head=True)
         else:
-            queryset = Page.objects.filter(head=True, status=Page.PUBLISHED)
+            queryset = Page.objects.filter(head=True, is_published=True)
 
         queryset = queryset.order_by('-published_at')
 
-        q = self.request.query_params.get('q', None)
+        # Optionally filter by a query parameter
+        q = self.request.query_params.get('q')
 
-        if q is not None:
+        if q:
             queryset = queryset.filter(headline__icontains=q)
 
         return queryset
 
     @detail_route(methods=['get'],)
     def publish(self, request, parent_id=None):
-        queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
+        instance = self.get_object_or_404(parent_id)
 
         instance.publish()
 
@@ -274,8 +269,7 @@ class PageViewSet(DispatchModelViewSet):
 
     @detail_route(methods=['get'],)
     def unpublish(self, request, parent_id=None):
-        queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
+        instance = self.get_object_or_404(parent_id)
 
         instance.unpublish()
 
@@ -291,7 +285,7 @@ class PageViewSet(DispatchModelViewSet):
             'revision_id': revision_id,
         }
         queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, **filter_kwargs)
+        instance = self.get_object_or_404(**filter_kwargs)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
