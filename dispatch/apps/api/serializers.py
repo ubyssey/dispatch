@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer
 from dispatch.apps.api.fields import JSONField
@@ -156,42 +156,6 @@ class SectionSerializer(DispatchModelSerializer):
             'name',
             'slug',
         )
-
-class CommentSerializer(DispatchModelSerializer):
-
-    article_id = serializers.IntegerField(write_only=True)
-    user = serializers.CharField(read_only=True, source='user.person.full_name')
-    timestamp = serializers.DateTimeField(format='%B %d, %Y', source='created_at', read_only=True)
-
-    class Meta:
-        model = Comment
-        fields = (
-            'user',
-            'article_id',
-            'content',
-            'timestamp',
-            'votes'
-        )
-
-    def create(self, validated_data):
-
-        user = validated_data.get('user', None)
-
-        if user is not None:
-            instance = Comment(user=user)
-            return self.update(instance, validated_data)
-        else:
-            return False
-
-    def update(self, instance, validated_data):
-
-        # Update all the fields
-        instance.article_id = validated_data.get('article_id', instance.article_id)
-        instance.content = validated_data.get('content', instance.content)
-
-        instance.save()
-
-        return instance
 
 class ArticleSerializer(DispatchModelSerializer):
     """
