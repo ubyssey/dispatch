@@ -16,7 +16,6 @@ router.register(r'topics', views.TopicViewSet, base_name='api-topics')
 router.register(r'images', views.ImageViewSet, base_name='api-images')
 router.register(r'galleries', views.ImageGalleryViewSet, base_name='api-galleries')
 router.register(r'templates', views.TemplateViewSet, base_name='api-templates')
-router.register(r'comments', views.CommentViewSet, base_name='api-comments')
 router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
@@ -29,7 +28,6 @@ component = views.ComponentViewSet.as_view({
 person_bulk_delete = views.PersonViewSet.as_view({ 'post': 'bulk_delete' })
 
 article_bulk_delete = views.ArticleViewSet.as_view({ 'post': 'bulk_delete' })
-article_comments = views.CommentViewSet.as_view({ 'get': 'article' })
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
@@ -41,7 +39,6 @@ urlpatterns = format_suffix_patterns([
     url(r'^people/delete/$', person_bulk_delete, name='person-bulk-delete'),
     # Article routes
     url(r'^articles/delete/$', article_bulk_delete, name='article-bulk-delete'),
-    url(r'^articles/(?P<pk>[0-9]+)/comments/$', article_comments, name='article-comments'),
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
