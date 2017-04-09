@@ -53,7 +53,6 @@ class Section(Model):
 
 class Publishable(Model):
 
-    preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
@@ -65,21 +64,6 @@ class Publishable(Model):
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
 
-    DRAFT = 0
-    PUBLISHED = 1
-    PITCH = 2
-    COPY = 3
-    MANAGE = 4
-
-    STATUS_CHOICES = (
-        (DRAFT, 'Draft'),
-        (PUBLISHED, 'Published'),
-        (PITCH, 'Pitch'),
-        (COPY, 'To be copyedited'),
-        (MANAGE, 'To be managed'),
-    )
-
-    status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
     published_at = DateTimeField(null=True)
 
     featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
@@ -129,12 +113,6 @@ class Publishable(Model):
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template().to_json()
-
-    def get_status(self):
-        for status in self.STATUS_CHOICES:
-            if status[0] == self.status:
-                return status[1]
-        return 'Draft'
 
     def get_json(self):
         """
