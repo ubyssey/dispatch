@@ -15,9 +15,9 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, FileSerializer, IntegrationSerializer)
 
 class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
@@ -406,6 +406,41 @@ class TopicViewSet(viewsets.ModelViewSet):
         """
         view = ArticleViewSet.as_view({'get': 'topic'})
         return view(request, pk=pk)
+
+class FileViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for File model views.
+    """
+    model = File
+    serializer_class = FileSerializer
+
+    def get_queryset(self):
+        queryset = File.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+    def bulk_delete(self, request):
+        deleted = []
+        ids = self.request.data.get('ids', None)
+
+        if ids is not None:
+            ids = ids.split(',')
+            for id in ids:
+                try:
+                    File.objects.filter(id=id).delete()
+                    deleted.append(int(id))
+                except:
+                    pass
+
+        data = {
+            'deleted': deleted
+        }
+
+        return Response(data)
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

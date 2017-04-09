@@ -7,6 +7,7 @@ from dispatch.apps.api import views
 
 router = routers.DefaultRouter()
 
+
 router.register(r'articles', views.ArticleViewSet, base_name='api-articles')
 router.register(r'pages', views.PageViewSet, base_name='api-pages')
 router.register(r'frontpage', views.FrontpageViewSet, base_name='api-frontpage')
@@ -21,6 +22,8 @@ router.register(r'comments', views.CommentViewSet, base_name='api-comments')
 router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
+router.register(r'files',views.FileViewSet, base_name='api-files')
+
 
 section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
 
@@ -35,6 +38,8 @@ person_bulk_delete = views.PersonViewSet.as_view({ 'post': 'bulk_delete' })
 
 article_bulk_delete = views.ArticleViewSet.as_view({ 'post': 'bulk_delete' })
 article_comments = views.CommentViewSet.as_view({ 'get': 'article' })
+
+file_bulk_delete = views.FileViewSet.as_view({ 'post': 'bulk_delete'})
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
@@ -57,4 +62,7 @@ urlpatterns = format_suffix_patterns([
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
     url(r'^auth/token', views.user_authenticate, name='user-token'),
+    # File route
+    url(r'^files/delete/$', file_bulk_delete, name='file-bulk-delete'),
+
 ]) + router.urls
