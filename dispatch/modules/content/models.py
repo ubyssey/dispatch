@@ -51,19 +51,20 @@ class Section(Model):
         return self.name
 
 class Publishable(Model):
+    """
+    Base model for Article and Page models.
+    """
 
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
     is_published = BooleanField(default=False)
-
     is_active = BooleanField(default=True)
+
     slug = SlugField(max_length=255)
 
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
-
-    published_at = DateTimeField(null=True)
 
     featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
 
@@ -82,6 +83,7 @@ class Publishable(Model):
 
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
+    published_at = DateTimeField(null=True)
 
     def add_view(self):
         self.views += 1
