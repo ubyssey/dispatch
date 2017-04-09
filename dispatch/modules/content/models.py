@@ -278,8 +278,6 @@ class Article(Publishable):
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
 
-    est_reading_time = PositiveIntegerField(null=True)
-
     READING_CHOICES = (
         ('anytime', 'Anytime'),
         ('morning', 'Morning'),
@@ -387,21 +385,6 @@ class Article(Publishable):
                 self.topic = topic
             except Topic.DoesNotExist:
                 pass
-
-    def calc_est_reading_time(self):
-
-        def count_words(string):
-            r = re.compile(r'[{}]'.format(punctuation))
-            new_string = r.sub(' ', string)
-            return len(new_string.split())
-
-        words = 0
-
-        for node in json.loads(self.content):
-            if type(node) is unicode:
-                words += count_words(node)
-
-        return int(words / 200) # Average reading speed = 200 wpm
 
     def save_authors(self, authors):
         # Clear current authors
