@@ -9,7 +9,6 @@ router = routers.DefaultRouter()
 
 router.register(r'articles', views.ArticleViewSet, base_name='api-articles')
 router.register(r'pages', views.PageViewSet, base_name='api-pages')
-router.register(r'frontpage', views.FrontpageViewSet, base_name='api-frontpage')
 router.register(r'sections', views.SectionViewSet, base_name='api-sections')
 router.register(r'people', views.PersonViewSet, base_name='api-people')
 router.register(r'tags', views.TagViewSet, base_name='api-tags')
@@ -21,10 +20,6 @@ router.register(r'comments', views.CommentViewSet, base_name='api-comments')
 router.register(r'trending', views.TrendingViewSet, base_name='api-trending')
 router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
-
-section_frontpage = views.SectionViewSet.as_view({ 'get': 'frontpage' })
-
-topic_articles = views.TopicViewSet.as_view({ 'get': 'articles' })
 
 component = views.ComponentViewSet.as_view({
     'get': 'detail',
@@ -40,11 +35,6 @@ dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
 
 urlpatterns = format_suffix_patterns([
-    # Extra section routes
-    url(r'^sections/(?P<pk>[0-9]+)/frontpage/$', section_frontpage, name='section-frontpage'),
-    url(r'^sections/(?P<slug>[\w-]+)/frontpage/$', section_frontpage, name='section-frontpage'),
-    # Extra topic route
-    url(r'^topics/(?P<pk>[0-9]+)/articles/$', topic_articles, name='topic-frontpage'),
     # Components route
     url(r'^components/(?P<slug>[\w-]+)/$', component, name='component'),
     # People route

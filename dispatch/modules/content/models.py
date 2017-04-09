@@ -300,16 +300,8 @@ class Article(Publishable):
         return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
 
     def get_reading_list(self, ref=None, dur=None):
-        if ref is not None:
-            if ref == 'frontpage':
-                articles = Article.objects.get_frontpage(exclude=[self.parent_id])
-                name = 'Top Stories'
-            elif ref == 'popular':
-                articles = Article.objects.get_popular(dur=dur).exclude(pk=self.id)[:5]
-                name = "Most popular this week"
-        else:
-            articles = self.get_related()
-            name = self.section.name
+        articles = self.get_related()
+        name = self.section.name
 
         return {
             'ids': ",".join([str(a.parent_id) for a in articles]),
