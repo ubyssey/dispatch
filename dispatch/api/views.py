@@ -442,7 +442,6 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response(data)
 
 
-
 class ImageViewSet(viewsets.ModelViewSet):
     """
     Viewset for Image model views.
