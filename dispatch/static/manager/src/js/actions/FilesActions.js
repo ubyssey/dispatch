@@ -44,7 +44,6 @@ export function toggleFile(fileId) {
   }
 }
 
-
 export function toggleAllFiles(fileIds) {
   return {
     type: types.TOGGLE_ALL_FILES,
@@ -66,6 +65,7 @@ export function clearFiles() {
 
 export function searchFiles(query) {
   var queryObj = {}
+  
   if (query) {
     queryObj.q = query
   }
