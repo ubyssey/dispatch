@@ -23,7 +23,6 @@ from django.template import loader, Context
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
 from dispatch.apps.core.models import Person, User
-from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -75,10 +74,6 @@ class Publishable(Model):
 
     seo_keyword = CharField(max_length=100, null=True)
     seo_description = TextField(null=True)
-
-    scripts = ManyToManyField(Script, related_name='%(class)s_scripts')
-    stylesheets = ManyToManyField(Stylesheet, related_name='%(class)s_stylesheets')
-    snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
 
     integrations = JSONField(default={})
 
