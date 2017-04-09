@@ -280,13 +280,13 @@ class ArticleSerializer(DispatchModelSerializer):
 
         # If there are tags, save them
         tag_ids = validated_data.get('tag_ids')
-        if tag_ids != False:
+        if tag_ids:
             instance.save_tags(tag_ids)
 
         # If there is a topic, save it
         topic_id = validated_data.get('topic_id')
 
-        if topic_id != False:
+        if topic_id:
             instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
