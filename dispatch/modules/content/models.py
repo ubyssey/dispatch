@@ -187,7 +187,6 @@ class Publishable(Model):
 
         Arguments:
         revision - if True, a new version of this Publishable will be created.
-        user - the user that is performing the save
         """
 
         if revision:
