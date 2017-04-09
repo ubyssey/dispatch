@@ -1,0 +1,33 @@
+@import '../utilities/colors';
+
+.c-files-dropzone-active {
+  background-color: $color-bg-gray-light;
+}
+
+.c-files-dropzone {
+  // Structure
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+}
+
+.c-files-dropzone__list {
+  // Structure
+  flex: 1;
+  display: flex;
+}
+
+.c-files-dropzone__text {
+  // Structure
+  width: 100%;
+  padding: 1rem;
+
+  // Background
+  background-color: $color-text-gray-light;
+
+  // Text
+  text-align: center;
+  color: $color-text-gray;
+}
