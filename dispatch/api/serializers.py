@@ -372,7 +372,7 @@ class PageSerializer(DispatchModelSerializer):
             'seo_description'
         )
         authenticated_fields = (
-            'template'
+            'template',
         )
 
     def create(self, validated_data):
