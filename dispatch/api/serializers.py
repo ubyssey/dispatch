@@ -2,9 +2,13 @@ from rest_framework import serializers
 
 from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.core.models import User, Person
+from dispatch.apps.api.mixins import DispatchModelSerializer
 from dispatch.apps.api.fields import JSONField
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(DispatchModelSerializer):
+    """
+    Serializes the User model.
+    """
     class Meta:
         model = User
         fields = (
@@ -12,7 +16,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'email'
         )
 
-class PersonSerializer(serializers.HyperlinkedModelSerializer):
+class PersonSerializer(DispatchModelSerializer):
     """
     Serializes the Person model.
     """
@@ -23,7 +27,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             'full_name',
         )
 
-class ImageSerializer(serializers.HyperlinkedModelSerializer):
+class ImageSerializer(DispatchModelSerializer):
     """
     Serializes the Image model.
     """
@@ -65,7 +69,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
-class TagSerializer(serializers.HyperlinkedModelSerializer):
+class TagSerializer(DispatchModelSerializer):
     """
     Serializes the Tag model.
     """
@@ -76,7 +80,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
             'name',
         )
 
-class TopicSerializer(serializers.HyperlinkedModelSerializer):
+class TopicSerializer(DispatchModelSerializer):
     """
     Serializes the Topic model.
     """
@@ -87,7 +91,7 @@ class TopicSerializer(serializers.HyperlinkedModelSerializer):
             'name',
         )
 
-class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
+class ImageAttachmentSerializer(DispatchModelSerializer):
     """
     Serializes the ImageAttachment model without including full Image instance.
     """
@@ -101,7 +105,7 @@ class ImageAttachmentSerializer(serializers.HyperlinkedModelSerializer):
             'credit'
         )
 
-class ImageGallerySerializer(serializers.HyperlinkedModelSerializer):
+class ImageGallerySerializer(DispatchModelSerializer):
     """
     Serializes the ImageGallery model without including full Image instance.
     """
@@ -141,7 +145,7 @@ class ImageGallerySerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
-class SectionSerializer(serializers.HyperlinkedModelSerializer):
+class SectionSerializer(DispatchModelSerializer):
     """
     Serializes the Section model.
     """
@@ -153,7 +157,7 @@ class SectionSerializer(serializers.HyperlinkedModelSerializer):
             'slug',
         )
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(DispatchModelSerializer):
 
     article_id = serializers.IntegerField(write_only=True)
     user = serializers.CharField(read_only=True, source='user.person.full_name')
@@ -189,7 +193,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleSerializer(DispatchModelSerializer):
     """
     Serializes the Article model.
     """
@@ -258,6 +262,10 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'template_fields',
             'seo_keyword',
             'seo_description',
+            'integrations'
+        )
+        authenticated_fields = (
+            'template',
             'integrations'
         )
 
@@ -365,15 +373,9 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             'seo_keyword',
             'seo_description'
         )
-
-    def __init__(self, *args, **kwargs):
-        # Instantiate the superclass normally
-        super(PageSerializer, self).__init__(*args, **kwargs)
-
-        template_fields = self.context['request'].query_params.get('template_fields', False)
-
-        if self.context['request'].method == 'GET' and not template_fields:
-            self.fields.pop('template_fields')
+        authenticated_fields = (
+            'template'
+        )
 
     def create(self, validated_data):
 
