@@ -255,7 +255,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
             'reading_time',
             'slug',
             'url',
-            'status',
             'template',
             'template_id',
             'template_fields',
@@ -275,10 +274,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data, action='update'):
 
-        status = validated_data.get('status', instance.status)
-
-        if status != instance.status and status == Article.PUBLISHED:
-            action = 'publish'
 
         # Update all the basic fields
         instance.headline = validated_data.get('headline', instance.headline)
@@ -286,7 +281,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.template = validated_data.get('template_id', instance.template)
-        instance.status = status
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
@@ -378,7 +372,6 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
             'slug',
             'revision_id',
             'url',
-            'status',
             'template',
             'template_fields',
             'seo_keyword',
@@ -404,17 +397,11 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data, action='update'):
 
-        status = validated_data.get('status', instance.status)
-
-        if status != instance.status and status == Article.PUBLISHED:
-            action = 'publish'
-
         # Update all the basic fields
         instance.title = validated_data.get('title', instance.title)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.template = validated_data.get('template', instance.template)
-        instance.status = status
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
 
