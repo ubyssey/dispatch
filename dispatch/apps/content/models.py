@@ -89,11 +89,6 @@ class Publishable(Model):
         self.views += 1
         self.save(revision=False)
 
-    def template_fields(self):
-        if not hasattr(self, 'template_fields_data'):
-            self.template_fields_data = self.get_template_fields()
-        return self.template_fields_data
-
     def get_template_path(self):
         if self.template != 'default':
             return 'article/%s.html' % self.template
@@ -246,12 +241,6 @@ class Publishable(Model):
             return revision
         except:
             return self
-
-    def check_stale(self):
-        if self.revision_id == 0:
-            return (False, self)
-        head = type(self).objects.get(parent=self.parent, head=True)
-        return (head.revision_id != self.revision_id, head)
 
     class Meta:
         abstract = True
