@@ -19,6 +19,16 @@ export const CLEAR_SELECTED_ARTICLES = 'CLEAR_SELECTED_ARTICLES'
 export const DELETE_ARTICLES = 'DELETE_ARTICLES'
 export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
 
+// Files actions
+export const FETCH_FILES = 'FETCH_FILES'
+export const SAVE_FILE = 'SAVE_FILE'
+export const CREATE_FILE = 'CREATE_FILE'
+export const TOGGLE_FILE = 'TOGGLE_FILE'
+export const TOGGLE_ALL_FILES = 'TOGGLE_ALL_FILES'
+export const CLEAR_SELECTED_FILES = 'CLEAR_SELECTED_FILES'
+export const DELETE_FILES = 'DELETE_FILES'
+export const CLEAR_FILES = 'CLEAR_FILES'
+
 // Modal actions
 export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'

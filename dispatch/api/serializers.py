@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.core.actions import perform_action
 from dispatch.apps.api.fields import JSONField
+from dispatch.apps.api.exceptions import InvalidFilename
+
 from dispatch.core.signals import article_post_save
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -24,6 +27,28 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'full_name',
         )
+
+
+class FileSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializes the File model.
+    """
+
+    class Meta:
+        model = File
+        fields = (
+            'id',
+            'name',
+            'file',
+            'created_at',
+            'updated_at'
+        )
+
+    def validate(self, data):
+        if not all(ord(c) < 128 for c in data.get('file').name):
+            raise InvalidFilename()
+        return data
+
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -449,7 +474,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
 class IntegrationSerializer(serializers.Serializer):
 
     id = serializers.CharField(source='ID', read_only=True)
-    settings = serializers.JSONField(source='get_settings')
+    settings = JSONField(source='get_settings')
 
     def save(self):
 

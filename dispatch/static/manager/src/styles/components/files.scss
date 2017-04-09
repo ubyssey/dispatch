@@ -1,0 +1,20 @@
+@import '../utilities/colors';
+
+.c-files-dropzone-active{
+  background-color: $color-bg-gray-light;
+}
+
+.c-files-dropzone{
+  width: 100%;
+  height: 100%;
+}
+
+.c-files-dropzone-text{
+  width: 100%;
+  bottom: 0;
+  text-align: center;
+  position: fixed;
+  background-color: $color-text-gray-light;
+  padding: 15px;
+  color: $color-text-gray;
+}
