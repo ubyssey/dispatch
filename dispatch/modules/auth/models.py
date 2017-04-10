@@ -67,7 +67,7 @@ class Setting(Model):
     value = CharField(max_length=255)
 
 class Action(Model):
-    person = ForeignKey(Person)
+    user = ForeignKey(User)
     action = CharField(max_length=50)
     object_type = CharField(max_length=50)
     object_id = PositiveIntegerField()
