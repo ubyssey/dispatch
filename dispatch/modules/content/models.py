@@ -76,7 +76,7 @@ class Publishable(Model):
 
     integrations = JSONField(default={})
 
-    content = TextField()
+    content = JSONField(default=[])
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
@@ -103,31 +103,6 @@ class Publishable(Model):
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template().to_json()
-
-    def get_json(self):
-        """
-        Returns a JSON representation (if possible) of the article content.
-        """
-        def prepare_json(nodes):
-            """
-            Processes each in the document, returning its full object representation.
-            """
-            for i, node in enumerate(nodes):
-                if type(node) is dict:
-                    # If node is a dictionary, replace data attribute with processed data.
-                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    nodes[i] = {
-                        'type': 'paragraph',
-                        'data': node,
-                    }
-            return nodes
-        # Attempt to load content as JSON, return raw content as fallback
-        try:
-            return prepare_json(json.loads(self.content))
-        except ValueError:
-            return self.content
 
     def get_html(self):
         """
@@ -159,7 +134,7 @@ class Publishable(Model):
 
         try:
             # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(json.loads(self.content))
+            return prepare_html(self.content)
         except ValueError:
             return self.content
 
@@ -298,14 +273,13 @@ class Article(Publishable):
             'name': name
         }
 
-
     def save_attachments(self):
         """
         Saves all attachments embedded in article content.
 
         TODO: add abstraction to this function -- delegate saving to embed models/controllers.
         """
-        nodes = json.loads(self.content)
+        nodes = self.content
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image_id']
@@ -323,7 +297,7 @@ class Article(Publishable):
                     'attachment_id': attachment.id,
                 }
 
-        self.content = json.dumps(nodes)
+        self.content = nodes
 
     def save_featured_image(self, data):
         attachment = ImageAttachment()
@@ -412,7 +386,7 @@ class Page(Publishable):
 
         TODO: add abstraction to this function -- delegate saving to embed models/controllers.
         """
-        nodes = json.loads(self.content)
+        nodes = self.content
         for node in nodes:
             if type(node) is dict and node['type'] == 'image':
                 image_id = node['data']['image_id']
@@ -433,7 +407,7 @@ class Page(Publishable):
                     'attachment_id': attachment.id,
                 }
 
-        self.content = json.dumps(nodes)
+        self.content = nodes
 
     def save_featured_image(self, data):
         attachment = ImageAttachment()
@@ -593,9 +567,10 @@ class ImageAttachment(Model):
         @staticmethod
         def json(data):
             id = data['attachment_id']
-            attach = ImageAttachment.objects.get(id=id)
 
-            if attach.image is None:
+            try:
+                attach = ImageAttachment.objects.get(id=id)
+            except ImageAttachment.DoesNotExist:
                 return
 
             return {
