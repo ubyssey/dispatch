@@ -10,7 +10,6 @@ class UserSerializer(DispatchModelSerializer):
     """
     Serializes the User model.
     """
-
     class Meta:
         model = User
         fields = (
@@ -118,12 +117,15 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
     """
     Serializes the ImageAttachment model without including full Image instance.
     """
-    image = ImageSerializer()
+
+    image = ImageSerializer(read_only=True)
+    image_id =  serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = ImageAttachment
         fields = (
             'image',
+            'image_id',
             'caption',
             'credit'
         )
@@ -190,14 +192,13 @@ class ArticleSerializer(DispatchModelSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    featured_image = ImageAttachmentSerializer(read_only=True)
-    featured_image_json = JSONField(required=False, allow_null=True, write_only=True)
+    featured_image = ImageAttachmentSerializer(allow_null=True)
 
     content = JSONField()
 
     authors = PersonSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
-    authors_string = serializers.CharField(source='get_author_string',read_only=True)
+    authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(write_only=True, required=False, child=serializers.IntegerField())
@@ -205,7 +206,7 @@ class ArticleSerializer(DispatchModelSerializer):
     topic = TopicSerializer(read_only=True)
     topic_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
 
-    url = serializers.CharField(source='get_absolute_url',read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
@@ -225,7 +226,6 @@ class ArticleSerializer(DispatchModelSerializer):
             'url',
             'headline',
             'featured_image',
-            'featured_image_json',
             'snippet',
             'content',
             'authors',
@@ -279,15 +279,12 @@ class ArticleSerializer(DispatchModelSerializer):
 
         instance.content = validated_data.get('content', instance.content)
 
-        # Process article attachments
-        instance.save_attachments()
-
         template_fields = validated_data.get('get_template_fields')
         if template_fields:
             instance.save_template_fields(template_fields)
 
-        featured_image = validated_data.get('featured_image_json')
-        if featured_image:
+        featured_image = validated_data.get('featured_image', False)
+        if featured_image != False:
             instance.save_featured_image(featured_image)
 
         authors = validated_data.get('author_ids')
@@ -314,8 +311,7 @@ class PageSerializer(DispatchModelSerializer):
 
     id = serializers.ReadOnlyField(source='parent_id')
 
-    featured_image = ImageAttachmentSerializer(read_only=True)
-    featured_image_json = JSONField(required=False, write_only=True)
+    featured_image = ImageAttachmentSerializer()
 
     content = JSONField()
 
@@ -334,7 +330,6 @@ class PageSerializer(DispatchModelSerializer):
             'url',
             'title',
             'featured_image',
-            'featured_image_json',
             'snippet',
             'content',
             'published_at',
@@ -352,9 +347,9 @@ class PageSerializer(DispatchModelSerializer):
 
     def create(self, validated_data):
         instance = Page()
-        return self.update(instance, validated_data, action='create')
+        return self.update(instance, validated_data)
 
-    def update(self, instance, validated_data, action='update'):
+    def update(self, instance, validated_data):
 
         # Update all the basic fields
         instance.title = validated_data.get('title', instance.title)
@@ -369,15 +364,12 @@ class PageSerializer(DispatchModelSerializer):
 
         instance.content = validated_data.get('content', instance.content)
 
-        # Process article attachments
-        instance.save_attachments()
-
         template_fields = validated_data.get('get_template_fields')
         if template_fields:
             instance.save_template_fields(template_fields)
 
-        featured_image = validated_data.get('featured_image_json')
-        if featured_image:
+        featured_image = validated_data.get('featured_image', False)
+        if featured_image != False:
             instance.save_featured_image(featured_image)
 
         # Perform a final save (without revision), update content and featured image
