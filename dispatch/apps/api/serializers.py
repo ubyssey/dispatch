@@ -193,8 +193,7 @@ class ArticleSerializer(DispatchModelSerializer):
     featured_image = ImageAttachmentSerializer(read_only=True)
     featured_image_json = JSONField(required=False, allow_null=True, write_only=True)
 
-    content = serializers.ReadOnlyField(source='get_json')
-    content_json = serializers.CharField(write_only=True)
+    content = JSONField()
 
     authors = PersonSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
@@ -229,7 +228,6 @@ class ArticleSerializer(DispatchModelSerializer):
             'featured_image_json',
             'snippet',
             'content',
-            'content_json',
             'authors',
             'author_ids',
             'tags',
@@ -279,7 +277,7 @@ class ArticleSerializer(DispatchModelSerializer):
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
-        instance.content = validated_data.get('content_json', instance.content)
+        instance.content = validated_data.get('content', instance.content)
 
         # Process article attachments
         instance.save_attachments()
@@ -319,8 +317,7 @@ class PageSerializer(DispatchModelSerializer):
     featured_image = ImageAttachmentSerializer(read_only=True)
     featured_image_json = JSONField(required=False, write_only=True)
 
-    content = serializers.ReadOnlyField(source='get_json')
-    content_json = serializers.CharField(write_only=True)
+    content = JSONField()
 
     url = serializers.CharField(source='get_absolute_url',read_only=True)
 
@@ -340,7 +337,6 @@ class PageSerializer(DispatchModelSerializer):
             'featured_image_json',
             'snippet',
             'content',
-            'content_json',
             'published_at',
             'is_published',
             'published_version',
@@ -371,7 +367,7 @@ class PageSerializer(DispatchModelSerializer):
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
-        instance.content = validated_data.get('content_json', instance.content)
+        instance.content = validated_data.get('content', instance.content)
 
         # Process article attachments
         instance.save_attachments()

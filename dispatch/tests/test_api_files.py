@@ -1,6 +1,7 @@
 import os
 import shutil
 import datetime
+import StringIO
 
 from rest_framework import status
 
@@ -17,13 +18,18 @@ class FileTests(DispatchAPITestCase):
         """
         url = reverse('api-files-list')
 
-        with open(os.path.join(os.path.dirname(__file__), 'input/TestFile.txt')) as fp:
-            data = {
-                'name': 'TestFile',
-                'file': fp
-            }
+        test_file = StringIO.StringIO('testtesttest')
 
-            return self.client.post(url, data, format='multipart')
+        data = {
+            'name': 'TestFile',
+            'file': test_file
+        }
+
+        response = self.client.post(url, data, format='multipart')
+
+        test_file.close()
+
+        return response
 
     def _cleanup(self):
         """
