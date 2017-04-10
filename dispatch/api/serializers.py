@@ -192,7 +192,7 @@ class ArticleSerializer(DispatchModelSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    featured_image = ImageAttachmentSerializer(allow_null=True)
+    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 
     content = JSONField()
 
@@ -311,7 +311,7 @@ class PageSerializer(DispatchModelSerializer):
 
     id = serializers.ReadOnlyField(source='parent_id')
 
-    featured_image = ImageAttachmentSerializer()
+    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 
     content = JSONField()
 
