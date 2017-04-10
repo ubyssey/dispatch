@@ -15,57 +15,13 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Comment, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, CommentSerializer,
-                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, FileSerializer, IntegrationSerializer)
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.api.mixins import DispatchModelViewSet
+from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+                                           ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
-class FrontpageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    """
-    Viewset for frontpage views.
-    """
-    serializer_class = ArticleSerializer
-    def fetch_frontpage(self, section_id=None, section_slug=None):
-        """
-        Return serialized frontpage listing, optionally filtered by section.
-        """
-        if section_id is not None:
-            # Filter queryset by section_id if set
-            queryset = Article.objects.get_frontpage(section_id=int(section_id))
-        elif section_slug is not None:
-            # Filter queryset by section_slug if set
-            queryset = Article.objects.get_frontpage(section=section_slug)
-        else:
-            # Don't filter the results
-            queryset = Article.objects.get_frontpage()
-
-        # Cast RawQuerySet as list for pagination to work
-        return list(queryset)
-
-    def list(self, request):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage()
-        return super(FrontpageViewSet, self).list(self, request)
-
-    def section(self, request, pk=None, slug=None):
-        """
-        Return resource listing representing the most recent and
-        relevant articles, photos, and videos in the given section
-        for the given timestamp.
-
-        TODO: implement timestamp parameter
-        """
-        # Update the queryset with filtered frontpage listing before calling super method
-        self.queryset = self.fetch_frontpage(section_id=pk, section_slug=slug)
-        return super(FrontpageViewSet, self).list(self, request)
-
-
-class SectionViewSet(viewsets.ModelViewSet):
+class SectionViewSet(DispatchModelViewSet):
     """
     Viewset for Section model views.
     """
@@ -79,18 +35,11 @@ class SectionViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-    def frontpage(self, request, pk=None, slug=None):
-        """
-        Extra method to return frontpage listing for the section.
-        Uses FrontpageViewSet.section() to perform request.
-        """
-        view = FrontpageViewSet.as_view({'get': 'section'})
-        return view(request, pk=pk, slug=slug)
-
-class ArticleViewSet(viewsets.ModelViewSet):
+class ArticleViewSet(DispatchModelViewSet):
     """
     Viewset for Article model views.
     """
+    model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
 
@@ -132,7 +81,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-
     def list(self, request, *args, **kwargs):
 
         queryset = self.filter_queryset(self.get_queryset())
@@ -149,23 +97,19 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'],)
     def publish(self, request, parent_id=None):
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
-
-        instance.publish()
+        instance = self.get_object_or_404(parent_id)
 
         serializer = self.get_serializer(instance)
+        serializer.publish()
 
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def unpublish(self, request, parent_id=None):
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
-
-        instance.unpublish()
+        instance = self.get_object_or_404(parent_id)
 
         serializer = self.get_serializer(instance)
+        serializer.unpublish()
 
         return Response(serializer.data)
 
@@ -181,18 +125,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
         queryset = Article.objects.all()
         instance = get_object_or_404(queryset, **filter_kwargs)
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def topic(self, request, pk=None):
-        queryset = Article.objects.filter(topic_id=pk, status=Article.PUBLISHED).order_by('-published_at')
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
@@ -233,7 +165,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
-class PageViewSet(viewsets.ModelViewSet):
+class PageViewSet(DispatchModelViewSet):
     """
     Viewset for Page model views.
     """
@@ -242,28 +174,27 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned articles by filtering
-        against a `topic` query parameter in the URL.
+        Only display unpublished content to authenticated users, filter by query parameter if present.
         """
 
         if self.request.user.is_authenticated():
             queryset = Page.objects.filter(head=True)
         else:
-            queryset = Page.objects.filter(head=True, status=Page.PUBLISHED)
+            queryset = Page.objects.filter(head=True, is_published=True)
 
         queryset = queryset.order_by('-published_at')
 
-        q = self.request.query_params.get('q', None)
+        # Optionally filter by a query parameter
+        q = self.request.query_params.get('q')
 
-        if q is not None:
+        if q:
             queryset = queryset.filter(headline__icontains=q)
 
         return queryset
 
     @detail_route(methods=['get'],)
     def publish(self, request, parent_id=None):
-        queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
+        instance = self.get_object_or_404(parent_id)
 
         instance.publish()
 
@@ -273,8 +204,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'],)
     def unpublish(self, request, parent_id=None):
-        queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, pk=parent_id)
+        instance = self.get_object_or_404(parent_id)
 
         instance.unpublish()
 
@@ -290,29 +220,11 @@ class PageViewSet(viewsets.ModelViewSet):
             'revision_id': revision_id,
         }
         queryset = Page.objects.all()
-        instance = get_object_or_404(queryset, **filter_kwargs)
+        instance = self.get_object_or_404(**filter_kwargs)
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-class CommentViewSet(viewsets.ModelViewSet):
-
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.order_by('-created_at')
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def article(self, request, pk=None):
-        self.queryset = Comment.objects.filter(article_id=pk).order_by('-created_at')
-        return self.list(request)
-
-
-
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
     """
@@ -345,7 +257,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(DispatchModelViewSet):
     """
     Viewset for Tag model views.
     """
@@ -372,7 +284,7 @@ class TagViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
 
-class TopicViewSet(viewsets.ModelViewSet):
+class TopicViewSet(DispatchModelViewSet):
     """
     Viewset for Topic model views.
     """
@@ -399,15 +311,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status_code, headers=headers)
 
-    def articles(self, request, pk=None):
-        """
-        Extra method to return frontpage listing for the topic.
-        Uses FrontpageViewSet.topic() to perform request.
-        """
-        view = ArticleViewSet.as_view({'get': 'topic'})
-        return view(request, pk=pk)
-
-class FileViewSet(viewsets.ModelViewSet):
+class FileViewSet(DispatchModelViewSet):
     """
     Viewset for File model views.
     """
@@ -492,7 +396,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
         return queryset
 
-class ImageGalleryViewSet(viewsets.ModelViewSet):
+class ImageGalleryViewSet(DispatchModelViewSet):
     """
     Viewset for ImageGallery model views.
     """
@@ -699,79 +603,15 @@ class DashboardViewSet(viewsets.GenericViewSet):
 
     def list_recent_articles(self, request):
 
-        recent = recent_articles(request.user.person)
+        recent = recent_articles(request.user)
 
-        articles = []
-        for x in recent:
-            articles.append(self.get_serializer(x).data)
+        articles = map(lambda a: self.get_serializer(a).data, recent)
 
         data = {
             'results': articles
         }
 
         return Response(data)
-
-class TrendingViewSet(viewsets.GenericViewSet):
-
-    def list(self, request):
-        data = {
-            "count": 3,
-            "next": None,
-            "previous": None,
-            "results": [
-                {
-                    "source": "instagram",
-                    "name": "University of British Columbia",
-                    "handle": "ubcaplaceofmind",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "https://instagram.com/p/5Z8dWHsDYh/",
-                    "image": "https://scontent-sea1-1.cdninstagram.com/hphotos-xpa1/t51.2885-15/10864817_505702442914268_993541537_n.jpg",
-                    "content": "Sailing on a boat with 120 strangers and no land in sight for 2 months might be a nightmare for some, but for Diane Hanano, Project Manager of the Pacific Centre for Isotopic and Geochemical Research at #UBC Science, the chance to sail on @joides_resolution was a dream come true."
-                },
-                {
-                    "source": "twitter",
-                    "name": "Jean-Francois Caron",
-                    "handle": "jf_bikes",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "https://twitter.com/jf_bikes/status/620705871882924032",
-                    "content": "@ubc_candcp @UBC The whole campus should be no-smoking except in special zones. Why enable an unhealthy & dangerous addiction?"
-                },
-                {
-                    "source": "reddit",
-                    "handle": "bugsahoy",
-                    "timestamp": "2015-07-02T22:26:34Z",
-                    "url": "http://www.reddit.com/r/UBC/comments/3dvwnp/how_is_first_year_dormcampus_life/",
-                    "title": "How is first year dorm/campus life?",
-                },
-
-            ]
-        }
-
-        return Response(data)
-
-# @api_view(['POST'])
-# @permission_classes((AllowAny,))
-# def user_register(request):
-#
-#     name = request.data.get('name', None)
-#     username = request.data.get('username', None)
-#     email = request.data.get('email', None)
-#     password = request.data.get('password', None)
-#
-#     try:
-#         user = User.objects.create_user(username, email, password, name=name)
-#         token = Token.objects.create(user=user)
-#
-#         user_serializer = UserSerializer(user)
-#
-#         data = {
-#             'user': user_serializer.data,
-#             'token': unicode(token)
-#         }
-#         return Response(data, status=status.HTTP_201_CREATED)
-#     except:
-#         return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
