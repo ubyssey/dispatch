@@ -67,7 +67,7 @@ class Publishable(Model):
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
 
-    featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
+    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
 
@@ -200,6 +200,42 @@ class Publishable(Model):
 
         return self
 
+    def save_featured_image(self, data):
+        """
+        Handles saving the featured image.
+
+        If data is None, the featured image will be removed.
+
+        `data` should be dictionary with the following format:
+          {
+            'image_id': int,
+            'caption': str,
+            'credit': str
+          }
+        """
+
+        attachment = self.featured_image
+
+        if not attachment:
+            attachment = ImageAttachment()
+
+        if data is None:
+            attachment.delete()
+            self.featured_image = None
+            return
+
+        attachment.image_id = data.get('image_id', attachment.image_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_image = attachment
+
     def get_published_version(self):
         try:
             published = type(self).objects.get(parent=self.parent, is_published=True)
@@ -273,44 +309,6 @@ class Article(Publishable):
             'name': name
         }
 
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = self.content
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-                if 'attachment_id' in node['data']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-                attachment.image = image
-                attachment.article = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = nodes
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-
-        attachment.image_id = data.get('image')
-        attachment.caption = data.get('caption', None)
-        attachment.credit = data.get('credit', None)
-
-        attachment.article = self
-        attachment.save()
-
-        self.featured_image = attachment
-
     def save_tags(self, tag_ids):
         self.tags.clear()
         for tag_id in tag_ids:
@@ -379,46 +377,6 @@ class Page(Publishable):
 
     def get_author_string(self):
         return None
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = self.content
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-
-                if node['data']['attachment_id']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-
-                attachment.image = image
-                attachment.page = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = nodes
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-        attachment.image_id = data['id']
-
-        attachment.caption = data['caption']
-        attachment.credit = data['credit']
-
-        attachment.page = self
-        attachment.save()
-        self.featured_image = attachment
 
 class Author(Model):
     article = ForeignKey(Article, null=True)
