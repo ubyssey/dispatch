@@ -169,6 +169,7 @@ class PageViewSet(DispatchModelViewSet):
     """
     Viewset for Page model views.
     """
+    model = Page
     serializer_class = PageSerializer
     lookup_field = 'parent_id'
 
