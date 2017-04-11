@@ -1,6 +1,5 @@
 import datetime
 import StringIO
-import json
 import os
 import re
 
@@ -216,8 +215,9 @@ class Publishable(Model):
 
         attachment = self.featured_image
 
-        if data is None and attachment:
-            attachment.delete()
+        if data is None:
+            if attachment:
+                attachment.delete()
             return
 
         if not attachment:
