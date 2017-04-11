@@ -1,6 +1,5 @@
 import datetime
 import StringIO
-import json
 import os
 import re
 
@@ -67,7 +66,7 @@ class Publishable(Model):
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
 
-    featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
+    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
 
@@ -76,7 +75,7 @@ class Publishable(Model):
 
     integrations = JSONField(default={})
 
-    content = TextField()
+    content = JSONField(default=[])
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
@@ -103,31 +102,6 @@ class Publishable(Model):
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template().to_json()
-
-    def get_json(self):
-        """
-        Returns a JSON representation (if possible) of the article content.
-        """
-        def prepare_json(nodes):
-            """
-            Processes each in the document, returning its full object representation.
-            """
-            for i, node in enumerate(nodes):
-                if type(node) is dict:
-                    # If node is a dictionary, replace data attribute with processed data.
-                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    nodes[i] = {
-                        'type': 'paragraph',
-                        'data': node,
-                    }
-            return nodes
-        # Attempt to load content as JSON, return raw content as fallback
-        try:
-            return prepare_json(json.loads(self.content))
-        except ValueError:
-            return self.content
 
     def get_html(self):
         """
@@ -159,7 +133,7 @@ class Publishable(Model):
 
         try:
             # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(json.loads(self.content))
+            return prepare_html(self.content)
         except ValueError:
             return self.content
 
@@ -224,6 +198,42 @@ class Publishable(Model):
             super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def save_featured_image(self, data):
+        """
+        Handles saving the featured image.
+
+        If data is None, the featured image will be removed.
+
+        `data` should be dictionary with the following format:
+          {
+            'image_id': int,
+            'caption': str,
+            'credit': str
+          }
+        """
+
+        attachment = self.featured_image
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+            return
+
+        if not attachment:
+            attachment = ImageAttachment()
+
+        attachment.image_id = data.get('image_id', attachment.image_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_image = attachment
 
     def get_published_version(self):
         try:
@@ -298,45 +308,6 @@ class Article(Publishable):
             'name': name
         }
 
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-                if 'attachment_id' in node['data']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-                attachment.image = image
-                attachment.article = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-
-        attachment.image_id = data.get('image')
-        attachment.caption = data.get('caption', None)
-        attachment.credit = data.get('credit', None)
-
-        attachment.article = self
-        attachment.save()
-
-        self.featured_image = attachment
-
     def save_tags(self, tag_ids):
         self.tags.clear()
         for tag_id in tag_ids:
@@ -405,46 +376,6 @@ class Page(Publishable):
 
     def get_author_string(self):
         return None
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-
-                if node['data']['attachment_id']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-
-                attachment.image = image
-                attachment.page = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-        attachment.image_id = data['id']
-
-        attachment.caption = data['caption']
-        attachment.credit = data['credit']
-
-        attachment.page = self
-        attachment.save()
-        self.featured_image = attachment
 
 class Author(Model):
     article = ForeignKey(Article, null=True)
@@ -593,9 +524,10 @@ class ImageAttachment(Model):
         @staticmethod
         def json(data):
             id = data['attachment_id']
-            attach = ImageAttachment.objects.get(id=id)
 
-            if attach.image is None:
+            try:
+                attach = ImageAttachment.objects.get(id=id)
+            except ImageAttachment.DoesNotExist:
                 return
 
             return {
