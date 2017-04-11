@@ -1,3 +1,4 @@
+import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
 
@@ -6,6 +7,37 @@ import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
 import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
+
+function preparePayload(data) {
+
+  if (data._content) {
+    // Convert article contentState to JSON array
+    data.content = ContentStateHelper.toJSON(data._content)
+    delete data._content
+  }
+
+  // Set section_id to section
+  data.section_id = data.section
+
+  // Set author_ids to authors
+  data.author_ids = data.authors
+
+  // Set tag_ids to tags
+  data.tag_ids = data.tags
+
+  // Set topic_id to topic
+  data.topic_id = data.topic
+
+  // Set template_id
+  data.template_id = data.template
+  delete data.template
+
+  if (R.has('featured_image', data) && data.featured_image) {
+    data.featured_image.image_id = data.featured_image.image
+  }
+
+  return data
+}
 
 export function fetchArticles(token, query) {
   return {
@@ -37,33 +69,7 @@ export function setArticle(article) {
 
 export function saveArticle(token, articleId, data) {
 
-  if (data._content) {
-    // Convert article contentState to JSON array
-    data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
-  }
-
-  // Delete old content state
-  delete data._content
-
-  // Set section_id to section
-  data.section_id = data.section
-  
-  // Set author_ids to authors
-  data.author_ids = data.authors
-
-  // Set tag_ids to tags
-  data.tag_ids = data.tags
-
-  // Set topic_id to topic
-  data.topic_id = data.topic
-
-  // Set featured_image_json and delete featured_image
-  data.featured_image_json = data.featured_image
-  delete data.featured_image
-
-  // Set template_id
-  data.template_id = data.template
-  delete data.template
+  data = preparePayload(data)
 
   return {
     type: types.SAVE_ARTICLE,
@@ -74,33 +80,7 @@ export function saveArticle(token, articleId, data) {
 
 export function createArticle(token, data) {
 
-  if (data._content) {
-    // Convert article contentState to JSON array
-    data.content_json = JSON.stringify(ContentStateHelper.toJSON(data._content))
-  }
-
-  // Delete old content state
-  delete data._content
-
-  // Set section_id to section
-  data.section_id = data.section
-
-  // Set author_ids to authors
-  data.author_ids = data.authors
-
-  // Set tag_ids to tags
-  data.tag_ids = data.tags
-
-  // Set topic_id to topic
-  data.topic_id = data.topic
-
-  // Set featured_image_json and delete featured_image
-  data.featured_image_json = data.featured_image
-  delete data.featured_image
-
-  // Set template_id
-  data.template_id = data.template
-  delete data.template
+  data = preparePayload(data)
 
   return {
     type: types.CREATE_ARTICLE,
