@@ -10,13 +10,40 @@ import ImagePanel from './ImagePanel'
 
 require('../../../../styles/components/image_manager.scss')
 
+const SCROLL_THRESHOLD = 20
+
 class ImageManagerComponent extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.scrollListener = this.scrollListener.bind(this)
+  }
+
   componentDidMount() {
-    this.props.fetchImages({
-      limit: 20,
-      ordering: '-created_at'
-    })
+    this.props.fetchImages(this.props.token, { limit: 30, ordering: '-created_at' })
+
+    this.images.parentElement.addEventListener('scroll', this.scrollListener)
+  }
+
+  componentWillUnmount() {
+    this.images.parentElement.removeEventListener('scroll', this.scrollListener)
+  }
+
+  loadMore() {
+    this.props.fetchImagesPage(this.props.token, this.props.images.next)
+  }
+
+  scrollListener() {
+    const containerHeight = this.images.clientHeight
+    const scrollOffset = this.images.parentElement.scrollTop + this.images.parentElement.clientHeight
+
+    if (!this.props.images.isLoading &&
+        this.props.images.next &&
+        scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
+      this.loadMore()
+    }
+
   }
 
   handleSave() {
@@ -76,7 +103,11 @@ class ImageManagerComponent extends React.Component {
           </div>
         </div>
         <div className='c-image-manager__body'>
-          <div className='c-image-manager__images'>{images}</div>
+          <div className='c-image-manager__images'>
+            <div
+              className='c-image-manager__images__container'
+              ref={(elem) => { this.images = elem }}>{images}</div>
+          </div>
           <div className='c-image-manager__active'>
           {this.renderImagePanel()}
           </div>
@@ -107,8 +138,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchImages: (params) => {
-      dispatch(imagesActions.fetchImages(params))
+    fetchImages: (token, params) => {
+      dispatch(imagesActions.fetchImages(token, params))
+    },
+    fetchImagesPage: (token, uri) => {
+      dispatch(imagesActions.fetchImagesPage(token, uri))
     },
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
