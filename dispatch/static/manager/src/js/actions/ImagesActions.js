@@ -39,7 +39,9 @@ export function deleteImage(token, imageId) {
   return {
     type: types.DELETE_IMAGE,
     payload: DispatchAPI.images.deleteImage(token, imageId)
-      .then( json => json.deleted )
+      .then(() => ({
+        imageId: imageId
+      }))
   }
 }
 
