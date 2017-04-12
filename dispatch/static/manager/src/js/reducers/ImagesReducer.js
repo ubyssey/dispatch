@@ -8,6 +8,8 @@ const initialState = {
     isLoading: false,
     isLoaded: false,
     count: null,
+    next: null,
+    previous: null,
     data: []
   },
   image: {
@@ -22,11 +24,14 @@ function imagesReducer(state = initialState.images, action) {
       isLoading: true
     })
   case types.FETCH_IMAGES + '_FULFILLED':
+    console.log(action)
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      data: action.payload.results.result
+      next: action.payload.next,
+      previous: action.payload.previous,
+      data: action.payload.append ? R.concat(state.data, action.payload.results.result) : action.payload.results.result
     })
   default:
     return state
