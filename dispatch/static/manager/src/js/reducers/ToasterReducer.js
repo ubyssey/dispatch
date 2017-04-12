@@ -5,73 +5,50 @@ import * as types from '../constants/ActionTypes'
 const DEFAULT_TIMEOUT = 2000
 
 export default function toasterReducer(toaster = {}, action) {
+
+  function showToaster(message, intent=Intent.SUCCESS) {
+    toaster.show({
+      message: message,
+      intent: intent,
+      timeout: DEFAULT_TIMEOUT
+    })
+    return toaster
+  }
+
   switch (action.type) {
   // Setup initial toaster
   case types.SETUP_TOASTER:
     return action.toaster
 
   // Article
-  case types.SAVE_ARTICLE + '_FULFILLED':
-    toaster.show({
-      message: 'Article saved!',
-      intent: Intent.SUCCESS,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
-  case types.SAVE_ARTICLE + '_REJECTED':
-    toaster.show({
-      message: 'Article could not be saved',
-      intent: Intent.DANGER,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
+  case `${types.SAVE_ARTICLE}_FULFILLED`:
+    return showToaster('Article saved')
+  case `${types.SAVE_ARTICLE}_REJECTED`:
+    return showToaster('Article could not be saved', Intent.DANGER)
+
+  // Images
+  case `${types.DELETE_IMAGE}_FULFILLED`:
+    return showToaster('Image deleted')
+  case `${types.DELETE_IMAGE}_REJECTED`:
+    return showToaster('Image could not be deleted', Intent.DANGER)
 
   // Image
   case `${types.SAVE_IMAGE}_FULFILLED`:
-    toaster.show({
-      message: 'Image saved',
-      intent: Intent.SUCCESS,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
+    return showToaster('Image saved')
   case `${types.SAVE_IMAGE}_REJECTED`:
-    toaster.show({
-      message: 'Image could not be saved',
-      intent: Intent.DANGER,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
+    return showToaster('Image could not be saved', Intent.DANGER)
 
   // Integrations
-  case types.SAVE_INTEGRATION + '_FULFILLED':
-    toaster.show({
-      message: 'Integration updated.',
-      intent: Intent.SUCCESS,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
-  case types.DELETE_INTEGRATION + '_FULFILLED':
-    toaster.show({
-      message: 'Integration removed.',
-      intent: Intent.SUCCESS,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
-  case types.INTEGRATION_CALLBACK + '_FULFILLED':
-    toaster.show({
-      message: 'Authentication successful.',
-      intent: Intent.SUCCESS,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
-  case types.INTEGRATION_CALLBACK + '_REJECTED':
-    toaster.show({
-      message: action.payload.detail,
-      intent: Intent.DANGER,
-      timeout: DEFAULT_TIMEOUT
-    })
-    break
+  case `${types.SAVE_INTEGRATION}_FULFILLED`:
+    return showToaster('Integration updated')
+  case `${types.DELETE_INTEGRATION}_FULFILLED`:
+    return showToaster('Integration removed')
+  case `${types.INTEGRATION_CALLBACK}_FULFILLED`:
+    return showToaster('Authentication successful')
+  case `${types.INTEGRATION_CALLBACK}_REJECTED`:
+    return showToaster(action.payload.detail, Intent.DANGER)
+  default:
+    return toaster
 
   }
-  return toaster
 }
