@@ -26,6 +26,22 @@ export default function toasterReducer(toaster = {}, action) {
     })
     break
 
+  // Image
+  case `${types.SAVE_IMAGE}_FULFILLED`:
+    toaster.show({
+      message: 'Image saved',
+      intent: Intent.SUCCESS,
+      timeout: DEFAULT_TIMEOUT
+    })
+    break
+  case `${types.SAVE_IMAGE}_REJECTED`:
+    toaster.show({
+      message: 'Image could not be saved',
+      intent: Intent.DANGER,
+      timeout: DEFAULT_TIMEOUT
+    })
+    break
+
   // Integrations
   case types.SAVE_INTEGRATION + '_FULFILLED':
     toaster.show({
