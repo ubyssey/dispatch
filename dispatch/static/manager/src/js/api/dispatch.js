@@ -177,7 +177,9 @@ var DispatchAPI = {
     saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
-
+    deleteImage: (token, imageId) => {
+      return deleteRequest('images', imageId, null, token)
+    }
   },
   templates: {
     fetchTemplate: (token, templateId) => {

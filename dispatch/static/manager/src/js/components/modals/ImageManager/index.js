@@ -51,6 +51,10 @@ class ImageManagerComponent extends React.Component {
     this.props.saveImage(this.props.token, image.id, image)
   }
 
+  handleDelete() {
+    this.props.deleteImage(this.props.token, this.props.image.data)
+  }
+
   handleUpdate(field, data) {
     const image = this.props.entities.image[this.props.image.data]
 
@@ -72,7 +76,8 @@ class ImageManagerComponent extends React.Component {
         <ImagePanel
           image={image}
           update={(field, data) => this.handleUpdate(field, data)}
-          save={() => this.handleSave()} />
+          save={() => this.handleSave()}
+          delete={() => this.handleDelete()} />
       )
     } else {
       return
@@ -152,6 +157,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.saveImage(token, imageId, image))
+    },
+    deleteImage: (token, imageId) => {
+      dispatch(imagesActions.deleteImage(token, imageId))
     }
   }
 }
