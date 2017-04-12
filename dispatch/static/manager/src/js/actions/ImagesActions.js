@@ -4,13 +4,31 @@ import * as types from '../constants/ActionTypes'
 import { imageSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-export function fetchImages(params) {
+export function fetchImagesPage(token, uri) {
   return {
     type: types.FETCH_IMAGES,
-    payload: DispatchAPI.images.fetchImages(params)
+    payload: DispatchAPI.fetchPage(token, uri)
       .then( json => {
         return {
           count: json.count,
+          next: json.next,
+          previous: json.previous,
+          append: true,
+          results: normalize(json.results, arrayOf(imageSchema))
+        }
+      })
+  }
+}
+
+export function fetchImages(token, params) {
+  return {
+    type: types.FETCH_IMAGES,
+    payload: DispatchAPI.images.fetchImages(token, params)
+      .then( json => {
+        return {
+          count: json.count,
+          next: json.next,
+          previous: json.previous,
           results: normalize(json.results, arrayOf(imageSchema))
         }
       })
