@@ -24,7 +24,6 @@ function imagesReducer(state = initialState.images, action) {
       isLoading: true
     })
   case types.FETCH_IMAGES + '_FULFILLED':
-    console.log(action)
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
