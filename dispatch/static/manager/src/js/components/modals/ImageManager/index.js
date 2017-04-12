@@ -1,8 +1,8 @@
 import React from 'react'
+import R from 'ramda'
 import { connect } from 'react-redux'
 
 import * as imagesActions from '../../../actions/ImagesActions'
-import * as personsActions from '../../../actions/PersonsActions'
 
 import { Button, TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
@@ -12,19 +12,6 @@ require('../../../../styles/components/image_manager.scss')
 
 class ImageManagerComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.updateImage = this.updateImage.bind(this)
-    this.saveImage = this.saveImage.bind(this)
-    this.addAuthor = this.addAuthor.bind(this)
-    this.removeAuthor = this.removeAuthor.bind(this)
-    this.createAuthor = this.createAuthor.bind(this)
-
-    this.fetchPersons = this.fetchPersons.bind(this)
-    this.insertImage = this.insertImage.bind(this)
-  }
-
   componentDidMount() {
     this.props.fetchImages({
       limit: 20,
@@ -32,35 +19,17 @@ class ImageManagerComponent extends React.Component {
     })
   }
 
-  saveImage(image) {
+  handleSave() {
+    const image = this.props.entities.image[this.props.image.data]
     this.props.saveImage(this.props.token, image.id, image)
   }
 
-  updateImage(image) {
-    this.props.updateImage(image.id, image)
-  }
+  handleUpdate(field, data) {
+    const image = this.props.entities.image[this.props.image.data]
 
-  addAuthor(image, id) {
-    return this.props.addAuthorToImage(this.props.token, image, id)
-  }
-
-  removeAuthor(image, id) {
-    return this.props.removeAuthorFromImage(this.props.token, image, id)
-  }
-
-  createAuthor(image, fullName) {
-    return this.props.createAndAddAuthorToImage(this.props.token, image, fullName)
-  }
-
-  fetchPersons(query) {
-
-    let queryObj = {}
-
-    if (query) {
-      queryObj['q'] = query
-    }
-
-    this.props.fetchPersons(this.props.token, queryObj)
+    this.props.updateImage(
+      R.assoc(field, data, image)
+    )
   }
 
   insertImage() {
@@ -71,25 +40,15 @@ class ImageManagerComponent extends React.Component {
   renderImagePanel() {
     const image = this.props.entities.image[this.props.image.data]
 
-    const persons = {
-      results: this.props.persons.data,
-      entities: this.props.entities.persons
-    }
-
     if (image) {
       return (
         <ImagePanel
           image={image}
-          persons={persons}
-          updateImage={this.updateImage}
-          saveImage={this.saveImage}
-          addAuthor={this.addAuthor}
-          removeAuthor={this.removeAuthor}
-          createAuthor={this.createAuthor}
-          fetchPersons={this.fetchPersons} />
+          update={(field, data) => this.handleUpdate(field, data)}
+          save={() => this.handleSave()} />
       )
     } else {
-      return null
+      return
     }
   }
 
@@ -126,7 +85,7 @@ class ImageManagerComponent extends React.Component {
           <div className='c-image-manger__footer__selected'></div>
           <Button
             disabled={!this.props.image.data}
-            onClick={this.insertImage}>Insert</Button>
+            onClick={() => this.insertImage()}>Insert</Button>
         </div>
       </div>
     )
@@ -138,11 +97,9 @@ const mapStateToProps = (state) => {
   return {
     images: state.app.images.images,
     image: state.app.images.image,
-    persons: state.app.persons,
     entities: {
       images: state.app.entities.images,
-      image: state.app.entities.image,
-      persons: state.app.entities.persons
+      image: state.app.entities.image
     },
     token: state.app.auth.token
   }
@@ -161,18 +118,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.saveImage(token, imageId, image))
-    },
-    addAuthorToImage: (token, image, id) => {
-      dispatch(imagesActions.addAuthorToImage(token, image, id))
-    },
-    removeAuthorFromImage: (token, image, id) => {
-      dispatch(imagesActions.removeAuthorFromImage(token, image, id))
-    },
-    createAndAddAuthorToImage: (token, image, fullName) => {
-      dispatch(imagesActions.createAndAddAuthorToImage(token, image, fullName))
-    },
-    fetchPersons: (token, query) => {
-      dispatch(personsActions.fetchPersons(token, query))
     }
   }
 }
