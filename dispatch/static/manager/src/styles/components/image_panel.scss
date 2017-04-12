@@ -1,31 +1,49 @@
 @import '../utilities/colors';
 @import '../utilities/fonts';
 
-.c-image-panel {
+.c-image-panel__header {
   // Structure
-  padding: 15px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+
+  .pt-button {
+    margin-right: 0.75rem;
+  }
 }
 
 .c-image-panel__image {
+  // Structure
+  padding: 1rem;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+}
+
+.c-image-panel__image__img {
   // Structure
   width: 100%;
   height: auto;
   display: block;
 }
 
-.c-image-panel__filename {
+.c-image-panel__image__filename {
   // Structure
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 5px;
-  padding-left: 5px;
-  margin-bottom: 15px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 
-  // border
+  // Border
   border: 1px solid $color-border-gray;
   border-top: none;
 
   // Text
   @include font-size(13);
   color: $color-black;
+  line-height: 1.3em;
 }
