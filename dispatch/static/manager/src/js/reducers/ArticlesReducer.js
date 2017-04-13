@@ -15,6 +15,7 @@ const initialState = {
   article: {
     isLoading: false,
     isLoaded: false,
+    errors: {},
     data: null
   }
 }
@@ -69,13 +70,23 @@ function articleReducer(state = initialState.article, action) {
     return R.merge(state, {
       isLoading: true
     })
-  case types.FETCH_ARTICLE + '_FULFILLED':
-  case types.SAVE_ARTICLE + '_FULFILLED':
+  case `${types.FETCH_ARTICLE}_FULFILLED`:
+  case `${types.SAVE_ARTICLE}_FULFILLED`:
+    return R.merge(state, {
+      isLoading: false,
+      isLoaded: true,
+      errors: {},
+      data: action.payload.result
+    })
   case types.SET_ARTICLE:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
       data: action.payload.result
+    })
+  case `${types.SAVE_ARTICLE}_REJECTED`:
+    return R.merge(state, {
+      errors: action.payload
     })
   default:
     return state
