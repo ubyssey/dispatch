@@ -49,8 +49,12 @@ class ImageManagerComponent extends React.Component {
 
   }
 
+  getImage() {
+    return this.props.entities.image[this.props.image.data]
+  }
+
   handleSave() {
-    const image = this.props.entities.image[this.props.image.data]
+    const image = this.getImage()
     this.props.saveImage(this.props.token, image.id, image)
   }
 
@@ -59,16 +63,13 @@ class ImageManagerComponent extends React.Component {
   }
 
   handleUpdate(field, data) {
-    const image = this.props.entities.image[this.props.image.data]
-
     this.props.updateImage(
-      R.assoc(field, data, image)
+      R.assoc(field, data, this.getImage())
     )
   }
 
   insertImage() {
-    const image = this.props.entities.images[this.props.image.data]
-    this.props.onSubmit(image)
+    this.props.onSubmit(this.getImage())
   }
 
   onDrop(files) {
@@ -79,26 +80,12 @@ class ImageManagerComponent extends React.Component {
     })
   }
 
-  renderImagePanel() {
-    const image = this.props.entities.image[this.props.image.data]
-
-    if (image) {
-      return (
-        <ImagePanel
-          image={image}
-          update={(field, data) => this.handleUpdate(field, data)}
-          save={() => this.handleSave()}
-          delete={() => this.handleDelete()} />
-      )
-    } else {
-      return
-    }
-  }
-
   render() {
 
+    const image = this.getImage()
+
     const images = this.props.images.data.map( id => {
-      let image = this.props.entities.images[id]
+      const image = this.props.entities.images[id]
       return (
         <ImageThumb
           key={image.id}
@@ -107,6 +94,14 @@ class ImageManagerComponent extends React.Component {
           selectImage={this.props.selectImage} />
       )
     })
+
+    const imagePanel = (
+      <ImagePanel
+        image={image}
+        update={(field, data) => this.handleUpdate(field, data)}
+        save={() => this.handleSave()}
+        delete={() => this.handleDelete()} />
+    )
 
     return (
       <div className='c-image-manager'>
@@ -132,7 +127,7 @@ class ImageManagerComponent extends React.Component {
               ref={(node) => { this.images = node }}>{images}</div>
           </Dropzone>
           <div className='c-image-manager__active'>
-          {this.renderImagePanel()}
+            {image ? imagePanel : null}
           </div>
         </div>
         <div className='c-image-manager__footer'>
