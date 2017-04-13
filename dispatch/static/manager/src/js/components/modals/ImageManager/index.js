@@ -15,16 +15,25 @@ require('../../../../styles/components/image_manager.scss')
 
 const SCROLL_THRESHOLD = 20
 
+const DEFAULT_QUERY = {
+  limit: 30,
+  ordering: '-created_at'
+}
+
 class ImageManagerComponent extends React.Component {
 
   constructor(props) {
     super(props)
 
     this.scrollListener = this.scrollListener.bind(this)
+
+    this.state = {
+      q: ''
+    }
   }
 
   componentDidMount() {
-    this.props.fetchImages(this.props.token, { limit: 30, ordering: '-created_at' })
+    this.props.fetchImages(this.props.token, DEFAULT_QUERY)
 
     this.images.parentElement.addEventListener('scroll', this.scrollListener)
   }
@@ -35,6 +44,10 @@ class ImageManagerComponent extends React.Component {
 
   loadMore() {
     this.props.fetchImagesPage(this.props.token, this.props.images.next)
+  }
+
+  searchImages() {
+    this.props.fetchImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
   }
 
   scrollListener() {
@@ -70,6 +83,10 @@ class ImageManagerComponent extends React.Component {
 
   insertImage() {
     this.props.onSubmit(this.getImage())
+  }
+
+  onSearch(q) {
+    this.setState({ q: q}, this.searchImages)
   }
 
   onDrop(files) {
@@ -112,7 +129,10 @@ class ImageManagerComponent extends React.Component {
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
           </div>
           <div className='c-image-manager__header__right'>
-            <TextInput placeholder='Search' />
+            <TextInput
+              placeholder='Search'
+              value={this.state.q}
+              onChange={e => this.onSearch(e.target.value)} />
           </div>
         </div>
         <div className='c-image-manager__body'>
