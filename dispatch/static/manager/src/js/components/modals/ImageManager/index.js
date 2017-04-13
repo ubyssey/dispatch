@@ -1,6 +1,9 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import Dropzone from 'react-dropzone'
+
+import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as imagesActions from '../../../actions/ImagesActions'
 
@@ -68,6 +71,14 @@ class ImageManagerComponent extends React.Component {
     this.props.onSubmit(image)
   }
 
+  onDrop(files) {
+    files.forEach(file => {
+      let formData = new FormData()
+      formData.append('img', file, file.name)
+      this.props.createImage(this.props.token, formData)
+    })
+  }
+
   renderImagePanel() {
     const image = this.props.entities.image[this.props.image.data]
 
@@ -101,18 +112,25 @@ class ImageManagerComponent extends React.Component {
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
           <div className='c-image-manager__header__left'>
-            <Button>Upload</Button>
+            <AnchorButton
+              intent={Intent.SUCCESS}
+              onClick={() => this.dropzone.open()}>Upload</AnchorButton>
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput placeholder='Search' />
           </div>
         </div>
         <div className='c-image-manager__body'>
-          <div className='c-image-manager__images'>
+          <Dropzone
+            ref={(node) => { this.dropzone = node }}
+            className='c-image-manager__images'
+            onDrop={(files) => this.onDrop(files)}
+            disableClick={true}
+            activeClassName='c-image-manager__images--active'>
             <div
               className='c-image-manager__images__container'
-              ref={(elem) => { this.images = elem }}>{images}</div>
-          </div>
+              ref={(node) => { this.images = node }}>{images}</div>
+          </Dropzone>
           <div className='c-image-manager__active'>
           {this.renderImagePanel()}
           </div>
@@ -154,6 +172,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateImage: (imageId, image) => {
       dispatch(imagesActions.updateImage(imageId, image))
+    },
+    createImage: (token, data) => {
+      dispatch(imagesActions.createImage(token, data))
     },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.saveImage(token, imageId, image))

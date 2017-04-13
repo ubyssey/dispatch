@@ -53,13 +53,14 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
     """
-    title = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=False)
+    title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    img = serializers.ImageField(required=False, write_only=True)
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
     authors = PersonSerializer(many=True, read_only=True)
     filename = serializers.CharField(read_only=True)
-    width = serializers.IntegerField()
-    height = serializers.IntegerField()
+    width = serializers.IntegerField(read_only=True)
+    height = serializers.IntegerField(read_only=True)
 
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
 
@@ -67,6 +68,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         model = Image
         fields = (
             'id',
+            'img',
             'filename',
             'title',
             'authors',
@@ -78,11 +80,15 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'height'
         )
 
+    def create(self, validated_data):
+        return self.update(
+            Image(),
+            validated_data
+        )
+
     def update(self, instance, validated_data):
 
-        # Save properties
-        instance.title = validated_data.get('title', instance.title)
-        instance.save()
+        instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save relationships
         author_ids = validated_data.get('author_ids', None)
