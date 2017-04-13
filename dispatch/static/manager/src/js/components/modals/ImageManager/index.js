@@ -7,7 +7,7 @@ import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as imagesActions from '../../../actions/ImagesActions'
 
-import { Button, TextInput } from '../../inputs'
+import { TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
 
@@ -137,9 +137,9 @@ class ImageManagerComponent extends React.Component {
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
-          <Button
+          <AnchorButton
             disabled={!this.props.image.data}
-            onClick={() => this.insertImage()}>Insert</Button>
+            onClick={() => this.insertImage()}>Insert</AnchorButton>
         </div>
       </div>
     )
