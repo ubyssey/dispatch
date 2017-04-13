@@ -83,8 +83,9 @@ function articleReducer(state = initialState.article, action) {
       isLoading: false,
       isLoaded: true,
       data: action.payload.result
-    })
+    })    
   case `${types.SAVE_ARTICLE}_REJECTED`:
+  case `${types.CREATE_ARTICLE}_REJECTED`:
     return R.merge(state, {
       errors: action.payload
     })
