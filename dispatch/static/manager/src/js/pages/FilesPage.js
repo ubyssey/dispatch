@@ -59,7 +59,7 @@ class FilesPageComponent extends React.Component {
   }
 
   isNewPage(prevProps, props) {
-    //Returns true if the page number has changed
+    // Returns true if the page number has changed
     return prevProps.location.query.page !== props.location.query.page
   }
 
@@ -73,7 +73,7 @@ class FilesPageComponent extends React.Component {
   }
 
   onDrop(files) {
-    files.forEach((file)=> {
+    files.forEach(file => {
       let formData = new FormData()
       formData.append('file', file, file.name)
       formData.append('name', file.name)
@@ -84,7 +84,6 @@ class FilesPageComponent extends React.Component {
   onDropzoneClick() {
     this.dropzone.open()
   }
-
 
   render() {
     return (

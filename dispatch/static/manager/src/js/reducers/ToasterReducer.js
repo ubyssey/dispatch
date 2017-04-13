@@ -37,6 +37,10 @@ export default function toasterReducer(toaster = {}, action) {
     return showToaster('Image saved')
   case `${types.SAVE_IMAGE}_REJECTED`:
     return showToaster('Image could not be saved', Intent.DANGER)
+  case `${types.CREATE_IMAGE}_FULFILLED`:
+    return showToaster('Image uploaded')
+  case `${types.CREATE_IMAGE}_REJECTED`:
+    return showToaster('Image could not be uploaded', Intent.DANGER)
 
   // Integrations
   case `${types.SAVE_INTEGRATION}_FULFILLED`:

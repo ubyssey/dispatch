@@ -177,6 +177,9 @@ var DispatchAPI = {
     saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
+    createImage: (token, data) => {
+      return postMultipartRequest('images', null, data, token)
+    },
     deleteImage: (token, imageId) => {
       return deleteRequest('images', imageId, null, token)
     }
