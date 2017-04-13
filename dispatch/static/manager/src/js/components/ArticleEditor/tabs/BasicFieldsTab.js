@@ -59,7 +59,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.snippet}>
         <TextAreaInput
           placeholder='Snippet'
-          value={props.snippet}
+          value={props.snippet || ''}
           rows='5'
           onChange={ e => props.update('snippet', e.target.value) } />
       </FormInput>
