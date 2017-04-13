@@ -8,15 +8,13 @@ export function fetchImagesPage(token, uri) {
   return {
     type: types.FETCH_IMAGES,
     payload: DispatchAPI.fetchPage(token, uri)
-      .then( json => {
-        return {
-          count: json.count,
-          next: json.next,
-          previous: json.previous,
-          append: true,
-          results: normalize(json.results, arrayOf(imageSchema))
-        }
-      })
+      .then( json => ({
+        count: json.count,
+        next: json.next,
+        previous: json.previous,
+        append: true,
+        results: normalize(json.results, arrayOf(imageSchema))
+      }))
   }
 }
 
@@ -24,14 +22,12 @@ export function fetchImages(token, params) {
   return {
     type: types.FETCH_IMAGES,
     payload: DispatchAPI.images.fetchImages(token, params)
-      .then( json => {
-        return {
-          count: json.count,
-          next: json.next,
-          previous: json.previous,
-          results: normalize(json.results, arrayOf(imageSchema))
-        }
-      })
+      .then( json => ({
+        count: json.count,
+        next: json.next,
+        previous: json.previous,
+        results: normalize(json.results, arrayOf(imageSchema))
+      }))
   }
 }
 
@@ -49,12 +45,10 @@ export function searchImages(token, query) {
   return {
     type: types.SEARCH_IMAGES,
     payload: DispatchAPI.images.searchImages(token, query)
-      .then( json => {
-        return {
-          count: json.count,
-          results: normalize(json.results, arrayOf(imageSchema))
-        }
-      })
+      .then( json => ({
+        count: json.count,
+        results: normalize(json.results, arrayOf(imageSchema))
+      }))
   }
 }
 
@@ -62,7 +56,15 @@ export function saveImage(token, imageId, data) {
   return {
     type: types.SAVE_IMAGE,
     payload: DispatchAPI.images.saveImage(token, imageId, data)
-      .then( json => normalize(json, imageSchema) )
+      .then(json => normalize(json, imageSchema))
+  }
+}
+
+export function createImage(token, data) {
+  return {
+    type: types.CREATE_IMAGE,
+    payload: DispatchAPI.images.createImage(token, data)
+      .then(json => normalize(json, imageSchema))
   }
 }
 

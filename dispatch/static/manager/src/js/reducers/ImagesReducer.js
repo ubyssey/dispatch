@@ -33,6 +33,10 @@ function imagesReducer(state = initialState.images, action) {
       previous: action.payload.previous,
       data: action.payload.append ? R.concat(state.data, action.payload.results.result) : action.payload.results.result
     })
+  case `${types.CREATE_IMAGE}_FULFILLED`:
+    return R.merge(state, {
+      data: R.concat([action.payload.result], state.data)
+    })
   case `${types.DELETE_IMAGE}_FULFILLED`:
     return R.merge(state, {
       data: R.without([action.payload.imageId], state.data)
