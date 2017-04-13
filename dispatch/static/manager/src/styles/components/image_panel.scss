@@ -9,7 +9,7 @@
   padding-bottom: 0.75rem;
 
   // Border
-  border-bottom: 1px solid $color-border-gray;
+  border-bottom: thin solid $color-border-gray;
 
   .pt-button {
     margin-right: 0.75rem;
@@ -21,7 +21,7 @@
   padding: 1rem;
 
   // Border
-  border-bottom: 1px solid $color-border-gray;
+  border-bottom: thin solid $color-border-gray;
 }
 
 .c-image-panel__image__img {
@@ -33,13 +33,10 @@
 
 .c-image-panel__image__filename {
   // Structure
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
+  padding: 0.5rem;
 
   // Border
-  border: 1px solid $color-border-gray;
+  border: thin solid $color-border-gray;
   border-top: none;
 
   // Text
