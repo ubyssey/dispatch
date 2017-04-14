@@ -1,3 +1,4 @@
 from django.dispatch import Signal
 
-article_post_save = Signal(providing_args=['article'])
+post_create = Signal(providing_args=['instance'])
+post_update = Signal(providing_args=['instance'])

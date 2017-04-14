@@ -1,18 +1,18 @@
 import datetime
-from PIL import Image as Img
-import StringIO, json, os, re
-from string import punctuation
+import StringIO
+import os
+import re
+
 from jsonfield import JSONField
+from PIL import Image as Img
 
 from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
-    SlugField, SET_NULL, permalink)
-
+    SlugField, SET_NULL)
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinLengthValidator, MaxLengthValidator
-from django.utils.functional import cached_property
 from django.utils import timezone
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -23,7 +23,6 @@ from django.template import loader, Context
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
 from dispatch.apps.core.models import Person, User
-from dispatch.apps.frontend.models import Script, Snippet, Stylesheet
 from dispatch.apps.frontend.embeds import embedlib
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -52,66 +51,40 @@ class Section(Model):
         return self.name
 
 class Publishable(Model):
+    """
+    Base model for Article and Page models.
+    """
 
-    preview = BooleanField(default=False)
     revision_id = PositiveIntegerField(default=0)
     head = BooleanField(default=False)
 
     is_published = BooleanField(default=False)
-
     is_active = BooleanField(default=True)
+
     slug = SlugField(max_length=255)
 
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
 
-    DRAFT = 0
-    PUBLISHED = 1
-    PITCH = 2
-    COPY = 3
-    MANAGE = 4
-
-    STATUS_CHOICES = (
-        (DRAFT, 'Draft'),
-        (PUBLISHED, 'Published'),
-        (PITCH, 'Pitch'),
-        (COPY, 'To be copyedited'),
-        (MANAGE, 'To be managed'),
-    )
-
-    status = PositiveIntegerField(default=0, choices=STATUS_CHOICES)
-    published_at = DateTimeField(null=True)
-
-    featured_image = ForeignKey('ImageAttachment', related_name='%(class)s_featured_image', blank=True, null=True)
-
-    images = ManyToManyField("Image", through='ImageAttachment', related_name='%(class)s_images')
-    videos = ManyToManyField('Video', related_name='%(class)s_videos')
+    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
 
     seo_keyword = CharField(max_length=100, null=True)
     seo_description = TextField(null=True)
 
-    scripts = ManyToManyField(Script, related_name='%(class)s_scripts')
-    stylesheets = ManyToManyField(Stylesheet, related_name='%(class)s_stylesheets')
-    snippets = ManyToManyField(Snippet, related_name='%(class)s_snippets')
-
     integrations = JSONField(default={})
 
-    content = TextField()
+    content = JSONField(default=[])
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
+    published_at = DateTimeField(null=True)
 
     def add_view(self):
         self.views += 1
         self.save(revision=False)
-
-    def template_fields(self):
-        if not hasattr(self, 'template_fields_data'):
-            self.template_fields_data = self.get_template_fields()
-        return self.template_fields_data
 
     def get_template_path(self):
         if self.template != 'default':
@@ -129,37 +102,6 @@ class Publishable(Model):
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template().to_json()
-
-    def get_status(self):
-        for status in self.STATUS_CHOICES:
-            if status[0] == self.status:
-                return status[1]
-        return 'Draft'
-
-    def get_json(self):
-        """
-        Returns a JSON representation (if possible) of the article content.
-        """
-        def prepare_json(nodes):
-            """
-            Processes each in the document, returning its full object representation.
-            """
-            for i, node in enumerate(nodes):
-                if type(node) is dict:
-                    # If node is a dictionary, replace data attribute with processed data.
-                    nodes[i]['data'] = embedlib.json(node['type'], node['data'])
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    nodes[i] = {
-                        'type': 'paragraph',
-                        'data': node,
-                    }
-            return nodes
-        # Attempt to load content as JSON, return raw content as fallback
-        try:
-            return prepare_json(json.loads(self.content))
-        except ValueError:
-            return self.content
 
     def get_html(self):
         """
@@ -191,7 +133,7 @@ class Publishable(Model):
 
         try:
             # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(json.loads(self.content))
+            return prepare_html(self.content)
         except ValueError:
             return self.content
 
@@ -214,9 +156,15 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
+        """
+        Handles the saving/updating of a Publishable instance.
+
+        Arguments:
+        revision - if True, a new version of this Publishable will be created.
+        """
 
         if revision:
-            # If this is a revision, set it to be the head of the list and increment the revision id.
+            # If this is a revision, set it to be the head of the list and increment the revision id
             self.head = True
             self.revision_id += 1
 
@@ -227,17 +175,19 @@ class Publishable(Model):
                 type(self).objects.filter(parent=self.parent, head=True).update(head=False)
 
                 # Clear the instance id to force Django to save a new instance.
-                # Both fields (pk, id) required for this to work -- something to do with model inheritance.
+                # Both fields (pk, id) required for this to work -- something to do with model inheritance
                 self.pk = None
                 self.id = None
+
+                # New version is unpublished by default
                 self.is_published = False
 
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
-        # Set created_at to now, but only for first version
-        if self.created_at is None:
+        # Set created_at to current time, but only for first version
+        if not self.created_at:
             self.created_at = timezone.now()
 
         super(Publishable, self).save(*args, **kwargs)
@@ -248,6 +198,42 @@ class Publishable(Model):
             super(Publishable, self).save(update_fields=['parent'])
 
         return self
+
+    def save_featured_image(self, data):
+        """
+        Handles saving the featured image.
+
+        If data is None, the featured image will be removed.
+
+        `data` should be dictionary with the following format:
+          {
+            'image_id': int,
+            'caption': str,
+            'credit': str
+          }
+        """
+
+        attachment = self.featured_image
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+            return
+
+        if not attachment:
+            attachment = ImageAttachment()
+
+        attachment.image_id = data.get('image_id', attachment.image_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_image = attachment
 
     def get_published_version(self):
         try:
@@ -272,24 +258,8 @@ class Publishable(Model):
         except:
             return self
 
-    def check_stale(self):
-        if self.revision_id == 0:
-            return (False, self)
-        head = type(self).objects.get(parent=self.parent, head=True)
-        return (head.revision_id != self.revision_id, head)
-
     class Meta:
         abstract = True
-
-class Comment(Model):
-    article = ForeignKey('Article')
-
-    user = ForeignKey(User)
-    content = TextField()
-
-    votes = PositiveIntegerField(default=0)
-
-    created_at = DateTimeField(auto_now_add=True)
 
 class Article(Publishable):
 
@@ -304,8 +274,6 @@ class Article(Publishable):
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
-
-    est_reading_time = PositiveIntegerField(null=True)
 
     READING_CHOICES = (
         ('anytime', 'Anytime'),
@@ -332,68 +300,13 @@ class Article(Publishable):
         return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
 
     def get_reading_list(self, ref=None, dur=None):
-        if ref is not None:
-            if ref == 'frontpage':
-                articles = Article.objects.get_frontpage(exclude=[self.parent_id])
-                name = 'Top Stories'
-            elif ref == 'popular':
-                articles = Article.objects.get_popular(dur=dur).exclude(pk=self.id)[:5]
-                name = "Most popular this week"
-        else:
-            articles = self.get_related()
-            name = self.section.name
+        articles = self.get_related()
+        name = self.section.name
 
         return {
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
-
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-                if 'attachment_id' in node['data']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-                attachment.image = image
-                attachment.article = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-
-        attachment.image_id = data.get('image')
-        attachment.caption = data.get('caption', None)
-        attachment.credit = data.get('credit', None)
-
-        attachment.article = self
-        attachment.save()
-
-        self.featured_image = attachment
-
-    def save_related(self, data):
-        tags = data["tags-list"]
-        authors = data["authors-list"]
-        if tags:
-            self.save_tags(tags)
-        if authors:
-            self.save_authors(authors)
 
     def save_tags(self, tag_ids):
         self.tags.clear()
@@ -414,21 +327,6 @@ class Article(Publishable):
                 self.topic = topic
             except Topic.DoesNotExist:
                 pass
-
-    def calc_est_reading_time(self):
-
-        def count_words(string):
-            r = re.compile(r'[{}]'.format(punctuation))
-            new_string = r.sub(' ', string)
-            return len(new_string.split())
-
-        words = 0
-
-        for node in json.loads(self.content):
-            if type(node) is unicode:
-                words += count_words(node)
-
-        return int(words / 200) # Average reading speed = 200 wpm
 
     def save_authors(self, authors):
         # Clear current authors
@@ -478,46 +376,6 @@ class Page(Publishable):
 
     def get_author_string(self):
         return None
-
-    def save_attachments(self):
-        """
-        Saves all attachments embedded in article content.
-
-        TODO: add abstraction to this function -- delegate saving to embed models/controllers.
-        """
-        nodes = json.loads(self.content)
-        for node in nodes:
-            if type(node) is dict and node['type'] == 'image':
-                image_id = node['data']['image_id']
-                image = Image.objects.get(id=image_id)
-
-                if node['data']['attachment_id']:
-                    attachment = ImageAttachment.objects.get(id=node['data']['attachment_id'])
-                else:
-                    attachment = ImageAttachment()
-
-                attachment.caption = node['data']['caption']
-                attachment.credit = node['data']['credit']
-
-                attachment.image = image
-                attachment.page = self
-                attachment.save()
-                node['data'] = {
-                    'attachment_id': attachment.id,
-                }
-
-        self.content = json.dumps(nodes)
-
-    def save_featured_image(self, data):
-        attachment = ImageAttachment()
-        attachment.image_id = data['id']
-
-        attachment.caption = data['caption']
-        attachment.credit = data['credit']
-
-        attachment.page = self
-        attachment.save()
-        self.featured_image = attachment
 
 class Author(Model):
     article = ForeignKey(Article, null=True)
@@ -666,9 +524,10 @@ class ImageAttachment(Model):
         @staticmethod
         def json(data):
             id = data['attachment_id']
-            attach = ImageAttachment.objects.get(id=id)
 
-            if attach.image is None:
+            try:
+                attach = ImageAttachment.objects.get(id=id)
+            except ImageAttachment.DoesNotExist:
                 return
 
             return {
@@ -741,7 +600,6 @@ class File(Model):
 
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
-    tag = CharField(max_length=100)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
