@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
 
-from dispatch.apps.content.models import Article, Person, Section
+from dispatch.apps.content.models import Section
 
 class SectionsTests(DispatchAPITestCase):
 
@@ -184,7 +184,7 @@ class SectionsTests(DispatchAPITestCase):
         Ensure that it is possible to get a specific section
         """
 
-        # Creations multiple sections
+        # Create multiple sections
         section_1 = Section.objects.create(slug='section-1', name='Section 1')
         section_2 = Section.objects.create(slug='section-2', name='Section 2')
         section_3 = Section.objects.create(slug='section-3', name='Section 3')
