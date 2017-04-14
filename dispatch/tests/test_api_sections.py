@@ -135,6 +135,11 @@ class SectionsTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+        try:
+            Section.objects.get(pk=section.data['id'])
+        except Section.DoesNotExist:
+            self.fail('Section should not have been deleted')
+        
     def test_delete_section(self):
         """
         Ensure that section can be deleted
