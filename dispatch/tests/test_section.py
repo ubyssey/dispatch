@@ -155,16 +155,38 @@ class SectionsTests(DispatchAPITestCase):
 		Ensure that it is possible to get all sections
 		"""
 		
+		# Create multiple sections
 		Section.objects.create(slug='section-1', name='Section 1')
 		Section.objects.create(slug='section-2', name='Section 2')
 		Section.objects.create(slug='section-3', name='Section 3')
 		
 		url = reverse('api-sections-list')
 
-		response = self.client.get(url, None, format='json')
+		response = self.client.get(url, format='json')
 		
+		# Check that all sections are returned 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(response.data['count'], 3)
 		self.assertEqual(response.data['results'][0]['slug'], 'section-1') 
 		self.assertEqual(response.data['results'][1]['slug'], 'section-2')
 		self.assertEqual(response.data['results'][2]['slug'], 'section-3')
+		
+	def test_get_specific_section(self):
+		"""
+		Ensure that it is possible to get a specific section 
+		"""
+		
+		# Creations multiple sections 
+		section_1 = Section.objects.create(slug='section-1', name='Section 1')
+		section_2 = Section.objects.create(slug='section-2', name='Section 2')
+		section_3 = Section.objects.create(slug='section-3', name='Section 3')
+		
+		url = reverse('api-sections-detail', args=[section_2.pk])
+
+		response = self.client.get(url, format='json')
+		
+		# Check that section 2 is returned 
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data['slug'], 'section-2')
+		
+		
