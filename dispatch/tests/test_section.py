@@ -149,3 +149,22 @@ class SectionsTests(DispatchAPITestCase):
 		# Can't delete a section that has already been deleted
 		response = self.client.delete(url, format='json')
 		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+		
+	def test_get_all_sections(self):
+		"""
+		Ensure that it is possible to get all sections
+		"""
+		
+		Section.objects.create(slug='section-1', name='Section 1')
+		Section.objects.create(slug='section-2', name='Section 2')
+		Section.objects.create(slug='section-3', name='Section 3')
+		
+		url = reverse('api-sections-list')
+
+		response = self.client.get(url, None, format='json')
+		
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data['count'], 3)
+		self.assertEqual(response.data['results'][0]['slug'], 'section-1') 
+		self.assertEqual(response.data['results'][1]['slug'], 'section-2')
+		self.assertEqual(response.data['results'][2]['slug'], 'section-3')
