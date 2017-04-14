@@ -306,7 +306,7 @@ class ArticleSerializer(DispatchModelSerializer):
 
         # Indicate whether instance was published/unpublished
         instance.was_published = not was_published and instance.is_published
-        instance.was_unpublished = was_unpublished and not instance.is_published
+        instance.was_unpublished = was_published and not instance.is_published
 
         return instance
 
