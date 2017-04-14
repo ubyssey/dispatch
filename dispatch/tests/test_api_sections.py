@@ -100,20 +100,23 @@ class SectionsTests(DispatchAPITestCase):
         Ensure that section can be updated
         """
 
-        response = self._create_section()
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        section = self._create_section()
 
         # Check data
-        self.assertEqual(response.data['name'], 'Test name')
-        self.assertEqual(response.data['slug'], 'test-section')
+        self.assertEqual(section.data['name'], 'Test name')
+        self.assertEqual(section.data['slug'], 'test-section')
 
-        # Update data
-        response.data['name'] = 'Updated name'
-        response.data['slug'] = 'Updated slug'
+        data = {
+            'name': 'new name',
+            'slug': 'new-slug',
+        }
+        
+        url = reverse('api-sections-detail', args=[section.data['id']])
+        
+        updated_section = self.client.patch(url, data, format='json')
 
-        self.assertEqual(response.data['name'], 'Updated name')
-        self.assertEqual(response.data['slug'], 'Updated slug')
+        self.assertEqual(updated_section.data['name'], 'new name')
+        self.assertEqual(updated_section.data['slug'], 'new-slug')
 
     def test_delete_section_unauthorized(self):
         """
