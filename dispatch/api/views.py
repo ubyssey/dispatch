@@ -96,24 +96,6 @@ class ArticleViewSet(DispatchModelViewSet):
         return Response(serializer.data)
 
     @detail_route(methods=['get'],)
-    def publish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.publish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def unpublish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.unpublish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):
         revision_id = request.query_params.get('revision_id', None)
 

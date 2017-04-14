@@ -1,7 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from dispatch.core.signals import post_create, post_update
+from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
+
+def was_published(instance):
+    return hasattr(instance, 'was_published') and instance.was_published
+
+def was_unpublished(instance):
+    return hasattr(instance, 'was_unpublished') and instance.was_unpublished
 
 class DispatchModelViewSet(ModelViewSet):
     """Custom viewset to add Dispatch signals to default ModelViewSet"""
@@ -11,10 +17,22 @@ class DispatchModelViewSet(ModelViewSet):
         instance = serializer.save()
         post_create.send(sender=self.model, instance=instance, user=self.request.user)
 
+        if was_published(instance):
+            post_publish.send(sender=self.model, instance=instance, user=self.request.user)
+
+        if was_unpublished(instance):
+            post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
+
     def perform_update(self, serializer):
         # Override perform_update to send post_update signal
         instance = serializer.save()
         post_update.send(sender=self.model, instance=instance, user=self.request.user)
+
+        if was_published(instance):
+            post_publish.send(sender=self.model, instance=instance, user=self.request.user)
+
+        if was_unpublished(instance):
+            post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
 
