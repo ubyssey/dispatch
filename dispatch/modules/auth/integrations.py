@@ -4,7 +4,7 @@ from django.db.models import signals
 from django.template import loader, Context
 from django.utils.html import escape
 
-from dispatch.core.signals import article_post_save
+from dispatch.core.signals import post_create, post_update
 from dispatch.apps.core.models import Integration
 from dispatch.apps.content.models import Article
 
@@ -148,13 +148,13 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
         return template.render(context)
 
     @classmethod
-    def update_instant_article(cls, sender, article, **kwargs):
+    def update_instant_article(cls, sender, instance, **kwargs):
 
-        integration = article.integrations.get('fb-instant-articles', {})
+        integration = instance.integrations.get('fb-instant-articles', {})
 
         if integration.get('enabled'):
 
-            html = cls.render_article(article)
+            html = cls.render_article(instance)
 
             settings = cls.get_settings()
 
@@ -171,4 +171,5 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
 integrationLib.register(FacebookInstantArticlesIntegration)
 
 # Connect signals
-article_post_save.connect(FacebookInstantArticlesIntegration.update_instant_article, sender=Article)
+post_create.connect(FacebookInstantArticlesIntegration.update_instant_article, sender=Article)
+post_update.connect(FacebookInstantArticlesIntegration.update_instant_article, sender=Article)

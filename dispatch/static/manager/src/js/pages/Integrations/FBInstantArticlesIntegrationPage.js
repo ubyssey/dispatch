@@ -1,20 +1,20 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
 
-import { FormInput, TextInput, SelectInput } from '../../components/inputs'
 import Panel from '../../components/Panel'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import {
+  InstantArticlesClientEditor,
+  InstantArticlesPageEditor,
+  InstantArticlesEnabledEditor
+} from '../../components/integrations/FBInstantArticles'
 
 import * as integrationActions from '../../actions/IntegrationActions'
 
 const INTEGRATION_ID = 'fb-instant-articles'
-
-function fbLoginURI(clientId, redirectURI) {
-  return `https://www.facebook.com/v2.8/dialog/oauth?client_id=${clientId}&redirect_uri=${window.location.origin}/admin${redirectURI}?callback=1&scope=pages_manage_instant_articles,pages_show_list`
-}
 
 class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
@@ -65,10 +65,6 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     this.setState({ editMode: false })
   }
 
-  saveIntegration(integration) {
-    this.props.saveIntegration(this.props.token, INTEGRATION_ID, integration)
-  }
-
   updateSettings(settings) {
     return this.props.updateIntegration(
       INTEGRATION_ID,
@@ -89,51 +85,9 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
     if (!this.props.integration.settings.page_id && R.path(['callback', 'pages', 'data'], this.props.integration)) {
       const page = this.props.integration.callback.pages.data[0]
       this.updateFacebookPage(page)
+      this.props.resetURI(this.props.location.pathname)
     }
 
-  }
-
-  renderFacebookPages() {
-
-    let pageMap = {}
-
-    const options = this.props.integration.callback.pages.data.map(page => {
-
-      // Add access token to map
-      pageMap[page.id] = page
-
-      return {
-        value: page.id,
-        label: page.name
-      }
-    })
-
-    return (
-
-      <FormInput label='Choose a Facebook Page to connect'>
-        <SelectInput
-          options={options}
-          selected={this.props.integration.settings.page_id}
-          onChange={e => this.updateFacebookPage(pageMap[e.target.value])} />
-          <AnchorButton
-            onClick={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
-            intent={Intent.SUCCESS}>
-            Enable Instant Articles
-          </AnchorButton>
-      </FormInput>
-
-    )
-  }
-
-  renderFacebookLogin() {
-    return (
-      <FormInput label='Authenticate with Facebook'>
-        <br />
-        <AnchorButton
-          href={fbLoginURI(this.props.integration.settings.client_id, this.props.location.pathname)}
-          intent={Intent.PRIMARY}>Authenticate with Facebook</AnchorButton>
-      </FormInput>
-    )
   }
 
   renderFacebookInstantArticles() {
@@ -143,75 +97,33 @@ class FBInstantArticlesIntegrationPageComponent extends React.Component {
 
     if (settings.page_configured) {
       return (
-        <FormInput label={`Instant Articles is enabled for ${settings.page_name}`}>
-          <br />
-          <AnchorButton
-            onClick={()  => this.props.deleteIntegration(this.props.token, INTEGRATION_ID)}
-            intent={Intent.DANGER}>
-            Remove integration
-          </AnchorButton>
-        </FormInput>
+        <InstantArticlesEnabledEditor
+          pageName={settings.page_name}
+          onDelete={() => this.props.deleteIntegration(this.props.token, INTEGRATION_ID)} />
       )
     }
 
     if (settings.client_configured && !this.state.editMode) {
       return (
-
-        <div>
-          <FormInput label='Facebook App ID'>
-            <TextInput
-              disabled={true}
-              value={settings.client_id}
-              fill={true} />
-
-            <AnchorButton onClick={() => this.enterEditMode()}>
-              Change app information
-            </AnchorButton>
-          </FormInput>
-
-          {callback.pages ? this.renderFacebookPages() : this.renderFacebookLogin()}
-
-        </div>
+        <InstantArticlesPageEditor
+          clientId={settings.client_id}
+          pages={R.path(['pages', 'data'], callback)}
+          pathname={this.props.location.pathname}
+          onChange={data => this.updateFacebookPage(data)}
+          onSave={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
+          enterEditMode={() => this.enterEditMode()} />
       )
     }
 
-    const cancelButton = (
-      <AnchorButton
-        onClick={() => this.exitEditMode()}>
-        Cancel
-      </AnchorButton>
-    )
-
     return (
-      <div>
-        <FormInput label='Facebook App ID'>
-          <TextInput
-            placeholder='App ID'
-            value={settings.client_id || ''}
-            fill={true}
-            onChange={ e => this.updateSettings({ client_id: e.target.value }) } />
-        </FormInput>
-
-        <FormInput label='Facebook App Secret'>
-          <TextInput
-            placeholder='App Secret'
-            value={settings.client_secret || ''}
-            fill={true}
-            type='password'
-            onChange={ e => this.updateSettings({ client_secret: e.target.value }) } />
-        </FormInput>
-
-        <FormInput>
-          <AnchorButton
-            intent={Intent.SUCCESS}
-            onClick={() => this.saveIntegration(this.props.integration)}>
-            Save settings
-          </AnchorButton>
-          {this.state.editMode ? cancelButton : null}
-        </FormInput>
-      </div>
+      <InstantArticlesClientEditor
+        clientId={settings.client_id}
+        clientSecret={settings.client_secret}
+        onChange={data => this.updateSettings(data)}
+        onSave={() => this.props.saveIntegration(this.props.token, INTEGRATION_ID, this.props.integration)}
+        editMode={this.state.editMode}
+        exitEditMode={() => this.exitEditMode()}/>
     )
-
   }
 
   render() {
@@ -264,6 +176,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateIntegration: (integrationId, data) => {
       dispatch(integrationActions.updateIntegration(integrationId, data))
+    },
+    resetURI: (pathname) => {
+      dispatch(push(pathname))
     }
   }
 }

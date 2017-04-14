@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
-
 from dispatch.apps.content.models import Article, Person, Section
 
 class ArticlesTests(DispatchAPITestCase):
@@ -28,7 +27,7 @@ class ArticlesTests(DispatchAPITestCase):
             'section_id': section.id,
             'author_ids': [person.id],
             'slug': 'test-article',
-            'content_json': '[]'
+            'content': []
         }
 
         return self.client.post(url, data, format='json')
@@ -75,7 +74,7 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.assertTrue('author_ids' in response.data)
-        self.assertTrue('content_json' in response.data)
+        self.assertTrue('content' in response.data)
         self.assertTrue('slug' in response.data)
         self.assertTrue('section_id' in response.data)
 
