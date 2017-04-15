@@ -39,6 +39,7 @@ export default function entitiesReducer(state = initialState, action) {
     })
   case types.FETCH_ARTICLE + '_FULFILLED':
   case types.SAVE_ARTICLE + '_FULFILLED':
+  case `${types.PUBLISH_ARTICLE}_FULFILLED`:
   case types.SET_ARTICLE:
     return R.merge(state, {
       articles: R.merge(state.articles, action.payload.entities.articles),
@@ -66,7 +67,7 @@ export default function entitiesReducer(state = initialState, action) {
       files: R.merge(state.files, action.payload.result.entities.files)
     })
   }
-  
+
   // Images
   case types.FETCH_IMAGES + '_FULFILLED':
     return R.merge(state, {
