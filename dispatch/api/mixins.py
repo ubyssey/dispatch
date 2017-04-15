@@ -1,13 +1,9 @@
+from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
-
-def was_published(instance):
-    return hasattr(instance, 'was_published') and instance.was_published
-
-def was_unpublished(instance):
-    return hasattr(instance, 'was_unpublished') and instance.was_unpublished
 
 class DispatchModelViewSet(ModelViewSet):
     """Custom viewset to add Dispatch signals to default ModelViewSet"""
@@ -17,22 +13,62 @@ class DispatchModelViewSet(ModelViewSet):
         instance = serializer.save()
         post_create.send(sender=self.model, instance=instance, user=self.request.user)
 
-        if was_published(instance):
-            post_publish.send(sender=self.model, instance=instance, user=self.request.user)
-
-        if was_unpublished(instance):
-            post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
-
     def perform_update(self, serializer):
         # Override perform_update to send post_update signal
         instance = serializer.save()
         post_update.send(sender=self.model, instance=instance, user=self.request.user)
 
-        if was_published(instance):
-            post_publish.send(sender=self.model, instance=instance, user=self.request.user)
+class DispatchPublishableMixin(object):
+    """Custom mixin that adds publish, unpublish routes to ModelViewSet"""
 
-        if was_unpublished(instance):
-            post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
+    def get_publishable_queryset(self):
+
+        # Only show unpublished articles to authenticated users
+        if self.request.user.is_authenticated():
+            queryset = self.model.objects.all()
+        else:
+            queryset = self.model.objects.filter(is_published=True)
+
+        version = self.request.query_params.get('version', None)
+
+        if version is not None:
+            queryset = queryset.filter(revision_id=version)
+        else:
+            queryset = queryset.filter(head=True)
+
+        return queryset
+
+    def perform_publish(self, serializer):
+        # Publish instance and send post_publish signal
+        instance = serializer.publish()
+        post_publish.send(sender=self.model, instance=instance, user=self.request.user)
+
+    def perform_unpublish(self, serializer):
+        # Unpublish instance and send post_unpublish signal
+        instance = serializer.unpublish()
+        post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
+
+    @detail_route(methods=['post'])
+    def publish(self, request, parent_id=None):
+
+        instance = self.get_object()
+
+        serializer = self.get_serializer(instance)
+
+        self.perform_publish(serializer)
+
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def unpublish(self, request, parent_id=None):
+
+        instance = self.get_object()
+
+        serializer = self.get_serializer(instance)
+
+        self.perform_unpublish(serializer)
+
+        return Response(serializer.data)
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
 
@@ -53,3 +89,11 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
         if not self.context.get('request') or not self.context.get('request').user.is_authenticated():
             for field in authenticated_fields:
                 self.fields.pop(field)
+
+class DispatchPublishableSerializer(object):
+
+    def publish(self):
+        return self.instance.publish()
+
+    def unpublish(self):
+        return self.instance.unpublish()
