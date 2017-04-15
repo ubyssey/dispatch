@@ -114,9 +114,13 @@ export function publishArticle(token, articleId, data) {
   }
 }
 
-// export function unpublishArticle(token, articleId, data) {
-//
-// }
+export function unpublishArticle(token, articleId) {
+  return {
+    type: types.UNPUBLISH_ARTICLE,
+    payload: DispatchAPI.articles.unpublishArticle(token, articleId)
+      .then( json => normalize(json, articleSchema) )
+  }
+}
 
 export function toggleArticle(articleId) {
   return {
