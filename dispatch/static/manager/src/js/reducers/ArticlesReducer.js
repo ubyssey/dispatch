@@ -63,7 +63,7 @@ function articlesReducer(state = initialState.articles, action) {
   }
 }
 
-function articleReducer(state = initialState.article, action) {
+function articleReducer(state = initialState.article, action) {  
   switch (action.type) {
   case types.FETCH_ARTICLE + '_PENDING':
     return R.merge(state, {
@@ -71,6 +71,7 @@ function articleReducer(state = initialState.article, action) {
     })
   case types.FETCH_ARTICLE + '_FULFILLED':
   case types.SAVE_ARTICLE + '_FULFILLED':
+  case types.PUBLISH_ARTICLE + '_FULFILLED':
   case types.SET_ARTICLE:
     return R.merge(state, {
       isLoading: false,

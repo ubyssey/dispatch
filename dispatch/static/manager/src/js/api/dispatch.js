@@ -141,6 +141,9 @@ var DispatchAPI = {
     createArticle: (token, data) => {
       return postRequest('articles', null, data, token)
     },
+    publishArticle: (token, articleId) => {
+      return postRequest('articles.publish', articleId, null, token)
+    },
     deleteArticles: (token, articleIds) => {
       return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
     }

@@ -88,6 +88,36 @@ export function createArticle(token, data) {
   }
 }
 
+export function publishArticle(token, articleId, data) {
+
+  data = preparePayload(data)
+
+  return function(dispatch) {
+
+    dispatch(() => ({ type: `${types.PUBLISH_ARTICLE}_PENDING` }))
+
+    DispatchAPI.articles.saveArticle(token, articleId, data)
+      .then( () => DispatchAPI.articles.publishArticle(token, articleId))
+      .then( json => normalize(json, articleSchema) )
+      .then( payload => {
+        dispatch({
+          type: `${types.PUBLISH_ARTICLE}_FULFILLED`,
+          payload: payload
+        })
+      })
+      .catch( error => {
+        dispatch(() => ({
+          type: `${types.PUBLISH_ARTICLE}_REJECTED`,
+          payload: error
+        }))
+      })
+  }
+}
+
+// export function unpublishArticle(token, articleId, data) {
+//
+// }
+
 export function toggleArticle(articleId) {
   return {
     type: types.TOGGLE_ARTICLE,

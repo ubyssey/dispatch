@@ -21,8 +21,6 @@ class ArticleEditorComponent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.handleSave = this.handleSave.bind(this)
-    this.handleUpdate = this.handleUpdate.bind(this)
     this.fetchArticleVersion = this.fetchArticleVersion.bind(this)
     this.toggleStyle = this.toggleStyle.bind(this)
   }
@@ -66,7 +64,7 @@ class ArticleEditorComponent extends React.Component {
     return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
   }
 
-  handleSave() {
+  saveArticle() {
     if (this.props.isNew) {
       this.props.createArticle(this.props.token, this.getArticle())
     } else {
@@ -76,6 +74,14 @@ class ArticleEditorComponent extends React.Component {
         this.getArticle()
       )
     }
+  }
+
+  publishArticle() {
+    this.props.publishArticle(
+      this.props.token,
+      this.props.articleId,
+      this.getArticle()
+    )
   }
 
   toggleStyle(style) {
@@ -108,21 +114,23 @@ class ArticleEditorComponent extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ArticleToolbar
-            saveArticle={this.handleSave}
+            saveArticle={() => this.saveArticle()}
+            publishArticle={() => this.publishArticle()}
             fetchArticleVersion={this.fetchArticleVersion}
-            article={article} />
+            article={article}
+            isNew={this.props.isNew} />
           <div className='u-container-editor'>
             <ArticleContentEditor
               article={article}
               isNew={this.props.isNew}
-              onUpdate={this.handleUpdate}
+              onUpdate={(field, value) => this.handleUpdate(field, value)}
               openModal={this.props.openModal}
               closeModal={this.props.closeModal} />
             <ArticleSidebar
               article={article}
               entities={this.props.entities}
               integrations={this.props.integrations}
-              update={this.handleUpdate} />
+              update={(field, value) => this.handleUpdate(field, value)} />
           </div>
         </div>
       </DocumentTitle>
@@ -158,6 +166,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     createArticle: (token, data) => {
       dispatch(articlesActions.createArticle(token, data))
+    },
+    publishArticle: (token, articleId, data) => {
+      dispatch(articlesActions.publishArticle(token, articleId, data))
     },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))
