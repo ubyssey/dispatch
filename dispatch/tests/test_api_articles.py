@@ -14,11 +14,9 @@ class ArticlesTests(DispatchAPITestCase):
 
         # Create test person
         person = Person.objects.create(full_name='Test Person')
-        person.save()
 
         # Create test section
         section = Section.objects.create(name='Test Section', slug='test')
-        section.save()
 
         url = reverse('api-articles-list')
 
@@ -235,3 +233,52 @@ class ArticlesTests(DispatchAPITestCase):
 
         self.assertEqual(response.data['current_version'], 2)
         self.assertEqual(response.data['is_published'], False)
+
+    def test_publish_article_unauthorized(self):
+        """
+        Publish article should fail with unauthorized request
+        """
+
+        article = self._create_article()
+
+        # Clear authentication credentials
+        self.client.credentials()
+
+        url = reverse('api-articles-publish', args=[article.data['id']])
+        response = self.client.post(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        articles = Article.objects.filter(parent_id=article.data['id'], is_published=True)
+
+        self.assertEqual(len(articles), 0)
+
+    def test_list_published_articles(self):
+        """
+        Unpublished articles should not be displayed to unauthorized users
+        """
+
+        section = Section.objects.create(name='Test Section', slug='test')
+
+        article_1 = Article.objects.create(headline='Article 1', slug='article-1', section=section)
+        article_2 = Article.objects.create(headline='Article 2', slug='article-2', section=section)
+        article_3 = Article.objects.create(headline='Article 3', slug='article-3', section=section)
+
+        # Publish second article
+        url = reverse('api-articles-publish', args=[article_2.parent_id])
+        response = self.client.post(url, format='json')
+
+        url = reverse('api-articles-list')
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 3)
+
+        # Clear client credentials
+        self.client.credentials()
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'][0]['slug'], 'article-2')
