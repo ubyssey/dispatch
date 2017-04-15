@@ -150,18 +150,50 @@ class ArticlesTests(DispatchAPITestCase):
 
         # Publish article first
         url = reverse('api-articles-publish', args=[article.data['id']])
-
         response = self.client.post(url, format='json')
 
         self.assertEqual(response.data['is_published'], True)
 
         # Now unpublish the article
         url = reverse('api-articles-unpublish', args=[article.data['id']])
-
         response = self.client.post(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_published'], False)
+
+    def test_unpublish_article_older_version(self):
+        """
+        Ensure that an older version of an article can be unpublished
+        """
+
+        article = self._create_article()
+
+        # Publish latest version
+        url = reverse('api-articles-publish', args=[article.data['id']])
+        response = self.client.post(url, format='json')
+
+        self.assertEqual(response.data['is_published'], True)
+        self.assertEqual(response.data['published_version'], 1)
+        self.assertEqual(response.data['current_version'], 1)
+        self.assertEqual(response.data['latest_version'], 1)
+
+        # Update article to generate new version
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, { 'headline': 'Updated headline' }, format='json')
+
+        self.assertEqual(response.data['headline'], 'Updated headline')
+        self.assertEqual(response.data['is_published'], False)
+        self.assertEqual(response.data['published_version'], 1)
+        self.assertEqual(response.data['current_version'], 2)
+        self.assertEqual(response.data['latest_version'], 2)
+
+        # Now unpublish the article
+        url = reverse('api-articles-unpublish', args=[article.data['id']])
+        response = self.client.post(url, format='json')
+
+        self.assertEqual(response.data['published_version'], None)
+        self.assertEqual(response.data['current_version'], 2)
+        self.assertEqual(response.data['latest_version'], 2)
 
     def test_publish_article_version(self):
         """
