@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
-from dispatch.apps.api.mixins import DispatchModelSerializer
+from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
 from dispatch.apps.api.exceptions import InvalidFilename
 
@@ -182,7 +182,7 @@ class SectionSerializer(DispatchModelSerializer):
             'slug',
         )
 
-class ArticleSerializer(DispatchModelSerializer):
+class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Article model.
     """
@@ -262,8 +262,6 @@ class ArticleSerializer(DispatchModelSerializer):
 
     def update(self, instance, validated_data):
 
-        was_published = instance.is_published
-
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
@@ -304,13 +302,9 @@ class ArticleSerializer(DispatchModelSerializer):
         # Perform a final save (without revision), update content and featured image
         instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
 
-        # Indicate whether instance was published/unpublished
-        instance.was_published = not was_published and instance.is_published
-        instance.was_unpublished = was_published and not instance.is_published
-
         return instance
 
-class PageSerializer(DispatchModelSerializer):
+class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Page model.
     """
