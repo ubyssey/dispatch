@@ -84,6 +84,13 @@ class ArticleEditorComponent extends React.Component {
     )
   }
 
+  unpublishArticle() {
+    this.props.unpublishArticle(
+      this.props.token,
+      this.props.articleId
+    )
+  }
+
   toggleStyle(style) {
     this.props.toggleEditorStyle(style)
   }
@@ -116,6 +123,7 @@ class ArticleEditorComponent extends React.Component {
           <ArticleToolbar
             saveArticle={() => this.saveArticle()}
             publishArticle={() => this.publishArticle()}
+            unpublishArticle={() => this.unpublishArticle()}
             fetchArticleVersion={this.fetchArticleVersion}
             article={article}
             isNew={this.props.isNew} />
@@ -169,6 +177,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     publishArticle: (token, articleId, data) => {
       dispatch(articlesActions.publishArticle(token, articleId, data))
+    },
+    unpublishArticle: (token, articleId) => {
+      dispatch(articlesActions.unpublishArticle(token, articleId))
     },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))

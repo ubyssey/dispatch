@@ -40,6 +40,7 @@ export default function entitiesReducer(state = initialState, action) {
   case types.FETCH_ARTICLE + '_FULFILLED':
   case types.SAVE_ARTICLE + '_FULFILLED':
   case `${types.PUBLISH_ARTICLE}_FULFILLED`:
+  case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
   case types.SET_ARTICLE:
     return R.merge(state, {
       articles: R.merge(state.articles, action.payload.entities.articles),
