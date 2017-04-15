@@ -315,7 +315,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = JSONField()
 
-    url = serializers.CharField(source='get_absolute_url',read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
