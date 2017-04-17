@@ -1,16 +1,15 @@
 import os
-import shutil
-import datetime
 import StringIO
 
 from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.apps.content.models import File
 
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 
-class FileTests(DispatchAPITestCase):
+class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def _upload_file(self):
         """
@@ -31,12 +30,6 @@ class FileTests(DispatchAPITestCase):
 
         return response
 
-    def _cleanup(self):
-        """
-        Delete created files and remove directory
-        """
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), 'media'))
-
     def test_upload_file_unauthorized(self):
         """
         File upload should fail with unauthenticated request
@@ -50,18 +43,19 @@ class FileTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+        files = File.objects.all()
+        self.assertEqual(len(files), 0)
+
     def test_upload_file(self):
         """
         Upload test file
         """
 
         response = self._upload_file()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Check data
         self.assertEqual(response.data['name'], 'TestFile')
-
-        self._cleanup()
+        self.assertTrue(self.fileExists(response.data['url']))
 
     def test_delete_file(self):
         """
@@ -76,16 +70,19 @@ class FileTests(DispatchAPITestCase):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        try:
+            File.objects.get(pk=file.data['id'])
+            self.fail('File should have been deleted')
+        except File.DoesNotExist:
+            pass
+
         # Can't delete an file that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self._cleanup()
-
-
     def test_delete_file_unauthorized(self):
         """
-        Delete file shoudl fail with unauthenticated request
+        Delete file should fail with unauthenticated request
         """
         # Upload a file
         file = self._upload_file()
@@ -97,3 +94,8 @@ class FileTests(DispatchAPITestCase):
 
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            File.objects.get(pk=file.data['id'])
+        except File.DoesNotExist:
+            self.fail('File should not have been deleted')
