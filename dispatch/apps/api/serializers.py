@@ -54,7 +54,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     Serializes the Image model.
     """
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    img = serializers.ImageField(required=False, write_only=True)
+    img = serializers.ImageField(write_only=True)
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
     url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
