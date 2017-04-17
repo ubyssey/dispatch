@@ -1,5 +1,9 @@
-import os
-import StringIO
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 from rest_framework import status
 
@@ -17,16 +21,14 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """
         url = reverse('api-files-list')
 
-        test_file = StringIO.StringIO('testtesttest')
+        with open(self._input('test_file.txt')) as test_file:
 
-        data = {
-            'name': 'TestFile',
-            'file': test_file
-        }
+            data = {
+                'name': 'TestFile',
+                'file': test_file
+            }
 
-        response = self.client.post(url, data, format='multipart')
-
-        test_file.close()
+            response = self.client.post(url, data, format='multipart')
 
         return response
 
@@ -34,6 +36,7 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """
         File upload should fail with unauthenticated request
         """
+
         # Clear authentication credentials
         self.client.credentials()
 
@@ -56,6 +59,27 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'TestFile')
         self.assertTrue(self.fileExists(response.data['url']))
+
+    def test_upload_file_invalid_filename(self):
+        """
+        Should not be able to upload file with non-ASCII characters in filename.
+        """
+
+        url = reverse('api-files-list')
+
+        with open(self._input('test_file_bad_filename_é.txt')) as test_file:
+
+            data = {
+                'name': 'TestFile',
+                'file': test_file
+            }
+
+            response = self.client.post(url, data, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+        files = File.objects.all()
+        self.assertEqual(len(files), 0)
 
     def test_delete_file(self):
         """

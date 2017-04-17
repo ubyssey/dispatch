@@ -48,7 +48,8 @@ class FileSerializer(DispatchModelSerializer):
         )
 
     def validate(self, data):
-        if not all(ord(c) < 128 for c in data.get('file').name):
+        # Only accept ASCII filenames
+        if data.get('file') and not all(ord(c) < 128 for c in data.get('file').name):
             raise InvalidFilename()
         return data
 
@@ -57,17 +58,21 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
     """
-    title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
     img = serializers.ImageField(write_only=True)
+    filename = serializers.CharField(read_only=True)
+
+    title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
     url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
+
     authors = PersonSerializer(many=True, read_only=True)
-    filename = serializers.CharField(read_only=True)
+    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
-
-    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
 
     class Meta:
         model = Image
@@ -81,10 +86,17 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'url_medium',
             'url_thumb',
-            'created_at',
             'width',
-            'height'
+            'height',
+            'created_at',
+            'updated_at'
         )
+
+    def validate(self, data):
+        # Only accept ASCII filenames
+        if data.get('img') and not all(ord(c) < 128 for c in data.get('img').name):
+            raise InvalidFilename()
+        return data
 
     def create(self, validated_data):
         return self.update(
