@@ -603,3 +603,9 @@ class File(Model):
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute file URL.
+        """
+        return settings.MEDIA_URL + str(self.file)

@@ -33,12 +33,16 @@ class FileSerializer(DispatchModelSerializer):
     Serializes the File model.
     """
 
+    file = serializers.FileField(write_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
     class Meta:
         model = File
         fields = (
             'id',
             'name',
             'file',
+            'url',
             'created_at',
             'updated_at'
         )
