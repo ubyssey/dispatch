@@ -20,7 +20,7 @@ export default function ImagePanel(props) {
           onClick={() => props.delete()}>Delete</AnchorButton>
       </div>
       <div className='c-image-panel__image'>
-        <img className='c-image-panel__image__img' src={props.image.thumb} />
+        <img className='c-image-panel__image__img' src={props.image.url_medium} />
         <div className='c-image-panel__image__filename'>{props.image.filename}</div>
       </div>
       <form>
