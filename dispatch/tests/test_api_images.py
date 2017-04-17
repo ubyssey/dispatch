@@ -23,48 +23,35 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Clear client credentials
         self.client.credentials()
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            response = self.client.post(url, data, format='multipart')
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        images = Image.objects.all()
-
-        self.assertEqual(len(images), 0)
+        self.assertEqual(Image.objects.count(), 0)
 
     def test_upload_image_empty(self):
         """
         Should not be able to upload an empty image.
         """
 
-        data = {}
-
         url = reverse('api-images-list')
 
-        response = self.client.post(url, data, format='multipart')
+        response = self.client.post(url, {}, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        images = Image.objects.all()
-        self.assertEqual(len(images), 0)
+        self.assertEqual(Image.objects.count(), 0)
 
     def test_upload_image_jpeg(self):
         """
         Should be able to upload a JPEG image.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            response = self.client.post(url, data, format='multipart')
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
@@ -78,13 +65,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to upload a PNG image.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.png')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            response = self.client.post(url, data, format='multipart')
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
@@ -136,22 +120,17 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
         self.assertEqual(response.data['detail'], 'The filename cannot contain non-ASCII characters')
-
-        images = Image.objects.all()
-        self.assertEqual(len(images), 0)
+        self.assertEqual(Image.objects.count(), 0)
 
     def test_update_image_unauthorized(self):
         """
         Should not be able to update an image without authorization.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            image = self.client.post(url, data, format='multipart')
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
 
@@ -172,20 +151,17 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         image_instance = Image.objects.get(pk=image.data['id'])
 
         self.assertEqual(image_instance.title, None)
-        self.assertEqual(len(image_instance.authors.all()), 0)
+        self.assertEqual(image_instance.authors.count(), 0)
 
     def test_update_image(self):
         """
         Should be able to update an image.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            image = self.client.post(url, data, format='multipart')
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
 
@@ -212,13 +188,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should not be able to delete an image without authorization.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            image = self.client.post(url, data, format='multipart')
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         # Clear client credentials
         self.client.credentials()
@@ -240,13 +213,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to delete an image.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            image = self.client.post(url, data, format='multipart')
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
 
@@ -271,13 +241,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to fetch an image by ID.
         """
 
+        url = reverse('api-images-list')
+
         with open(self.get_input_file('test_image.jpg')) as test_image:
-
-            data = { 'img': test_image }
-
-            url = reverse('api-images-list')
-
-            image = self.client.post(url, data, format='multipart')
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
 
