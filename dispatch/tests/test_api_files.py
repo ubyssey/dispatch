@@ -45,9 +45,7 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.post(url, None, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        files = File.objects.all()
-        self.assertEqual(len(files), 0)
+        self.assertEqual(File.objects.count(), 0)
 
     def test_upload_file(self):
         """
@@ -78,12 +76,10 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
             response = self.client.post(url, { 'file': test_file }, format='multipart')
 
         self.remove_input_file(invalid_filename)
-        
+
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
         self.assertEqual(response.data['detail'], 'The filename cannot contain non-ASCII characters')
-
-        files = File.objects.all()
-        self.assertEqual(len(files), 0)
+        self.assertEqual(File.objects.count(), 0)
 
     def test_delete_file(self):
         """
