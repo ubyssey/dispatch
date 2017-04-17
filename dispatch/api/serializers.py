@@ -4,7 +4,7 @@ from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Ima
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer
 from dispatch.apps.api.fields import JSONField
-from dispatch.apps.api.exceptions import InvalidFilename
+from dispatch.apps.api.validators import ValidFilename
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -33,7 +33,7 @@ class FileSerializer(DispatchModelSerializer):
     Serializes the File model.
     """
 
-    file = serializers.FileField(write_only=True)
+    file = serializers.FileField(write_only=True, validators=[ValidFilename])
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
@@ -47,19 +47,12 @@ class FileSerializer(DispatchModelSerializer):
             'updated_at'
         )
 
-    def validate(self, data):
-        # Only accept ASCII filenames
-        if data.get('file') and not all(ord(c) < 128 for c in data.get('file').name):
-            raise InvalidFilename()
-        return data
-
-
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
     """
 
-    img = serializers.ImageField(write_only=True)
+    img = serializers.ImageField(write_only=True, validators=[ValidFilename])
     filename = serializers.CharField(read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
@@ -91,12 +84,6 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'created_at',
             'updated_at'
         )
-
-    def validate(self, data):
-        # Only accept ASCII filenames
-        if data.get('img') and not all(ord(c) < 128 for c in data.get('img').name):
-            raise InvalidFilename()
-        return data
 
     def create(self, validated_data):
         return self.update(
