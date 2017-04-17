@@ -4,7 +4,7 @@ require('../../../../styles/components/image_thumb.scss')
 
 export default function ImageThumb(props) {
   const style = {
-    backgroundImage: `url('${props.image.thumb}')`
+    backgroundImage: `url('${props.image.url_thumb}')`
   }
 
   const baseClass = 'c-image-thumb'
