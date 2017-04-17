@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
 
-from dispatch.apps.content.models import Page, Person
+from dispatch.apps.content.models import Page
 
 class PagesTest(DispatchAPITestCase):
 
@@ -12,10 +12,6 @@ class PagesTest(DispatchAPITestCase):
         """
         Create Dummy Page
         """
-
-        # Create test person
-        person = Person.objects.create(full_tame='Test Person')
-        person.save()
 
         url = reverse('api-pages-list')
 
@@ -65,7 +61,7 @@ class PagesTest(DispatchAPITestCase):
 
         url = reverse('api-pages-list')
 
-        response = self.client.post(url, None, format='json')
+        self._create_page()
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -118,7 +114,7 @@ class PagesTest(DispatchAPITestCase):
         url = reverse('api-pages-detail', args=[page.data['id']])
 
         # Change the fields
-        newdata = {
+        new_data = {
           "title": "New Test Page",
           "slug": "New test-page",
           "snippet": "This is a new test snippet",
@@ -130,7 +126,7 @@ class PagesTest(DispatchAPITestCase):
           ]
         }
 
-        response = self.client.patch(url, newdata, format='json')
+        response = self.client.patch(url, new_data, format='json')
 
         # Check data
         self.assertEqual(response.data['title'], "New Test Page")
@@ -149,10 +145,7 @@ class PagesTest(DispatchAPITestCase):
         url = reverse('api-pages-detail', args=[page.data['id']])
 
         # Change the content
-        newdata = {
-          "title": "Test Page",
-          "slug": "test-page",
-          "snippet": "This is a test snippet",
+        new_data = {
           "content": [
             {
               "type": "paragraph",
@@ -161,7 +154,7 @@ class PagesTest(DispatchAPITestCase):
           ]
         }
 
-        response = self.client.patch(url, newdata, format='json')
+        response = self.client.patch(url, new_data, format='json')
 
         self.assertEqual(response.data['content'][0]['data'], "This is some brand new paragraph text")
 
@@ -179,10 +172,7 @@ class PagesTest(DispatchAPITestCase):
         self.client.credentials()
 
         # Change the fields
-        newdata = {
-          "title": "New Test Page",
-          "slug": "New test-page",
-          "snippet": "This is a new test snippet",
+        new_data = {
           "content": [
             {
               "type": "paragraph",
@@ -191,14 +181,11 @@ class PagesTest(DispatchAPITestCase):
           ]
         }
 
-        response = self.client.patch(url, newdata, format='json')
+        response = self.client.patch(url, new_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Check Data
-        self.assertEqual(response.data['title'], 'Test Page')
-        self.assertEqual(response.data['slug'], 'test_page')
-        self.assertEqual(response.data['snippet'], "This is a test snippet")
         self.assertEqual(response.data['content'][0]['data'], 'This is some paragraph text')
 
 
@@ -236,4 +223,4 @@ class PagesTest(DispatchAPITestCase):
 
         # Can't delete a page that has already been deleted
         response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
