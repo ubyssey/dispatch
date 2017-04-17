@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 from rest_framework import status
 
 from django.core.urlresolvers import reverse
@@ -95,7 +102,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         with open(self._input('test_image.jpg')) as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
-            
+
         with open(self._input('test_image.jpg')) as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
@@ -107,6 +114,21 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Check that filenames are different
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
+
+    def test_upload_image_invalid_filename(self):
+        """
+        Should not be able to upload image with non-ASCII characters in filename.
+        """
+
+        url = reverse('api-images-list')
+
+        with open(self._input('test_image_bad_filename_é.jpg')) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+        images = Image.objects.all()
+        self.assertEqual(len(images), 0)
 
     def test_update_image_unauthorized(self):
         """
