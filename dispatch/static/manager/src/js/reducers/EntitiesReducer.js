@@ -66,7 +66,7 @@ export default function entitiesReducer(state = initialState, action) {
       files: R.merge(state.files, action.payload.result.entities.files)
     })
   }
-  
+
   // Images
   case types.FETCH_IMAGES + '_FULFILLED':
     return R.merge(state, {
@@ -77,6 +77,10 @@ export default function entitiesReducer(state = initialState, action) {
     return R.merge(state, {
       images: R.merge(state.images, action.payload.entities.images),
       image: R.merge(state.image, action.payload.entities.images)
+    })
+  case `${types.CREATE_IMAGE}_FULFILLED`:
+    return R.merge(state, {
+      images: R.merge(state.images, action.payload.entities.images)
     })
 
   // Image
