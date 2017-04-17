@@ -23,7 +23,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Clear client credentials
         self.client.credentials()
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -58,7 +58,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to upload a JPEG image.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -78,7 +78,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to upload a PNG image.
         """
 
-        with open(self._input('test_image.png')) as test_image:
+        with open(self.get_input_file('test_image.png')) as test_image:
 
             data = { 'img': test_image }
 
@@ -100,10 +100,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(image_1.status_code, status.HTTP_201_CREATED)
@@ -122,10 +122,20 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self._input('test_image_bad_filename_é.jpg')) as test_image:
+        valid_filename = 'test_image.jpg'
+        invalid_filename = 'test_image_bad_filename_é.jpg'
+
+        with open(self.get_input_file(valid_filename)) as valid_image:
+            with open(self.get_input_file(invalid_filename), 'w') as invalid_image:
+                invalid_image.writelines(valid_image.readlines())
+
+        with open(self.get_input_file(invalid_filename)) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
+        self.remove_input_file(invalid_filename)
+
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(response.data['detail'], 'The filename cannot contain non-ASCII characters')
 
         images = Image.objects.all()
         self.assertEqual(len(images), 0)
@@ -135,7 +145,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should not be able to update an image without authorization.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -169,7 +179,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to update an image.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -202,7 +212,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should not be able to delete an image without authorization.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -230,7 +240,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to delete an image.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -261,7 +271,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Should be able to fetch an image by ID.
         """
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
 
             data = { 'img': test_image }
 
@@ -284,13 +294,13 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-images-list')
 
         # Upload three images
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self._input('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image.jpg')) as test_image:
             image_3 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         response = self.client.get(url, format='json')

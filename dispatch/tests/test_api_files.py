@@ -21,7 +21,7 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """
         url = reverse('api-files-list')
 
-        with open(self._input('test_file.txt')) as test_file:
+        with open(self.get_input_file('test_file.txt')) as test_file:
 
             data = {
                 'name': 'TestFile',
@@ -67,16 +67,20 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-files-list')
 
-        with open(self._input('test_file_bad_filename_é.txt')) as test_file:
+        valid_filename = 'test_file.txt'
+        invalid_filename = 'test_file_bad_filename_é.txt'
 
-            data = {
-                'name': 'TestFile',
-                'file': test_file
-            }
+        with open(self.get_input_file(valid_filename)) as valid_file:
+            with open(self.get_input_file(invalid_filename), 'w') as invalid_file:
+                invalid_file.writelines(valid_file.readlines())
 
-            response = self.client.post(url, data, format='multipart')
+        with open(self.get_input_file(invalid_filename)) as test_file:
+            response = self.client.post(url, { 'file': test_file }, format='multipart')
 
+        self.remove_input_file(invalid_filename)
+        
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(response.data['detail'], 'The filename cannot contain non-ASCII characters')
 
         files = File.objects.all()
         self.assertEqual(len(files), 0)
