@@ -47,11 +47,11 @@ class DispatchMediaTestMixin(object):
         except:
             pass
 
-    def _input(self, filename):
-        """
-        Returns test input file with given filename.
-        """
+    def get_input_file(self, filename):
         return os.path.join(os.path.dirname(__file__), 'input', filename)
+
+    def remove_input_file(self, filename):
+        os.remove(self.get_input_file(filename))
 
     def fileExists(self, path):
         return os.path.exists(os.path.join(os.path.dirname(__file__), 'media', path))
