@@ -114,7 +114,7 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         q = self.request.query_params.get('q')
 
         if q:
-            queryset = queryset.filter(headline__icontains=q)
+            queryset = queryset.filter(title__icontains=q)
 
         return queryset
 
