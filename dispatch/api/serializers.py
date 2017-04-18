@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
-from dispatch.apps.api.mixins import DispatchModelSerializer
+from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
 from dispatch.apps.api.validators import ValidFilename
 
@@ -193,7 +193,7 @@ class SectionSerializer(DispatchModelSerializer):
             'slug',
         )
 
-class ArticleSerializer(DispatchModelSerializer):
+class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Article model.
     """
@@ -315,7 +315,7 @@ class ArticleSerializer(DispatchModelSerializer):
 
         return instance
 
-class PageSerializer(DispatchModelSerializer):
+class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Page model.
     """
@@ -326,7 +326,7 @@ class PageSerializer(DispatchModelSerializer):
 
     content = JSONField()
 
-    url = serializers.CharField(source='get_absolute_url',read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')

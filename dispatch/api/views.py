@@ -16,7 +16,7 @@ from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.api.mixins import DispatchModelViewSet
+from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
@@ -35,7 +35,7 @@ class SectionViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-class ArticleViewSet(DispatchModelViewSet):
+class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
     Viewset for Article model views.
     """
@@ -49,10 +49,8 @@ class ArticleViewSet(DispatchModelViewSet):
         against a `topic` query parameter in the URL.
         """
 
-        if self.request.user.is_authenticated():
-            queryset = Article.objects
-        else:
-            queryset = Article.objects.filter(is_published=True)
+        # Get base queryset from DispatchPublishableMixin
+        queryset = self.get_publishable_queryset()
 
         queryset = queryset.order_by('-updated_at')
 
@@ -60,7 +58,6 @@ class ArticleViewSet(DispatchModelViewSet):
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
         topic = self.request.query_params.get('topic', None)
-        version = self.request.query_params.get('version', None)
 
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
@@ -74,58 +71,7 @@ class ArticleViewSet(DispatchModelViewSet):
         if topic is not None:
             queryset = queryset.filter(topic_id=topic)
 
-        if version is not None:
-            queryset = queryset.filter(revision_id=version)
-        else:
-            queryset = queryset.filter(head=True)
-
         return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def publish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.publish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def unpublish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.unpublish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def revision(self, request, parent_id=None):
-        revision_id = request.query_params.get('revision_id', None)
-
-        filter_kwargs = {
-            'parent_id': parent_id,
-            'revision_id': revision_id,
-        }
-
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, **filter_kwargs)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def rendered(self, request, parent_id=None):
@@ -165,7 +111,7 @@ class ArticleViewSet(DispatchModelViewSet):
 
         return Response(data)
 
-class PageViewSet(DispatchModelViewSet):
+class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
     Viewset for Page model views.
     """
@@ -192,26 +138,6 @@ class PageViewSet(DispatchModelViewSet):
             queryset = queryset.filter(headline__icontains=q)
 
         return queryset
-
-    @detail_route(methods=['get'],)
-    def publish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        instance.publish()
-
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def unpublish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        instance.unpublish()
-
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):

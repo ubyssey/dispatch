@@ -25,6 +25,14 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Article saved')
   case `${types.SAVE_ARTICLE}_REJECTED`:
     return showToast('Article could not be saved', Intent.DANGER)
+  case `${types.PUBLISH_ARTICLE}_FULFILLED`:
+    return showToast('Article published')
+  case `${types.PUBLISH_ARTICLE}_REJECTED`:
+    return showToast('Article could not be published', Intent.DANGER)
+  case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
+    return showToast('Article unpublished')
+  case `${types.UNPUBLISH_ARTICLE}_REJECTED`:
+    return showToast('Article could not be unpublished', Intent.DANGER)
 
   // Images
   case `${types.DELETE_IMAGE}_FULFILLED`:
