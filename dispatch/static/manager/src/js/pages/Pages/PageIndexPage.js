@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
-import { LinkButton } from '../../components/inputs'
 
 import { Link } from 'react-router'
 
 import * as pagesActions from '../../actions/PagesActions'
+import { humanizeDatetime } from '../../util/helpers'
 
+import { LinkButton } from '../../components/inputs'
 import ItemList from '../../components/ItemList'
 
 const DEFAULT_LIMIT = 15
@@ -100,7 +101,7 @@ class PagesPageComponent extends React.Component {
 
           columns={[
             item => (<strong><Link to={`/pages/${item.id}`} dangerouslySetInnerHTML={{__html: item.title}} /></strong>),
-            item => item.published_at,
+            item => humanizeDatetime(item.published_at),
             item => item.latest_version + ' revisions'
           ]}
 
