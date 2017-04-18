@@ -25,6 +25,10 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Article saved')
   case `${types.SAVE_ARTICLE}_REJECTED`:
     return showToast('Article could not be saved', Intent.DANGER)
+  case `${types.DELETE_ARTICLES}_FULFILLED`:
+    return showToast(`${action.payload.length} articles deleted`)
+  case `${types.DELETE_ARTICLES}_REJECTED`:
+    return showToast('Some articles could not be deleted', Intent.DANGER)
   case `${types.PUBLISH_ARTICLE}_FULFILLED`:
     return showToast('Article published')
   case `${types.PUBLISH_ARTICLE}_REJECTED`:
@@ -49,6 +53,16 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Image uploaded')
   case `${types.CREATE_IMAGE}_REJECTED`:
     return showToast('Image could not be uploaded', Intent.DANGER)
+
+  // Files
+  case `${types.CREATE_FILE}_FULFILLED`:
+    return showToast('File uploaded')
+  case `${types.CREATE_FILE}_REJECTED`:
+    return showToast('File could not be uploaded', Intent.DANGER)
+  case `${types.DELETE_FILES}_FULFILLED`:
+    return showToast(`${action.payload.length} files deleted`)
+  case `${types.DELETE_FILES}_REJECTED`:
+    return showToast('Some files could not be deleted', Intent.DANGER)
 
   // Integrations
   case `${types.SAVE_INTEGRATION}_FULFILLED`:
