@@ -30,10 +30,25 @@ export function createFile(token, file) {
 }
 
 export function deleteFiles(token, fileIds) {
-  return {
-    type: types.DELETE_FILES,
-    payload: DispatchAPI.files.deleteFiles(token, fileIds)
-      .then( json => json.deleted )
+  return function(dispatch) {
+    dispatch({ type: `${types.DELETE_FILES}_PENDING` })
+
+    Promise.all(
+      fileIds.map(fileId => DispatchAPI.files.deleteFile(token, fileId))
+    )
+    .then(() => {
+      dispatch({
+        type: `${types.DELETE_FILES}_FULFILLED`,
+        payload: fileIds
+      })
+    })
+    .catch(error => {
+      dispatch({
+        type: `${types.DELETE_FILES}_REJECTED`,
+        payload: error
+      })
+    })
+
   }
 }
 
@@ -65,7 +80,7 @@ export function clearFiles() {
 
 export function searchFiles(query) {
   var queryObj = {}
-  
+
   if (query) {
     queryObj.q = query
   }

@@ -143,10 +143,25 @@ export function clearSelectedArticles() {
 }
 
 export function deleteArticles(token, articleIds) {
-  return {
-    type: types.DELETE_ARTICLES,
-    payload: DispatchAPI.articles.deleteArticles(token, articleIds)
-      .then( json => json.deleted )
+  return function(dispatch) {
+    dispatch({ type: `${types.DELETE_ARTICLES}_PENDING` })
+
+    Promise.all(
+      articleIds.map(articleId => DispatchAPI.articles.deleteArticle(token, articleId))
+    )
+    .then(() => {
+      dispatch({
+        type: `${types.DELETE_ARTICLES}_FULFILLED`,
+        payload: articleIds
+      })
+    })
+    .catch(error => {
+      dispatch({
+        type: `${types.DELETE_ARTICLES}_REJECTED`,
+        payload: error
+      })
+    })
+
   }
 }
 
