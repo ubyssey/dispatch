@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from django.test import TestCase
 
 from rest_framework.test import APIRequestFactory, APIClient
@@ -27,3 +30,28 @@ class DispatchAPITestCase(TestCase):
 
         # Set user auth token header
         self.client.credentials(HTTP_AUTHORIZATION='Token %s' % token.key)
+
+    def tearDown(self):
+        super(DispatchAPITestCase, self).tearDown()
+
+        # Call cleanup if it exists
+        if hasattr(self, '_cleanup'):
+            self._cleanup()
+
+class DispatchMediaTestMixin(object):
+
+    def _cleanup(self):
+        # Clear the media directory
+        try:
+            shutil.rmtree(os.path.join(os.path.dirname(__file__), 'media'))
+        except:
+            pass
+
+    def get_input_file(self, filename):
+        return os.path.join(os.path.dirname(__file__), 'input', filename)
+
+    def remove_input_file(self, filename):
+        os.remove(self.get_input_file(filename))
+
+    def fileExists(self, path):
+        return os.path.exists(os.path.join(os.path.dirname(__file__), 'media', path))

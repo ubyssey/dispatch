@@ -439,18 +439,18 @@ class Image(Model):
     def get_wide_url(self):
         return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
 
-    #Overriding
+    # Overriding
     def save(self, **kwargs):
         """
         Custom save method to process thumbnails and save image dimensions.
         """
 
+        is_new = self.pk is None
+
         # Call super method
         super(Image, self).save(**kwargs)
 
-        update_fields = kwargs.get('update_fields', [])
-
-        if 'img' in update_fields and self.img:
+        if is_new and self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
@@ -603,3 +603,9 @@ class File(Model):
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute file URL.
+        """
+        return settings.MEDIA_URL + str(self.file)

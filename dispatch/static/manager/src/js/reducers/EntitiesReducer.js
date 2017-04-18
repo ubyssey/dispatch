@@ -80,6 +80,10 @@ export default function entitiesReducer(state = initialState, action) {
       images: R.merge(state.images, action.payload.entities.images),
       image: R.merge(state.image, action.payload.entities.images)
     })
+  case `${types.CREATE_IMAGE}_FULFILLED`:
+    return R.merge(state, {
+      images: R.merge(state.images, action.payload.entities.images)
+    })
 
   // Image
   case types.SELECT_IMAGE:

@@ -62,6 +62,17 @@ function getRequest(route, id=null, query={}, token=null) {
   .then(parseJSON)
 }
 
+function getPageRequest(uri, token=null) {
+  return fetch(
+    uri,
+    {
+      method: 'GET',
+      headers: buildHeaders(token)
+    }
+  )
+  .then(parseJSON)
+}
+
 function postRequest(route, id=null, payload={}, token=null) {
   return fetch(
     buildRoute(route, id),
@@ -112,6 +123,9 @@ function patchRequest(route, id=null, payload={}, token=null) {
 }
 
 var DispatchAPI = {
+  fetchPage: (token, uri) => {
+    return getPageRequest(uri, token)
+  },
   auth: {
     fetchToken: (email, password) => {
 
@@ -163,13 +177,18 @@ var DispatchAPI = {
     }
   },
   images: {
-    fetchImages: (query) => {
-      return getRequest('images', null, query)
+    fetchImages: (token, query) => {
+      return getRequest('images', null, query, token)
     },
     saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
-
+    createImage: (token, data) => {
+      return postMultipartRequest('images', null, data, token)
+    },
+    deleteImage: (token, imageId) => {
+      return deleteRequest('images', imageId, null, token)
+    }
   },
   templates: {
     fetchTemplate: (token, templateId) => {

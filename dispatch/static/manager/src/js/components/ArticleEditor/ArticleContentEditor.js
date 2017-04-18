@@ -19,7 +19,8 @@ export default class ArticleContentEditor extends React.Component {
         <div className='c-article-editor__inner'>
           <ArticleHeadline
             onUpdate={this.props.onUpdate}
-            headline={this.props.article.headline} />
+            headline={this.props.article.headline}
+            error={this.props.errors.headline} />
           <div className='c-article-editor__body'>
             <ContentEditor
               scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
