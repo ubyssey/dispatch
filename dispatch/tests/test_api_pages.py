@@ -36,21 +36,7 @@ class PagesTest(DispatchAPITestCase):
         # Clear authentication credentials
         self.client.credentials()
 
-        url = reverse('api-pages-list')
-
-        data = {
-          "title": "Test Page",
-          "slug": "test-page",
-          "snippet": "This is a test snippet",
-          "content": [
-            {
-              "type": "paragraph",
-              "data": "This is some paragraph text"
-            }
-          ]
-        }
-
-        response = self.client.post(url, data, format='json')
+        self._create_page()
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -61,7 +47,7 @@ class PagesTest(DispatchAPITestCase):
 
         url = reverse('api-pages-list')
 
-        self._create_page()
+        response = self.client.post(url, None, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -118,12 +104,6 @@ class PagesTest(DispatchAPITestCase):
           "title": "New Test Page",
           "slug": "New test-page",
           "snippet": "This is a new test snippet",
-          "content": [
-            {
-              "type": "paragraph",
-              "data": "This is some paragraph text"
-            }
-          ]
         }
 
         response = self.client.patch(url, new_data, format='json')
@@ -217,9 +197,9 @@ class PagesTest(DispatchAPITestCase):
         # Generate detail url
         url = reverse('api-pages-detail', args=[page.data['id']])
 
-        # Successful deletion should return 204
+        # Successful deletion should return 404
         response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         # Can't delete a page that has already been deleted
         response = self.client.delete(url, format='json')
