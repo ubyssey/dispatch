@@ -1,7 +1,6 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
-import { showLoading, hideLoading } from 'react-redux-loading-bar'
 
 import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
@@ -95,25 +94,22 @@ export function publishArticle(token, articleId, data) {
 
   return function(dispatch) {
 
-    dispatch(() => ({ type: `${types.PUBLISH_ARTICLE}_PENDING` }))
-    dispatch(showLoading())
+    dispatch({ type: `${types.PUBLISH_ARTICLE}_PENDING` })
 
     DispatchAPI.articles.saveArticle(token, articleId, data)
-      .then( () => DispatchAPI.articles.publishArticle(token, articleId))
-      .then( json => normalize(json, articleSchema) )
-      .then( payload => {
-        dispatch(hideLoading())
+      .then(() => DispatchAPI.articles.publishArticle(token, articleId))
+      .then(json => normalize(json, articleSchema))
+      .then(payload => {
         dispatch({
           type: `${types.PUBLISH_ARTICLE}_FULFILLED`,
           payload: payload
         })
       })
       .catch( error => {
-        dispatch(hideLoading())
-        dispatch(() => ({
+        dispatch({
           type: `${types.PUBLISH_ARTICLE}_REJECTED`,
           payload: error
-        }))
+        })
       })
   }
 }
