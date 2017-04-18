@@ -142,7 +142,7 @@ class Publishable(Model):
 
     def publish(self):
         # Unpublish last published version
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False)
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
         self.is_published = True
         if self.published_at is None:
             self.published_at = datetime.datetime.now()
@@ -150,8 +150,8 @@ class Publishable(Model):
         return self
 
     def unpublish(self):
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
         self.is_published = False
-        self.save(revision=False)
         return self
 
     # Overriding
