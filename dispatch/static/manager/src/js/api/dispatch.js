@@ -155,25 +155,25 @@ var DispatchAPI = {
     createArticle: (token, data) => {
       return postRequest('articles', null, data, token)
     },
+    deleteArticle: (token, articleId) => {
+      return deleteRequest('articles', articleId, null, token)
+    },
     publishArticle: (token, articleId) => {
       return postRequest('articles.publish', articleId, null, token)
     },
     unpublishArticle: (token, articleId) => {
       return postRequest('articles.unpublish', articleId, null, token)
-    },
-    deleteArticles: (token, articleIds) => {
-      return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
     }
   },
   files:{
     fetchFiles: (token, query) => {
-      return getRequest('files',null, query, token)
-    },
-    deleteFiles: (token, fileIds) => {
-      return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
+      return getRequest('files', null, query, token)
     },
     createFile: (token, data) => {
       return postMultipartRequest('files', null, data, token)
+    },
+    deleteFile: (token, fileId) => {
+      return deleteRequest('files', fileId, null, token)
     }
   },
   images: {
