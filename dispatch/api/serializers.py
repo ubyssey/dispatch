@@ -330,6 +330,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
+    latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
     template_fields = JSONField(required=False, source='get_template_fields')
 
@@ -347,6 +348,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'is_published',
             'published_version',
             'current_version',
+            'latest_version',
             'template',
             'template_fields',
             'seo_keyword',
