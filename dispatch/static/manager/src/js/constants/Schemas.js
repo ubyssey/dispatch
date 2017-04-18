@@ -6,6 +6,7 @@ export const topicSchema = new Schema('topics')
 export const tagSchema = new Schema('tags')
 export const imageSchema = new Schema('images')
 export const articleSchema = new Schema('articles')
+export const pageSchema = new Schema('pages')
 export const templateSchema = new Schema('templates')
 export const fileSchema = new Schema('files')
 
@@ -14,6 +15,13 @@ articleSchema.define({
   authors: arrayOf(personSchema),
   tags: arrayOf(tagSchema),
   topic: topicSchema,
+  template: templateSchema,
+  featured_image: {
+    image: imageSchema,
+  }
+})
+
+pageSchema.define({
   template: templateSchema,
   featured_image: {
     image: imageSchema,
