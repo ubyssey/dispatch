@@ -105,12 +105,10 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         Only display unpublished content to authenticated users, filter by query parameter if present.
         """
 
-        if self.request.user.is_authenticated():
-            queryset = Page.objects.filter(head=True)
-        else:
-            queryset = Page.objects.filter(head=True, is_published=True)
+        # Get base queryset from DispatchPublishableMixin
+        queryset = self.get_publishable_queryset()
 
-        queryset = queryset.order_by('-published_at')
+        queryset = queryset.order_by('-updated_at')
 
         # Optionally filter by a query parameter
         q = self.request.query_params.get('q')
