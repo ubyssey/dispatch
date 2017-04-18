@@ -116,7 +116,7 @@ class ArticlesPageComponent extends React.Component {
             item => (<strong><Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} /></strong>),
             item => item.authors_string,
             item => item.published_at,
-            item => item.revision_id + ' revisions'
+            item => item.latest_version + ' revisions'
           ]}
 
 
