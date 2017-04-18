@@ -20,7 +20,7 @@ export default function toasterReducer(toaster = {}, action) {
   case types.SETUP_TOASTER:
     return action.toaster
 
-  // Article
+  // Articles
   case `${types.SAVE_ARTICLE}_FULFILLED`:
     return showToast('Article saved')
   case `${types.SAVE_ARTICLE}_REJECTED`:
@@ -37,6 +37,24 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Article unpublished')
   case `${types.UNPUBLISH_ARTICLE}_REJECTED`:
     return showToast('Article could not be unpublished', Intent.DANGER)
+
+  // Pages
+  case `${types.SAVE_PAGE}_FULFILLED`:
+    return showToast('Page saved')
+  case `${types.SAVE_PAGE}_REJECTED`:
+    return showToast('Page could not be saved', Intent.DANGER)
+  case `${types.DELETE_PAGES}_FULFILLED`:
+    return showToast(`${action.payload.length} pages deleted`)
+  case `${types.DELETE_PAGES}_REJECTED`:
+    return showToast('Some pages could not be deleted', Intent.DANGER)
+  case `${types.PUBLISH_PAGE}_FULFILLED`:
+    return showToast('Page published')
+  case `${types.PUBLISH_PAGE}_REJECTED`:
+    return showToast('Page could not be published', Intent.DANGER)
+  case `${types.UNPUBLISH_PAGE}_FULFILLED`:
+    return showToast('Page unpublished')
+  case `${types.UNPUBLISH_PAGE}_REJECTED`:
+    return showToast('Page could not be unpublished', Intent.DANGER)
 
   // Images
   case `${types.DELETE_IMAGE}_FULFILLED`:
