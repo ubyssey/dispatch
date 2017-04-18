@@ -92,25 +92,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         return Response(data)
 
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    Article.objects.filter(parent_id=id).delete()
-                    deleted.append(int(id))
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
-
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
     Viewset for Page model views.
@@ -164,25 +145,6 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
-
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    Person.objects.get(pk=id).delete()
-                    deleted.append(id)
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
 
 class TagViewSet(DispatchModelViewSet):
     """
@@ -252,26 +214,6 @@ class FileViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
-
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    File.objects.filter(id=id).delete()
-                    deleted.append(int(id))
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
-
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
