@@ -130,6 +130,7 @@ class ArticleEditorComponent extends React.Component {
           <div className='u-container-editor'>
             <ArticleContentEditor
               article={article}
+              errors={this.props.article.errors}
               isNew={this.props.isNew}
               onUpdate={(field, value) => this.handleUpdate(field, value)}
               openModal={this.props.openModal}
@@ -137,6 +138,7 @@ class ArticleEditorComponent extends React.Component {
             <ArticleSidebar
               article={article}
               entities={this.props.entities}
+              errors={this.props.article.errors}
               integrations={this.props.integrations}
               update={(field, value) => this.handleUpdate(field, value)} />
           </div>

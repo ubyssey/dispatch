@@ -41,7 +41,7 @@ export default function FeaturedImageTab(props) {
         <FormInput label='Caption'>
           <TextAreaInput
             placeholder='Caption'
-            value={props.featured_image.caption}
+            value={props.featured_image.caption || ''}
             rows='2'
             onChange={ e => updateCaption(e.target.value) } />
         </FormInput>
@@ -49,7 +49,7 @@ export default function FeaturedImageTab(props) {
         <FormInput label='Credit'>
           <TextAreaInput
             placeholder='Credit'
-            value={props.featured_image.credit}
+            value={props.featured_image.credit || ''}
             rows='2'
             onChange={ e => updateCredit(e.target.value) } />
         </FormInput>
