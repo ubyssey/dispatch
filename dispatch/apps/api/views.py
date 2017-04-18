@@ -15,7 +15,6 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
@@ -25,6 +24,7 @@ class SectionViewSet(DispatchModelViewSet):
     """
     Viewset for Section model views.
     """
+    model = Section
     serializer_class = SectionSerializer
 
     def get_queryset(self):
@@ -282,39 +282,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
     update_fields = ('title', 'authors')
-
-    def create(self, request, *args, **kwargs):
-        authors = request.POST.get('authors', None)
-
-        # If filename is not valid ASCII, don't add to DB and send error
-        if not all(ord(c) < 128 for c in request.data.get('img').name):
-            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-        if authors is None:
-            # Set author to current user if no authors are passed
-            authors = [request.user.id]
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        resource = serializer.save()
-        resource.save_authors(authors) # Handle author saving
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def update(self, request, *args, **kwargs):
-
-        # Filter data to only include updatable fields
-        data = { key: request.data.get(key) for key in self.update_fields }
-
-        if 'authors' in data:
-            data['author_ids'] = data['authors']
-
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=data, partial=True)
-        serializer.is_valid(raise_exception=True)
-
-        serializer.save()
-
-        return Response(serializer.data)
 
     def get_queryset(self):
         queryset = Image.objects.all()

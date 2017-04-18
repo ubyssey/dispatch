@@ -4,7 +4,7 @@ from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Ima
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
-from dispatch.apps.api.exceptions import InvalidFilename
+from dispatch.apps.api.validators import ValidFilename
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -33,56 +33,67 @@ class FileSerializer(DispatchModelSerializer):
     Serializes the File model.
     """
 
+    file = serializers.FileField(write_only=True, validators=[ValidFilename])
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
     class Meta:
         model = File
         fields = (
             'id',
             'name',
             'file',
+            'url',
             'created_at',
             'updated_at'
         )
-
-    def validate(self, data):
-        if not all(ord(c) < 128 for c in data.get('file').name):
-            raise InvalidFilename()
-        return data
-
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializes the Image model.
     """
-    title = serializers.CharField(allow_null=True, allow_blank=True, trim_whitespace=False)
-    url = serializers.CharField(source='get_absolute_url', read_only=True)
-    thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
-    authors = PersonSerializer(many=True, read_only=True)
-    filename = serializers.CharField(read_only=True)
-    width = serializers.IntegerField()
-    height = serializers.IntegerField()
 
+    img = serializers.ImageField(write_only=True, validators=[ValidFilename])
+    filename = serializers.CharField(read_only=True)
+
+    title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+    url_medium = serializers.CharField(source='get_medium_url', read_only=True)
+    url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
+
+    authors = PersonSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+
+    width = serializers.IntegerField(read_only=True)
+    height = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Image
         fields = (
             'id',
+            'img',
             'filename',
             'title',
             'authors',
             'author_ids',
             'url',
-            'thumb',
-            'created_at',
+            'url_medium',
+            'url_thumb',
             'width',
-            'height'
+            'height',
+            'created_at',
+            'updated_at'
+        )
+
+    def create(self, validated_data):
+        return self.update(
+            Image(),
+            validated_data
         )
 
     def update(self, instance, validated_data):
 
-        # Save properties
-        instance.title = validated_data.get('title', instance.title)
-        instance.save()
+        instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save relationships
         author_ids = validated_data.get('author_ids', None)

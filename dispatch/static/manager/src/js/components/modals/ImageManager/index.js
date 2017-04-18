@@ -1,102 +1,108 @@
 import React from 'react'
+import R from 'ramda'
 import { connect } from 'react-redux'
+import Dropzone from 'react-dropzone'
+
+import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import * as imagesActions from '../../../actions/ImagesActions'
-import * as personsActions from '../../../actions/PersonsActions'
 
-import { Button, TextInput } from '../../inputs'
+import { TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
 
 require('../../../../styles/components/image_manager.scss')
+
+const SCROLL_THRESHOLD = 20
+
+const DEFAULT_QUERY = {
+  limit: 30,
+  ordering: '-created_at'
+}
 
 class ImageManagerComponent extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.updateImage = this.updateImage.bind(this)
-    this.saveImage = this.saveImage.bind(this)
-    this.addAuthor = this.addAuthor.bind(this)
-    this.removeAuthor = this.removeAuthor.bind(this)
-    this.createAuthor = this.createAuthor.bind(this)
+    this.scrollListener = this.scrollListener.bind(this)
 
-    this.fetchPersons = this.fetchPersons.bind(this)
-    this.insertImage = this.insertImage.bind(this)
+    this.state = {
+      q: ''
+    }
   }
 
   componentDidMount() {
-    this.props.fetchImages({
-      limit: 20,
-      ordering: '-created_at'
-    })
+    this.props.fetchImages(this.props.token, DEFAULT_QUERY)
+
+    this.images.parentElement.addEventListener('scroll', this.scrollListener)
   }
 
-  saveImage(image) {
+  componentWillUnmount() {
+    this.images.parentElement.removeEventListener('scroll', this.scrollListener)
+  }
+
+  loadMore() {
+    this.props.fetchImagesPage(this.props.token, this.props.images.next)
+  }
+
+  searchImages() {
+    this.props.fetchImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
+  }
+
+  scrollListener() {
+    const containerHeight = this.images.clientHeight
+    const scrollOffset = this.images.parentElement.scrollTop + this.images.parentElement.clientHeight
+
+    if (!this.props.images.isLoading &&
+        this.props.images.next &&
+        scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
+      this.loadMore()
+    }
+
+  }
+
+  getImage() {
+    return this.props.entities.image[this.props.image.data]
+  }
+
+  handleSave() {
+    const image = this.getImage()
     this.props.saveImage(this.props.token, image.id, image)
   }
 
-  updateImage(image) {
-    this.props.updateImage(image.id, image)
+  handleDelete() {
+    this.props.deleteImage(this.props.token, this.props.image.data)
   }
 
-  addAuthor(image, id) {
-    return this.props.addAuthorToImage(this.props.token, image, id)
-  }
-
-  removeAuthor(image, id) {
-    return this.props.removeAuthorFromImage(this.props.token, image, id)
-  }
-
-  createAuthor(image, fullName) {
-    return this.props.createAndAddAuthorToImage(this.props.token, image, fullName)
-  }
-
-  fetchPersons(query) {
-
-    let queryObj = {}
-
-    if (query) {
-      queryObj['q'] = query
-    }
-
-    this.props.fetchPersons(this.props.token, queryObj)
+  handleUpdate(field, data) {
+    this.props.updateImage(
+      R.assoc(field, data, this.getImage())
+    )
   }
 
   insertImage() {
-    const image = this.props.entities.images[this.props.image.data]
-    this.props.onSubmit(image)
+    this.props.onSubmit(this.getImage())
   }
 
-  renderImagePanel() {
-    const image = this.props.entities.image[this.props.image.data]
+  onSearch(q) {
+    this.setState({ q: q}, this.searchImages)
+  }
 
-    const persons = {
-      results: this.props.persons.data,
-      entities: this.props.entities.persons
-    }
-
-    if (image) {
-      return (
-        <ImagePanel
-          image={image}
-          persons={persons}
-          updateImage={this.updateImage}
-          saveImage={this.saveImage}
-          addAuthor={this.addAuthor}
-          removeAuthor={this.removeAuthor}
-          createAuthor={this.createAuthor}
-          fetchPersons={this.fetchPersons} />
-      )
-    } else {
-      return null
-    }
+  onDrop(files) {
+    files.forEach(file => {
+      let formData = new FormData()
+      formData.append('img', file, file.name)
+      this.props.createImage(this.props.token, formData)
+    })
   }
 
   render() {
 
+    const image = this.getImage()
+
     const images = this.props.images.data.map( id => {
-      let image = this.props.entities.images[id]
+      const image = this.props.entities.images[id]
       return (
         <ImageThumb
           key={image.id}
@@ -106,27 +112,49 @@ class ImageManagerComponent extends React.Component {
       )
     })
 
+    const imagePanel = (
+      <ImagePanel
+        image={image}
+        update={(field, data) => this.handleUpdate(field, data)}
+        save={() => this.handleSave()}
+        delete={() => this.handleDelete()} />
+    )
+
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
           <div className='c-image-manager__header__left'>
-            <Button>Upload</Button>
+            <AnchorButton
+              intent={Intent.SUCCESS}
+              onClick={() => this.dropzone.open()}>Upload</AnchorButton>
           </div>
           <div className='c-image-manager__header__right'>
-            <TextInput placeholder='Search' />
+            <TextInput
+              placeholder='Search'
+              value={this.state.q}
+              onChange={e => this.onSearch(e.target.value)} />
           </div>
         </div>
         <div className='c-image-manager__body'>
-          <div className='c-image-manager__images'>{images}</div>
+          <Dropzone
+            ref={(node) => { this.dropzone = node }}
+            className='c-image-manager__images'
+            onDrop={(files) => this.onDrop(files)}
+            disableClick={true}
+            activeClassName='c-image-manager__images--active'>
+            <div
+              className='c-image-manager__images__container'
+              ref={(node) => { this.images = node }}>{images}</div>
+          </Dropzone>
           <div className='c-image-manager__active'>
-          {this.renderImagePanel()}
+            {image ? imagePanel : null}
           </div>
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
-          <Button
+          <AnchorButton
             disabled={!this.props.image.data}
-            onClick={this.insertImage}>Insert</Button>
+            onClick={() => this.insertImage()}>Insert</AnchorButton>
         </div>
       </div>
     )
@@ -138,11 +166,9 @@ const mapStateToProps = (state) => {
   return {
     images: state.app.images.images,
     image: state.app.images.image,
-    persons: state.app.persons,
     entities: {
       images: state.app.entities.images,
-      image: state.app.entities.image,
-      persons: state.app.entities.persons
+      image: state.app.entities.image
     },
     token: state.app.auth.token
   }
@@ -150,8 +176,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchImages: (params) => {
-      dispatch(imagesActions.fetchImages(params))
+    fetchImages: (token, params) => {
+      dispatch(imagesActions.fetchImages(token, params))
+    },
+    fetchImagesPage: (token, uri) => {
+      dispatch(imagesActions.fetchImagesPage(token, uri))
     },
     selectImage: (imageId) => {
       dispatch(imagesActions.selectImage(imageId))
@@ -159,20 +188,14 @@ const mapDispatchToProps = (dispatch) => {
     updateImage: (imageId, image) => {
       dispatch(imagesActions.updateImage(imageId, image))
     },
+    createImage: (token, data) => {
+      dispatch(imagesActions.createImage(token, data))
+    },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.saveImage(token, imageId, image))
     },
-    addAuthorToImage: (token, image, id) => {
-      dispatch(imagesActions.addAuthorToImage(token, image, id))
-    },
-    removeAuthorFromImage: (token, image, id) => {
-      dispatch(imagesActions.removeAuthorFromImage(token, image, id))
-    },
-    createAndAddAuthorToImage: (token, image, fullName) => {
-      dispatch(imagesActions.createAndAddAuthorToImage(token, image, fullName))
-    },
-    fetchPersons: (token, query) => {
-      dispatch(personsActions.fetchPersons(token, query))
+    deleteImage: (token, imageId) => {
+      dispatch(imagesActions.deleteImage(token, imageId))
     }
   }
 }

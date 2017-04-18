@@ -22,21 +22,6 @@ $header-height: 50px;
   width: 100%;
 }
 
-.c-article-editor__toolbar__editor-buttons {
-  // Text
-  line-height: $header-height;
-
-  .pt-button {
-    // Structure
-    margin-right: 0.5rem;
-
-    .pt-icon-standard {
-      // Structure
-      margin-right: 0;
-    }
-  }
-}
-
 .c-article-editor__toolbar__article-buttons {
   // Structure
   flex: 1;
