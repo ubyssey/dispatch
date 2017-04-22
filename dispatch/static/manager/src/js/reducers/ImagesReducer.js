@@ -8,6 +8,8 @@ const initialState = {
     isLoading: false,
     isLoaded: false,
     count: null,
+    next: null,
+    previous: null,
     data: []
   },
   image: {
@@ -17,16 +19,27 @@ const initialState = {
 
 function imagesReducer(state = initialState.images, action) {
   switch (action.type) {
-  case types.FETCH_IMAGES + '_PENDING':
+
+  case `${types.FETCH_IMAGES}_PENDING`:
     return R.merge(state, {
       isLoading: true
     })
-  case types.FETCH_IMAGES + '_FULFILLED':
+  case `${types.FETCH_IMAGES}_FULFILLED`:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      data: action.payload.results.result
+      next: action.payload.next,
+      previous: action.payload.previous,
+      data: action.payload.append ? R.concat(state.data, action.payload.results.result) : action.payload.results.result
+    })
+  case `${types.CREATE_IMAGE}_FULFILLED`:
+    return R.merge(state, {
+      data: R.concat([action.payload.result], state.data)
+    })
+  case `${types.DELETE_IMAGE}_FULFILLED`:
+    return R.merge(state, {
+      data: R.without([action.payload.imageId], state.data)
     })
   default:
     return state
@@ -39,6 +52,14 @@ function imageReducer(state = initialState.image, action) {
     return R.merge(state, {
       data: action.imageId
     })
+  case `${types.DELETE_IMAGE}_FULFILLED`:
+    if (action.payload.imageId == state.data) {
+      return R.merge(state, {
+        data: null
+      })
+    } else {
+      return state
+    }
   default:
     return state
   }

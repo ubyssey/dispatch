@@ -62,6 +62,17 @@ function getRequest(route, id=null, query={}, token=null) {
   .then(parseJSON)
 }
 
+function getPageRequest(uri, token=null) {
+  return fetch(
+    uri,
+    {
+      method: 'GET',
+      headers: buildHeaders(token)
+    }
+  )
+  .then(parseJSON)
+}
+
 function postRequest(route, id=null, payload={}, token=null) {
   return fetch(
     buildRoute(route, id),
@@ -112,6 +123,9 @@ function patchRequest(route, id=null, payload={}, token=null) {
 }
 
 var DispatchAPI = {
+  fetchPage: (token, uri) => {
+    return getPageRequest(uri, token)
+  },
   auth: {
     fetchToken: (email, password) => {
 
@@ -141,29 +155,40 @@ var DispatchAPI = {
     createArticle: (token, data) => {
       return postRequest('articles', null, data, token)
     },
-    deleteArticles: (token, articleIds) => {
-      return postRequest('articles/delete', null, {ids: articleIds.join(',')}, token)
+    deleteArticle: (token, articleId) => {
+      return deleteRequest('articles', articleId, null, token)
+    },
+    publishArticle: (token, articleId) => {
+      return postRequest('articles.publish', articleId, null, token)
+    },
+    unpublishArticle: (token, articleId) => {
+      return postRequest('articles.unpublish', articleId, null, token)
     }
   },
   files:{
     fetchFiles: (token, query) => {
-      return getRequest('files',null, query, token)
-    },
-    deleteFiles: (token, fileIds) => {
-      return postRequest('files/delete', null, {ids: fileIds.join(',')}, token)
+      return getRequest('files', null, query, token)
     },
     createFile: (token, data) => {
       return postMultipartRequest('files', null, data, token)
+    },
+    deleteFile: (token, fileId) => {
+      return deleteRequest('files', fileId, null, token)
     }
   },
   images: {
-    fetchImages: (query) => {
-      return getRequest('images', null, query)
+    fetchImages: (token, query) => {
+      return getRequest('images', null, query, token)
     },
     saveImage: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
-
+    createImage: (token, data) => {
+      return postMultipartRequest('images', null, data, token)
+    },
+    deleteImage: (token, imageId) => {
+      return deleteRequest('images', imageId, null, token)
+    }
   },
   templates: {
     fetchTemplate: (token, templateId) => {
