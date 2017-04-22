@@ -31,7 +31,8 @@ export default function ArticleSidebar(props) {
             tags={props.article.tags || []}
             topic={props.article.topic}
             slug={props.article.slug}
-            snippet={props.article.snippet} />
+            snippet={props.article.snippet}
+            errors={props.errors} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>
