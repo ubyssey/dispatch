@@ -71,6 +71,9 @@ LOGIN_REDIRECT_URL = 'dispatch.apps.manager.views.home'
 # Application definition
 
 INSTALLED_APPS = [
+    'dispatch.apps.content',
+    'dispatch.apps.core',
+    'dispatch.apps.frontend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,10 +82,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
-    'rest_framework.authtoken',
-    'dispatch.apps.content',
-    'dispatch.apps.core',
-    'dispatch.apps.frontend'
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE_CLASSES = (
