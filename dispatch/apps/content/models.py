@@ -460,6 +460,7 @@ class Image(Model):
                 self.save_thumbnail(image, self.SIZES[size], name, size)
 
 
+    #TODO: modify to account for gif and jpeg?
     def save_thumbnail(self, image, size, name, label):
         width, height = size
         (imw, imh) = image.size
