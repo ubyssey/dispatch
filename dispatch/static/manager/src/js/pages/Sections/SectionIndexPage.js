@@ -76,10 +76,6 @@ class SectionsPageComponent extends React.Component {
     this.props.clearSelectedSections()
   }
 
-  searchSections(query) {
-    this.props.searchSections(this.props.token, this.props.location.query.section, query)
-  }
-
   render() {
 
     return (
@@ -107,7 +103,7 @@ class SectionsPageComponent extends React.Component {
             toggleItem: this.props.toggleSection,
             toggleAllItems: this.props.toggleAllSections,
             deleteItems: (sectionIds) => this.deleteSections(sectionIds),
-            searchItems: (query) => this.searchSections(query)
+            searchItems: (query) => this.props.searchSections(query)
           }}
 
           />
@@ -147,8 +143,8 @@ const mapDispatchToProps = (dispatch) => {
     clearSections: () => {
       dispatch(sectionsActions.clearSections())
     },
-    searchSections: (token, section, query) => {
-      dispatch(sectionsActions.searchSections(section, query))
+    searchSections: (query) => {
+      dispatch(sectionsActions.searchSections(query))
     }
   }
 }
