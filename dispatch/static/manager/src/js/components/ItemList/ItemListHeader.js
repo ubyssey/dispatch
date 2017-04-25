@@ -8,16 +8,14 @@ import ItemListSearchBar from './ItemListSearchBar'
 
 export default function ItemListHeader(props) {
 
-  function handleToggleAllItems() {
-    props.actions.toggleAllItems(props.items.ids)
-  }
-
-  function handleDeleteItems() {
-    props.actions.deleteItems(props.items.selected)
-  }
-
   const pagination = (
     <ItemListPagination currentPage={props.currentPage} totalPages={props.totalPages} location={props.location} />
+  )
+
+  const createButton = (
+    <div className='c-item-list__header__create'>
+      {props.createHandler ? props.createHandler() : null}
+    </div>
   )
 
   return (
@@ -27,12 +25,12 @@ export default function ItemListHeader(props) {
           <div className='c-item-list__header__checkbox'>
             <input type='checkbox'
               checked={props.actions.isAllSelected}
-              onChange={handleToggleAllItems} />
+              onChange={() => props.actions.toggleAllItems(props.items.ids)} />
           </div>
           {`${props.items.selected.length} ${props.type} selected`}
           <Button
             className='c-item-list__header__delete'
-            onClick={handleDeleteItems}
+            onClick={() => props.actions.deleteItems(props.items.selected)}
             disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
@@ -40,6 +38,7 @@ export default function ItemListHeader(props) {
           <ItemListSearchBar
             query={props.location.query.q}
             searchItems={props.actions.searchItems} />
+          {props.createHandler ? createButton : null}
         </div>
       </div>
     </Toolbar>
