@@ -91,6 +91,14 @@ class ArticleEditorComponent extends React.Component {
     )
   }
 
+  previewArticle() {
+    this.props.previewArticle(
+      this.props.token,
+      this.props.articleId,
+      this.getArticle()
+    )
+  }
+
   toggleStyle(style) {
     this.props.toggleEditorStyle(style)
   }
@@ -124,6 +132,7 @@ class ArticleEditorComponent extends React.Component {
             saveArticle={() => this.saveArticle()}
             publishArticle={() => this.publishArticle()}
             unpublishArticle={() => this.unpublishArticle()}
+            previewArticle={() => this.previewArticle()}
             fetchArticleVersion={this.fetchArticleVersion}
             article={article}
             isNew={this.props.isNew} />
@@ -182,6 +191,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     unpublishArticle: (token, articleId) => {
       dispatch(articlesActions.unpublishArticle(token, articleId))
+    },
+    previewArticle: (token, articleId, data) => {
+      dispatch(articlesActions.previewArticle(token, articleId, data))
     },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))
