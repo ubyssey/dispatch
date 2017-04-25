@@ -20,6 +20,12 @@ export default function toasterReducer(toaster = {}, action) {
   case types.SETUP_TOASTER:
     return action.toaster
 
+  // Sections
+  case `${types.SAVE_SECTION}_FULFILLED`:
+    return showToast('Section saved')
+  case `${types.SAVE_SECTION}_REJECTED`:
+    return showToast('Section could not be saved', Intent.DANGER)
+
   // Articles
   case `${types.SAVE_ARTICLE}_FULFILLED`:
     return showToast('Article saved')
