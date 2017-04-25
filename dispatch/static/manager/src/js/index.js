@@ -51,8 +51,8 @@ render((
 
           <Route path='sections'>
             <IndexRoute component={Pages.Sections.Index} />
-            <Route path='new' component={Pages.Sections.NewArticle} />
-            <Route path=':sectionId' component={Pages.Sections.Article} />
+            <Route path='new' component={Pages.Sections.NewSection} />
+            <Route path=':sectionId' component={Pages.Sections.Section} />
           </Route>
 
           <Route path='articles'>

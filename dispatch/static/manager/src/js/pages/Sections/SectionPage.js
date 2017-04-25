@@ -1,9 +1,9 @@
 import React from 'react'
 
-//import SectionEditor from '../../components/SectionEditor'
+import SectionEditor from '../../components/SectionEditor'
 
-export default function SectionPage() {
+export default function SectionPage(props) {
   return (
-    <div>new section</div>
+    <SectionEditor sectionId={props.params.sectionId} />
   )
 }
