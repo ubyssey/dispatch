@@ -94,11 +94,15 @@ export default function entitiesReducer(state = initialState, action) {
     return R.merge(state, {
       section: {}
     })
-  case `${types.FETCH_SECTION}_FULFILLED`:
-  case `${types.SAVE_SECTION}_FULFILLED`:
   case types.SET_SECTION:
     return R.merge(state, {
       section: R.merge(state.section, action.payload.entities.sections),
+    })
+  case `${types.FETCH_SECTION}_FULFILLED`:
+  case `${types.SAVE_SECTION}_FULFILLED`:
+    return R.merge(state, {
+      section: R.merge(state.section, action.payload.entities.sections),
+      sections: R.merge(state.sections, action.payload.entities.sections)
     })
 
   // Files
