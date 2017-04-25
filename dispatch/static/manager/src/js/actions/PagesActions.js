@@ -15,7 +15,6 @@ function preparePayload(data) {
     delete data._content
   }
 
-  // Set template_id
   data.template_id = data.template
   delete data.template
 

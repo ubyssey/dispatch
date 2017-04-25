@@ -15,19 +15,14 @@ function preparePayload(data) {
     delete data._content
   }
 
-  // Set section_id to section
   data.section_id = data.section
 
-  // Set author_ids to authors
   data.author_ids = data.authors
 
-  // Set tag_ids to tags
   data.tag_ids = data.tags
 
-  // Set topic_id to topic
   data.topic_id = data.topic
 
-  // Set template_id
   data.template_id = data.template
   delete data.template
 
