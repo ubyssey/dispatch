@@ -77,9 +77,9 @@ function sectionsListReducer(state = initialState.list, action) {
       selected: [],
       isAllSelected: false
     })
-  case types.DELETE_SECTIONS + '_FULFILLED':
+  case `${types.DELETE_SECTIONS}_FULFILLED`:
     return R.merge(state, {
-      ids: R.without(action.payload, state.data)
+      ids: R.without(action.payload, state.ids)
     })
   default:
     return state
