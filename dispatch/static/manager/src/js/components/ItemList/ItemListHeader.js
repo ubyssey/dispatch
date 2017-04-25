@@ -19,7 +19,7 @@ export default function ItemListHeader(props) {
   )
 
   return (
-    <Toolbar>
+    <Toolbar alignLeft={true}>
       <div className='c-item-list__header'>
         <div className='c-item-list__header__left'>
           <div className='c-item-list__header__checkbox'>

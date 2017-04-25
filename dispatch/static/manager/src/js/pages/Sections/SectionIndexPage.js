@@ -4,6 +4,8 @@ import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
 
+import { Intent } from '@blueprintjs/core'
+
 import * as sectionsActions from '../../actions/SectionsActions'
 
 import { LinkButton } from '../../components/inputs'
@@ -97,7 +99,11 @@ class SectionsPageComponent extends React.Component {
           ]}
 
           emptyMessage={'You haven\'t created any sections yet.'}
-          createHandler={() => (<LinkButton to={'sections/new'}>Create section</LinkButton>)}
+          createHandler={() => (
+            <LinkButton intent={Intent.SUCCESS} to={'sections/new'}>
+              <span className='pt-icon-standard pt-icon-add'></span>Create section
+            </LinkButton>)
+          }
 
           actions={{
             toggleItem: this.props.toggleSection,

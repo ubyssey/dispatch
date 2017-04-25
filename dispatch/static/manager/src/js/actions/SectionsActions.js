@@ -27,6 +27,29 @@ export function fetchSectionsNav(token) {
   }
 }
 
+export function fetchSection(token, sectionId) {
+  return {
+    type: types.FETCH_SECTION,
+    payload: DispatchAPI.sections.fetchSection(token, sectionId)
+      .then(json => normalize(json, sectionSchema))
+  }
+}
+
+export function setSection(section) {
+  return {
+    type: types.SET_SECTION,
+    payload: normalize(section, sectionSchema)
+  }
+}
+
+export function saveSection(token, sectionId, data) {
+  return {
+    type: types.SAVE_SECTION,
+    payload: DispatchAPI.sections.saveSection(token, sectionId, data)
+      .then(json => normalize(json, sectionSchema))
+  }
+}
+
 export function toggleSection(sectionId) {
   return {
     type: types.TOGGLE_SECTION,

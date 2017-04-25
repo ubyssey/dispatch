@@ -141,8 +141,8 @@ var DispatchAPI = {
     fetchSections: (token, query) => {
       return getRequest('sections', null, query, token)
     },
-    fetchSection: (token, sectionId, params) => {
-      return getRequest('sections', sectionId, params, token)
+    fetchSection: (token, sectionId) => {
+      return getRequest('sections', sectionId, null, token)
     },
     saveSection: (token, sectionId, data) => {
       return patchRequest('sections', sectionId, data, token)
