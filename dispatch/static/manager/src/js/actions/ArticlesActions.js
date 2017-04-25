@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
 
@@ -32,7 +31,7 @@ function preparePayload(data) {
   data.template_id = data.template
   delete data.template
 
-  if (R.has('featured_image', data) && data.featured_image) {
+  if (data.featured_image) {
     data.featured_image.image_id = data.featured_image.image
   }
 
