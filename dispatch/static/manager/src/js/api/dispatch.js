@@ -165,7 +165,30 @@ var DispatchAPI = {
       return postRequest('articles.unpublish', articleId, null, token)
     }
   },
-  files:{
+  pages: {
+    fetchPages: (token, query) => {
+      return getRequest('pages', null, query, token)
+    },
+    fetchPage: (token, pageId, params) => {
+      return getRequest('pages', pageId, params, token)
+    },
+    savePage: (token, pageId, data) => {
+      return patchRequest('pages', pageId, data, token)
+    },
+    createPage: (token, data) => {
+      return postRequest('pages', null, data, token)
+    },
+    deletePage: (token, pageId) => {
+      return deleteRequest('pages', pageId, null, token)
+    },
+    publishPage: (token, pageId) => {
+      return postRequest('pages.publish', pageId, null, token)
+    },
+    unpublishPage: (token, pageId) => {
+      return postRequest('pages.unpublish', pageId, null, token)
+    }
+  },
+  files: {
     fetchFiles: (token, query) => {
       return getRequest('files', null, query, token)
     },
