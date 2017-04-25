@@ -1,8 +1,10 @@
+import { push } from 'react-router-redux'
+import { normalize, arrayOf } from 'normalizr'
+
 import * as types from '../constants/ActionTypes'
 import { sectionSchema } from '../constants/Schemas'
-import DispatchAPI from '../api/dispatch'
 
-import { normalize, arrayOf } from 'normalizr'
+import DispatchAPI from '../api/dispatch'
 
 export function fetchSections(token, query) {
   return {
@@ -71,5 +73,18 @@ export function deleteSections(token, sectionIds) {
 export function clearSections() {
   return {
     type: types.CLEAR_SECTIONS
+  }
+}
+
+export function searchSections(query) {
+
+  var queryObj = {}
+
+  if (query) {
+    queryObj.q = query
+  }
+
+  return function(dispatch) {
+    dispatch(push({ pathname: '/sections/', query: queryObj }))
   }
 }
