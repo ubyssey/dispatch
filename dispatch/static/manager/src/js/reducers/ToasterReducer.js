@@ -21,14 +21,18 @@ export default function toasterReducer(toaster = {}, action) {
     return action.toaster
 
   // Sections
+  case `${types.CREATE_SECTION}_FULFILLED`:
   case `${types.SAVE_SECTION}_FULFILLED`:
     return showToast('Section saved')
+  case `${types.CREATE_SECTION}_REJECTED`:
   case `${types.SAVE_SECTION}_REJECTED`:
     return showToast('Section could not be saved', Intent.DANGER)
 
   // Articles
+  case `${types.CREATE_ARTICLE}_FULFILLED`:
   case `${types.SAVE_ARTICLE}_FULFILLED`:
     return showToast('Article saved')
+  case `${types.CREATE_ARTICLE}_REJECTED`:
   case `${types.SAVE_ARTICLE}_REJECTED`:
     return showToast('Article could not be saved', Intent.DANGER)
   case `${types.DELETE_ARTICLES}_FULFILLED`:

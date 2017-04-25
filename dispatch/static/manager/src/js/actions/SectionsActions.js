@@ -50,6 +50,13 @@ export function saveSection(token, sectionId, data) {
   }
 }
 
+export function createSection(token, data) {
+  return {
+    type: types.CREATE_SECTION,
+    payload: DispatchAPI.sections.createSection(token, data)
+  }
+}
+
 export function toggleSection(sectionId) {
   return {
     type: types.TOGGLE_SECTION,
