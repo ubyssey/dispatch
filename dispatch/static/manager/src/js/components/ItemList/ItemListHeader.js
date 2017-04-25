@@ -9,7 +9,7 @@ import ItemListSearchBar from './ItemListSearchBar'
 export default function ItemListHeader(props) {
 
   function handleToggleAllItems() {
-    props.actions.toggleAllItems(props.items.data)
+    props.actions.toggleAllItems(props.items.ids)
   }
 
   function handleDeleteItems() {
@@ -36,7 +36,7 @@ export default function ItemListHeader(props) {
             disabled={!props.items.selected.length}>Delete</Button>
         </div>
         <div className='c-item-list__header__right'>
-          {props.items.isLoaded && props.items.data.length ? pagination : null}
+          {props.items.isLoaded && props.items.ids.length ? pagination : null}
           <ItemListSearchBar
             query={props.location.query.q}
             searchItems={props.actions.searchItems} />

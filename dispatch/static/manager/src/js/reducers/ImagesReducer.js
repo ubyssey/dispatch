@@ -4,20 +4,20 @@ import R from 'ramda'
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  images: {
+  list: {
     isLoading: false,
     isLoaded: false,
     count: null,
     next: null,
     previous: null,
-    data: []
+    ids: []
   },
-  image: {
-    data: null
+  single: {
+    id: null
   }
 }
 
-function imagesReducer(state = initialState.images, action) {
+function imagesListReducer(state = initialState.list, action) {
   switch (action.type) {
 
   case `${types.FETCH_IMAGES}_PENDING`:
@@ -31,31 +31,31 @@ function imagesReducer(state = initialState.images, action) {
       count: action.payload.count,
       next: action.payload.next,
       previous: action.payload.previous,
-      data: action.payload.append ? R.concat(state.data, action.payload.results.result) : action.payload.results.result
+      ids: action.payload.append ? R.concat(state.ids, action.payload.results.result) : action.payload.results.result
     })
   case `${types.CREATE_IMAGE}_FULFILLED`:
     return R.merge(state, {
-      data: R.concat([action.payload.result], state.data)
+      ids: R.concat([action.payload.result], state.ids)
     })
   case `${types.DELETE_IMAGE}_FULFILLED`:
     return R.merge(state, {
-      data: R.without([action.payload.imageId], state.data)
+      ids: R.without([action.payload.imageId], state.ids)
     })
   default:
     return state
   }
 }
 
-function imageReducer(state = initialState.image, action) {
+function imagesSingleReducer(state = initialState.single, action) {
   switch (action.type) {
   case types.SELECT_IMAGE:
     return R.merge(state, {
-      data: action.imageId
+      id: action.imageId
     })
   case `${types.DELETE_IMAGE}_FULFILLED`:
-    if (action.payload.imageId == state.data) {
+    if (action.payload.imageId == state.id) {
       return R.merge(state, {
-        data: null
+        id: null
       })
     } else {
       return state
@@ -66,6 +66,6 @@ function imageReducer(state = initialState.image, action) {
 }
 
 export default combineReducers({
-  images: imagesReducer,
-  image: imageReducer
+  list: imagesListReducer,
+  single: imagesSingleReducer
 })

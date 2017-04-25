@@ -141,7 +141,7 @@ class ArticlesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    articles: state.app.articles.articles,
+    articles: state.app.articles.list,
     entities: {
       articles: state.app.entities.articles,
       sections: state.app.entities.sections

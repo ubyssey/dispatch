@@ -24,7 +24,7 @@ export default function ItemListTable(props) {
         </ul>
       </div>
     )
-  } else if (!props.items.data.length) {
+  } else if (!props.items.ids.length) {
     return (
       <ItemListEmpty
         query={props.location.query.q}
@@ -33,7 +33,7 @@ export default function ItemListTable(props) {
     )
   } else {
 
-    const items = props.items.data.map( id => {
+    const items = props.items.ids.map( id => {
       let item = props.entities[id]
       return (
         <ItemListItem

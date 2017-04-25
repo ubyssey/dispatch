@@ -38,7 +38,7 @@ class TemplateSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected ? [this.props.selected] : []}
-        results={this.props.templates.data}
+        results={this.props.templates.ids}
         entities={this.props.entities.templates}
         addValue={this.addTemplate}
         removeValue={this.removeTemplate}
