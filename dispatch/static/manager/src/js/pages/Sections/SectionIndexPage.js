@@ -90,7 +90,7 @@ class SectionsPageComponent extends React.Component {
           type='sections'
 
           currentPage={this.getCurrentPage()}
-          totalSections={this.getTotalSections()}
+          totalPages={this.getTotalSections()}
 
           items={this.props.sections}
           entities={this.props.entities.sections}
