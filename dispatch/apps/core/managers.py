@@ -10,14 +10,14 @@ class UserManager(BaseUserManager):
 
         self.personModel = personModel
 
-    def _create_user(self, email, password=None, is_admin=False, is_active=True, is_superuser=False):
+    def _create_user(self, email, password=None, is_staff=False, is_active=True, is_superuser=False):
         if not email:
             raise ValueError('User must have a valid email address')
 
         if not self.is_valid_password(password):
             raise ValueError('Password is invalid')
 
-        user = self.model(email=email, is_admin=is_admin, is_active=is_active, is_superuser=is_superuser)
+        user = self.model(email=email, is_staff=is_staff, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
 
         person = self.personModel.objects.create()

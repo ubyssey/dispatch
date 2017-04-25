@@ -1,7 +1,7 @@
 from django.db.models import Model, CharField, SlugField, TextField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
 from django.conf import settings
 
-from django.contrib.auth.models import AbstractBaseUser, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
 
 from dispatch.apps.core.managers import UserManager, IntegrationManager
 
@@ -19,21 +19,11 @@ class Person(Model):
     def __str__(self):
         return self.full_name or ''
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = CharField(max_length=255, unique=True)
-    is_admin = BooleanField(default=False)
+    is_staff = BooleanField(default=False)
     is_active = BooleanField(default=True)
-    is_superuser = BooleanField()
     person = OneToOneField(Person, blank=True, null=True, related_name='person')
-    groups = ManyToManyField(Group, verbose_name=('groups'),
-        blank=True, help_text=('The groups this user belongs to. A user will '
-                               'get all permissions granted to each of '
-                               'their groups.'),
-        related_name="user_set", related_query_name="user")
-    user_permissions = ManyToManyField(Permission,
-        verbose_name=('user permissions'), blank=True,
-        help_text=('Specific permissions for this user.'),
-        related_name="user_set", related_query_name="user")
 
     USERNAME_FIELD = 'email'
 
@@ -48,19 +38,11 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.gen_short_name()
 
-    @property
-    def is_superuser(self):
-        return self.is_superuser
-
-    @property
-    def is_staff(self):
-        return self.is_admin
-
     def has_perm(self, perm, obj=None):
-        return self.is_admin
+        return self.is_staff
 
     def has_module_perms(self, app_label):
-        return self.is_admin
+        return self.is_staff
 
 class Setting(Model):
     name = CharField(max_length=255)

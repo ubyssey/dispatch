@@ -5,7 +5,6 @@
 .DS_Store
 .Python
 
-dispatch/apps/**/migrations/
 dist/
 node_modules/
 
