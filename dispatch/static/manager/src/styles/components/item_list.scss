@@ -13,7 +13,6 @@
 
 // Component: ItemListTable
 .c-item-list__table {
-  padding: 0 50px;
   flex: 1;
   overflow: scroll;
 
@@ -37,9 +36,10 @@
   color: $color-text-gray;
 
   &--checkbox {
-    width: 50px;
+    width: 3rem;
     text-align: center;
     padding-left: 0;
+    margin-left: -1rem;
   }
 
   &--title {
@@ -65,19 +65,12 @@
   display: flex;
 }
 
-.c-item-list__header__left {
-  height: 50px;
-  line-height: 50px;
-}
-
 .c-item-list__header__right {
   // Structure
   flex: 1;
-  height: 50px;
 
   // Text
   font-size: 14px;
-  line-height: 50px;
   color: $color-text-gray;
   text-align: right;
 }
@@ -85,7 +78,7 @@
 .c-item-list__header__checkbox {
   // Structure
   display: inline-block;
-  width: 50px;
+  width: 3rem;
   padding-left: 0;
   margin-right: 7px;
 

@@ -9,7 +9,7 @@ export default function ItemListTable(props) {
 
   if (props.items.isLoading) {
     return (
-      <div className='c-item-list__table'>
+      <div className='c-item-list__table u-container'>
         <ul>
           <ItemListItemPlaceholder />
           <ItemListItemPlaceholder />
@@ -46,7 +46,7 @@ export default function ItemListTable(props) {
     })
 
     return (
-      <div className='c-item-list__table'>
+      <div className='c-item-list__table u-container u-container--align-left'>
         <ul>{items}</ul>
       </div>
     )
