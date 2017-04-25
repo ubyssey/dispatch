@@ -83,6 +83,7 @@ export default function entitiesReducer(state = initialState, action) {
 
   // Sections
   case types.FETCH_SECTIONS + '_FULFILLED':
+  case types.FETCH_SECTIONS_NAV + '_FULFILLED':
     return R.merge(state, {
       sections: R.merge(state.sections, action.payload.results.entities.sections)
     })

@@ -140,7 +140,19 @@ var DispatchAPI = {
   sections: {
     fetchSections: (token, query) => {
       return getRequest('sections', null, query, token)
-    }
+    },
+    fetchSection: (token, sectionId, params) => {
+      return getRequest('sections', sectionId, params, token)
+    },
+    saveSection: (token, sectionId, data) => {
+      return patchRequest('sections', sectionId, data, token)
+    },
+    createSection: (token, data) => {
+      return postRequest('sections', null, data, token)
+    },
+    deleteSection: (token, sectionId) => {
+      return deleteRequest('sections', sectionId, null, token)
+    },
   },
   articles: {
     fetchArticles: (token, query) => {
