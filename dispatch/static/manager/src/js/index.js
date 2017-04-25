@@ -55,9 +55,12 @@ render((
             <Route path=":articleId" component={Pages.Articles.Article} />
           </Route>
 
+          <Route path="pages">
+            <IndexRoute component={Pages.Pages.Index} />
+          </Route>
+
           <Route path='components' component={Pages.Components} />
           <Route path='files' component={Pages.Files} />
-          <Route path='pages' component={Pages.Pages} />
           <Route path='sections' component={Pages.Sections} />
           <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
