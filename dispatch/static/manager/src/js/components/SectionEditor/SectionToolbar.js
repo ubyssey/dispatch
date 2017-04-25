@@ -11,7 +11,7 @@ export default function SectionToolbar(props) {
       <div className='c-section-editor__toolbar'>
         <AnchorButton
           intent={Intent.SUCCESS}
-          onClick={() => props.saveSection()}>Update</AnchorButton>
+          onClick={() => props.saveSection()}>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
       </div>
     </Toolbar>
   )
