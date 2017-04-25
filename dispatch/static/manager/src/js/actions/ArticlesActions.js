@@ -105,7 +105,7 @@ export function publishArticle(token, articleId, data) {
           payload: payload
         })
       })
-      .catch( error => {
+      .catch(error => {
         dispatch({
           type: `${types.PUBLISH_ARTICLE}_REJECTED`,
           payload: error
@@ -119,6 +119,33 @@ export function unpublishArticle(token, articleId) {
     type: types.UNPUBLISH_ARTICLE,
     payload: DispatchAPI.articles.unpublishArticle(token, articleId)
       .then( json => normalize(json, articleSchema) )
+  }
+}
+
+export function previewArticle(token, articleId, data) {
+
+  data = preparePayload(data)
+
+  return function(dispatch) {
+    dispatch({ type: `${types.SAVE_ARTICLE}_PENDING` })
+
+    DispatchAPI.articles.saveArticle(token, articleId, data)
+      .then(json => {
+        dispatch({
+          type: `${types.SAVE_ARTICLE}_FULFILLED`,
+          payload: normalize(json, articleSchema)
+        })
+
+        // Open article in new browser tab
+        window.open(json.url, `_dispatch-preview-${json.id}`)
+      })
+      .catch(error => {
+        dispatch({
+          type: `${types.SAVE_ARTICLE}_REJECTED`,
+          payload: error
+        })
+      })
+
   }
 }
 
