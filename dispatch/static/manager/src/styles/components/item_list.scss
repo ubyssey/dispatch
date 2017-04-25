@@ -98,17 +98,23 @@
   margin-left: 1rem;
 }
 
+.c-item-list__header__create {
+  // Structure
+  display: inline-block;
+  margin-left: 1rem;
+}
+
 // Component: ItemListPagination
 .c-item-list__pagination {
   // Structure
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 1rem;
 }
 
 .c-item-list__pagination__text {
   // Structure
   display: inline-block;
-  margin-left: 5px;
+  margin-left: 0.5rem;
 }
 
 // Component: ItemListSearchBar
