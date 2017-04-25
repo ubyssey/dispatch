@@ -119,10 +119,19 @@
 
 // Component: ItemListSearchBar
 .c-item-list__searchbar {
+  // Structure
   display: inline-block;
 
-  .c-text-input {
-    width: 225px;
+  .pt-input {
+    // Structure
+    width: 175px;
+
+    // Extras
+    transition: width 0.25s;
+
+    &:focus {
+      width: 275px;
+    }
   }
 }
 
