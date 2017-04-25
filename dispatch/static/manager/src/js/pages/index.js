@@ -3,9 +3,9 @@ import DashboardPage from './DashboardPage'
 import PeoplePage from './PeoplePage'
 import FilesPage from './FilesPage'
 import ComponentsPage from './ComponentsPage'
-import SectionsPage from './SectionsPage'
 import ProfilePage from './ProfilePage'
 
+import * as Sections from './Sections'
 import * as Articles from './Articles'
 import * as Pages from './Pages'
 import * as Integrations from './Integrations'
@@ -16,8 +16,8 @@ export {
   PeoplePage as People,
   FilesPage as Files,
   ComponentsPage as Components,
-  SectionsPage as Sections,
   ProfilePage as Profile,
+  Sections as Sections,
   Articles as Articles,
   Pages as Pages,
   Integrations as Integrations
