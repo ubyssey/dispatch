@@ -21,6 +21,20 @@ export const CLEAR_SELECTED_ARTICLES = 'CLEAR_SELECTED_ARTICLES'
 export const DELETE_ARTICLES = 'DELETE_ARTICLES'
 export const CLEAR_ARTICLES = 'CLEAR_ARTICLES'
 
+// Pages actions
+export const FETCH_PAGES = 'FETCH_PAGES'
+export const FETCH_PAGE = 'FETCH_PAGE'
+export const SET_PAGE = 'SET_PAGE'
+export const SAVE_PAGE = 'SAVE_PAGE'
+export const CREATE_PAGE = 'CREATE_PAGE'
+export const PUBLISH_PAGE = 'PUBLISH_PAGE'
+export const UNPUBLISH_PAGE = 'UNPUBLISH_PAGE'
+export const TOGGLE_PAGE = 'TOGGLE_PAGE'
+export const TOGGLE_ALL_PAGES = 'TOGGLE_ALL_PAGES'
+export const CLEAR_SELECTED_PAGES = 'CLEAR_SELECTED_PAGES'
+export const DELETE_PAGES = 'DELETE_PAGES'
+export const CLEAR_PAGES = 'CLEAR_PAGES'
+
 // Files actions
 export const FETCH_FILES = 'FETCH_FILES'
 export const SAVE_FILE = 'SAVE_FILE'
