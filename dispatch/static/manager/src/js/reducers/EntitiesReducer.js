@@ -18,11 +18,11 @@ export default function entitiesReducer(state = initialState, action) {
   switch (action.type) {
 
   // Articles
-  case types.FETCH_ARTICLES + '_PENDING':
+  case `${types.FETCH_ARTICLES}_PENDING`:
     return R.merge(state, {
       articles: {}
     })
-  case types.FETCH_ARTICLES + '_FULFILLED':
+  case `${types.FETCH_ARTICLES}_FULFILLED`:
     return R.merge(state, {
       articles: R.merge(state.articles, action.payload.results.entities.articles),
       persons: R.merge(state.persons, action.payload.results.entities.persons),
@@ -37,8 +37,8 @@ export default function entitiesReducer(state = initialState, action) {
     return R.merge(state, {
       article: {}
     })
-  case types.FETCH_ARTICLE + '_FULFILLED':
-  case types.SAVE_ARTICLE + '_FULFILLED':
+  case `${types.FETCH_ARTICLE}_FULFILLED`:
+  case `${types.SAVE_ARTICLE}_FULFILLED`:
   case `${types.PUBLISH_ARTICLE}_FULFILLED`:
   case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
   case types.SET_ARTICLE:
@@ -49,6 +49,35 @@ export default function entitiesReducer(state = initialState, action) {
       images: R.merge(state.images, action.payload.entities.images),
       topics: R.merge(state.topics, action.payload.entities.topics),
       tags: R.merge(state.tags, action.payload.entities.tags),
+      templates: R.merge(state.templates, action.payload.entities.templates)
+    })
+
+  // Pages
+  case `${types.FETCH_PAGES}_PENDING`:
+    return R.merge(state, {
+      pages: {}
+    })
+  case `${types.FETCH_PAGES}_FULFILLED`:
+    return R.merge(state, {
+      pages: R.merge(state.pages, action.payload.results.entities.pages),
+      images: R.merge(state.images, action.payload.results.entities.images),
+      templates: R.merge(state.templates, action.payload.results.entities.templates)
+    })
+
+  // Page
+  case `${types.FETCH_PAGE}_PENDING`:
+    return R.merge(state, {
+      page: {}
+    })
+  case `${types.FETCH_PAGE}_FULFILLED`:
+  case `${types.SAVE_PAGE}_FULFILLED`:
+  case `${types.PUBLISH_PAGE}_FULFILLED`:
+  case `${types.UNPUBLISH_PAGE}_FULFILLED`:
+  case types.SET_PAGE:
+    return R.merge(state, {
+      pages: R.merge(state.pages, action.payload.entities.pages),
+      page: R.merge(state.page, action.payload.entities.pages),
+      images: R.merge(state.images, action.payload.entities.images),
       templates: R.merge(state.templates, action.payload.entities.templates)
     })
 
