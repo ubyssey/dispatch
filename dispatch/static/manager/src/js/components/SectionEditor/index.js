@@ -74,9 +74,10 @@ class SectionEditorComponent extends React.Component {
         <div className='u-container-main'>
           <SectionToolbar
             name={section.name}
+            isNew={this.props.isNew}
             saveSection={() => this.saveSection()}
             deleteSection={() => this.props.deleteSection(this.props.token, this.props.sectionId, AFTER_DELETE)}
-            isNew={this.props.isNew} />
+            goBack={this.props.goBack} />
           <div className='u-container u-container--padded'>
             <SectionForm
               section={section}
