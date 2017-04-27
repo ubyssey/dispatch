@@ -8,8 +8,6 @@ import * as sectionsActions from '../../actions/SectionsActions'
 import SectionToolbar from './SectionToolbar'
 import SectionForm from './SectionForm'
 
-require('../../../styles/components/section_editor.scss')
-
 const NEW_SECTION_ID = 'new'
 const AFTER_DELETE = '/sections/'
 
