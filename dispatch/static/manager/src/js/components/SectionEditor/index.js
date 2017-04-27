@@ -11,6 +11,7 @@ import SectionForm from './SectionForm'
 require('../../../styles/components/section_editor.scss')
 
 const NEW_SECTION_ID = 'new'
+const AFTER_DELETE = '/sections/'
 
 class SectionEditorComponent extends React.Component {
 
@@ -73,6 +74,7 @@ class SectionEditorComponent extends React.Component {
         <div className='u-container-main'>
           <SectionToolbar
             saveSection={() => this.saveSection()}
+            deleteSection={() => this.props.deleteSection(this.props.token, this.props.sectionId, AFTER_DELETE)}
             isNew={this.props.isNew} />
           <div className='u-container u-container--padded'>
             <SectionForm
@@ -111,6 +113,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     createSection: (token, data) => {
       dispatch(sectionsActions.createSection(token, data))
+    },
+    deleteSection: (token, sectionId, next) => {
+      dispatch(sectionsActions.deleteSection(token, sectionId, next))
     }
   }
 }

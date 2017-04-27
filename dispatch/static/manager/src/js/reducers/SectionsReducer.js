@@ -12,8 +12,8 @@ const initialState = {
   list: {
     isLoading: false,
     isLoaded: false,
-    selected: [],
     isAllSelected: false,
+    selected: [],
     count: null,
     ids: []
   },
@@ -27,11 +27,11 @@ const initialState = {
 
 function sectionsNavigationReducer(state = initialState.navigation, action) {
   switch (action.type) {
-  case types.FETCH_SECTIONS_NAV + '_PENDING':
+  case `${types.FETCH_SECTIONS_NAV}_PENDING`:
     return R.merge(state, {
       isLoading: true
     })
-  case types.FETCH_SECTIONS_NAV + '_FULFILLED':
+  case `${types.FETCH_SECTIONS_NAV}_FULFILLED`:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
@@ -45,11 +45,11 @@ function sectionsNavigationReducer(state = initialState.navigation, action) {
 function sectionsListReducer(state = initialState.list, action) {
   let index
   switch (action.type) {
-  case types.FETCH_SECTIONS + '_PENDING':
+  case `${types.FETCH_SECTIONS}_PENDING`:
     return R.merge(state, {
       isLoading: true
     })
-  case types.FETCH_SECTIONS + '_FULFILLED':
+  case `${types.FETCH_SECTIONS}_FULFILLED`:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
@@ -77,6 +77,10 @@ function sectionsListReducer(state = initialState.list, action) {
       selected: [],
       isAllSelected: false
     })
+  case `${types.DELETE_SECTION}_FULFILLED`:
+    return R.merge(state, {
+      ids: R.without([action.payload], state.ids)
+    })
   case `${types.DELETE_SECTIONS}_FULFILLED`:
     return R.merge(state, {
       ids: R.without(action.payload, state.ids)
@@ -88,7 +92,7 @@ function sectionsListReducer(state = initialState.list, action) {
 
 function sectionsSingleReducer(state = initialState.single, action) {
   switch (action.type) {
-  case types.FETCH_SECTION + '_PENDING':
+  case `${types.FETCH_SECTION}_PENDING`:
     return R.merge(state, {
       isLoading: true
     })
@@ -105,6 +109,10 @@ function sectionsSingleReducer(state = initialState.single, action) {
       isLoading: false,
       isLoaded: true,
       id: action.payload.result
+    })
+  case `${types.DELETE_SECTION}_FULFILLED`:
+    return R.merge(state, {
+      id: null
     })
   case `${types.SAVE_SECTION}_REJECTED`:
   case `${types.CREATE_SECTION}_REJECTED`:

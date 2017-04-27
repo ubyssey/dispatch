@@ -12,6 +12,12 @@ export default function SectionToolbar(props) {
         <AnchorButton
           intent={Intent.SUCCESS}
           onClick={() => props.saveSection()}>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
+        <AnchorButton
+          intent={Intent.DANGER}
+          disabled={props.isNew}
+          onClick={() => props.deleteSection()}>
+            <span className='pt-icon-standard pt-icon-trash'></span>Delete
+          </AnchorButton>
       </div>
     </Toolbar>
   )
