@@ -17,13 +17,17 @@ export default function SectionToolbar(props) {
   return (
     <Toolbar>
       <ToolbarLeft>
-        <AnchorButton>Back</AnchorButton>
+        <AnchorButton
+          onClick={() => props.goBack()}>
+          <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
+        </AnchorButton>
         {props.isNew ? newTitle : editTitle}
       </ToolbarLeft>
       <ToolbarRight>
         <AnchorButton
           intent={Intent.SUCCESS}
-          onClick={() => props.saveSection()}>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
+          onClick={() => props.saveSection()}>
+          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
         <AnchorButton
           intent={Intent.DANGER}
           disabled={props.isNew}
