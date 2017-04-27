@@ -1,9 +1,11 @@
 @import '../utilities/colors';
+@import '../utilities/fonts';
 
 .c-toolbar {
   // Structure
+  display: flex;
   overflow: hidden;
-  padding: 0 50px;
+  height: 50px;
 
   // Border
   border-bottom: thin solid $color-border-gray;
@@ -14,4 +16,23 @@
   // Text
   color: $color-text-gray;
   font-size: 14px;
+  line-height: 48px;
+
+  .pt-button {
+    margin-right: 0.75rem;
+  }
+}
+
+.c-toolbar__left {
+  // Structure
+  flex: 1;
+}
+
+.c-toolbar__title {
+  // Structure
+  display: inline-block;
+
+  // Text
+  font-size: font-size(16);
+  font-weight: $font-weight-semi-bold;
 }

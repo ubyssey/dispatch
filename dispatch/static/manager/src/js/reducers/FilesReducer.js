@@ -8,7 +8,7 @@ const initialState = {
   selected: [],
   isAllSelected: false,
   count: 0,
-  data: []
+  ids: []
 }
 
 function filesReducer(state = initialState, action) {
@@ -24,21 +24,21 @@ function filesReducer(state = initialState, action) {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      data: action.payload.results.result
+      ids: action.payload.results.result
     })
   case types.CREATE_FILE + '_FULFILLED':
     return R.merge(state,{
       count: state.count++,
-      data: R.append(action.payload.result.result, state.data)
+      ids: R.append(action.payload.result.result, state.ids)
     })
   case types.DELETE_FILES + '_FULFILLED':
     return R.merge(state, {
-      data: R.without(action.payload, state.data)
+      ids: R.without(action.payload, state.ids)
     })
   case types.CLEAR_FILES:
     return R.merge(state, {
       isLoaded: false,
-      data: []
+      ids: []
     })
   case types.TOGGLE_FILE:{
     let index = R.findIndex(R.equals(action.id), state.selected)

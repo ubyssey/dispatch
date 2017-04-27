@@ -5,7 +5,7 @@ import * as types from '../constants/ActionTypes'
 const initialState = {
   isLoading: false,
   isLoaded: false,
-  data: []
+  ids: []
 }
 
 export default function templatesReducer(state = initialState, action) {
@@ -19,7 +19,7 @@ export default function templatesReducer(state = initialState, action) {
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
-      data: action.payload.results.result
+      ids: action.payload.results.result
     })
   default:
     return state

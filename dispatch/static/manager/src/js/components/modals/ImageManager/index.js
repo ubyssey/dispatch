@@ -63,7 +63,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   getImage() {
-    return this.props.entities.image[this.props.image.data]
+    return this.props.entities.image[this.props.image.id]
   }
 
   handleSave() {
@@ -72,7 +72,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   handleDelete() {
-    this.props.deleteImage(this.props.token, this.props.image.data)
+    this.props.deleteImage(this.props.token, this.props.image.id)
   }
 
   handleUpdate(field, data) {
@@ -101,13 +101,13 @@ class ImageManagerComponent extends React.Component {
 
     const image = this.getImage()
 
-    const images = this.props.images.data.map( id => {
+    const images = this.props.images.ids.map( id => {
       const image = this.props.entities.images[id]
       return (
         <ImageThumb
           key={image.id}
           image={image}
-          isSelected={this.props.image.data === id}
+          isSelected={this.props.image.id === id}
           selectImage={this.props.selectImage} />
       )
     })
@@ -153,7 +153,7 @@ class ImageManagerComponent extends React.Component {
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
           <AnchorButton
-            disabled={!this.props.image.data}
+            disabled={!this.props.image.id}
             onClick={() => this.insertImage()}>Insert</AnchorButton>
         </div>
       </div>
@@ -164,8 +164,8 @@ class ImageManagerComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    images: state.app.images.images,
-    image: state.app.images.image,
+    images: state.app.images.list,
+    image: state.app.images.single,
     entities: {
       images: state.app.entities.images,
       image: state.app.entities.image
