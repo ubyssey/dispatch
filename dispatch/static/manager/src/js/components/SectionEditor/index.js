@@ -73,6 +73,7 @@ class SectionEditorComponent extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <SectionToolbar
+            name={section.name}
             saveSection={() => this.saveSection()}
             deleteSection={() => this.props.deleteSection(this.props.token, this.props.sectionId, AFTER_DELETE)}
             isNew={this.props.isNew} />

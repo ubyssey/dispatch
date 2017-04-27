@@ -1,7 +1,9 @@
 @import '../utilities/colors';
+@import '../utilities/fonts';
 
 .c-toolbar {
   // Structure
+  display: flex;
   overflow: hidden;
   height: 50px;
 
@@ -19,4 +21,18 @@
   .pt-button {
     margin-right: 0.75rem;
   }
+}
+
+.c-toolbar__left {
+  // Structure
+  flex: 1;
+}
+
+.c-toolbar__title {
+  // Structure
+  display: inline-block;
+
+  // Text
+  font-size: font-size(16);
+  font-weight: $font-weight-semi-bold;
 }
