@@ -51,9 +51,26 @@ export function saveSection(token, sectionId, data) {
 }
 
 export function createSection(token, data) {
-  return {
-    type: types.CREATE_SECTION,
-    payload: DispatchAPI.sections.createSection(token, data)
+
+  return function(dispatch) {
+
+    dispatch({ type: `${types.CREATE_SECTION}_PENDING` })
+
+    DispatchAPI.sections.createSection(token, data)
+      .then(section => {
+        dispatch({
+          type: `${types.CREATE_SECTION}_FULFILLED`,
+          payload: normalize(section, sectionSchema)
+        })
+        dispatch(push(`/sections/${section.id}`))
+      })
+      .catch(error => {
+        dispatch({
+          type: `${types.CREATE_SECTION}_REJECTED`,
+          payload: error
+        })
+      })
+
   }
 }
 
