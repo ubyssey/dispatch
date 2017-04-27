@@ -8,17 +8,15 @@ export default function SectionToolbar(props) {
 
   return (
     <Toolbar>
-      <div className='c-section-editor__toolbar'>
-        <AnchorButton
-          intent={Intent.SUCCESS}
-          onClick={() => props.saveSection()}>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
-        <AnchorButton
-          intent={Intent.DANGER}
-          disabled={props.isNew}
-          onClick={() => props.deleteSection()}>
-            <span className='pt-icon-standard pt-icon-trash'></span>Delete
-          </AnchorButton>
-      </div>
+      <AnchorButton
+        intent={Intent.SUCCESS}
+        onClick={() => props.saveSection()}>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
+      <AnchorButton
+        intent={Intent.DANGER}
+        disabled={props.isNew}
+        onClick={() => props.deleteSection()}>
+          <span className='pt-icon-standard pt-icon-trash'></span>Delete
+        </AnchorButton>
     </Toolbar>
   )
 }
