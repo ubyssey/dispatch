@@ -77,6 +77,33 @@ export function clearSelectedSections() {
   }
 }
 
+export function deleteSection(token, sectionId, next=null) {
+
+  return function(dispatch) {
+    dispatch({ type: `${types.DELETE_SECTION}_PENDING` })
+
+    DispatchAPI.sections.deleteSection(token, sectionId)
+      .then(() => {
+        if (next) {
+          dispatch(push(next))
+        }
+      })
+      .then(() => {
+        dispatch({
+          type: `${types.DELETE_SECTION}_FULFILLED`,
+          payload: sectionId
+        })
+      })
+      .catch(error => {
+        dispatch({
+          type: `${types.DELETE_SECTION}_REJECTED`,
+          payload: error
+        })
+      })
+  }
+
+}
+
 export function deleteSections(token, sectionIds) {
   return function(dispatch) {
     dispatch({ type: `${types.DELETE_SECTIONS}_PENDING` })
