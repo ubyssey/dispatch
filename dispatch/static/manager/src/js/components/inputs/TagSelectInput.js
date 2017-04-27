@@ -49,7 +49,7 @@ class TagSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected}
-        results={this.props.tags.data}
+        results={this.props.tags.ids}
         entities={this.props.entities.tags}
         addValue={this.addTag}
         removeValue={this.removeTag}

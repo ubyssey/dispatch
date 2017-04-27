@@ -20,13 +20,27 @@ export default function toasterReducer(toaster = {}, action) {
   case types.SETUP_TOASTER:
     return action.toaster
 
+  // Sections
+  case `${types.CREATE_SECTION}_FULFILLED`:
+  case `${types.SAVE_SECTION}_FULFILLED`:
+    return showToast('Section saved')
+  case `${types.CREATE_SECTION}_REJECTED`:
+  case `${types.SAVE_SECTION}_REJECTED`:
+    return showToast('Section could not be saved', Intent.DANGER)
+  case `${types.DELETE_SECTIONS}_FULFILLED`:
+    return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
+  case `${types.DELETE_SECTIONS}_REJECTED`:
+    return showToast('Some sections could not be deleted', Intent.DANGER)
+
   // Articles
+  case `${types.CREATE_ARTICLE}_FULFILLED`:
   case `${types.SAVE_ARTICLE}_FULFILLED`:
     return showToast('Article saved')
+  case `${types.CREATE_ARTICLE}_REJECTED`:
   case `${types.SAVE_ARTICLE}_REJECTED`:
     return showToast('Article could not be saved', Intent.DANGER)
   case `${types.DELETE_ARTICLES}_FULFILLED`:
-    return showToast(`${action.payload.length} articles deleted`)
+    return showToast(`${action.payload.length} article${action.payload.length > 1 ? 's' : ''} deleted`)
   case `${types.DELETE_ARTICLES}_REJECTED`:
     return showToast('Some articles could not be deleted', Intent.DANGER)
   case `${types.PUBLISH_ARTICLE}_FULFILLED`:
@@ -78,7 +92,7 @@ export default function toasterReducer(toaster = {}, action) {
   case `${types.CREATE_FILE}_REJECTED`:
     return showToast('File could not be uploaded', Intent.DANGER)
   case `${types.DELETE_FILES}_FULFILLED`:
-    return showToast(`${action.payload.length} files deleted`)
+    return showToast(`${action.payload.length} file${action.payload.length > 1 ? 's' : ''} deleted`)
   case `${types.DELETE_FILES}_REJECTED`:
     return showToast('Some files could not be deleted', Intent.DANGER)
 
