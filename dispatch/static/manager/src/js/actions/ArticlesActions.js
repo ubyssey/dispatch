@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
 
@@ -16,23 +15,18 @@ function preparePayload(data) {
     delete data._content
   }
 
-  // Set section_id to section
   data.section_id = data.section
 
-  // Set author_ids to authors
   data.author_ids = data.authors
 
-  // Set tag_ids to tags
   data.tag_ids = data.tags
 
-  // Set topic_id to topic
   data.topic_id = data.topic
 
-  // Set template_id
   data.template_id = data.template
   delete data.template
 
-  if (R.has('featured_image', data) && data.featured_image) {
+  if (data.featured_image) {
     data.featured_image.image_id = data.featured_image.image
   }
 
@@ -105,7 +99,7 @@ export function publishArticle(token, articleId, data) {
           payload: payload
         })
       })
-      .catch( error => {
+      .catch(error => {
         dispatch({
           type: `${types.PUBLISH_ARTICLE}_REJECTED`,
           payload: error
@@ -119,6 +113,33 @@ export function unpublishArticle(token, articleId) {
     type: types.UNPUBLISH_ARTICLE,
     payload: DispatchAPI.articles.unpublishArticle(token, articleId)
       .then( json => normalize(json, articleSchema) )
+  }
+}
+
+export function previewArticle(token, articleId, data) {
+
+  data = preparePayload(data)
+
+  return function(dispatch) {
+    dispatch({ type: `${types.SAVE_ARTICLE}_PENDING` })
+
+    DispatchAPI.articles.saveArticle(token, articleId, data)
+      .then(json => {
+        dispatch({
+          type: `${types.SAVE_ARTICLE}_FULFILLED`,
+          payload: normalize(json, articleSchema)
+        })
+
+        // Open article in new browser tab
+        window.open(json.url, `_dispatch-preview-${json.id}`)
+      })
+      .catch(error => {
+        dispatch({
+          type: `${types.SAVE_ARTICLE}_REJECTED`,
+          payload: error
+        })
+      })
+
   }
 }
 

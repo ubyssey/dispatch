@@ -27,7 +27,9 @@ export default function ArticleToolbar(props) {
             intent={Intent.SUCCESS}
             onClick={() => props.saveArticle()}>Update</AnchorButton>
           {props.article.is_published ? unpublish : publish}
-          <AnchorButton disabled={props.isNew}>Preview</AnchorButton>
+          <AnchorButton 
+            disabled={props.isNew}
+            onClick={() => props.previewArticle()}>Preview</AnchorButton>
           <VersionsDropdown
             current_version={props.article.current_version}
             published_version={props.article.published_version}
