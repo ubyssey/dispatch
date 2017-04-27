@@ -24,3 +24,7 @@ export default function FormInput(props) {
   }
 
 }
+
+FormInput.defaultProps = {
+  padded: true
+}
