@@ -9,6 +9,7 @@ export default function SectionForm(props) {
 
       <FormInput
         label='Name'
+        padded={false}
         error={props.errors.name}>
         <TextInput
           placeholder='Name'
@@ -19,6 +20,7 @@ export default function SectionForm(props) {
 
       <FormInput
         label='Slug'
+        padded={false}
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
