@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
-import { LinkButton } from '../../components/inputs'
 
 import { Link } from 'react-router'
 
 import * as articlesActions from '../../actions/ArticlesActions'
+import { humanizeDatetime } from '../../util/helpers'
 
+import { LinkButton } from '../../components/inputs'
 import ItemList from '../../components/ItemList'
 
 const DEFAULT_LIMIT = 15
@@ -115,8 +116,8 @@ class ArticlesPageComponent extends React.Component {
           columns={[
             item => (<strong><Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} /></strong>),
             item => item.authors_string,
-            item => item.published_at,
-            item => item.revision_id + ' revisions'
+            item => humanizeDatetime(item.published_at),
+            item => item.latest_version + ' revisions'
           ]}
 
 
