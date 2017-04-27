@@ -3,8 +3,10 @@ import StringIO
 import os
 import re
 
+
 from jsonfield import JSONField
 from PIL import Image as Img
+import images2gif
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -416,7 +418,8 @@ class Image(Model):
         """
         Returns the image filename without extension.
         """
-        return re.split('.(jpg|gif|png)', self.img.name)[0]
+        #return re.split('.(jpg|gif|png)', self.img.name)[0]
+        return self.img.name
 
     def get_absolute_url(self):
         """
@@ -428,16 +431,26 @@ class Image(Model):
         """
         Returns the medium size image URL.
         """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'medium')
+        fileName = re.split('.(jpg|gif|png)',self.get_name())
+        name = fileName[0]
+        fileType = fileName[1]
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, 'medium', fileType)
 
     def get_thumbnail_url(self):
         """
         Returns the thumbnail URL.
         """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
+
+        fileName = re.split('.(jpg|gif|png)',self.get_name())
+        name = fileName[0]
+        fileType = fileName[1]
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, self.THUMBNAIL_SIZE, fileType)
 
     def get_wide_url(self):
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
+        fileName = re.split('.(jpg|gif|png)',self.get_name())
+        name = fileName[0]
+        fileType = fileName[1]
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, 'wide', fileType)
 
     # Overriding
     def save(self, **kwargs):
@@ -455,13 +468,13 @@ class Image(Model):
             self.width, self.height = image.size
             super(Image, self).save()
             name = re.split('.(jpg|gif|png)', self.img.name)[0]
+            fileType = re.split('.(jpg|gif|png)', self.img.name)[1]
 
             for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size)
+                self.save_thumbnail(image, self.SIZES[size], name, size, fileType)
 
 
-    #TODO: modify to account for gif and jpeg think we need to resize each image
-    def save_thumbnail(self, image, size, name, label):
+    def save_thumbnail(self, image, size, name, label, fileType):
         width, height = size
         (imw, imh) = image.size
 
@@ -470,11 +483,11 @@ class Image(Model):
             image.thumbnail(size, Img.ANTIALIAS)
 
         # Attach new thumbnail label to image filename
-        name = "%s-%s.jpg" % (name, label)
+        name = "%s-%s.%s" % (name, label, fileType)
 
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
-        image.save(image_io, format='JPEG', quality=75)
+        image.save(image_io, format=fileType, quality=75)
 
         # Convert StringIO object to Django File object
         thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
