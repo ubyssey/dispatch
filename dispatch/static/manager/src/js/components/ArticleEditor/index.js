@@ -160,7 +160,7 @@ class ArticleEditorComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    article: state.app.articles.article,
+    article: state.app.articles.single,
     editorState: state.app.editor,
     entities: {
       articles: state.app.entities.articles,

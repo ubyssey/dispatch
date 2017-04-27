@@ -4,23 +4,23 @@ import R from 'ramda'
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  pages: {
+  list: {
     isLoading: false,
     isLoaded: false,
     selected: [],
     isAllSelected: false,
     count: null,
-    data: []
+    ids: []
   },
-  page: {
+  single: {
     isLoading: false,
     isLoaded: false,
     errors: {},
-    data: null
+    id: null
   }
 }
 
-function pagesReducer(state = initialState.pages, action) {
+function pagesListReducer(state = initialState.list, action) {
   let index
   switch (action.type) {
   case types.FETCH_PAGES + '_PENDING':
@@ -32,13 +32,13 @@ function pagesReducer(state = initialState.pages, action) {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      data: action.payload.results.result
+      ids: action.payload.results.result
     })
   case types.CLEAR_PAGES:
     return R.merge(state, {
       isLoaded: false,
       count: null,
-      data: []
+      ids: []
     })
   case types.TOGGLE_PAGE:
     index = R.findIndex(R.equals(action.id), state.selected)
@@ -57,14 +57,14 @@ function pagesReducer(state = initialState.pages, action) {
     })
   case types.DELETE_PAGES + '_FULFILLED':
     return R.merge(state, {
-      data: R.without(action.payload, state.data)
+      ids: R.without(action.payload, state.ids)
     })
   default:
     return state
   }
 }
 
-function pageReducer(state = initialState.page, action) {
+function pagesSingleReducer(state = initialState.single, action) {
   switch (action.type) {
   case types.FETCH_PAGE + '_PENDING':
     return R.merge(state, {
@@ -78,13 +78,13 @@ function pageReducer(state = initialState.page, action) {
       isLoading: false,
       isLoaded: true,
       errors: {},
-      data: action.payload.result
+      id: action.payload.result
     })
   case types.SET_PAGE:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
-      data: action.payload.result
+      id: action.payload.result
     })
   case `${types.SAVE_PAGE}_REJECTED`:
   case `${types.CREATE_PAGE}_REJECTED`:
@@ -99,6 +99,6 @@ function pageReducer(state = initialState.page, action) {
 }
 
 export default combineReducers({
-  pages: pagesReducer,
-  page: pageReducer
+  list: pagesListReducer,
+  single: pagesSingleReducer
 })

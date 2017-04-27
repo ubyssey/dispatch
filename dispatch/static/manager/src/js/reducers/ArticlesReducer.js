@@ -4,23 +4,23 @@ import R from 'ramda'
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  articles: {
+  list: {
     isLoading: false,
     isLoaded: false,
     selected: [],
     isAllSelected: false,
     count: null,
-    data: []
+    ids: []
   },
-  article: {
+  single: {
     isLoading: false,
     isLoaded: false,
     errors: {},
-    data: null
+    id: null
   }
 }
 
-function articlesReducer(state = initialState.articles, action) {
+function articlesListReducer(state = initialState.list, action) {
   let index
   switch (action.type) {
   case types.FETCH_ARTICLES + '_PENDING':
@@ -32,13 +32,13 @@ function articlesReducer(state = initialState.articles, action) {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      data: action.payload.results.result
+      ids: action.payload.results.result
     })
   case types.CLEAR_ARTICLES:
     return R.merge(state, {
       isLoaded: false,
       count: null,
-      data: []
+      ids: []
     })
   case types.TOGGLE_ARTICLE:
     index = R.findIndex(R.equals(action.id), state.selected)
@@ -57,14 +57,14 @@ function articlesReducer(state = initialState.articles, action) {
     })
   case types.DELETE_ARTICLES + '_FULFILLED':
     return R.merge(state, {
-      data: R.without(action.payload, state.data)
+      ids: R.without(action.payload, state.ids)
     })
   default:
     return state
   }
 }
 
-function articleReducer(state = initialState.article, action) {
+function articlesSingleReducer(state = initialState.single, action) {
   switch (action.type) {
   case types.FETCH_ARTICLE + '_PENDING':
     return R.merge(state, {
@@ -78,13 +78,13 @@ function articleReducer(state = initialState.article, action) {
       isLoading: false,
       isLoaded: true,
       errors: {},
-      data: action.payload.result
+      id: action.payload.result
     })
   case types.SET_ARTICLE:
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
-      data: action.payload.result
+      id: action.payload.result
     })
   case `${types.SAVE_ARTICLE}_REJECTED`:
   case `${types.CREATE_ARTICLE}_REJECTED`:
@@ -99,6 +99,6 @@ function articleReducer(state = initialState.article, action) {
 }
 
 export default combineReducers({
-  articles: articlesReducer,
-  article: articleReducer
+  list: articlesListReducer,
+  single: articlesSingleReducer
 })
