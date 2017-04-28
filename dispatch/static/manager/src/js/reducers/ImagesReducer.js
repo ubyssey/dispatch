@@ -3,6 +3,8 @@ import R from 'ramda'
 
 import * as types from '../constants/ActionTypes'
 
+import { pending, fulfilled } from './ReducerHelpers'
+
 const initialState = {
   list: {
     isLoading: false,
@@ -20,11 +22,11 @@ const initialState = {
 function imagesListReducer(state = initialState.list, action) {
   switch (action.type) {
 
-  case `${types.FETCH_IMAGES}_PENDING`:
+  case pending(types.IMAGES.LIST):
     return R.merge(state, {
       isLoading: true
     })
-  case `${types.FETCH_IMAGES}_FULFILLED`:
+  case fulfilled(types.IMAGES.LIST):
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
@@ -33,11 +35,11 @@ function imagesListReducer(state = initialState.list, action) {
       previous: action.payload.previous,
       ids: action.payload.append ? R.concat(state.ids, action.payload.results.result) : action.payload.results.result
     })
-  case `${types.CREATE_IMAGE}_FULFILLED`:
+  case fulfilled(types.IMAGES.CREATE):
     return R.merge(state, {
       ids: R.concat([action.payload.result], state.ids)
     })
-  case `${types.DELETE_IMAGE}_FULFILLED`:
+  case fulfilled(types.IMAGES.DELETE):
     return R.merge(state, {
       ids: R.without([action.payload.imageId], state.ids)
     })
@@ -48,11 +50,11 @@ function imagesListReducer(state = initialState.list, action) {
 
 function imagesSingleReducer(state = initialState.single, action) {
   switch (action.type) {
-  case types.SELECT_IMAGE:
+  case types.IMAGES.SELECT:
     return R.merge(state, {
       id: action.imageId
     })
-  case `${types.DELETE_IMAGE}_FULFILLED`:
+  case fulfilled(types.IMAGES.DELETE):
     if (action.payload.imageId == state.id) {
       return R.merge(state, {
         id: null
