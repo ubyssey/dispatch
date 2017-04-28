@@ -1,6 +1,8 @@
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
 
+import DispatchAPI from '../api/dispatch'
+
 export default class GenericActions {
 
   constructor(types, api, schema) {
@@ -27,6 +29,20 @@ export default class GenericActions {
       payload: this.api.list(token, params)
         .then(json => ({
           count: json.count,
+          results: normalize(json.results, arrayOf(this.schema))
+        }))
+    }
+  }
+
+  listPage(token, uri) {
+    return {
+      type: this.types.LIST,
+      payload: DispatchAPI.fetchPage(token, uri)
+        .then(json => ({
+          count: json.count,
+          next: json.next,
+          previous: json.previous,
+          append: true,
           results: normalize(json.results, arrayOf(this.schema))
         }))
     }
