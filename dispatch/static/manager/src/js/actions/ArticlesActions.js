@@ -9,14 +9,6 @@ import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
 
 class ArticlesActions extends PublishableActions {
 
-  constructor() {
-    super(
-      types.ARTICLES,
-      DispatchAPI.articles,
-      articleSchema
-    )
-  }
-
   prepareData(data) {
     if (data._content) {
       // Convert article contentState to JSON array
@@ -60,4 +52,8 @@ class ArticlesActions extends PublishableActions {
 
 }
 
-export default new ArticlesActions()
+export default new ArticlesActions(
+  types.ARTICLES,
+  DispatchAPI.articles,
+  articleSchema
+)
