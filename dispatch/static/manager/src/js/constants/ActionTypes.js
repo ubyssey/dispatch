@@ -64,13 +64,15 @@ export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'
 
 // Image actions
-export const FETCH_IMAGES = 'FETCH_IMAGES'
-export const CREATE_IMAGE = 'CREATE_IMAGE'
-export const SAVE_IMAGE = 'SAVE_IMAGE'
-export const DELETE_IMAGE = 'DELETE_IMAGE'
-export const UPDATE_IMAGE = 'UPDATE_IMAGE'
-export const SEARCH_IMAGES = 'SEARCH_IMAGES'
-export const SELECT_IMAGE = 'SELECT_IMAGE'
+export const IMAGES = {
+  LIST: 'LIST_IMAGE',
+  CREATE: 'CREATE_IMAGE',
+  SAVE: 'SAVE_IMAGE',
+  DELETE: 'DELETE_IMAGE',
+  SET: 'SET_IMAGE',
+  SELECT: 'SELECT_IMAGE',
+  SEARCH: 'SEARCH_IMAGE'
+}
 
 // Person actions
 export const FETCH_PERSONS = 'FETCH_PERSONS'
