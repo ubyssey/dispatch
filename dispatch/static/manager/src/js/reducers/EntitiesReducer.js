@@ -1,6 +1,8 @@
 import R from 'ramda'
 import * as types from '../constants/ActionTypes'
 
+import { pending, fulfilled } from './ReducerHelpers'
+
 const initialState = {
   articles: {},
   article: {},
@@ -19,11 +21,11 @@ export default function entitiesReducer(state = initialState, action) {
   switch (action.type) {
 
   // Articles
-  case `${types.FETCH_ARTICLES}_PENDING`:
+  case pending(types.ARTICLES.LIST):
     return R.merge(state, {
       articles: {}
     })
-  case `${types.FETCH_ARTICLES}_FULFILLED`:
+  case fulfilled(types.ARTICLES.LIST):
     return R.merge(state, {
       articles: R.merge(state.articles, action.payload.results.entities.articles),
       persons: R.merge(state.persons, action.payload.results.entities.persons),
@@ -34,15 +36,15 @@ export default function entitiesReducer(state = initialState, action) {
     })
 
   // Article
-  case types.FETCH_ARTICLE + '_PENDING':
+  case pending(types.ARTICLES.GET):
     return R.merge(state, {
       article: {}
     })
-  case `${types.FETCH_ARTICLE}_FULFILLED`:
-  case `${types.SAVE_ARTICLE}_FULFILLED`:
-  case `${types.PUBLISH_ARTICLE}_FULFILLED`:
-  case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
-  case types.SET_ARTICLE:
+  case fulfilled(types.ARTICLES.GET):
+  case fulfilled(types.ARTICLES.SAVE):
+  case fulfilled(types.ARTICLES.PUBLISH):
+  case fulfilled(types.ARTICLES.UNPUBLISH):
+  case types.ARTICLES.SET:
     return R.merge(state, {
       articles: R.merge(state.articles, action.payload.entities.articles),
       article: R.merge(state.article, action.payload.entities.articles),

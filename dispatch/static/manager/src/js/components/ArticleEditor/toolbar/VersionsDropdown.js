@@ -19,7 +19,7 @@ export default class VersionsDropdown extends React.Component {
   }
 
   selectVersion(version) {
-    this.props.fetchArticleVersion(version)
+    this.props.getVersion(version)
     this.refs.dropdown.close()
   }
 
