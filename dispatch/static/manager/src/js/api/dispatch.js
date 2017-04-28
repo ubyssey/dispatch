@@ -122,7 +122,7 @@ function patchRequest(route, id=null, payload={}, token=null) {
   .then(parseJSON)
 }
 
-var DispatchAPI = {
+const DispatchAPI = {
   fetchPage: (token, uri) => {
     return getPageRequest(uri, token)
   },
@@ -215,7 +215,7 @@ var DispatchAPI = {
     list: (token, query) => {
       return getRequest('images', null, query, token)
     },
-    save (token, imageId, data) => {
+    save: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
     create: (token, data) => {
