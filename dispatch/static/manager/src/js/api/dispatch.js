@@ -155,25 +155,25 @@ var DispatchAPI = {
     },
   },
   articles: {
-    fetchArticles: (token, query) => {
+    list: (token, query) => {
       return getRequest('articles', null, query, token)
     },
-    fetchArticle: (token, articleId, params) => {
+    get: (token, articleId, params) => {
       return getRequest('articles', articleId, params, token)
     },
-    saveArticle: (token, articleId, data) => {
+    save: (token, articleId, data) => {
       return patchRequest('articles', articleId, data, token)
     },
-    createArticle: (token, data) => {
+    create: (token, data) => {
       return postRequest('articles', null, data, token)
     },
-    deleteArticle: (token, articleId) => {
+    delete: (token, articleId) => {
       return deleteRequest('articles', articleId, null, token)
     },
-    publishArticle: (token, articleId) => {
+    publish: (token, articleId) => {
       return postRequest('articles.publish', articleId, null, token)
     },
-    unpublishArticle: (token, articleId) => {
+    unpublish: (token, articleId) => {
       return postRequest('articles.unpublish', articleId, null, token)
     }
   },

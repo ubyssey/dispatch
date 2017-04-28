@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core'
 
 import * as types from '../constants/ActionTypes'
+import { fulfilled, rejected } from './ReducerHelpers'
 
 const DEFAULT_TIMEOUT = 2000
 
@@ -33,23 +34,23 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Some sections could not be deleted', Intent.DANGER)
 
   // Articles
-  case `${types.CREATE_ARTICLE}_FULFILLED`:
-  case `${types.SAVE_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.CREATE):
+  case fulfilled(types.ARTICLES.SAVE):
     return showToast('Article saved')
-  case `${types.CREATE_ARTICLE}_REJECTED`:
-  case `${types.SAVE_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.CREATE):
+  case rejected(types.ARTICLES.SAVE):
     return showToast('Article could not be saved', Intent.DANGER)
-  case `${types.DELETE_ARTICLES}_FULFILLED`:
+  case fulfilled(types.ARTICLES.DELETE_MANY):
     return showToast(`${action.payload.length} article${action.payload.length > 1 ? 's' : ''} deleted`)
-  case `${types.DELETE_ARTICLES}_REJECTED`:
+  case rejected(types.ARTICLES.DELETE_MANY):
     return showToast('Some articles could not be deleted', Intent.DANGER)
-  case `${types.PUBLISH_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.PUBLISH):
     return showToast('Article published')
-  case `${types.PUBLISH_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.PUBLISH):
     return showToast('Article could not be published', Intent.DANGER)
-  case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.UNPUBLISH):
     return showToast('Article unpublished')
-  case `${types.UNPUBLISH_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.UNPUBLISH):
     return showToast('Article could not be unpublished', Intent.DANGER)
 
   // Pages
