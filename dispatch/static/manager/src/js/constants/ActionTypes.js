@@ -1,82 +1,73 @@
+import R from 'ramda'
+
+const DEFAULT_RESOURCE_ACTION_TYPES = [
+  'LIST',
+  'GET',
+  'SAVE',
+  'CREATE',
+  'DELETE',
+  'DELETE_MANY',
+  'PUBLISH',
+  'UNPUBLISH',
+  'SET',
+  'TOGGLE',
+  'TOGGLE_ALL',
+  'CLEAR_SELECTED',
+  'CLEAR_ALL'
+]
+
+/**
+ * Utility to generate an action type object from a list of action types.
+ */
+function makeActionTypes(prefix, actionTypes) {
+  return actionTypes.reduce(
+    (acc, action) => R.assoc(action, `${prefix}_${action}`, acc),
+    {}
+  )
+}
+
+/**
+ * Utility to generate generic resource action types. Additional action types
+ * can be passed through the `extraActionTypes` parameter.
+ *
+ * i.e. resourceActionTypes('BOOKS') generates:
+ *
+ *  {
+ *    LIST: 'BOOKS_LIST',
+ *    GET: 'BOOKS_GET',
+ *    SAVE: 'BOOKS_SAVE'
+ *    ...
+ *  }
+ */
+function resourceActionTypes(prefix, extraActionTypes=[]) {
+  return makeActionTypes(
+    prefix,
+    R.concat(DEFAULT_RESOURCE_ACTION_TYPES, extraActionTypes)
+  )
+}
+
+// Resource actions
+export const SECTIONS = resourceActionTypes('SECTIONS')
+export const ARTICLES = resourceActionTypes('ARTICLES', ['PUBLISH', 'UNPUBLISH'])
+export const PAGES = resourceActionTypes('PAGES', ['PUBLISH', 'UNPUBLISH'])
+export const FILES = resourceActionTypes('FILES')
+export const IMAGES = resourceActionTypes('IMAGES')
+export const PERSONS = resourceActionTypes('PERSONS')
+export const TOPICS = resourceActionTypes('TOPICS')
+export const TAGS = resourceActionTypes('TAGS')
+export const TEMPLATES = resourceActionTypes('TEMPLATES')
+
+console.log(ARTICLES)
+
 // User actions
 export const AUTH_REQUIRED = 'AUTH_REQUIRED'
 export const AUTH_REQUEST_TOKEN = 'AUTH_REQUEST_TOKEN'
 export const AUTH_RECEIVE_TOKEN = 'AUTH_RECEIVE_TOKEN'
 export const AUTH_FAILURE_TOKEN = 'AUTH_FAILURE_TOKEN'
 
-// Sections actions
-export const FETCH_SECTIONS = 'FETCH_SECTIONS'
-export const FETCH_SECTIONS_NAV = 'FETCH_SECTIONS_NAV'
-export const FETCH_SECTION = 'FETCH_SECTION'
-export const SET_SECTION = 'SET_SECTION'
-export const SAVE_SECTION = 'SAVE_SECTION'
-export const CREATE_SECTION = 'CREATE_SECTION'
-export const DELETE_SECTION = 'DELETE_SECTION'
-export const TOGGLE_SECTION = 'TOGGLE_SECTION'
-export const TOGGLE_ALL_SECTIONS = 'TOGGLE_ALL_SECTIONS'
-export const CLEAR_SELECTED_SECTIONS = 'CLEAR_SELECTED_SECTIONS'
-export const DELETE_SECTIONS = 'DELETE_SECTIONS'
-export const CLEAR_SECTIONS = 'CLEAR_SECTIONS'
-
-// Articles actions
-export const ARTICLES = {
-  LIST: 'LIST_ARTICLE',
-  GET: 'GET_ARTICLE',
-  SAVE: 'SAVE_ARTICLE',
-  CREATE: 'CREATE_ARTICLE',
-  DELETE: 'DELETE_ARTICLE',
-  DELETE_MANY: 'DELETE_MANY_ARTICLE',
-  PUBLISH: 'PUBLISH_ARTICLE',
-  UNPUBLISH: 'UNPUBLISH_ARTICLE',
-  SET: 'SET_ARTICLE',
-  TOGGLE: 'TOGGLE_ARTICLE',
-  TOGGLE_ALL: 'TOGGLE_ALL_ARTICLE',
-  CLEAR_SELECTED: 'CLEAR_SELECTED_ARTICLE',
-  CLEAR_ALL: 'CLEAR_ALL_ARTICLE'
-}
-
-// Pages actions
-export const FETCH_PAGES = 'FETCH_PAGES'
-export const FETCH_PAGE = 'FETCH_PAGE'
-export const SET_PAGE = 'SET_PAGE'
-export const SAVE_PAGE = 'SAVE_PAGE'
-export const CREATE_PAGE = 'CREATE_PAGE'
-export const PUBLISH_PAGE = 'PUBLISH_PAGE'
-export const UNPUBLISH_PAGE = 'UNPUBLISH_PAGE'
-export const TOGGLE_PAGE = 'TOGGLE_PAGE'
-export const TOGGLE_ALL_PAGES = 'TOGGLE_ALL_PAGES'
-export const CLEAR_SELECTED_PAGES = 'CLEAR_SELECTED_PAGES'
-export const DELETE_PAGES = 'DELETE_PAGES'
-export const CLEAR_PAGES = 'CLEAR_PAGES'
-
-// Files actions
-export const FETCH_FILES = 'FETCH_FILES'
-export const SAVE_FILE = 'SAVE_FILE'
-export const CREATE_FILE = 'CREATE_FILE'
-export const TOGGLE_FILE = 'TOGGLE_FILE'
-export const TOGGLE_ALL_FILES = 'TOGGLE_ALL_FILES'
-export const CLEAR_SELECTED_FILES = 'CLEAR_SELECTED_FILES'
-export const DELETE_FILES = 'DELETE_FILES'
-export const CLEAR_FILES = 'CLEAR_FILES'
-
 // Modal actions
 export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'
-
-// Image actions
-export const IMAGES = {
-  LIST: 'LIST_IMAGE',
-  CREATE: 'CREATE_IMAGE',
-  SAVE: 'SAVE_IMAGE',
-  DELETE: 'DELETE_IMAGE',
-  SET: 'SET_IMAGE',
-  SELECT: 'SELECT_IMAGE',
-  SEARCH: 'SEARCH_IMAGE'
-}
-
-// Person actions
-export const FETCH_PERSONS = 'FETCH_PERSONS'
-export const CREATE_PERSON = 'CREATE_PERSON'
 
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
@@ -87,19 +78,6 @@ export const TOGGLE_EDITOR_STYLE = 'TOGGLE_EDITOR_STYLE'
 export const EDITOR_KEY_COMMAND = 'EDITOR_KEY_COMMAND'
 export const EDITOR_INSERT_LINK = 'EDITOR_INSERT_LINK'
 export const EDITOR_REMOVE_LINK = 'EDITOR_REMOVE_LINK'
-
-// Topic actions
-export const FETCH_TOPICS = 'FETCH_TOPICS'
-export const CREATE_TOPIC = 'CREATE_TOPIC'
-
-// Tag actions
-export const FETCH_TAGS = 'FETCH_TAGS'
-export const CREATE_TAG = 'CREATE_TAG'
-
-// Templates actions
-export const FETCH_TEMPLATES = 'FETCH_TEMPLATES'
-export const FETCH_TEMPLATE = 'FETCH_TEMPLATE'
-
 
 // Integration actions
 export const INTEGRATION_CALLBACK = 'INTEGRATION_CALLBACK'
