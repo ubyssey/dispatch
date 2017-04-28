@@ -138,19 +138,19 @@ var DispatchAPI = {
     }
   },
   sections: {
-    fetchSections: (token, query) => {
+    list: (token, query) => {
       return getRequest('sections', null, query, token)
     },
-    fetchSection: (token, sectionId) => {
+    get: (token, sectionId) => {
       return getRequest('sections', sectionId, null, token)
     },
-    saveSection: (token, sectionId, data) => {
+    save: (token, sectionId, data) => {
       return patchRequest('sections', sectionId, data, token)
     },
-    createSection: (token, data) => {
+    create: (token, data) => {
       return postRequest('sections', null, data, token)
     },
-    deleteSection: (token, sectionId) => {
+    delete: (token, sectionId) => {
       return deleteRequest('sections', sectionId, null, token)
     },
   },
@@ -178,93 +178,93 @@ var DispatchAPI = {
     }
   },
   pages: {
-    fetchPages: (token, query) => {
+    list: (token, query) => {
       return getRequest('pages', null, query, token)
     },
-    fetchPage: (token, pageId, params) => {
+    get: (token, pageId, params) => {
       return getRequest('pages', pageId, params, token)
     },
-    savePage: (token, pageId, data) => {
+    save: (token, pageId, data) => {
       return patchRequest('pages', pageId, data, token)
     },
-    createPage: (token, data) => {
+    create: (token, data) => {
       return postRequest('pages', null, data, token)
     },
-    deletePage: (token, pageId) => {
+    delete: (token, pageId) => {
       return deleteRequest('pages', pageId, null, token)
     },
-    publishPage: (token, pageId) => {
+    publish: (token, pageId) => {
       return postRequest('pages.publish', pageId, null, token)
     },
-    unpublishPage: (token, pageId) => {
+    unpublish: (token, pageId) => {
       return postRequest('pages.unpublish', pageId, null, token)
     }
   },
   files: {
-    fetchFiles: (token, query) => {
+    list: (token, query) => {
       return getRequest('files', null, query, token)
     },
-    createFile: (token, data) => {
+    create: (token, data) => {
       return postMultipartRequest('files', null, data, token)
     },
-    deleteFile: (token, fileId) => {
+    delete: (token, fileId) => {
       return deleteRequest('files', fileId, null, token)
     }
   },
   images: {
-    fetchImages: (token, query) => {
+    list: (token, query) => {
       return getRequest('images', null, query, token)
     },
-    saveImage: (token, imageId, data) => {
+    save (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
-    createImage: (token, data) => {
+    create: (token, data) => {
       return postMultipartRequest('images', null, data, token)
     },
-    deleteImage: (token, imageId) => {
+    delete: (token, imageId) => {
       return deleteRequest('images', imageId, null, token)
     }
   },
   templates: {
-    fetchTemplate: (token, templateId) => {
-      return getRequest('templates', templateId, null, token)
-    },
-    fetchTemplates: (token, query) => {
+    list: (token, query) => {
       return getRequest('templates', null, query, token)
+    },
+    get: (token, templateId) => {
+      return getRequest('templates', templateId, null, token)
     }
   },
   persons: {
-    fetchPersons: (token, query) => {
+    list: (token, query) => {
       return getRequest('people', null, query, token)
     },
-    createPerson: (token, fullName) => {
+    create: (token, fullName) => {
       return postRequest('people', null, {full_name: fullName}, token)
     }
   },
   topics: {
-    fetchTopics: (token, query) => {
+    list: (token, query) => {
       return getRequest('topics', null, query, token)
     },
-    createTopic: (token, name) => {
+    create: (token, name) => {
       return postRequest('topics', null, {name: name}, token)
     }
   },
   tags: {
-    fetchTags: (token, query) => {
+    list: (token, query) => {
       return getRequest('tags', null, query, token)
     },
-    createTag: (token, name) => {
+    create: (token, name) => {
       return postRequest('tags', null, {name: name}, token)
     }
   },
   integrations: {
-    fetchIntegration: (token, integrationId) => {
+    get: (token, integrationId) => {
       return getRequest('integrations', integrationId, null, token)
     },
-    saveIntegration: (token, integrationId, data) => {
+    save: (token, integrationId, data) => {
       return patchRequest('integrations', integrationId, data, token)
     },
-    deleteIntegration: (token, integrationId) => {
+    delete: (token, integrationId) => {
       return deleteRequest('integrations', integrationId, null, token)
     },
     callback: (token, integrationId, query) => {
