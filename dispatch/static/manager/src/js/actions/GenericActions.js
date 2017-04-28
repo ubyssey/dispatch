@@ -49,7 +49,7 @@ export default class GenericActions {
   }
 
   delete(token, id, next=null) {
-    return function(dispatch) {
+    return (dispatch) => {
 
       dispatch({ type: `${this.types.DELETE}_PENDING` })
 
@@ -75,7 +75,7 @@ export default class GenericActions {
   }
 
   deleteMany(token, ids) {
-    return function(dispatch) {
+    return (dispatch) => {
       dispatch({ type: `${this.types.DELETE_MANY}_PENDING` })
 
       Promise.all(
