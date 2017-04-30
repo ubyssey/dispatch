@@ -103,7 +103,9 @@ export class ResourceActions {
     return {
       type: this.types.SAVE,
       payload: this.api.save(token, id, this.prepareData(data))
-        .then(json => normalize(json, this.schema))
+        .then(json => ({
+          data: normalize(json, this.schema)
+        }))
     }
   }
 
@@ -111,7 +113,9 @@ export class ResourceActions {
     return {
       type: this.types.CREATE,
       payload: this.api.create(token, this.dataAdapter(data))
-        .then(json => normalize(json, this.schema))
+        .then(json => ({
+          data: normalize(json, this.schema)
+        }))
     }
   }
 
