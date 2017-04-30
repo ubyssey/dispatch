@@ -33,4 +33,4 @@ reducer.handle(fulfilled(types.AUTH.GET_TOKEN), (state, action) => {
   })
 })
 
-export default reducer.reduce
+export default reducer.getReducer()

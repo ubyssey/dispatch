@@ -31,7 +31,7 @@ navigationReducer.handle(fulfilled(types.SECTIONS.LIST_NAV), (state, action) => 
 })
 
 export default combineReducers({
-  navigation: navigationReducer.reduce,
-  list: buildManyResourceReducer(types.SECTIONS).reduce,
-  single: buildSingleResourceReducer(types.SECTIONS).reduce,
+  navigation: navigationReducer.getReducer(),
+  list: buildManyResourceReducer(types.SECTIONS).getReducer(),
+  single: buildSingleResourceReducer(types.SECTIONS).getReducer(),
 })

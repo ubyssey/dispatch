@@ -16,4 +16,4 @@ reducer.handle(types.MODAL.OPEN, (state, action) => ({
 
 reducer.handle(types.MODAL.CLOSE, () => initialState)
 
-export default reducer.reduce
+export default reducer.getReducer()
