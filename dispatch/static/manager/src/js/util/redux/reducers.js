@@ -1,23 +1,31 @@
 import R from 'ramda'
 
-import { pending, fulfilled, rejected } from '../util/helpers'
+import { pending, fulfilled, rejected } from './actions'
 
 export class Reducer {
 
   constructor(initialState) {
     this.initialState = initialState
+
     this.handlers = new Map()
+    this.defaultHandler = (state) => state
+
+    this.reduce = this.reduce.bind(this)
   }
 
   handle(type, handler) {
     this.handlers.set(type, handler)
   }
 
-  reduce(state=this.initialState, action) {
+  handleDefault(handler) {
+    this.defaultHandler = handler
+  }
+
+  reduce(state, action) {
     if (this.handlers.has(action.type)) {
-      return this.handlers.get(action.type)(state, action)
+      return this.handlers.get(action.type)(state || this.initialState, action)
     } else {
-      return state
+      return this.defaultHandler(state || this.initialState, action)
     }
   }
 
@@ -43,7 +51,7 @@ export function buildManyResourceReducer(types) {
       isLoading: false,
       isLoaded: true,
       count: action.payload.count,
-      ids: action.payload.results.result
+      ids: action.payload.data.result
     })
   })
 
@@ -79,11 +87,12 @@ export function buildManyResourceReducer(types) {
 }
 
 export function handleSuccess(state, action) {
+  console.log(action)
   return R.merge(state, {
     isLoading: false,
     isLoaded: true,
     errors: {},
-    id: action.payload.result
+    id: action.payload.data.result
   })
 }
 
@@ -116,7 +125,7 @@ export function buildSingleResourceReducer(types) {
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
-      id: action.payload.result
+      id: action.payload.data.result
     })
   })
 
