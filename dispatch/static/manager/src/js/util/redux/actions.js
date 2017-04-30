@@ -112,7 +112,7 @@ export class ResourceActions {
   create(token, id, data) {
     return {
       type: this.types.CREATE,
-      payload: this.api.create(token, this.dataAdapter(data))
+      payload: this.api.create(token, this.prepareData(data))
         .then(json => ({
           data: normalize(json, this.schema)
         }))
@@ -122,7 +122,7 @@ export class ResourceActions {
   delete(token, id, next=null) {
     return (dispatch) => {
 
-      dispatch({ type: `${this.types.DELETE}_PENDING` })
+      dispatch({ type: pending(this.types.DELETE) })
 
       this.api.delete(token, id)
         .then(() => {
@@ -132,13 +132,13 @@ export class ResourceActions {
         })
         .then(() => {
           dispatch({
-            type: `${this.types.DELETE}_FULFILLED`,
+            type: fulfilled(this.types.DELETE),
             payload: id
           })
         })
         .catch(error => {
           dispatch({
-            type: `${this.types.DELETE}_REJECTED`,
+            type: rejected(this.types.DELETE),
             payload: error
           })
         })
@@ -147,20 +147,20 @@ export class ResourceActions {
 
   deleteMany(token, ids) {
     return (dispatch) => {
-      dispatch({ type: `${this.types.DELETE_MANY}_PENDING` })
+      dispatch({ type: pending(this.types.DELETE_MANY) })
 
       Promise.all(
         ids.map(id => this.api.delete(token, id))
       )
       .then(() => {
         dispatch({
-          type: `${this.types.DELETE_MANY}_FULFILLED`,
+          type: fulfilled(this.types.DELETE_MANY),
           payload: ids
         })
       })
       .catch(error => {
         dispatch({
-          type: `${this.types.DELETE_MANY}_REJECTED`,
+          type: rejected(this.types.DELETE_MANY),
           payload: error
         })
       })
