@@ -3,18 +3,9 @@ import { connect } from 'react-redux'
 
 import MultiSelectInput from './MultiSelectInput'
 
-import * as topicsActions from '../../actions/TopicsActions'
+import topicsActions from '../../actions/TopicsActions'
 
 class TopicSelectInputComponent extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.addTopic = this.addTopic.bind(this)
-    this.removeTopic = this.removeTopic.bind(this)
-    this.createTopic = this.createTopic.bind(this)
-    this.fetchTopics = this.fetchTopics.bind(this)
-  }
 
   addTopic(topicId) {
     this.props.update(topicId)
@@ -24,18 +15,14 @@ class TopicSelectInputComponent extends React.Component {
     this.props.update(null)
   }
 
-  createTopic() {
-
-  }
-
-  fetchTopics(query) {
+  listTopics(query) {
     let queryObj = {}
 
     if (query) {
       queryObj['q'] = query
     }
 
-    this.props.fetchTopics(this.props.token, queryObj)
+    this.props.listTopics(this.props.token, queryObj)
   }
 
   render() {
@@ -44,10 +31,9 @@ class TopicSelectInputComponent extends React.Component {
         selected={this.props.selected ? [this.props.selected] : []}
         results={this.props.topics.ids}
         entities={this.props.entities.topics}
-        addValue={this.addTopic}
-        removeValue={this.removeTopic}
-        createValue={this.createTopic}
-        fetchResults={this.fetchTopics}
+        addValue={(id) => this.addTopic(id)}
+        removeValue={(id) => this.removeTopic(id)}
+        fetchResults={(query) => this.listTopics(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Edit topic' : 'Add topic'} />
     )
@@ -67,8 +53,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTopics: (token, query) => {
-      dispatch(topicsActions.fetchTopics(token, query))
+    listTopics: (token, query) => {
+      dispatch(topicsActions.list(token, query))
     }
   }
 }
