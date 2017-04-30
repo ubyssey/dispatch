@@ -50,4 +50,4 @@ reducer.handle(fulfilled(types.INTEGRATIONS.DELETE), (state, action) => {
   })
 })
 
-export default reducer.reduce
+export default reducer.getReducer()

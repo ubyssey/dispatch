@@ -8,6 +8,6 @@ import {
 } from '../util/redux'
 
 export default combineReducers({
-  list: buildManyResourceReducer(types.IMAGES).reduce,
-  single: buildSingleResourceReducer(types.IMAGES).reduce
+  list: buildManyResourceReducer(types.IMAGES).getReducer(),
+  single: buildSingleResourceReducer(types.IMAGES).getReducer()
 })
