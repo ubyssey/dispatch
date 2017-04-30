@@ -1,9 +1,58 @@
+import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 import { push } from 'react-router-redux'
 
-import DispatchAPI from '../api/dispatch'
+import DispatchAPI from '../../api/dispatch'
 
-export default class GenericActions {
+export function pending(actionType) { return `${actionType}_PENDING` }
+export function fulfilled(actionType) { return `${actionType}_FULFILLED` }
+export function rejected(actionType) { return `${actionType}_REJECTED` }
+
+const DEFAULT_RESOURCE_ACTION_TYPES = [
+  'LIST',
+  'GET',
+  'SAVE',
+  'CREATE',
+  'DELETE',
+  'DELETE_MANY',
+  'SET',
+  'TOGGLE',
+  'TOGGLE_ALL',
+  'CLEAR_SELECTED',
+  'CLEAR_ALL'
+]
+
+/**
+ * Utility to generate an action type object from a list of action types.
+ */
+export function actionTypes(prefix, actionTypes) {
+  return actionTypes.reduce(
+    (acc, action) => R.assoc(action, `${prefix}_${action}`, acc),
+    {}
+  )
+}
+
+/**
+ * Utility to generate generic resource action types. Additional action types
+ * can be passed through the `extraActionTypes` parameter.
+ *
+ * i.e. resourceActionTypes('BOOKS') generates:
+ *
+ *  {
+ *    LIST: 'BOOKS_LIST',
+ *    GET: 'BOOKS_GET',
+ *    SAVE: 'BOOKS_SAVE'
+ *    ...
+ *  }
+ */
+export function resourceActionTypes(prefix, extraActionTypes=[]) {
+  return actionTypes(
+    prefix,
+    R.concat(DEFAULT_RESOURCE_ACTION_TYPES, extraActionTypes)
+  )
+}
+
+export class ResourceActions {
 
   constructor(types, api, schema) {
     this.types = types
@@ -19,7 +68,9 @@ export default class GenericActions {
     return {
       type: this.types.GET,
       payload: this.api.get(token, id, params)
-        .then(json => normalize(json, this.schema))
+        .then(json => ({
+          data: normalize(json, this.schema)
+        }))
     }
   }
 
@@ -29,7 +80,7 @@ export default class GenericActions {
       payload: this.api.list(token, params)
         .then(json => ({
           count: json.count,
-          results: normalize(json.results, arrayOf(this.schema))
+          data: normalize(json.results, arrayOf(this.schema))
         }))
     }
   }
@@ -43,7 +94,7 @@ export default class GenericActions {
           next: json.next,
           previous: json.previous,
           append: true,
-          results: normalize(json.results, arrayOf(this.schema))
+          data: normalize(json.results, arrayOf(this.schema))
         }))
     }
   }
@@ -115,7 +166,9 @@ export default class GenericActions {
   set(resource) {
     return {
       type: this.types.SET,
-      payload: normalize(resource, this.schema)
+      payload: {
+        data: normalize(resource, this.schema)
+      }
     }
   }
 
