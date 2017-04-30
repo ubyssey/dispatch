@@ -21,8 +21,6 @@ reducer.handle(types.AUTH.LOGIN_REQUIRED, (state, action) => {
 
 reducer.handle(fulfilled(types.AUTH.GET_TOKEN), (state, action) => {
 
-  console.log('Logged in')
-
   Cookies.set('token', action.token) // Persist token in browser cookie
   Cookies.set('email', action.email) // Persist email in browser cookie
 
