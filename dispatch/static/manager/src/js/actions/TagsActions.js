@@ -4,7 +4,7 @@ import DispatchAPI from '../api/dispatch'
 
 import { ResourceActions } from '../util/redux'
 
-export default ResourceActions(
+export default new ResourceActions(
   types.TAGS,
   DispatchAPI.tags,
   tagSchema
