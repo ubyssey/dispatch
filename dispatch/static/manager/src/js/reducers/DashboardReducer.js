@@ -41,6 +41,6 @@ recentReducer.handle(fulfilled(types.DASHBOARD.LIST_RECENT_ARTICLES), (state, ac
 })
 
 export default combineReducers({
-  actions: actionsReducer.reduce,
-  recent: recentReducer.reduce
+  actions: actionsReducer.getReducer(),
+  recent: recentReducer.getReducer()
 })

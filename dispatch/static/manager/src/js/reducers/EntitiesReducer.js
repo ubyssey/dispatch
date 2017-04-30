@@ -35,4 +35,4 @@ reducer.handleDefault((state, action) => {
   )
 })
 
-export default reducer.reduce
+export default reducer.getReducer()

@@ -21,6 +21,6 @@ singleReducer.handle(rejected(types.PAGES.PUBLISHED), handleError)
 singleReducer.handle(rejected(types.PAGES.UNPUBLISHED), handleError)
 
 export default combineReducers({
-  list: manyReducer.reduce,
-  single: singleReducer.reduce
+  list: manyReducer.getReducer(),
+  single: singleReducer.getReducer()
 })

@@ -9,8 +9,6 @@ export class Reducer {
 
     this.handlers = new Map()
     this.defaultHandler = (state) => state
-
-    this.reduce = this.reduce.bind(this)
   }
 
   handle(type, handler) {
@@ -27,6 +25,10 @@ export class Reducer {
     } else {
       return this.defaultHandler(state || this.initialState, action)
     }
+  }
+
+  getReducer() {
+    return this.reduce.bind(this)
   }
 
 }
