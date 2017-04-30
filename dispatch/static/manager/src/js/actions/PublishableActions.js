@@ -1,8 +1,8 @@
 import { normalize } from 'normalizr'
 
-import GenericActions from './GenericActions'
+import { ResourceActions } from '../util/redux'
 
-export default class PublishableActions extends GenericActions {
+export default class PublishableActions extends ResourceActions {
 
   publish(token, id, data) {
     return (dispatch) => {
@@ -36,7 +36,7 @@ export default class PublishableActions extends GenericActions {
 
   preview(token, id, data) {
     return (dispatch) => {
-      
+
       dispatch({ type: `${this.types.SAVE}_PENDING` })
 
       this.api.save(token, id, this.prepareData(data))
