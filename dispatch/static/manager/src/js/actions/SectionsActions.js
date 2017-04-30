@@ -6,16 +6,16 @@ import { sectionSchema } from '../constants/Schemas'
 
 import DispatchAPI from '../api/dispatch'
 
-import GenericActions from './GenericActions'
+import { ResourceActions } from '../util/redux'
 
-class SectionsActions extends GenericActions {
+class SectionsActions extends ResourceActions {
 
   listNav(token) {
     return {
       type: this.types.LIST_NAV,
       payload: this.api.list(token)
         .then(json => ({
-          results: normalize(json.results, arrayOf(this.schema))
+          data: normalize(json.results, arrayOf(this.schema))
         }))
     }
   }

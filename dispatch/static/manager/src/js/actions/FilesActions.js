@@ -4,9 +4,9 @@ import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
 import { fileSchema } from '../constants/Schemas'
 
-import GenericActions from './GenericActions'
+import { ResourceActions } from '../util/redux'
 
-class FilesActions extends GenericActions {
+class FilesActions extends ResourceActions {
 
   search(query) {
     var queryObj = {}
