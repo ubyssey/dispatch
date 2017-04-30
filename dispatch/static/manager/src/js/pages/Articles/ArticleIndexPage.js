@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 
 import { Intent } from '@blueprintjs/core'
 
-import * as articlesActions from '../../actions/ArticlesActions'
+import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
 import { LinkButton } from '../../components/inputs'
@@ -57,7 +57,7 @@ class ArticlesPageComponent extends React.Component {
     // Fetch articles
     this.props.clearArticles()
     this.props.clearSelectedArticles()
-    this.props.fetchArticles(this.props.token, this.getQuery())
+    this.props.listArticles(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
@@ -65,12 +65,12 @@ class ArticlesPageComponent extends React.Component {
     if (this.isNewSection(prevProps, this.props) || this.isNewQuery(prevProps, this.props)) {
       this.props.clearArticles()
       this.props.clearSelectedArticles()
-      this.props.fetchArticles(this.props.token, this.getQuery())
+      this.props.listArticles(this.props.token, this.getQuery())
     }
 
     else if (this.isNewPage(prevProps, this.props)) {
       // Fetch articles
-      this.props.fetchArticles(this.props.token, this.getQuery())
+      this.props.listArticles(this.props.token, this.getQuery())
       this.props.clearSelectedArticles()
     }
   }
@@ -157,26 +157,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchArticles: (token, query) => {
-      dispatch(articlesActions.fetchArticles(token, query))
+    listArticles: (token, query) => {
+      dispatch(articlesActions.list(token, query))
     },
     toggleArticle: (articleId) => {
-      dispatch(articlesActions.toggleArticle(articleId))
+      dispatch(articlesActions.toggle(articleId))
     },
     toggleAllArticles: (articleIds) => {
-      dispatch(articlesActions.toggleAllArticles(articleIds))
+      dispatch(articlesActions.toggleAll(articleIds))
     },
     clearSelectedArticles: () => {
-      dispatch(articlesActions.clearSelectedArticles())
-    },
-    deleteArticles: (token, articleIds) => {
-      dispatch(articlesActions.deleteArticles(token, articleIds))
+      dispatch(articlesActions.clearSelected())
     },
     clearArticles: () => {
-      dispatch(articlesActions.clearArticles())
+      dispatch(articlesActions.clearAll())
+    },
+    deleteArticles: (token, articleIds) => {
+      dispatch(articlesActions.deleteMany(token, articleIds))
     },
     searchArticles: (token, section, query) => {
-      dispatch(articlesActions.searchArticles(section, query))
+      dispatch(articlesActions.search(section, query))
     }
   }
 }
