@@ -1,7 +1,7 @@
 import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
-import { articleSchema } from '../constants/Schemas'
+import { pageSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
 import PublishableActions from './PublishableActions'
