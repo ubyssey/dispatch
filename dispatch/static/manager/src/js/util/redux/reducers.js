@@ -87,7 +87,6 @@ export function buildManyResourceReducer(types) {
 }
 
 export function handleSuccess(state, action) {
-  console.log(action)
   return R.merge(state, {
     isLoading: false,
     isLoaded: true,
