@@ -127,9 +127,9 @@ const DispatchAPI = {
     return getPageRequest(uri, token)
   },
   auth: {
-    fetchToken: (email, password) => {
+    getToken: (email, password) => {
 
-      var payload = {
+      const payload = {
         email: email,
         password: password
       }
