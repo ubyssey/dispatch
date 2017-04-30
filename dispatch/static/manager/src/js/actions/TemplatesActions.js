@@ -4,7 +4,7 @@ import DispatchAPI from '../api/dispatch'
 
 import { normalize, arrayOf } from 'normalizr'
 
-export function fetchTemplates(token, query) {
+export function list(token, query) {
   return {
     type: types.FETCH_TEMPLATES,
     payload: DispatchAPI.templates.fetchTemplates(token, query)
@@ -17,7 +17,7 @@ export function fetchTemplates(token, query) {
   }
 }
 
-export function fetchTemplate(token, templateId) {
+export function get(token, templateId) {
   return {
     type: types.FETCH_TEMPLATE,
     payload: DispatchAPI.templates.fetchTemplate(token, templateId)
