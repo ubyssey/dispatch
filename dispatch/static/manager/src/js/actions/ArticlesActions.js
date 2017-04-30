@@ -1,10 +1,10 @@
 import { push } from 'react-router-redux'
 
-import PublishableActions from './PublishableActions'
 import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
+import PublishableActions from './PublishableActions'
 import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
 
 class ArticlesActions extends PublishableActions {
@@ -35,7 +35,7 @@ class ArticlesActions extends PublishableActions {
   }
 
   search(section, query) {
-    var queryObj = {}
+    let queryObj = {}
 
     if (query) {
       queryObj.q = query
@@ -45,7 +45,7 @@ class ArticlesActions extends PublishableActions {
       queryObj.section = section
     }
 
-    return function(dispatch) {
+    return (dispatch) => {
       dispatch(push({ pathname: '/articles/', query: queryObj }))
     }
   }
