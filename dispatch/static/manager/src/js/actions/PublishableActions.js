@@ -14,7 +14,9 @@ export default class PublishableActions extends ResourceActions {
         .then(json => {
           dispatch({
             type: `${this.types.PUBLISH}_FULFILLED`,
-            payload: normalize(json, this.schema)
+            payload: {
+              data: normalize(json, this.schema)
+            }
           })
         })
         .catch(error => {
@@ -30,7 +32,9 @@ export default class PublishableActions extends ResourceActions {
     return {
       type: this.types.UNPUBLISH,
       payload: this.api.unpublish(token, id)
-        .then(json => normalize(json, this.schema))
+        .then(json => ({
+          data: normalize(json, this.schema)
+        }))
     }
   }
 
@@ -43,7 +47,9 @@ export default class PublishableActions extends ResourceActions {
         .then(json => {
           dispatch({
             type: `${this.types.SAVE}_FULFILLED`,
-            payload: normalize(json, this.schema)
+            payload: {
+              data: normalize(json, this.schema)
+            }
           })
 
           window.open(json.url, `_dispatch-preview-${json.id}`)
