@@ -5,12 +5,10 @@ export function integrationCallback(token, integrationId, query) {
   return {
     type: types.INTEGRATIONS.CALLBACK,
     payload: DispatchAPI.integrations.callback(token, integrationId, query)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
@@ -18,12 +16,10 @@ export function fetchIntegration(token, integrationId) {
   return {
     type: types.INTEGRATIONS.GET,
     payload: DispatchAPI.integrations.get(token, integrationId)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
@@ -31,12 +27,10 @@ export function saveIntegration(token, integrationId, data) {
   return {
     type: types.INTEGRATIONS.SAVE,
     payload: DispatchAPI.integrations.save(token, integrationId, data)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
@@ -44,11 +38,9 @@ export function deleteIntegration(token, integrationId) {
   return {
     type: types.INTEGRATIONS.DELETE,
     payload: DispatchAPI.integrations.delete(token, integrationId)
-      .then(function() {
-        return {
-          id: integrationId
-        }
-      })
+      .then(() => ({
+        id: integrationId
+      }))
   }
 }
 
