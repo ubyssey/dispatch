@@ -1,19 +1,19 @@
 import { normalize } from 'normalizr'
 
-import { ResourceActions } from '../util/redux'
+import { ResourceActions, pending, fulfilled, rejected } from '../util/redux'
 
 export default class PublishableActions extends ResourceActions {
 
   publish(token, id, data) {
     return (dispatch) => {
 
-      dispatch({ type: `${this.types.PUBLISH}_PENDING` })
+      dispatch({ type: pending(this.types.PUBLISH) })
 
       this.api.save(token, id, this.prepareData(data))
         .then(() => this.api.publish(token, id))
         .then(json => {
           dispatch({
-            type: `${this.types.PUBLISH}_FULFILLED`,
+            type: fulfilled(this.types.PUBLISH),
             payload: {
               data: normalize(json, this.schema)
             }
@@ -21,7 +21,7 @@ export default class PublishableActions extends ResourceActions {
         })
         .catch(error => {
           dispatch({
-            type: `${this.types.PUBLISH}_REJECTED`,
+            type: rejected(this.types.PUBLISH),
             payload: error
           })
         })
@@ -41,12 +41,12 @@ export default class PublishableActions extends ResourceActions {
   preview(token, id, data) {
     return (dispatch) => {
 
-      dispatch({ type: `${this.types.SAVE}_PENDING` })
+      dispatch({ type: pending(this.types.SAVE) })
 
       this.api.save(token, id, this.prepareData(data))
         .then(json => {
           dispatch({
-            type: `${this.types.SAVE}_FULFILLED`,
+            type: fulfilled(this.types.SAVE),
             payload: {
               data: normalize(json, this.schema)
             }
@@ -56,7 +56,7 @@ export default class PublishableActions extends ResourceActions {
         })
         .catch(error => {
           dispatch({
-            type: `${this.types.SAVE}_REJECTED`,
+            type: rejected(this.types.SAVE),
             payload: error
           })
         })
