@@ -9,13 +9,13 @@ import { ResourceActions } from '../util/redux'
 class FilesActions extends ResourceActions {
 
   search(query) {
-    var queryObj = {}
+    let queryObj = {}
 
     if (query) {
       queryObj.q = query
     }
 
-    return function(dispatch) {
+    return (dispatch) => {
       dispatch(push({ pathname: '/files/', query: queryObj }))
     }
   }
