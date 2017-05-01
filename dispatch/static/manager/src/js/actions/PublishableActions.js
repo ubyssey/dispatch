@@ -2,6 +2,12 @@ import { normalize } from 'normalizr'
 
 import { ResourceActions, pending, fulfilled, rejected } from '../util/redux'
 
+const PREVIEW_PREFIX = '_dispatch-preview'
+
+function openPreviewWindow(url, id) {
+  window.open(url, `${PREVIEW_PREFIX}-${id}`)
+}
+
 export default class PublishableActions extends ResourceActions {
 
   publish(token, id, data) {
@@ -52,7 +58,7 @@ export default class PublishableActions extends ResourceActions {
             }
           })
 
-          window.open(json.url, `_dispatch-preview-${json.id}`)
+          openPreviewWindow(json.url, json.id)
         })
         .catch(error => {
           dispatch({
