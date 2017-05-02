@@ -6,7 +6,7 @@ import re
 
 from jsonfield import JSONField
 from PIL import Image as Img
-import images2gif
+from dispatch.apps.content.helpers import images2gif
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -470,9 +470,36 @@ class Image(Model):
             name = re.split('.(jpg|gif|png)', self.img.name)[0]
             fileType = re.split('.(jpg|gif|png)', self.img.name)[1]
 
-            for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size, fileType)
+            if(fileType == 'gif'):
+                for size in self.SIZES.keys():
+                    self.save_gif_thumbnail(image, self.SIZES[size], name, size, fileType)
+            else:
+                for size in self.SIZES.keys():
+                    self.save_thumbnail(image, self.SIZES[size], name, size, fileType)
 
+
+    def save_gif_thumbnail(self, image, size, name, label, fileType):
+        width, height = size
+        (imw, imh) = image.size
+
+        frames = images2gif.readGif(image,False)
+        for frame in frames:
+            print('resize frame')
+            frame.thumbnail(size, Img.ANTIALIAS)
+
+        images2gif.writeGif('gifTest.gif', frames)
+
+        # Attach new thumbnail label to image filename
+        name = "%s-%s.gif" % (name, label)
+        # Write new thumbnail to StringIO object
+        image_io = StringIO.StringIO()
+        image.save(image_io, save_all=True, format=fileType, quality=75)
+
+        # Convert StringIO object to Django File object
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/gif', image_io.len, None)
+
+        # Save the new file to the default storage system
+        default_storage.save(name, thumb_file)
 
     def save_thumbnail(self, image, size, name, label, fileType):
         width, height = size
@@ -484,7 +511,9 @@ class Image(Model):
 
         # Attach new thumbnail label to image filename
         name = "%s-%s.%s" % (name, label, fileType)
-
+        #Image.save format takes JPEG not jpg
+        if fileType == 'jpg':
+            fileType = 'JPEG'
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
         image.save(image_io, format=fileType, quality=75)
