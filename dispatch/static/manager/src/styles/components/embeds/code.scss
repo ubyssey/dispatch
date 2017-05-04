@@ -1,0 +1,14 @@
+@import '../../utilities/colors';
+
+.o-embed--code_editor {
+  width: 100%;
+  border-style: solid;
+  border-color: black;
+}
+
+.o-embed--code_editor_button_container {
+  padding: 5px;
+  border-style: solid;
+  border-top-width: 1px;
+  border-top-color: $color-border-gray;
+}
