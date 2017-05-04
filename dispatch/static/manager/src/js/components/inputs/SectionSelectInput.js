@@ -37,7 +37,7 @@ class SectionSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected ? [this.props.selected] : []}
-        results={this.props.sections.data}
+        results={this.props.sections.ids}
         entities={this.props.entities.sections}
         addValue={this.addSection}
         removeValue={this.removeSection}
@@ -51,7 +51,7 @@ class SectionSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    sections: state.app.sections,
+    sections: state.app.sections.list,
     entities: {
       sections: state.app.entities.sections
     },

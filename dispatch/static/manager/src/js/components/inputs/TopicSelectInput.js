@@ -42,7 +42,7 @@ class TopicSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected ? [this.props.selected] : []}
-        results={this.props.topics.data}
+        results={this.props.topics.ids}
         entities={this.props.entities.topics}
         addValue={this.addTopic}
         removeValue={this.removeTopic}
