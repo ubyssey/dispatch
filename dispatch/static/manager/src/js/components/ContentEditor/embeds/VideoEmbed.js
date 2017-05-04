@@ -30,7 +30,9 @@ class VideoEmbedComponent extends React.Component {
               onChange={e => this.props.updateField('url', e.target.value)} />
           </FormInput>
         </form>
-        <Button onClick={() => this.insertVideo()}>Insert</Button>
+        <div className='o-embed--video__button__container'>
+          <Button onClick={() => this.insertVideo()}>Insert</Button>
+        </div>
       </div>
     )
 
