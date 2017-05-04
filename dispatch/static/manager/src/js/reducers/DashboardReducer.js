@@ -3,6 +3,8 @@ import { combineReducers } from 'redux'
 
 import * as types from '../constants/ActionTypes'
 
+import { pending, fulfilled, Reducer } from '../util/redux'
+
 const initialState = {
   actions: {
     isLoading: false,
@@ -12,48 +14,33 @@ const initialState = {
   recent: {
     isLoading: false,
     isLoaded: false,
-    data: []
+    ids: []
   }
 }
 
-const actionsReducer = (state = initialState.actions, action) => {
-  switch(action.type) {
-  case `${types.FETCH_ACTIONS}_PENDING`:
-    return R.merge(state,{
-      isLoading: true
-    })
-  case `${types.FETCH_ACTIONS}_FULFILLED`:
-    return R.merge(state,{
-      isLoading: false,
-      isLoaded: true,
-      data: action.payload.results
-    })
-  default:
-    return state
-  }
-}
+let actionsReducer = new Reducer(initialState.actions)
 
-const recentReducer = (state = initialState.recent, action) => {
-  switch (action.type) {
-  case `${types.FETCH_RECENT_ARTICLES}_PENDING`:
-    return R.merge(state, {
-      isLoading: true
-    })
-  case `${types.FETCH_RECENT_ARTICLES}_FULFILLED`:
-    return R.merge(state,{
-      isLoading: false,
-      isLoaded: true,
-      data: Object.keys(action.payload.entities.articles || {}).map((elem) => ({
-        id: elem,
-        headline: action.payload.entities.articles[elem].headline
-      }))
-    })
-  default:
-    return state
-  }
-}
+actionsReducer.handle(pending(types.DASHBOARD.LIST_ACTIONS), (state) => R.merge(state, { isLoading: true }))
+actionsReducer.handle(fulfilled(types.DASHBOARD.LIST_ACTIONS), (state, action) => {
+  return R.merge(state,{
+    isLoading: false,
+    isLoaded: true,
+    data: action.payload.results
+  })
+})
+
+let recentReducer = new Reducer(initialState.recent)
+
+recentReducer.handle(pending(types.DASHBOARD.LIST_RECENT_ARTICLES), (state) => R.merge(state, { isLoading: true }))
+recentReducer.handle(fulfilled(types.DASHBOARD.LIST_RECENT_ARTICLES), (state, action) => {
+  return R.merge(state,{
+    isLoading: false,
+    isLoaded: true,
+    ids: action.payload.data.result
+  })
+})
 
 export default combineReducers({
-  actions: actionsReducer,
-  recent: recentReducer
+  actions: actionsReducer.getReducer(),
+  recent: recentReducer.getReducer()
 })

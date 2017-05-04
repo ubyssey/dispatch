@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
 
-import * as pagesActions from '../../actions/PagesActions'
+import pagesActions from '../../actions/PagesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
 import { LinkButton } from '../../components/inputs'
@@ -48,7 +48,7 @@ class PagesPageComponent extends React.Component {
     // Fetch pages
     this.props.clearPages()
     this.props.clearSelectedPages()
-    this.props.fetchPages(this.props.token, this.getQuery())
+    this.props.listPages(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
@@ -56,12 +56,12 @@ class PagesPageComponent extends React.Component {
     if (this.isNewQuery(prevProps, this.props)) {
       this.props.clearPages()
       this.props.clearSelectedPages()
-      this.props.fetchPages(this.props.token, this.getQuery())
+      this.props.listPages(this.props.token, this.getQuery())
     }
 
     else if (this.isNewPage(prevProps, this.props)) {
       // Fetch pages
-      this.props.fetchPages(this.props.token, this.getQuery())
+      this.props.listPages(this.props.token, this.getQuery())
       this.props.clearSelectedPages()
     }
   }
@@ -134,26 +134,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchPages: (token, query) => {
-      dispatch(pagesActions.fetchPages(token, query))
+    listPages: (token, query) => {
+      dispatch(pagesActions.list(token, query))
     },
     togglePage: (pageId) => {
-      dispatch(pagesActions.togglePage(pageId))
+      dispatch(pagesActions.toggle(pageId))
     },
     toggleAllPages: (pageIds) => {
-      dispatch(pagesActions.toggleAllPages(pageIds))
+      dispatch(pagesActions.toggleAll(pageIds))
     },
     clearSelectedPages: () => {
-      dispatch(pagesActions.clearSelectedPages())
-    },
-    deletePages: (token, pageIds) => {
-      dispatch(pagesActions.deletePages(token, pageIds))
+      dispatch(pagesActions.clearSelected())
     },
     clearPages: () => {
-      dispatch(pagesActions.clearPages())
+      dispatch(pagesActions.clearAll())
+    },
+    deletePages: (token, pageIds) => {
+      dispatch(pagesActions.deleteMany(token, pageIds))
     },
     searchPages: (token, section, query) => {
-      dispatch(pagesActions.searchPages(section, query))
+      dispatch(pagesActions.search(section, query))
     }
   }
 }

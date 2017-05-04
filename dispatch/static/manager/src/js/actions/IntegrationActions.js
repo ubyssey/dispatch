@@ -3,58 +3,50 @@ import DispatchAPI from '../api/dispatch'
 
 export function integrationCallback(token, integrationId, query) {
   return {
-    type: types.INTEGRATION_CALLBACK,
+    type: types.INTEGRATIONS.CALLBACK,
     payload: DispatchAPI.integrations.callback(token, integrationId, query)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
 export function fetchIntegration(token, integrationId) {
   return {
-    type: types.FETCH_INTEGRATION,
-    payload: DispatchAPI.integrations.fetchIntegration(token, integrationId)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+    type: types.INTEGRATIONS.GET,
+    payload: DispatchAPI.integrations.get(token, integrationId)
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
 export function saveIntegration(token, integrationId, data) {
   return {
-    type: types.SAVE_INTEGRATION,
-    payload: DispatchAPI.integrations.saveIntegration(token, integrationId, data)
-      .then(function(json) {
-        return {
-          id: integrationId,
-          data: json
-        }
-      })
+    type: types.INTEGRATIONS.SAVE,
+    payload: DispatchAPI.integrations.save(token, integrationId, data)
+      .then(json => ({
+        id: integrationId,
+        data: json
+      }))
   }
 }
 
 export function deleteIntegration(token, integrationId) {
   return {
-    type: types.DELETE_INTEGRATION,
-    payload: DispatchAPI.integrations.deleteIntegration(token, integrationId)
-      .then(function() {
-        return {
-          id: integrationId
-        }
-      })
+    type: types.INTEGRATIONS.DELETE,
+    payload: DispatchAPI.integrations.delete(token, integrationId)
+      .then(() => ({
+        id: integrationId
+      }))
   }
 }
 
 export function updateIntegration(integrationId, data) {
   return {
-    type: types.UPDATE_INTEGRATION,
+    type: types.INTEGRATIONS.UPDATE,
     payload: {
       id: integrationId,
       data: data

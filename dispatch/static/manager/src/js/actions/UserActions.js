@@ -3,46 +3,34 @@ import { push } from 'react-router-redux'
 import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
 
-function authRequired(nextPath) {
-  return {
-    type: types.AUTH_REQUIRED,
-    nextPath: nextPath
-  }
-}
-
-function requestToken() {
-  return {
-    type: types.AUTH_REQUEST_TOKEN
-  }
-}
-
-function receiveToken(token, email) {
-  return {
-    type: types.AUTH_RECEIVE_TOKEN,
-    token: token,
-    email: email
-  }
-}
-
+import { pending, fulfilled, rejected } from '../util/redux'
 
 export function requireLogin(nextPath) {
   return function (dispatch) {
     dispatch(push('/login'))
-    dispatch(authRequired(nextPath))
+    dispatch({
+      type: types.AUTH.LOGIN_REQUIRED,
+      nextPath: nextPath
+    })
   }
 }
 
 export function authenticateUser(email, password, nextPath = '/') {
-  return function (dispatch) {
-    dispatch(requestToken())
+  return (dispatch) => {
+    dispatch({ type: pending(types.AUTH.GET_TOKEN) })
 
-    return DispatchAPI.auth.fetchToken(email, password)
-      .then( json => {
-        dispatch(receiveToken(json.token, email))
+    return DispatchAPI.auth.getToken(email, password)
+      .then((response) => {
+        dispatch({
+          type: fulfilled(types.AUTH.GET_TOKEN),
+          token: response.token,
+          email: email
+        })
+
         dispatch(push(nextPath))
       })
-      .catch(function(err) {
-        console.log('error', err)
+      .catch(() => {
+        dispatch({ type: rejected(types.AUTH.GET_TOKEN) })
       })
   }
 }
