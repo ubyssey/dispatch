@@ -13,14 +13,12 @@ class CodeEmbedComponent extends React.Component {
 
   constructor(props){
     super(props)
-    this.state = {
-      embedValue: ''
-    }
   }
   onCodeChange(newValue){
-    this.setState({
-      embedValue: newValue
-    })
+    console.log('props are: ',this.props)
+
+    this.props.data.embedValue = newValue
+
   }
 
   render(){
@@ -31,7 +29,7 @@ class CodeEmbedComponent extends React.Component {
           theme='chrome'
           width='100%'
           height='300px'
-          value={this.state.embedValue}
+          value={this.props.data.embedValue}
           defaultValue='<h1>Enter html code here</h1>'
           showPrintMargin={false}
           onChange={(value) => this.onCodeChange(value)}
@@ -50,6 +48,6 @@ export default {
   type: 'code',
   component: CodeEmbedComponent,
   defaultData: {
-    body: null
+    embedValue: ''
   }
 }
