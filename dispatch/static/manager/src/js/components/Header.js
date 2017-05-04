@@ -17,10 +17,8 @@ export default function Header(props) {
 
   return (
     <header className='c-header'>
-      <div className='c-header__inner'>
-        <Link to='/' className='c-header__logo'>
-          <i className='c-header__logo-icon fa fa-circle'></i>dispatch
-        </Link>
+      <div className='c-header__inner u-container'>
+        <Link to='/' className='c-header__logo'>dispatch</Link>
         <nav className='c-header__sections'>
           <ul>{sections}</ul>
         </nav>

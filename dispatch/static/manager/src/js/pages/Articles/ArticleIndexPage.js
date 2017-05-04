@@ -4,6 +4,8 @@ import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
 
+import { Intent } from '@blueprintjs/core'
+
 import * as articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -122,7 +124,11 @@ class ArticlesPageComponent extends React.Component {
 
 
           emptyMessage={'You haven\'t created any articles yet.'}
-          createHandler={() => (<LinkButton to={'articles/new'}>Create article</LinkButton>)}
+          createHandler={() => (
+            <LinkButton intent={Intent.SUCCESS} to={'articles/new'}>
+              <span className='pt-icon-standard pt-icon-add'></span>Create article
+            </LinkButton>)
+          }
 
           actions={{
             toggleItem: this.props.toggleArticle,
@@ -141,7 +147,7 @@ class ArticlesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    articles: state.app.articles.articles,
+    articles: state.app.articles.list,
     entities: {
       articles: state.app.entities.articles,
       sections: state.app.entities.sections

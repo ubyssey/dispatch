@@ -48,7 +48,7 @@ class AuthorSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected}
-        results={this.props.persons.data}
+        results={this.props.persons.ids}
         entities={this.props.entities.persons}
         addValue={this.addAuthor}
         removeValue={this.removeAuthor}

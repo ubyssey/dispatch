@@ -5,6 +5,7 @@ const initialState = {
   articles: {},
   article: {},
   sections: {},
+  section: {},
   files: {},
   images: {},
   image: {},
@@ -83,8 +84,25 @@ export default function entitiesReducer(state = initialState, action) {
 
   // Sections
   case types.FETCH_SECTIONS + '_FULFILLED':
+  case types.FETCH_SECTIONS_NAV + '_FULFILLED':
     return R.merge(state, {
       sections: R.merge(state.sections, action.payload.results.entities.sections)
+    })
+
+  // Section
+  case types.FETCH_SECTION + '_PENDING':
+    return R.merge(state, {
+      section: {}
+    })
+  case types.SET_SECTION:
+    return R.merge(state, {
+      section: R.merge(state.section, action.payload.entities.sections),
+    })
+  case `${types.FETCH_SECTION}_FULFILLED`:
+  case `${types.SAVE_SECTION}_FULFILLED`:
+    return R.merge(state, {
+      section: R.merge(state.section, action.payload.entities.sections),
+      sections: R.merge(state.sections, action.payload.entities.sections)
     })
 
   // Files
