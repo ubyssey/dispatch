@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
-import * as imagesActions from '../../../actions/ImagesActions'
+import imagesActions from '../../../actions/ImagesActions'
 
 import { TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
@@ -33,7 +33,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchImages(this.props.token, DEFAULT_QUERY)
+    this.props.listImages(this.props.token, DEFAULT_QUERY)
 
     this.images.parentElement.addEventListener('scroll', this.scrollListener)
   }
@@ -43,11 +43,11 @@ class ImageManagerComponent extends React.Component {
   }
 
   loadMore() {
-    this.props.fetchImagesPage(this.props.token, this.props.images.next)
+    this.props.listImagesPage(this.props.token, this.props.images.next)
   }
 
   searchImages() {
-    this.props.fetchImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
+    this.props.listImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
   }
 
   scrollListener() {
@@ -55,8 +55,8 @@ class ImageManagerComponent extends React.Component {
     const scrollOffset = this.images.parentElement.scrollTop + this.images.parentElement.clientHeight
 
     if (!this.props.images.isLoading &&
-        this.props.images.next &&
-        scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
+      this.props.images.next &&
+      scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
       this.loadMore()
     }
 
@@ -76,7 +76,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   handleUpdate(field, data) {
-    this.props.updateImage(
+    this.props.setImage(
       R.assoc(field, data, this.getImage())
     )
   }
@@ -176,26 +176,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchImages: (token, params) => {
-      dispatch(imagesActions.fetchImages(token, params))
+    listImages: (token, params) => {
+      dispatch(imagesActions.list(token, params))
     },
-    fetchImagesPage: (token, uri) => {
-      dispatch(imagesActions.fetchImagesPage(token, uri))
+    listImagesPage: (token, uri) => {
+      dispatch(imagesActions.listPage(token, uri))
     },
     selectImage: (imageId) => {
-      dispatch(imagesActions.selectImage(imageId))
+      dispatch(imagesActions.select(imageId))
     },
-    updateImage: (imageId, image) => {
-      dispatch(imagesActions.updateImage(imageId, image))
+    setImage: (imageId, image) => {
+      dispatch(imagesActions.set(imageId, image))
     },
     createImage: (token, data) => {
-      dispatch(imagesActions.createImage(token, data))
+      dispatch(imagesActions.create(token, data))
     },
     saveImage: (token, imageId, image) => {
-      dispatch(imagesActions.saveImage(token, imageId, image))
+      dispatch(imagesActions.save(token, imageId, image))
     },
     deleteImage: (token, imageId) => {
-      dispatch(imagesActions.deleteImage(token, imageId))
+      dispatch(imagesActions.delete(token, imageId))
     }
   }
 }
