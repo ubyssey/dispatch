@@ -3,7 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as sectionsActions from '../../actions/SectionsActions'
+import sectionsActions from '../../actions/SectionsActions'
 
 import SectionToolbar from './SectionToolbar'
 import SectionForm from './SectionForm'
@@ -19,7 +19,7 @@ class SectionEditorComponent extends React.Component {
       this.props.setSection({ id: NEW_SECTION_ID })
     } else {
       // Fetch section
-      this.props.fetchSection(this.props.token, this.props.sectionId)
+      this.props.getSection(this.props.token, this.props.sectionId)
     }
   }
 
@@ -27,7 +27,7 @@ class SectionEditorComponent extends React.Component {
     if (!this.props.isNew) {
       // Fetch section
       if (prevProps.sectionId !== this.props.sectionId) {
-        this.props.fetchSection(this.props.token, this.props.sectionId)
+        this.props.getSection(this.props.token, this.props.sectionId)
       }
     }
   }
@@ -102,20 +102,20 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSection: (token, sectionId) => {
-      dispatch(sectionsActions.fetchSection(token, sectionId))
+    getSection: (token, sectionId) => {
+      dispatch(sectionsActions.get(token, sectionId))
     },
     setSection: (section) => {
-      dispatch(sectionsActions.setSection(section))
+      dispatch(sectionsActions.set(section))
     },
     saveSection: (token, sectionId, data) => {
-      dispatch(sectionsActions.saveSection(token, sectionId, data))
+      dispatch(sectionsActions.save(token, sectionId, data))
     },
     createSection: (token, data) => {
-      dispatch(sectionsActions.createSection(token, data))
+      dispatch(sectionsActions.create(token, data))
     },
     deleteSection: (token, sectionId, next) => {
-      dispatch(sectionsActions.deleteSection(token, sectionId, next))
+      dispatch(sectionsActions.delete(token, sectionId, next))
     }
   }
 }

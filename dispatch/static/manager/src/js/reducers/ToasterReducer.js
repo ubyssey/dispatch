@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core'
 
 import * as types from '../constants/ActionTypes'
+import { fulfilled, rejected } from '../util/redux'
 
 const DEFAULT_TIMEOUT = 2000
 
@@ -21,89 +22,89 @@ export default function toasterReducer(toaster = {}, action) {
     return action.toaster
 
   // Sections
-  case `${types.CREATE_SECTION}_FULFILLED`:
-  case `${types.SAVE_SECTION}_FULFILLED`:
+  case fulfilled(types.SECTIONS.CREATE):
+  case fulfilled(types.SECTIONS.SAVE):
     return showToast('Section saved')
-  case `${types.CREATE_SECTION}_REJECTED`:
-  case `${types.SAVE_SECTION}_REJECTED`:
+  case rejected(types.SECTIONS.CREATE):
+  case rejected(types.SECTIONS.SAVE):
     return showToast('Section could not be saved', Intent.DANGER)
-  case `${types.DELETE_SECTIONS}_FULFILLED`:
+  case fulfilled(types.SECTIONS.DELETE_MANY):
     return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
-  case `${types.DELETE_SECTIONS}_REJECTED`:
+  case rejected(types.SECTIONS.DELETE_MANY):
     return showToast('Some sections could not be deleted', Intent.DANGER)
 
   // Articles
-  case `${types.CREATE_ARTICLE}_FULFILLED`:
-  case `${types.SAVE_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.CREATE):
+  case fulfilled(types.ARTICLES.SAVE):
     return showToast('Article saved')
-  case `${types.CREATE_ARTICLE}_REJECTED`:
-  case `${types.SAVE_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.CREATE):
+  case rejected(types.ARTICLES.SAVE):
     return showToast('Article could not be saved', Intent.DANGER)
-  case `${types.DELETE_ARTICLES}_FULFILLED`:
+  case fulfilled(types.ARTICLES.DELETE_MANY):
     return showToast(`${action.payload.length} article${action.payload.length > 1 ? 's' : ''} deleted`)
-  case `${types.DELETE_ARTICLES}_REJECTED`:
+  case rejected(types.ARTICLES.DELETE_MANY):
     return showToast('Some articles could not be deleted', Intent.DANGER)
-  case `${types.PUBLISH_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.PUBLISH):
     return showToast('Article published')
-  case `${types.PUBLISH_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.PUBLISH):
     return showToast('Article could not be published', Intent.DANGER)
-  case `${types.UNPUBLISH_ARTICLE}_FULFILLED`:
+  case fulfilled(types.ARTICLES.UNPUBLISH):
     return showToast('Article unpublished')
-  case `${types.UNPUBLISH_ARTICLE}_REJECTED`:
+  case rejected(types.ARTICLES.UNPUBLISH):
     return showToast('Article could not be unpublished', Intent.DANGER)
 
   // Pages
-  case `${types.SAVE_PAGE}_FULFILLED`:
+  case fulfilled(types.PAGES.CREATE):
+  case fulfilled(types.PAGES.SAVE):
     return showToast('Page saved')
-  case `${types.SAVE_PAGE}_REJECTED`:
+  case rejected(types.PAGES.CREATE):
+  case rejected(types.PAGES.SAVE):
     return showToast('Page could not be saved', Intent.DANGER)
-  case `${types.DELETE_PAGES}_FULFILLED`:
-    return showToast(`${action.payload.length} pages deleted`)
-  case `${types.DELETE_PAGES}_REJECTED`:
+  case fulfilled(types.PAGES.DELETE_MANY):
+    return showToast(`${action.payload.length} page${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PAGES.DELETE_MANY):
     return showToast('Some pages could not be deleted', Intent.DANGER)
-  case `${types.PUBLISH_PAGE}_FULFILLED`:
+  case fulfilled(types.PAGES.PUBLISH):
     return showToast('Page published')
-  case `${types.PUBLISH_PAGE}_REJECTED`:
+  case rejected(types.PAGES.PUBLISH):
     return showToast('Page could not be published', Intent.DANGER)
-  case `${types.UNPUBLISH_PAGE}_FULFILLED`:
+  case fulfilled(types.PAGES.UNPUBLISH):
     return showToast('Page unpublished')
-  case `${types.UNPUBLISH_PAGE}_REJECTED`:
+  case rejected(types.PAGES.UNPUBLISH):
     return showToast('Page could not be unpublished', Intent.DANGER)
 
   // Images
-  case `${types.DELETE_IMAGE}_FULFILLED`:
+  case fulfilled(types.IMAGES.SAVE):
+    return showToast('Image saved')
+  case rejected(types.IMAGES.SAVE):
+    return showToast('Image could not be saved', Intent.DANGER)
+  case fulfilled(types.IMAGES.CREATE):
+    return showToast('Image uploaded')
+  case rejected(types.IMAGES.CREATE):
+    return showToast('Image could not be uploaded', Intent.DANGER)
+  case fulfilled(types.IMAGES.DELETE):
     return showToast('Image deleted')
-  case `${types.DELETE_IMAGE}_REJECTED`:
+  case rejected(types.IMAGES.DELETE):
     return showToast('Image could not be deleted', Intent.DANGER)
 
-  // Image
-  case `${types.SAVE_IMAGE}_FULFILLED`:
-    return showToast('Image saved')
-  case `${types.SAVE_IMAGE}_REJECTED`:
-    return showToast('Image could not be saved', Intent.DANGER)
-  case `${types.CREATE_IMAGE}_FULFILLED`:
-    return showToast('Image uploaded')
-  case `${types.CREATE_IMAGE}_REJECTED`:
-    return showToast('Image could not be uploaded', Intent.DANGER)
-
   // Files
-  case `${types.CREATE_FILE}_FULFILLED`:
+  case fulfilled(types.FILES.CREATE):
     return showToast('File uploaded')
-  case `${types.CREATE_FILE}_REJECTED`:
+  case rejected(types.FILES.CREATE):
     return showToast('File could not be uploaded', Intent.DANGER)
-  case `${types.DELETE_FILES}_FULFILLED`:
+  case fulfilled(types.FILES.DELETE_MANY):
     return showToast(`${action.payload.length} file${action.payload.length > 1 ? 's' : ''} deleted`)
-  case `${types.DELETE_FILES}_REJECTED`:
+  case rejected(types.FILES.DELETE_MANY):
     return showToast('Some files could not be deleted', Intent.DANGER)
 
   // Integrations
-  case `${types.SAVE_INTEGRATION}_FULFILLED`:
+  case fulfilled(types.INTEGRATIONS.SAVE):
     return showToast('Integration updated')
-  case `${types.DELETE_INTEGRATION}_FULFILLED`:
+  case fulfilled(types.INTEGRATIONS.DELETE):
     return showToast('Integration removed')
-  case `${types.INTEGRATION_CALLBACK}_FULFILLED`:
+  case fulfilled(types.INTEGRATIONS.CALLBACK):
     return showToast('Authentication successful')
-  case `${types.INTEGRATION_CALLBACK}_REJECTED`:
+  case callback(types.INTEGRATIONS.CALLBACK):
     return showToast(action.payload.detail, Intent.DANGER)
   default:
     return toaster

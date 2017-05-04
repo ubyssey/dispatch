@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Position, Toaster } from '@blueprintjs/core'
 
-import * as sectionsActions from '../actions/SectionsActions'
+import sectionsActions from '../actions/SectionsActions'
 import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
 
@@ -14,14 +14,12 @@ require('../../styles/components/toaster.scss')
 class Main extends React.Component {
 
   componentWillMount() {
-    // Load sections
     if ( !this.props.sections.isLoaded ) {
-      this.props.fetchSectionsNav(this.props.token)
+      this.props.listSectionsNav(this.props.token)
     }
   }
 
   componentDidMount() {
-    // Initialize toaster reducer with toaster ref
     this.props.setupToaster(this.refs.toaster)
   }
 
@@ -61,8 +59,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSectionsNav: (token) => {
-      dispatch(sectionsActions.fetchSectionsNav(token))
+    listSectionsNav: (token) => {
+      dispatch(sectionsActions.listNav(token))
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())

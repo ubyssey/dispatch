@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 
 import { Intent } from '@blueprintjs/core'
 
-import * as sectionsActions from '../../actions/SectionsActions'
+import sectionsActions from '../../actions/SectionsActions'
 
 import { LinkButton } from '../../components/inputs'
 import ItemList from '../../components/ItemList'
@@ -48,7 +48,7 @@ class SectionsPageComponent extends React.Component {
     // Fetch sections
     this.props.clearSections()
     this.props.clearSelectedSections()
-    this.props.fetchSections(this.props.token, this.getQuery())
+    this.props.listSections(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
@@ -56,10 +56,10 @@ class SectionsPageComponent extends React.Component {
     if (this.isNewQuery(prevProps, this.props)) {
       this.props.clearSections()
       this.props.clearSelectedSections()
-      this.props.fetchSections(this.props.token, this.getQuery())
+      this.props.listSections(this.props.token, this.getQuery())
     } else if (this.isNewPage(prevProps, this.props)) {
       // Fetch sections
-      this.props.fetchSections(this.props.token, this.getQuery())
+      this.props.listSections(this.props.token, this.getQuery())
       this.props.clearSelectedSections()
     }
   }
@@ -131,26 +131,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSections: (token, query) => {
-      dispatch(sectionsActions.fetchSections(token, query))
+    listSections: (token, query) => {
+      dispatch(sectionsActions.list(token, query))
     },
     toggleSection: (sectionId) => {
-      dispatch(sectionsActions.toggleSection(sectionId))
+      dispatch(sectionsActions.toggle(sectionId))
     },
     toggleAllSections: (sectionIds) => {
-      dispatch(sectionsActions.toggleAllSections(sectionIds))
+      dispatch(sectionsActions.toggleAll(sectionIds))
     },
     clearSelectedSections: () => {
-      dispatch(sectionsActions.clearSelectedSections())
-    },
-    deleteSections: (token, sectionIds) => {
-      dispatch(sectionsActions.deleteSections(token, sectionIds))
+      dispatch(sectionsActions.clearSelected())
     },
     clearSections: () => {
-      dispatch(sectionsActions.clearSections())
+      dispatch(sectionsActions.clearAll())
+    },
+    deleteSections: (token, sectionIds) => {
+      dispatch(sectionsActions.deleteMany(token, sectionIds))
     },
     searchSections: (query) => {
-      dispatch(sectionsActions.searchSections(query))
+      dispatch(sectionsActions.search(query))
     }
   }
 }
