@@ -108,7 +108,10 @@
 // Component: FormInput
 .c-form-input {
   // Structure
-  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
 
   // Border
   border-bottom: 1px solid $color-border-gray;
@@ -130,13 +133,27 @@
   }
 }
 
+.c-form-input--no-padding {
+  // Structure
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .c-form-input__label {
   // Structure
   display: block;
+  position: relative;
   margin-bottom: 7px;
 
   // Text
   font-weight: $font-weight-bold;
+}
+
+.c-form-input__error.pt-tag {
+  // Structure
+  position: absolute;
+  right: 0;
+  top: -2px;
 }
 
 .c-form-input .pt-button {

@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Position, Toaster } from '@blueprintjs/core'
 
-import * as sectionsActions from '../actions/SectionsActions'
+import sectionsActions from '../actions/SectionsActions'
 import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
 
@@ -14,14 +14,12 @@ require('../../styles/components/toaster.scss')
 class Main extends React.Component {
 
   componentWillMount() {
-    // Load sections
     if ( !this.props.sections.isLoaded ) {
-      this.props.fetchSections(this.props.token)
+      this.props.listSectionsNav(this.props.token)
     }
   }
 
   componentDidMount() {
-    // Initialize toaster reducer with toaster ref
     this.props.setupToaster(this.refs.toaster)
   }
 
@@ -34,7 +32,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const sections = this.props.sections.data.map( id => this.props.entities.sections[id] )
+    const sections = this.props.sections.ids.map( id => this.props.entities.sections[id] )
 
     return (
       <div>
@@ -49,7 +47,7 @@ class Main extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    sections: state.app.sections,
+    sections: state.app.sections.navigation,
     email: state.app.auth.email,
     entities: {
       sections: state.app.entities.sections
@@ -61,8 +59,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSections: (token) => {
-      dispatch(sectionsActions.fetchSections(token))
+    listSectionsNav: (token) => {
+      dispatch(sectionsActions.listNav(token))
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())

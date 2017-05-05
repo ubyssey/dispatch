@@ -14,36 +14,18 @@
   float: left;
 }
 
-$header-height: 50px;
-
 .c-article-editor__toolbar {
   // Structure
   display: flex;
   width: 100%;
 }
 
-.c-article-editor__toolbar__editor-buttons {
-  // Text
-  line-height: $header-height;
-
-  .pt-button {
-    // Structure
-    margin-right: 0.5rem;
-
-    .pt-icon-standard {
-      // Structure
-      margin-right: 0;
-    }
-  }
-}
-
 .c-article-editor__toolbar__article-buttons {
   // Structure
   flex: 1;
-  line-height: $header-height;
 
   .pt-button {
-    margin-left: 0.75rem;
+    margin-right: 0.75rem;
   }
 }
 
