@@ -49,16 +49,24 @@ render((
         <Route component={Containers.Main}>
           <IndexRoute component={Pages.Dashboard} />
 
-          <Route path="articles">
+          <Route path='sections'>
+            <IndexRoute component={Pages.Sections.Index} />
+            <Route path='new' component={Pages.Sections.NewSection} />
+            <Route path=':sectionId' component={Pages.Sections.Section} />
+          </Route>
+
+          <Route path='articles'>
             <IndexRoute component={Pages.Articles.Index} />
-            <Route path="new" component={Pages.Articles.NewArticle} />
-            <Route path=":articleId" component={Pages.Articles.Article} />
+            <Route path='new' component={Pages.Articles.NewArticle} />
+            <Route path=':articleId' component={Pages.Articles.Article} />
+          </Route>
+
+          <Route path='pages'>
+            <IndexRoute component={Pages.Pages.Index} />
           </Route>
 
           <Route path='components' component={Pages.Components} />
           <Route path='files' component={Pages.Files} />
-          <Route path='pages' component={Pages.Pages} />
-          <Route path='sections' component={Pages.Sections} />
           <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
 

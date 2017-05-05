@@ -4,18 +4,9 @@ import { connect } from 'react-redux'
 
 import MultiSelectInput from './MultiSelectInput'
 
-import * as tagsActions from '../../actions/TagsActions'
+import tagsActions from '../../actions/TagsActions'
 
 class TagSelectInputComponent extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.addTag = this.addTag.bind(this)
-    this.removeTag = this.removeTag.bind(this)
-    this.createTag = this.createTag.bind(this)
-    this.fetchTags = this.fetchTags.bind(this)
-  }
 
   addTag(tagId) {
     let newTags = R.append(tagId, this.props.selected)
@@ -31,30 +22,25 @@ class TagSelectInputComponent extends React.Component {
     this.props.update(newTags)
   }
 
-  createTag() {
-
-  }
-
-  fetchTags(query) {
+  listTags(query) {
     let queryObj = {}
 
     if (query) {
       queryObj['q'] = query
     }
 
-    this.props.fetchTags(this.props.token, queryObj)
+    this.props.listTags(this.props.token, queryObj)
   }
 
   render() {
     return (
       <MultiSelectInput
         selected={this.props.selected}
-        results={this.props.tags.data}
+        results={this.props.tags.ids}
         entities={this.props.entities.tags}
-        addValue={this.addTag}
-        removeValue={this.removeTag}
-        createValue={this.createTag}
-        fetchResults={this.fetchTags}
+        addValue={(id) => this.addTag(id)}
+        removeValue={(id) => this.removeTag(id)}
+        fetchResults={(query) => this.listTags(query)}
         attribute='name'
         editMessage={this.props.selected.length ? 'Edit tags' : 'Add tags'} />
     )
@@ -74,8 +60,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTags: (token, query) => {
-      dispatch(tagsActions.fetchTags(token, query))
+    listTags: (token, query) => {
+      dispatch(tagsActions.list(token, query))
     }
   }
 }

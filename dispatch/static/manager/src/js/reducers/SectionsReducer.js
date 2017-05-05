@@ -1,27 +1,37 @@
 import R from 'ramda'
+import { combineReducers } from 'redux'
 
 import * as types from '../constants/ActionTypes'
 
-const initialState = {
-  isLoading: false,
-  isLoaded: false,
-  data: []
-}
+import {
+  pending,
+  fulfilled,
+  Reducer,
+  buildManyResourceReducer,
+  buildSingleResourceReducer
+} from '../util/redux'
 
-export default function sectionsReducer(state = initialState, action) {
-  switch (action.type) {
-  case types.FETCH_SECTIONS + '_PENDING':
-    return R.merge(state, {
-      isLoading: true,
-      isLoaded: false
-    })
-  case types.FETCH_SECTIONS + '_FULFILLED':
-    return R.merge(state, {
-      isLoading: false,
-      isLoaded: true,
-      data: action.payload.results.result
-    })
-  default:
-    return state
+const initialState = {
+  navigation: {
+    isLoading: false,
+    isLoaded: false,
+    ids: []
   }
 }
+
+let navigationReducer = new Reducer(initialState.navigation)
+
+navigationReducer.handle(pending(types.SECTIONS.LIST_NAV), (state) => R.merge(state, { isLoading: true }))
+navigationReducer.handle(fulfilled(types.SECTIONS.LIST_NAV), (state, action) => {
+  return R.merge(state, {
+    isLoading: false,
+    isLoaded: true,
+    ids: action.payload.data.result
+  })
+})
+
+export default combineReducers({
+  navigation: navigationReducer.getReducer(),
+  list: buildManyResourceReducer(types.SECTIONS).getReducer(),
+  single: buildSingleResourceReducer(types.SECTIONS).getReducer(),
+})

@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone'
 import moment from 'moment'
 import { Button } from '@blueprintjs/core'
 
-import * as filesActions from '../actions/FilesActions'
+import filesActions from '../actions/FilesActions'
 
 import ItemList from '../components/ItemList'
 
@@ -16,31 +16,34 @@ const DEFAULT_LIMIT = 15
 class FilesPageComponent extends React.Component {
 
   componentWillMount() {
-    this.props.clearFiles()
+    this.props.clearAllFiles()
     this.props.clearSelectedFiles()
-    this.props.fetchFiles(this.props.token, this.getQuery())
+    this.props.listFiles(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
     if (this.isNewQuery(prevProps, this.props)) {
-      this.props.clearFiles()
+      this.props.clearAllFiles()
       this.props.clearSelectedFiles()
-      this.props.fetchFiles(this.props.token, this.getQuery())
+      this.props.listFiles(this.props.token, this.getQuery())
     }
     else if (this.isNewPage(prevProps, this.props)) {
-      this.props.fetchFiles(this.props.token, this.getQuery())
+      this.props.listFiles(this.props.token, this.getQuery())
       this.props.clearSelectedFiles()
     }
   }
 
   getQuery() {
+
     var query = {
       limit: DEFAULT_LIMIT,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
-    if(this.props.location.query.q) {
+
+    if (this.props.location.query.q) {
       query.q = this.props.location.query.q
     }
+
     return query
   }
 
@@ -59,7 +62,7 @@ class FilesPageComponent extends React.Component {
   }
 
   isNewPage(prevProps, props) {
-    //Returns true if the page number has changed
+    // Returns true if the page number has changed
     return prevProps.location.query.page !== props.location.query.page
   }
 
@@ -73,7 +76,7 @@ class FilesPageComponent extends React.Component {
   }
 
   onDrop(files) {
-    files.forEach((file)=> {
+    files.forEach(file => {
       let formData = new FormData()
       formData.append('file', file, file.name)
       formData.append('name', file.name)
@@ -84,7 +87,6 @@ class FilesPageComponent extends React.Component {
   onDropzoneClick() {
     this.dropzone.open()
   }
-
 
   render() {
     return (
@@ -147,29 +149,29 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchFiles: (token, query) => {
-      dispatch(filesActions.fetchFiles(token,query))
+    listFiles: (token, query) => {
+      dispatch(filesActions.list(token,query))
     },
     toggleFile: (fileId) => {
-      dispatch(filesActions.toggleFile(fileId))
+      dispatch(filesActions.toggle(fileId))
     },
     createFile: (token, file) => {
-      dispatch(filesActions.createFile(token, file))
+      dispatch(filesActions.create(token, file))
     },
     toggleAllFiles: (fileIds) => {
-      dispatch(filesActions.toggleAllFiles(fileIds))
+      dispatch(filesActions.toggleAll(fileIds))
     },
     clearSelectedFiles: () => {
-      dispatch(filesActions.clearSelectedFiles())
+      dispatch(filesActions.clearSelected())
     },
-    clearFiles: () => {
-      dispatch(filesActions.clearFiles())
+    clearAllFiles: () => {
+      dispatch(filesActions.clearAll())
     },
     deleteFiles: (token, fileIds) => {
-      dispatch(filesActions.deleteFiles(token, fileIds))
+      dispatch(filesActions.deleteMany(token, fileIds))
     },
     searchFiles: (token, query) => {
-      dispatch(filesActions.searchFiles(query))
+      dispatch(filesActions.search(query))
     }
   }
 }

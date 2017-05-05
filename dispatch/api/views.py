@@ -15,9 +15,8 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.frontend.models import ComponentSet, Component
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.api.mixins import DispatchModelViewSet
+from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
 
@@ -25,6 +24,7 @@ class SectionViewSet(DispatchModelViewSet):
     """
     Viewset for Section model views.
     """
+    model = Section
     serializer_class = SectionSerializer
 
     def get_queryset(self):
@@ -35,7 +35,7 @@ class SectionViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-class ArticleViewSet(DispatchModelViewSet):
+class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
     Viewset for Article model views.
     """
@@ -49,10 +49,8 @@ class ArticleViewSet(DispatchModelViewSet):
         against a `topic` query parameter in the URL.
         """
 
-        if self.request.user.is_authenticated():
-            queryset = Article.objects
-        else:
-            queryset = Article.objects.filter(is_published=True)
+        # Get base queryset from DispatchPublishableMixin
+        queryset = self.get_publishable_queryset()
 
         queryset = queryset.order_by('-updated_at')
 
@@ -60,7 +58,6 @@ class ArticleViewSet(DispatchModelViewSet):
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
         topic = self.request.query_params.get('topic', None)
-        version = self.request.query_params.get('version', None)
 
         if tag is not None:
             queryset = queryset.filter(tags__name=tag)
@@ -74,58 +71,7 @@ class ArticleViewSet(DispatchModelViewSet):
         if topic is not None:
             queryset = queryset.filter(topic_id=topic)
 
-        if version is not None:
-            queryset = queryset.filter(revision_id=version)
-        else:
-            queryset = queryset.filter(head=True)
-
         return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def publish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.publish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def unpublish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        serializer = self.get_serializer(instance)
-        serializer.unpublish()
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def revision(self, request, parent_id=None):
-        revision_id = request.query_params.get('revision_id', None)
-
-        filter_kwargs = {
-            'parent_id': parent_id,
-            'revision_id': revision_id,
-        }
-
-        queryset = Article.objects.all()
-        instance = get_object_or_404(queryset, **filter_kwargs)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def rendered(self, request, parent_id=None):
@@ -146,26 +92,7 @@ class ArticleViewSet(DispatchModelViewSet):
 
         return Response(data)
 
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    Article.objects.filter(parent_id=id).delete()
-                    deleted.append(int(id))
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
-
-class PageViewSet(DispatchModelViewSet):
+class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
     Viewset for Page model views.
     """
@@ -178,40 +105,18 @@ class PageViewSet(DispatchModelViewSet):
         Only display unpublished content to authenticated users, filter by query parameter if present.
         """
 
-        if self.request.user.is_authenticated():
-            queryset = Page.objects.filter(head=True)
-        else:
-            queryset = Page.objects.filter(head=True, is_published=True)
+        # Get base queryset from DispatchPublishableMixin
+        queryset = self.get_publishable_queryset()
 
-        queryset = queryset.order_by('-published_at')
+        queryset = queryset.order_by('-updated_at')
 
         # Optionally filter by a query parameter
         q = self.request.query_params.get('q')
 
         if q:
-            queryset = queryset.filter(headline__icontains=q)
+            queryset = queryset.filter(title__icontains=q)
 
         return queryset
-
-    @detail_route(methods=['get'],)
-    def publish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        instance.publish()
-
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
-
-    @detail_route(methods=['get'],)
-    def unpublish(self, request, parent_id=None):
-        instance = self.get_object_or_404(parent_id)
-
-        instance.unpublish()
-
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
 
     @detail_route(methods=['get'],)
     def revision(self, request, parent_id=None):
@@ -238,25 +143,6 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
-
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    Person.objects.get(pk=id).delete()
-                    deleted.append(id)
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
 
 class TagViewSet(DispatchModelViewSet):
     """
@@ -327,26 +213,6 @@ class FileViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-    def bulk_delete(self, request):
-        deleted = []
-        ids = self.request.data.get('ids', None)
-
-        if ids is not None:
-            ids = ids.split(',')
-            for id in ids:
-                try:
-                    File.objects.filter(id=id).delete()
-                    deleted.append(int(id))
-                except:
-                    pass
-
-        data = {
-            'deleted': deleted
-        }
-
-        return Response(data)
-
-
 class ImageViewSet(viewsets.ModelViewSet):
     """
     Viewset for Image model views.
@@ -356,39 +222,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
     update_fields = ('title', 'authors')
-
-    def create(self, request, *args, **kwargs):
-        authors = request.POST.get('authors', None)
-
-        # If filename is not valid ASCII, don't add to DB and send error
-        if not all(ord(c) < 128 for c in request.data.get('img').name):
-            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-        if authors is None:
-            # Set author to current user if no authors are passed
-            authors = [request.user.id]
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        resource = serializer.save()
-        resource.save_authors(authors) # Handle author saving
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def update(self, request, *args, **kwargs):
-
-        # Filter data to only include updatable fields
-        data = { key: request.data.get(key) for key in self.update_fields }
-
-        if 'authors' in data:
-            data['author_ids'] = data['authors']
-
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=data, partial=True)
-        serializer.is_valid(raise_exception=True)
-
-        serializer.save()
-
-        return Response(serializer.data)
 
     def get_queryset(self):
         queryset = Image.objects.all()

@@ -37,10 +37,10 @@ class DashboardPageComponent extends React.Component {
   }
 
   renderRecent() {
-    return this.props.recent.data.map(
-      (elem, i) => (
+    return this.props.recent.ids.map((id) => this.props.entities.articles[id])
+      .map((article, i) => (
         <li key={i} className='c-dashboard_recent-articles__item'>
-          <Link to={`/articles/${elem.id}`} dangerouslySetInnerHTML={{__html: elem.headline}} />
+          <Link to={`/articles/${article.id}`} dangerouslySetInnerHTML={{__html: article.headline}} />
         </li>
       )
     )
@@ -74,7 +74,10 @@ class DashboardPageComponent extends React.Component {
 const mapStateToProps = (state) => ({
   token: state.app.auth.token,
   actions: state.app.dashboard.actions,
-  recent: state.app.dashboard.recent
+  recent: state.app.dashboard.recent,
+  entities: {
+    articles: state.app.entities.articles
+  }
 })
 
 const mapDispatchToProps = (dispatch) => ({

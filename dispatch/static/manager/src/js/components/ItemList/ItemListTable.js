@@ -9,7 +9,7 @@ export default function ItemListTable(props) {
 
   if (props.items.isLoading) {
     return (
-      <div className='c-item-list__table'>
+      <div className='c-item-list__table u-container'>
         <ul>
           <ItemListItemPlaceholder />
           <ItemListItemPlaceholder />
@@ -24,7 +24,7 @@ export default function ItemListTable(props) {
         </ul>
       </div>
     )
-  } else if (!props.items.data.length) {
+  } else if (!props.items.ids.length) {
     return (
       <ItemListEmpty
         query={props.location.query.q}
@@ -33,7 +33,7 @@ export default function ItemListTable(props) {
     )
   } else {
 
-    const items = props.items.data.map( id => {
+    const items = props.items.ids.map( id => {
       let item = props.entities[id]
       return (
         <ItemListItem
@@ -46,7 +46,7 @@ export default function ItemListTable(props) {
     })
 
     return (
-      <div className='c-item-list__table'>
+      <div className='c-item-list__table u-container u-container--align-left'>
         <ul>{items}</ul>
       </div>
     )
