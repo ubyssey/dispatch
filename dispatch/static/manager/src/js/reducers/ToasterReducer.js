@@ -104,7 +104,7 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Integration removed')
   case fulfilled(types.INTEGRATIONS.CALLBACK):
     return showToast('Authentication successful')
-  case callback(types.INTEGRATIONS.CALLBACK):
+  case rejected(types.INTEGRATIONS.CALLBACK):
     return showToast(action.payload.detail, Intent.DANGER)
   default:
     return toaster
