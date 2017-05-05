@@ -12,44 +12,56 @@ export default function BasicFieldsTab(props) {
   return (
     <div>
 
-      <FormInput label='Slug'>
+      <FormInput
+        label='Slug'
+        error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
           value={props.slug}
           fill={true}
-          onChange={ e => props.update('slug', e.target.value) } />
+          onChange={e => props.update('slug', e.target.value) } />
       </FormInput>
 
-      <FormInput label='Section'>
+      <FormInput
+        label='Section'
+        error={props.errors.section_id}>
         <SectionSelectInput
           selected={props.section}
-          update={ section => props.update('section', section) } />
+          update={section => props.update('section', section) } />
       </FormInput>
 
-      <FormInput label='Authors'>
+      <FormInput
+        label='Authors'
+        error={props.errors.author_ids}>
         <AuthorSelectInput
           selected={props.authors}
-          update={ authors => props.update('authors', authors) } />
+          update={authors => props.update('authors', authors) } />
       </FormInput>
 
-      <FormInput label='Tags'>
+      <FormInput
+        label='Tags'
+        error={props.errors.tag_ids}>
         <TagSelectInput
           selected={props.tags}
-          update={ tags => props.update('tags', tags) } />
+          update={tags => props.update('tags', tags) } />
       </FormInput>
 
-      <FormInput label='Topic'>
+      <FormInput
+        label='Topic'
+        error={props.errors.topic_ids}>
         <TopicSelectInput
           selected={props.topic}
-          update={ topic => props.update('topic', topic) } />
+          update={topic => props.update('topic', topic) } />
       </FormInput>
 
-      <FormInput label='Snippet'>
+      <FormInput
+        label='Snippet'
+        error={props.errors.snippet}>
         <TextAreaInput
           placeholder='Snippet'
-          value={props.snippet}
+          value={props.snippet || ''}
           rows='5'
-          onChange={ e => props.update('snippet', e.target.value) } />
+          onChange={e => props.update('snippet', e.target.value) } />
       </FormInput>
 
     </div>

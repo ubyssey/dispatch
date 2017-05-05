@@ -8,7 +8,7 @@
   height: 100%;
 }
 
-$image-manger-header-padding: 10px;
+$image-manger-header-padding: 1rem;
 $image-manager-header-border: 1px solid $color-border-gray;
 $image-manager-header-box-shadow: rgba(0,0,0,0.05) 0px 1px 1px;
 $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
@@ -62,8 +62,23 @@ $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
 
 .c-image-manager__images {
   // Structure
-  padding: 15px;
   flex: 2;
+
+  // Extras
+  overflow-y: scroll;
+}
+
+.c-image-manager__images--active {
+  // Extras
+  opacity: 0.5;
+}
+
+.c-image-manager__images__container {
+  // Structure
+  padding: 1rem;
+
+  // Extras
+  overflow: auto;
 }
 
 .c-image-manager__active {

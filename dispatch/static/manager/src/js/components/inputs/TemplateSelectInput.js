@@ -7,14 +7,6 @@ import * as templatesActions from '../../actions/TemplatesActions'
 
 class TemplateSelectInputComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.addTemplate = this.addTemplate.bind(this)
-    this.removeTemplate = this.removeTemplate.bind(this)
-    this.fetchTemplates = this.fetchTemplates.bind(this)
-  }
-
   addTemplate(templateId) {
     this.props.update(templateId)
   }
@@ -23,14 +15,14 @@ class TemplateSelectInputComponent extends React.Component {
     this.props.update(null)
   }
 
-  fetchTemplates(query) {
+  listTemplates(query) {
     let queryObj = {}
 
     if (query) {
       queryObj['q'] = query
     }
 
-    this.props.fetchTemplates(this.props.token, queryObj)
+    this.props.listTemplates(this.props.token, queryObj)
   }
 
   render() {
@@ -38,11 +30,11 @@ class TemplateSelectInputComponent extends React.Component {
     return (
       <MultiSelectInput
         selected={this.props.selected ? [this.props.selected] : []}
-        results={this.props.templates.data}
+        results={this.props.templates.ids}
         entities={this.props.entities.templates}
-        addValue={this.addTemplate}
-        removeValue={this.removeTemplate}
-        fetchResults={this.fetchTemplates}
+        addValue={(id) => this.addTemplate(id)}
+        removeValue={(id) => this.removeTemplate(id)}
+        fetchResults={(query) => this.listTemplates(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Change template' : 'Set template'} />
     )
@@ -62,8 +54,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTemplates: (token, query) => {
-      dispatch(templatesActions.fetchTemplates(token, query))
+    listTemplates: (token, query) => {
+      dispatch(templatesActions.list(token, query))
     }
   }
 }
