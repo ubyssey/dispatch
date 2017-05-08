@@ -9,6 +9,7 @@ from dispatch.apps.content.models import Page
 class PagesTest(DispatchAPITestCase):
 
     def _create_page(self):
+
         """
         Create Dummy Page
         """
