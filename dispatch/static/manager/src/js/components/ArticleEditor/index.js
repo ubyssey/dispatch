@@ -3,7 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as articlesActions from '../../actions/ArticlesActions'
+import articlesActions from '../../actions/ArticlesActions'
 import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
 import * as integrationActions from '../../actions/IntegrationActions'
@@ -21,17 +21,14 @@ class ArticleEditorComponent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.fetchArticleVersion = this.fetchArticleVersion.bind(this)
     this.toggleStyle = this.toggleStyle.bind(this)
   }
 
   componentWillMount() {
     if (this.props.isNew) {
-      // Create empty article
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
-      // Fetch article
-      this.props.fetchArticle(this.props.token, this.props.articleId)
+      this.props.getArticle(this.props.token, this.props.articleId)
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
@@ -39,9 +36,8 @@ class ArticleEditorComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!this.props.isNew) {
-      // Fetch article
       if (prevProps.articleId !== this.props.articleId) {
-        this.props.fetchArticle(this.props.token, this.props.articleId)
+        this.props.getArticle(this.props.token, this.props.articleId)
 
         this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
       }
@@ -107,8 +103,8 @@ class ArticleEditorComponent extends React.Component {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
-  fetchArticleVersion(version) {
-    return this.props.fetchArticle(
+  getArticleVersion(version) {
+    return this.props.getArticle(
       this.props.token,
       this.props.articleId,
       { version: version }
@@ -133,7 +129,7 @@ class ArticleEditorComponent extends React.Component {
             publishArticle={() => this.publishArticle()}
             unpublishArticle={() => this.unpublishArticle()}
             previewArticle={() => this.previewArticle()}
-            fetchArticleVersion={this.fetchArticleVersion}
+            getVersion={(version) => this.getArticleVersion(version)}
             article={article}
             isNew={this.props.isNew} />
           <div className='u-container-editor'>
@@ -160,7 +156,7 @@ class ArticleEditorComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    article: state.app.articles.article,
+    article: state.app.articles.single,
     editorState: state.app.editor,
     entities: {
       articles: state.app.entities.articles,
@@ -174,26 +170,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchArticle: (token, articleId, params) => {
-      dispatch(articlesActions.fetchArticle(token, articleId, params))
+    getArticle: (token, articleId, params) => {
+      dispatch(articlesActions.get(token, articleId, params))
     },
     setArticle: (article) => {
-      dispatch(articlesActions.setArticle(article))
+      dispatch(articlesActions.set(article))
     },
     saveArticle: (token, articleId, data) => {
-      dispatch(articlesActions.saveArticle(token, articleId, data))
+      dispatch(articlesActions.save(token, articleId, data))
     },
     createArticle: (token, data) => {
-      dispatch(articlesActions.createArticle(token, data))
+      dispatch(articlesActions.create(token, data))
     },
     publishArticle: (token, articleId, data) => {
-      dispatch(articlesActions.publishArticle(token, articleId, data))
+      dispatch(articlesActions.publish(token, articleId, data))
     },
     unpublishArticle: (token, articleId) => {
-      dispatch(articlesActions.unpublishArticle(token, articleId))
+      dispatch(articlesActions.unpublish(token, articleId))
     },
     previewArticle: (token, articleId, data) => {
-      dispatch(articlesActions.previewArticle(token, articleId, data))
+      dispatch(articlesActions.preview(token, articleId, data))
     },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))

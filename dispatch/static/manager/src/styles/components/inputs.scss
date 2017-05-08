@@ -108,7 +108,10 @@
 // Component: FormInput
 .c-form-input {
   // Structure
-  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
 
   // Border
   border-bottom: 1px solid $color-border-gray;
@@ -128,6 +131,12 @@
   label.pt-label {
     margin: 0;
   }
+}
+
+.c-form-input--no-padding {
+  // Structure
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .c-form-input__label {
