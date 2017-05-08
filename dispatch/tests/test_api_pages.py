@@ -36,7 +36,7 @@ class PagesTest(DispatchAPITestCase):
         # Clear authentication credentials
         self.client.credentials()
 
-        self._create_page()
+        response = self._create_page()
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -60,17 +60,17 @@ class PagesTest(DispatchAPITestCase):
 
         # Page missing content, snippet, slug
         data = {
-            "title": "Test Page",
+            "title": "Test Page"
         }
 
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        # Check Data
-        self.assertTrue('content_json' in response.data)
-        self.assertTrue('snippet' in response.data)
-        self.assertTrue('slug' in response.data)
+        count = Page.objects.all().count()
+
+        self.assertEqual(count, 0)
+
 
     def test_create_page(self):
         """
@@ -83,7 +83,7 @@ class PagesTest(DispatchAPITestCase):
 
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
-        self.assertEqual(response.data['slug'], 'test_page')
+        self.assertEqual(response.data['slug'], 'test-page')
         self.assertEqual(response.data['snippet'], "This is a test snippet")
         self.assertEqual(response.data['content'][0]['type'], 'paragraph')
         self.assertEqual(response.data['content'][0]['data'], 'This is some paragraph text')
@@ -94,23 +94,24 @@ class PagesTest(DispatchAPITestCase):
         """
 
         # First make a page
-        page = self._create_page()
+        response = self._create_page()
 
         # Generate detail url
-        url = reverse('api-pages-detail', args=[page.data['id']])
+        url = reverse('api-pages-detail', args=[response.data['id']])
 
         # Change the fields
         new_data = {
           "title": "New Test Page",
-          "slug": "New test-page",
+          "slug": "new-test-page",
           "snippet": "This is a new test snippet",
         }
 
         response = self.client.patch(url, new_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check data
         self.assertEqual(response.data['title'], "New Test Page")
-        self.assertEqual(response.data['slug'], "New test-page")
+        self.assertEqual(response.data['slug'], "new-test-page")
         self.assertEqual(response.data['snippet'], "This is a new test snippet")
 
     def test_update_content_page(self):
@@ -144,10 +145,12 @@ class PagesTest(DispatchAPITestCase):
         """
 
         # First make a page
-        page = self._create_page()
+        response = self._create_page()
+
+        id = response.data['id']
 
         # Generate detail url
-        url = reverse('api-pages-detail', args=[page.data['id']])
+        url = reverse('api-pages-detail', args=[id])
 
         self.client.credentials()
 
@@ -165,8 +168,9 @@ class PagesTest(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Check Data
-        self.assertEqual(response.data['content'][0]['data'], 'This is some paragraph text')
+        page = Page.objects.get(pk=id)
+
+        self.assertEqual(page.content[0]['data'], 'This is some paragraph text')
 
 
     def test_delete_page_unauthorized(self):
@@ -197,9 +201,9 @@ class PagesTest(DispatchAPITestCase):
         # Generate detail url
         url = reverse('api-pages-detail', args=[page.data['id']])
 
-        # Successful deletion should return 404
+        # Successful deletion should return 204
         response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # Can't delete a page that has already been deleted
         response = self.client.delete(url, format='json')
