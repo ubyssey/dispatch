@@ -15,6 +15,7 @@ export default function ItemList(props) {
         location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
+        createHandler={props.createHandler}
         actions={props.actions} />
       <ItemListTable
         items={props.items}

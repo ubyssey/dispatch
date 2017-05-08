@@ -5,20 +5,17 @@ import DispatchAPI from '../api/dispatch'
 
 export function getUserActions(token) {
   return {
-    type: types.FETCH_ACTIONS,
+    type: types.DASHBOARD.LIST_ACTIONS,
     payload: DispatchAPI.dashboard.actions(token)
-      .then(json => {
-        return json
-      })
   }
 }
 
 export function getRecentArticles(token) {
   return {
-    type: types.FETCH_RECENT_ARTICLES,
+    type: types.DASHBOARD.LIST_RECENT_ARTICLES,
     payload: DispatchAPI.dashboard.recent(token)
-      .then(json => {
-        return normalize(json.results, arrayOf(articleSchema))
-      })
+      .then(json => ({
+        data: normalize(json.results, arrayOf(articleSchema))
+      }))
   }
 }

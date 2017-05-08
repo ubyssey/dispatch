@@ -6,7 +6,7 @@ export default function LinkButton(props) {
   return (
     <Link
       to={props.to}>
-      <Button>
+      <Button {...props}>
         {props.children}
       </Button>
     </Link>
