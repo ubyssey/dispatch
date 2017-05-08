@@ -1,8 +1,8 @@
 import React from 'react'
-import Toolbar from '../Toolbar'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
+import { Toolbar } from '../Toolbar'
 import VersionsDropdown from './toolbar/VersionsDropdown'
 
 export default function ArticleToolbar(props) {
@@ -27,14 +27,14 @@ export default function ArticleToolbar(props) {
             intent={Intent.SUCCESS}
             onClick={() => props.saveArticle()}>Update</AnchorButton>
           {props.article.is_published ? unpublish : publish}
-          <AnchorButton 
+          <AnchorButton
             disabled={props.isNew}
             onClick={() => props.previewArticle()}>Preview</AnchorButton>
           <VersionsDropdown
             current_version={props.article.current_version}
             published_version={props.article.published_version}
             latest_version={props.article.latest_version}
-            fetchArticleVersion={props.fetchArticleVersion} />
+            getVersion={props.getVersion} />
         </div>
       </div>
     </Toolbar>

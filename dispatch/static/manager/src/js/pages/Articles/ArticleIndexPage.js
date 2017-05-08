@@ -4,7 +4,9 @@ import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
 
-import * as articlesActions from '../../actions/ArticlesActions'
+import { Intent } from '@blueprintjs/core'
+
+import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
 import { LinkButton } from '../../components/inputs'
@@ -55,7 +57,7 @@ class ArticlesPageComponent extends React.Component {
     // Fetch articles
     this.props.clearArticles()
     this.props.clearSelectedArticles()
-    this.props.fetchArticles(this.props.token, this.getQuery())
+    this.props.listArticles(this.props.token, this.getQuery())
   }
 
   componentDidUpdate(prevProps) {
@@ -63,12 +65,12 @@ class ArticlesPageComponent extends React.Component {
     if (this.isNewSection(prevProps, this.props) || this.isNewQuery(prevProps, this.props)) {
       this.props.clearArticles()
       this.props.clearSelectedArticles()
-      this.props.fetchArticles(this.props.token, this.getQuery())
+      this.props.listArticles(this.props.token, this.getQuery())
     }
 
     else if (this.isNewPage(prevProps, this.props)) {
       // Fetch articles
-      this.props.fetchArticles(this.props.token, this.getQuery())
+      this.props.listArticles(this.props.token, this.getQuery())
       this.props.clearSelectedArticles()
     }
   }
@@ -122,7 +124,11 @@ class ArticlesPageComponent extends React.Component {
 
 
           emptyMessage={'You haven\'t created any articles yet.'}
-          createHandler={() => (<LinkButton to={'articles/new'}>Create article</LinkButton>)}
+          createHandler={() => (
+            <LinkButton intent={Intent.SUCCESS} to={'articles/new'}>
+              <span className='pt-icon-standard pt-icon-add'></span>Create article
+            </LinkButton>)
+          }
 
           actions={{
             toggleItem: this.props.toggleArticle,
@@ -141,7 +147,7 @@ class ArticlesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    articles: state.app.articles.articles,
+    articles: state.app.articles.list,
     entities: {
       articles: state.app.entities.articles,
       sections: state.app.entities.sections
@@ -151,26 +157,26 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchArticles: (token, query) => {
-      dispatch(articlesActions.fetchArticles(token, query))
+    listArticles: (token, query) => {
+      dispatch(articlesActions.list(token, query))
     },
     toggleArticle: (articleId) => {
-      dispatch(articlesActions.toggleArticle(articleId))
+      dispatch(articlesActions.toggle(articleId))
     },
     toggleAllArticles: (articleIds) => {
-      dispatch(articlesActions.toggleAllArticles(articleIds))
+      dispatch(articlesActions.toggleAll(articleIds))
     },
     clearSelectedArticles: () => {
-      dispatch(articlesActions.clearSelectedArticles())
-    },
-    deleteArticles: (token, articleIds) => {
-      dispatch(articlesActions.deleteArticles(token, articleIds))
+      dispatch(articlesActions.clearSelected())
     },
     clearArticles: () => {
-      dispatch(articlesActions.clearArticles())
+      dispatch(articlesActions.clearAll())
+    },
+    deleteArticles: (token, articleIds) => {
+      dispatch(articlesActions.deleteMany(token, articleIds))
     },
     searchArticles: (token, section, query) => {
-      dispatch(articlesActions.searchArticles(section, query))
+      dispatch(articlesActions.search(section, query))
     }
   }
 }
