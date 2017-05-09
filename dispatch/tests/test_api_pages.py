@@ -1,9 +1,6 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
-
 from dispatch.tests.cases import DispatchAPITestCase
-
 from dispatch.apps.content.models import Page
 
 class PagesTest(DispatchAPITestCase):
@@ -16,13 +13,13 @@ class PagesTest(DispatchAPITestCase):
         url = reverse('api-pages-list')
 
         data = {
-          "title": "Test Page",
-          "slug": "test-page",
-          "snippet": "This is a test snippet",
-          "content": [
+          'title': 'Test Page',
+          'slug': 'test-page',
+          'snippet': 'This is a test snippet',
+          'content': [
             {
-              "type": "paragraph",
-              "data": "This is some paragraph text"
+              'type': 'paragraph',
+              'data': 'This is some paragraph text'
             }
           ]
         }
@@ -53,14 +50,14 @@ class PagesTest(DispatchAPITestCase):
 
     def test_create_incomplete_page(self):
         """
-        Creat Page should fail with missing required fields
+        Create page should fail with missing required fields
         """
 
         url = reverse('api-pages-list')
 
         # Page missing content, snippet, slug
         data = {
-            "title": "Test Page"
+            'title': 'Test Page'
         }
 
         response = self.client.post(url, data, format='json')
@@ -79,12 +76,19 @@ class PagesTest(DispatchAPITestCase):
 
         response = self._create_page()
 
+        id = response.data['id']
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        try:
+            page = Page.objects.get(pk=response.data['id'])
+        except Page.DoesNotExist:
+            self.fail("The page should exist in the database")
 
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
         self.assertEqual(response.data['slug'], 'test-page')
-        self.assertEqual(response.data['snippet'], "This is a test snippet")
+        self.assertEqual(response.data['snippet'], 'This is a test snippet')
         self.assertEqual(response.data['content'][0]['type'], 'paragraph')
         self.assertEqual(response.data['content'][0]['data'], 'This is some paragraph text')
 
@@ -101,18 +105,18 @@ class PagesTest(DispatchAPITestCase):
 
         # Change the fields
         new_data = {
-          "title": "New Test Page",
-          "slug": "new-test-page",
-          "snippet": "This is a new test snippet",
+          'title': 'New Test Page',
+          'slug': 'new-test-page',
+          'snippet': 'This is a new test snippet',
         }
 
         response = self.client.patch(url, new_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check data
-        self.assertEqual(response.data['title'], "New Test Page")
-        self.assertEqual(response.data['slug'], "new-test-page")
-        self.assertEqual(response.data['snippet'], "This is a new test snippet")
+        self.assertEqual(response.data['title'], 'New Test Page')
+        self.assertEqual(response.data['slug'], 'new-test-page')
+        self.assertEqual(response.data['snippet'], 'This is a new test snippet')
 
     def test_update_content_page(self):
         """
@@ -120,24 +124,24 @@ class PagesTest(DispatchAPITestCase):
         """
 
         # First make a page
-        page = self._create_page()
+        page = self._create_page() # Should be response?
 
         # Generate detail url
-        url = reverse('api-pages-detail', args=[page.data['id']])
+        url = reverse('api-pages-detail', args=[page.data['id']]) # Should be response.data['id']?
 
         # Change the content
         new_data = {
-          "content": [
+          'content': [
             {
-              "type": "paragraph",
-              "data": "This is some brand new paragraph text"
+              'type': 'paragraph',
+              'data': 'This is some brand new paragraph text'
             }
           ]
         }
 
         response = self.client.patch(url, new_data, format='json')
 
-        self.assertEqual(response.data['content'][0]['data'], "This is some brand new paragraph text")
+        self.assertEqual(response.data['content'][0]['data'], 'This is some brand new paragraph text')
 
     def test_update_content_unauthorized(self):
         """
@@ -156,10 +160,10 @@ class PagesTest(DispatchAPITestCase):
 
         # Change the fields
         new_data = {
-          "content": [
+          'content': [
             {
-              "type": "paragraph",
-              "data": "This is some new paragraph text"
+              'type': 'paragraph',
+              'data': 'This is some new paragraph text'
             }
           ]
         }
