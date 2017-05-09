@@ -80,6 +80,11 @@ class PagesTest(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        try:
+            page = Page.objects.get(pk=response.data['id'])
+        except Page.DoesNotExist:
+            self.fail("The page should exist in the database")
+
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
         self.assertEqual(response.data['slug'], 'test-page')
@@ -133,16 +138,17 @@ class PagesTest(DispatchAPITestCase):
         self.assertEqual(page.slug, 'new-test-page')
         self.assertEqual(page.snippet, 'This is a new test snippet')
 
+
     def test_update_content_page(self):
         """
         Should be able to update contents of the page
         """
 
         # First make a page
-        page = self._create_page()
+        page = self._create_page() # Should be response?
 
         # Generate detail url
-        url = reverse('api-pages-detail', args=[page.data['id']])
+        url = reverse('api-pages-detail', args=[page.data['id']]) # Should be response.data['id']?
 
         # Change the content
         new_data = {
