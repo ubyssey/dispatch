@@ -80,17 +80,23 @@ class PagesTest(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        try:
-            page = Page.objects.get(pk=response.data['id'])
-        except Page.DoesNotExist:
-            self.fail("The page should exist in the database")
-
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
         self.assertEqual(response.data['slug'], 'test-page')
         self.assertEqual(response.data['snippet'], 'This is a test snippet')
         self.assertEqual(response.data['content'][0]['type'], 'paragraph')
         self.assertEqual(response.data['content'][0]['data'], 'This is some paragraph text')
+
+        try:
+            page = Page.objects.get(pk=response.data['id'])
+        except Page.DoesNotExist:
+            self.fail("The page should exist in the database")
+
+        self.assertEqual(page.title, 'Test Page')
+        self.assertEqual(page.slug, 'test-page')
+        self.assertEqual(page.snippet, 'This is a test snippet')
+        self.assertEqual(page.content[0]['type'], 'paragraph')
+        self.assertEqual(page.content[0]['data'], 'This is some paragraph text')
 
     def test_update_fields_page(self):
         """
@@ -118,16 +124,25 @@ class PagesTest(DispatchAPITestCase):
         self.assertEqual(response.data['slug'], 'new-test-page')
         self.assertEqual(response.data['snippet'], 'This is a new test snippet')
 
+        try:
+            page = Page.objects.get(parent_id=response.data['id'], head=True)
+        except Page.DoesNotExist:
+            self.fail("The page should exist in the database")
+
+        self.assertEqual(page.title, 'New Test Page')
+        self.assertEqual(page.slug, 'new-test-page')
+        self.assertEqual(page.snippet, 'This is a new test snippet')
+
     def test_update_content_page(self):
         """
         Should be able to update contents of the page
         """
 
         # First make a page
-        page = self._create_page() # Should be response?
+        page = self._create_page()
 
         # Generate detail url
-        url = reverse('api-pages-detail', args=[page.data['id']]) # Should be response.data['id']?
+        url = reverse('api-pages-detail', args=[page.data['id']])
 
         # Change the content
         new_data = {
@@ -141,7 +156,15 @@ class PagesTest(DispatchAPITestCase):
 
         response = self.client.patch(url, new_data, format='json')
 
+        # Check data
         self.assertEqual(response.data['content'][0]['data'], 'This is some brand new paragraph text')
+
+        try:
+            page = Page.objects.get(parent_id=page.data['id'], head=True)
+        except Page.DoesNotExist:
+            self.fail("The page should exist in the database")
+
+        self.assertEqual(page.content[0]['data'], 'This is some brand new paragraph text')
 
     def test_update_content_unauthorized(self):
         """
