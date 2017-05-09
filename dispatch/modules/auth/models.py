@@ -10,7 +10,7 @@ class Person(Model):
     is_admin = BooleanField(default=True)
 
     image = ImageField(upload_to='images', null=True, blank=True)
-    slug = SlugField(null=True, blank=True)
+    slug = SlugField(null=True, blank=True, unique=True)
     description = TextField(null=True, blank=True)
 
     def get_image_url(self):
