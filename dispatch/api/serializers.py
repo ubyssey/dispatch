@@ -21,11 +21,15 @@ class PersonSerializer(DispatchModelSerializer):
     """
     Serializes the Person model.
     """
+
     class Meta:
+        # TODO: Add image support
         model = Person
         fields = (
             'id',
             'full_name',
+            'slug',
+            'description'
         )
 
 class FileSerializer(DispatchModelSerializer):
