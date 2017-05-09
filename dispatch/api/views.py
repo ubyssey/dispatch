@@ -134,6 +134,7 @@ class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
     """
+    model = Person
     serializer_class = PersonSerializer
 
     def get_queryset(self):
