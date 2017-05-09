@@ -1,5 +1,5 @@
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
-from dispatch.apps.content.models import Image, Person
+from dispatch.apps.content.models import Person
 from django.core.urlresolvers import reverse  # How do I know when to use this?
 from rest_framework import status
 
@@ -40,7 +40,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Update this person
         url = reverse('api-people-detail', args=[response.data['id']])
-        data = {'full_name' : 'Updated Name'}
+        data = {'full_name': 'Updated Name'}
 
         # Check response correctness
         response = self.client.patch(url, data, format='json')
@@ -53,8 +53,35 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(person.full_name, 'Updated Name')
         self.assertEqual(person.slug, 'test-person')
         self.assertEqual(person.description, 'This is a description')
-    
 
+    def test_unauthorized_person_creation(self):
+        """
+        Create person should fail with unauthenticated request
+        """
+        # Clear authentication credentials
+        self.client.credentials()
+
+        response = self._create_person(
+            full_name='Test Person', slug='test-person',
+            description='This is a description')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthorized_person_update(self):
+        # Create original person
+        response = self._create_person(
+            full_name='Test Person', slug='test-person',
+            description='This is a description')
+
+        self.client.credentials()
+
+        # Update this person
+        url = reverse('api-people-detail', args=[response.data['id']])
+        data = {'full_name': 'Updated Name'}
+
+        # Check response correctness
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
