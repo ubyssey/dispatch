@@ -85,13 +85,46 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check response correctness
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
+
     def test_empty_person(self):
         """
         Creating a person with no attributes should be pass
+        TODO: Determine if want to change this behavior by changing command line 'stuff' for superuser
         """
         response = self._create_person()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        person = Person.objects.get(pk=response.data['id'])
+        self.assertEqual(person.full_name, '')
+
+    def test_duplicate_fullnames(self):
+        """
+        Having two persons with the same full name is fine
+        """
+        response1 = self._create_person(full_name='Test Person')
+        response2 = self._create_person(full_name='Test Person')
+
+        # Response correctness
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+
+        # Database correctness
+        person1 = Person.objects.get(pk=response1.data['id'])
+        person2 = Person.objects.get(pk=response2.data['id'])
+        self.assertEqual(person1.full_name, 'Test Person')
+        self.assertEqual(person2.full_name, 'Test Person')
+
+    def test_duplicate_slug(self):
+        """
+        Having two persons with the same slug is not okay,
+        because they can't have the same route
+        """
+        response1 = self._create_person(full_name='Test Person 1', slug='test-person')
+        response2 = self._create_person(full_name='Test Person 2', slug='test-person')
+
+        # Response correctness
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
