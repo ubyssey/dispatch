@@ -1,4 +1,4 @@
-from django.template import loader, Context
+from django.template import loader
 
 class EmbedLibrary(object):
 
@@ -43,12 +43,11 @@ class AbstractController(object):
 class AbstractTemplateRenderController(AbstractController):
 
     TEMPLATE = None
-    
+
     @classmethod
     def render(self, data):
         template = loader.get_template(self.TEMPLATE)
-        c = Context(data)
-        return template.render(c)
+        return template.render(data)
 
 
 class ListController(AbstractController):
@@ -80,15 +79,15 @@ class CodeController(AbstractController):
 
 class VideoController(AbstractTemplateRenderController):
 
-    TEMPLATE = "article/embeds/video.html"
+    TEMPLATE = "embeds/video.html"
 
 class AdvertisementController(AbstractTemplateRenderController):
 
-    TEMPLATE = "article/embeds/advertisement.html"
+    TEMPLATE = "embeds/advertisement.html"
 
 class PullQuoteController(AbstractTemplateRenderController):
 
-    TEMPLATE = "article/embeds/quote.html"
+    TEMPLATE = "embeds/quote.html"
 
 
 
