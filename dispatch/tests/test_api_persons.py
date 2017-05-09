@@ -68,6 +68,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthorized_person_update(self):
+        """
+        Updating a person should fail with unauthenticated request
+        """
         # Create original person
         response = self._create_person(
             full_name='Test Person', slug='test-person',
@@ -82,6 +85,13 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check response correctness
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    
+    def test_empty_person(self):
+        """
+        Creating a person with no attributes should be pass
+        """
+        response = self._create_person()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
