@@ -180,7 +180,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(articlesActions.save(token, articleId, data))
     },
     createArticle: (token, data) => {
-      dispatch(articlesActions.create(token, data))
+      dispatch(articlesActions.create(token, data, 'articles'))
     },
     publishArticle: (token, articleId, data) => {
       dispatch(articlesActions.publish(token, articleId, data))
