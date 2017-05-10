@@ -19,7 +19,7 @@ from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Ima
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
-from dispatch.apps.api.exceptions import ExistionRelationship
+from dispatch.apps.api.exceptions import ProtectedResourceError
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -150,7 +150,7 @@ class PersonViewSet(DispatchModelViewSet):
         try:
             instance.delete()
         except ProtectedError:
-            raise ExistionRelationship('Cannot delete PERSON because attached to USER')
+            raise ProtectedResourceError('Cannot delete PERSON because attached to USER')
 
 class TagViewSet(DispatchModelViewSet):
     """
