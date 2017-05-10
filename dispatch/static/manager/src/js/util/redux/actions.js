@@ -110,13 +110,31 @@ export class ResourceActions {
     }
   }
 
-  create(token, id, data) {
-    return {
-      type: this.types.CREATE,
-      payload: this.api.create(token, this.prepareData(data))
-        .then(json => ({
-          data: normalize(json, this.schema)
-        }))
+  create(token, data, next=null) {
+    return (dispatch) => {
+
+      dispatch({ type: pending(this.types.CREATE) })
+
+      this.api.create(token, this.prepareData(data))
+        .then(json => {
+          if (next) {
+            dispatch(push(`${next}/${json.id}`))
+          }
+
+          dispatch({
+            type: fulfilled(this.types.CREATE),
+            payload: {
+              data: normalize(json, this.schema)
+            }
+          })
+        })
+        .catch(error => {
+          console.log(error)
+          dispatch({
+            type: rejected(this.types.CREATE),
+            payload: error
+          })
+        })
     }
   }
 

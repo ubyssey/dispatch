@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(sectionsActions.save(token, sectionId, data))
     },
     createSection: (token, data) => {
-      dispatch(sectionsActions.create(token, data))
+      dispatch(sectionsActions.create(token, data, 'sections'))
     },
     deleteSection: (token, sectionId, next) => {
       dispatch(sectionsActions.delete(token, sectionId, next))
