@@ -63,7 +63,7 @@ export function buildManyResourceReducer(types) {
     })
   })
 
-  reducer.handle(types.TOGGLE_SELECTED, (state, action) => {
+  reducer.handle(types.TOGGLE, (state, action) => {
     const index = R.findIndex(R.equals(action.id), state.selected)
     return R.merge(state, {
       selected: index > -1 ? R.remove(index, 1, state.selected) : R.append(action.id, state.selected)
