@@ -130,6 +130,12 @@ export function buildSingleResourceReducer(types) {
     })
   })
 
+  reducer.handle(types.SELECT, (state, action) => {
+    return R.merge(state, {
+      id: action.id
+    })
+  })
+
   return reducer
 
 }

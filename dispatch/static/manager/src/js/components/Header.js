@@ -7,7 +7,7 @@ require('../../styles/components/loading_bar.scss')
 
 export default function Header(props) {
 
-  const sections = props.sections.map( section => {
+  const sections = props.sections.map(section => {
     return (
       <li className='c-header__link' key={section.id}>
         <Link to={{ pathname: '/articles/', query: { section: section.id }}}>{section.name}</Link>
