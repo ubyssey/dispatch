@@ -202,8 +202,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-people-detail', args=[response.data['id']])
 
         response = self.client.delete(url, format='json')
-        # TODO: Determine if a "500" error is correct status code
-        self.assertEquals(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
