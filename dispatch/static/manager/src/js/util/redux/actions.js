@@ -18,6 +18,7 @@ const DEFAULT_RESOURCE_ACTION_TYPES = [
   'SET',
   'TOGGLE',
   'TOGGLE_ALL',
+  'SELECT',
   'CLEAR_SELECTED',
   'CLEAR_ALL'
 ]
@@ -170,6 +171,7 @@ export class ResourceActions {
   set(resource) {
     return {
       type: this.types.SET,
+      isLocalAction: true,
       payload: {
         data: normalize(resource, this.schema)
       }
@@ -187,6 +189,13 @@ export class ResourceActions {
     return {
       type: this.types.TOGGLE_ALL,
       ids: ids
+    }
+  }
+
+  select(id) {
+    return {
+      type: this.types.SELECT,
+      id: id
     }
   }
 
