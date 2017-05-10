@@ -208,10 +208,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
         A helper method that creates a simple person object with the given attributes
-        and returns the response, data and url in a dictionary
+        and returns the response
         """
-        url = reverse(
-            'api-people-list')  # Creates url based on views with given name
+        url = reverse('api-people-list')
 
         data = {
             'full_name': full_name,
