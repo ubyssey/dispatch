@@ -5,6 +5,6 @@ class InvalidFilename(APIException):
     status_code = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
     default_detail = 'Invalid filename'
 
-class ProtectedError(APIException):
+class ExistionRelationship(APIException):
     status_code = status.HTTP_409_CONFLICT
     default_detail = 'Cannot delete because MODEL has lingering relationships'
