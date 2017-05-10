@@ -150,7 +150,7 @@ class PersonViewSet(DispatchModelViewSet):
         try:
             instance.delete()
         except ProtectedError:
-            raise ProtectedResourceError('Cannot delete PERSON because attached to USER')
+            raise ProtectedResourceError('Deletion failed because person belongs to a user')
 
 class TagViewSet(DispatchModelViewSet):
     """

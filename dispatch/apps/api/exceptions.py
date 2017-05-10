@@ -7,4 +7,4 @@ class InvalidFilename(APIException):
 
 class ProtectedResourceError(APIException):
     status_code = status.HTTP_409_CONFLICT
-    default_detail = 'Cannot delete MODEL because it is PROTECTED'
+    default_detail = 'Deletion failed because resource is a member of a protected relationship'
