@@ -160,7 +160,8 @@ const mapStateToProps = (state) => {
     editorState: state.app.editor,
     entities: {
       remote: state.app.entities.articles,
-      local: state.app.entities.local.articles
+      local: state.app.entities.local.articles,
+      images: state.app.entities.images
     },
     integrations: state.app.integrations.integrations,
     token: state.app.auth.token
