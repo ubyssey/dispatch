@@ -1,5 +1,5 @@
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
-from dispatch.apps.content.models import Person
+from dispatch.apps.content.models import Person, User
 from django.core.urlresolvers import reverse  # How do I know when to use this?
 from rest_framework import status
 
@@ -119,12 +119,69 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Having two persons with the same slug is not okay,
         because they can't have the same route
         """
-        response1 = self._create_person(full_name='Test Person 1', slug='test-person')
-        response2 = self._create_person(full_name='Test Person 2', slug='test-person')
+        response1 = self._create_person(
+            full_name='Test Person 1', slug='test-person')
+        response2 = self._create_person(
+            full_name='Test Person 2', slug='test-person')
 
         # Response correctness
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_person(self):
+        """
+        Simple person deletion test and throw error if trying to delete
+        an item that is already deleted/doesn't exist
+        """
+
+        response = self._create_person(
+            full_name='Test Person', slug='test-person')
+        # Generate detail URL
+        url = reverse('api-people-detail', args=[response.data['id']])
+
+        # Successful deletion should return 204
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Can't delete an person that has already been deleted
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_unauthorized_person_deletion(self):
+        """
+        unauthorized deletion of a person isn't allowed
+        """
+
+        response = self._create_person(
+            full_name='Test Person', slug='test-person')
+        # Generate detail URL
+        url = reverse('api-people-detail', args=[response.data['id']])
+
+        self.client.credentials()
+
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_person_user(self):
+        """
+        Deleting a person SHOULD NOT also delete the user associated with that person
+        """
+        # TODO: Add API for attaching person to user, currently bypassing API
+        user = User.objects.get(pk=1)  # This is the user created in the setup
+
+        # Create new person to attach to user
+        response = self._create_person(
+            full_name='Test Person', slug='test-person')
+        user.person_id = response.data['id']
+        user.save()  # Update change to database
+
+        # Delete Person ensuring that an error is thrown since it is connect to
+        # a User
+        url = reverse('api-people-detail', args=[response.data['id']])
+
+        response = self.client.delete(url, format='json')
+        self.assertEquals(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
