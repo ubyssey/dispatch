@@ -1,5 +1,6 @@
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.db.models import ProtectedError
 from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
@@ -144,6 +145,12 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
+    
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError:
+            raise APIException('Cannot delete PERSON because attached to USER')
 
 class TagViewSet(DispatchModelViewSet):
     """
