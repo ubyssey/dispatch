@@ -199,6 +199,37 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
         
         self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
+    
+    def test_get_image_url(self):
+        """
+        Test to ensure proper url is returned
+        """
+        # TODO: Add image support to PersonSerializer
+        with open(self.get_input_file('test_image.jpg')) as test_image:
+            response = self._create_person(
+                full_name='Test Person', 
+                image=test_image,
+                slug='test-person', 
+                description='This is a description'
+                )
+
+        person = Person.objects.get(pk=response.data['id'])
+        self.assertEqual(person.get_image_url(), settings.MEDIA_URL + "test_image.jpg")
+
+    def test_string_representation(self):
+        """
+        Test the string representation methods of the model
+        """
+        
+        # Testing when a full name is provided
+        response = self._create_person(full_name='Test Person')
+        person= Person.objects.get(pk=response.data['id'])
+        self.assertEqual(str(person), 'Test Person')
+
+        # Testing without a full name
+        response = self._create_person()
+        person = Person.objects.get(pk=response.data['id'])
+        self.assertEqual(str(person), '')
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
