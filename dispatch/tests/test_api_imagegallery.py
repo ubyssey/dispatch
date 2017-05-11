@@ -18,7 +18,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         return response.data['id']
 
     def _create_gallery_only(self, id, attachments):
-        """Create a gallery instance, but does not upload images"""
+        """Creates a gallery instance, but does not upload images"""
 
         url = reverse('api-galleries-list')
 
@@ -41,7 +41,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 'image_id': image_1
             },
             {
-                'caption': 'test caption 2,
+                'caption': 'test caption 2',
                 'image_id': image_2
             }
         ]
