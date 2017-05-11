@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
+import Logout from './Logout'
 
 require('../../styles/components/header.scss')
 require('../../styles/components/loading_bar.scss')
@@ -54,7 +55,7 @@ export default function Header(props) {
                   <Link to='/profile'>manage profile</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/logout'>logout</Link>
+                  <Logout />
                 </li>
               </ul>
             </li>
