@@ -214,7 +214,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 )
 
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(person.get_image_url(), settings.MEDIA_URL + "test_image.jpg")
+        self.assertEquals(person.get_image_url(), settings.MEDIA_URL + "test_image.jpg")
 
     def test_string_representation(self):
         """
@@ -224,12 +224,12 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Testing when a full name is provided
         response = self._create_person(full_name='Test Person')
         person= Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), 'Test Person')
+        self.assertEquals(str(person), 'Test Person')
 
         # Testing without a full name
         response = self._create_person()
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), '')
+        self.assertEquals(str(person), '')
 
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
