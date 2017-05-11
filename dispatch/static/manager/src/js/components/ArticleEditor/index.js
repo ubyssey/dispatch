@@ -47,10 +47,10 @@ class ArticleEditorComponent extends React.Component {
   getArticle() {
     var article
     if (this.props.isNew) {
-      article = this.props.entities.article[NEW_ARTICLE_ID]
+      article = this.props.entities.local[NEW_ARTICLE_ID]
     } else {
-      article = this.props.entities.article[this.props.articleId] ||
-        this.props.entities.articles[this.props.articleId] || false
+      article = this.props.entities.local[this.props.articleId] ||
+        this.props.entities.remote[this.props.articleId] || false
     }
 
     if (!article) {
@@ -159,8 +159,8 @@ const mapStateToProps = (state) => {
     article: state.app.articles.single,
     editorState: state.app.editor,
     entities: {
-      articles: state.app.entities.articles,
-      article: state.app.entities.article,
+      remote: state.app.entities.articles,
+      local: state.app.entities.local.articles,
       images: state.app.entities.images
     },
     integrations: state.app.integrations.integrations,
@@ -180,7 +180,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(articlesActions.save(token, articleId, data))
     },
     createArticle: (token, data) => {
-      dispatch(articlesActions.create(token, data))
+      dispatch(articlesActions.create(token, data, 'articles'))
     },
     publishArticle: (token, articleId, data) => {
       dispatch(articlesActions.publish(token, articleId, data))
