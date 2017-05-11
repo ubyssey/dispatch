@@ -2,7 +2,7 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.apps.content.models import Person, User
 from django.core.urlresolvers import reverse
 from rest_framework import status
-
+from django.conf import settings
 
 class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     """
