@@ -1,6 +1,8 @@
 from django.template import loader
+from dispatch.apps.api.serializers import ImageSerializer
+from dispatch.apps.content.models import Image
 
-class EmbedDoesNotExist(Exception):
+class EmbedException(Exception):
     pass
 
 class EmbedLibrary(object):
@@ -11,11 +13,18 @@ class EmbedLibrary(object):
     def register(self, type, function):
         self.library[type] = function
 
-    def render(self, type, data):
+    def get_controller(self, type):
         if type in self.library:
-            return self.library[type].render(data)
+            return self.library[type]
         else:
-            raise EmbedDoesNotExist('No embed controller registered for type %s' % type)
+            raise EmbedException('No embed controller registered for type %s' % type)
+
+    def to_json(self, type, data):
+        return self.get_controller(type).to_json(data)
+
+    def render(self, type, data):
+        return self.get_controller(type).render(data)
+
 
 embedlib = EmbedLibrary()
 
@@ -32,7 +41,7 @@ def maptag(tagname, contents):
 class AbstractController(object):
 
     @staticmethod
-    def json(data):
+    def to_json(data):
         return data
 
 class AbstractTemplateRenderController(AbstractController):
@@ -42,9 +51,7 @@ class AbstractTemplateRenderController(AbstractController):
     @classmethod
     def render(self, data):
         template = loader.get_template(self.TEMPLATE)
-
         return template.render(self.prepare_data(data))
-
 
     @classmethod
     def prepare_data(self, data):
@@ -90,9 +97,50 @@ class PullQuoteController(AbstractTemplateRenderController):
 
     TEMPLATE = 'embeds/quote.html'
 
+class ImageController(AbstractTemplateRenderController):
+
+    TEMPLATE = 'embeds/image.html'
+
+    @classmethod
+    def get_image(self, id):
+        try:
+            return Image.objects.get(pk=id)
+        except Image.DoesNotExist:
+            raise EmbedException('Image with id %d does not exist' % id)
+
+    @classmethod
+    def to_json(self, data):
+
+        id = data['image_id']
+
+        image = self.get_image(id)
+
+        serializer = ImageSerializer(image)
+        image_data = serializer.data
+
+        return {
+            'image': image_data,
+            'caption' : data['caption'],
+            'credit' : data['credit']
+        }
+
+    @classmethod
+    def prepare_data(self, data):
+
+        id = data['image_id']
+
+        image = self.get_image(id)
+
+        return {
+            'image': image,
+            'caption': data['caption'],
+            'credit': data['credit']
+        }
+
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
+embedlib.register('image', ImageController)
