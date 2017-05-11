@@ -1,8 +1,10 @@
-from dispatch.apps.frontend import embeds
-from django.test import TestCase
 from django.template import loader
+from django.core.urlresolvers import reverse
 
-class EmbedsTest(TestCase):
+from dispatch.apps.frontend import embeds
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+
+class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_list_controller(self):
 
@@ -121,23 +123,23 @@ class EmbedsTest(TestCase):
     def test_video_controller(self):
 
         data_1 = {
-            'id' : '1234', # youtube video id
+            'id' : '1234',
             'title' : 'Test title',
             'caption' : 'Test caption',
             'credit' : 'Test credit'
         }
         data_2 = {
-            'id' : '1234', # youtube video id
+            'id' : '1234',
             'title' : 'Test title',
             'caption' : 'Test caption',
         }
         data_3 = {
-            'id' : '1234', # youtube video id
+            'id' : '1234',
             'title' : 'Test title',
             'credit' : 'Test credit'
         }
         data_4 = {
-            'id' : '1234', # youtube video id
+            'id' : '1234', 
             'title' : 'Test title',
         }
         data_5 = {
@@ -166,7 +168,7 @@ class EmbedsTest(TestCase):
         try:
             result = embeds.embedlib.render('test', data)
             self.fail('EmbedDoesNotExist exception should have been raised')
-        except embeds.EmbedDoesNotExist:
+        except embeds.EmbedException:
             pass
 
     def test_register_existing_type(self):
@@ -181,3 +183,56 @@ class EmbedsTest(TestCase):
         result = embeds.embedlib.render('quote', data_1)
 
         self.assertEqual(result, '<h1>Header text</h1>')
+
+    def test_image_controller(self):
+
+        url = reverse('api-images-list')
+
+        with open(self.get_input_file('test_image.jpg')) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        image_id_1 = response.data['id']
+
+        data_1 = {
+            'image_id' : image_id_1,
+            'caption' : 'This is a test caption',
+            'credit' : 'This is a test credit'
+        }
+
+        data_2 = {
+            'image_id' : 5,
+            'caption' : 'This is a test caption',
+            'credit' : 'This is a test credit'
+        }
+
+        json_1 = {
+            'image': {
+                'title': None,
+                'url': u'images/2017/05/test_image.jpg',
+                'url_medium': u'images/2017/05/test_image-medium.jpg',
+                'created_at': response.data['created_at'],
+                'updated_at': response.data['updated_at'],
+                'url_thumb': u'images/2017/05/test_image-square.jpg',
+                'filename': u'test_image.jpg',
+                'width': 600,
+                'authors': [],
+                'height': 400,
+                'id': 1
+            },
+            'caption': 'This is a test caption',
+            'credit': 'This is a test credit'
+        }
+
+        html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.jpg" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
+
+        result_1 = embeds.embedlib.to_json('image', data_1)
+        self.assertEqual(result_1, json_1)
+
+        result_2 = embeds.embedlib.render('image', data_1)
+        self.assertEqual(result_2, html_str)
+
+        try:
+            result_3 = embeds.embedlib.to_json('image', data_2)
+            self.fail('Invalid image id should have raised exception')
+        except embeds.EmbedException:
+            pass

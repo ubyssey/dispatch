@@ -23,7 +23,6 @@ from django.template import loader, Context
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
 from dispatch.apps.core.models import Person, User
-from dispatch.apps.frontend.embeds import embedlib
 from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
@@ -125,7 +124,8 @@ class Publishable(Model):
                     if node['type'] == 'paragraph':
                         html += "<p>%s</p>" % node['data']
                     else:
-                        html += embedlib.render(node['type'], data)
+                        pass
+                        #html += embedlib.render(node['type'], data)
                 else:
                     # If node isn't a dictionary, then it's assumed to be a paragraph.
                     html += "<p>%s</p>" % node
@@ -520,40 +520,6 @@ class ImageAttachment(Model):
 
     order = PositiveIntegerField(null=True)
 
-    class EmbedController:
-        @staticmethod
-        def json(data):
-            id = data['attachment_id']
-
-            try:
-                attach = ImageAttachment.objects.get(id=id)
-            except ImageAttachment.DoesNotExist:
-                return
-
-            return {
-                'image_id': attach.image.id,
-                'url': attach.image.get_absolute_url(),
-                'caption': attach.caption,
-                'credit': attach.credit,
-                'width': attach.image.width,
-                'height': attach.image.height,
-            }
-
-        @staticmethod
-        def render(data):
-            template = loader.get_template("image.html")
-            id = data['attachment_id']
-            attach = ImageAttachment.objects.get(id=id)
-            c = Context({
-                'id': attach.id,
-                'src': attach.image.get_absolute_url(),
-                'caption': attach.caption,
-                'credit': attach.credit
-            })
-            return template.render(c)
-
-    embedlib.register('image', EmbedController)
-
 class ImageGallery(Model):
     title = CharField(max_length=255)
     images = ManyToManyField(ImageAttachment, related_name="images")
@@ -593,7 +559,7 @@ class ImageGallery(Model):
             except:
                 return "Gallery not found"
 
-    embedlib.register('gallery', EmbedController)
+    #embedlib.register('gallery', EmbedController)
 
 
 class File(Model):
