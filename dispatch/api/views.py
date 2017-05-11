@@ -234,6 +234,8 @@ class ImageGalleryViewSet(DispatchModelViewSet):
     """
     Viewset for ImageGallery model views.
     """
+
+    model = ImageGallery
     serializer_class = ImageGallerySerializer
 
     paginate_by = 30
