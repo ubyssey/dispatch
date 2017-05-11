@@ -34,3 +34,9 @@ export function authenticateUser(email, password, nextPath = '/') {
       })
   }
 }
+
+export function unauthenticateUser(nextPath = '/') {
+  return dispatch => {
+    //TODO: hook up the API call
+  }
+}
