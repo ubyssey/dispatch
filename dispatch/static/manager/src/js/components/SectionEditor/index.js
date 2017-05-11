@@ -34,10 +34,10 @@ class SectionEditorComponent extends React.Component {
 
   getSection() {
     if (this.props.isNew) {
-      return this.props.entities.section[NEW_SECTION_ID]
+      return this.props.entities.local[NEW_SECTION_ID]
     } else {
-      return this.props.entities.section[this.props.sectionId] ||
-        this.props.entities.sections[this.props.sectionId] || false
+      return this.props.entities.local[this.props.sectionId] ||
+        this.props.entities.remote[this.props.sectionId] || false
     }
   }
 
@@ -93,8 +93,8 @@ const mapStateToProps = (state) => {
   return {
     section: state.app.sections.single,
     entities: {
-      sections: state.app.entities.sections,
-      section: state.app.entities.section,
+      remote: state.app.entities.sections,
+      local: state.app.entities.local.sections,
     },
     token: state.app.auth.token
   }
@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(sectionsActions.save(token, sectionId, data))
     },
     createSection: (token, data) => {
-      dispatch(sectionsActions.create(token, data))
+      dispatch(sectionsActions.create(token, data, 'sections'))
     },
     deleteSection: (token, sectionId, next) => {
       dispatch(sectionsActions.delete(token, sectionId, next))
