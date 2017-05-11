@@ -1,37 +1,32 @@
 from django.template import loader
 
+class EmbedDoesNotExist(Exception):
+    pass
+
 class EmbedLibrary(object):
 
     def __init__(self):
         self.library = {}
 
-    def register(self, name, function):
-        self.library[name] = function
-
-    def call(self, name, args):
-        if name in self.library:
-            return self.library[name](args)
-
-    def json(self, type, data):
-        if type in self.library:
-            return self.library[type].json(data)
-        else:
-            return data
+    def register(self, type, function):
+        self.library[type] = function
 
     def render(self, type, data):
         if type in self.library:
             return self.library[type].render(data)
+        else:
+            raise EmbedDoesNotExist('No embed controller registered for type %s' % type)
 
 embedlib = EmbedLibrary()
 
 
 def tag(tag, content):
-    return u"<{tag}>{content}</{tag}>".format(tag=tag, content=content)
+    return u'<{tag}>{content}</{tag}>'.format(tag=tag, content=content)
 
 def maptag(tagname, contents):
     """Returns the HTML produced from enclosing each item in
     `contents` in a tag of type `tagname`"""
-    return u"".join(tag(tagname, item) for item in contents)
+    return u''.join(tag(tagname, item) for item in contents)
 
 
 class AbstractController(object):
@@ -54,7 +49,7 @@ class ListController(AbstractController):
 
     @classmethod
     def render(self, data):
-        return tag("ul", maptag("li", data))
+        return tag('ul', maptag('li', data))
 
 class HeaderController(AbstractController):
 
@@ -79,17 +74,15 @@ class CodeController(AbstractController):
 
 class VideoController(AbstractTemplateRenderController):
 
-    TEMPLATE = "embeds/video.html"
+    TEMPLATE = 'embeds/video.html'
 
 class AdvertisementController(AbstractTemplateRenderController):
 
-    TEMPLATE = "embeds/advertisement.html"
+    TEMPLATE = 'embeds/advertisement.html'
 
 class PullQuoteController(AbstractTemplateRenderController):
 
-    TEMPLATE = "embeds/quote.html"
-
-
+    TEMPLATE = 'embeds/quote.html'
 
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
