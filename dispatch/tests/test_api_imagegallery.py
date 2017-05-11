@@ -329,7 +329,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         try:
             ImageGallery.objects.get(pk=id)
         except ImageGallery.DoesNotExist:
-                self.fail('The gallery should not have been deleted')
+            self.fail('The gallery should not have been deleted')
 
     def test_imagegallery_delete(self):
         """Ensure that galleries can be deleted"""
