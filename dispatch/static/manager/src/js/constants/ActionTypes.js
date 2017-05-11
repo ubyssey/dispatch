@@ -14,7 +14,8 @@ export const TEMPLATES = resourceActionTypes('TEMPLATES')
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [
   'LOGIN_REQUIRED',
-  'GET_TOKEN'
+  'GET_TOKEN',
+  'LOGOUT'
 ])
 
 // Integration actions
