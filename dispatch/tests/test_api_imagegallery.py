@@ -6,6 +6,7 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.apps.content.models import ImageGallery
 
 class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
+
     def _upload_image(self):
         """Upload an image that can be linked by galleries"""
 
@@ -22,8 +23,8 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-list')
 
         data = {
-          "title": "Gallery Title %d" % id,
-          "attachment_json": attachments
+          'title': 'Gallery Title %d' % id,
+          'attachment_json': attachments
         }
 
         return self.client.post(url, data, format='json')
@@ -36,12 +37,12 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         attachment = [
             {
-                "caption": "test caption 1",
-                "image_id": image_1
+                'caption': 'test caption 1',
+                'image_id': image_1
             },
             {
-                "caption": "test caption 2",
-                "image_id": image_2
+                'caption': 'test caption 2,
+                'image_id': image_2
             }
         ]
 
@@ -104,11 +105,12 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Clear authentication credentials (after uploading the image)
         self.client.credentials()
+
         data = {
-            "title": "Gallery Title",
-            "attachment_json": {
-                "caption": "test caption 1",
-                "image_id": image_1
+            'title': 'Gallery Title',
+            'attachment_json': {
+                'caption': 'test caption 1',
+                'image_id': image_1
             }
         }
 
@@ -125,7 +127,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-list')
 
         data = {
-          "title": "Gallery Title"
+          'title': 'Gallery Title'
         }
 
         response = self.client.post(url, data, format='json')
@@ -160,11 +162,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-list')
 
         data = {
-          "title": "Gallery Title",
-          "attachment_json": [
+          'title': 'Gallery Title',
+          'attachment_json': [
             {
-              "caption": "test caption 1",
-              "image_id": -1
+              'caption': 'test caption 1',
+              'image_id': -1
             }
           ]
         }
@@ -173,16 +175,16 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_imagegallery_create_no_image_ids(self):
-        """ that an appropriate error is returned when an image gallery is
+        """Ensure that an appropriate error is returned when an image gallery is
         created with an invalid image id"""
 
         url = reverse('api-galleries-list')
 
         data = {
-          "title": "Gallery Title",
-          "attachment_json": [
+          'title': 'Gallery Title',
+          'attachment_json': [
             {
-              "caption": "test caption 1"
+              'caption': 'test caption 1'
             }
           ]
         }
@@ -201,11 +203,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.client.credentials()
 
         data = {
-          "title": "New Gallery Title",
-          "attachment_json": [
+          'title': 'New Gallery Title',
+          'attachment_json': [
             {
-              "caption": "test caption 1",
-              "image_id": img_id1
+              'caption': 'test caption 1',
+              'image_id': img_id1
             }
           ]
         }
@@ -232,15 +234,15 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-detail', args=[id])
 
         data = {
-          "title": "New Gallery Title",
-          "attachment_json": [
+          'title': 'New Gallery Title',
+          'attachment_json': [
             {
-              "caption": "new test caption 1",
-              "image_id": img_id2
+              'caption': 'new test caption 1',
+              'image_id': img_id2
             },
             {
-              "caption": "new test caption 2",
-              "image_id": img_id1
+              'caption': 'new test caption 2',
+              'image_id': img_id1
             }
           ]
         }
@@ -277,11 +279,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-detail', args=[id])
 
         data = {
-            "title": "New Gallery Ttile",
-            "attachment_json": [
+            'title': 'New Gallery Ttile',
+            'attachment_json': [
                 {
-                    "caption": "new test caption",
-                    "image_id": -1
+                    'caption': 'new test caption',
+                    'image_id': -1
                 }
             ]
         }
@@ -299,10 +301,10 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-detail', args=[id])
 
         data = {
-            "title": "New Gallery Title",
-            "attachment_json": [
+            'title': 'New Gallery Title',
+            'attachment_json': [
                 {
-                    "caption": "new test caption"
+                    'caption': 'new test caption'
                 }
             ]
         }
@@ -323,6 +325,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            ImageGallery.objects.get(pk=id)
+        except ImageGallery.DoesNotExist:
+                self.fail('The gallery should not have been deleted')
 
     def test_imagegallery_delete(self):
         """Ensure that galleries can be deleted"""
@@ -355,24 +362,26 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-galleries-list')
 
         data = {
-            "title": "New Gallery Title",
-            "attachment_json": [
+            'title': 'New Gallery Title',
+            'attachment_json': [
                 {
-                    "caption": "test caption 1",
-                    "image_id": img_id1
+                    'caption': 'test caption 1',
+                    'image_id': img_id1
                 },
                 {
-                    "caption": "test caption 2",
-                    "image_id": img_id2
+                    'caption': 'test caption 2',
+                    'image_id': img_id2
                 }
             ]
         }
+
         gallery2 = self.client.post(url, data, format='json')
         self.assertEqual(gallery2.status_code, status.HTTP_201_CREATED)
 
         id2 = gallery2.data['id']
         url = reverse('api-galleries-detail', args=[id2])
         response = self.client.get(url, format='json')
+
         self.assertEqual(response.data['title'], 'New Gallery Title')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
         self.assertEqual(response.data['images'][0]['image']['id'], img_id1)
