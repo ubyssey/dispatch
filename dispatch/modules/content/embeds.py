@@ -42,7 +42,13 @@ class AbstractTemplateRenderController(AbstractController):
     @classmethod
     def render(self, data):
         template = loader.get_template(self.TEMPLATE)
-        return template.render(data)
+
+        return template.render(self.prepare_data(data))
+
+
+    @classmethod
+    def prepare_data(self, data):
+        return data
 
 
 class ListController(AbstractController):
