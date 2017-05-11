@@ -49,13 +49,11 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'full_name': 'Updated Name'
             }
 
-        # Check response correctness
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.data['full_name'], 'Updated Name')
         self.assertEqual(response.data['slug'], 'test-person')
         self.assertEqual(response.data['description'], 'This is a description')
 
-        # Check database correctness
         person = Person.objects.get(pk=response.data['id'])
         self.assertEqual(person.full_name, 'Updated Name')
         self.assertEqual(person.slug, 'test-person')
@@ -95,7 +93,6 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'full_name': 'Updated Name'
             }
 
-        # Check response correctness
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -117,11 +114,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response1 = self._create_person(full_name='Test Person')
         response2 = self._create_person(full_name='Test Person')
 
-        # Response correctness
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
 
-        # Database correctness
         person1 = Person.objects.get(pk=response1.data['id'])
         person2 = Person.objects.get(pk=response2.data['id'])
         self.assertEqual(person1.full_name, 'Test Person')
