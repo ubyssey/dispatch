@@ -63,7 +63,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   getImage() {
-    return this.props.entities.image[this.props.image.id]
+    return this.props.entities.local[this.props.image.id]
   }
 
   handleSave() {
@@ -102,7 +102,7 @@ class ImageManagerComponent extends React.Component {
     const image = this.getImage()
 
     const images = this.props.images.ids.map( id => {
-      const image = this.props.entities.images[id]
+      const image = this.props.entities.remote[id]
       return (
         <ImageThumb
           key={image.id}
@@ -167,8 +167,8 @@ const mapStateToProps = (state) => {
     images: state.app.images.list,
     image: state.app.images.single,
     entities: {
-      images: state.app.entities.images,
-      image: state.app.entities.image
+      remote: state.app.entities.images,
+      local: state.app.entities.local.images
     },
     token: state.app.auth.token
   }
