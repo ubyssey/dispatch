@@ -20,7 +20,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 image=test_image,
                 slug='test-person', 
                 description='This is a description'
-                )
+            )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['full_name'], 'Test Person')
@@ -42,13 +42,13 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             full_name='Test Person', 
             slug='test-person',
             description='This is a description'
-            )
+        )
 
         # Update this person
         url = reverse('api-people-detail', args=[response.data['id']])
         data = {
             'full_name': 'Updated Name'
-            }
+        }
 
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.data['full_name'], 'Updated Name')
@@ -71,7 +71,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             full_name='Test Person', 
             slug='test-person',
             description='This is a description'
-            )
+        )
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -84,7 +84,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             full_name='Test Person', 
             slug='test-person',
             description='This is a description'
-            )
+        )
 
         self.client.credentials()
 
@@ -92,7 +92,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-people-detail', args=[response.data['id']])
         data = {
             'full_name': 'Updated Name'
-            }
+        }
 
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -131,11 +131,11 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response1 = self._create_person(
             full_name='Test Person 1', 
             slug='test-person'
-            )
+        )
         response2 = self._create_person(
             full_name='Test Person 2', 
             slug='test-person'
-            )
+        )
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
@@ -149,7 +149,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self._create_person(
             full_name='Test Person', 
             slug='test-person'
-            )
+        )
         # Generate detail URL
         url = reverse('api-people-detail', args=[response.data['id']])
 
@@ -169,7 +169,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self._create_person(
             full_name='Test Person', 
             slug='test-person'
-            )
+        )
         # Generate detail URL
         url = reverse('api-people-detail', args=[response.data['id']])
 
@@ -189,7 +189,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self._create_person(
             full_name='Test Person', 
             slug='test-person'
-            )
+        )
         user.person_id = response.data['id']
         user.save()  # Update change to database
 
@@ -211,7 +211,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 image=test_image,
                 slug='test-person', 
                 description='This is a description'
-                )
+            )
         imageDirectory = "images"
         person = Person.objects.get(pk=response.data['id'])
         self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image.jpg") )
