@@ -148,6 +148,7 @@ class TagViewSet(DispatchModelViewSet):
     """
     Viewset for Tag model views.
     """
+    model = Tag
     serializer_class = TagSerializer
 
     def get_queryset(self):
@@ -158,23 +159,11 @@ class TagViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            resource = serializer.save()
-            status_code = status.HTTP_201_CREATED
-        except APIException:
-            instance = Tag.objects.get(name=request.data.get('name'))
-            serializer = self.get_serializer(instance)
-            status_code = status.HTTP_200_OK
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status_code, headers=headers)
-
 class TopicViewSet(DispatchModelViewSet):
     """
     Viewset for Topic model views.
     """
+    model = Topic
     serializer_class = TopicSerializer
 
     def get_queryset(self):
@@ -184,19 +173,6 @@ class TopicViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
-
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            resource = serializer.save()
-            status_code = status.HTTP_201_CREATED
-        except APIException:
-            instance = Topic.objects.get(name=request.data.get('name'))
-            serializer = self.get_serializer(instance)
-            status_code = status.HTTP_200_OK
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status_code, headers=headers)
 
 class FileViewSet(DispatchModelViewSet):
     """
