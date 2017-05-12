@@ -1,6 +1,6 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
-import { push } from 'react-router-redux'
+import { push, replace } from 'react-router-redux'
 
 import DispatchAPI from '../../api/dispatch'
 
@@ -118,7 +118,7 @@ export class ResourceActions {
       this.api.create(token, this.prepareData(data))
         .then(json => {
           if (next) {
-            dispatch(push(`${next}/${json.id}`))
+            dispatch(replace(`${next}/${json.id}`))
           }
 
           dispatch({
