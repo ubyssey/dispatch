@@ -3,7 +3,7 @@ from dispatch.apps.content.models import Person, User
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from django.conf import settings
-
+from os.path import join
 class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     """
     A class to test the person API methods
@@ -204,7 +204,6 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """
         Test to ensure proper url is returned
         """
-        # TODO: Add image support to PersonSerializer
         with open(self.get_input_file('test_image.jpg')) as test_image:
             response = self._create_person(
                 full_name='Test Person', 
@@ -212,9 +211,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 slug='test-person', 
                 description='This is a description'
                 )
-
+        imageDirectory = "images"
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEquals(person.get_image_url(), settings.MEDIA_URL + "test_image.jpg")
+        self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image.jpg") )
 
     def test_string_representation(self):
         """
