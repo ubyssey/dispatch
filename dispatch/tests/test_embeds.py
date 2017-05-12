@@ -3,10 +3,13 @@ from django.core.urlresolvers import reverse
 
 from dispatch.apps.frontend import embeds
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+from dispatch.tests.helpers import DispatchTestHelpers
+from dispatch.apps.content.models import ImageGallery
 
 class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_list_controller(self):
+        """Should output correct html list formatting"""
 
         data_1 = [
             'item 1',
@@ -23,6 +26,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_2, '<ul></ul>')
 
     def test_header_controller(self):
+        """Should output correct header tags around content"""
 
         data_1 = {
             'size' : 'h1',
@@ -48,6 +52,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_3, '<h1></h1>')
 
     def test_code_controller(self):
+        """should output correct code tags around content"""
 
         data_1 = {
             'mode' : 'javascript',
@@ -80,6 +85,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_4, '')
 
     def test_advertisement_controller(self):
+        """Should output id of ad and alignment in html"""
 
         data_1 = {
             'id' : 'ad-1',
@@ -98,6 +104,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_2.strip(), '<div class="ad"><span></span><span></span></div>')
 
     def test_pull_quote_controller(self):
+        """Gives quote and source"""
 
         data_1 = {
             'content' : 'This is a quote',
@@ -121,6 +128,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_3.strip(), '<p class="quote"></p>')
 
     def test_video_controller(self):
+        """Should output html strings with the information included"""
 
         data_1 = {
             'id' : '1234',
@@ -139,7 +147,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'credit' : 'Test credit'
         }
         data_4 = {
-            'id' : '1234', 
+            'id' : '1234',
             'title' : 'Test title',
         }
         data_5 = {
@@ -160,6 +168,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_5.strip(), '<iframe src="https://www.youtube.com/watch?v="></iframe>\n<h1></h1>')
 
     def test_not_in_embedlib(self):
+        """Should raise EmbedException"""
 
         data = {
             'id' : '123'
@@ -172,6 +181,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             pass
 
     def test_register_existing_type(self):
+        """Should overwrite previous type"""
 
         data_1 = {
             'size' : 'h1',
@@ -185,6 +195,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result, '<h1>Header text</h1>')
 
     def test_image_controller(self):
+        """Should output html strings/json formatted information"""
 
         url = reverse('api-images-list')
 
@@ -200,7 +211,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         data_2 = {
-            'image_id' : 5,
+            'image_id' : -1,
             'caption' : 'This is a test caption',
             'credit' : 'This is a test credit'
         }
@@ -226,9 +237,9 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.jpg" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
 
         result_1 = embeds.embedlib.to_json('image', data_1)
-        self.assertEqual(result_1, json_1)
-
         result_2 = embeds.embedlib.render('image', data_1)
+
+        self.assertEqual(result_1, json_1)
         self.assertEqual(result_2, html_str)
 
         try:
@@ -236,3 +247,21 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             self.fail('Invalid image id should have raised exception')
         except embeds.EmbedException:
             pass
+
+    def test_gallery_controller(self):
+
+        # Make a gallery and get its data
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(0, self.client)
+        data = gallery.data
+
+        # Render the data to html
+        result = embeds.embedlib.render('gallery', data)
+
+        print result
+
+        # Expected output
+        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/2017/05/test_image.png" />\n        \n        <img src="images/2017/05/test_image_AP923DL.png" />\n        \n    </div>\n</div>\n'
+
+        # CHANGE OUTPUT TO BE REDUNDANT TO CHANGING URLS I.E. src="images/2017/05/test_image_AP923DL.png- AP923DL.png changes each time you render it
+
+        #self.assertEqual(result, output)

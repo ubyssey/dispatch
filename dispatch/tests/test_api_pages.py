@@ -3,28 +3,10 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 
 from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import Page
 
 class PagesTest(DispatchAPITestCase):
-
-    def _create_page(self):
-        """Create dummy page"""
-
-        url = reverse('api-pages-list')
-
-        data = {
-          'title': 'Test Page',
-          'slug': 'test-page',
-          'snippet': 'This is a test snippet',
-          'content': [
-            {
-              'type': 'paragraph',
-              'data': 'This is some paragraph text'
-            }
-          ]
-        }
-
-        return self.client.post(url, data, format='json')
 
     def test_create_page_unauthorized(self):
         """Create page while unauthorized should fail with unauthenticated request"""
@@ -32,7 +14,7 @@ class PagesTest(DispatchAPITestCase):
         # Clear authentication credentials
         self.client.credentials()
 
-        response = self._create_page()
+        response = DispatchTestHelpers.create_page(self.client)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -67,7 +49,7 @@ class PagesTest(DispatchAPITestCase):
     def test_create_page(self):
         """Ensure we can make a page"""
 
-        response = self._create_page()
+        response = DispatchTestHelpers.create_page(self.client)
 
         id = response.data['id']
 
@@ -99,7 +81,7 @@ class PagesTest(DispatchAPITestCase):
     def test_update_fields_page(self):
         """Should be able to update the title, slug, snippet of the page"""
 
-        page = self._create_page()
+        page = DispatchTestHelpers.create_page(self.client)
 
         url = reverse('api-pages-detail', args=[page.data['id']])
 
@@ -135,7 +117,7 @@ class PagesTest(DispatchAPITestCase):
     def test_update_content_page(self):
         """Should be able to update contents of the page"""
 
-        page = self._create_page()
+        page = DispatchTestHelpers.create_page(self.client)
 
         url = reverse('api-pages-detail', args=[page.data['id']])
 
@@ -159,7 +141,7 @@ class PagesTest(DispatchAPITestCase):
     def test_update_content_unauthorized(self):
         """Patch page should fail with unauthenticated request"""
 
-        response = self._create_page()
+        response = DispatchTestHelpers.create_page(self.client)
 
         page_id = response.data['id']
 
@@ -193,7 +175,7 @@ class PagesTest(DispatchAPITestCase):
     def test_delete_page_unauthorized(self):
         """Delete page should fail with unauthenticated request"""
 
-        page = self._create_page()
+        page = DispatchTestHelpers.create_page(self.client)
 
         self.client.credentials()
 
@@ -211,7 +193,7 @@ class PagesTest(DispatchAPITestCase):
     def test_delete_page(self):
         """Ensure that you can delete your page"""
 
-        page = self._create_page()
+        page = DispatchTestHelpers.create_page(self.client)
 
         url = reverse('api-pages-detail', args=[page.data['id']])
 
