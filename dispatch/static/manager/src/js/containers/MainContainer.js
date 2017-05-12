@@ -32,7 +32,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const sections = this.props.sections.ids.map( id => this.props.entities.sections[id] )
+    const sections = this.props.sections.ids.map(id => this.props.entities.sections[id] )
 
     return (
       <div>

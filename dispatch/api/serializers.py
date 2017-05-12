@@ -4,7 +4,7 @@ from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Ima
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
-from dispatch.apps.api.validators import ValidFilename
+from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -151,7 +151,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
     """
 
     images = ImageAttachmentSerializer(read_only=True, many=True)
-    attachment_json = JSONField(required=False, write_only=True)
+    attachment_json = JSONField(required=False, write_only=True, validators=[ValidateImageGallery])
 
     class Meta:
         model = ImageGallery
