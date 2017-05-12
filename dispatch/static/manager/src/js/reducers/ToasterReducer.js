@@ -106,6 +106,31 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Authentication successful')
   case rejected(types.INTEGRATIONS.CALLBACK):
     return showToast(action.payload.detail, Intent.DANGER)
+
+  // Tags
+  case fulfilled(types.TAGS.CREATE):
+  case fulfilled(types.TAGS.SAVE):
+    return showToast('Tag saved')
+  case rejected(types.TAGS.CREATE):
+  case rejected(types.TAGS.SAVE):
+    return showToast('Tag could not be saved', Intent.DANGER)
+  case fulfilled(types.TAGS.DELETE_MANY):
+    return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.TAGS.DELETE_MANY):
+    return showToast('Some tags could not be deleted', Intent.DANGER)
+
+  // Topics
+  case fulfilled(types.TOPICS.CREATE):
+  case fulfilled(types.TOPICS.SAVE):
+    return showToast('Topic saved')
+  case rejected(types.TOPICS.CREATE):
+  case rejected(types.TOPICS.SAVE):
+    return showToast('Topic could not be saved', Intent.DANGER)
+  case fulfilled(types.TOPICS.DELETE_MANY):
+    return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.TOPICS.DELETE_MANY):
+    return showToast('Some topics could not be deleted', Intent.DANGER)
+
   default:
     return toaster
 
