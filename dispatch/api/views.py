@@ -134,6 +134,7 @@ class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
     """
+    model = Person
     serializer_class = PersonSerializer
 
     def get_queryset(self):
@@ -148,6 +149,7 @@ class TagViewSet(DispatchModelViewSet):
     """
     Viewset for Tag model views.
     """
+    model = Tag
     serializer_class = TagSerializer
 
     def get_queryset(self):
@@ -175,6 +177,7 @@ class TopicViewSet(DispatchModelViewSet):
     """
     Viewset for Topic model views.
     """
+    model = Topic
     serializer_class = TopicSerializer
 
     def get_queryset(self):
