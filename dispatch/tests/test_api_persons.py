@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from django.conf import settings
 from os.path import join
+
 class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     """
     A class to test the person API methods
