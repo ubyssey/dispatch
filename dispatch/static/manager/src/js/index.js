@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux'
@@ -22,6 +22,7 @@ const BASE_PATH = '/admin'
 const browserHistory = useRouterHistory(createHistory)({ basename: BASE_PATH })
 const router = routerMiddleware(browserHistory)
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   combineReducers({
     app: appReducer,
@@ -29,13 +30,15 @@ const store = createStore(
     loadingBar: loadingBarReducer,
     modal: modalReducer
   }),
-  applyMiddleware(
-    thunk,
-    router,
-    promiseMiddleware(),
-    loadingBarMiddleware({
-      promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
-    })
+  composeEnhancers(
+    applyMiddleware(
+      thunk,
+      router,
+      promiseMiddleware(),
+      loadingBarMiddleware({
+        promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
+      })
+    )
   )
 )
 
@@ -72,6 +75,18 @@ render((
 
           <Route path='integrations' component={Pages.Integrations.Index}>
             <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
+          </Route>
+
+          <Route path='tags'>
+            <IndexRoute component={Pages.Tags.Index} />
+            <Route path='new' component={Pages.Tags.NewTag} />
+            <Route path=':tagId' component={Pages.Tags.Tag} />
+          </Route>
+
+          <Route path='topics'>
+            <IndexRoute component={Pages.Topics.Index} />
+            <Route path='new' component={Pages.Topics.NewTopic} />
+            <Route path=':topicId' component={Pages.Topics.Topic} />
           </Route>
 
         </Route>
