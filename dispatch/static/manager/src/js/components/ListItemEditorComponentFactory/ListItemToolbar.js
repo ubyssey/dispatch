@@ -4,14 +4,14 @@ import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import { Toolbar, ToolbarLeft, ToolbarRight, ToolbarTitle } from '../Toolbar'
 
-export default function SectionToolbar(props) {
+export default function ListItemToolbar(props) {
 
   const editTitle = (
-    <ToolbarTitle><span className='u-text-light'>Section: </span><span>{props.name}</span></ToolbarTitle>
+    <ToolbarTitle><span className='u-text-light'>{props.classString}: </span><span>{props.name}</span></ToolbarTitle>
   )
 
   const newTitle = (
-    <ToolbarTitle><span className='u-text-light'>New section</span></ToolbarTitle>
+    <ToolbarTitle><span className='u-text-light'>New {props.classString}</span></ToolbarTitle>
   )
 
   return (
@@ -26,12 +26,12 @@ export default function SectionToolbar(props) {
       <ToolbarRight>
         <AnchorButton
           intent={Intent.SUCCESS}
-          onClick={() => props.saveSection()}>
+          onClick={() => props.saveListItem()}>
           <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
         <AnchorButton
           intent={Intent.DANGER}
           disabled={props.isNew}
-          onClick={() => props.deleteSection()}>
+          onClick={() => props.deleteListItem()}>
           <span className='pt-icon-standard pt-icon-trash'></span>Delete
         </AnchorButton>
       </ToolbarRight>
