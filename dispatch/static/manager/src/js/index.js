@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux'
@@ -22,7 +22,6 @@ const BASE_PATH = '/admin'
 const browserHistory = useRouterHistory(createHistory)({ basename: BASE_PATH })
 const router = routerMiddleware(browserHistory)
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   combineReducers({
     app: appReducer,
@@ -30,15 +29,13 @@ const store = createStore(
     loadingBar: loadingBarReducer,
     modal: modalReducer
   }),
-  composeEnhancers(
-    applyMiddleware(
-      thunk,
-      router,
-      promiseMiddleware(),
-      loadingBarMiddleware({
-        promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
-      })
-    )
+  applyMiddleware(
+    thunk,
+    router,
+    promiseMiddleware(),
+    loadingBarMiddleware({
+      promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
+    })
   )
 )
 
