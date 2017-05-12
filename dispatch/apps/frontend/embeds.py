@@ -1,6 +1,7 @@
-from django.template import loader
-from dispatch.apps.api.serializers import ImageSerializer
+from django.template import loader, Context
+from dispatch.apps.api.serializers import ImageSerializer, ImageGallerySerializer
 from dispatch.apps.content.models import Image
+from dispatch.apps.content.models import ImageGallery
 
 class EmbedException(Exception):
     pass
@@ -137,6 +138,48 @@ class ImageController(AbstractTemplateRenderController):
             'credit': data['credit']
         }
 
+class GalleryController(AbstractTemplateRenderController):
+
+    TEMPLATE = 'embeds/gallery.html'
+
+    @classmethod
+    def get_gallery(self, id):
+        try:
+            return ImageGallery.objects.get(pk=id)
+        except ImageGallery.DoesNotExist:
+            raise EmbedException('Image Gallery with id %d does not exist' % id)
+
+    @classmethod
+    def to_json(self, data):
+
+        id = data['id']
+
+        gallery = self.get_gallery(id)
+
+        serializer = ImageGallerySerializer(gallery)
+        gallery_data = serializer.data
+
+        return {
+            'gallery' : gallery_data,
+        }
+
+    @classmethod
+    def prepare_data(self, data):
+
+        id = data['id']
+
+        gallery = self.get_gallery(id)
+        images = gallery.images.all()
+
+        return {
+            'id': gallery.id,
+            'title': gallery.title,
+            'cover': images[0],
+            'thumbs': images[1:5],
+            'images': images,
+            'size': len(images)
+        }
+
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
@@ -144,3 +187,4 @@ embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
 embedlib.register('image', ImageController)
+embedlib.register('gallery', GalleryController)

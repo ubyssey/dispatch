@@ -535,29 +535,32 @@ class ImageGallery(Model):
             attachment_obj.save()
             self.images.add(attachment_obj)
 
-    class EmbedController:
-        @staticmethod
-        def json(data):
-            return data
-
-        @staticmethod
-        def render(data):
-            template = loader.get_template("article/embeds/gallery.html")
-            id = data['id']
-            try:
-                gallery = ImageGallery.objects.get(id=id)
-                images = gallery.images.all()
-                c = Context({
-                    'id': gallery.id,
-                    'title': gallery.title,
-                    'cover': images[0],
-                    'thumbs': images[1:5],
-                    'images': images,
-                    'size': len(images)
-                })
-                return template.render(c)
-            except:
-                return "Gallery not found"
+    # class EmbedController:
+    #     @staticmethod
+    #     def json(data):
+    #         return data
+    #
+    #     @staticmethod
+    #     def render(data):
+    #
+    #         template = loader.get_template("articles/embeds/gallery.html")
+    #
+    #         id = data['id']
+    #
+    #         try:
+    #             gallery = ImageGallery.objects.get(id=id)
+    #             images = gallery.images.all()
+    #             c = Context({
+    #                 'id': gallery.id,
+    #                 'title': gallery.title,
+    #                 'cover': images[0],
+    #                 'thumbs': images[1:5],
+    #                 'images': images,
+    #                 'size': len(images)
+    #             })
+    #             #return template.render(c)
+    #         except:
+    #             return "Gallery not found"
 
     #embedlib.register('gallery', EmbedController)
 
