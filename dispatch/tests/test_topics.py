@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
 
-from dispatch.apps.content.models import Article, Person, Section, Topic
+from dispatch.apps.content.models import Topic
 
 class TopicsTests(DispatchAPITestCase):
 
@@ -27,14 +27,14 @@ class TopicsTests(DispatchAPITestCase):
 		Create topic should fail with unauthenticated request
 		"""
 
-		# Clear authentication credentials
-		self.client.credentials()
+        # Clear authentication credentials
+        self.client.credentials()
 
-		url = reverse('api-topics-list')
+        url = reverse('api-topics-list')
 
-		response = self.client.post(url, None, format='json')
+        response = self.client.post(url, None, format='json')
 
-		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_empty_topic(self):
         """
@@ -88,7 +88,7 @@ class TopicsTests(DispatchAPITestCase):
         # Clear authentication credentials
         self.client.credentials()
 
-        url = reverse('api-topics-detail', args=[topics.data['id']])
+        url = reverse('api-topics-detail', args=[topic.data['id']])
 
         response = self.client.delete(url, format='json')
 
