@@ -194,29 +194,40 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(result, '<h1>Header text</h1>')
 
-    def test_image_controller(self):
-        """Should output html strings/json formatted information"""
+    def test_image_controller_render(self):
+        """Should output html string"""
+
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        data = {
+            'image_id' : image_id,
+            'caption' : 'This is a test caption',
+            'credit' : 'This is a test credit'
+        }
+
+        html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.png" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
+
+        result = embeds.embedlib.render('image', data)
+
+        self.assertEqual(result, html_str)
+
+    def test_image_controller_to_json(self):
+        """Should output json data"""
 
         url = reverse('api-images-list')
 
         with open(self.get_input_file('test_image.jpg')) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        image_id_1 = response.data['id']
+        image_id = response.data['id']
 
-        data_1 = {
-            'image_id' : image_id_1,
+        data = {
+            'image_id' : image_id,
             'caption' : 'This is a test caption',
             'credit' : 'This is a test credit'
         }
 
-        data_2 = {
-            'image_id' : -1,
-            'caption' : 'This is a test caption',
-            'credit' : 'This is a test credit'
-        }
-
-        json_1 = {
+        json = {
             'image': {
                 'title': None,
                 'url': u'images/2017/05/test_image.jpg',
@@ -234,16 +245,23 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'credit': 'This is a test credit'
         }
 
-        html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.jpg" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
+        result = embeds.embedlib.to_json('image', data)
 
-        result_1 = embeds.embedlib.to_json('image', data_1)
-        result_2 = embeds.embedlib.render('image', data_1)
+        self.assertEqual(result, json)
 
-        self.assertEqual(result_1, json_1)
-        self.assertEqual(result_2, html_str)
+    def test_invalid_image_id(self):
+        """Should raise EmbedException"""
+
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        data = {
+            'image_id' : -1,
+            'caption' : 'This is a test caption',
+            'credit' : 'This is a test credit'
+        }
 
         try:
-            result_3 = embeds.embedlib.to_json('image', data_2)
+            result = embeds.embedlib.to_json('image', data)
             self.fail('Invalid image id should have raised exception')
         except embeds.EmbedException:
             pass
