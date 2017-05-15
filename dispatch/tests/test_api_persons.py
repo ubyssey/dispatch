@@ -40,7 +40,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         )
 
         # Update this person
-        url = reverse('api-people-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[response.data['id']])
         data = {
             'full_name': 'Updated Name'
         }
@@ -82,7 +82,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.client.credentials()
 
         # Update this person
-        url = reverse('api-people-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[response.data['id']])
         data = {
             'full_name': 'Updated Name'
         }
@@ -141,7 +141,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             slug='test-person'
         )
         # Generate detail URL
-        url = reverse('api-people-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[response.data['id']])
 
         # Successful deletion should return 204
         response = self.client.delete(url, format='json')
@@ -159,7 +159,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             slug='test-person'
         )
         # Generate detail URL
-        url = reverse('api-people-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[response.data['id']])
 
         self.client.credentials()
 
@@ -183,7 +183,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Delete Person ensuring that an error is thrown since it is connect to
         # a User
-        url = reverse('api-people-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[response.data['id']])
 
         response = self.client.delete(url, format='json')
 
@@ -236,7 +236,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.client.credentials()
 
-        url = reverse('api-people-list')
+        url = reverse('api-persons-list')
 
         response = self.client.get(url, {}, format='json')
 
@@ -249,7 +249,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.client.credentials()
 
         # Use the id == 0, default person created on database creation
-        url = reverse('api-people-detail', args=[0])
+        url = reverse('api-persons-detail', args=[0])
 
         response = self.client.get(url, {}, format='json')
 
@@ -259,7 +259,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """A helper method that creates a simple person object with the given attributes
         and returns the response"""
 
-        url = reverse('api-people-list')
+        url = reverse('api-persons-list')
 
         data = {
             'full_name': full_name,
