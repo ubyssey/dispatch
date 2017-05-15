@@ -7,11 +7,11 @@ import { Toolbar, ToolbarLeft, ToolbarRight, ToolbarTitle } from '../Toolbar'
 export default function ListItemToolbar(props) {
 
   const editTitle = (
-    <ToolbarTitle><span className='u-text-light'>{props.classString}: </span><span>{props.name}</span></ToolbarTitle>
+    <ToolbarTitle><span className='u-text-light'>{props.type}: </span><span>{props.name}</span></ToolbarTitle>
   )
 
   const newTitle = (
-    <ToolbarTitle><span className='u-text-light'>New {props.classString}</span></ToolbarTitle>
+    <ToolbarTitle><span className='u-text-light'>New {props.type}</span></ToolbarTitle>
   )
 
   return (

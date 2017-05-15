@@ -1,7 +1,8 @@
+import React from 'react'
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
-import { Index as ListItemIndex } from '../ListItem'
+import ItemIndexPage from '../ItemIndexPage'
 import topicsActions from '../../actions/TopicsActions'
 
 const mapStateToProps = (state) => {
@@ -48,13 +49,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-class TopicsPageComponent extends ListItemIndex {
-
-  constructor(props) {
-    super(props)
-
-    this.typeString = 'topics'
-  }
+function TopicsPageComponent(props) {
+  return (
+    <ItemIndexPage
+      typeSingular='topic'
+      typePlural='topics'
+      {... props} />
+  )
 }
 
 const TopicsPage = connect(

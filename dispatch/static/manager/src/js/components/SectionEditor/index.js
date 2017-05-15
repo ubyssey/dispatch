@@ -1,10 +1,12 @@
+import React from 'react'
 import { connect } from 'react-redux'
 
 import sectionsActions from '../../actions/SectionsActions'
 import SectionForm from './SectionForm'
 
-import ListItemEditorComponent from '../ListItemEditorComponent'
+import ItemEditor from '../ItemEditor'
 
+const TYPE = 'Section'
 const AFTER_DELETE = 'sections'
 
 const mapStateToProps = (state) => {
@@ -38,15 +40,14 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-class SectionEditorComponent extends ListItemEditorComponent {
-
-  constructor(props) {
-    super(props)
-
-    this.formClass = SectionForm
-    this.classString = 'sction'
-    this.AFTER_DELETE = AFTER_DELETE
-  }
+function SectionEditorComponent(props) {
+  return (
+    <ItemEditor
+      type={TYPE}
+      afterDelete={AFTER_DELETE}
+      form={SectionForm}
+      {... props} />
+  )
 }
 
 const SectionEditor = connect(
