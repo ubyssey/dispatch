@@ -1,6 +1,6 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
-import { push, replace } from 'react-router-redux'
+import { replace } from 'react-router-redux'
 
 import DispatchAPI from '../../api/dispatch'
 
@@ -146,7 +146,7 @@ export class ResourceActions {
       this.api.delete(token, id)
         .then(() => {
           if (next) {
-            dispatch(push(next))
+            dispatch(replace(next))
           }
         })
         .then(() => {

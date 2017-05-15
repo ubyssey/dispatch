@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
-import { IndexFactory } from '../ListItemFactory'
+import { Index as ListItemIndex } from '../ListItem'
 import sectionsActions from '../../actions/SectionsActions'
 
 const mapStateToProps = (state) => {
@@ -48,7 +48,15 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const SectionsPageComponent = IndexFactory('sections')
+class SectionsPageComponent extends ListItemIndex {
+
+  constructor(props) {
+    super(props)
+
+    this.typeString = 'sections'
+
+  }
+}
 
 const SectionsIndexPage = connect(
   mapStateToProps,
