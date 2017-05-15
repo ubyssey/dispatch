@@ -161,6 +161,8 @@ class GalleryController(AbstractTemplateRenderController):
 
         return {
             'gallery' : gallery_data,
+            'id' : data['id'],
+            'title' : data['title']
         }
 
     @classmethod
