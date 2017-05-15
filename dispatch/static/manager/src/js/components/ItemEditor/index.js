@@ -6,7 +6,7 @@ import ListItemToolbar from './ListItemToolbar'
 
 const NEW_LISTITEM_ID = 'new'
 
-class ListItemEditorComponent extends React.Component {
+export default class ItemEditor extends React.Component {
 
   componentWillMount() {
     if (this.props.isNew) {
@@ -29,8 +29,8 @@ class ListItemEditorComponent extends React.Component {
 
   getListItem() {
     if (!this.props.entities.local) {
-      // need to wait for get call to complete
-      return undefined
+      // need to wait for GET call to complete
+      return
     }
 
     if (this.props.isNew) {
@@ -67,24 +67,21 @@ class ListItemEditorComponent extends React.Component {
 
     const title = this.props.isNew ? `New ${this.classString}` : `Edit - ${listItem.name}`
 
-    const form = React.createElement(this.formClass, {
-      listItem,
-      errors: this.props.listItem.errors,
-      update: (field, value) => this.handleUpdate(field, value)
-    })
-
     return (
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ListItemToolbar
             name={listItem.name}
-            classString={this.classString}
+            type={this.props.type}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}
-            deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.AFTER_DELETE)}
+            deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}
             goBack={this.props.goBack} />
           <div className='u-container u-container--padded'>
-            {form}
+            <this.props.form
+              listItem={listItem}
+              errors={this.props.listItem.errors}
+              update={(field, value) => this.handleUpdate(field, value)} />
           </div>
         </div>
       </DocumentTitle>
@@ -92,5 +89,3 @@ class ListItemEditorComponent extends React.Component {
   }
 
 }
-
-export default ListItemEditorComponent
