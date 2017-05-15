@@ -9,6 +9,8 @@ import * as Sections from './Sections'
 import * as Articles from './Articles'
 import * as Pages from './Pages'
 import * as Integrations from './Integrations'
+import * as Tags from './Tags'
+import * as Topics from './Topics'
 
 export {
   LoginPage as Login,
@@ -20,5 +22,7 @@ export {
   Sections as Sections,
   Articles as Articles,
   Pages as Pages,
-  Integrations as Integrations
+  Integrations as Integrations,
+  Tags as Tags,
+  Topics as Topics
 }

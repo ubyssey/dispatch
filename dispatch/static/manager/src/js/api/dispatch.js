@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import url from 'url'
 
-const API_URL = 'http://localhost:8000/api/'
+const API_URL = process.env.API_URL || 'http://localhost:8000/api/'
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
@@ -245,17 +245,35 @@ const DispatchAPI = {
     list: (token, query) => {
       return getRequest('topics', null, query, token)
     },
-    create: (token, name) => {
-      return postRequest('topics', null, {name: name}, token)
-    }
+    get: (token, topicId) => {
+      return getRequest('topics', topicId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('topics', null, data, token)
+    },
+    save: (token, topicId, data) => {
+      return patchRequest('topics', topicId, data, token)
+    },
+    delete: (token, topicId) => {
+      return deleteRequest('topics', topicId, null, token)
+    },
   },
   tags: {
     list: (token, query) => {
       return getRequest('tags', null, query, token)
     },
-    create: (token, name) => {
-      return postRequest('tags', null, {name: name}, token)
-    }
+    get: (token, tagId) => {
+      return getRequest('tags', tagId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('tags', null, data, token)
+    },
+    save: (token, tagId, data) => {
+      return patchRequest('tags', tagId, data, token)
+    },
+    delete: (token, tagId) => {
+      return deleteRequest('tags', tagId, null, token)
+    },
   },
   integrations: {
     get: (token, integrationId) => {
