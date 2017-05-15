@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import sectionsActions from '../../actions/SectionsActions'
 import SectionForm from './SectionForm'
 
-import ListItemEditorComponentFactory from '../ListItemEditorComponentFactory'
+import ListItemEditorComponent from '../ListItemEditorComponent'
 
 const AFTER_DELETE = 'sections'
 
@@ -38,11 +38,16 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const SectionEditorComponent = ListItemEditorComponentFactory(
-  SectionForm,
-  'section',
-  AFTER_DELETE
-)
+class SectionEditorComponent extends ListItemEditorComponent {
+
+  constructor(props) {
+    super(props)
+
+    this.formClass = SectionForm
+    this.classString = 'sction'
+    this.AFTER_DELETE = AFTER_DELETE
+  }
+}
 
 const SectionEditor = connect(
   mapStateToProps,

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import tagsActions from '../../actions/TagsActions'
 import TagForm from './TagForm'
 
-import ListItemEditorComponentFactory from '../ListItemEditorComponentFactory'
+import ListItemEditorComponent from '../ListItemEditorComponent'
 
 const AFTER_DELETE = 'tags'
 
@@ -38,11 +38,16 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const TagEditorComponent = ListItemEditorComponentFactory(
-  TagForm,
-  'tag',
-  AFTER_DELETE
-)
+class TagEditorComponent extends ListItemEditorComponent {
+
+  constructor(props) {
+    super(props)
+
+    this.formClass = TagForm
+    this.classString = 'tag'
+    this.AFTER_DELETE = AFTER_DELETE
+  }
+}
 
 const TagEditor = connect(
   mapStateToProps,

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
-import { IndexFactory } from '../ListItemFactory'
+import { Index as ListItemIndex } from '../ListItem'
 import tagsActions from '../../actions/TagsActions'
 
 const mapStateToProps = (state) => {
@@ -48,7 +48,14 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const TagsPageComponent = IndexFactory('tags')
+class TagsPageComponent extends ListItemIndex {
+
+  constructor(props) {
+    super(props)
+
+    this.typeString = 'tags'
+  }
+}
 
 const TagsPage = connect(
   mapStateToProps,
