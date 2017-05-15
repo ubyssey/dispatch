@@ -205,6 +205,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """
         Test to ensure proper url is returned
         """
+
+        # Test a good image
         with open(self.get_input_file('test_image.jpg')) as test_image:
             response = self._create_person(
                 full_name='Test Person', 
@@ -212,9 +214,23 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 slug='test-person', 
                 description='This is a description'
             )
+            
         imageDirectory = "images"
         person = Person.objects.get(pk=response.data['id'])
         self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image.jpg") )
+    
+    def test_image_validation(self):
+        """
+        Test that ensures image validator on serializer is working.
+        A bad path results in a BAD_REQUEST
+        """
+        response = self._create_person(
+            full_name='Test Person', 
+            image="fakeimagepath.jpg",
+            slug='test-person-bad-image'
+        )
+
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_string_representation(self):
         """
@@ -236,7 +252,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Test that an a get request for persons listing without
         admin credentials results in a UNAUTHORIZED response
         """
-        
+
         self.client.credentials()
 
         url = reverse('api-people-list')

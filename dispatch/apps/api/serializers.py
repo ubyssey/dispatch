@@ -22,6 +22,8 @@ class PersonSerializer(DispatchModelSerializer):
     Serializes the Person model.
     """
 
+    image = serializers.ImageField(required=False, validators=[ValidFilename])
+
     class Meta:
         model = Person
         fields = (
