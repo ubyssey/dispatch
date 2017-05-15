@@ -54,22 +54,14 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         queryset = queryset.order_by('-updated_at')
 
-        tag = self.request.query_params.get('tag', None)
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
-        topic = self.request.query_params.get('topic', None)
-
-        if tag is not None:
-            queryset = queryset.filter(tags__name=tag)
 
         if q is not None:
             queryset = queryset.filter(headline__icontains=q)
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
-
-        if topic is not None:
-            queryset = queryset.filter(topic_id=topic)
 
         return queryset
 
@@ -117,18 +109,6 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(title__icontains=q)
 
         return queryset
-
-    @detail_route(methods=['get'],)
-    def revision(self, request, parent_id=None):
-        revision_id = request.query_params.get('revision_id', None)
-        filter_kwargs = {
-            'parent_id': parent_id,
-            'revision_id': revision_id,
-        }
-        queryset = Page.objects.all()
-        instance = self.get_object_or_404(**filter_kwargs)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
 class PersonViewSet(DispatchModelViewSet):
     """
