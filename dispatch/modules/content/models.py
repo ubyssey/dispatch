@@ -125,7 +125,8 @@ class Publishable(Model):
                         html += "<p>%s</p>" % node['data']
                     else:
                         pass
-                        #html += embedlib.render(node['type'], data)
+                        # TODO: Need to find better solution for this
+                        # html += embedlib.render(node['type'], data)
                 else:
                     # If node isn't a dictionary, then it's assumed to be a paragraph.
                     html += "<p>%s</p>" % node
@@ -534,36 +535,6 @@ class ImageGallery(Model):
             attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], image_id=attachment['image_id'])
             attachment_obj.save()
             self.images.add(attachment_obj)
-
-    # class EmbedController:
-    #     @staticmethod
-    #     def json(data):
-    #         return data
-    #
-    #     @staticmethod
-    #     def render(data):
-    #
-    #         template = loader.get_template("articles/embeds/gallery.html")
-    #
-    #         id = data['id']
-    #
-    #         try:
-    #             gallery = ImageGallery.objects.get(id=id)
-    #             images = gallery.images.all()
-    #             c = Context({
-    #                 'id': gallery.id,
-    #                 'title': gallery.title,
-    #                 'cover': images[0],
-    #                 'thumbs': images[1:5],
-    #                 'images': images,
-    #                 'size': len(images)
-    #             })
-    #             #return template.render(c)
-    #         except:
-    #             return "Gallery not found"
-
-    #embedlib.register('gallery', EmbedController)
-
 
 class File(Model):
 
