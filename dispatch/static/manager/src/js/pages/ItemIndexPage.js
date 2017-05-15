@@ -5,12 +5,12 @@ import { Link } from 'react-router'
 
 import { Intent } from '@blueprintjs/core'
 
-import { LinkButton } from '../../components/inputs'
-import ItemList from '../../components/ItemList'
+import { LinkButton } from '../components/inputs'
+import ItemList from '../components/ItemList'
 
 const DEFAULT_LIMIT = 15
 
-class ListItemsPageComponent extends React.Component {
+export default class ListItemsPageComponent extends React.Component {
 
   getQuery() {
     var query = {
@@ -84,14 +84,15 @@ class ListItemsPageComponent extends React.Component {
 
   render() {
     // Make the title start with uppercase letter
-    const titleString = this.typeString.replace(/^\w/, m => m.toUpperCase())
+    const titleString = this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
 
     return (
       <DocumentTitle title={titleString}>
         <ItemList
           location={this.props.location}
 
-          type={this.typeString}
+          typeSingular={this.props.typeSingular}
+          typePlural={this.props.typePlural}
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalListItems()}
@@ -100,13 +101,13 @@ class ListItemsPageComponent extends React.Component {
           entities={this.props.entities.listItems}
 
           columns={[
-            item => (<strong><Link to={`/${this.typeString}/${item.id}`} dangerouslySetInnerHTML={{__html: item.name}} /></strong>),
+            item => (<strong><Link to={`/${this.props.typePlural}/${item.id}`} dangerouslySetInnerHTML={{__html: item.name}} /></strong>),
             item => item.slug
           ]}
 
-          emptyMessage={`You haven\'t created any ${this.typeString} yet.`}
+          emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
-            <LinkButton intent={Intent.SUCCESS} to={`${this.typeString}/new`}>
+            <LinkButton intent={Intent.SUCCESS} to={`${this.props.typePlural}/new`}>
               <span className='pt-icon-standard pt-icon-add'></span>Create {this.typeString}
             </LinkButton>)
           }
@@ -123,8 +124,4 @@ class ListItemsPageComponent extends React.Component {
     )
   }
 
-}
-
-export {
-  ListItemsPageComponent as Index
 }
