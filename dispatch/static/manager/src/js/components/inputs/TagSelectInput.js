@@ -50,7 +50,7 @@ class TagSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    tags: state.app.tags,
+    tags: state.app.tags.list,
     entities: {
       tags: state.app.entities.tags
     },

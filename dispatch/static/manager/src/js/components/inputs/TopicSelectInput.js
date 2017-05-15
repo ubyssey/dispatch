@@ -43,7 +43,7 @@ class TopicSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    topics: state.app.topics,
+    topics: state.app.topics.list,
     entities: {
       topics: state.app.entities.topics
     },
