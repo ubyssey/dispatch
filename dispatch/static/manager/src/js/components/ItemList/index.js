@@ -11,7 +11,8 @@ export default function ItemList(props) {
     <div className='c-item-list'>
       <ItemListHeader
         items={props.items}
-        type={props.type}
+        typeSingular={props.typeSingular}
+        typePlural={props.typePlural}
         location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
