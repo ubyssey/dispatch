@@ -13,7 +13,7 @@ from rest_framework.authtoken.models import Token
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.actions import list_actions, recent_articles
-from dispatch.apps.core.models import Person
+from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
@@ -132,9 +132,7 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         return Response(serializer.data)
 
 class PersonViewSet(DispatchModelViewSet):
-    """
-    Viewset for Person model views.
-    """
+    """Viewset for Person model views."""
     model = Person
     serializer_class = PersonSerializer
 
@@ -147,12 +145,21 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
-    
+
     def perform_destroy(self, instance):
         try:
             instance.delete()
         except ProtectedError:
             raise ProtectedResourceError('Deletion failed because person belongs to a user')
+
+class UserViewSet(DispatchModelViewSet):
+    """Viewset for User model views."""
+    model = User
+    serializer_class = UserSerializer
+
+    queryset = User.objects.all()
+
+    permission_classes = (IsAuthenticated,)
 
 class TagViewSet(DispatchModelViewSet):
     """
