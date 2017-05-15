@@ -10,11 +10,16 @@ class UserSerializer(DispatchModelSerializer):
     """
     Serializes the User model.
     """
+
+    email = serializers.EmailField(required=True)
+    person_id =  serializers.IntegerField()
+
     class Meta:
         model = User
         fields = (
             'id',
-            'email'
+            'email',
+            'person_id'
         )
 
 class PersonSerializer(DispatchModelSerializer):
