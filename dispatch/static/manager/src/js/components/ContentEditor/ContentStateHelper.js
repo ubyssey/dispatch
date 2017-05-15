@@ -69,6 +69,7 @@ function createBlock(acc, block) {
     break
   case 'image':
   case 'video':
+  case 'quote':
     blocksFromJSON = createEntityBlock(block)
     break
   }
