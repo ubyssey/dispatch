@@ -250,18 +250,30 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_gallery_controller(self):
 
+        # Test "render" with gallery controller, uses "get_gallery" and "prepare_data"
         # Make a gallery and get its data
         gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(0, self.client)
         data = gallery.data
 
         # Render the data to html
-        result = embeds.embedlib.render('gallery', data)
+        result_1 = embeds.embedlib.render('gallery', data)
 
-        print result
+        # Get the unique url that is produced when creating the gallery
+        abs_url = data['images'][1]['image']['filename'].replace('.png', '')
 
         # Expected output
-        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/2017/05/test_image.png" />\n        \n        <img src="images/2017/05/test_image_AP923DL.png" />\n        \n    </div>\n</div>\n'
+        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/2017/05/test_image.png" />\n        \n        <img src="images/2017/05/%s.png" />\n        \n    </div>\n</div>\n' % abs_url
 
-        # CHANGE OUTPUT TO BE REDUNDANT TO CHANGING URLS I.E. src="images/2017/05/test_image_AP923DL.png- AP923DL.png changes each time you render it
+        self.assertEqual(result_1, output)
 
-        #self.assertEqual(result, output)
+        # Test "to_json"
+        result_2 = embeds.GalleryController.to_json(data)
+
+        json_created_at = data['images'][0]['image']['created_at']
+        json_updated_at = data['images'][0]['image']['updated_at']
+
+        self.assertEqual(result_2['title'], u'Gallery Title 0')
+        self.assertEqual(result_2['id'], 1)
+        self.assertEqual(result_2['gallery']['images'][1]['image']['filename'], abs_url + '.png')
+        self.assertEqual(result_2['gallery']['images'][0]['image']['created_at'], json_created_at)
+        self.assertEqual(result_2['gallery']['images'][0]['image']['updated_at'], json_updated_at)
