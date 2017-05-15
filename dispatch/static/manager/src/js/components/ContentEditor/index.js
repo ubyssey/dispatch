@@ -330,7 +330,8 @@ class ContentEditorComponent extends React.Component {
           openModal: this.props.openModal,
           closeModal: this.props.closeModal,
           modal: embed.modal,
-          modalCallback: embed.modalCallback
+          modalCallback: embed.modalCallback,
+          showEdit: embed.showEdit
         }
       }
     }
