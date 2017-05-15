@@ -14,7 +14,6 @@ from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
-from dispatch.apps.frontend.models import ComponentSet, Component
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
@@ -55,22 +54,14 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         queryset = queryset.order_by('-updated_at')
 
-        tag = self.request.query_params.get('tag', None)
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
-        topic = self.request.query_params.get('topic', None)
-
-        if tag is not None:
-            queryset = queryset.filter(tags__name=tag)
 
         if q is not None:
             queryset = queryset.filter(headline__icontains=q)
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
-
-        if topic is not None:
-            queryset = queryset.filter(topic_id=topic)
 
         return queryset
 
@@ -119,18 +110,6 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         return queryset
 
-    @detail_route(methods=['get'],)
-    def revision(self, request, parent_id=None):
-        revision_id = request.query_params.get('revision_id', None)
-        filter_kwargs = {
-            'parent_id': parent_id,
-            'revision_id': revision_id,
-        }
-        queryset = Page.objects.all()
-        instance = self.get_object_or_404(**filter_kwargs)
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
 class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
@@ -147,7 +126,7 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
-    
+
     def perform_destroy(self, instance):
         try:
             instance.delete()
@@ -253,94 +232,6 @@ class ImageGalleryViewSet(DispatchModelViewSet):
     ordering_fields = ('created_at',)
 
     queryset = ImageGallery.objects.all()
-
-
-class ComponentViewSet(viewsets.GenericViewSet):
-
-    components = ThemeHelper.get_theme_components()
-    pages = ThemeHelper.get_theme_pages()
-
-    def detail(self, request, slug=None):
-        spots_list = []
-        components_dict = {}
-        saved_dict = {}
-
-        page = self.pages.get(slug)
-
-        try:
-            instance = ComponentSet.objects.get(slug=slug)
-
-            for component in instance.components.all():
-                component_class = self.components.get(component.slug)
-                component_obj = component_class(instance=component)
-                saved_dict[component.spot] = {
-                    'slug': component.slug,
-                    'fields': component_obj.field_data_as_json(),
-                }
-        except:
-            pass
-
-        for spot, name in page.component_spots:
-            options = []
-            for component in self.components.get_for_spot(spot):
-                options.append({
-                    'name': component.NAME,
-                    'slug': component.SLUG,
-                    })
-                if component.SLUG not in components_dict:
-                    component_obj = component()
-                    components_dict[component.SLUG] = component_obj.fields_as_json()
-
-            spots_list.append({
-                'name': name,
-                'slug': spot,
-                'options': options,
-            })
-
-        data = {
-            'spots': spots_list,
-            'components': components_dict,
-            'saved': saved_dict,
-        }
-
-        return Response(data)
-
-    def update(self, request, slug=None):
-
-        try:
-            update_status = status.HTTP_200_OK
-            instance = ComponentSet.objects.get(slug=slug)
-        except:
-            update_status = status.HTTP_201_CREATED
-            instance = ComponentSet(slug=slug)
-            instance.save()
-
-        component_slug = request.POST.get('component')
-        spot = request.POST.get('spot')
-
-        component_class = self.components.get(component_slug)
-
-        try:
-            component_instance = Component.objects.get(page=instance, spot=spot)
-            if component_instance.slug == component_slug:
-                component_obj = component_class(request.POST, instance=component_instance, spot=spot)
-            else:
-                instance.components.remove(instance)
-                raise Exception()
-        except:
-            component_obj = component_class(request.POST, spot=spot)
-
-        component_instance = component_obj.save()
-
-        instance.components.add(component_instance)
-
-        instance.save()
-
-        data = {
-            'saved': True
-        }
-
-        return Response(data, status=update_status)
 
 class TemplateViewSet(viewsets.GenericViewSet):
 
