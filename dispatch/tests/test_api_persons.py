@@ -231,6 +231,35 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         person = Person.objects.get(pk=response.data['id'])
         self.assertEquals(str(person), '')
 
+    def test_unauthorized_listing_get_request(self):
+        """
+        Test that an a get request for persons listing without
+        admin credentials results in a UNAUTHORIZED response
+        """
+        
+        self.client.credentials()
+
+        url = reverse('api-people-list')
+        
+        response = self.client.get(url, {}, format='json')
+
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthorized_detail_get_request(self):
+        """
+        Test that an a get request for person detail without
+        admin credentials results in a UNAUTHORIZED response
+        """
+
+        self.client.credentials()
+        
+        # Use the id == 0, default person created on database creation
+        url = reverse('api-people-detail', args=[0])
+        
+        response = self.client.get(url, {}, format='json')
+
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def _create_person(self, full_name='', image='', slug='', description=''):
         """
         A helper method that creates a simple person object with the given attributes
