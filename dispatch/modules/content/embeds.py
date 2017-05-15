@@ -1,6 +1,9 @@
-from django.template import loader
+from django.template import loader, Context
+from dispatch.apps.api.serializers import ImageSerializer, ImageGallerySerializer
+from dispatch.apps.content.models import Image
+from dispatch.apps.content.models import ImageGallery
 
-class EmbedDoesNotExist(Exception):
+class EmbedException(Exception):
     pass
 
 class EmbedLibrary(object):
@@ -11,11 +14,18 @@ class EmbedLibrary(object):
     def register(self, type, function):
         self.library[type] = function
 
-    def render(self, type, data):
+    def get_controller(self, type):
         if type in self.library:
-            return self.library[type].render(data)
+            return self.library[type]
         else:
-            raise EmbedDoesNotExist('No embed controller registered for type %s' % type)
+            raise EmbedException('No embed controller registered for type %s' % type)
+
+    def to_json(self, type, data):
+        return self.get_controller(type).to_json(data)
+
+    def render(self, type, data):
+        return self.get_controller(type).render(data)
+
 
 embedlib = EmbedLibrary()
 
@@ -32,7 +42,7 @@ def maptag(tagname, contents):
 class AbstractController(object):
 
     @staticmethod
-    def json(data):
+    def to_json(data):
         return data
 
 class AbstractTemplateRenderController(AbstractController):
@@ -42,7 +52,11 @@ class AbstractTemplateRenderController(AbstractController):
     @classmethod
     def render(self, data):
         template = loader.get_template(self.TEMPLATE)
-        return template.render(data)
+        return template.render(self.prepare_data(data))
+
+    @classmethod
+    def prepare_data(self, data):
+        return data
 
 
 class ListController(AbstractController):
@@ -84,9 +98,95 @@ class PullQuoteController(AbstractTemplateRenderController):
 
     TEMPLATE = 'embeds/quote.html'
 
+class ImageController(AbstractTemplateRenderController):
+
+    TEMPLATE = 'embeds/image.html'
+
+    @classmethod
+    def get_image(self, id):
+        try:
+            return Image.objects.get(pk=id)
+        except Image.DoesNotExist:
+            raise EmbedException('Image with id %d does not exist' % id)
+
+    @classmethod
+    def to_json(self, data):
+
+        id = data['image_id']
+
+        image = self.get_image(id)
+
+        serializer = ImageSerializer(image)
+        image_data = serializer.data
+
+        return {
+            'image': image_data,
+            'caption' : data['caption'],
+            'credit' : data['credit']
+        }
+
+    @classmethod
+    def prepare_data(self, data):
+
+        id = data['image_id']
+
+        image = self.get_image(id)
+
+        return {
+            'image': image,
+            'caption': data['caption'],
+            'credit': data['credit']
+        }
+
+class GalleryController(AbstractTemplateRenderController):
+
+    TEMPLATE = 'embeds/gallery.html'
+
+    @classmethod
+    def get_gallery(self, id):
+        try:
+            return ImageGallery.objects.get(pk=id)
+        except ImageGallery.DoesNotExist:
+            raise EmbedException('Image Gallery with id %d does not exist' % id)
+
+    @classmethod
+    def to_json(self, data):
+
+        id = data['id']
+
+        gallery = self.get_gallery(id)
+
+        serializer = ImageGallerySerializer(gallery)
+        gallery_data = serializer.data
+
+        return {
+            'gallery' : gallery_data,
+            'id' : data['id'],
+            'title' : data['title']
+        }
+
+    @classmethod
+    def prepare_data(self, data):
+
+        id = data['id']
+
+        gallery = self.get_gallery(id)
+        images = gallery.images.all()
+
+        return {
+            'id': gallery.id,
+            'title': gallery.title,
+            'cover': images[0],
+            'thumbs': images[1:5],
+            'images': images,
+            'size': len(images)
+        }
+
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
 embedlib.register('header', HeaderController)
 embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
+embedlib.register('image', ImageController)
+embedlib.register('gallery', GalleryController)
