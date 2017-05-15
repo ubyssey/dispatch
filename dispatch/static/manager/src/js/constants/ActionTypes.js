@@ -7,8 +7,8 @@ export const PAGES = resourceActionTypes('PAGES', ['PUBLISH', 'UNPUBLISH'])
 export const FILES = resourceActionTypes('FILES')
 export const IMAGES = resourceActionTypes('IMAGES')
 export const PERSONS = resourceActionTypes('PERSONS')
-export const TOPICS = resourceActionTypes('TOPICS', ['LIST_NAV'])
-export const TAGS = resourceActionTypes('TAGS', ['LIST_NAV'])
+export const TOPICS = resourceActionTypes('TOPICS')
+export const TAGS = resourceActionTypes('TAGS')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 
 // Authentication actions
