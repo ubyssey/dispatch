@@ -1,5 +1,5 @@
 from django.template.loader import render_to_string
-from django.db.models import Q
+from django.db.models import Q, ProtectedError
 from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
@@ -19,6 +19,7 @@ from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Ima
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
                                            ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+from dispatch.apps.api.exceptions import ProtectedResourceError
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -134,7 +135,10 @@ class PersonViewSet(DispatchModelViewSet):
     """
     Viewset for Person model views.
     """
+    model = Person
     serializer_class = PersonSerializer
+
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = Person.objects.all()
@@ -143,6 +147,12 @@ class PersonViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `full_name`
             queryset = queryset.filter(full_name__icontains=q)
         return queryset
+    
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except ProtectedError:
+            raise ProtectedResourceError('Deletion failed because person belongs to a user')
 
 class TagViewSet(DispatchModelViewSet):
     """
