@@ -3,29 +3,13 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
-
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import Section
 
 class SectionsTests(DispatchAPITestCase):
 
-    def _create_section(self):
-        """
-        Create a dummy section instance
-        """
-
-        data = {
-            'name': 'Test name',
-            'slug': 'test-section',
-        }
-
-        url = reverse('api-sections-list')
-
-        return self.client.post(url, data, format='json')
-
     def test_create_section_unauthorized(self):
-        """
-        Create section should fail with unauthenticated request
-        """
+        """Create section should fail with unauthenticated request"""
 
         # Clear authentication credentials
         self.client.credentials()
@@ -37,9 +21,7 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_empty_section(self):
-        """
-        Create section should fail with empty payload
-        """
+        """Create section should fail with empty payload"""
 
         url = reverse('api-sections-list')
 
@@ -48,9 +30,7 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_incomplete_section(self):
-        """
-        Create section should fail with missing required fields
-        """
+        """Create section should fail with missing required fields"""
 
         url = reverse('api-sections-list')
 
@@ -66,11 +46,9 @@ class SectionsTests(DispatchAPITestCase):
         self.assertTrue('slug' in response.data)
 
     def test_create_section(self):
-        """
-        Ensure that section can be created
-        """
+        """Ensure that section can be created"""
 
-        response = self._create_section()
+        response = DispatchTestHelpers.create_section(self.client)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -79,28 +57,24 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.data['slug'], 'test-section')
 
     def test_create_duplicate_section(self):
-        """
-        Create duplication section should fail
-        """
+        """Create duplication section should fail"""
 
         # Create section
-        response = self._create_section()
+        response = DispatchTestHelpers.create_section(self.client)
 
         # Confirm section was created
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Create section again
-        response = self._create_section()
+        response = DispatchTestHelpers.create_section(self.client)
 
         # Confirm creating duplicate section returns error
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_section(self):
-        """
-        Ensure that section can be updated
-        """
+        """Ensure that section can be updated"""
 
-        section = self._create_section()
+        section = DispatchTestHelpers.create_section(self.client)
 
         # Check data
         self.assertEqual(section.data['name'], 'Test name')
@@ -110,21 +84,19 @@ class SectionsTests(DispatchAPITestCase):
             'name': 'new name',
             'slug': 'new-slug',
         }
-        
+
         url = reverse('api-sections-detail', args=[section.data['id']])
-        
+
         updated_section = self.client.patch(url, data, format='json')
 
         self.assertEqual(updated_section.data['name'], 'new name')
         self.assertEqual(updated_section.data['slug'], 'new-slug')
 
     def test_delete_section_unauthorized(self):
-        """
-        Delete section should fail with unauthenticated request
-        """
+        """Delete section should fail with unauthenticated request"""
 
         # Create a section
-        section = self._create_section()
+        section = DispatchTestHelpers.create_section(self.client)
 
         # Clear authentication credentials
         self.client.credentials()
@@ -139,13 +111,11 @@ class SectionsTests(DispatchAPITestCase):
             Section.objects.get(pk=section.data['id'])
         except Section.DoesNotExist:
             self.fail('Section should not have been deleted')
-        
-    def test_delete_section(self):
-        """
-        Ensure that section can be deleted
-        """
 
-        section = self._create_section()
+    def test_delete_section(self):
+        """Ensure that section can be deleted"""
+
+        section = DispatchTestHelpers.create_section(self.client)
 
         # Generate detail URL
         url = reverse('api-sections-detail', args=[section.data['id']])
@@ -159,9 +129,7 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_all_sections(self):
-        """
-        Ensure that it is possible to get all sections
-        """
+        """Ensure that it is possible to get all sections"""
 
         # Create multiple sections
         Section.objects.create(slug='section-1', name='Section 1')
@@ -180,9 +148,7 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.data['results'][2]['slug'], 'section-3')
 
     def test_get_specific_section(self):
-        """
-        Ensure that it is possible to get a specific section
-        """
+        """Ensure that it is possible to get a specific section"""
 
         # Create multiple sections
         section_1 = Section.objects.create(slug='section-1', name='Section 1')
