@@ -3,57 +3,17 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import ImageGallery
 
 class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
-
-    def _upload_image(self):
-        """Upload an image that can be linked by galleries"""
-
-        url = reverse('api-images-list')
-
-        with open(self.get_input_file('test_image.png'), 'rb') as test_image:
-            response = self.client.post(url, { 'img': test_image }, format='multipart')
-
-        return response.data['id']
-
-    def _create_gallery_only(self, id, attachments):
-        """Creates a gallery instance, but does not upload images"""
-
-        url = reverse('api-galleries-list')
-
-        data = {
-          'title': 'Gallery Title %d' % id,
-          'attachment_json': attachments
-        }
-
-        return self.client.post(url, data, format='json')
-
-    def _create_gallery(self, id):
-        """Create a gallery instance for further testing"""
-
-        image_1 = self._upload_image()
-        image_2 = self._upload_image()
-
-        attachment = [
-            {
-                'caption': 'test caption 1',
-                'image_id': image_1
-            },
-            {
-                'caption': 'test caption 2',
-                'image_id': image_2
-            }
-        ]
-
-        return (self._create_gallery_only(id, attachment), image_1, image_2)
 
     def test_imagegallery_all(self):
         """Test that listing all the galleries works"""
 
         # insert 2 galleries
-        gallery1, img_id11, img_id12 = self._create_gallery(0)
-        gallery2, img_id21, img_id22 = self._create_gallery(1)
+        gallery1, img_id11, img_id12 = DispatchTestHelpers.create_gallery(0, self.client)
+        gallery2, img_id21, img_id22 = DispatchTestHelpers.create_gallery(1, self.client)
 
         url = reverse('api-galleries-list')
         response = self.client.get(url, format='json')
@@ -75,7 +35,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_get(self):
         """Test that getting a specific gallery works"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -90,7 +50,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['images'][1]['image']['id'], img_id2)
 
     def test_imagegallery_get_invalid_id(self):
-        """Test that getting an invalid id returnsappropriate error"""
+        """Test that getting an invalid id returns appropriate error"""
 
         id = -1
         url = reverse('api-galleries-detail', args=[id])
@@ -101,7 +61,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Create gallery should fail with unauthenticated request"""
 
         url = reverse('api-galleries-list')
-        image_1 = self._upload_image()
+        image_1 = DispatchTestHelpers.upload_image(self.client)
 
         # Clear authentication credentials (after uploading the image)
         self.client.credentials()
@@ -142,7 +102,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_create(self):
         """Ensure that gallery can be created"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -195,7 +155,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_patch_unauthorized(self):
         """Patch gallery should fail with unauthenticated request"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
 
@@ -228,7 +188,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_patch_single(self):
         """Ensure that patching a single gallery works"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -273,7 +233,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that an appropriate error is returned when an image gallery is
         patched with an invalid image id"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -295,7 +255,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that an appropriate error is returned when an image gallery is
         patched with an invalid image id"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -315,7 +275,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_delete_unauthorized(self):
         """Delete gallery should fail with unauthenticated request"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         # Clear authentication credentials
@@ -334,7 +294,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_delete(self):
         """Ensure that galleries can be deleted"""
 
-        gallery, img_id1, img_id2 = self._create_gallery(1)
+        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -357,7 +317,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_image_in_multiple_galleries(self):
         """Ensure that an image can be in multiple galleries"""
 
-        gallery1, img_id1, img_id2 = self._create_gallery(1)
+        gallery1, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         url = reverse('api-galleries-list')
 
