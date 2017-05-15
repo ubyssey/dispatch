@@ -3,37 +3,13 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import Article, Person, Section
 
 class ArticlesTests(DispatchAPITestCase):
 
-    def _create_article(self):
-        """
-        Create a dummy article instance
-        """
-
-        # Create test person
-        person = Person.objects.create(full_name='Test Person')
-
-        # Create test section
-        section = Section.objects.create(name='Test Section', slug='test')
-
-        url = reverse('api-articles-list')
-
-        data = {
-            'headline': 'Test headline',
-            'section_id': section.id,
-            'author_ids': [person.id],
-            'slug': 'test-article',
-            'content': []
-        }
-
-        return self.client.post(url, data, format='json')
-
     def test_create_article_unauthorized(self):
-        """
-        Create article should fail with unauthenticated request
-        """
+        """Create article should fail with unauthenticated request"""
 
         # Clear authentication credentials
         self.client.credentials()
@@ -45,9 +21,7 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_empty_article(self):
-        """
-        Create article should fail with empty payload
-        """
+        """Create article should fail with empty payload"""
 
         url = reverse('api-articles-list')
 
@@ -56,9 +30,7 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_incomplete_article(self):
-        """
-        Create article should fail with missing required fields
-        """
+        """Create article should fail with missing required fields"""
 
         url = reverse('api-articles-list')
 
@@ -77,11 +49,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertTrue('section_id' in response.data)
 
     def test_create_article(self):
-        """
-        Ensure that article can be created
-        """
+        """Ensure that article can be created"""
 
-        response = self._create_article()
+        response = DispatchTestHelpers.create_article(self.client)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -92,12 +62,10 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['slug'], 'test-article')
 
     def test_delete_article_unauthorized(self):
-        """
-        Delete article should fail with unauthenticated request
-        """
+        """Delete article should fail with unauthenticated request"""
 
         # Create an article
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Clear authentication credentials
         self.client.credentials()
@@ -109,11 +77,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_article(self):
-        """
-        Ensure that article can be deleted
-        """
+        """Ensure that article can be deleted"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Generate detail URL
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -127,11 +93,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_publish_article(self):
-        """
-        Ensure that an existing article can be published
-        """
+        """Ensure that an existing article can be published"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Generate detail URL
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -142,11 +106,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['is_published'], True)
 
     def test_unpublish_article(self):
-        """
-        Ensure that an existing article can be unpublished
-        """
+        """Ensure that an existing article can be unpublished"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Publish article first
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -162,11 +124,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['is_published'], False)
 
     def test_unpublish_article_older_version(self):
-        """
-        Ensure that an older version of an article can be unpublished
-        """
+        """Ensure that an older version of an article can be unpublished"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Publish latest version
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -196,11 +156,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['latest_version'], 2)
 
     def test_publish_article_version(self):
-        """
-        Ensure that a specific version of an article can be published
-        """
+        """Ensure that a specific version of an article can be published"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Update article to generate new version
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -224,11 +182,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['latest_version'], 2)
 
     def test_publish_article_older_version(self):
-        """
-        Ensure that an older version of an article can be published
-        """
+        """Ensure that an older version of an article can be published"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Update article to generate new version
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -267,11 +223,9 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['is_published'], False)
 
     def test_publish_article_unauthorized(self):
-        """
-        Publish article should fail with unauthorized request
-        """
+        """Publish article should fail with unauthorized request"""
 
-        article = self._create_article()
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Clear authentication credentials
         self.client.credentials()
@@ -286,9 +240,7 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(len(articles), 0)
 
     def test_list_published_articles(self):
-        """
-        Unpublished articles should not be displayed to unauthorized users
-        """
+        """Unpublished articles should not be displayed to unauthorized users"""
 
         section = Section.objects.create(name='Test Section', slug='test')
 
