@@ -138,6 +138,8 @@ class PersonViewSet(DispatchModelViewSet):
     model = Person
     serializer_class = PersonSerializer
 
+    permission_classes = (IsAuthenticated,)
+
     def get_queryset(self):
         queryset = Person.objects.all()
         q = self.request.query_params.get('q', None)
