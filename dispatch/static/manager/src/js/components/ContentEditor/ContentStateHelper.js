@@ -63,15 +63,10 @@ function createBlock(acc, block) {
 
   let blocksFromJSON
 
-  switch (block.type) {
-  case 'paragraph':
+  if (block.type === 'paragraph') {
     blocksFromJSON = createParagraphBlock(block)
-    break
-  case 'image':
-  case 'video':
-  case 'quote':
+  } else {
     blocksFromJSON = createEntityBlock(block)
-    break
   }
 
   if (blocksFromJSON) {
