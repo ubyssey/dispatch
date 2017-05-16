@@ -9,7 +9,7 @@ export default function TopicForm(props) {
       <FormInput
         label='Name'
         padded={false}
-        error={props.errors.name}>
+        error={props.errors ? props.errors.name : null}>
         <TextInput
           placeholder='Name'
           value={props.listItem.name || ''}

@@ -1,0 +1,50 @@
+@import '../utilities/variables';
+@import '../utilities/colors';
+
+$person-form-image-area-v-padding: $input-button-padding;
+$person-form-image-max-height: 500px;
+$person-form-image-dropzone-min-height: 250px;
+$person-form-image-dropzone-min-width: 250px;
+
+$person-form-dropzone-padding: 15px;
+$person-form-dropzone-inset-shadow-color: #888;
+$person-form-dropzone-inset-shadow-blur: 25px;
+$person-form-dropzone-inset-shadow-spread: 5px;
+
+.c-person-form__image__button {
+  margin-top: $person-form-image-area-v-padding;
+}
+
+.c-person-form__images__container {
+  max-width: 100%;
+  width: auto;
+  display: inline-block;
+  height: 100%;
+}
+
+.c-person-form__image__dropzone {
+  margin-top: $person-form-image-area-v-padding;
+  max-width: 100%;
+  min-width: $person-form-image-dropzone-min-width;
+  max-height: $person-form-image-max-height + 4px;
+  min-height: $person-form-image-dropzone-min-height;
+  border: 2px dashed $color-border-gray;
+  display: inline-block;
+}
+
+.c-person-form__image__dropzone--active {
+  margin-top: $person-form-image-area-v-padding;
+  max-height: $person-form-image-max-height;
+  box-shadow: 0 0 $person-form-dropzone-inset-shadow-blur
+                  $person-form-dropzone-inset-shadow-spread
+                  $person-form-dropzone-inset-shadow-color inset;
+}
+
+.c-person-form__images {
+  max-height: $person-form-image-max-height;
+  max-width: 100%;
+}
+
+.c-person-form__image__dropzone__text {
+  padding: $person-form-dropzone-padding;
+}
