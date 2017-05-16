@@ -1,5 +1,5 @@
-from dispatch.apps.api.serializers import ArticleSerializer
-from dispatch.apps.content.models import Article
+from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer
+from dispatch.apps.content.models import Article, Image
 
 class InvalidField(Exception):
     pass
@@ -7,8 +7,9 @@ class InvalidField(Exception):
 class Field(object):
     """Base class for all widget fields"""
 
-    def __init__(self, label, many=False):
+    def __init__(self, label, many=True):
         self.label = label
+        self.many = many
 
         if not isinstance(self.label, basestring):
             raise InvalidField("label must be a string")
@@ -43,7 +44,7 @@ class CharField(Field):
 
 class TextField(Field):
 
-    type = 'string'
+    type = 'text'
 
     def validate(self):
         if not isinstance(self.data, basestring):
@@ -51,35 +52,86 @@ class TextField(Field):
 
 class ArticleField(Field):
 
-    type = 'list'
+    type = 'article'
 
-    @classmethod
+    def validate(self):
+        if self.many:
+            if not all( [isinstance(id, int) for id in self.data] ):
+                raise InvalidField('Data must be list of integers')
+        else:
+            if not isinstance(self.data, int):
+                raise InvalidField('Data must be an integer')
+
     def get_article(self, id):
         try:
             return Article.objects.get(pk=id)
-        except:
-            raise InvalidField('Oh good lord help us all')
+        except Article.DoesNotExist:
+            raise Article.DoesNotExist('Article does not exist')
 
-
-    def validate(self):
-        if not isinstance(self.data, list):
-            raise InvalidField('%s data must be a list' % self.label)
+    def get_article_json(self, id):
+        article = self.get_article(id)
+        serializer = ArticleSerializer(article)
+        return serializer.data
 
     def to_json(self):
+        if self.many:
+            return {
+                'label' : self.label,
+                'data' : map(self.get_article_json, self.data)
+            }
+        else:
+            return {
+                'label' : self.label,
+                'data' : self.get_article_json(self.data)
+            }
 
-        json_data = {}
-
-        for id in self.data:
-
-            article = self.get_article(id)
-
-            serializer = ArticleSerializer(article)
-            article_data = serializer.data
-
-            json_data[id] = article_data
-
-        return json_data
+    def prepare_data(self):
+        if self.many:
+            return map(self.get_article, self.data)
+        else:
+            return self.get_article(self.data)
 
 class ImageField(Field):
-    # TODO
-    pass
+
+    type = 'image'
+
+    def validate(self):
+        if self.many:
+            return {
+                'label' : self.label,
+                'data' : map(self.get_image_json, self.data)
+            }
+        else:
+            return {
+                'label' : self.label,
+                'data' : self.get_image_json(self.data)
+            }
+
+    def get_image(self, id):
+        try:
+            return Image.objects.get(pk=id)
+        except Image.DoesNotExist:
+            raise Image.DoesNotExist('Image does not exist')
+
+    def get_image_json(self, id):
+        image = self.get_image(id)
+        serializer = ImageSerializer(image)
+        return serializer.data
+
+    def to_json(self):
+        if self.many:
+            return {
+                'label' : self.label,
+                'data' : map(self.get_image_json, self.data)
+            }
+        else:
+            return {
+                'label' : self.label,
+                'data' : self.get_image_json(self.data)
+            }
+
+    def prepare_data(self):
+        if self.many:
+            return map(self.get_image, self.data)
+        else:
+            return self.get_image(self.data)
