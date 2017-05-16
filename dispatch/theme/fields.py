@@ -30,10 +30,13 @@ class CharField(Field):
             raise InvalidField('%s data must be a string' % self.label)
 
 class TextField(Field):
+    # TODO
     pass
 
 class ArticleField(Field):
+    # TODO
     pass
 
 class ImageField(Field):
+    # TODO
     pass

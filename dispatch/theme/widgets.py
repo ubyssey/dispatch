@@ -25,18 +25,21 @@ class Widget(object):
     def set_data(self, data):
         self.data = data
 
-    def to_josn(self):
+    def to_json(self):
         """Return JSON representation for this widget"""
+        # TODO
         pass
 
     def prepare_data(self):
         """Prepare widget data for template"""
+        # TODO
         pass
 
     def render(self):
         """Renders the widget as HTML"""
+        # TODO
         pass
-    
+
 def has_valid_id(o):
 
     def is_valid_slug(slug):
