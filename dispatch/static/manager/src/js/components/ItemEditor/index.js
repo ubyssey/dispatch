@@ -65,13 +65,13 @@ export default class ItemEditor extends React.Component {
       return (<div>Loading</div>)
     }
 
-    const title = this.props.isNew ? `New ${this.classString}` : `Edit - ${listItem.name}`
+    const title = this.props.isNew ? `New ${this.props.type}` : `Edit - ${listItem[this.props.displayField] || listItem.name}`
 
     return (
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ListItemToolbar
-            name={listItem.name}
+            name={listItem[this.props.displayField] || listItem.name}
             type={this.props.type}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}
@@ -80,7 +80,7 @@ export default class ItemEditor extends React.Component {
           <div className='u-container u-container--padded'>
             <this.props.form
               listItem={listItem}
-              errors={this.props.listItem.errors}
+              errors={listItem.errors}
               update={(field, value) => this.handleUpdate(field, value)} />
           </div>
         </div>

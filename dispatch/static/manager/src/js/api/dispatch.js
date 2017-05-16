@@ -122,6 +122,19 @@ function patchRequest(route, id=null, payload={}, token=null) {
   .then(parseJSON)
 }
 
+function patchMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token, false),
+      body: payload
+    }
+  )
+  .then(handleError)
+  .then(parseJSON)
+}
+
 const DispatchAPI = {
   fetchPage: (token, uri) => {
     return getPageRequest(uri, token)
@@ -241,10 +254,10 @@ const DispatchAPI = {
       return getRequest('persons', personId, null, token)
     },
     save: (token, personId, data) => {
-      return patchRequest('persons', personId, data, token)
+      return patchMultipartRequest('persons', personId, data, token)
     },
     create: (token, data) => {
-      return postRequest('persons', null, data, token)
+      return postMultipartRequest('persons', null, data, token)
     },
     delete: (token, personId) => {
       return deleteRequest('persons', personId, null, token)
