@@ -266,3 +266,39 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(response.data['results'][0]['slug'], 'article-2')
+
+    def test_article_headline_query(self):
+        """Should be able to search for articles by headline"""
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 1 and 2', slug='article-2')
+        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3')
+
+        url = '%s?q=%s' % (reverse('api-articles-list'), 'Article 1')
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['headline'], 'Article 1 and 2')
+        self.assertEqual(data['results'][1]['headline'], 'Article 1')
+        self.assertEqual(data['count'], 2)
+
+    def test_section_name_query(self):
+        """Should be able to search for articles by section name"""
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
+
+        section = Section.objects.create(name='Test section 2', slug='test-section-2')
+        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3', section, section.slug)
+
+        section_id =  article_1.data['section']['id']
+
+        url = '%s?section=%s' % (reverse('api-articles-list'), section_id)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['headline'], 'Article 2')
+        self.assertEqual(data['results'][1]['headline'], 'Article 1')
+        self.assertEqual(data['count'], 2)
