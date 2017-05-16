@@ -267,8 +267,8 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(response.data['results'][0]['slug'], 'article-2')
 
-    def test_article_name_query(self):
-        """Should be able to search for articles by name"""
+    def test_article_headline_query(self):
+        """Should be able to search for articles by headline"""
 
         article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
         article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 1 and 2', slug='article-2')
