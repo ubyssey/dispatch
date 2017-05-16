@@ -235,11 +235,20 @@ const DispatchAPI = {
   },
   persons: {
     list: (token, query) => {
-      return getRequest('people', null, query, token)
+      return getRequest('persons', null, query, token)
     },
-    create: (token, fullName) => {
-      return postRequest('people', null, {full_name: fullName}, token)
-    }
+    get: (token, personId) => {
+      return getRequest('persons', personId, null, token)
+    },
+    save: (token, personId, data) => {
+      return patchRequest('persons', personId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('persons', null, data, token)
+    },
+    delete: (token, personId) => {
+      return deleteRequest('persons', personId, null, token)
+    },
   },
   topics: {
     list: (token, query) => {
