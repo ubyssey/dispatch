@@ -3,7 +3,7 @@ import React from 'react'
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import { Toolbar } from '../Toolbar'
-import VersionsDropdown from './toolbar/VersionsDropdown'
+import VersionsDropdown from '../ArticleEditor/toolbar/VersionsDropdown'
 
 export default function PageToolbar(props) {
 
