@@ -8,22 +8,23 @@ from dispatch.tests.cases import DispatchMediaTestMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(self, client):
+    def create_article(self, client, headline, slug, section=None):
         """Create a dummy article instance"""
 
         # Create test person
         person = Person.objects.create(full_name='Test Person')
 
-        # Create test section
-        section = Section.objects.create(name='Test Section', slug='test')
+        if not section:
+            # Create test section
+            (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-slug')
 
         url = reverse('api-articles-list')
 
         data = {
-            'headline': 'Test headline',
+            'headline': headline,
             'section_id': section.id,
             'author_ids': [person.id],
-            'slug': 'test-article',
+            'slug': slug,
             'content': []
         }
 
@@ -95,14 +96,17 @@ class DispatchTestHelpers(object):
         return (self._create_gallery_only(id, attachment, client), image_1, image_2)
 
     @classmethod
-    def create_page(self, client):
+    def create_page(self, client, title=None, slug=None):
         """Create dummy page"""
 
         url = reverse('api-pages-list')
 
+        page_title = 'Test Page' if not title else title
+        page_slug = 'test-page' if not slug else slug
+
         data = {
-          'title': 'Test Page',
-          'slug': 'test-page',
+          'title': page_title,
+          'slug': page_slug,
           'snippet': 'This is a test snippet',
           'content': [
             {
@@ -115,16 +119,32 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_section(self, client):
+    def create_section(self, client, name, slug):
         """
         Create a dummy section instance
         """
 
         data = {
-            'name': 'Test name',
-            'slug': 'test-section',
+            'name': name,
+            'slug': slug,
         }
 
         url = reverse('api-sections-list')
 
         return client.post(url, data, format='json')
+
+    @classmethod
+    def create_person(self, client, full_name='', image='', slug='', description=''):
+        """A helper method that creates a simple person object with the given attributes
+        and returns the response"""
+
+        url = reverse('api-persons-list')
+
+        data = {
+            'full_name': full_name,
+            'image': image,
+            'slug': slug,
+            "description": description
+        }
+
+        return client.post(url, data, format='multipart')
