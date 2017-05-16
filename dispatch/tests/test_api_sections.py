@@ -53,7 +53,7 @@ class SectionsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check data
-        self.assertEqual(response.data['name'], 'Test name')
+        self.assertEqual(response.data['name'], 'Test Section')
         self.assertEqual(response.data['slug'], 'test-section')
 
     def test_create_duplicate_section(self):
@@ -77,7 +77,7 @@ class SectionsTests(DispatchAPITestCase):
         section = DispatchTestHelpers.create_section(self.client)
 
         # Check data
-        self.assertEqual(section.data['name'], 'Test name')
+        self.assertEqual(section.data['name'], 'Test Section')
         self.assertEqual(section.data['slug'], 'test-section')
 
         data = {
@@ -162,3 +162,21 @@ class SectionsTests(DispatchAPITestCase):
         # Check that section 2 is returned
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['slug'], 'section-2')
+
+    def test_section_query(self):
+        """Be able to search for sections"""
+
+        # Create sections
+        DispatchTestHelpers.create_section(self.client, 'news', 'news-slug')
+        DispatchTestHelpers.create_section(self.client, 'some News', 'some-news-slug')
+        DispatchTestHelpers.create_section(self.client, 'science', 'science-slug')
+
+        url = '%s?q=%s' % (reverse('api-sections-list'), 'news')
+
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['name'], 'news')
+        self.assertEqual(data['results'][1]['name'], 'some News')
+        self.assertEqual(data['count'], 2)
