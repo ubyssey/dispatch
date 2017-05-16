@@ -4,7 +4,6 @@ import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
 import FeaturedImageTab from '../ArticleEditor/tabs/FeaturedImageTab'
-import DeliveryTab from '../ArticleEditor/tabs/DeliveryTab'
 import TemplateTab from '../ArticleEditor/tabs/TemplateTab'
 import SEOTab from '../ArticleEditor/tabs/SEOTab'
 
@@ -18,7 +17,6 @@ export default function PageSidebar(props) {
         <TabList className='c-article-sidebar__tablist'>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application'></span>Basic fields</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media'></span>Featured image</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope'></span>Delivery</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget'></span>Template</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media'></span>SEO</Tab>
         </TabList>
@@ -40,15 +38,6 @@ export default function PageSidebar(props) {
             update={props.update}
             featured_image={props.page.featured_image}
             entities={props.entities} />
-        </TabPanel>
-
-        <TabPanel className='c-article-sidebar__panel'>
-          <DeliveryTab
-            update={props.update}
-            importance={props.page.importance}
-            reading_time={props.page.reading_time}
-            integrations={props.page.integrations}
-            availableIntegrations={props.integrations} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>
