@@ -6,7 +6,6 @@ import DocumentTitle from 'react-document-title'
 import pagesActions from '../../actions/PagesActions'
 import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
-import * as integrationActions from '../../actions/IntegrationActions'
 
 import PageToolbar from './PageToolbar'
 import PageContentEditor from './PageContentEditor'
@@ -30,8 +29,6 @@ class PageEditorComponent extends React.Component {
     } else {
       this.props.getPage(this.props.token, this.props.pageId)
     }
-
-    this.props.fetchIntegration(this.props.token, 'fb-instant-pages')
   }
 
   componentDidUpdate(prevProps) {
@@ -123,7 +120,7 @@ class PageEditorComponent extends React.Component {
       return (<div>Loading</div>)
     }
 
-    const title = this.props.isNew ? 'New page' : `Edit - ${page.headline}`
+    const title = this.props.isNew ? 'New page' : `Edit - ${page.title}`
 
     return (
       <DocumentTitle title={title}>
@@ -203,9 +200,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     toggleEditorStyle: (style) => {
       dispatch(editorActions.toggleEditorStyle(style))
-    },
-    fetchIntegration: (token, integrationId) => {
-      dispatch(integrationActions.fetchIntegration(token, integrationId))
     }
   }
 }
