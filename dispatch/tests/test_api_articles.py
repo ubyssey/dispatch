@@ -51,7 +51,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_create_article(self):
         """Ensure that article can be created"""
 
-        response = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        response = DispatchTestHelpers.create_article(self.client)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -65,7 +65,7 @@ class ArticlesTests(DispatchAPITestCase):
         """Delete article should fail with unauthenticated request"""
 
         # Create an article
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Clear authentication credentials
         self.client.credentials()
@@ -79,7 +79,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_delete_article(self):
         """Ensure that article can be deleted"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Generate detail URL
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -95,7 +95,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_publish_article(self):
         """Ensure that an existing article can be published"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Generate detail URL
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -108,7 +108,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_unpublish_article(self):
         """Ensure that an existing article can be unpublished"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Publish article first
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -126,7 +126,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_unpublish_article_older_version(self):
         """Ensure that an older version of an article can be unpublished"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Publish latest version
         url = reverse('api-articles-publish', args=[article.data['id']])
@@ -158,7 +158,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_publish_article_version(self):
         """Ensure that a specific version of an article can be published"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Update article to generate new version
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -184,7 +184,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_publish_article_older_version(self):
         """Ensure that an older version of an article can be published"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Update article to generate new version
         url = reverse('api-articles-detail', args=[article.data['id']])
@@ -225,7 +225,7 @@ class ArticlesTests(DispatchAPITestCase):
     def test_publish_article_unauthorized(self):
         """Publish article should fail with unauthorized request"""
 
-        article = DispatchTestHelpers.create_article(self.client, 'Test headline', 'test-article')
+        article = DispatchTestHelpers.create_article(self.client)
 
         # Clear authentication credentials
         self.client.credentials()
@@ -270,10 +270,9 @@ class ArticlesTests(DispatchAPITestCase):
     def test_article_name_query(self):
         """Should be able to search for articles by name"""
 
-        article_1 = DispatchTestHelpers.create_article(self.client, 'Article 1', 'article-1')
-        article_2 = DispatchTestHelpers.create_article(self.client, 'Article 1 and 2', 'article-2')
-        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3')
-
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 1 and 2', slug='article-2')
+        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3')
 
         url = '%s?q=%s' % (reverse('api-articles-list'), 'Article 1')
         response = self.client.get(url, format='json')
@@ -287,11 +286,11 @@ class ArticlesTests(DispatchAPITestCase):
     def test_section_name_query(self):
         """Should be able to search for articles by section name"""
 
-        article_1 = DispatchTestHelpers.create_article(self.client, 'Article 1', 'article-1')
-        article_2 = DispatchTestHelpers.create_article(self.client, 'Article 2', 'article-2')
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
 
         section = Section.objects.create(name='Test section 2', slug='test-section-2')
-        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3', section)
+        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3', section, section.slug)
 
         section_id =  article_1.data['section']['id']
 
