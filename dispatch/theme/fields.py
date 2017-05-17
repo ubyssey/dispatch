@@ -7,7 +7,7 @@ class InvalidField(Exception):
 class Field(object):
     """Base class for all widget fields"""
 
-    def __init__(self, label, many=True):
+    def __init__(self, label, many=False):
         self.label = label
         self.many = many
 
@@ -24,7 +24,10 @@ class Field(object):
 
     def to_json(self):
         """Returns JSON representation of field data"""
-        return self.data
+        return {
+            'label' : self.label,
+            'data' : self.data
+        }
 
     def prepare_data(self):
         """Prepares field data for use in a template"""
@@ -74,16 +77,20 @@ class ArticleField(Field):
         return serializer.data
 
     def to_json(self):
-        if self.many:
-            return {
-                'label' : self.label,
-                'data' : map(self.get_article_json, self.data)
-            }
-        else:
-            return {
-                'label' : self.label,
-                'data' : self.get_article_json(self.data)
-            }
+
+        def get_data():
+            if not self.data:
+                return
+
+            if self.many:
+                return map(self.get_article_json, self.data)
+            else:
+                return self.get_article_json(self.data)
+
+        return {
+            'label': self.label,
+            'data': get_data()
+        }
 
     def prepare_data(self):
         if self.many:
@@ -97,15 +104,11 @@ class ImageField(Field):
 
     def validate(self):
         if self.many:
-            return {
-                'label' : self.label,
-                'data' : map(self.get_image_json, self.data)
-            }
+            if not all( [isinstance(id, int) for id in self.data] ):
+                raise InvalidField('Data must be list of integers')
         else:
-            return {
-                'label' : self.label,
-                'data' : self.get_image_json(self.data)
-            }
+            if not isinstance(self.data, int):
+                raise InvalidField('Data must be an integer')
 
     def get_image(self, id):
         try:
@@ -119,16 +122,20 @@ class ImageField(Field):
         return serializer.data
 
     def to_json(self):
-        if self.many:
-            return {
-                'label' : self.label,
-                'data' : map(self.get_image_json, self.data)
-            }
-        else:
-            return {
-                'label' : self.label,
-                'data' : self.get_image_json(self.data)
-            }
+
+        def get_data():
+            if not self.data:
+                return
+
+            if self.many:
+                return map(self.get_image_json, self.data)
+            else:
+                return self.get_image_json(self.data)
+
+        return {
+            'label': self.label,
+            'data': get_data()
+        }
 
     def prepare_data(self):
         if self.many:
