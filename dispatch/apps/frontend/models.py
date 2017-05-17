@@ -9,6 +9,6 @@ class TemplateVariable(Model):
     value = TextField()
 
 class Zone(Model):
-    zone_id = SlugField()
-    widget_id = SlugField()
-    data = JSONField()
+    zone_id = SlugField(primary_key=True)
+    widget_id = SlugField(null=True)
+    data = JSONField(null=True)
