@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer
 from dispatch.apps.content.models import Article, Image
 
-=======
->>>>>>> 4809f9db28c1f9fcaea943209b08831d741efca4
 class InvalidField(Exception):
     pass
 
