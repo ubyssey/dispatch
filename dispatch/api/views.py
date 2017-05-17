@@ -16,8 +16,13 @@ from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
-from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+from dispatch.apps.api.serializers import (
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+    ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer)
 from dispatch.apps.api.exceptions import ProtectedResourceError
+
+from dispatch.theme import ThemeManager, ZoneNotFound
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -323,6 +328,60 @@ class IntegrationViewSet(viewsets.GenericViewSet):
             return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
+
+class ZoneViewSet(viewsets.GenericViewSet):
+    """Viewset for widget zones"""
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_object_or_404(self, pk=None):
+        try:
+            return ThemeManager.Zones.get(pk)
+        except ZoneNotFound:
+            raise NotFound("The zone with id '%s' does not exist" % pk)
+
+    def get_paginated_response(self, data):
+        return Response({
+            'count': len(data),
+            'results': data
+        })
+
+    def list(self, request):
+
+        zones = ThemeManager.Zones.list()
+
+        serializer = ZoneSerializer(zones, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = ZoneSerializer(zone)
+
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = ZoneSerializer(zone, data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response(serializer.to_representation(zone))
+
+    @detail_route(methods=['get'])
+    def widgets(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = WidgetSerializer(zone.widgets, many=True)
+
+        return self.get_paginated_response(serializer.data)
 
 class DashboardViewSet(viewsets.GenericViewSet):
 
