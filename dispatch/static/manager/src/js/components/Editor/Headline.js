@@ -4,10 +4,10 @@ import { EditableText, Tooltip, Position, Intent } from '@blueprintjs/core'
 
 require('../../../styles/components/article_headline.scss')
 
-export default function PageHeadline(props) {
+export default function ArticleHeadline(props) {
 
   function handleUpdate(value) {
-    props.onUpdate('title', value)
+    props.onUpdate(props.field || 'headline', value)
   }
 
   const textField = (
@@ -15,8 +15,8 @@ export default function PageHeadline(props) {
       multiline={true}
       minLines={1}
       maxLines={4}
-      placeholder='Enter a title'
-      value={props.title}
+      placeholder='Enter a headline'
+      value={props.headline}
       onChange={handleUpdate} />
   )
 
