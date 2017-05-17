@@ -409,3 +409,33 @@ class IntegrationSerializer(serializers.Serializer):
             self.instance.save(settings)
 
         return self.instance
+
+class FieldSerializer(serializers.Serializer):
+
+    type = serializers.CharField()
+    name = serializers.CharField()
+    label = serializers.CharField()
+
+class WidgetSerializer(serializers.Serializer):
+
+    id = serializers.SlugField()
+    name = serializers.CharField(read_only=True)
+    data = JSONField(required=False)
+    fields = serializers.ListField(read_only=True, child=FieldSerializer())
+
+    def validate(self, data):
+        # TODO: implement validator to check widget fields
+        return data
+
+class ZoneSerializer(serializers.Serializer):
+
+    id = serializers.SlugField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    widget = WidgetSerializer()
+
+    def update(self, instance, validated_data):
+
+        instance.set_widget(validated_data.get('widget'))
+        instance.save()
+
+        return instance
