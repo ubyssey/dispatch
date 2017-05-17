@@ -1,17 +1,12 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
-
 from dispatch.tests.cases import DispatchAPITestCase
-
 from dispatch.apps.content.models import Tag
 
-class tagsTests(DispatchAPITestCase):
+class TagsTests(DispatchAPITestCase):
 
     def _create_tag(self):
-        """
-        Create a dummy tag instance
-        """
+        """Create a dummy tag instance"""
 
         data = {
             'name': 'testTag'
@@ -22,9 +17,8 @@ class tagsTests(DispatchAPITestCase):
         return self.client.post(url, data, format='json')
 
     def test_create_tag_unauthorized(self):
-
         """
-		Create tag should fail with unauthenticated request
+        Create tag should fail with unauthenticated request
         """
 
         # Clear authentication credentials
@@ -40,7 +34,7 @@ class tagsTests(DispatchAPITestCase):
         """
         Create tag should fail with empty payload
         """
-        
+
         url = reverse('api-tags-list')
 
         response = self.client.post(url, None, format='json')
@@ -55,9 +49,7 @@ class tagsTests(DispatchAPITestCase):
         url = reverse('api-tags-list')
 
         # tag data is missing name
-        data = {
-
-        }
+        data = {}
 
         response = self.client.post(url, data, format='json')
 
