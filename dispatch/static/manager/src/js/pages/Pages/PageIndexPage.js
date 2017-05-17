@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
+import { Intent } from '@blueprintjs/core'
 
 import pagesActions from '../../actions/PagesActions'
 import { humanizeDatetime } from '../../util/helpers'
@@ -101,12 +102,12 @@ class PagesPageComponent extends React.Component {
 
           columns={[
             item => (<strong><Link to={`/pages/${item.id}`} dangerouslySetInnerHTML={{__html: item.title}} /></strong>),
-            item => humanizeDatetime(item.published_at),
+            item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
             item => item.latest_version + ' revisions'
           ]}
 
           emptyMessage={'You haven\'t created any pages yet.'}
-          createHandler={() => (<LinkButton to={'pages/new'}>Create page</LinkButton>)}
+          createHandler={() => (<LinkButton intent={Intent.SUCCESS} to={'pages/new'}>Create page</LinkButton>)}
 
           actions={{
             toggleItem: this.props.togglePage,

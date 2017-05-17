@@ -3,9 +3,9 @@ import React from 'react'
 import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
-import FeaturedImageTab from '../ArticleEditor/tabs/FeaturedImageTab'
-import TemplateTab from '../ArticleEditor/tabs/TemplateTab'
-import SEOTab from '../ArticleEditor/tabs/SEOTab'
+import FeaturedImageTab from '../Editor/tabs/FeaturedImageTab'
+import TemplateTab from '../Editor/tabs/TemplateTab'
+import SEOTab from '../Editor/tabs/SEOTab'
 
 require('../../../styles/components/article_sidebar.scss')
 

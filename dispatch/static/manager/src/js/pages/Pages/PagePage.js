@@ -2,7 +2,7 @@ import React from 'react'
 
 import PageEditor from '../../components/PageEditor'
 
-export default function NewSectionPage(props) {
+export default function NewPagePage(props) {
   return (
     <PageEditor
       pageId={props.params.pageId}
