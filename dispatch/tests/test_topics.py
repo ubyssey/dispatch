@@ -1,17 +1,12 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
-
 from dispatch.tests.cases import DispatchAPITestCase
-
 from dispatch.apps.content.models import Topic
 
 class TopicsTests(DispatchAPITestCase):
 
     def _create_topic(self):
-        """
-        Create a dummy topic instance
-        """
+        """Create a dummy topic instance"""
 
         data = {
             'name': 'testing topic'
@@ -22,10 +17,9 @@ class TopicsTests(DispatchAPITestCase):
         return self.client.post(url, data, format='json')
 
     def test_create_topic_unauthorized(self):
-
         """
-		Create topic should fail with unauthenticated request
-		"""
+        Create topic should fail with unauthenticated request
+        """
 
         # Clear authentication credentials
         self.client.credentials()
