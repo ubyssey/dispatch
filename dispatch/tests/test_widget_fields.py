@@ -1,9 +1,9 @@
 from dispatch.apps.content.models import Image
 from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, InvalidField
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class WidgetFieldTest(DispatchAPITestCase):
+class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_char_field(self):
         """Should be able to initialize charfield and set data"""
