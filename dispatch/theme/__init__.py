@@ -9,9 +9,11 @@ class Registry(object):
     def zone(self, zone):
         validate_zone(zone)
         self.zones[zone.id] = zone
+        return zone
 
     def widget(self, widget):
         validate_widget(widget)
         self.widgets[widget.id] = widget
+        return widget
 
 register = Registry()
