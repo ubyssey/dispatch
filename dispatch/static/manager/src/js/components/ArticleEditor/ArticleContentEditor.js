@@ -1,7 +1,6 @@
 import React from 'react'
 
-// import QuillEditor from './QuillEditor'
-import ArticleHeadline from './ArticleHeadline'
+import Headline from '../Editor/Headline'
 import ContentEditor from '../ContentEditor'
 
 import { ImageEmbed, VideoEmbed } from '../ContentEditor/embeds'
@@ -17,10 +16,11 @@ export default class ArticleContentEditor extends React.Component {
     return (
       <div ref='container' className='c-article-editor'>
         <div className='c-article-editor__inner'>
-          <ArticleHeadline
+          <Headline
             onUpdate={this.props.onUpdate}
             headline={this.props.article.headline}
-            error={this.props.errors.headline} />
+            error={this.props.errors.headline}
+            field="title" />
           <div className='c-article-editor__body'>
             <ContentEditor
               scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
