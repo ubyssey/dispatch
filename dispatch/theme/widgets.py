@@ -1,16 +1,63 @@
-from django.core.validators import slug_re
+from django.template import loader
 
-from dispatch.theme.fields import Field
-
-class InvalidWidget(Exception):
-    pass
-
-class InvalidZone(Exception):
-    pass
+from dispatch.apps.frontend.models import Zone as ZoneModel
+from dispatch.theme import ThemeManager
+from dispatch.theme.fields import Field, InvalidField
 
 class Zone(object):
     id = None
     name = None
+
+    _widget = None
+    _widgets = []
+
+    @property
+    def widget(self):
+
+        if not self._widget:
+            try:
+                zone = ZoneModel.objects.get(zone_id=self.id)
+
+                widget = ThemeManager.Widgets.get(zone.widget_id)
+                widget.set_data(zone.data)
+
+                self._widget = widget
+            except ZoneModel.DoesNotExist:
+                pass
+
+        return self._widget
+
+    @property
+    def widgets(self):
+        """Return the widgets compatible with this zone"""
+        return [W() for W in self._widgets]
+
+    @classmethod
+    def register_widget(cls, widget):
+        """Register a widget with this zone"""
+        cls._widgets.append(widget)
+
+    def set_widget(self, validated_data):
+
+        widget = ThemeManager.Widgets.get(validated_data['id'])
+
+        widget.set_data(validated_data['data'])
+
+        # TODO: add validation step here
+
+        self._widget = widget
+
+    def save(self):
+
+        (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
+
+        zone.widget_id = self._widget.id
+        zone.data = self._widget.data
+
+        return zone.save()
+
+    def render(self):
+        return self.widget.render()
 
 class Widget(object):
     id = None
@@ -18,62 +65,65 @@ class Widget(object):
     template = None
     zones = []
 
-    def get_fields(self):
+    @property
+    def fields(self):
         """Return list of fields defined on this widget"""
-        return filter(lambda a: isinstance(getattr(self, a), Field), dir(self))
+
+        def get_field(name):
+            field = getattr(self, name)
+            field.name = name
+            return field
+
+        fields = filter(lambda a: a != 'fields' and isinstance(getattr(self, a), Field), dir(self))
+
+        return [get_field(f) for f in fields]
 
     def set_data(self, data):
-        self.data = data
+        """Sets data for each field"""
+
+        for field in self.fields:
+            field.set_data(data.get(field.name))
+
+    def get_data(self):
+        """Prints data from each field"""
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.data
+
+        return result
 
     def to_json(self):
         """Return JSON representation for this widget"""
-        # TODO
-        pass
+
+        result = {}
+
+        for field in self.fields:
+
+            result[field.name] = field.to_json()
+
+        return result
 
     def prepare_data(self):
         """Prepare widget data for template"""
-        # TODO
-        pass
+
+        result = {}
+
+        for field in self.fields:
+
+            result[field.name] = field.prepare_data()
+
+        return result
 
     def render(self):
         """Renders the widget as HTML"""
-        # TODO
-        pass
 
-def has_valid_id(o):
+        template = None
 
-    def is_valid_slug(slug):
-        """Uses Django's slug regex to test if id is valid"""
-        return slug_re.match(slug)
+        for field in self.fields:
 
-    return hasattr(o, 'id') and o.id and is_valid_slug(o.id)
+            if field.data == None:
+                raise InvalidField("All initialized fields must have data")
 
-def has_valid_name(o):
-    return hasattr(o, 'name') and o.name
-
-def has_valid_template(o):
-    return hasattr(o, 'template') and o.template
-
-def validate_widget(widget):
-    """Checks that the given widget contains the required fields"""
-
-    if not has_valid_id(widget):
-        raise InvalidWidget("%s must contain a valid 'id' attribute" % widget.__name__)
-
-    if not has_valid_name(widget):
-        raise InvalidWidget("%s must contain a valid 'name' attribute" % widget.__name__)
-
-    if not has_valid_template(widget):
-        raise InvalidWidget("%s must contain a valid 'template' attribute" % widget.__name__)
-
-    if not hasattr(widget, 'zones') or not widget.zones:
-        raise InvalidWidget("%s must be compatible with at least one zone" % widget.__name__)
-
-def validate_zone(zone):
-    """Checks that the given zone contains the required fields"""
-
-    if not has_valid_id(zone):
-        raise InvalidZone("%s must contain a valid 'id' attribute" % zone.__name__)
-
-    if not has_valid_name(zone):
-        raise InvalidZone("%s must contain a valid 'name' attribute" % zone.__name__)
+        template = loader.get_template(self.template)
+        return template.render(self.prepare_data())
