@@ -49,9 +49,7 @@ class TopicsTests(DispatchAPITestCase):
         url = reverse('api-topics-list')
 
         # topic data is missing name
-        data = {
-
-        }
+        data = {}
 
         response = self.client.post(url, data, format='json')
 
