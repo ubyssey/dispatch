@@ -21,7 +21,8 @@ class CodeEmbedComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      mode: 'html'
+      mode: 'html',
+      edit: true
     }
   }
 
@@ -35,8 +36,23 @@ class CodeEmbedComponent extends React.Component {
     })
   }
 
+  insertCodeEmbed() {
+    this.setState({
+      edit: false
+    })
+    this.props.updateField('mode', this.state.mode)
+//    this.props.stopEditing()
+  }
 
-  render() {
+  startEditing() {
+    this.setState({
+      edit: true
+    })
+  }
+
+
+
+  renderEditor() {
     return (
       <div className='o-embed--code'>
         <AceEditor
@@ -52,7 +68,7 @@ class CodeEmbedComponent extends React.Component {
           editorProps={{$blockScrolling: true}}
         />
         <div className='o-embed--code_editor_button_container'>
-          <Button>Insert</Button>
+          <Button onClick={() => this.insertCodeEmbed()}>Insert</Button>
           <div className='o-embed--code_editor_mode_select'>
             <SelectInput
               options={MODES}
@@ -64,12 +80,27 @@ class CodeEmbedComponent extends React.Component {
       </div>
     )
   }
+
+  renderEmbed() {
+    return (
+      <div dangerouslySetInnerHTML={{__html: this.props.data.embedValue}}></div>
+    )
+  }
+  render() {
+    console.log('props: ',this.props)
+    return(
+      <div className='o-embed'>
+        {this.state.edit ? this.renderEditor() : this.renderEmbed()}
+      </div>
+    )
+  }
 }
 
 export default {
   type: 'code',
   component: CodeEmbedComponent,
   defaultData: {
-    embedValue: ''
+    embedValue: '',
+    mode: ''
   }
 }
