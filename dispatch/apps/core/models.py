@@ -1,4 +1,7 @@
-from django.db.models import Model, CharField, SlugField, TextField, BooleanField, ForeignKey, OneToOneField, ManyToManyField, ImageField, DateTimeField, PositiveIntegerField
+from django.db.models import (
+    Model, CharField, SlugField, TextField, BooleanField, 
+    ForeignKey, OneToOneField, ManyToManyField, 
+    ImageField, DateTimeField, PositiveIntegerField, PROTECT)
 from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
@@ -9,8 +12,8 @@ class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
     is_admin = BooleanField(default=True)
 
-    image = ImageField(upload_to='images', null=True, blank=True)
-    slug = SlugField(null=True, blank=True)
+    image = ImageField(upload_to='images', null=True)
+    slug = SlugField(null=True, unique=True)
     description = TextField(null=True, blank=True)
 
     def get_image_url(self):
@@ -23,7 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = CharField(max_length=255, unique=True)
     is_staff = BooleanField(default=False)
     is_active = BooleanField(default=True)
-    person = OneToOneField(Person, blank=True, null=True, related_name='person')
+    person = OneToOneField(Person, null=True, related_name='person', on_delete=PROTECT)
 
     USERNAME_FIELD = 'email'
 

@@ -46,5 +46,6 @@ export default {
       image_id: image.id,
       url: image.url
     }
-  }
+  },
+  showEdit: true
 }

@@ -1,28 +1,30 @@
+import { push } from 'react-router-redux'
+
 import * as types from '../constants/ActionTypes'
 import { topicSchema } from '../constants/Schemas'
+
 import DispatchAPI from '../api/dispatch'
 
-import { normalize, arrayOf } from 'normalizr'
+import { ResourceActions } from '../util/redux'
 
-export function fetchTopics(token, query) {
-  return {
-    type: types.FETCH_TOPICS,
-    payload: DispatchAPI.topics.fetchTopics(token, query)
-      .then(function(json) {
-        return {
-          count: json.count,
-          results: normalize(json.results, arrayOf(topicSchema))
-        }
-      })
+class TopicsActions extends ResourceActions {
+
+  search(query) {
+    let queryObj = {}
+
+    if (query) {
+      queryObj.q = query
+    }
+
+    return dispatch => {
+      dispatch(push({ pathname: '/topics/', query: queryObj }))
+    }
   }
+
 }
 
-export function createTopic(token, name) {
-  return {
-    type: types.CREATE_TOPIC,
-    payload: DispatchAPI.topics.createTopic(token, name)
-      .then( json => {
-        normalize(json, topicSchema)
-      })
-  }
-}
+export default new TopicsActions(
+  types.TOPICS,
+  DispatchAPI.topics,
+  topicSchema
+)

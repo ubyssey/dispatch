@@ -34,7 +34,7 @@ export default function ArticleToolbar(props) {
             current_version={props.article.current_version}
             published_version={props.article.published_version}
             latest_version={props.article.latest_version}
-            fetchArticleVersion={props.fetchArticleVersion} />
+            getVersion={props.getVersion} />
         </div>
       </div>
     </Toolbar>

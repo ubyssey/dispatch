@@ -1,0 +1,6 @@
+<iframe src="https://www.youtube.com/watch?v={{ id }}"></iframe>
+<h1>{{ title }}</h1>
+{% if caption or credit %}<div class="caption">
+    {{ caption|safe }} <span class="credit">{{ credit }}</span>
+</div>
+{% endif %}

@@ -5,7 +5,7 @@ import SectionEditor from '../../components/SectionEditor'
 export default function SectionPage(props) {
   return (
     <SectionEditor
-      sectionId={props.params.sectionId}
+      itemId={props.params.sectionId}
       goBack={props.history.goBack} />
   )
 }
