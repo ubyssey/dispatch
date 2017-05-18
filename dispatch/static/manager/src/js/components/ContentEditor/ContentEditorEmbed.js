@@ -77,6 +77,15 @@ export default class ContentEditorEmbed extends React.Component {
       stopEditing: this.stopEditing
     }
 
+    const editButton = this.props.blockProps.showEdit ? (
+      <li>
+        <a onClick={() => this.updateEmbed()}>
+          <span className='pt-icon-standard pt-icon-edit'></span>
+          <span>Edit</span>
+        </a>
+      </li>
+    ) : null
+
     return (
       <div
         className='o-embed-container'
@@ -85,12 +94,7 @@ export default class ContentEditorEmbed extends React.Component {
         <div className='o-embed-container__header'>
           <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
           <ul className='o-embed-container__header__options'>
-            <li>
-              <a onClick={() => this.updateEmbed()}>
-                <span className='pt-icon-standard pt-icon-edit'></span>
-                <span>Edit</span>
-              </a>
-            </li>
+            {editButton}
             <li>
               <a onClick={() => this.removeEmbed()}>
                 <span className='pt-icon-standard pt-icon-trash'></span>
