@@ -111,7 +111,10 @@ class Widget(object):
 
         for field in self.fields:
 
-            result[field.name] = field.prepare_data()
+            if field.data:
+                result[field.name] = field.prepare_data()
+            else:
+                result[field.name] = None
 
         return result
 
@@ -119,11 +122,6 @@ class Widget(object):
         """Renders the widget as HTML"""
 
         template = None
-
-        for field in self.fields:
-
-            if field.data == None:
-                raise InvalidField("All initialized fields must have data")
 
         template = loader.get_template(self.template)
         return template.render(self.prepare_data())
