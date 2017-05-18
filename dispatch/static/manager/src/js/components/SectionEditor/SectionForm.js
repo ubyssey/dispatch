@@ -13,7 +13,7 @@ export default function SectionForm(props) {
         error={props.errors.name}>
         <TextInput
           placeholder='Name'
-          value={props.section.name || ''}
+          value={props.listItem.name || ''}
           fill={true}
           onChange={ e => props.update('name', e.target.value) } />
       </FormInput>
@@ -24,7 +24,7 @@ export default function SectionForm(props) {
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
-          value={props.section.slug || ''}
+          value={props.listItem.slug || ''}
           fill={true}
           onChange={ e => props.update('slug', e.target.value) } />
       </FormInput>

@@ -1,28 +1,30 @@
+import { push } from 'react-router-redux'
+
 import * as types from '../constants/ActionTypes'
-import { tagSchema, topicSchema } from '../constants/Schemas'
+import { tagSchema } from '../constants/Schemas'
+
 import DispatchAPI from '../api/dispatch'
 
-import { normalize, arrayOf } from 'normalizr'
+import { ResourceActions } from '../util/redux'
 
-export function fetchTags(token, query) {
-  return {
-    type: types.FETCH_TAGS,
-    payload: DispatchAPI.tags.fetchTags(token, query)
-      .then(function(json) {
-        return {
-          count: json.count,
-          results: normalize(json.results, arrayOf(tagSchema))
-        }
-      })
+class TagsActions extends ResourceActions {
+
+  search(query) {
+    let queryObj = {}
+
+    if (query) {
+      queryObj.q = query
+    }
+
+    return dispatch => {
+      dispatch(push({ pathname: '/tags/', query: queryObj }))
+    }
   }
+
 }
 
-export function createTag(token, name) {
-  return {
-    type: types.CREATE_TAG,
-    payload: DispatchAPI.tags.createTag(token, name)
-      .then( json => {
-        normalize(json, topicSchema)
-      })
-  }
-}
+export default new TagsActions(
+  types.TAGS,
+  DispatchAPI.tags,
+  tagSchema
+)
