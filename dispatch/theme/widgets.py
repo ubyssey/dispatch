@@ -124,7 +124,5 @@ class Widget(object):
     def render(self):
         """Renders the widget as HTML"""
 
-        template = None
-
         template = loader.get_template(self.template)
         return template.render(self.prepare_data())
