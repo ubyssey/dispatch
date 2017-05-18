@@ -1,5 +1,5 @@
-<div>
-{% for widget in widgets %}
-  <li>{{ widget }}</li>
-{% endfor %}
+{% load widgets %}
+
+<div class="zone">
+{% zone 'test-zone' %}
 </div>
