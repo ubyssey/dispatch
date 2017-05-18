@@ -17,7 +17,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
-          value={props.slug}
+          value={props.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value) } />
       </FormInput>

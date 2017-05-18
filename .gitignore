@@ -10,3 +10,5 @@ node_modules/
 
 .coverage
 htmlcov/
+
+*.vscode/

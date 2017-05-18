@@ -26,7 +26,7 @@ export default function ItemListHeader(props) {
             checked={props.actions.isAllSelected}
             onChange={() => props.actions.toggleAllItems(props.items.ids)} />
         </div>
-        {`${props.items.selected.length} ${props.type} selected`}
+        {`${props.items.selected.length} ${props.typePlural} selected`}
         <Button
           className='c-item-list__header__delete'
           onClick={() => props.actions.deleteItems(props.items.selected)}

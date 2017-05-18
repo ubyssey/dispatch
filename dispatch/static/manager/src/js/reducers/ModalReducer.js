@@ -1,20 +1,19 @@
 import * as types from '../constants/ActionTypes'
 
+import { Reducer } from '../util/redux'
+
 const initialState = {
   component: null,
   props: {}
 }
 
-export default function modalReducer(state = initialState, action) {
-  switch (action.type) {
-  case types.OPEN_MODAL:
-    return {
-      component: action.component,
-      props: action.props
-    }
-  case types.CLOSE_MODAL:
-    return initialState
-  default:
-    return state
-  }
-}
+let reducer = new Reducer(initialState)
+
+reducer.handle(types.MODAL.OPEN, (state, action) => ({
+  component: action.component,
+  props: action.props
+}))
+
+reducer.handle(types.MODAL.CLOSE, () => initialState)
+
+export default reducer.getReducer()
