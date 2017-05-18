@@ -296,6 +296,20 @@ const DispatchAPI = {
     recent: (token) => {
       return getRequest('dashboard/recent', null, {}, token)
     }
+  },
+  zones: {
+    list: (token) => {
+      return getRequest('zones', null, null, token)
+    },
+    get: (token, zoneId) => {
+      return getRequest('zones', zoneId, null, token)
+    },
+    save: (token, zoneId, data) => {
+      return patchRequest('zones', zoneId, data, token)
+    },
+    widgets: (token, zoneId) => {
+      return getRequest('zones.widgets', zoneId, null, token)
+    }
   }
 }
 
