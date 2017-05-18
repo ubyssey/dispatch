@@ -10,7 +10,6 @@ class ThemeRegistry(object):
         self.widgets = OrderedDict()
 
     def clear(self):
-
         for zone in self.zones.values():
             zone.clear_widgets()
 
