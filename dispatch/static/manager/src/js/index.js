@@ -65,7 +65,7 @@ render((
             <IndexRoute component={Pages.Pages.Index} />
           </Route>
 
-          <Route path='components' component={Pages.Components} />
+          <Route path='widgets' component={Pages.Widgets} />
           <Route path='files' component={Pages.Files} />
           <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
