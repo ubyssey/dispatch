@@ -1,0 +1,7 @@
+<div class="gallery-attachment">
+    <div class="images">
+        {% for attachment in images %}
+        <img src="{{ attachment.image.get_absolute_url }}" />
+        {% endfor %}
+    </div>
+</div>

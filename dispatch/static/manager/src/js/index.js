@@ -74,6 +74,18 @@ render((
             <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
           </Route>
 
+          <Route path='tags'>
+            <IndexRoute component={Pages.Tags.Index} />
+            <Route path='new' component={Pages.Tags.NewTag} />
+            <Route path=':tagId' component={Pages.Tags.Tag} />
+          </Route>
+
+          <Route path='topics'>
+            <IndexRoute component={Pages.Topics.Index} />
+            <Route path='new' component={Pages.Topics.NewTopic} />
+            <Route path=':topicId' component={Pages.Topics.Topic} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>
