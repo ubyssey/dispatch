@@ -2,7 +2,7 @@ import LoginPage from './LoginPage'
 import DashboardPage from './DashboardPage'
 import PeoplePage from './PeoplePage'
 import FilesPage from './FilesPage'
-import ComponentsPage from './ComponentsPage'
+import WidgetsPage from './WidgetsPage'
 import ProfilePage from './ProfilePage'
 
 import * as Sections from './Sections'
@@ -17,7 +17,7 @@ export {
   DashboardPage as Dashboard,
   PeoplePage as People,
   FilesPage as Files,
-  ComponentsPage as Components,
+  WidgetsPage as Widgets,
   ProfilePage as Profile,
   Sections as Sections,
   Articles as Articles,
