@@ -1,27 +1,37 @@
 import R from 'ramda'
+import { combineReducers } from 'redux'
 
 import * as types from '../constants/ActionTypes'
 
-const initialState = {
-  isLoading: false,
-  isLoaded: false,
-  ids: []
-}
+import {
+  pending,
+  fulfilled,
+  Reducer,
+  buildManyResourceReducer,
+  buildSingleResourceReducer
+} from '../util/redux'
 
-export default function tagsReducer(state = initialState, action) {
-  switch (action.type) {
-  case types.FETCH_TAGS + '_PENDING':
-    return R.merge(state, {
-      isLoading: true,
-      isLoaded: false
-    })
-  case types.FETCH_TAGS + '_FULFILLED':
-    return R.merge(state, {
-      isLoading: false,
-      isLoaded: true,
-      ids: action.payload.results.result
-    })
-  default:
-    return state
+const initialState = {
+  navigation: {
+    isLoading: false,
+    isLoaded: false,
+    ids: []
   }
 }
+
+let navigationReducer = new Reducer(initialState.navigation)
+
+navigationReducer.handle(pending(types.TAGS.LIST_NAV), (state) => R.merge(state, { isLoading: true }))
+navigationReducer.handle(fulfilled(types.TAGS.LIST_NAV), (state, action) => {
+  return R.merge(state, {
+    isLoading: false,
+    isLoaded: true,
+    ids: action.payload.data.result
+  })
+})
+
+export default combineReducers({
+  navigation: navigationReducer.getReducer(),
+  list: buildManyResourceReducer(types.TAGS).getReducer(),
+  single: buildSingleResourceReducer(types.TAGS).getReducer(),
+})

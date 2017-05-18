@@ -1,100 +1,20 @@
 import React from 'react'
-import R from 'ramda'
 import { connect } from 'react-redux'
-import DocumentTitle from 'react-document-title'
 
-import * as sectionsActions from '../../actions/SectionsActions'
-
-import SectionToolbar from './SectionToolbar'
+import sectionsActions from '../../actions/SectionsActions'
 import SectionForm from './SectionForm'
 
-const NEW_SECTION_ID = 'new'
-const AFTER_DELETE = '/sections/'
+import ItemEditor from '../ItemEditor'
 
-class SectionEditorComponent extends React.Component {
-
-  componentWillMount() {
-    if (this.props.isNew) {
-      // Create empty section
-      this.props.setSection({ id: NEW_SECTION_ID })
-    } else {
-      // Fetch section
-      this.props.fetchSection(this.props.token, this.props.sectionId)
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.isNew) {
-      // Fetch section
-      if (prevProps.sectionId !== this.props.sectionId) {
-        this.props.fetchSection(this.props.token, this.props.sectionId)
-      }
-    }
-  }
-
-  getSection() {
-    if (this.props.isNew) {
-      return this.props.entities.section[NEW_SECTION_ID]
-    } else {
-      return this.props.entities.section[this.props.sectionId] ||
-        this.props.entities.sections[this.props.sectionId] || false
-    }
-  }
-
-  saveSection() {
-    if (this.props.isNew) {
-      this.props.createSection(this.props.token, this.getSection())
-    } else {
-      this.props.saveSection(
-        this.props.token,
-        this.props.sectionId,
-        this.getSection()
-      )
-    }
-  }
-
-  handleUpdate(field, value) {
-    this.props.setSection(R.assoc(field, value, this.getSection()))
-  }
-
-  render() {
-
-    const section = this.getSection()
-
-    if (!section) {
-      return (<div>Loading</div>)
-    }
-
-    const title = this.props.isNew ? 'New section' : `Edit - ${section.name}`
-
-    return (
-      <DocumentTitle title={title}>
-        <div className='u-container-main'>
-          <SectionToolbar
-            name={section.name}
-            isNew={this.props.isNew}
-            saveSection={() => this.saveSection()}
-            deleteSection={() => this.props.deleteSection(this.props.token, this.props.sectionId, AFTER_DELETE)}
-            goBack={this.props.goBack} />
-          <div className='u-container u-container--padded'>
-            <SectionForm
-              section={section}
-              errors={this.props.section.errors}
-              update={(field, value) => this.handleUpdate(field, value)} />
-          </div>
-        </div>
-      </DocumentTitle>
-    )
-  }
-
-}
+const TYPE = 'Section'
+const AFTER_DELETE = 'sections'
 
 const mapStateToProps = (state) => {
   return {
-    section: state.app.sections.single,
+    listItem: state.app.sections.single,
     entities: {
-      sections: state.app.entities.sections,
-      section: state.app.entities.section,
+      remote: state.app.entities.sections,
+      local: state.app.entities.local.sections,
     },
     token: state.app.auth.token
   }
@@ -102,22 +22,32 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSection: (token, sectionId) => {
-      dispatch(sectionsActions.fetchSection(token, sectionId))
+    getListItem: (token, sectionId) => {
+      dispatch(sectionsActions.get(token, sectionId))
     },
-    setSection: (section) => {
-      dispatch(sectionsActions.setSection(section))
+    setListItem: (section) => {
+      dispatch(sectionsActions.set(section))
     },
-    saveSection: (token, sectionId, data) => {
-      dispatch(sectionsActions.saveSection(token, sectionId, data))
+    saveListItem: (token, sectionId, data) => {
+      dispatch(sectionsActions.save(token, sectionId, data))
     },
-    createSection: (token, data) => {
-      dispatch(sectionsActions.createSection(token, data))
+    createListItem: (token, data) => {
+      dispatch(sectionsActions.create(token, data, AFTER_DELETE))
     },
-    deleteSection: (token, sectionId, next) => {
-      dispatch(sectionsActions.deleteSection(token, sectionId, next))
+    deleteListItem: (token, sectionId, next) => {
+      dispatch(sectionsActions.delete(token, sectionId, next))
     }
   }
+}
+
+function SectionEditorComponent(props) {
+  return (
+    <ItemEditor
+      type={TYPE}
+      afterDelete={AFTER_DELETE}
+      form={SectionForm}
+      {... props} />
+  )
 }
 
 const SectionEditor = connect(
