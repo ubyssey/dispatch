@@ -16,6 +16,12 @@ const MODES = [
   { value: 'javascript', label: 'javascript' }
 ]
 
+const DEFAULTVALUES = {
+  html : '<div>Enter html code here</div>',
+  css : '.cssCode{width:1px;}',
+  javascript : 'function javascript(arguments){return true}'
+}
+
 class CodeEmbedComponent extends React.Component {
 
   constructor(props) {
@@ -60,8 +66,7 @@ class CodeEmbedComponent extends React.Component {
           theme='chrome'
           width='100%'
           height='300px'
-          value={this.props.data.embedValue}
-          defaultValue='<h1>Enter html code here</h1>'
+          value={this.props.data.embedValue ? this.props.data.embedValue : DEFAULTVALUES[this.state.mode]}
           showPrintMargin={false}
           onChange={(value) => this.onCodeChange(value)}
           className='o-embed--code_editor'
@@ -83,7 +88,14 @@ class CodeEmbedComponent extends React.Component {
 
   renderEmbed() {
     return (
-      <div dangerouslySetInnerHTML={{__html: this.props.data.embedValue}}></div>
+      <div>
+        <div
+          dangerouslySetInnerHTML={{__html: this.props.data.embedValue}}>
+        </div>
+        <div className='o-embed--code_editor_button_container'>
+          <Button onClick={() => this.startEditing()}>Edit</Button>
+        </div>
+      </div>
     )
   }
   render() {
