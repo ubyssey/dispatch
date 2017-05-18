@@ -1,10 +1,14 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
 from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
+
+from dispatch.theme import ThemeManager
+from dispatch.theme.exceptions import WidgetNotFound
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -409,3 +413,49 @@ class IntegrationSerializer(serializers.Serializer):
             self.instance.save(settings)
 
         return self.instance
+
+class FieldSerializer(serializers.Serializer):
+
+    type = serializers.CharField()
+    name = serializers.CharField()
+    label = serializers.CharField()
+
+class WidgetSerializer(serializers.Serializer):
+
+    id = serializers.SlugField()
+    name = serializers.CharField(read_only=True)
+    data = JSONField(required=False)
+    fields = serializers.ListField(read_only=True, child=FieldSerializer())
+
+    def validate(self, data):
+
+        errors = {}
+
+        try:
+            ThemeManager.Widgets.get(data['id'])
+        except WidgetNotFound as e:
+            errors['id'] = str(e)
+
+        # TODO: validate widget fields
+
+        if errors:
+            raise ValidationError(errors)
+
+        return data
+
+class ZoneSerializer(serializers.Serializer):
+
+    id = serializers.SlugField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    widget = WidgetSerializer(allow_null=True)
+
+    def update(self, instance, validated_data):
+
+        widget = validated_data.get('widget')
+
+        if not widget:
+            instance.delete()
+        else:
+            instance.save(validated_data.get('widget'))
+
+        return instance

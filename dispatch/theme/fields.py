@@ -25,6 +25,8 @@ class Field(object):
 
 class CharField(Field):
 
+    type = 'char'
+
     def validate(self):
         if not isinstance(self.data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
