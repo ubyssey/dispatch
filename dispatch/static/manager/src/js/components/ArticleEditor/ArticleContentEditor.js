@@ -4,12 +4,13 @@ import React from 'react'
 import ArticleHeadline from './ArticleHeadline'
 import ContentEditor from '../ContentEditor'
 
-import { ImageEmbed, VideoEmbed, CodeEmbed } from '../ContentEditor/embeds'
+import { ImageEmbed, VideoEmbed, PullQuoteEmbed, CodeEmbed } from '../ContentEditor/embeds'
 
 const embeds = [
   ImageEmbed,
   VideoEmbed,
-  CodeEmbed
+  CodeEmbed,
+  PullQuoteEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {

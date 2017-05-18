@@ -2,7 +2,7 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 
-import * as templatesActions from '../../../actions/TemplatesActions'
+import templatesActions from '../../../actions/TemplatesActions'
 
 import { FormInput, TextInput, SelectInput } from '../../inputs'
 
@@ -47,7 +47,7 @@ class TemplateTabComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchTemplate(this.props.token, this.props.template)
+    this.props.getTemplate(this.props.token, this.props.template)
   }
 
   handleFieldChange(field, e) {
@@ -117,8 +117,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTemplate: (token, templateId) => {
-      dispatch(templatesActions.fetchTemplate(token, templateId))
+    getTemplate: (token, templateId) => {
+      dispatch(templatesActions.get(token, templateId))
     }
   }
 }

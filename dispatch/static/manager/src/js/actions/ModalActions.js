@@ -2,7 +2,7 @@ import * as types from '../constants/ActionTypes'
 
 export function openModal(component, props) {
   return {
-    type: types.OPEN_MODAL,
+    type: types.MODAL.OPEN,
     component: component,
     props: props
   }
@@ -10,6 +10,6 @@ export function openModal(component, props) {
 
 export function closeModal() {
   return {
-    type: types.CLOSE_MODAL
+    type: types.MODAL.CLOSE
   }
 }
