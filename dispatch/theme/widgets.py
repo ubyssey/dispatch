@@ -1,3 +1,5 @@
+from django.template import loader
+
 from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import Field
@@ -62,6 +64,10 @@ class Zone(object):
         ZoneModel.objects.get(zone_id=self.id).delete()
 
 class Widget(object):
+
+    def __init__(self):
+        self.data = {}
+
     @property
     def fields(self):
         """Return list of fields defined on this widget"""
@@ -76,19 +82,47 @@ class Widget(object):
         return [get_field(f) for f in fields]
 
     def set_data(self, data):
+        """Sets data for each field"""
+
         self.data = data
+
+        for field in self.fields:
+            field.set_data(data.get(field.name))
+
+    def get_data(self):
+        """Returns data from each field"""
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.data
+
+        return result
 
     def to_json(self):
         """Return JSON representation for this widget"""
-        # TODO
-        pass
+
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.to_json()
+
+        return result
 
     def prepare_data(self):
         """Prepare widget data for template"""
-        # TODO
-        pass
+
+        result = {}
+
+        for field in self.fields:
+            if field.data:
+                result[field.name] = field.prepare_data()
+            else:
+                result[field.name] = None
+
+        return result
 
     def render(self):
         """Renders the widget as HTML"""
-        # TODO
-        pass
+
+        template = loader.get_template(self.template)
+        return template.render(self.prepare_data())

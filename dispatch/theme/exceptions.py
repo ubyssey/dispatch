@@ -17,3 +17,6 @@ class WidgetNotFound(WidgetException):
 
 class ZoneNotFound(ZoneException):
     pass
+
+class InvalidField(Exception):
+    pass
