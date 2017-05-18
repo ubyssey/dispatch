@@ -2,14 +2,18 @@ from django.template import loader
 
 from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
-from dispatch.theme.fields import Field, InvalidField
+from dispatch.theme.fields import Field
+
+class MetaZone(type):
+    def __init__(cls, name, bases, nmspc):
+        cls._widget = None
+        cls._widgets = []
+
+        super(MetaZone, cls).__init__(name, bases, nmspc)
 
 class Zone(object):
-    id = None
-    name = None
 
-    _widget = None
-    _widgets = []
+    __metaclass__ = MetaZone
 
     @property
     def widget(self):
@@ -37,33 +41,32 @@ class Zone(object):
         """Register a widget with this zone"""
         cls._widgets.append(widget)
 
-    def set_widget(self, validated_data):
+    @classmethod
+    def clear_widgets(cls):
+        """Clear all widgets registered with this zone"""
+        cls._widgets = []
+
+    def save(self, validated_data):
+        """Save widget data for this zone"""
 
         widget = ThemeManager.Widgets.get(validated_data['id'])
-
         widget.set_data(validated_data['data'])
-
-        # TODO: add validation step here
-
-        self._widget = widget
-
-    def save(self):
 
         (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
 
-        zone.widget_id = self._widget.id
-        zone.data = self._widget.data
+        zone.widget_id = widget.id
+        zone.data = widget.data
 
         return zone.save()
 
-    def render(self):
-        return self.widget.render()
+    def delete(self):
+        """Delete widget data for this zone"""
+        ZoneModel.objects.get(zone_id=self.id).delete()
 
 class Widget(object):
-    id = None
-    name = None
-    template = None
-    zones = []
+
+    def __init__(self):
+        self.data = {}
 
     @property
     def fields(self):
@@ -81,11 +84,13 @@ class Widget(object):
     def set_data(self, data):
         """Sets data for each field"""
 
+        self.data = data
+
         for field in self.fields:
             field.set_data(data.get(field.name))
 
     def get_data(self):
-        """Prints data from each field"""
+        """Returns data from each field"""
         result = {}
 
         for field in self.fields:
@@ -99,7 +104,6 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-
             result[field.name] = field.to_json()
 
         return result
@@ -110,7 +114,6 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-
             if field.data:
                 result[field.name] = field.prepare_data()
             else:
