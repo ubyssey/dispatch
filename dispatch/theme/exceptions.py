@@ -1,11 +1,19 @@
-class InvalidWidget(Exception):
+class WidgetException(Exception):
+    """Base class for all widget exceptions"""
     pass
 
-class InvalidZone(Exception):
+class ZoneException(Exception):
+    """Base class for all zone exceptions"""
     pass
 
-class ZoneNotFound(Exception):
+class InvalidWidget(WidgetException):
     pass
 
-class WidgetNotFound(Exception):
+class InvalidZone(ZoneException):
+    pass
+
+class WidgetNotFound(WidgetException):
+    pass
+
+class ZoneNotFound(ZoneException):
     pass
