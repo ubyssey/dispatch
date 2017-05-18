@@ -2,12 +2,16 @@ from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import Field
 
-class Zone(object):
-    id = None
-    name = None
+class MetaZone(type):
+    def __init__(cls, name, bases, nmspc):
+        cls._widget = None
+        cls._widgets = []
 
-    _widget = None
-    _widgets = []
+        super(MetaZone, cls).__init__(name, bases, nmspc)
+
+class Zone(object):
+
+    __metaclass__ = MetaZone
 
     @property
     def widget(self):
@@ -35,31 +39,29 @@ class Zone(object):
         """Register a widget with this zone"""
         cls._widgets.append(widget)
 
-    def set_widget(self, validated_data):
+    @classmethod
+    def clear_widgets(cls):
+        """Clear all widgets registered with this zone"""
+        cls._widgets = []
+
+    def save(self, validated_data):
+        """Save widget data for this zone"""
 
         widget = ThemeManager.Widgets.get(validated_data['id'])
-
         widget.set_data(validated_data['data'])
-
-        # TODO: add validation step here
-
-        self._widget = widget
-
-    def save(self):
 
         (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
 
-        zone.widget_id = self._widget.id
-        zone.data = self._widget.data
+        zone.widget_id = widget.id
+        zone.data = widget.data
 
         return zone.save()
 
-class Widget(object):
-    id = None
-    name = None
-    template = None
-    zones = []
+    def delete(self):
+        """Delete widget data for this zone"""
+        ZoneModel.objects.get(zone_id=self.id).delete()
 
+class Widget(object):
     @property
     def fields(self):
         """Return list of fields defined on this widget"""
