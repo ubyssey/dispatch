@@ -425,7 +425,6 @@ class Image(Model):
         """
         Returns the image filename without extension.
         """
-        #return re.split('.(jpg|gif|png)', self.img.name)[0]
         return self.img.name
 
     def get_absolute_url(self):
