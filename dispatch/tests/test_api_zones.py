@@ -294,7 +294,7 @@ class ZonesTests(DispatchAPITestCase):
         self.assertEqual(response.data['id'], TEST_ZONE_A_ID)
         self.assertEqual(response.data['widget']['id'], TEST_WIDGET_B_ID)
 
-    def test_zones_update_update_widget(self):
+    def test_zones_update_widget(self):
         """Should be able to update widget data"""
 
         register.zone(TestZoneA)
