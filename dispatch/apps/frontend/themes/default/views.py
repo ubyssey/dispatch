@@ -3,54 +3,20 @@ from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 
 from dispatch.apps.content.models import Article, Page
-from .forms import RegistrationForm
 
-class DefaultTheme():
+class DefaultTheme:
 
     def home(self, request):
         return render_to_response('index.html')
 
     def article(self, request, section=None, slug=None):
-
-        return None
+        return
 
     def page(self, request, slug=None):
-
-        return None
+        return
 
     def section(self, request, section=None):
-
-        return None
-
-    def register(self, request):
-
-        if request.method == 'POST':
-            form = RegistrationForm(request.POST)
-            if form.is_valid():
-                form.save()
-                new_user = authenticate(username=request.POST['email'], password=request.POST['password1'])
-                login(request, new_user)
-                return redirect(self.home)
-        else:
-            form = RegistrationForm()
-
-        context = {
-            'form': form,
-        }
-
-        return render(request, "register.html", context)
-
-    def login(self, request):
-        if request.method == 'POST':
-            user = authenticate(username=request.POST['email'], password=request.POST['password'])
-            login(request, user)
-            return redirect(self.home)
-        else:
-           return render(request, "login.html")
-
-    def logout(self, request):
-        logout(request)
-        return redirect(self.home)
+        return
 
     def find_article(self, request, slug, section=None):
 

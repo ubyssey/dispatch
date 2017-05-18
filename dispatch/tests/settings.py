@@ -5,7 +5,8 @@ from dispatch.conf.default_settings import (
     REST_FRAMEWORK,
     AUTH_USER_MODEL,
     INSTALLED_APPS as DEFAULT_INSTALLED_APPS,
-    DISPATCH_PROJECT_MODULE
+    DISPATCH_PROJECT_MODULE,
+    TEMPLATES
 )
 
 SECRET_KEY = 'fake-key'
