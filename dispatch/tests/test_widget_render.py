@@ -72,27 +72,21 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
     # Render widget that doesnt have data assigned
     def test_widget_render_no_data(self):
-        """widget that renders with no data should throw error(?)"""
-
-        article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        """Rendering widgets with some of the data as None should not render the "None" data"""
 
         widget = TestWidget()
 
-        data = widget.get_data(), '\n\n\n' # The data isnt being deleted between tests. Even
+        widget.set_data({})
+
+        data = widget.get_data() # The data isnt being deleted between tests. Even
                                           # though "set_data" hasn't been called yet, the data
-                                          # remains from the last call. Not sure how to change
+                                          # remains from the previous call. Not sure how to change
+                                          # TODO: Fix for future @Peter
+        result = widget.render()
 
-        # ^^^ data gets {'article': 1, 'image': 1, 'description': 'test description', 'title': 'test title'}
+        html = u'<div class="widget">\n    \n    \n    \n    \n</div>\n'
 
-        widget.set_data({
-        })
-
-        try:
-            widget.render()
-            self.fail('Render should have failed as data for initialized fields are required')
-        except InvalidField:
-            pass
+        self.assertEqual(result, html)
 
     # article/image field empty
     def test_widget_article_image_field_empty(self):
@@ -100,13 +94,13 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         widget = TestWidget()
 
+        widget.set_data({})
         widget.set_data({
             'title': 'test title',
             'description': 'test description'
         })
 
-        try:
-            widget.render()
-            self.fail('Render should have failed as data for initialized fields are required')
-        except InvalidField:
-            pass
+        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    \n    \n</div>\n'
+
+        result = widget.render()
+        self.assertEqual(result, html)
