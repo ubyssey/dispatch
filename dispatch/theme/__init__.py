@@ -9,6 +9,14 @@ class ThemeRegistry(object):
         self.zones = OrderedDict()
         self.widgets = OrderedDict()
 
+    def clear(self):
+
+        for zone in self.zones.values():
+            zone.clear_widgets()
+
+        self.zones = OrderedDict()
+        self.widgets = OrderedDict()
+
     def zone(self, zone):
         validate_zone(zone)
         self.zones[zone.id] = zone
