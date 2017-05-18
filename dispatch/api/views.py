@@ -22,7 +22,8 @@ from dispatch.apps.api.serializers import (
     IntegrationSerializer, ZoneSerializer, WidgetSerializer)
 from dispatch.apps.api.exceptions import ProtectedResourceError
 
-from dispatch.theme import ThemeManager, ZoneNotFound
+from dispatch.theme import ThemeManager
+from dispatch.theme.exceptions import ZoneNotFound
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -372,7 +373,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
 
         serializer.save()
 
-        return Response(serializer.to_representation(zone))
+        return Response(serializer.data)
 
     @detail_route(methods=['get'])
     def widgets(self, request, pk=None):

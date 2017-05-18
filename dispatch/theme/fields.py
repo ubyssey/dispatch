@@ -1,8 +1,6 @@
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer
 from dispatch.apps.content.models import Article, Image
-
-class InvalidField(Exception):
-    pass
+from dispatch.theme.exceptions import InvalidField
 
 class Field(object):
     """Base class for all widget fields"""
