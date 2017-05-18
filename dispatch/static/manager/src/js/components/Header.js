@@ -7,7 +7,7 @@ require('../../styles/components/loading_bar.scss')
 
 export default function Header(props) {
 
-  const sections = props.sections.map( section => {
+  const sections = props.sections.map(section => {
     return (
       <li className='c-header__link' key={section.id}>
         <Link to={{ pathname: '/articles/', query: { section: section.id }}}>{section.name}</Link>
@@ -44,6 +44,12 @@ export default function Header(props) {
                 </li>
                 <li className='c-header__dropdown__link'>
                   <Link to='/integrations/'><span className='pt-icon-standard pt-icon-box' /> integrations</Link>
+                </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/tags/'><span className='pt-icon-standard pt-icon-tag' /> tags</Link>
+                </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/topics/'><span className='pt-icon-standard pt-icon-ninja' /> topics</Link>
                 </li>
               </ul>
             </li>
