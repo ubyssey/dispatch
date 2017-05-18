@@ -1,3 +1,4 @@
+from django.template import loader
 
 from dispatch.theme import register
 from dispatch.theme.widgets import Zone, Widget
@@ -70,7 +71,6 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(widget_render, html)
 
-    # Render widget that doesnt have data assigned
     def test_widget_render_no_data(self):
         """Rendering widgets with some of the data as None should not render the "None" data"""
 
@@ -88,7 +88,6 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(result, html)
 
-    # article/image field empty
     def test_widget_article_image_field_empty(self):
         """Article or image field should be filled"""
 
@@ -103,4 +102,31 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    \n    \n</div>\n'
 
         result = widget.render()
+        self.assertEqual(result, html)
+
+    def test_zone_render(self):
+
+        # TODO: fix register clearing issue
+        register.zone(TestZone)
+        register.widget(TestWidget)
+
+        zone = TestZone()
+        widget = TestWidget()
+
+        validated_data = {
+            'id': 'test-widget',
+            'data': {
+              'title': 'test title 1',
+              'description': 'test description'
+            }
+        }
+
+        zone.save(validated_data)
+
+        template = loader.get_template('widgets/zones.html')
+
+        result = template.render()
+
+        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n</div>\n\n</div>\n'
+
         self.assertEqual(result, html)
