@@ -3,25 +3,13 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 
 from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import Tag
 
 class TagsTests(DispatchAPITestCase):
 
-    def _create_tag(self):
-        """Create a dummy tag instance"""
-
-        data = {
-            'name': 'testTag'
-        }
-
-        url = reverse('api-tags-list')
-
-        return self.client.post(url, data, format='json')
-
     def test_create_tag_unauthorized(self):
-        """
-        Create tag should fail with unauthenticated request
-        """
+        """Create tag should fail with unauthenticated request"""
 
         # Clear authentication credentials
         self.client.credentials()
@@ -33,9 +21,7 @@ class TagsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_empty_tag(self):
-        """
-        Create tag should fail with empty payload
-        """
+        """Create tag should fail with empty payload"""
 
         url = reverse('api-tags-list')
 
@@ -44,9 +30,7 @@ class TagsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_incomplete_tag(self):
-        """
-        Create tag should fail with missing required fields
-        """
+        """Create tag should fail with missing required fields"""
 
         url = reverse('api-tags-list')
 
@@ -60,24 +44,17 @@ class TagsTests(DispatchAPITestCase):
         self.assertTrue('name' in response.data)
 
     def test_create_tag(self):
-        """
-        Ensure that tag can be created
-        """
+        """Ensure that tag can be created"""
 
-        response = self._create_tag()
+        response = DispatchTestHelpers.create_tag(self.client, 'testTag')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Check data
         self.assertEqual(response.data['name'], 'testTag')
 
     def test_delete_tag_unauthorized(self):
-        """
-        Delete tag should fail with unauthenticated request
-        """
+        """Delete tag should fail with unauthenticated request"""
 
-        # Create an tag
-        tag = self._create_tag()
+        tag = DispatchTestHelpers.create_tag(self.client, 'testTag')
 
         # Clear authentication credentials
         self.client.credentials()
@@ -89,13 +66,10 @@ class TagsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_tag(self):
-        """
-        Ensure that tag can be deleted
-        """
+        """Ensure that tag can be deleted"""
 
-        tag = self._create_tag()
+        tag = DispatchTestHelpers.create_tag(self.client, 'testTag')
 
-        # Generate detail URL
         url = reverse('api-tags-detail', args=[tag.data['id']])
 
         # Successful deletion should return 204

@@ -1,25 +1,15 @@
-from django.core.urlresolvers import reverse
 from rest_framework import status
+
+from django.core.urlresolvers import reverse
+
 from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.apps.content.models import Topic
 
 class TopicsTests(DispatchAPITestCase):
 
-    def _create_topic(self):
-        """Create a dummy topic instance"""
-
-        data = {
-            'name': 'testing topic'
-        }
-
-        url = reverse('api-topics-list')
-
-        return self.client.post(url, data, format='json')
-
     def test_create_topic_unauthorized(self):
-        """
-        Create topic should fail with unauthenticated request
-        """
+        """Create topic should fail with unauthenticated request"""
 
         # Clear authentication credentials
         self.client.credentials()
@@ -31,9 +21,7 @@ class TopicsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_empty_topic(self):
-        """
-        Create topic should fail with empty payload
-        """
+        """Create topic should fail with empty payload"""
 
         url = reverse('api-topics-list')
 
@@ -42,9 +30,7 @@ class TopicsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_incomplete_topic(self):
-        """
-        Create topic should fail with missing required fields
-        """
+        """Create topic should fail with missing required fields"""
 
         url = reverse('api-topics-list')
 
@@ -58,24 +44,17 @@ class TopicsTests(DispatchAPITestCase):
         self.assertTrue('name' in response.data)
 
     def test_create_topic(self):
-        """
-        Ensure that topic can be created
-        """
+        """Ensure that topic can be created"""
 
-        response = self._create_topic()
+        response = DispatchTestHelpers.create_topic(self.client, 'Test Topic')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Check data
-        self.assertEqual(response.data['name'], 'testing topic')
+        self.assertEqual(response.data['name'], 'Test Topic')
 
     def test_delete_topic_unauthorized(self):
-        """
-        Delete topic should fail with unauthenticated request
-        """
+        """Delete topic should fail with unauthenticated request"""
 
-        # Create an topic
-        topic = self._create_topic()
+        topic = DispatchTestHelpers.create_topic(self.client, 'Test Topic')
 
         # Clear authentication credentials
         self.client.credentials()
@@ -87,13 +66,10 @@ class TopicsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_topic(self):
-        """
-        Ensure that topic can be deleted
-        """
+        """Ensure that topic can be deleted"""
 
-        topic = self._create_topic()
+        topic = DispatchTestHelpers.create_topic(self.client, 'Test Topic')
 
-        # Generate detail URL
         url = reverse('api-topics-detail', args=[topic.data['id']])
 
         # Successful deletion should return 204
