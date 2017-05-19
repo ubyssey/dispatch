@@ -48,6 +48,27 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(widget_json['description']['data'], 'test description')
         self.assertEqual(widget_json['title']['data'], 'test title')
 
+    def test_widget_get_data(self):
+        """Ensure that get_data returns the correct data"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        widget = TestWidget()
+
+        widget.set_data({
+            'title': 'test title',
+            'description': 'test description',
+            'article': article.data['id'],
+            'image' : image_id
+        })
+
+        widget_data = widget.get_data()
+
+        self.assertEqual(widget_data, {'article': 1, 'image': 1, 'description': 'test description', 'title': 'test title'})
+
+
+
     def test_widget_render(self):
         """Ensure that render will return correct html strings"""
 
