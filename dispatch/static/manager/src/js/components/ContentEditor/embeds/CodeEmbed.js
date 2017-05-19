@@ -26,9 +26,17 @@ class CodeEmbedComponent extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      mode: 'html',
-      edit: true
+    if(this.props.data.embedValue){
+      this.state = {
+        mode: this.props.data.mode,
+        edit: false
+      }
+    }
+    else{
+      this.state = {
+        mode: 'html',
+        edit: true
+      }
     }
   }
 
@@ -40,14 +48,13 @@ class CodeEmbedComponent extends React.Component {
     this.setState({
       mode: mode
     })
+    this.props.updateField('mode',this.state.mode)
   }
 
-  insertCodeEmbed() {
+  previewCodeEmbed() {
     this.setState({
       edit: false
     })
-    this.props.updateField('mode', this.state.mode)
-//    this.props.stopEditing()
   }
 
   startEditing() {
@@ -55,8 +62,6 @@ class CodeEmbedComponent extends React.Component {
       edit: true
     })
   }
-
-
 
   renderEditor() {
     return (
@@ -73,7 +78,7 @@ class CodeEmbedComponent extends React.Component {
           editorProps={{$blockScrolling: true}}
         />
         <div className='o-embed--code_editor_button_container'>
-          <Button onClick={() => this.insertCodeEmbed()}>Insert</Button>
+          <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
           <div className='o-embed--code_editor_mode_select'>
             <SelectInput
               options={MODES}
@@ -99,9 +104,9 @@ class CodeEmbedComponent extends React.Component {
     )
   }
   render() {
-    console.log('props: ',this.props)
+    console.log('props: ',this.props.data)
     return(
-      <div className='o-embed'>
+      <div className='o-embed o-embed--code'>
         {this.state.edit ? this.renderEditor() : this.renderEmbed()}
       </div>
     )
