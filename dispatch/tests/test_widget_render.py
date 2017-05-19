@@ -8,12 +8,10 @@ from dispatch.apps.content.models import Article, Image
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-@register.zone
 class TestZone(Zone):
     id = 'test-zone'
     name = 'Test zone'
 
-@register.widget
 class TestWidget(Widget):
     id = 'test-widget'
     name = 'Test widget'
@@ -75,13 +73,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         """Rendering widgets with some of the data as None should not render the "None" data"""
 
         widget = TestWidget()
-
-        widget.set_data({})
-
-        data = widget.get_data() # The data isnt being deleted between tests. Even
-                                          # though "set_data" hasn't been called yet, the data
-                                          # remains from the previous call. Not sure how to change
-                                          # TODO: Fix for future @Peter
+        
         result = widget.render()
 
         html = u'<div class="widget">\n    \n    \n    \n    \n</div>\n'
@@ -106,7 +98,6 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_zone_render(self):
 
-        # TODO: fix register clearing issue
         register.zone(TestZone)
         register.widget(TestWidget)
 
