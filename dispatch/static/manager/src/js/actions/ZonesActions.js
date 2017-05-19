@@ -4,7 +4,7 @@ import DispatchAPI from '../api/dispatch'
 import * as types from '../constants/ActionTypes'
 import { zoneSchema, widgetSchema } from '../constants/Schemas'
 
-export function listZones(token) {
+export function list(token) {
   return {
     type: types.ZONES.LIST,
     payload: DispatchAPI.zones.list(token)
@@ -15,7 +15,7 @@ export function listZones(token) {
   }
 }
 
-export function getZone(token, zoneId) {
+export function get(token, zoneId) {
   return {
     type: types.ZONES.GET,
     payload: DispatchAPI.zones.get(token, zoneId)
@@ -25,7 +25,17 @@ export function getZone(token, zoneId) {
   }
 }
 
-export function saveZone(token, zoneId, data) {
+export function set(data) {
+  return {
+    type: types.ZONES.SET,
+    isLocalAction: true,
+    payload: {
+      data: normalize(data, zoneSchema)
+    }
+  }
+}
+
+export function save(token, zoneId, data) {
   return {
     type: types.ZONES.SAVE,
     payload: DispatchAPI.zones.save(token, zoneId, data)
@@ -35,13 +45,17 @@ export function saveZone(token, zoneId, data) {
   }
 }
 
-export function getZoneWidgets(token, zoneId) {
+export function listWidgets(token, zoneId) {
   return {
-    type: types.ZONES.WIDGETS,
+    type: types.ZONES.LIST_WIDGETS,
     payload: DispatchAPI.zones.widgets(token, zoneId)
+      .then(json => {
+        console.log(json)
+        return json
+      })
       .then(json => ({
-        count: json.count
-        data: normalize(json.results, arrayOf(zoneSchema))
+        count: json.count,
+        data: normalize(json.results, arrayOf(widgetSchema))
       }))
   }
 }
