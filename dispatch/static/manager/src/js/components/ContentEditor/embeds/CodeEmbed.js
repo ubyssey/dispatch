@@ -26,17 +26,8 @@ class CodeEmbedComponent extends React.Component {
 
   constructor(props) {
     super(props)
-    if(this.props.data.embedValue){
-      this.state = {
-        mode: this.props.data.mode,
-        edit: false
-      }
-    }
-    else{
-      this.state = {
-        mode: 'html',
-        edit: true
-      }
+    this.state = {
+      showEdit: true
     }
   }
 
@@ -45,21 +36,18 @@ class CodeEmbedComponent extends React.Component {
   }
 
   changeMode(mode) {
-    this.setState({
-      mode: mode
-    })
-    this.props.updateField('mode',this.state.mode)
+    this.props.updateField('mode',mode)
   }
 
   previewCodeEmbed() {
     this.setState({
-      edit: false
+      showEdit: false
     })
   }
 
   startEditing() {
     this.setState({
-      edit: true
+      showEdit: true
     })
   }
 
@@ -67,13 +55,14 @@ class CodeEmbedComponent extends React.Component {
     return (
       <div className='o-embed--code'>
         <AceEditor
-          mode={this.state.mode}
+          mode={this.props.data.mode}
           theme='chrome'
           width='100%'
           height='300px'
-          value={this.props.data.embedValue ? this.props.data.embedValue : DEFAULTVALUES[this.state.mode]}
+          value={this.props.data.embedValue}
+          defaultValue={this.props.data.embedValue ? this.props.data.embedValue : DEFAULTVALUES[this.props.data.mode]}
           showPrintMargin={false}
-          onChange={(value) => this.onCodeChange(value)}
+          onChange={(e) => this.onCodeChange(e)}
           className='o-embed--code_editor'
           editorProps={{$blockScrolling: true}}
         />
@@ -82,7 +71,7 @@ class CodeEmbedComponent extends React.Component {
           <div className='o-embed--code_editor_mode_select'>
             <SelectInput
               options={MODES}
-              selected={this.state.mode}
+              selected={this.props.data.mode}
               onChange={(e) => this.changeMode(e.target.value)}
             />
           </div>
@@ -104,10 +93,10 @@ class CodeEmbedComponent extends React.Component {
     )
   }
   render() {
-    console.log('props: ',this.props.data)
+    console.log('props: ',this.props)
     return(
       <div className='o-embed o-embed--code'>
-        {this.state.edit ? this.renderEditor() : this.renderEmbed()}
+        {this.state.showEdit ? this.renderEditor() : this.renderEmbed()}
       </div>
     )
   }
@@ -118,6 +107,6 @@ export default {
   component: CodeEmbedComponent,
   defaultData: {
     embedValue: '',
-    mode: ''
+    mode: 'html',
   }
 }
