@@ -5,15 +5,13 @@
 .c-form-input label.pt-label > .pt-input,
 .c-form-input label.pt-label > .pt-select,
 .c-form-input label.pt-label > .pt-button,
-.c-form-input label.pt-label > .pt-switch {
+.c-form-input label.pt-label > .pt-switch,
+.c-form-input label.pt-label > .c-input--multi-select {
   margin-top: 10px;
 }
 
 // Component: MultiSelectInput
 .c-input--multi-select {
-  // Structure
-  margin-top: 10px;
-
   .pt-popover {
     // Structure
     margin-bottom: 1rem;
