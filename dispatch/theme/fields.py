@@ -53,7 +53,7 @@ class ArticleField(Field):
 
     def validate(self, data):
         if self.many:
-            if not all([isinstance(id, int) for id in data]):
+            if (type(data) != list) or (not all([isinstance(id, int) for id in data])):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
@@ -98,7 +98,7 @@ class ImageField(Field):
 
     def validate(self, data):
         if self.many:
-            if not all( [isinstance(id, int) for id in data] ):
+            if (type(data) != list) or (not all([isinstance(id, int) for id in data])):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
