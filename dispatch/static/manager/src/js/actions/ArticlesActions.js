@@ -13,6 +13,7 @@ class ArticlesActions extends PublishableActions {
     if (data._content) {
       // Convert article contentState to JSON array
       data.content = ContentStateHelper.toJSON(data._content)
+      console.log('data content: ',data.content)
       delete data._content
     }
 
