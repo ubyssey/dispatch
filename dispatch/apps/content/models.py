@@ -115,6 +115,7 @@ class Publishable(Model):
                 if type(node) is dict:
                     # If node is a dictionary, append its rendered HTML.
                     data = node['data']
+                    print(data)
                     # If node is an ad, include section/id info for DFP
                     if node['type'] == 'advertisement':
                         data['id'] = len(html) % 1000
@@ -123,12 +124,20 @@ class Publishable(Model):
 
                     if node['type'] == 'paragraph':
                         html += "<p>%s</p>" % node['data']
+                    if node['type'] == 'code':
+                        if node.get('data',{}).get('mode',{}) == 'html':
+                            html += "<div>%s</div>" % node.get('data',{}).get('embedValue',{})
+                        if node.get('data',{}).get('mode',{}) == 'javascript':
+                            html += "<script>%s</script>" % node.get('data',{}).get('embedValue',{})
+
                     else:
                         pass
                         # TODO: Need to find better solution for this
                         # html += embedlib.render(node['type'], data)
                 else:
                     # If node isn't a dictionary, then it's assumed to be a paragraph.
+                    print('was paragraph')
+                    print(node)
                     html += "<p>%s</p>" % node
             return html
 
