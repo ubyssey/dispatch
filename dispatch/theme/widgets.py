@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.template import loader
 
 from dispatch.apps.frontend.models import Zone as ZoneModel
@@ -63,38 +65,45 @@ class Zone(object):
         """Delete widget data for this zone"""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
+class MetaWidget(type):
+    
+    @classmethod
+    def __prepare__(self, name, bases):
+        return OrderedDict()
+
+    def __new__(self, name, bases, classdict):
+
+        def prepare_fields():
+
+            def get_field(name, field):
+                field.name = name
+                return field
+
+            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+
+            return [get_field(name, field) for name, field in fields]
+
+        classdict['fields'] = prepare_fields()
+
+        return type.__new__(self, name, bases, classdict)
+
 class Widget(object):
+
+    __metaclass__ = MetaWidget
 
     def __init__(self):
         self.data = {}
 
-    @property
-    def fields(self):
-        """Return list of fields defined on this widget"""
-
-        def get_field(name):
-            field = getattr(self, name)
-            field.name = name
-            return field
-
-        fields = filter(lambda a: a != 'fields' and isinstance(getattr(self, a), Field), dir(self))
-
-        return [get_field(f) for f in fields]
-
     def set_data(self, data):
         """Sets data for each field"""
-
         self.data = data
-
-        for field in self.fields:
-            field.set_data(data.get(field.name))
 
     def get_data(self):
         """Returns data from each field"""
         result = {}
 
         for field in self.fields:
-            result[field.name] = field.data
+            result[field.name] = self.data.get(field.name)
 
         return result
 
@@ -104,7 +113,7 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            result[field.name] = field.to_json()
+            result[field.name] = field.to_json(self.data.get(field.name))
 
         return result
 
@@ -114,8 +123,9 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            if field.data:
-                result[field.name] = field.prepare_data()
+            data = self.data.get(field.name)
+            if data:
+                result[field.name] = field.prepare_data(data)
             else:
                 result[field.name] = None
 
