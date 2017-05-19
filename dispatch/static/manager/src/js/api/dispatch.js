@@ -235,10 +235,10 @@ const DispatchAPI = {
   },
   persons: {
     list: (token, query) => {
-      return getRequest('people', null, query, token)
+      return getRequest('persons', null, query, token)
     },
     create: (token, fullName) => {
-      return postRequest('people', null, {full_name: fullName}, token)
+      return postRequest('persons', null, {full_name: fullName}, token)
     }
   },
   topics: {

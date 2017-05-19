@@ -42,7 +42,7 @@ export const ZONES = actionTypes('ZONES', [
   'LIST',
   'GET',
   'SAVE',
-  'WIDGETS',
+  'LIST_WIDGETS',
   'SET'
 ])
 
