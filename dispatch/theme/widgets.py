@@ -83,18 +83,14 @@ class Widget(object):
 
     def set_data(self, data):
         """Sets data for each field"""
-
         self.data = data
-
-        for field in self.fields:
-            field.set_data(data.get(field.name))
 
     def get_data(self):
         """Returns data from each field"""
         result = {}
 
         for field in self.fields:
-            result[field.name] = field.data
+            result[field.name] = self.data.get(field.name)
 
         return result
 
@@ -104,7 +100,7 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            result[field.name] = field.to_json()
+            result[field.name] = field.to_json(self.data.get(field.name))
 
         return result
 
@@ -114,8 +110,9 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            if field.data:
-                result[field.name] = field.prepare_data()
+            data = self.data.get(field.name)
+            if data:
+                result[field.name] = field.prepare_data(data)
             else:
                 result[field.name] = None
 

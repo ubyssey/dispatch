@@ -10,57 +10,53 @@ class Field(object):
         self.many = many
 
         if not isinstance(self.label, basestring):
-            raise InvalidField("label must be a string")
+            raise InvalidField('Label must be a string')
 
-    def validate(self):
+    def validate(self, data):
         """Validates the field data"""
         raise NotImplementedError
 
-    def set_data(self, data):
-        """Assigns data to this instance of the field"""
-        self.data = data
-
-    def to_json(self):
+    def to_json(self, data):
         """Returns JSON representation of field data"""
         return {
             'label' : self.label,
-            'data' : self.data
+            'data' : data
         }
 
-    def prepare_data(self):
+    def prepare_data(self, data):
         """Prepares field data for use in a template"""
-        return self.data
+        return data
 
 class CharField(Field):
 
     type = 'char'
 
-    def validate(self):
+    def validate(self, data):
 
-        if not isinstance(self.data, basestring):
+        if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
-        elif len(self.data) > 255:
+        elif len(data) > 255:
             raise InvalidField('Max length for charfield data is 255')
 
 class TextField(Field):
 
     type = 'text'
 
-    def validate(self):
-        if not isinstance(self.data, basestring):
+    def validate(self, data):
+        if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
 class ArticleField(Field):
 
     type = 'article'
 
-    def validate(self):
+    def validate(self, data):
         if self.many:
-            if not all( [isinstance(id, int) for id in self.data] ):
+            if not all([isinstance(id, int) for id in data]):
                 raise InvalidField('Data must be list of integers')
         else:
-            if not isinstance(self.data, int):
+            if not isinstance(data, int):
                 raise InvalidField('Data must be an integer')
 
     def get_article(self, id):
@@ -74,38 +70,38 @@ class ArticleField(Field):
         serializer = ArticleSerializer(article)
         return serializer.data
 
-    def to_json(self):
+    def to_json(self, data):
 
         def get_data():
-            if not self.data:
+            if not data:
                 return
 
             if self.many:
-                return map(self.get_article_json, self.data)
+                return map(self.get_article_json, data)
             else:
-                return self.get_article_json(self.data)
+                return self.get_article_json(data)
 
         return {
             'label': self.label,
             'data': get_data()
         }
 
-    def prepare_data(self):
+    def prepare_data(self, data):
         if self.many:
-            return map(self.get_article, self.data)
+            return map(self.get_article, data)
         else:
-            return self.get_article(self.data)
+            return self.get_article(data)
 
 class ImageField(Field):
 
     type = 'image'
 
-    def validate(self):
+    def validate(self, data):
         if self.many:
-            if not all( [isinstance(id, int) for id in self.data] ):
+            if not all( [isinstance(id, int) for id in data] ):
                 raise InvalidField('Data must be list of integers')
         else:
-            if not isinstance(self.data, int):
+            if not isinstance(data, int):
                 raise InvalidField('Data must be an integer')
 
     def get_image(self, id):
@@ -119,24 +115,24 @@ class ImageField(Field):
         serializer = ImageSerializer(image)
         return serializer.data
 
-    def to_json(self):
+    def to_json(self, data):
 
         def get_data():
-            if not self.data:
+            if not data:
                 return
 
             if self.many:
-                return map(self.get_image_json, self.data)
+                return map(self.get_image_json, data)
             else:
-                return self.get_image_json(self.data)
+                return self.get_image_json(data)
 
         return {
             'label': self.label,
             'data': get_data()
         }
 
-    def prepare_data(self):
+    def prepare_data(self, data):
         if self.many:
-            return map(self.get_image, self.data)
+            return map(self.get_image, data)
         else:
-            return self.get_image(self.data)
+            return self.get_image(data)
