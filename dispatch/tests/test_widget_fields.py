@@ -1,7 +1,8 @@
-from dispatch.apps.content.models import Image
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, InvalidField
+from dispatch.apps.content.models import Article, Image
+from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, Field
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
+from dispatch.theme.exceptions import InvalidField
 
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -9,15 +10,16 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Should be able to initialize charfield and set data"""
 
         testfield = CharField('Title')
-        testfield.set_data('This is a sentence')
+
+        data = 'This is a sentence'
 
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        self.assertEqual(testfield.to_json(), {'label' : 'Title', 'data': 'This is a sentence'})
-        self.assertEqual(testfield.prepare_data(), 'This is a sentence')
+        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data': 'This is a sentence'})
+        self.assertEqual(testfield.prepare_data(data), 'This is a sentence')
 
     def test_char_field_invalid_label(self):
         """Initilaizing with invalid data should raise an error"""
@@ -32,10 +34,9 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Setting CharField data to something to a number should raise InvalidField"""
 
         testfield = CharField('Title')
-        testfield.set_data(6) 
 
         try:
-            testfield.validate()
+            testfield.validate(6)
             self.fail('Setting CharField data to a number should raise InvalidField')
         except InvalidField:
             pass
@@ -48,10 +49,8 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         # 256 charecters
         data = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus metus et ultrices vehicula. Phasellus placerat, mi sed posuere elementum, nisl nisi condimentum odio, sit amet facilisis sem sapien et ligula. Phasellus vel sagittis mi. Morbi nullam.'
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
             self.fail('Should fail with InvalidField')
         except InvalidField:
             pass
@@ -60,24 +59,24 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Should be able to initialize charfield and set data"""
 
         testfield = TextField('Title')
-        testfield.set_data('This is a longer sentence than the one further up\nthis file')
+
+        data = 'This is a longer sentence than the one further up\nthis file'
 
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        self.assertEqual(testfield.to_json()['data'], 'This is a longer sentence than the one further up\nthis file')
-        self.assertEqual(testfield.prepare_data(), 'This is a longer sentence than the one further up\nthis file')
+        self.assertEqual(testfield.to_json(data)['data'], 'This is a longer sentence than the one further up\nthis file')
+        self.assertEqual(testfield.prepare_data(data), 'This is a longer sentence than the one further up\nthis file')
 
     def test_text_field_invalid_data(self):
         """Setting TextField data to something to a number should raise InvalidField"""
 
         testfield = TextField('Title')
-        testfield.set_data(6)
 
         try:
-            testfield.validate()
+            testfield.validate(6)
             self.fail('Setting TextField data to a number should raise InvalidField')
         except InvalidField:
             pass
@@ -92,14 +91,12 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [article_1.data['id'], article_2.data['id']]
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json()
+        json = testfield.to_json(data)
 
         # Test some example entries
         self.assertEqual(json['label'], 'Title')
@@ -117,14 +114,12 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = article.data['id']
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json()
+        json = testfield.to_json(data)
 
         # Test some example entries
         self.assertEqual(json['label'], 'Title')
@@ -141,14 +136,12 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [article_1.data['id'], article_2.data['id']]
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        result = testfield.prepare_data()
+        result = testfield.prepare_data(data)
 
         self.assertEqual(result[0].title, article_1.data['headline'])
         self.assertEqual(result[1].title, article_2.data['headline'])
@@ -163,13 +156,49 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [article_1.data['id'], article_2.data['id']]
 
-        testfield.set_data(data)
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_article_singular_data(self):
+        """Test the case where ArticleField is initialized with many, but given 1 piece of data"""
+
+        testfield = ArticleField('Title', many=True)
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Test headline 1', slug='test-article-1')
+
+        data = article_1.data['id']
 
         try:
-            testfield.validate()
+            testfield.validate(data)
             self.fail('Field data is invalid, exception should have been thrown')
-        except :
+        except InvalidField:
             pass
+
+    def test_article_doesnt_exist(self):
+        """Test the case where an article id for an article that doesn't exist is passed as data"""
+
+        testfield = ArticleField('Title')
+
+        id = -1
+
+        try:
+            testfield.get_article(id)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except Article.DoesNotExist:
+            pass
+
+    def test_article_to_json_no_data(self):
+        """Passing data=None to to_json returns None"""
+
+        testfield = ArticleField('Title')
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
+
 
     def test_image_field(self):
         """Should be able to create image field"""
@@ -181,14 +210,12 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [image_id_1, image_id_2]
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json()
+        json = testfield.to_json(data)
 
         image_1 = Image.objects.get(pk=image_id_1)
         image_2 = Image.objects.get(pk=image_id_2)
@@ -207,14 +234,12 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         image_id = DispatchTestHelpers.upload_image(self.client)
 
-        testfield.set_data(image_id)
-
         try:
-            testfield.validate()
+            testfield.validate(image_id)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json()
+        json = testfield.to_json(image_id)
 
         image = Image.objects.get(pk=image_id)
 
@@ -233,17 +258,15 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [image_id_1, image_id_2]
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
         image_1 = Image.objects.get(pk=image_id_1)
         image_2 = Image.objects.get(pk=image_id_2)
 
-        result = testfield.prepare_data()
+        result = testfield.prepare_data(data)
 
         self.assertEqual(result[0].filename(), image_1.filename())
         self.assertEqual(result[1].filename(), image_2.filename())
@@ -258,10 +281,57 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = [image_id_1, image_id_2]
 
-        testfield.set_data(data)
-
         try:
-            testfield.validate()
+            testfield.validate(data)
             self.fail('Field data is invalid, exception should have been thrown')
         except:
             pass
+
+    def test_not_implemented_validated_method(self):
+        """Tests that not writing a validate method for a new field raises an error"""
+
+        testfield = Field('Test Label')
+
+        data = 'Test Data'
+
+        try:
+            testfield.validate(data)
+            self.fail('Code should have failed with NotImplementedError')
+        except NotImplementedError:
+            pass
+
+    def test_image_singular_data(self):
+        """Test the case where ArticleField is initialized with many, but given 1 piece of data"""
+
+        testfield = ImageField('Title', many=True)
+
+        image_id_1 = DispatchTestHelpers.upload_image(self.client)
+
+        data = image_id_1
+
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_image_doesnt_exist(self):
+        """Test the case where an image id is passed for an image that doesnt exist"""
+
+        testfield = ImageField('Title')
+
+        id = 1
+
+        try:
+            testfield.get_image(id)
+        except Image.DoesNotExist:
+            pass
+
+    def test_image_none_data_to_json(self):
+        """Test the case where None data is passed to 'to_json' """
+
+        testfield = ImageField('Title')
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})

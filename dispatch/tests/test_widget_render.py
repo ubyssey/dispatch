@@ -1,3 +1,4 @@
+from django.template import loader
 
 from dispatch.theme import register
 from dispatch.theme.widgets import Zone, Widget
@@ -7,12 +8,10 @@ from dispatch.apps.content.models import Article, Image
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-@register.zone
 class TestZone(Zone):
     id = 'test-zone'
     name = 'Test zone'
 
-@register.widget
 class TestWidget(Widget):
     id = 'test-widget'
     name = 'Test widget'
@@ -21,7 +20,7 @@ class TestWidget(Widget):
     zones = [TestZone]
 
     title = CharField('Title')
-    description  = TextField('Description')
+    description = TextField('Description')
     article = ArticleField('Featured article')
     image = ImageField('Featured image')
 
@@ -49,6 +48,27 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(widget_json['description']['data'], 'test description')
         self.assertEqual(widget_json['title']['data'], 'test title')
 
+    def test_widget_get_data(self):
+        """Ensure that get_data returns the correct data"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        widget = TestWidget()
+
+        widget.set_data({
+            'title': 'test title',
+            'description': 'test description',
+            'article': article.data['id'],
+            'image' : image_id
+        })
+
+        widget_data = widget.get_data()
+
+        self.assertEqual(widget_data, {'article': 1, 'image': 1, 'description': 'test description', 'title': 'test title'})
+
+
+
     def test_widget_render(self):
         """Ensure that render will return correct html strings"""
 
@@ -70,25 +90,17 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(widget_render, html)
 
-    # Render widget that doesnt have data assigned
     def test_widget_render_no_data(self):
         """Rendering widgets with some of the data as None should not render the "None" data"""
 
         widget = TestWidget()
 
-        widget.set_data({})
-
-        data = widget.get_data() # The data isnt being deleted between tests. Even
-                                          # though "set_data" hasn't been called yet, the data
-                                          # remains from the previous call. Not sure how to change
-                                          # TODO: Fix for future @Peter
         result = widget.render()
 
         html = u'<div class="widget">\n    \n    \n    \n    \n</div>\n'
 
         self.assertEqual(result, html)
 
-    # article/image field empty
     def test_widget_article_image_field_empty(self):
         """Article or image field should be filled"""
 
@@ -103,4 +115,30 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    \n    \n</div>\n'
 
         result = widget.render()
+        self.assertEqual(result, html)
+
+    def test_zone_render(self):
+
+        register.zone(TestZone)
+        register.widget(TestWidget)
+
+        zone = TestZone()
+        widget = TestWidget()
+
+        validated_data = {
+            'id': 'test-widget',
+            'data': {
+              'title': 'test title 1',
+              'description': 'test description'
+            }
+        }
+
+        zone.save(validated_data)
+
+        template = loader.get_template('widgets/zones.html')
+
+        result = template.render()
+
+        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n</div>\n\n</div>\n'
+
         self.assertEqual(result, html)
