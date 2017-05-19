@@ -1,7 +1,8 @@
-from dispatch.apps.content.models import Image
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, InvalidField
+from dispatch.apps.content.models import Article, Image
+from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, Field
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
+from dispatch.theme.exceptions import InvalidField
 
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -158,8 +159,46 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         try:
             testfield.validate(data)
             self.fail('Field data is invalid, exception should have been thrown')
-        except :
+        except InvalidField:
             pass
+
+    def test_article_singular_data(self):
+        """Test the case where ArticleField is initialized with many, but given 1 piece of data"""
+
+        testfield = ArticleField('Title', many=True)
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Test headline 1', slug='test-article-1')
+
+        data = article_1.data['id']
+
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_article_doesnt_exist(self):
+        """Test the case where an article id for an article that doesn't exist is passed as data"""
+
+        testfield = ArticleField('Title')
+
+        id = -1
+
+        try:
+            testfield.get_article(id)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except Article.DoesNotExist:
+            pass
+
+    def test_article_to_json_no_data(self):
+        """Passing data=None to to_json returns None"""
+
+        testfield = ArticleField('Title')
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
+
 
     def test_image_field(self):
         """Should be able to create image field"""
@@ -247,3 +286,52 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
             self.fail('Field data is invalid, exception should have been thrown')
         except:
             pass
+
+    def test_not_implemented_validated_method(self):
+        """Tests that not writing a validate method for a new field raises an error"""
+
+        testfield = Field('Test Label')
+
+        data = 'Test Data'
+
+        try:
+            testfield.validate(data)
+            self.fail('Code should have failed with NotImplementedError')
+        except NotImplementedError:
+            pass
+
+    def test_image_singular_data(self):
+        """Test the case where ArticleField is initialized with many, but given 1 piece of data"""
+
+        testfield = ImageField('Title', many=True)
+
+        image_id_1 = DispatchTestHelpers.upload_image(self.client)
+
+        data = image_id_1
+
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_image_doesnt_exist(self):
+        """Test the case where an image id is passed for an image that doesnt exist"""
+
+        testfield = ImageField('Title')
+
+        id = 1
+
+        try:
+            testfield.get_image(id)
+        except Image.DoesNotExist:
+            pass
+
+    def test_image_none_data_to_json(self):
+        """Test the case where None data is passed to 'to_json' """
+
+        testfield = ImageField('Title')
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
