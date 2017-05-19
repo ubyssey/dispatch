@@ -20,7 +20,7 @@ class TestWidget(Widget):
     zones = [TestZone]
 
     title = CharField('Title')
-    description  = TextField('Description')
+    description = TextField('Description')
     article = ArticleField('Featured article')
     image = ImageField('Featured image')
 
@@ -73,7 +73,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         """Rendering widgets with some of the data as None should not render the "None" data"""
 
         widget = TestWidget()
-        
+
         result = widget.render()
 
         html = u'<div class="widget">\n    \n    \n    \n    \n</div>\n'
