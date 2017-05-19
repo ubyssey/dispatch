@@ -6,9 +6,11 @@ import DocumentTitle from 'react-document-title'
 import * as zonesActions from '../../actions/ZonesActions'
 
 import ListItemToolbar from '../ItemEditor/ListItemToolbar'
-import WidgetField from './WidgetField'
 
-import WidgetSelectInput from '../inputs/WidgetSelectInput'
+import Panel from '../Panel'
+
+import WidgetField from './WidgetField'
+import WidgetSelector from './WidgetSelector'
 
 class ZoneEditorComponent extends React.Component {
 
@@ -55,12 +57,16 @@ class ZoneEditorComponent extends React.Component {
             type='Zone'
             saveListItem={() => this.saveZone()}
             goBack={this.props.goBack} />
-          <div className='u-container u-container--padded'>
-            <WidgetSelectInput
-              zoneId={this.props.zoneId}
-              selected={this.props.zone.widget}
-              update={widget => this.updateWidget(widget)} />
+          <div className='u-container-body'>
+            <Panel title='Widget'>
+              <WidgetSelector
+                zoneId={this.props.zoneId}
+                selected={this.props.zone.widget}
+                update={widget => this.updateWidget(widget)} />
+            </Panel>
+            <Panel title='Fields'>
             {fields}
+            </Panel>
           </div>
         </div>
       </DocumentTitle>
