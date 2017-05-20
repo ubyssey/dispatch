@@ -1,8 +1,26 @@
 from dispatch.apps.content.models import Article, Image
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, Field
+from dispatch.theme import register
+from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, WidgetField, Field
+from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.theme.exceptions import InvalidField
+
+class TestZone(Zone):
+    id = 'test-zone'
+    name = 'Test zone'
+
+class TestWidget(Widget):
+    id = 'test-widget'
+    name = 'Test widget'
+    template = 'widgets/test-widget.html'
+
+    zones = [TestZone]
+
+    title = CharField('Title')
+    description = TextField('Description')
+    article = ArticleField('Featured article')
+    image = ImageField('Featured image')
 
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -335,3 +353,36 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         data = None
 
         self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
+
+    def test_widget_field_initialization(self):
+        """Should be able to initialize a new WidgetField"""
+
+        # Create article and image for testing
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        testwidget = TestWidget()
+
+        testwidget.set_data({
+            'title': 'test title',
+            'description': 'test description',
+            'article': article.data['id'],
+            'image' : image_id
+        })
+
+        registery = register.widget(testwidget) # Test Widget is now registered
+
+        print registery
+
+        widget_id = testwidget.id
+
+        # a test Widget is now initialized, initilize a widget field to put the test Widget in
+        testfield = WidgetField('Title')
+
+        try:
+            testfield.validate(widget_id)
+        except InvalidField:
+            raise InvalidField('Widget with id %s does not exist' % widget_id)
+
+        json = testfield.get_widget(widget_id)
+        print json
