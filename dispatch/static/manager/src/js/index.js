@@ -69,7 +69,6 @@ render((
 
           <Route path='components' component={Pages.Components} />
           <Route path='files' component={Pages.Files} />
-          <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
 
           <Route path='integrations' component={Pages.Integrations.Index}>
@@ -86,6 +85,12 @@ render((
             <IndexRoute component={Pages.Topics.Index} />
             <Route path='new' component={Pages.Topics.NewTopic} />
             <Route path=':topicId' component={Pages.Topics.Topic} />
+          </Route>
+
+          <Route path='persons'>
+            <IndexRoute component={Pages.Persons.Index} />
+            <Route path='new' component={Pages.Persons.NewPerson} />
+            <Route path=':personId' component={Pages.Persons.Person} />
           </Route>
 
         </Route>
