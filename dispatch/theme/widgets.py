@@ -25,7 +25,8 @@ class Zone(object):
     def _load_zone(self):
         try:
             self._zone = ZoneModel.objects.get(zone_id=self.id)
-            self._widget = widget = ThemeManager.Widgets.get(self._zone.widget_id)
+            self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
+            self._widget.set_data(self._zone.data)
             self._is_loaded = True
         except ZoneModel.DoesNotExist:
             pass
@@ -35,10 +36,10 @@ class Zone(object):
         if not self._is_loaded:
             self._load_zone()
 
-        if not self._zone:
+        if not self._zone or not self._widget:
             return None
 
-        return self._zone.data
+        return self._widget.to_json()
 
     @property
     def widget(self):
