@@ -63,6 +63,8 @@ render((
 
           <Route path='pages'>
             <IndexRoute component={Pages.Pages.Index} />
+            <Route path='new' component={Pages.Pages.New} />
+            <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
           <Route path='components' component={Pages.Components} />
