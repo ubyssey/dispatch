@@ -1,6 +1,9 @@
-from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer
+from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.apps.content.models import Article, Image
-from dispatch.theme.exceptions import InvalidField
+from dispatch.theme.exceptions import InvalidField, WidgetNotFound
+from dispatch.theme import ThemeManager
+
+
 
 class Field(object):
     """Base class for all widget fields"""
@@ -119,7 +122,7 @@ class ImageField(Field):
 
         def get_data():
             if not data:
-                return
+                return None
 
             if self.many:
                 return map(self.get_image_json, data)
@@ -136,3 +139,42 @@ class ImageField(Field):
             return map(self.get_image, data)
         else:
             return self.get_image(data)
+
+class WidgetField(Field):
+
+    type = 'widget'
+
+    def validate(self, data):
+
+        if not isinstance(data, basestring):
+            raise InvalidField('Data must be a string')
+
+    def get_widget(self, id):
+        try:
+            return ThemeManager.Widgets.get(id)
+        except WidgetNotFound:
+            raise WidgetNotFound('Widget with id %s does not exist' % id)
+
+    def get_widget_json(self, data):
+        widget = self.get_widget(data['id'])
+        widget.set_data(data['data'])
+        serializer = WidgetSerializer(widget)
+        return serializer.data
+
+    def to_json(self, data):
+
+        def get_data():
+            if not data:
+                return None
+
+            return self.get_widget_json(data)
+
+        return {
+            'label': self.label,
+            'data': get_data()
+        }
+
+    def prepare_data(self, data):
+        widget = self.get_widget(data['id'])
+        widget.set_data(data['data'])
+        return widget
