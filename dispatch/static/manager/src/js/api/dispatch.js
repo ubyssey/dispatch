@@ -94,7 +94,6 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: payload
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -117,6 +116,18 @@ function patchRequest(route, id=null, payload={}, token=null) {
       method: 'PATCH',
       headers: buildHeaders(token),
       body: JSON.stringify(payload)
+    }
+  )
+  .then(parseJSON)
+}
+
+function patchMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token, false),
+      body: payload
     }
   )
   .then(parseJSON)
@@ -235,11 +246,20 @@ const DispatchAPI = {
   },
   persons: {
     list: (token, query) => {
-      return getRequest('people', null, query, token)
+      return getRequest('persons', null, query, token)
     },
-    create: (token, fullName) => {
-      return postRequest('people', null, {full_name: fullName}, token)
-    }
+    get: (token, personId) => {
+      return getRequest('persons', personId, null, token)
+    },
+    save: (token, personId, data) => {
+      return patchMultipartRequest('persons', personId, data, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('persons', null, data, token)
+    },
+    delete: (token, personId) => {
+      return deleteRequest('persons', personId, null, token)
+    },
   },
   topics: {
     list: (token, query) => {
