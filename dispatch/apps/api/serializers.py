@@ -419,6 +419,7 @@ class FieldSerializer(serializers.Serializer):
     type = serializers.CharField()
     name = serializers.CharField()
     label = serializers.CharField()
+    many = serializers.BooleanField()
 
 class WidgetSerializer(serializers.Serializer):
 
