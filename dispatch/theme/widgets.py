@@ -17,19 +17,34 @@ class Zone(object):
 
     __metaclass__ = MetaZone
 
+    def __init__(self):
+        self._is_loaded = False
+        self._zone = None
+        self._widget = None
+
+    def _load_zone(self):
+        try:
+            self._zone = ZoneModel.objects.get(zone_id=self.id)
+            self._widget = widget = ThemeManager.Widgets.get(self._zone.widget_id)
+            self._is_loaded = True
+        except ZoneModel.DoesNotExist:
+            pass
+
+    @property
+    def data(self):
+        if not self._is_loaded:
+            self._load_zone()
+
+        if not self._zone:
+            return None
+
+        return self._zone.data
+
     @property
     def widget(self):
 
-        if not self._widget:
-            try:
-                zone = ZoneModel.objects.get(zone_id=self.id)
-
-                widget = ThemeManager.Widgets.get(zone.widget_id)
-                widget.set_data(zone.data)
-
-                self._widget = widget
-            except ZoneModel.DoesNotExist:
-                pass
+        if not self._is_loaded:
+            self._load_zone()
 
         return self._widget
 
@@ -51,13 +66,10 @@ class Zone(object):
     def save(self, validated_data):
         """Save widget data for this zone"""
 
-        widget = ThemeManager.Widgets.get(validated_data['id'])
-        widget.set_data(validated_data['data'])
-
         (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
 
-        zone.widget_id = widget.id
-        zone.data = widget.data
+        zone.widget_id = validated_data['widget']
+        zone.data = validated_data['data']
 
         return zone.save()
 
@@ -66,7 +78,7 @@ class Zone(object):
         ZoneModel.objects.get(zone_id=self.id).delete()
 
 class MetaWidget(type):
-    
+
     @classmethod
     def __prepare__(self, name, bases):
         return OrderedDict()
