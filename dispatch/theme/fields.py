@@ -9,6 +9,11 @@ class Field(object):
         self.label = label
         self.many = many
 
+        if self.many:
+            self.default = []
+        else:
+            self.default = None
+
         if not isinstance(self.label, basestring):
             raise InvalidField('Label must be a string')
 
@@ -53,7 +58,7 @@ class ArticleField(Field):
 
     def validate(self, data):
         if self.many:
-            if (type(data) != list) or (not all([isinstance(id, int) for id in data])):
+            if not all([isinstance(id, int) for id in data]):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
@@ -74,7 +79,7 @@ class ArticleField(Field):
 
         def get_data():
             if not data:
-                return
+                return self.default
 
             if self.many:
                 return map(self.get_article_json, data)
@@ -87,6 +92,9 @@ class ArticleField(Field):
         }
 
     def prepare_data(self, data):
+        if not data:
+            return self.default
+
         if self.many:
             return map(self.get_article, data)
         else:
@@ -98,7 +106,7 @@ class ImageField(Field):
 
     def validate(self, data):
         if self.many:
-            if (type(data) != list) or (not all([isinstance(id, int) for id in data])):
+            if not all( [isinstance(id, int) for id in data] ):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
