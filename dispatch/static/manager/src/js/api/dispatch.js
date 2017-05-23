@@ -94,7 +94,6 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: payload
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -131,7 +130,6 @@ function patchMultipartRequest(route, id=null, payload={}, token=null) {
       body: payload
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 

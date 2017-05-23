@@ -48,3 +48,8 @@ $person-form-dropzone-inset-shadow-spread: 5px;
 .c-person-form__image__dropzone__text {
   padding: $person-form-dropzone-padding;
 }
+
+.c-person-form__image__error {
+  margin-top: $person-form-image-area-v-padding;
+  font-weight: 600;
+}
