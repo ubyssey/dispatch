@@ -1,5 +1,4 @@
 import React from 'react'
-import R from 'ramda'
 import { connect } from 'react-redux'
 
 import MultiSelectInput from './MultiSelectInput'
@@ -9,7 +8,7 @@ import * as zonesActions from '../../actions/ZonesActions'
 class WidgetSelectInputComponent extends React.Component {
 
   addWidget(widgetId) {
-    this.props.update(this.props.entities.widgets[widgetId])
+    this.props.update(widgetId)
   }
 
   removeWidget() {
@@ -27,17 +26,11 @@ class WidgetSelectInputComponent extends React.Component {
   }
 
   render() {
-
-    const entities = R.merge(
-      this.props.entities.widgets,
-      R.assoc(this.props.selected.id, this.props.selected, {})
-    )
-
     return (
       <MultiSelectInput
-        selected={this.props.selected.id ? [this.props.selected.id] : []}
+        selected={this.props.selected ? [this.props.selected] : []}
         results={this.props.widgets.ids}
-        entities={entities}
+        entities={this.props.entities.widgets}
         addValue={(id) => this.addWidget(id)}
         removeValue={(id) => this.removeWidget(id)}
         fetchResults={(query) => this.listWidgets(query)}

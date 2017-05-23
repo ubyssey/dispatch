@@ -19,16 +19,15 @@ class ZoneEditorComponent extends React.Component {
   }
 
   updateField(name, data) {
-    let zone = this.props.zone
-    zone.widget.data = R.assoc(name, data, zone.widget.data)
-    this.props.setZone(zone)
+    this.props.setZone(
+      R.assoc('data', R.assoc(name, data, this.props.zone.data), this.props.zone)
+    )
   }
 
-  updateWidget(widget) {
-    let zone = this.props.zone
-    widget.data = {}
-    zone.widget = widget
-    this.props.setZone(zone)
+  updateWidget(widgetId) {
+    this.props.setZone(
+      R.assoc('widget', widgetId, this.props.zone)
+    )
   }
 
   saveZone() {
@@ -41,11 +40,11 @@ class ZoneEditorComponent extends React.Component {
       return (<div>Loading</div>)
     }
 
-    const fields = this.props.zone.widget ? this.props.zone.widget.fields.map((field) => (
+    const fields = this.props.widget ? this.props.widget.fields.map((field) => (
       <WidgetField
         key={field.name}
         field={field}
-        data={this.props.zone.widget.data[field.name] || null}
+        data={this.props.zone.data[field.name] || null}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
@@ -62,7 +61,7 @@ class ZoneEditorComponent extends React.Component {
               <WidgetSelector
                 zoneId={this.props.zoneId}
                 selected={this.props.zone.widget}
-                update={widget => this.updateWidget(widget)} />
+                update={widgetId => this.updateWidget(widgetId)} />
             </Panel>
             <Panel title='Fields'>
             {fields}
@@ -75,8 +74,12 @@ class ZoneEditorComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const zone = state.app.entities.local.zones[state.app.zones.single.id]
+  const widget = zone ? state.app.entities.widgets[zone.widget] : null
+
   return {
-    zone: state.app.entities.local.zones[state.app.zones.single.id],
+    zone: zone,
+    widget: widget,
     token: state.app.auth.token
   }
 }
