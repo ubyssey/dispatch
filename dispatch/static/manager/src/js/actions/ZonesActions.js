@@ -1,8 +1,68 @@
+import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 
 import DispatchAPI from '../api/dispatch'
 import * as types from '../constants/ActionTypes'
-import { zoneSchema, widgetSchema } from '../constants/Schemas'
+import { zoneSchema, widgetSchema, articleSchema } from '../constants/Schemas'
+
+function normalizeZoneData(field, data) {
+  switch (field.type) {
+  case 'article':
+    return field.many ? normalize(data, arrayOf(articleSchema)) : normalize(data, articleSchema)
+  default:
+    return {
+      result: data,
+      entities: {}
+    }
+  }
+}
+
+function normalizeZone(zone) {
+
+  const fields = R.path(['widget', 'fields'], zone) || []
+
+  let fieldEntities = {}
+
+  fields.forEach(field => {
+    const normalizedData = normalizeZoneData(field, zone.data[field.name])
+
+    fieldEntities = R.mergeWith(
+      R.merge,
+      fieldEntities,
+      normalizedData.entities
+    )
+
+    zone.data[field.name] = normalizedData.result
+  })
+
+  let result = normalize(zone, zoneSchema)
+
+  result.entities = R.merge(result.entities, fieldEntities)
+
+  return result
+}
+
+function normalizeZones(zones) {
+
+  let results = []
+  let entities = {}
+
+  zones.forEach(zone => {
+    const normalizedData = normalizeZone(zone)
+    results.push(normalizedData.result)
+
+    entities = R.mergeWith(
+      R.merge,
+      entities,
+      normalizedData.entities
+    )
+  })
+
+  return {
+    result: results,
+    entities: entities
+  }
+}
 
 export function list(token) {
   return {
@@ -10,7 +70,7 @@ export function list(token) {
     payload: DispatchAPI.zones.list(token)
       .then(json => ({
         count: json.count,
-        data: normalize(json.results, arrayOf(zoneSchema))
+        data: normalizeZones(json.results)
       }))
   }
 }
@@ -20,7 +80,7 @@ export function get(token, zoneId) {
     type: types.ZONES.GET,
     payload: DispatchAPI.zones.get(token, zoneId)
       .then(json => ({
-        data: normalize(json, zoneSchema)
+        data: normalizeZone(json)
       }))
   }
 }
@@ -50,7 +110,6 @@ export function listWidgets(token, zoneId) {
     type: types.ZONES.LIST_WIDGETS,
     payload: DispatchAPI.zones.widgets(token, zoneId)
       .then(json => {
-        console.log(json)
         return json
       })
       .then(json => ({
