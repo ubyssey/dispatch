@@ -1,4 +1,4 @@
-from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer
+from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.apps.content.models import Article, Image
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme import ThemeManager
@@ -155,8 +155,9 @@ class WidgetField(Field):
         except WidgetNotFound:
             raise WidgetNotFound('Widget with id %s does not exist' % id)
 
-    def get_widget_json(self, id):
-        widget = self.get_widget(id)
+    def get_widget_json(self, data):
+        widget = self.get_widget(data['id'])
+        widget.set_data(data['data'])
         serializer = WidgetSerializer(widget)
         return serializer.data
 
@@ -166,10 +167,7 @@ class WidgetField(Field):
             if not data:
                 return None
 
-            if self.many:
-                return map(self.get_widget_json, data)
-            else:
-                return self.get_widget_json(data)
+            return self.get_widget_json(data)
 
         return {
             'label': self.label,
@@ -177,7 +175,6 @@ class WidgetField(Field):
         }
 
     def prepare_data(self, data):
-        if self.many:
-            return map(self.get_widget, data)
-        else:
-            return self.get_widget(data)
+        widget = self.get_widget(data['id'])
+        widget.set_data(data['data'])
+        return widget
