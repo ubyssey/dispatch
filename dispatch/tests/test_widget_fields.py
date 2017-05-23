@@ -21,6 +21,29 @@ class TestWidget(Widget):
     description = TextField('Description')
     article = ArticleField('Featured article')
     image = ImageField('Featured image')
+    widget = WidgetField('Featured Widget')
+
+class TestWidget2(Widget):
+    id = 'test-widget-2'
+    name = 'Test widget 2'
+    template = 'widgets/test-widget.html'
+
+    zones = [TestZone]
+
+    title = CharField('Title 2')
+    description = TextField('Description 2')
+    article = ArticleField('Featured article 2')
+    image = ImageField('Featured image 2')
+    widget = WidgetField('Featured Widget 2')
+
+class TestWidget3(Widget):
+    id = 'test-widget-3'
+    name = 'Test widget 3'
+    template = 'widgets/test-widget.html'
+
+    zones = [TestZone]
+
+    title = CharField('Title')
 
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -357,32 +380,158 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_widget_field_initialization(self):
         """Should be able to initialize a new WidgetField"""
 
+        register.widget(TestWidget)
+
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
         image_id = DispatchTestHelpers.upload_image(self.client)
 
         testwidget = TestWidget()
 
-        testwidget.set_data({
-            'title': 'test title',
-            'description': 'test description',
-            'article': article.data['id'],
-            'image' : image_id
-        })
-
-        registery = register.widget(testwidget) # Test Widget is now registered
-
-        print registery
-
-        widget_id = testwidget.id
+        field_data = {
+            'id': 'test-widget',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+                'article': article.data['id'],
+                'image': image_id
+            }
+        }
 
         # a test Widget is now initialized, initilize a widget field to put the test Widget in
         testfield = WidgetField('Title')
 
         try:
-            testfield.validate(widget_id)
+            testfield.validate(field_data['id'])
         except InvalidField:
-            raise InvalidField('Widget with id %s does not exist' % widget_id)
+            self.fail('Widget should be valid')
 
-        json = testfield.get_widget(widget_id)
-        print json
+    def test_get_widget_from_widget_field(self):
+        """Should be able to validate and get widget from widgetfield"""
+
+        register.widget(TestWidget)
+
+        testwidget = TestWidget()
+
+        testfield = WidgetField('Title')
+
+        # Create article and image for testing
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        field_data = {
+            'id': testwidget.id,
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+                'article': article.data['id'],
+                'image': image_id
+            }
+        }
+
+        widget = testfield.get_widget(field_data['id'])
+
+        self.assertEqual(type(widget), type(testwidget))
+
+    def test_widget_field_to_json(self):
+        """Should be able to get to_json from field"""
+
+        register.widget(TestWidget)
+
+        # Create article and image for testing
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+
+        testfield = WidgetField('Title')
+
+        field_data = {
+            'id': 'test-widget',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+                'article': article.data['id'],
+                'image': image_id
+            }
+        }
+
+        json = testfield.to_json(field_data)
+
+        self.assertEqual(json['label'], 'Title')
+        self.assertEqual(json['data']['id'], 'test-widget')
+
+    def test_widget_field_prepare_data(self):
+        """Prepare_data should return widget"""
+
+        register.widget(TestWidget)
+
+        # Create article and image for testing
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+        widget = TestWidget()
+
+        testfield = WidgetField('Title')
+
+        field_data = {
+            'id': 'test-widget',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+                'article': article.data['id'],
+                'image': image_id
+            }
+        }
+
+        prepared_data = testfield.prepare_data(field_data)
+
+        self.assertEqual(type(prepared_data), type(widget))
+
+    def test_get_all_widgets(self):
+        """Get all the widgets recursively associated with a field"""
+
+        register.widget(TestWidget)
+        register.widget(TestWidget2)
+        register.widget(TestWidget3)
+
+        # Create article and image for testing
+        article = DispatchTestHelpers.create_article(self.client)
+        image_id = DispatchTestHelpers.upload_image(self.client)
+        widget1 = TestWidget()
+        widget2 = TestWidget2()
+        widget3 = TestWidget3()
+
+        testfield = WidgetField('Title')
+
+        field_data = {
+            'id': 'test-widget',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+                'article': article.data['id'],
+                'image': image_id,
+                'widget': {
+                    'id': 'test-widget-2',
+                    'data': {
+                        'title': 'test title',
+                        'description': 'test description',
+                        'article': article.data['id'],
+                        'image': image_id,
+                        'widget': {
+                            'id': 'test-widget-3',
+                            'data': {
+                                'title': 'Test widget 3'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        json = testfield.to_json(field_data)
+        prepared_data =  testfield.prepare_data(field_data).data
+
+        self.assertEqual(json['data']['id'], 'test-widget')
+        self.assertEqual(json['data']['data']['widget']['id'], 'test-widget-2')
+        self.assertEqual(json['data']['data']['widget']['data']['widget']['id'], 'test-widget-3')
+
+        self.assertEqual(prepared_data['widget']['id'], 'test-widget-2')
+        self.assertEqual(prepared_data['widget']['data']['widget']['id'], 'test-widget-3')
