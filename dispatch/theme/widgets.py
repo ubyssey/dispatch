@@ -80,11 +80,7 @@ class Zone(object):
 
 class MetaWidget(type):
 
-    @classmethod
-    def __prepare__(self, name, bases):
-        return OrderedDict()
-
-    def __new__(self, name, bases, classdict):
+    def __new__(cls, name, bases, classdict):
 
         def prepare_fields():
 
@@ -93,12 +89,13 @@ class MetaWidget(type):
                 return field
 
             fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+            fields.sort(key=lambda f: f[1]._creation_counter)
 
             return [get_field(name, field) for name, field in fields]
 
         classdict['fields'] = prepare_fields()
 
-        return type.__new__(self, name, bases, classdict)
+        return type.__new__(cls, name, bases, classdict)
 
 class Widget(object):
 
@@ -126,7 +123,8 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            result[field.name] = field.to_json(self.data.get(field.name))
+            # TODO: Refactor field.to_json to return only data
+            result[field.name] = field.to_json(self.data.get(field.name))['data']
 
         return result
 
