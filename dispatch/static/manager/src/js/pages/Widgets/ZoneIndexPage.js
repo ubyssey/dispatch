@@ -31,7 +31,7 @@ class ZoneIndexPageComponent extends React.Component {
 
           columns={[
             zone => (<strong><Link to={`/widgets/${zone.id}`} dangerouslySetInnerHTML={{__html: zone.name}} /></strong>),
-            zone => zone.widget ? zone.widget.name : 'No widget'
+            zone => zone.widget ? this.props.entities.widgets[zone.widget].name : 'No widget'
           ]}
 
           emptyMessage={`You haven\'t defined any ${this.props.typePlural} yet.`}
@@ -47,7 +47,8 @@ const mapStateToProps = (state) => {
     token: state.app.auth.token,
     zones: state.app.zones.list,
     entities: {
-      zones: state.app.entities.zones
+      zones: state.app.entities.zones,
+      widgets: state.app.entities.widgets
     }
   }
 }
