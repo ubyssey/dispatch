@@ -4,11 +4,11 @@ from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.theme.exceptions import InvalidField
+from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 
 class TestZone(Zone):
-    id = 'test-zone'
-    name = 'Test zone'
+     id = 'test-zone'
+     name = 'Test zone'
 
 class TestWidget(Widget):
     id = 'test-widget'
@@ -535,3 +535,31 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(prepared_data['widget']['id'], 'test-widget-2')
         self.assertEqual(prepared_data['widget']['data']['widget']['id'], 'test-widget-3')
+
+    def test_widget_field_invalid_data(self):
+        """Initilaizing a widget field with invalid data should raise an error"""
+
+        try:
+            widget = WidgetField(6)
+            self.fail('InvalidField Error should have been raised')
+        except InvalidField:
+            pass
+
+    def test_get_non_existant_widget(self):
+        """Using get_widget with non-existant widget_id should fail"""
+
+        widget = WidgetField('Title')
+
+        try:
+            widget.get_widget('this_is_not_a_widget_id')
+            self.fail('WidgetNotFound Error should have been raised')
+        except WidgetNotFound:
+            pass
+
+    def test_to_json_no_data(self):
+        """Using to_json with no data should return None for data"""
+
+        data = None
+        widget = WidgetField('Title')
+
+        self.assertEqual(widget.to_json(data), {'data': None, 'label': 'Title'})
