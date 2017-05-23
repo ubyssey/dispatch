@@ -5,6 +5,8 @@ from dispatch.theme.exceptions import InvalidField
 class Field(object):
     """Base class for all widget fields"""
 
+    _creation_counter = 0
+
     def __init__(self, label, many=False):
         self.label = label
         self.many = many
@@ -13,6 +15,9 @@ class Field(object):
             self.default = []
         else:
             self.default = None
+
+        self._creation_counter = Field._creation_counter
+        Field._creation_counter += 1
 
         if not isinstance(self.label, basestring):
             raise InvalidField('Label must be a string')
@@ -68,6 +73,7 @@ class ArticleField(Field):
         try:
             return Article.objects.get(pk=id)
         except Article.DoesNotExist:
+            # TODO: better exception handling
             raise Article.DoesNotExist('Article does not exist')
 
     def get_article_json(self, id):
@@ -116,6 +122,7 @@ class ImageField(Field):
         try:
             return Image.objects.get(pk=id)
         except Image.DoesNotExist:
+            # TODO: better exception handling
             raise Image.DoesNotExist('Image does not exist')
 
     def get_image_json(self, id):
