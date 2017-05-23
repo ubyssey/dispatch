@@ -80,7 +80,7 @@ export default class ItemEditor extends React.Component {
           <div className='u-container u-container--padded'>
             <this.props.form
               listItem={listItem}
-              errors={listItem.errors}
+              errors={this.props.listItem ? this.props.listItem.errors : {}}
               update={(field, value) => this.handleUpdate(field, value)} />
           </div>
         </div>

@@ -9,7 +9,7 @@ export default function TagForm(props) {
       <FormInput
         label='Name'
         padded={false}
-        error={props.errors ? props.errors.name : null}>
+        error={props.errors.name}>
         <TextInput
           placeholder='Name'
           value={props.listItem.name || ''}

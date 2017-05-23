@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { AnchorButton } from '@blueprintjs/core'
 
 import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
@@ -27,7 +27,7 @@ export default class PersonForm extends React.Component {
         <FormInput
           label='Full Name'
           padded={false}
-          error={this.props.errors ? this.props.errors.full_name : null}>
+          error={this.props.errors.full_name}>
           <TextInput
             placeholder='Full Name'
             value={this.props.listItem.full_name || ''}
@@ -37,9 +37,9 @@ export default class PersonForm extends React.Component {
         <FormInput
           label='Slug'
           padded={false}
-          error={this.props.errors ? this.props.errors.slug : null}>
+          error={this.props.errors.slug}>
           <TextInput
-            placeholder='Full Name'
+            placeholder='Slug'
             value={this.props.listItem.slug || ''}
             fill={true}
             onChange={ e => this.props.update('slug', e.target.value) } />
@@ -50,7 +50,8 @@ export default class PersonForm extends React.Component {
           className='c-person-form__image__dropzone'
           onDrop={(files) => this.onDrop(files)}
           disableClick={true}
-          activeClassName='c-person-form__image__dropzone--active'>
+          activeClassName='c-person-form__image__dropzone--active'
+          multiple={false}>
           <div
             className='c-person-form__images__container'>
             {this.state.displayImg || this.props.listItem.image ? null :
@@ -59,22 +60,25 @@ export default class PersonForm extends React.Component {
               </div>}
             <img
               className='c-person-form__images'
-              ref={(node) => { this.images = node }}
               src={this.state.displayImg || this.props.listItem.image}/>
           </div>
         </Dropzone>
 
         <div className='c-person-form__image__button'>
           <AnchorButton
-            intent={Intent.SUCCESS}
             onClick={() => this.dropzone.open()}>Select Image</AnchorButton>
         </div>
+
+        {this.props.errors.detail ?
+          <div className='pt-callout pt-intent-danger c-person-form__image__error'>
+            {this.props.errors.detail}
+          </div> : null}
 
 
         <FormInput
           label='Description'
           padded={false}
-          error={this.props.errors ? this.props.errors.description : null}>
+          error={this.props.errors.description}>
           <TextAreaInput
             placeholder='Description'
             value={this.props.listItem.description || ''}

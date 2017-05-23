@@ -8,7 +8,7 @@ import personsActions from '../../actions/PersonsActions'
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    listItems: state.app.persons,
+    listItems: state.app.persons.list,
     entities: {
       listItems: state.app.entities.persons
     }
