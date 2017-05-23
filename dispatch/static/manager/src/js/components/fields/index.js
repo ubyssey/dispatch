@@ -1,5 +1,7 @@
 import CharField from './CharField'
+import TextField from './TextField'
 
 export {
-  CharField as char
+  CharField as char,
+  TextField as text,
 }
