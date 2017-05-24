@@ -7,7 +7,7 @@ require('../../../styles/components/article_headline.scss')
 export default function ArticleHeadline(props) {
 
   function handleUpdate(value) {
-    props.onUpdate('headline', value)
+    props.onUpdate(props.field || 'headline', value)
   }
 
   const textField = (
