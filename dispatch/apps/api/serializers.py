@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Person
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
-from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
+from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, validate_person_id
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -12,15 +12,41 @@ class UserSerializer(DispatchModelSerializer):
     """
 
     email = serializers.EmailField(required=True)
-    person_id =  serializers.IntegerField()
+    person_id =  serializers.IntegerField(validators=[validate_person_id])
+    password_a = serializers.CharField(
+        required=False, 
+        write_only=True, 
+        validators=[PasswordValidator(confirm_field='password_b')]
+    )
+    password_b = serializers.CharField(required=False, write_only=True)
 
     class Meta:
         model = User
         fields = (
             'id',
             'email',
-            'person_id'
+            'person_id',
+            'password_a',
+            'password_b',
         )
+
+    def create(self, validated_data):
+
+        instance = User()
+
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+
+        instance.email = validated_data.get('email', instance.email)
+        instance.person_id = validated_data.get('person_id', instance.person_id)
+
+        if validated_data.get('password'):
+            instance.set_password(validated.get('password'))
+
+        instance.save()
+
+        return instance
 
 class PersonSerializer(DispatchModelSerializer):
     """
