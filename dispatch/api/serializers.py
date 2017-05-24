@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
@@ -471,7 +471,7 @@ class ZoneSerializer(serializers.Serializer):
 
         return instance
 
-class EventsSerializer(serializers.Serializer):
+class EventSerializer(DispatchModelSerializer):
 
     class Meta:
         model = Event

@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Article, Person, Section
+from dispatch.apps.content.models import Article, Person, Section, Event
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):
@@ -164,5 +164,18 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-topics-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_event(cls, client, title='Test event', description='Test description', host='test host'):
+
+        data = {
+            'title': title,
+            'description': description,
+            'host': host
+        }
+
+        url = reverse('api-event-list')
 
         return client.post(url, data, format='json')
