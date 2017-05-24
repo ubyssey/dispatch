@@ -550,15 +550,15 @@ class File(Model):
         """
         return settings.MEDIA_URL + str(self.file)
 
-class Events(Model):
+class Event(Model):
     title = CharField(max_length=255)
     description = TextField(max_length=500)
     host = CharField(max_length=255)
 
     image = ForeignKey('Image', null=True)
 
-    start_time = DateTimeField()
-    end_time = DateTimeField()
+    start_time = DateTimeField(null=True)
+    end_time = DateTimeField(null=True)
     location = CharField(max_length=500)
 
     CATEGORY_CHOICES = (
