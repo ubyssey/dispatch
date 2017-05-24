@@ -20,7 +20,8 @@ module.exports = {
     "no-unused-vars": ["warn", {"args": "after-used"}],
     "no-console": 0,
     "react/prop-types": 0,
-    "react/jsx-indent-props": ["error", 2]
+    "react/jsx-indent-props": ["error", 2],
+    "react/no-find-dom-node": 0
   },
   "plugins": [
     "react"
