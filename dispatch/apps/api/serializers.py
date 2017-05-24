@@ -470,3 +470,14 @@ class ZoneSerializer(serializers.Serializer):
             instance.save(validated_data.get('widget'))
 
         return instance
+
+class EventsSerializer(serializers.Serializer):
+
+    class Meta:
+        model = Event
+        fields = (
+            'id',
+            'title',
+            'description',
+            'host'
+        )
