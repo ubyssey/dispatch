@@ -1,5 +1,30 @@
 from dispatch.apps.api.exceptions import InvalidFilename, InvalidGalleryAttachments
+from django.core.exceptions import ValidationError
 from dispatch.apps.content.models import Image
+from dispatch.apps.core.models import Person
+from django.contrib.auth.password_validation import validate_password
+
+def validate_person_id(value):
+    if Person.objects.filter(id=value).exists():
+        return value
+    else:
+        error_string = 'PERSON doesn\'t exist with given person_id %s' % value
+        raise ValidationError(error_string)
+
+class PasswordValidator(object):
+
+    def __init__(self, confirm_field):
+        self.confirm_field = confirm_field
+
+    def set_context(self, serializer_field):
+        self.data = serializer_field.parent.initial_data
+        self.instance = serializer_field.parent.instance
+
+    def __call__(self, value):
+        if value != self.data.get(self.confirm_field):
+            raise ValidationError('Passwords do not match')
+
+        validate_password(value, user=self.instance)
 
 def all_ascii(s):
     return all(ord(c) < 128 for c in s)
