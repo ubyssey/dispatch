@@ -37,7 +37,7 @@ class Zone(object):
             self._load_zone()
 
         if not self._zone or not self._widget:
-            return None
+            return {}
 
         return self._widget.to_json()
 
