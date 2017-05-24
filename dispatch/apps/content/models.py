@@ -552,7 +552,7 @@ class File(Model):
 
 class Events(Model):
     title = CharField(max_length=255)
-    description = CharField(max_length=500)
+    description = TextField(max_length=500)
     host = CharField(max_length=255)
 
     image = ForeignKey('Image', null=True)
@@ -560,7 +560,6 @@ class Events(Model):
     start_time = DateTimeField()
     end_time = DateTimeField()
     location = CharField(max_length=500)
-
 
     CATEGORY_CHOICES = (
         ('sports', 'Sports'),
@@ -575,6 +574,4 @@ class Events(Model):
 
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
 
-    url = CharField(max_length=255)
-
-    
+    facebook_url = CharField(max_length=255, null=True)
