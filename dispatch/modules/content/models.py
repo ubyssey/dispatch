@@ -413,6 +413,8 @@ class Image(Model):
         'jpeg'
     }
 
+    image_formats = '.(jpg|JPEG|jpeg|JPG|gif|png)'
+
     THUMBNAIL_SIZE = 'square'
 
     def filename(self):
@@ -421,11 +423,26 @@ class Image(Model):
         """
         return os.path.basename(self.img.name)
 
-    def get_name(self):
+    def get_file_name(self):
         """
-        Returns the image filename without extension.
+        Returns the image filename.
         """
         return self.img.name
+
+    def get_name(self):
+        """
+        Returns the filename without extension.
+        """
+        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        return file_name[0]
+
+
+    def get_file_extension(self):
+        """
+        Returns the file extension.
+        """
+        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        return file_name[1]
 
     def get_absolute_url(self):
         """
@@ -437,26 +454,19 @@ class Image(Model):
         """
         Returns the medium size image URL.
         """
-        fileName = re.split('.(jpg|gif|png)',self.get_name())
-        name = fileName[0]
-        fileType = fileName[1]
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, 'medium', fileType)
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
         """
         Returns the thumbnail URL.
         """
-
-        fileName = re.split('.(jpg|gif|png)',self.get_name())
-        name = fileName[0]
-        fileType = fileName[1]
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, self.THUMBNAIL_SIZE, fileType)
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
 
     def get_wide_url(self):
-        fileName = re.split('.(jpg|gif|png)',self.get_name())
-        name = fileName[0]
-        fileType = fileName[1]
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, name, 'wide', fileType)
+        """
+        Returns the wide URL.
+        """
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'wide', self.get_file_extension())
 
     # Overriding
     def save(self, **kwargs):
@@ -473,11 +483,11 @@ class Image(Model):
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
-            name = re.split('.(jpg|JPEG|jpeg|JPG|gif|png)', self.img.name)[0]
-            fileType = re.split('.(jpg|JPEG|jpeg|JPG|gif|png)', self.img.name)[1]
+            name = re.split(self.image_formats, self.img.name)[0]
+            file_type = re.split(self.image_formats, self.img.name)[1]
 
             for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size, fileType)
+                self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
 
 
     def save_thumbnail(self, image, size, name, label, fileType):
@@ -490,7 +500,7 @@ class Image(Model):
 
         # Attach new thumbnail label to image filename
         name = "%s-%s.%s" % (name, label, fileType)
-        #Image.save format takes JPEG not jpg
+        # Image.save format takes JPEG not jpg
         if fileType in self.jpg_formats:
             fileType = 'JPEG'
         # Write new thumbnail to StringIO object
