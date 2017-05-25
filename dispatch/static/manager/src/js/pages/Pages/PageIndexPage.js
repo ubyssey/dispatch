@@ -92,7 +92,8 @@ class PagesPageComponent extends React.Component {
         <ItemList
           location={this.props.location}
 
-          type='pages'
+          typePlural='pages'
+          typeSingular='page'
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
