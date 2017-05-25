@@ -5,6 +5,7 @@ from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.apps.api.fields import JSONField
 from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, validate_person_id
+from dispatch.apps.api.exceptions import DuplicateKeyError
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -33,8 +34,10 @@ class UserSerializer(DispatchModelSerializer):
     def create(self, validated_data):
 
         instance = User()
-
-        return self.update(instance, validated_data)
+        if User.objects.filter(email=validated_data['email']).exists():
+            raise DuplicateKeyError("Email is already in use!")
+        else:
+            return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
 
