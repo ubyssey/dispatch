@@ -86,6 +86,12 @@ render((
             <Route path=':topicId' component={Pages.Topics.Topic} />
           </Route>
 
+          <Route path='galleries'>
+            <IndexRoute component={Pages.Galleries.Index} />
+            <Route path='new' component={Pages.Galleries.NewGallery} />
+            <Route path=':galleryId' component={Pages.Galleries.Gallery} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>
