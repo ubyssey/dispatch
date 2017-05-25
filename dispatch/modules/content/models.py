@@ -127,6 +127,8 @@ class Publishable(Model):
                     if node['type'] == 'code':
                         if node.get('data',{}).get('mode',{}) == 'html':
                             html += "<div>%s</div>" % node.get('data',{}).get('embedValue',{})
+                        if node.get('data',{}).get('mode',{}) == 'css':
+                            html += "<style>%s</style>" % node.get('data',{}).get('embedValue',{})
                         if node.get('data',{}).get('mode',{}) == 'javascript':
                             html += "<script>%s</script>" % node.get('data',{}).get('embedValue',{})
 
