@@ -1,8 +1,11 @@
+from collections import OrderedDict
+
 from django.template import loader
 
 from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import Field
+from dispatch.theme.exceptions import InvalidField
 
 class MetaZone(type):
     def __init__(cls, name, bases, nmspc):
@@ -15,19 +18,35 @@ class Zone(object):
 
     __metaclass__ = MetaZone
 
+    def __init__(self):
+        self._is_loaded = False
+        self._zone = None
+        self._widget = None
+
+    def _load_zone(self):
+        try:
+            self._zone = ZoneModel.objects.get(zone_id=self.id)
+            self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
+            self._widget.set_data(self._zone.data)
+            self._is_loaded = True
+        except ZoneModel.DoesNotExist:
+            pass
+
+    @property
+    def data(self):
+        if not self._is_loaded:
+            self._load_zone()
+
+        if not self._zone or not self._widget:
+            return {}
+
+        return self._widget.to_json()
+
     @property
     def widget(self):
 
-        if not self._widget:
-            try:
-                zone = ZoneModel.objects.get(zone_id=self.id)
-
-                widget = ThemeManager.Widgets.get(zone.widget_id)
-                widget.set_data(zone.data)
-
-                self._widget = widget
-            except ZoneModel.DoesNotExist:
-                pass
+        if not self._is_loaded:
+            self._load_zone()
 
         return self._widget
 
@@ -49,13 +68,10 @@ class Zone(object):
     def save(self, validated_data):
         """Save widget data for this zone"""
 
-        widget = ThemeManager.Widgets.get(validated_data['id'])
-        widget.set_data(validated_data['data'])
-
         (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
 
-        zone.widget_id = widget.id
-        zone.data = widget.data
+        zone.widget_id = validated_data['widget']
+        zone.data = validated_data['data']
 
         return zone.save()
 
@@ -63,23 +79,31 @@ class Zone(object):
         """Delete widget data for this zone"""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
+class MetaWidget(type):
+
+    def __new__(cls, name, bases, classdict):
+
+        def prepare_fields():
+
+            def get_field(name, field):
+                field.name = name
+                return field
+
+            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+            fields.sort(key=lambda f: f[1]._creation_counter)
+
+            return [get_field(name, field) for name, field in fields]
+
+        classdict['fields'] = prepare_fields()
+
+        return type.__new__(cls, name, bases, classdict)
+
 class Widget(object):
+
+    __metaclass__ = MetaWidget
 
     def __init__(self):
         self.data = {}
-
-    @property
-    def fields(self):
-        """Return list of fields defined on this widget"""
-
-        def get_field(name):
-            field = getattr(self, name)
-            field.name = name
-            return field
-
-        fields = filter(lambda a: a != 'fields' and isinstance(getattr(self, a), Field), dir(self))
-
-        return [get_field(f) for f in fields]
 
     def set_data(self, data):
         """Sets data for each field"""
@@ -111,10 +135,7 @@ class Widget(object):
 
         for field in self.fields:
             data = self.data.get(field.name)
-            if data:
-                result[field.name] = field.prepare_data(data)
-            else:
-                result[field.name] = None
+            result[field.name] = field.prepare_data(data)
 
         return result
 
