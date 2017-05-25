@@ -109,6 +109,14 @@ class ImageField(ModelField):
     model = Image
     serializer = ImageSerializer
 
+class EventField(ModelField):
+
+    type = 'event'
+
+    model = Event
+    serializer = EventSerializer
+
+
 class WidgetField(Field):
 
     type = 'widget'
@@ -147,10 +155,3 @@ class WidgetField(Field):
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
-
-class EventField(ModelField):
-
-    type = 'event'
-
-    model = Event
-    serializer = EventSerializer
