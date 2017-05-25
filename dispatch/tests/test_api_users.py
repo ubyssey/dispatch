@@ -49,12 +49,13 @@ class UserTests(DispatchAPITestCase):
 
     def test_create_user_with_password(self):
         """Check that creating a user with a password works correctly"""
-        # NOTE: By default _create_user() supplies a good password 
-        response = _create_user()
+        # NOTE: By default _create_user() supplies a good password
+        response = self._create_user("test@ubyssey.ca")
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
     def test_bad_passords(self):
+        """A test case to ensure a variety of bad passwords are not succesful"""
         person_id = self._create_person("Attached Person").data['id']
         url = reverse('api-users-list')
         data = {
@@ -89,7 +90,23 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_update(self):
         """Ensure that user updates works correctly"""
-        #response = self.client.post(url, data, format='json')
+        response = self._create_user('test@ubyssey.ca')
+
+        UPDATED_EMAIL = 'updateTest@gmail.com'
+        UPDATED_PASSWORD = 'updatedPassword'
+
+        url = reverse('api-users-detail', args=[response.data['id']])
+        data = {
+            'email' : UPDATED_EMAIL,
+            'password_a' : UPDATED_PASSWORD,
+            'password_b' : UPDATED_PASSWORD
+        }
+        #TODO: Figure out how to test that password is updating
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.data['email'], UPDATED_EMAIL)
+
+        user = User.objects.get(pk=response.data['id'])
+        self.assertEqual(user.email, UPDATED_EMAIL)
 
     def _create_user(self, email, full_name='Attached Person', person_id=None):
         """
