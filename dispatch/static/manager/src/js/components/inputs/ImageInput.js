@@ -8,6 +8,8 @@ import * as modalActions from '../../actions/ModalActions'
 
 import ImageManager from '../modals/ImageManager'
 
+import SortableList from './SortableList'
+
 function Image(props) {
   return (
     <div className='c-input--image__thumb' style={{ backgroundImage: `url('${props.url}')` }}>
@@ -65,28 +67,32 @@ class ImageInputComponent extends React.Component {
   }
 
   render() {
-    const images = this.getSelected()
-      .map(id => this.props.entities[id])
-      .map(image => (
-        <Image
-          key={image.id}
-          url={image.url}
-          onClick={() => this.removeImage(image.id)} />
-      ))
-
     return (
       <div className={`c-input c-input--image${this.props.fill ? ' c-input--fill' : ''}`}>
-        {images}
+        <SortableList
+          items={this.getSelected()}
+          entities={this.props.entities}
+          onChange={selected => this.props.onChange(selected)}
+          inline={true}
+          renderItem={image => (
+            <Image
+              key={image.id}
+              url={this.props.many ? image.url_thumb : image.url_medium}
+              onClick={() => this.removeImage(image.id)} />
+          )} />
         <AnchorButton
-          onClick={() => this.chooseImage() }>{this.props.image ? 'Change image' : 'Select image'}</AnchorButton>
+          onClick={() => this.chooseImage() }>{this.props.many ? 'Add image' : (this.props.selected ? 'Change image' : 'Select image')}</AnchorButton>
       </div>
     )
   }
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = (state) => {
+  return {
+    entities: state.app.entities.images
+  }
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {

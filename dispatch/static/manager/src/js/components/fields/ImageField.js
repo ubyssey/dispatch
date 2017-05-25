@@ -1,10 +1,10 @@
 import React from 'react'
 
-import ArticleSelectInput from '../inputs/ArticleSelectInput'
+import ImageInput from '../inputs/ImageInput'
 
-export default function ArticleField(props) {
+export default function ImageField(props) {
   return (
-    <ArticleSelectInput
+    <ImageInput
       selected={props.data}
       many={props.many}
       onChange={selected => props.onChange(selected)} />

@@ -115,7 +115,7 @@ class ImageField(Field):
 
     def validate(self, data):
         if self.many:
-            if not all( [isinstance(id, int) for id in data] ):
+            if not isinstance(data, list) or not all([isinstance(id, int) for id in data]):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
@@ -137,12 +137,15 @@ class ImageField(Field):
 
         def get_data():
             if not data:
-                return
-
-            if self.many:
-                return map(self.get_image_json, data)
-            else:
-                return self.get_image_json(data)
+                return self.default
+                
+            try:
+                if self.many:
+                    return map(self.get_image_json, data)
+                else:
+                    return self.get_image_json(data)
+            except:
+                return self.default
 
         return {
             'label': self.label,

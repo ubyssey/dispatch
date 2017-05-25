@@ -27,7 +27,7 @@ class ArticleSelectInputComponent extends React.Component {
         selected={this.props.selected}
         results={this.props.articles.ids}
         entities={this.props.entities.articles}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(selected) => this.props.onChange(selected)}
         fetchResults={(query) => this.listArticles(query)}
         attribute='headline'
         editMessage={this.props.selected ? `Edit ${label}` : `Add ${label}`} />

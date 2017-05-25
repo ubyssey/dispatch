@@ -155,8 +155,10 @@ class ItemSelectInput extends React.Component {
         <SortableList
           items={this.getSelected()}
           entities={this.props.entities}
-          attribute={this.props.attribute}
-          onChange={selected => this.props.onChange(selected)} />
+          onChange={selected => this.props.onChange(selected)}
+          renderItem={item => (
+            <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
+          )} />
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
