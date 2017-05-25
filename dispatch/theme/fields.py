@@ -63,7 +63,7 @@ class ArticleField(Field):
 
     def validate(self, data):
         if self.many:
-            if not all([isinstance(id, int) for id in data]):
+            if not isinstance(data, list) or not all([isinstance(id, int) for id in data]):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
@@ -87,10 +87,13 @@ class ArticleField(Field):
             if not data:
                 return self.default
 
-            if self.many:
-                return map(self.get_article_json, data)
-            else:
-                return self.get_article_json(data)
+            try:
+                if self.many:
+                    return map(self.get_article_json, data)
+                else:
+                    return self.get_article_json(data)
+            except:
+                return self.default
 
         return {
             'label': self.label,
