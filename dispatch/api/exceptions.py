@@ -10,6 +10,9 @@ class ProtectedResourceError(APIException):
     status_code = status.HTTP_409_CONFLICT
     default_detail = 'Deletion failed because resource is a member of a protected relationship'
 
+class DuplicateKeyError(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    default_detail = 'Could not create resource because it is a duplicate'
 
 class InvalidGalleryAttachments(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
