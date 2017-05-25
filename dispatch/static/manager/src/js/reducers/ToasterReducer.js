@@ -137,6 +137,26 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.ZONES.SAVE):
     return showToast('Zone could not be saved', Intent.DANGER)
 
+    // Persons
+  case fulfilled(types.PERSONS.CREATE):
+  case fulfilled(types.PERSONS.SAVE):
+    return showToast('Person saved')
+  case rejected(types.PERSONS.CREATE):
+  case rejected(types.PERSONS.SAVE):
+    return showToast('Person could not be saved', Intent.DANGER)
+  case fulfilled(types.PERSONS.DELETE):
+    return showToast('Person deleted')
+  case rejected(types.PERSONS.DELETE):
+    if (action.payload === 'Conflict') {
+      return showToast('Can not delete currently logged in person', Intent.DANGER)
+    } else {
+      return showToast('Could not delete person', Intent.DANGER)
+    }
+  case fulfilled(types.PERSONS.DELETE_MANY):
+    return showToast(`${action.payload.length} persons${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PERSONS.DELETE_MANY):
+    return showToast('Some persons could not be deleted', Intent.DANGER)
+
   default:
     return toaster
 
