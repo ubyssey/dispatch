@@ -12,6 +12,7 @@ export default function WidgetField(props) {
     <FormInput label={props.field.label}>
       <Field
         label={props.field.label}
+        many={props.field.many}
         data={props.data}
         onChange={props.onChange} />
     </FormInput>

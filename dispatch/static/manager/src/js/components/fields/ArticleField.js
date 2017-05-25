@@ -6,7 +6,8 @@ export default function ArticleField(props) {
 
   return (
     <ArticleSelectInput
-      selected={props.data || []}
+      selected={props.data}
+      many={props.many}
       update={articleId => props.onChange(articleId)} />
   )
 

@@ -24,6 +24,7 @@
 
   // Text
   font-weight: 600;
+  line-height: 16px;
 
   &:last-child {
     border-bottom: none;
@@ -32,6 +33,17 @@
   &:hover, &--selected {
     background: $input-color-highlight;
   }
+}
+
+.o-dropdown-list__no-results {
+  // Structure
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+
+  // Text
+  text-align: center;
+  color: $color-text-gray;
+  line-height: 16px;
 }
 
 .o-dropdown-list__item__text {

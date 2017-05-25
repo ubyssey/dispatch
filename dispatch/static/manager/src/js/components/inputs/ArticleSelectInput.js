@@ -18,15 +18,19 @@ class ArticleSelectInputComponent extends React.Component {
   }
 
   render() {
+
+    const label = this.props.many ? 'articles' : 'article'
+
     return (
       <ItemSelectInput
+        many={this.props.many}
         selected={this.props.selected}
         results={this.props.articles.ids}
         entities={this.props.entities.articles}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listArticles(query)}
         attribute='headline'
-        editMessage={this.props.selected.length ? 'Edit articles' : 'Add articles'} />
+        editMessage={this.props.selected ? `Edit ${label}` : `Add ${label}`} />
     )
   }
 

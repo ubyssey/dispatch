@@ -95,7 +95,7 @@ export function set(data) {
     type: types.ZONES.SET,
     isLocalAction: true,
     payload: {
-      data: normalize(data, zoneSchema)
+      data: normalizeZone(data)
     }
   }
 }
@@ -105,7 +105,7 @@ export function save(token, zoneId, data) {
     type: types.ZONES.SAVE,
     payload: DispatchAPI.zones.save(token, zoneId, data)
       .then(json => ({
-        data: normalize(json, zoneSchema)
+        data: normalizeZone(json)
       }))
   }
 }
