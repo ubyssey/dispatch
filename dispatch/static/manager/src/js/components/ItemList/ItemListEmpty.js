@@ -8,7 +8,7 @@ export default function ItemListEmpty(props) {
     <div className='c-item-list-empty'>
       <div className='c-item-list-empty__container'>
         <p>{message}</p>
-        {props.query ? null : props.createHandler()}
+        {props.query || !props.createHandler ? null : props.createHandler()}
       </div>
     </div>
   )
