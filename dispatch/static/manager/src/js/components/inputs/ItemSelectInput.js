@@ -103,7 +103,7 @@ class ItemSelectInput extends React.Component {
 
   renderNoResults() {
     return (
-      <li className='o-dropdown-list__item'>No results</li>
+      <li className='o-dropdown-list__no-results'>No results</li>
     )
   }
 
