@@ -29,7 +29,8 @@ class GalleryFormComponent extends React.Component {
     super(props)
 
     this.moveOutOfGallery = this.moveOutOfGallery.bind(this)
-    this.moveIntoGallery = this.moveIntoGallery.bind(this)
+    this.addToGallery = this.addToGallery.bind(this)
+    this.moveWithinGallery = this.moveWithinGallery.bind(this)
     this.galleryDragHover = this.galleryDragHover.bind(this)
     this.endDrag = this.endDrag.bind(this)
 
@@ -94,31 +95,37 @@ class GalleryFormComponent extends React.Component {
     return Math.ceil(this.props.listItem.images.length / this.getNumPerRow())
   }
 
-  moveIntoGallery(id, fromIdx, dropLocation) {
-    this.setState({ showMoveIcon: false })
+  moveWithinGallery(fromIdx, dropLocation) {
+    const { xIdx, yIdx } = this.computePosition(dropLocation)
+    let toIdx = yIdx*this.getNumPerRow() + xIdx
 
-    let xIdx, yIdx, toIdx
-    if (dropLocation) {
-      const pos = this.computePosition(dropLocation)
-      xIdx = pos.xIdx
-      yIdx = pos.yIdx
-      toIdx = yIdx*this.getNumPerRow() + xIdx
+    const images = this.props.listItem.images
+    const moveImage = images[fromIdx]
+
+    // reduce to index because removed entry is lower than added index
+    if (fromIdx < toIdx) {
+      toIdx--
     }
+
+    // construct images list with image in *new* location
+    let newImages = R.insert(toIdx,
+      moveImage, R.remove(fromIdx, 1, images))
+
+    this.props.update('images', newImages)
+  }
+
+  addToGallery(id) {
+    this.setState({ showMoveIcon: false })
 
     const images = this.props.listItem.images
 
-    if (typeof fromIdx === 'number') {
-      const moveImage = images[fromIdx]
-
-      // construct images list with image in *new* location
-      if (fromIdx < toIdx) {
-        toIdx-- // offset because of removed entry
+    // check if image with id is already in gallery
+    // and return if it is
+    for (let i in images) {
+      const image = images[i]
+      if (id == image.image_id || (image.image && image.image.id == id)) {
+        return
       }
-      let newImages = R.insert(toIdx,
-        moveImage, R.remove(fromIdx, 1, images))
-
-      this.props.update('images', newImages)
-      return
     }
 
     // construct new image list with new image appended
@@ -225,9 +232,11 @@ class GalleryFormComponent extends React.Component {
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
           <DnDZone
-            onDrop={this.moveIntoGallery}
+            onDrop={this.moveWithinGallery}
             zoneId='in'
-            hover={this.galleryDragHover}>
+            hover={this.galleryDragHover}
+            endDrag={this.endDrag}
+            >
             {inGalleryImages}
             <span
               className='c-imagegallery-editor-movement-indicator'
@@ -242,7 +251,7 @@ class GalleryFormComponent extends React.Component {
 
         <FormInput>
           <ImageInput
-            onUpdate={(id) => { this.moveIntoGallery(id) }} />
+            onUpdate={(id) => { this.addToGallery(id) }} />
         </FormInput>
       </form>
     )
