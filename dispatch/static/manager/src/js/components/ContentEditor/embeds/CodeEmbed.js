@@ -16,11 +16,7 @@ const MODES = [
   { value: 'javascript', label: 'javascript' }
 ]
 
-const DEFAULTVALUES = {
-  html : '<div>Enter html code here</div>',
-  css : '.cssCode{width:1px;}',
-  javascript : 'function javascript(arguments){return true}'
-}
+const DEFAULTVALUE = '<div>Enter html code here</div>'
 
 class CodeEmbedComponent extends React.Component {
 
@@ -51,6 +47,12 @@ class CodeEmbedComponent extends React.Component {
     })
   }
 
+  showPreviewButton() {
+    return (
+      <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
+    )
+  }
+
   renderEditor() {
     return (
       <div className='o-embed--code'>
@@ -60,14 +62,14 @@ class CodeEmbedComponent extends React.Component {
           width='100%'
           height='300px'
           value={this.props.data.embedValue}
-          defaultValue={this.props.data.embedValue ? this.props.data.embedValue : DEFAULTVALUES[this.props.data.mode]}
+          defaultValue={this.props.data.embedValue ? this.props.data.embedValue : DEFAULTVALUE}
           showPrintMargin={false}
           onChange={(e) => this.onCodeChange(e)}
           className='o-embed--code_editor'
           editorProps={{$blockScrolling: true}}
         />
         <div className='o-embed--code_editor_button_container'>
-          <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
+          {(this.props.data.mode === 'html') && this.showPreviewButton()}
           <div className='o-embed--code_editor_mode_select'>
             <SelectInput
               options={MODES}
@@ -93,7 +95,6 @@ class CodeEmbedComponent extends React.Component {
     )
   }
   render() {
-    console.log('props: ',this.props)
     return(
       <div className='o-embed o-embed--code'>
         {this.state.showEdit ? this.renderEditor() : this.renderEmbed()}
