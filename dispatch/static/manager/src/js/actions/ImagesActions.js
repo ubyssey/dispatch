@@ -4,7 +4,18 @@ import DispatchAPI from '../api/dispatch'
 
 import { ResourceActions } from '../util/redux'
 
-export default new ResourceActions(
+class ImagesActions extends ResourceActions {
+
+  prepareData(data) {
+    
+    data.author_ids = data.authors
+
+    return data
+  }
+
+}
+
+export default new ImagesActions(
   types.IMAGES,
   DispatchAPI.images,
   imageSchema
