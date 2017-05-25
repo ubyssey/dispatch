@@ -11,6 +11,7 @@ import * as Pages from './Pages'
 import * as Integrations from './Integrations'
 import * as Tags from './Tags'
 import * as Topics from './Topics'
+import * as Galleries from './Galleries'
 
 export {
   LoginPage as Login,
@@ -24,5 +25,6 @@ export {
   Pages as Pages,
   Integrations as Integrations,
   Tags as Tags,
-  Topics as Topics
+  Topics as Topics,
+  Galleries as Galleries
 }
