@@ -28,14 +28,13 @@ export default function FeaturedImageTab(props) {
 
   if (props.featured_image) {
 
-    const image = props.entities.images[props.featured_image.image]
-
     return (
       <div>
         <FormInput label='Image'>
           <ImageInput
-            image={image}
-            onUpdate={updateImage} />
+            fill={true}
+            selected={props.featured_image.image}
+            onChange={updateImage} />
         </FormInput>
 
         <FormInput label='Caption'>
@@ -43,7 +42,7 @@ export default function FeaturedImageTab(props) {
             placeholder='Caption'
             value={props.featured_image.caption || ''}
             rows='2'
-            onChange={ e => updateCaption(e.target.value) } />
+            onChange={e => updateCaption(e.target.value)} />
         </FormInput>
 
         <FormInput label='Credit'>
@@ -51,16 +50,16 @@ export default function FeaturedImageTab(props) {
             placeholder='Credit'
             value={props.featured_image.credit || ''}
             rows='2'
-            onChange={ e => updateCredit(e.target.value) } />
+            onChange={e => updateCredit(e.target.value)} />
         </FormInput>
       </div>
     )
   } else {
     return (
       <div>
-        <FormInput>
+        <FormInput label='Image'>
           <ImageInput
-            onUpdate={updateImage} />
+            onChange={updateImage} />
         </FormInput>
       </div>
     )
