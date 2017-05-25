@@ -151,6 +151,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+        #TODO: Check database for deletion
+        
     def test_unauthorized_person_deletion(self):
         """Unauthorized deletion of a person isn't allowed"""
 
