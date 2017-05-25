@@ -107,7 +107,8 @@ class ArticlesPageComponent extends React.Component {
         <ItemList
           location={this.props.location}
 
-          type='articles'
+          typePlural='articles'
+          typeSingular='article'
 
           currentPage={this.getCurrentPage()}
           totalPages={this.getTotalPages()}
@@ -118,7 +119,7 @@ class ArticlesPageComponent extends React.Component {
           columns={[
             item => (<strong><Link to={`/articles/${item.id}`} dangerouslySetInnerHTML={{__html: item.headline}} /></strong>),
             item => item.authors_string,
-            item => humanizeDatetime(item.published_at),
+            item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
             item => item.latest_version + ' revisions'
           ]}
 

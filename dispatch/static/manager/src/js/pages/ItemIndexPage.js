@@ -101,7 +101,7 @@ export default class ListItemsPageComponent extends React.Component {
           entities={this.props.entities.listItems}
 
           columns={[
-            item => (<strong><Link to={`/${this.props.typePlural}/${item.id}`} dangerouslySetInnerHTML={{__html: item.name}} /></strong>),
+            item => (<strong><Link to={`/${this.props.typePlural}/${item.id}`} dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.name}} /></strong>),
             item => item.slug
           ]}
 

@@ -176,11 +176,9 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test title'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test title'
             }
         }
 
@@ -200,11 +198,9 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_B_ID])
 
         data = {
+            'id': TEST_WIDGET_A_ID,
             'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test title'
-                }
+                'title': 'Test title'
             }
         }
 
@@ -223,11 +219,9 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test title'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test title'
             }
         }
 
@@ -237,7 +231,7 @@ class ZonesTests(DispatchAPITestCase):
 
         self.assertEqual(response.data['id'], TEST_ZONE_A_ID)
         self.assertEqual(response.data['widget']['id'], TEST_WIDGET_A_ID)
-        self.assertEqual(response.data['widget']['data']['title'], 'Test title')
+        self.assertEqual(response.data['data']['title'], 'Test title')
 
     def test_zones_update_set_invalid_widget(self):
         """Should not be able to set non-existent widget"""
@@ -248,16 +242,14 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_B_ID,
-                'data': {}
-            }
+            'widget': TEST_WIDGET_B_ID,
+            'data': {}
         }
 
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['widget']['id'][0], "Widget with id '%s' does not exist" % TEST_WIDGET_B_ID)
+        self.assertEqual(response.data['widget'][0], "Widget with id '%s' does not exist" % TEST_WIDGET_B_ID)
 
     def test_zones_update_change_widget(self):
         """Should be able to change the widget on a zone"""
@@ -269,10 +261,8 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {}
-            }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {}
         }
 
         response = self.client.patch(url, data, format='json')
@@ -282,10 +272,8 @@ class ZonesTests(DispatchAPITestCase):
         self.assertEqual(response.data['widget']['id'], TEST_WIDGET_A_ID)
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_B_ID,
-                'data': {}
-            }
+            'widget': TEST_WIDGET_B_ID,
+            'data': {}
         }
 
         response = self.client.patch(url, data, format='json')
@@ -303,32 +291,28 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test A'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test A'
             }
         }
 
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['widget']['data']['title'], 'Test A')
+        self.assertEqual(response.data['data']['title'], 'Test A')
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test B'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test B'
             }
         }
 
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['widget']['data']['title'], 'Test B')
+        self.assertEqual(response.data['data']['title'], 'Test B')
 
     def test_zones_update_remove_widget(self):
         """Should be able to remove widget from zone"""
@@ -339,18 +323,16 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test A'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test A'
             }
         }
 
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['widget']['data']['title'], 'Test A')
+        self.assertEqual(response.data['data']['title'], 'Test A')
 
         data = {
             'widget': None
@@ -360,6 +342,7 @@ class ZonesTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['widget'], None)
+        self.assertEqual(response.data['data'], {})
 
     def test_widgets_validate_data(self):
         """Should be able to valiate your data"""
@@ -370,17 +353,15 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 'Test A'
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 'Test A'
             }
         }
 
         response = self.client.patch(url, data, format='json')
 
-        self.assertEqual(response.data['widget']['data']['title'], 'Test A')
+        self.assertEqual(response.data['data']['title'], 'Test A')
 
     def test_widgets_invalid_data(self):
         """Invalid data should raise an error"""
@@ -391,15 +372,13 @@ class ZonesTests(DispatchAPITestCase):
         url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
 
         data = {
-            'widget': {
-                'id': TEST_WIDGET_A_ID,
-                'data': {
-                    'title': 0
-                }
+            'widget': TEST_WIDGET_A_ID,
+            'data': {
+                'title': 0
             }
         }
 
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['widget']['title'][0], 'Title data must be a string')
+        self.assertEqual(response.data['title'][0], 'Title data must be a string')
