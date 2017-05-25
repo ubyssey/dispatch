@@ -22,6 +22,7 @@ from django.template import loader, Context
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
+from dispatch.apps.content import render
 from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -102,41 +103,9 @@ class Publishable(Model):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
         return Template().to_json()
 
-    def get_html(self):
-        """
-        Returns article content as HTML.
-        """
-        def prepare_html(nodes):
-            """
-            Processes each in the document, returning its rendered HTML representation.
-            """
-            html = ""
-            for node in nodes:
-                if type(node) is dict:
-                    # If node is a dictionary, append its rendered HTML.
-                    data = node['data']
-                    # If node is an ad, include section/id info for DFP
-                    if node['type'] == 'advertisement':
-                        data['id'] = len(html) % 1000
-                        data['section'] = self.section
-                        data['template'] = self.template
-
-                    if node['type'] == 'paragraph':
-                        html += "<p>%s</p>" % node['data']
-                    else:
-                        pass
-                        # TODO: Need to find better solution for this
-                        # html += embedlib.render(node['type'], data)
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    html += "<p>%s</p>" % node
-            return html
-
-        try:
-            # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(self.content)
-        except ValueError:
-            return self.content
+    @property
+    def html(self):
+        return render.content_to_html(self.content)
 
     def is_parent(self):
         return self.parent is None
