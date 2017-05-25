@@ -9,6 +9,8 @@ export const articleSchema = new Schema('articles')
 export const pageSchema = new Schema('pages')
 export const templateSchema = new Schema('templates')
 export const fileSchema = new Schema('files')
+export const zoneSchema = new Schema('zones')
+export const widgetSchema = new Schema('widgets')
 
 articleSchema.define({
   section: sectionSchema,
@@ -30,4 +32,8 @@ pageSchema.define({
 
 imageSchema.define({
   authors: arrayOf(personSchema)
+})
+
+zoneSchema.define({
+  widget: widgetSchema
 })
