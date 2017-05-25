@@ -3,7 +3,6 @@ import React from 'react'
 import { TextAreaInput } from '../inputs'
 
 export default function TextField(props) {
-
   return (
     <TextAreaInput
       placeholder={props.label}
@@ -11,5 +10,4 @@ export default function TextField(props) {
       rows='5'
       onChange={e => props.onChange(e.target.value)} />
   )
-
 }

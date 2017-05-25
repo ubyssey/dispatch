@@ -1,5 +1,6 @@
 import React from 'react'
 import R from 'ramda'
+import PropTypes from 'prop-types'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 
@@ -12,10 +13,14 @@ class SortableList extends React.Component {
   moveItem(dragIndex, hoverIndex) {
 
     const dragItem = this.props.items[dragIndex]
-    const hoverItem = this.props.items[hoverIndex]
+    //const hoverItem = this.props.items[hoverIndex]
+
+    // if (hoverIndex >= dragIndex) {
+    //   hoverIndex--
+    // }
 
     this.props.onChange(
-      R.update(hoverIndex, dragItem, R.update(dragIndex, hoverItem, this.props.items))
+      R.insert(hoverIndex, dragItem, R.remove(dragIndex, 1, this.props.items))
     )
   }
 
@@ -29,14 +34,29 @@ class SortableList extends React.Component {
           <Item
             key={item.id}
             index={i}
+            inline={this.props.inline}
             id={item.id}
-            text={item[this.props.attribute]}
-            moveItem={(dragIndex, hoverIndex) => this.moveItem(dragIndex, hoverIndex)}
-          />
+            moveItem={(dragIndex, hoverIndex) => this.moveItem(dragIndex, hoverIndex)}>
+            {this.props.renderItem(item)}
+          </Item>
         ))}
       </ul>
     )
   }
+}
+
+SortableList.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  renderItem: PropTypes.func.isRequired,
+  items: PropTypes.array,
+  entities: PropTypes.object,
+  inline: PropTypes.bool
+}
+
+SortableList.defaultProps = {
+  items: [],
+  entities: {},
+  inline: false
 }
 
 export default DragDropContext(HTML5Backend)(SortableList)

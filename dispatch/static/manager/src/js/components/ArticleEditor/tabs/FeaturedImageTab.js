@@ -34,7 +34,6 @@ export default function FeaturedImageTab(props) {
           <ImageInput
             fill={true}
             selected={props.featured_image.image}
-            entities={props.entities.images}
             onChange={updateImage} />
         </FormInput>
 
