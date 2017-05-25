@@ -204,3 +204,20 @@ class PagesTest(DispatchAPITestCase):
         # Can't delete a page that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_pages_search(self):
+        """Should be able to search through pages"""
+
+        page_1 = DispatchTestHelpers.create_page(self.client, 'page 1', 'page-1')
+        page_2 = DispatchTestHelpers.create_page(self.client, 'page 1 and 2', 'page-2')
+        page_3 = DispatchTestHelpers.create_page(self.client, 'page 3', 'page-3')
+
+        url = '%s?q=%s' % (reverse('api-pages-list'), 'page 1')
+
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['title'], 'page 1 and 2')
+        self.assertEqual(data['results'][1]['title'], 'page 1')
+        self.assertEqual(data['count'], 2)

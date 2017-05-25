@@ -7,7 +7,8 @@ devConfig.devtool = 'eval-cheap-module-source-map';
 devConfig.plugins = [
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': JSON.stringify('development')
+      'NODE_ENV': JSON.stringify('development'),
+      'API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:8000/api/')
     }
   })
 ];

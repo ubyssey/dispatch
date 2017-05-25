@@ -63,15 +63,34 @@ render((
 
           <Route path='pages'>
             <IndexRoute component={Pages.Pages.Index} />
+            <Route path='new' component={Pages.Pages.New} />
+            <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
           <Route path='components' component={Pages.Components} />
           <Route path='files' component={Pages.Files} />
-          <Route path='people' component={Pages.People} />
           <Route path='profile' component={Pages.Profile} />
 
           <Route path='integrations' component={Pages.Integrations.Index}>
             <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
+          </Route>
+
+          <Route path='tags'>
+            <IndexRoute component={Pages.Tags.Index} />
+            <Route path='new' component={Pages.Tags.NewTag} />
+            <Route path=':tagId' component={Pages.Tags.Tag} />
+          </Route>
+
+          <Route path='topics'>
+            <IndexRoute component={Pages.Topics.Index} />
+            <Route path='new' component={Pages.Topics.NewTopic} />
+            <Route path=':topicId' component={Pages.Topics.Topic} />
+          </Route>
+
+          <Route path='persons'>
+            <IndexRoute component={Pages.Persons.Index} />
+            <Route path='new' component={Pages.Persons.NewPerson} />
+            <Route path=':personId' component={Pages.Persons.Person} />
           </Route>
 
         </Route>

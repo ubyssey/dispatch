@@ -1,9 +1,12 @@
-from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
-from dispatch.apps.content.models import Person, User
-from django.core.urlresolvers import reverse
-from rest_framework import status
-from django.conf import settings
 from os.path import join
+from rest_framework import status
+
+from django.core.urlresolvers import reverse
+from django.conf import settings
+
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+from dispatch.tests.helpers import DispatchTestHelpers
+from dispatch.apps.content.models import Person, User
 
 class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     """A class to test the person API methods"""
@@ -12,7 +15,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test simple person creation, checks the response and database"""
 
         with open(self.get_input_file('test_image.jpg')) as test_image:
-            response = self._create_person(
+            response = DispatchTestHelpers.create_person(
+                self.client,
                 full_name='Test Person',
                 image=test_image,
                 slug='test-person',
@@ -33,7 +37,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that person update works correctly in both response and database"""
 
         # Create original person
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person',
             description='This is a description'
@@ -61,7 +66,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Clear authentication credentials
         self.client.credentials()
 
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person',
             description='This is a description'
@@ -73,7 +79,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Updating a person should fail with unauthenticated request"""
 
         # Create original person
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person',
             description='This is a description'
@@ -95,7 +102,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         Creating a person with no attributes should be pass
         TODO: Determine if want to change this behavior by changing command line 'stuff' for superuser
         """
-        response = self._create_person()
+        response = DispatchTestHelpers.create_person(self.client)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         person = Person.objects.get(pk=response.data['id'])
@@ -104,8 +111,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_duplicate_fullnames(self):
         """Having two persons with the same full name is fine"""
 
-        response1 = self._create_person(full_name='Test Person')
-        response2 = self._create_person(full_name='Test Person')
+        response1 = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
+        response2 = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
@@ -120,11 +127,13 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Having two persons with the same slug is not okay,
         because they can't have the same route"""
 
-        response1 = self._create_person(
+        response1 = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person 1',
             slug='test-person'
         )
-        response2 = self._create_person(
+        response2 = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person 2',
             slug='test-person'
         )
@@ -136,7 +145,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Simple person deletion test and throw error if trying to delete
         an item that is already deleted/doesn't exist"""
 
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person'
         )
@@ -156,7 +166,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_unauthorized_person_deletion(self):
         """Unauthorized deletion of a person isn't allowed"""
 
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person'
         )
@@ -176,7 +187,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         user = User.objects.get(pk=1)  # This is the user created in the setup
 
         # Create new person to attach to user
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             slug='test-person'
         )
@@ -196,7 +208,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Test a good image
         with open(self.get_input_file('test_image.jpg')) as test_image:
-            response = self._create_person(
+            response = DispatchTestHelpers.create_person(
+                self.client,
                 full_name='Test Person',
                 image=test_image,
                 slug='test-person',
@@ -211,7 +224,8 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test that ensures image validator on serializer is working.
         A bad path results in a BAD_REQUEST"""
 
-        response = self._create_person(
+        response = DispatchTestHelpers.create_person(
+            self.client,
             full_name='Test Person',
             image="fakeimagepath.jpg",
             slug='test-person-bad-image'
@@ -223,12 +237,12 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test the string representation methods of the model"""
 
         # Testing when a full name is provided
-        response = self._create_person(full_name='Test Person')
+        response = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
         person= Person.objects.get(pk=response.data['id'])
         self.assertEquals(str(person), 'Test Person')
 
         # Testing without a full name
-        response = self._create_person()
+        response = DispatchTestHelpers.create_person(self.client)
         person = Person.objects.get(pk=response.data['id'])
         self.assertEquals(str(person), '')
 
@@ -257,17 +271,19 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def _create_person(self, full_name='', image='', slug='', description=''):
-        """A helper method that creates a simple person object with the given attributes
-        and returns the response"""
+    def test_persons_search(self):
+        """Should be able to search through persons"""
 
-        url = reverse('api-persons-list')
+        person_1 = DispatchTestHelpers.create_person(self.client, full_name='John Doe')
+        person_2 = DispatchTestHelpers.create_person(self.client, full_name='Jane Doe')
+        person_3 = DispatchTestHelpers.create_person(self.client, full_name='Axel Jacobsen')
 
-        data = {
-            'full_name': full_name,
-            'image': image,
-            'slug': slug,
-            "description": description
-        }
+        url = '%s?q=%s' % (reverse('api-persons-list'), 'Doe')
 
-        return self.client.post(url, data, format='multipart')
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['full_name'], 'John Doe')
+        self.assertEqual(data['results'][1]['full_name'], 'Jane Doe')
+        self.assertEqual(data['count'], 2)
