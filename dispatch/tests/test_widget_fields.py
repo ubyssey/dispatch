@@ -59,7 +59,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data': 'This is a sentence'})
+        self.assertEqual(testfield.to_json(data), 'This is a sentence')
         self.assertEqual(testfield.prepare_data(data), 'This is a sentence')
 
     def test_char_field_invalid_label(self):
@@ -108,7 +108,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        self.assertEqual(testfield.to_json(data)['data'], 'This is a longer sentence than the one further up\nthis file')
+        self.assertEqual(testfield.to_json(data), 'This is a longer sentence than the one further up\nthis file')
         self.assertEqual(testfield.prepare_data(data), 'This is a longer sentence than the one further up\nthis file')
 
     def test_text_field_invalid_data(self):
@@ -140,11 +140,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         json = testfield.to_json(data)
 
         # Test some example entries
-        self.assertEqual(json['label'], 'Title')
-        self.assertEqual(json['data'][0]['id'], 1)
-        self.assertEqual(json['data'][1]['id'], 2)
-        self.assertEqual(json['data'][0]['headline'], u'Test headline 1')
-        self.assertEqual(json['data'][1]['headline'], u'Test headline 2')
+        self.assertEqual(json[0]['id'], 1)
+        self.assertEqual(json[1]['id'], 2)
+        self.assertEqual(json[0]['headline'], u'Test headline 1')
+        self.assertEqual(json[1]['headline'], u'Test headline 2')
 
     def test_article_single_id(self):
         """Should be able to create article field with only 1 id"""
@@ -163,9 +162,8 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         json = testfield.to_json(data)
 
         # Test some example entries
-        self.assertEqual(json['label'], 'Title')
-        self.assertEqual(json['data']['id'], 1)
-        self.assertEqual(json['data']['headline'], u'Test headline')
+        self.assertEqual(json['id'], 1)
+        self.assertEqual(json['headline'], u'Test headline')
 
     def test_article_prepare_data(self):
         """Should be able to return prepared data for the template"""
@@ -238,8 +236,13 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = None
 
-        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
+        self.assertEqual(testfield.to_json(data), None)
 
+        testfield = ArticleField('Title', many=True)
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), [])
 
     def test_image_field(self):
         """Should be able to create image field"""
@@ -261,11 +264,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         image_1 = Image.objects.get(pk=image_id_1)
         image_2 = Image.objects.get(pk=image_id_2)
 
-        self.assertEqual(json['label'], 'Title')
-        self.assertEqual(json['data'][0]['id'], 1)
-        self.assertEqual(json['data'][0]['filename'], image_1.filename())
-        self.assertEqual(json['data'][1]['id'], 2)
-        self.assertEqual(json['data'][1]['filename'], image_2.filename())
+        self.assertEqual(json[0]['id'], 1)
+        self.assertEqual(json[0]['filename'], image_1.filename())
+        self.assertEqual(json[1]['id'], 2)
+        self.assertEqual(json[1]['filename'], image_2.filename())
 
 
     def test_image_single_id(self):
@@ -284,10 +286,8 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         image = Image.objects.get(pk=image_id)
 
-        # Test some example entries
-        self.assertEqual(json['label'], 'Title')
-        self.assertEqual(json['data']['id'], 1)
-        self.assertEqual(json['data']['filename'], image.filename())
+        self.assertEqual(json['id'], 1)
+        self.assertEqual(json['filename'], image.filename())
 
     def test_image_prepare_data(self):
         """Should be able to return prepared data for the template"""
@@ -375,7 +375,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = None
 
-        self.assertEqual(testfield.to_json(data), {'label' : 'Title', 'data' : None})
+        self.assertEqual(testfield.to_json(data), None)
 
     def test_widget_field_initialization(self):
         """Should be able to initialize a new WidgetField"""
@@ -456,8 +456,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         json = testfield.to_json(field_data)
 
-        self.assertEqual(json['label'], 'Title')
-        self.assertEqual(json['data']['id'], 'test-widget')
+        self.assertEqual(json['id'], 'test-widget')
 
     def test_widget_field_prepare_data(self):
         """Prepare_data should return widget"""
@@ -529,9 +528,9 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         json = testfield.to_json(field_data)
         prepared_data =  testfield.prepare_data(field_data).data
 
-        self.assertEqual(json['data']['id'], 'test-widget')
-        self.assertEqual(json['data']['data']['widget']['id'], 'test-widget-2')
-        self.assertEqual(json['data']['data']['widget']['data']['widget']['id'], 'test-widget-3')
+        self.assertEqual(json['id'], 'test-widget')
+        self.assertEqual(json['data']['widget']['id'], 'test-widget-2')
+        self.assertEqual(json['data']['widget']['data']['widget']['id'], 'test-widget-3')
 
         self.assertEqual(prepared_data['widget']['id'], 'test-widget-2')
         self.assertEqual(prepared_data['widget']['data']['widget']['id'], 'test-widget-3')
@@ -562,4 +561,4 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         data = None
         widget = WidgetField('Title')
 
-        self.assertEqual(widget.to_json(data), {'data': None, 'label': 'Title'})
+        self.assertEqual(widget.to_json(data), None)

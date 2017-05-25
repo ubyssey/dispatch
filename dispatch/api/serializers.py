@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.apps.api.fields import JSONField
+from dispatch.apps.api.fields import JSONField, PrimaryKeyField
 from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
 
 from dispatch.theme import ThemeManager
@@ -419,46 +419,47 @@ class FieldSerializer(serializers.Serializer):
     type = serializers.CharField()
     name = serializers.CharField()
     label = serializers.CharField()
+    many = serializers.BooleanField()
 
 class WidgetSerializer(serializers.Serializer):
 
     id = serializers.SlugField()
     name = serializers.CharField(read_only=True)
-    data = JSONField(required=False)
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
-
-    def validate(self, widget_data):
-        """Perform validation of the data"""
-
-        errors = {}
-
-        try:
-            widget = ThemeManager.Widgets.get(widget_data['id'])
-
-        except WidgetNotFound as e:
-            errors['id'] = str(e)
-
-        else:
-            for field in widget.fields:
-
-                field_data = widget_data['data'].get(field.name)
-
-                if field_data is not None:
-                    try:
-                        field.validate(field_data)
-                    except InvalidField as e:
-                        errors[field.name] = str(e)
-
-        if errors:
-            raise ValidationError(errors)
-
-        return widget_data
 
 class ZoneSerializer(serializers.Serializer):
 
     id = serializers.SlugField(read_only=True)
     name = serializers.CharField(read_only=True)
-    widget = WidgetSerializer(allow_null=True)
+    widget = PrimaryKeyField(allow_null=True, serializer=WidgetSerializer(allow_null=True))
+    data = JSONField(required=False)
+
+    def validate(self, data):
+        """Perform validation of the widget data"""
+
+        errors = {}
+
+        if data.get('widget') is not None:
+
+            try:
+                widget = ThemeManager.Widgets.get(data['widget'])
+            except WidgetNotFound as e:
+                errors['widget'] = str(e)
+            else:
+                for field in widget.fields:
+
+                    field_data = data['data'].get(field.name)
+
+                    if field_data is not None:
+                        try:
+                            field.validate(field_data)
+                        except InvalidField as e:
+                            errors[field.name] = str(e)
+
+        if errors:
+            raise ValidationError(errors)
+
+        return data
 
     def update(self, instance, validated_data):
 
@@ -467,6 +468,6 @@ class ZoneSerializer(serializers.Serializer):
         if not widget:
             instance.delete()
         else:
-            instance.save(validated_data.get('widget'))
+            instance.save(validated_data)
 
         return instance
