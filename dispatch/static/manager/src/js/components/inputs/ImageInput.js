@@ -73,7 +73,7 @@ class ImageInputComponent extends React.Component {
           items={this.getSelected()}
           entities={this.props.entities}
           onChange={selected => this.props.onChange(selected)}
-          inline={true}
+          inline={this.props.many}
           renderItem={image => (
             <Image
               key={image.id}
