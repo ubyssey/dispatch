@@ -155,6 +155,9 @@ class ImageField(Field):
         }
 
     def prepare_data(self, data):
+        if not data:
+            return self.default
+
         if self.many:
             return map(self.get_image, data)
         else:
@@ -177,8 +180,11 @@ class WidgetField(Field):
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
-        serializer = WidgetSerializer(widget)
-        return serializer.data
+
+        return {
+            'id': data['id'],
+            'data': widget.to_json()
+        }
 
     def to_json(self, data):
 
