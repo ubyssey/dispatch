@@ -124,8 +124,7 @@ class Widget(object):
         result = {}
 
         for field in self.fields:
-            # TODO: Refactor field.to_json to return only data
-            result[field.name] = field.to_json(self.data.get(field.name))['data']
+            result[field.name] = field.to_json(self.data.get(field.name))
 
         return result
 
