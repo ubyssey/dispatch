@@ -235,10 +235,10 @@ const DispatchAPI = {
   },
   persons: {
     list: (token, query) => {
-      return getRequest('people', null, query, token)
+      return getRequest('persons', null, query, token)
     },
     create: (token, fullName) => {
-      return postRequest('people', null, {full_name: fullName}, token)
+      return postRequest('persons', null, {full_name: fullName}, token)
     }
   },
   topics: {
@@ -295,6 +295,20 @@ const DispatchAPI = {
     },
     recent: (token) => {
       return getRequest('dashboard/recent', null, {}, token)
+    }
+  },
+  zones: {
+    list: (token) => {
+      return getRequest('zones', null, null, token)
+    },
+    get: (token, zoneId) => {
+      return getRequest('zones', zoneId, null, token)
+    },
+    save: (token, zoneId, data) => {
+      return patchRequest('zones', zoneId, data, token)
+    },
+    widgets: (token, zoneId) => {
+      return getRequest('zones.widgets', zoneId, null, token)
     }
   }
 }

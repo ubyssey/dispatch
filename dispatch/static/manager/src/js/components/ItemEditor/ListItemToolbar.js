@@ -14,6 +14,15 @@ export default function ListItemToolbar(props) {
     <ToolbarTitle><span className='u-text-light'>New {props.type}</span></ToolbarTitle>
   )
 
+  const deleteButton = (
+    <AnchorButton
+      intent={Intent.DANGER}
+      disabled={props.isNew}
+      onClick={() => props.deleteListItem()}>
+      <span className='pt-icon-standard pt-icon-trash'></span>Delete
+    </AnchorButton>
+  )
+
   return (
     <Toolbar>
       <ToolbarLeft>
@@ -28,12 +37,7 @@ export default function ListItemToolbar(props) {
           intent={Intent.SUCCESS}
           onClick={() => props.saveListItem()}>
           <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
-        <AnchorButton
-          intent={Intent.DANGER}
-          disabled={props.isNew}
-          onClick={() => props.deleteListItem()}>
-          <span className='pt-icon-standard pt-icon-trash'></span>Delete
-        </AnchorButton>
+        {props.deleteListItem ? deleteButton : null}
       </ToolbarRight>
     </Toolbar>
   )

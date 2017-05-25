@@ -131,6 +131,12 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.TOPICS.DELETE_MANY):
     return showToast('Some topics could not be deleted', Intent.DANGER)
 
+  // Zones
+  case fulfilled(types.ZONES.SAVE):
+    return showToast('Zone saved')
+  case rejected(types.ZONES.SAVE):
+    return showToast('Zone could not be saved', Intent.DANGER)
+
   default:
     return toaster
 
