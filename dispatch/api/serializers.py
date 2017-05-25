@@ -439,20 +439,22 @@ class ZoneSerializer(serializers.Serializer):
 
         errors = {}
 
-        try:
-            widget = ThemeManager.Widgets.get(data['widget'])
-        except WidgetNotFound as e:
-            errors['widget'] = str(e)
-        else:
-            for field in widget.fields:
+        if data.get('widget') is not None:
 
-                field_data = data['data'].get(field.name)
+            try:
+                widget = ThemeManager.Widgets.get(data['widget'])
+            except WidgetNotFound as e:
+                errors['widget'] = str(e)
+            else:
+                for field in widget.fields:
 
-                if field_data is not None:
-                    try:
-                        field.validate(field_data)
-                    except InvalidField as e:
-                        errors[field.name] = str(e)
+                    field_data = data['data'].get(field.name)
+
+                    if field_data is not None:
+                        try:
+                            field.validate(field_data)
+                        except InvalidField as e:
+                            errors[field.name] = str(e)
 
         if errors:
             raise ValidationError(errors)
