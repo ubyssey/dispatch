@@ -4,7 +4,7 @@ import TextInput from './TextInput'
 import ImageInput from './ImageInput'
 import InputGroup from './InputGroup'
 import FormInput from './FormInput'
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 import TextAreaInput from './TextAreaInput'
 import SelectInput from './SelectInput'
 
@@ -17,7 +17,7 @@ export {
   ImageInput as ImageInput,
   InputGroup as InputGroup,
   FormInput as FormInput,
-  MultiSelectInput as MultiSelectInput,
+  ItemSelectInput as ItemSelectInput,
   TextAreaInput as TextAreaInput,
   SelectInput as SelectInput
 }

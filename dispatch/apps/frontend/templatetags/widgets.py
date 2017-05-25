@@ -13,5 +13,4 @@ def zone(zone_id):
     except ZoneNotFound:
         return None
 
-
     return zone.widget.render()
