@@ -22,6 +22,49 @@ class UserTests(DispatchAPITestCase):
         response = self._create_user(email="test@gmail.com", person_id=123)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_empty_user(self):
+        """Creating an empty user should fail"""
+        url = reverse('api-users-list')
+        response = self.client.post(url, {}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_duplicate_emails(self):
+        """Creating a user with duplicate emails should fail"""
+        response1 = self._create_user('test@gmail.com')
+        response2 = self._create_user('test@gmail.com')
+
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_409_CONFLICT)
+
+    def test_unauthorized_user_creation(self):
+        """Test unauthorized user creation"""
+        #NOTE: Can't use helper method here, credential clear will break _create_person
+        person_id = self._create_person("Attached Person").data['id']
+
+        self.client.credentials()
+        url = reverse('api-users-list')
+        data = {
+            'email' : 'testemail123@ubyssey.ca',
+            'person_id' : person_id,
+            'password_a': 'Matching',
+            'password_b': 'NotMatching'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthorized_user_update(self):
+        """Test unauthorized user update"""
+        response = self._create_user('test@gmail.com')
+
+        url = reverse('api-users-detail', args=[response.data['id']])
+        data = {
+            'email' : 'newEmail@gmail.com'
+        }
+        self.client.credentials()
+        response = self.client.patch(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_unauthorized_listing_get_request(self):
         """Test that an a get request for users listing without
         admin credentials results in a UNAUTHORIZED response"""
@@ -137,5 +180,4 @@ class UserTests(DispatchAPITestCase):
             'slug': slug,
             "description": description
         }
-
         return self.client.post(url, data, format='multipart')
