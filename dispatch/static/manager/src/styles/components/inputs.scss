@@ -6,83 +6,27 @@
 .c-form-input label.pt-label > .pt-select,
 .c-form-input label.pt-label > .pt-button,
 .c-form-input label.pt-label > .pt-switch,
-.c-form-input label.pt-label > .c-input--multi-select {
+.c-form-input label.pt-label > .c-input--item-select {
   margin-top: 10px;
 }
 
 // Component: MultiSelectInput
-.c-input--multi-select {
+.c-input--item-select {
+  // Text
+  font-weight: $font-weight-semi-bold;
+
   .pt-popover {
     // Structure
     margin-bottom: 1rem;
   }
 }
 
-.c-input--multi-select__values {
-  // Structure
-  margin-bottom: 5px;
-}
-
-.c-input--multi-select__no-results {
-  // Text
-  color: $color-text-gray;
-}
-
-.c-input--multi-select__value,
-.c-input--multi-select__no-results {
-  // Structure
-  height: $input-height;
-  padding-left: $input-text-padding;
-  padding-right: $input-text-padding;
-
-  // Text
-  @include font-size($input-font-size);
-  line-height: $input-height - 2;
-}
-
-.c-input--multi-select__value {
-  // Structure
-  position: relative;
-  display: inline-block;
-  margin-right: 0.35rem;
-  margin-bottom: 0.5rem;
-
-  // Border
-  border: 1px solid $color-border-gray-dark;
-  border-radius: $input-text-border-radius;
-
-  // Exrtas
-  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1);
-}
-
-.c-input--multi-select__value__icon {
-  // Structure
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: $input-height;
-  padding-left: $input-text-padding;
-  padding-right: $input-text-padding;
-
-  // Text
-  line-height: $input-height - 2;
-
-  // Extras
-  cursor: pointer;
-  opacity: 0.5;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.c-input--multi-select__dropdown {
+.c-input--item-select__dropdown {
   // Structure
   width: 350px;
 }
 
-.c-input--multi-select__search {
+.c-input--item-select__search {
   // Structure
   padding: 0.5rem;
 

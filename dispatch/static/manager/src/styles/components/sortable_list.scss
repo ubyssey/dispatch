@@ -1,0 +1,30 @@
+@import '../utilities/colors';
+
+// Component: SortableList
+
+.c-sortable-list {
+  // Structure
+  margin-bottom: 10px;
+}
+
+.c-sortable-list__item {
+  // Structure
+  position: relative;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  max-width: 400px;
+
+  // Background
+  background-color: #fff;
+
+  // Border
+  border: 1px solid $color-border-gray-dark;
+  border-radius: 3px;
+
+  // Text
+  line-height: 2rem;
+
+  // Exrtas
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1);
+}

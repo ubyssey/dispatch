@@ -1,19 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 
 import * as zonesActions from '../../actions/ZonesActions'
 
 class WidgetSelectInputComponent extends React.Component {
-
-  addWidget(widgetId) {
-    this.props.update(widgetId)
-  }
-
-  removeWidget() {
-    this.props.update(null)
-  }
 
   listWidgets(query) {
     let queryObj = {}
@@ -27,12 +19,12 @@ class WidgetSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <MultiSelectInput
-        selected={this.props.selected ? [this.props.selected] : []}
+      <ItemSelectInput
+        many={false}
+        selected={this.props.selected}
         results={this.props.widgets.ids}
         entities={this.props.entities.widgets}
-        addValue={(id) => this.addWidget(id)}
-        removeValue={(id) => this.removeWidget(id)}
+        onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listWidgets(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Change widget' : 'Set widget'} />

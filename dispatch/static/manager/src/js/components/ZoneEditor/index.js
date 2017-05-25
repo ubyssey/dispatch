@@ -50,22 +50,24 @@ class ZoneEditorComponent extends React.Component {
 
     return (
       <DocumentTitle title={`Widgets - ${this.props.zone.name}`}>
-        <div className='u-container-main'>
-          <ListItemToolbar
-            name={this.props.zone.name}
-            type='Zone'
-            saveListItem={() => this.saveZone()}
-            goBack={this.props.goBack} />
-          <div className='u-container-body'>
-            <Panel title='Widget'>
-              <WidgetSelector
-                zoneId={this.props.zoneId}
-                selected={this.props.zone.widget}
-                update={widgetId => this.updateWidget(widgetId)} />
-            </Panel>
-            <Panel title='Fields'>
-            {fields}
-            </Panel>
+        <div>
+          <div className='u-container-main'>
+            <ListItemToolbar
+              name={this.props.zone.name}
+              type='Zone'
+              saveListItem={() => this.saveZone()}
+              goBack={this.props.goBack} />
+            <div className='u-container-body'>
+              <Panel title='Widget'>
+                <WidgetSelector
+                  zoneId={this.props.zoneId}
+                  selected={this.props.zone.widget}
+                  update={widgetId => this.updateWidget(widgetId)} />
+              </Panel>
+              <Panel title='Fields'>
+              {fields}
+              </Panel>
+            </div>
           </div>
         </div>
       </DocumentTitle>

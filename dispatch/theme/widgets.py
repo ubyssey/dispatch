@@ -5,6 +5,7 @@ from django.template import loader
 from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import Field
+from dispatch.theme.exceptions import InvalidField
 
 class MetaZone(type):
     def __init__(cls, name, bases, nmspc):
@@ -135,10 +136,7 @@ class Widget(object):
 
         for field in self.fields:
             data = self.data.get(field.name)
-            if data:
-                result[field.name] = field.prepare_data(data)
-            else:
-                result[field.name] = None
+            result[field.name] = field.prepare_data(data)
 
         return result
 
