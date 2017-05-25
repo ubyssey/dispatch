@@ -24,6 +24,11 @@ function normalizeZone(zone) {
   let fieldEntities = {}
 
   fields.forEach(field => {
+
+    if (!zone.data[field.name]) {
+      return
+    }
+
     const normalizedData = normalizeZoneData(field, zone.data[field.name])
 
     fieldEntities = R.mergeWith(
