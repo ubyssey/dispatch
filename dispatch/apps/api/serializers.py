@@ -8,7 +8,7 @@ from dispatch.apps.api.fields import JSONField, PrimaryKeyField
 from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
 
 from dispatch.theme import ThemeManager
-from dispatch.theme.exceptions import WidgetNotFound
+from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class UserSerializer(DispatchModelSerializer):
     """
@@ -435,14 +435,24 @@ class ZoneSerializer(serializers.Serializer):
     data = JSONField(required=False)
 
     def validate(self, data):
+        """Perform validation of the widget data"""
 
         errors = {}
 
-        if data['widget'] is not None:
-            try:
-                ThemeManager.Widgets.get(data['widget'])
-            except WidgetNotFound as e:
-                errors['widget'] = str(e)
+        try:
+            widget = ThemeManager.Widgets.get(data['widget'])
+        except WidgetNotFound as e:
+            errors['widget'] = str(e)
+        else:
+            for field in widget.fields:
+
+                field_data = data['data'].get(field.name)
+
+                if field_data is not None:
+                    try:
+                        field.validate(field_data)
+                    except InvalidField as e:
+                        errors[field.name] = str(e)
 
         if errors:
             raise ValidationError(errors)
