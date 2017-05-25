@@ -1,16 +1,25 @@
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
 from dispatch.apps.content.models import Article, Image, Event
-from dispatch.theme.exceptions import InvalidField, WidgetNotFound
+
 from dispatch.theme import ThemeManager
-
-
+from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 
 class Field(object):
     """Base class for all widget fields"""
 
+    _creation_counter = 0
+
     def __init__(self, label, many=False):
         self.label = label
         self.many = many
+
+        if self.many:
+            self.default = []
+        else:
+            self.default = None
+
+        self._creation_counter = Field._creation_counter
+        Field._creation_counter += 1
 
         if not isinstance(self.label, basestring):
             raise InvalidField('Label must be a string')
@@ -21,10 +30,7 @@ class Field(object):
 
     def to_json(self, data):
         """Returns JSON representation of field data"""
-        return {
-            'label' : self.label,
-            'data' : data
-        }
+        return data
 
     def prepare_data(self, data):
         """Prepares field data for use in a template"""
@@ -35,7 +41,7 @@ class ModelField(Field):
 
     def validate(self, data):
         if self.many:
-            if (type(data) != list) or (not all([isinstance(id, int) for id in data])):
+            if not isinstance(data, list) or not all([isinstance(id, int) for id in data]):
                 raise InvalidField('Data must be list of integers')
         else:
             if not isinstance(data, int):
@@ -53,22 +59,21 @@ class ModelField(Field):
         return serializer.data
 
     def to_json(self, data):
+        if not data:
+            return self.default
 
-        def get_data():
-            if not data:
-                return
-
+        try:
             if self.many:
                 return map(self.get_model_json, data)
             else:
                 return self.get_model_json(data)
-
-        return {
-            'label': self.label,
-            'data': get_data()
-        }
+        except:
+            return self.default
 
     def prepare_data(self, data):
+        if not data:
+            return self.default
+
         if self.many:
             return map(self.get_model, data)
         else:
@@ -84,7 +89,7 @@ class CharField(Field):
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
-        elif len(data) > 255:
+        if len(data) > 255:
             raise InvalidField('Max length for charfield data is 255')
 
 class TextField(Field):
@@ -114,7 +119,6 @@ class WidgetField(Field):
     type = 'widget'
 
     def validate(self, data):
-
         if not isinstance(data, basestring):
             raise InvalidField('Data must be a string')
 
@@ -127,21 +131,17 @@ class WidgetField(Field):
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
-        serializer = WidgetSerializer(widget)
-        return serializer.data
-
-    def to_json(self, data):
-
-        def get_data():
-            if not data:
-                return None
-
-            return self.get_widget_json(data)
 
         return {
-            'label': self.label,
-            'data': get_data()
+            'id': data['id'],
+            'data': widget.to_json()
         }
+
+    def to_json(self, data):
+        if not data:
+            return self.default
+
+        return self.get_widget_json(data)
 
     def prepare_data(self, data):
         widget = self.get_widget(data['id'])

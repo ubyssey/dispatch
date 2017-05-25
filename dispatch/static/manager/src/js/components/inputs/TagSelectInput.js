@@ -1,26 +1,11 @@
 import React from 'react'
-import R from 'ramda'
 import { connect } from 'react-redux'
 
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 
 import tagsActions from '../../actions/TagsActions'
 
 class TagSelectInputComponent extends React.Component {
-
-  addTag(tagId) {
-    let newTags = R.append(tagId, this.props.selected)
-    this.props.update(newTags)
-  }
-
-  removeTag(tagId) {
-    let newTags = R.remove(
-      R.findIndex(R.equals(tagId), this.props.selected),
-      1,
-      this.props.selected
-    )
-    this.props.update(newTags)
-  }
 
   listTags(query) {
     let queryObj = {}
@@ -34,12 +19,11 @@ class TagSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <MultiSelectInput
+      <ItemSelectInput
         selected={this.props.selected}
         results={this.props.tags.ids}
         entities={this.props.entities.tags}
-        addValue={(id) => this.addTag(id)}
-        removeValue={(id) => this.removeTag(id)}
+        onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTags(query)}
         attribute='name'
         editMessage={this.props.selected.length ? 'Edit tags' : 'Add tags'} />
