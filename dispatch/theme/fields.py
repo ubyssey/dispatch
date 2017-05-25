@@ -30,10 +30,7 @@ class Field(object):
 
     def to_json(self, data):
         """Returns JSON representation of field data"""
-        return {
-            'label' : self.label,
-            'data' : data
-        }
+        return data
 
     def prepare_data(self, data):
         """Prepares field data for use in a template"""
@@ -84,23 +81,16 @@ class ArticleField(Field):
         return serializer.data
 
     def to_json(self, data):
+        if not data:
+            return self.default
 
-        def get_data():
-            if not data:
-                return self.default
-
-            try:
-                if self.many:
-                    return map(self.get_article_json, data)
-                else:
-                    return self.get_article_json(data)
-            except:
-                return self.default
-
-        return {
-            'label': self.label,
-            'data': get_data()
-        }
+        try:
+            if self.many:
+                return map(self.get_article_json, data)
+            else:
+                return self.get_article_json(data)
+        except:
+            return self.default
 
     def prepare_data(self, data):
         if not data:
@@ -136,23 +126,16 @@ class ImageField(Field):
         return serializer.data
 
     def to_json(self, data):
+        if not data:
+            return self.default
 
-        def get_data():
-            if not data:
-                return self.default
-
-            try:
-                if self.many:
-                    return map(self.get_image_json, data)
-                else:
-                    return self.get_image_json(data)
-            except:
-                return self.default
-
-        return {
-            'label': self.label,
-            'data': get_data()
-        }
+        try:
+            if self.many:
+                return map(self.get_image_json, data)
+            else:
+                return self.get_image_json(data)
+        except:
+            return self.default
 
     def prepare_data(self, data):
         if not data:
@@ -187,17 +170,10 @@ class WidgetField(Field):
         }
 
     def to_json(self, data):
+        if not data:
+            return self.default
 
-        def get_data():
-            if not data:
-                return self.default
-
-            return self.get_widget_json(data)
-
-        return {
-            'label': self.label,
-            'data': get_data()
-        }
+        return self.get_widget_json(data)
 
     def prepare_data(self, data):
         widget = self.get_widget(data['id'])
