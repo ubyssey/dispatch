@@ -151,6 +151,45 @@ class UserTests(DispatchAPITestCase):
         user = User.objects.get(pk=response.data['id'])
         self.assertEqual(user.email, UPDATED_EMAIL)
 
+    def test_delete_user(self):
+        """Simple user deletion test"""
+
+        response = self._create_user(
+            email='test@gmail.com',
+            full_name='Attached Person'
+        )
+        user_id = response.data['id']
+        person_id = response.data['person_id']
+        # Generate detail URL
+        url = reverse('api-users-detail', args=[user_id])
+
+        # Successful deletion should return 204
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(User.objects.filter(id=user_id).exists())
+
+        # Can't delete an user that has already been deleted
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Check that attached person is not deleted
+        url = reverse('api-persons-detail', args=[person_id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(Person.objects.filter(id=person_id).exists())
+
+
+    def test_unauthorized_user_deletion(self):
+        """Unauthorized deletion of a user isn't allowed"""
+
+        response = self._create_user(
+            email='test@gmail.com'
+        )
+        url = reverse('api-users-detail', args=[response.data['id']])
+        self.client.credentials()
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def _create_user(self, email, full_name='Attached Person', person_id=None):
         """
         A helper method that creates a simple user object with the given attributes
@@ -165,7 +204,7 @@ class UserTests(DispatchAPITestCase):
             'password_a': 'TheBestPassword',
             'password_b': 'TheBestPassword'
         }
-        
+
         return self.client.post(url, data, format='json')
 
     def _create_person(self, full_name='', image='', slug='', description=''):
