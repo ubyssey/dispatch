@@ -28,7 +28,7 @@ export default function Header(props) {
               <a>Manage <i className='fa fa-caret-down left'></i></a>
               <ul>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/components/'><span className='pt-icon-standard pt-icon-widget' /> components</Link>
+                  <Link to='/widgets/'><span className='pt-icon-standard pt-icon-widget' /> widgets</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
                   <Link to='/files/'><span className='pt-icon-standard pt-icon-document' /> files</Link>

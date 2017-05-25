@@ -129,7 +129,6 @@ export class ResourceActions {
           })
         })
         .catch(error => {
-          console.log(error)
           dispatch({
             type: rejected(this.types.CREATE),
             payload: error
