@@ -40,10 +40,16 @@ export default function Header(props) {
                   <Link to='/sections/'><span className='pt-icon-standard pt-icon-properties' /> sections</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/people/'><span className='pt-icon-standard pt-icon-person' /> people</Link>
+                  <Link to='/persons/'><span className='pt-icon-standard pt-icon-person' /> persons</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
                   <Link to='/integrations/'><span className='pt-icon-standard pt-icon-box' /> integrations</Link>
+                </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/tags/'><span className='pt-icon-standard pt-icon-tag' /> tags</Link>
+                </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/topics/'><span className='pt-icon-standard pt-icon-ninja' /> topics</Link>
                 </li>
               </ul>
             </li>
