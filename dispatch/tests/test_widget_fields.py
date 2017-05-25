@@ -433,6 +433,20 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(type(widget), type(testwidget))
 
+    def test_widget_field_invalid_data(self):
+        """Trying to validate invalid data should result in InvalidField error"""
+
+        testfield = WidgetField('Title')
+
+        # The data to be validated - valid data are basestrings
+        widget_id = 1
+
+        try:
+            testfield.validate(widget_id)
+            self.fail('Widget ID was invalid - validate method should have raised Invalid Field')
+        except InvalidField:
+            pass
+
     def test_widget_field_to_json(self):
         """Should be able to get to_json from field"""
 
@@ -486,7 +500,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(type(prepared_data), type(widget))
 
     def test_get_all_widgets(self):
-        """Get all the widgets recursively associated with a field"""
+        """Get all the widgets associated with a field"""
 
         register.widget(TestWidget)
         register.widget(TestWidget2)
