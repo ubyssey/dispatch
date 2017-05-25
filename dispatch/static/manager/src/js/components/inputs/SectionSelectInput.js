@@ -1,19 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 
 import sectionsActions from '../../actions/SectionsActions'
 
 class SectionSelectInputComponent extends React.Component {
-
-  addSection(sectionId) {
-    this.props.update(sectionId)
-  }
-
-  removeSection() {
-    this.props.update(null)
-  }
 
   listSections(query) {
     let queryObj = {}
@@ -27,12 +19,12 @@ class SectionSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <MultiSelectInput
-        selected={this.props.selected ? [this.props.selected] : []}
+      <ItemSelectInput
+        many={false}
+        selected={this.props.selected}
         results={this.props.sections.ids}
         entities={this.props.entities.sections}
-        addValue={(id) => this.addSection(id)}
-        removeValue={(id) => this.removeSection(id)}
+        onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Edit section' : 'Add section'} />
