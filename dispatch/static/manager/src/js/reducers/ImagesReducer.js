@@ -12,7 +12,6 @@ import {
 let manyReducer = buildManyResourceReducer(types.IMAGES)
 
 manyReducer.handle(fulfilled(types.IMAGES.CREATE), (state, action) => {
-  console.log('test', action)
   return R.merge(state, {
     ids: R.prepend(action.payload.data.result, state.ids)
   })

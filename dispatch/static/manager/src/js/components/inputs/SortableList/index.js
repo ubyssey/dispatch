@@ -13,11 +13,6 @@ class SortableList extends React.Component {
   moveItem(dragIndex, hoverIndex) {
 
     const dragItem = this.props.items[dragIndex]
-    //const hoverItem = this.props.items[hoverIndex]
-
-    // if (hoverIndex >= dragIndex) {
-    //   hoverIndex--
-    // }
 
     this.props.onChange(
       R.insert(hoverIndex, dragItem, R.remove(dragIndex, 1, this.props.items))
