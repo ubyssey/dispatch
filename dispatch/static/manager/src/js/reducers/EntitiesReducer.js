@@ -23,10 +23,12 @@ const initialState = {
   persons: {},
   topics: {},
   tags: {},
+  galleries: {},
   local: {
     articles: {},
     images: {},
-    sections: {}
+    sections: {},
+    galleries: {}
   }
 }
 

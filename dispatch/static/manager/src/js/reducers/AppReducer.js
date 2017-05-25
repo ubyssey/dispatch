@@ -15,6 +15,7 @@ import toasterReducer from './ToasterReducer'
 import editorReducer from './EditorReducer'
 import integrationsReducer from './IntegrationsReducer'
 import dashboardReducer from './DashboardReducer'
+import galleriesReducer from './GalleriesReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -31,5 +32,6 @@ export default combineReducers({
   toaster: toasterReducer,
   editor: editorReducer,
   integrations: integrationsReducer,
-  dashboard: dashboardReducer
+  dashboard: dashboardReducer,
+  galleries: galleriesReducer
 })
