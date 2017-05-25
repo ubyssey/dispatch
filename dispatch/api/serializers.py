@@ -479,5 +479,11 @@ class EventSerializer(DispatchModelSerializer):
             'id',
             'title',
             'description',
-            'host'
+            'host',
+            'image',
+            'start_time',
+            'end_time',
+            'location',
+            'category',
+            'facebook_url'
         )
