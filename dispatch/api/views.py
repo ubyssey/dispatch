@@ -14,12 +14,12 @@ from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
 from dispatch.apps.api.exceptions import ProtectedResourceError
 
 from dispatch.theme import ThemeManager
@@ -384,6 +384,26 @@ class DashboardViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data)
+
+class EventViewSet(DispatchModelViewSet):
+    """ViewSet for Event"""
+
+    model = Event
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            # TODO: Add query by category
+            queryset = queryset.filter(
+                Q(title__icontains=q) |
+                Q(description__icontains=q) |
+                Q(host__icontains=q)
+            )
+        return queryset
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))

@@ -1,6 +1,6 @@
-from dispatch.apps.content.models import Article, Image
+from dispatch.apps.content.models import Article, Image, Event
 from dispatch.theme import register
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, WidgetField, Field
+from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, WidgetField, EventField, Field
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -186,7 +186,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result[1].title, article_2.data['headline'])
 
     def test_article_false_many(self):
-        """Test the case where many is false where you have more than 1 article"""
+        """Test the case where many is false when you have more than 1 article"""
 
         testfield = ArticleField('Title')
 
@@ -224,7 +224,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         id = -1
 
         try:
-            testfield.get_article(id)
+            testfield.get_model(id)
             self.fail('Field data is invalid, exception should have been thrown')
         except Article.DoesNotExist:
             pass
@@ -328,7 +328,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         except:
             pass
 
-    def test_not_implemented_validated_method(self):
+    def test_not_implemented_validate_method(self):
         """Tests that not writing a validate method for a new field raises an error"""
 
         testfield = Field('Test Label')
@@ -342,7 +342,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
             pass
 
     def test_image_singular_data(self):
-        """Test the case where ArticleField is initialized with many, but given 1 piece of data"""
+        """Test the case where ImageField is initialized with many, but given 1 piece of data"""
 
         testfield = ImageField('Title', many=True)
 
@@ -364,11 +364,11 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         id = 1
 
         try:
-            testfield.get_image(id)
+            testfield.get_model(id)
         except Image.DoesNotExist:
             pass
 
-    def test_image_none_data_to_json(self):
+    def test_image_to_json_no_data(self):
         """Test the case where None data is passed to 'to_json' """
 
         testfield = ImageField('Title')
@@ -433,6 +433,20 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(type(widget), type(testwidget))
 
+    def test_widget_field_invalid_data(self):
+        """Trying to validate invalid data should result in InvalidField error"""
+
+        testfield = WidgetField('Title')
+
+        # The data to be validated - valid data are basestrings
+        widget_id = 1
+
+        try:
+            testfield.validate(widget_id)
+            self.fail('Widget ID was invalid - validate method should have raised Invalid Field')
+        except InvalidField:
+            pass
+
     def test_widget_field_to_json(self):
         """Should be able to get to_json from field"""
 
@@ -485,7 +499,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(type(prepared_data), type(widget))
 
     def test_get_all_widgets(self):
-        """Get all the widgets recursively associated with a field"""
+        """Get all the widgets associated with a field"""
 
         register.widget(TestWidget)
         register.widget(TestWidget2)
@@ -555,10 +569,126 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         except WidgetNotFound:
             pass
 
-    def test_to_json_no_data(self):
+    def test_widget_to_json_no_data(self):
         """Using to_json with no data should return None for data"""
 
         data = None
         widget = WidgetField('Title')
 
         self.assertEqual(widget.to_json(data), None)
+
+    def test_event_field(self):
+        """Should be able to create event Field"""
+
+        testfield = EventField('Title', many=True)
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test title 1')
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test title 2')
+
+        data = [event_1.data['id'], event_2.data['id']]
+
+        try:
+            testfield.validate(data)
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        json = testfield.to_json(data)
+
+        # Test some example entries
+        self.assertEqual(json[0]['id'], 1)
+        self.assertEqual(json[1]['id'], 2)
+        self.assertEqual(json[0]['title'], u'Test title 1')
+        self.assertEqual(json[1]['title'], u'Test title 2')
+
+    def test_event_single_id(self):
+        """Should be able to create event field with only 1 id"""
+
+        testfield = EventField('Title')
+
+        event = DispatchTestHelpers.create_event(self.client)
+
+        data = event.data['id']
+
+        try:
+            testfield.validate(data)
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        json = testfield.to_json(data)
+
+        # Test some example entries
+        self.assertEqual(json['id'], 1)
+        self.assertEqual(json['title'], u'Test event')
+
+    def test_event_prepare_data(self):
+        """Should be able to return prepared data for the template"""
+
+        testfield = EventField('Title', many=True)
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test title 1', description='test description 1')
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test title 2', description='test description 2')
+
+        data = [event_1.data['id'], event_2.data['id']]
+
+        try:
+            testfield.validate(data)
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        result = testfield.prepare_data(data)
+
+        self.assertEqual(result[0].title, event_1.data['title'])
+        self.assertEqual(result[1].title, event_2.data['title'])
+
+    def test_event_false_many(self):
+        """Test the case where many is false when you have more than 1 event"""
+
+        testfield = EventField('Title')
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test title 1', description='test description')
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test title 2', description='test description')
+
+        data = [event_1.data['id'], event_2.data['id']]
+
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_event_singular_data(self):
+        """Test the case where EventField is initialized with many, but given 1 piece of data"""
+
+        testfield = EventField('Title', many=True)
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test title 1', description='test description')
+
+        data = event_1.data['id']
+
+        try:
+            testfield.validate(data)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_event_doesnt_exist(self):
+        """Test the case where an event id for an event that doesn't exist is passed as data"""
+
+        testfield = EventField('Title')
+
+        id = -1
+
+        try:
+            testfield.get_model(id)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except Event.DoesNotExist:
+            pass
+
+    def test_event_to_json_no_data(self):
+        """Passing data=None to to_json returns None"""
+
+        testfield = EventField('Title')
+
+        data = None
+
+        self.assertEqual(testfield.to_json(data), None)
