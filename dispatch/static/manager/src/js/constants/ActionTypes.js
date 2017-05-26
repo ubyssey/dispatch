@@ -38,6 +38,15 @@ export const DASHBOARD = actionTypes('DASHBOARD', [
   'LIST_RECENT_ARTICLES'
 ])
 
+// Zones actions
+export const ZONES = actionTypes('ZONES', [
+  'LIST',
+  'GET',
+  'SAVE',
+  'LIST_WIDGETS',
+  'SET'
+])
+
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
 

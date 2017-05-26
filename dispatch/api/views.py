@@ -14,10 +14,16 @@ from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.actions import list_actions, recent_articles
 from dispatch.apps.core.models import Person
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
-from dispatch.apps.api.serializers import (ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer)
+from dispatch.apps.api.serializers import (
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+    ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
 from dispatch.apps.api.exceptions import ProtectedResourceError
+
+from dispatch.theme import ThemeManager
+from dispatch.theme.exceptions import ZoneNotFound
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -147,19 +153,6 @@ class TagViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            resource = serializer.save()
-            status_code = status.HTTP_201_CREATED
-        except APIException:
-            instance = Tag.objects.get(name=request.data.get('name'))
-            serializer = self.get_serializer(instance)
-            status_code = status.HTTP_200_OK
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status_code, headers=headers)
-
 class TopicViewSet(DispatchModelViewSet):
     """
     Viewset for Topic model views.
@@ -174,19 +167,6 @@ class TopicViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
         return queryset
-
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            resource = serializer.save()
-            status_code = status.HTTP_201_CREATED
-        except APIException:
-            instance = Topic.objects.get(name=request.data.get('name'))
-            serializer = self.get_serializer(instance)
-            status_code = status.HTTP_200_OK
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status_code, headers=headers)
 
 class FileViewSet(DispatchModelViewSet):
     """
@@ -324,6 +304,60 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         return Response(data)
 
+class ZoneViewSet(viewsets.GenericViewSet):
+    """Viewset for widget zones"""
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_object_or_404(self, pk=None):
+        try:
+            return ThemeManager.Zones.get(pk)
+        except ZoneNotFound:
+            raise NotFound("The zone with id '%s' does not exist" % pk)
+
+    def get_paginated_response(self, data):
+        return Response({
+            'count': len(data),
+            'results': data
+        })
+
+    def list(self, request):
+
+        zones = ThemeManager.Zones.list()
+
+        serializer = ZoneSerializer(zones, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = ZoneSerializer(zone)
+
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = ZoneSerializer(zone, data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def widgets(self, request, pk=None):
+
+        zone = self.get_object_or_404(pk)
+
+        serializer = WidgetSerializer(zone.widgets, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
 class DashboardViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)
@@ -350,6 +384,26 @@ class DashboardViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data)
+
+class EventViewSet(DispatchModelViewSet):
+    """ViewSet for Event"""
+
+    model = Event
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            # TODO: Add query by category
+            queryset = queryset.filter(
+                Q(title__icontains=q) |
+                Q(description__icontains=q) |
+                Q(host__icontains=q)
+            )
+        return queryset
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
