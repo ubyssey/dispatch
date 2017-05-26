@@ -2,13 +2,13 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Article, Person, Section
+from dispatch.apps.content.models import Article, Person, Section, Event
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(self, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug'):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug'):
         """Create a dummy article instance"""
 
         # Create test person
@@ -30,7 +30,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def upload_file(self, client):
+    def upload_file(cls, client):
         """Upload a test file to server"""
 
         obj = DispatchMediaTestMixin()
@@ -49,7 +49,7 @@ class DispatchTestHelpers(object):
         return response
 
     @classmethod
-    def upload_image(self, client):
+    def upload_image(cls, client):
         """Upload an image that can be linked by galleries"""
 
         url = reverse('api-images-list')
@@ -62,7 +62,7 @@ class DispatchTestHelpers(object):
         return response.data['id']
 
     @classmethod
-    def _create_gallery_only(self, id, attachments, client):
+    def _create_gallery_only(cls, id, attachments, client):
         """Creates a gallery instance, but does not upload images"""
 
         url = reverse('api-galleries-list')
@@ -75,11 +75,11 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_gallery(self, id, client):
+    def create_gallery(cls, id, client):
         """Create a gallery instance for further testing"""
 
-        image_1 = self.upload_image(client)
-        image_2 = self.upload_image(client)
+        image_1 = cls.upload_image(client)
+        image_2 = cls.upload_image(client)
 
         attachment = [
             {
@@ -94,10 +94,10 @@ class DispatchTestHelpers(object):
             }
         ]
 
-        return (self._create_gallery_only(id, attachment, client), image_1, image_2)
+        return (cls._create_gallery_only(id, attachment, client), image_1, image_2)
 
     @classmethod
-    def create_page(self, client, title='Test Page', slug='test-page'):
+    def create_page(cls, client, title='Test Page', slug='test-page'):
         """Create dummy page"""
 
         url = reverse('api-pages-list')
@@ -117,10 +117,8 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_section(self, client, name='Test Section', slug='test-section'):
-        """
-        Create a dummy section instance
-        """
+    def create_section(cls, client, name='Test Section', slug='test-section'):
+        """Create a dummy section instance"""
 
         data = {
             'name': name,
@@ -132,7 +130,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_person(self, client, full_name='', image='', slug='', description=''):
+    def create_person(cls, client, full_name='', image='', slug='', description=''):
         """A helper method that creates a simple person object with the given attributes
         and returns the response"""
 
@@ -146,3 +144,40 @@ class DispatchTestHelpers(object):
         }
 
         return client.post(url, data, format='multipart')
+
+    @classmethod
+    def create_tag(cls, client, name='testTag'):
+        """Create a dummy tag instance"""
+
+        data = {
+            'name': name
+        }
+
+        url = reverse('api-tags-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_topic(cls, client, name='Test Topic'):
+        """Create a dummy topic instance"""
+
+        data = {
+            'name': name
+        }
+
+        url = reverse('api-topics-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_event(cls, client, title='Test event', description='Test description', host='test host'):
+
+        data = {
+            'title': title,
+            'description': description,
+            'host': host
+        }
+
+        url = reverse('api-event-list')
+
+        return client.post(url, data, format='json')
