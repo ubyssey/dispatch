@@ -24,11 +24,14 @@ const initialState = {
   topics: {},
   tags: {},
   galleries: {},
+  zones: {},
+  widgets: {},
   local: {
     articles: {},
     images: {},
     sections: {},
-    galleries: {}
+    galleries: {},
+    zones: {}
   }
 }
 

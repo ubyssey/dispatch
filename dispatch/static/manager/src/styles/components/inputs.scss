@@ -5,14 +5,15 @@
 .c-form-input label.pt-label > .pt-input,
 .c-form-input label.pt-label > .pt-select,
 .c-form-input label.pt-label > .pt-button,
-.c-form-input label.pt-label > .pt-switch {
+.c-form-input label.pt-label > .pt-switch,
+.c-form-input label.pt-label > .c-input--item-select {
   margin-top: 10px;
 }
 
 // Component: MultiSelectInput
-.c-input--multi-select {
-  // Structure
-  margin-top: 10px;
+.c-input--item-select {
+  // Text
+  font-weight: $font-weight-semi-bold;
 
   .pt-popover {
     // Structure
@@ -20,71 +21,34 @@
   }
 }
 
-.c-input--multi-select__values {
-  // Structure
-  margin-bottom: 5px;
-}
-
-.c-input--multi-select__no-results {
-  // Text
-  color: $color-text-gray;
-}
-
-.c-input--multi-select__value,
-.c-input--multi-select__no-results {
-  // Structure
-  height: $input-height;
-  padding-left: $input-text-padding;
-  padding-right: $input-text-padding;
-
-  // Text
-  @include font-size($input-font-size);
-  line-height: $input-height - 2;
-}
-
-.c-input--multi-select__value {
+.c-input--item-select__item {
   // Structure
   position: relative;
-  display: inline-block;
-  margin-right: 0.35rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   margin-bottom: 0.5rem;
+  max-width: 400px;
+
+  // Background
+  background-color: #fff;
 
   // Border
   border: 1px solid $color-border-gray-dark;
-  border-radius: $input-text-border-radius;
+  border-radius: 3px;
+
+  // Text
+  line-height: 2rem;
 
   // Exrtas
   box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1);
 }
 
-.c-input--multi-select__value__icon {
-  // Structure
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: $input-height;
-  padding-left: $input-text-padding;
-  padding-right: $input-text-padding;
-
-  // Text
-  line-height: $input-height - 2;
-
-  // Extras
-  cursor: pointer;
-  opacity: 0.5;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.c-input--multi-select__dropdown {
+.c-input--item-select__dropdown {
   // Structure
   width: 350px;
 }
 
-.c-input--multi-select__search {
+.c-input--item-select__search {
   // Structure
   padding: 0.5rem;
 
@@ -164,10 +128,70 @@
 // Component: ImageInput
 
 .c-input--image {
-  img {
+  // Structure
+  margin-top: 0.5rem;
+
+  &.c-input--fill .c-input--image__thumb {
     // Structure
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
     width: 100%;
   }
+}
+
+.c-input--image__thumb {
+  // Structure
+  position: relative;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 150px;
+
+  // Border
+  border: 1px solid $color-border-gray;
+  border-radius: 3px;
+
+  // Background
+  background-size: cover;
+
+  // Text
+  line-height: 2rem;
+
+  // Extra
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.1);
+
+  &:after {
+    // Structure
+    display: block;
+    padding-top: 66.66%;
+    content: '';
+  }
+
+  &:hover {
+    .c-input--image__remove {
+      // Extra
+      opacity: 1;
+
+      &:hover {
+        // Extra
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.c-input--image__remove {
+  // Structure
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+
+  // Text
+  color: $color-white;
+
+  // Extra
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.25s;
 }
