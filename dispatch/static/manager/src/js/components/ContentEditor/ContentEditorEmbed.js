@@ -33,9 +33,6 @@ export default class ContentEditorEmbed extends React.Component {
 
       }
     })
-    console.log('props: ',this.props)
-    console.log('block props: ',this.props.blockProps)
-
   }
 
   removeEmbed() {
