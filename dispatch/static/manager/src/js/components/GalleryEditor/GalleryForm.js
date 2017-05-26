@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import Measure from 'react-measure'
+import autobind from 'class-autobind'
 
 import { Popover, Position, AnchorButton } from '@blueprintjs/core'
 
@@ -29,17 +30,10 @@ class GalleryFormComponent extends React.Component {
 
   constructor(props) {
     super(props)
-
-    this.moveOutOfGallery = this.moveOutOfGallery.bind(this)
-    this.addToGallery = this.addToGallery.bind(this)
-    this.moveWithinGallery = this.moveWithinGallery.bind(this)
-    this.galleryDragHover = this.galleryDragHover.bind(this)
-    this.endDrag = this.endDrag.bind(this)
-    this.openImageSelector = this.openImageSelector.bind(this)
-    this.clearGallery = this.clearGallery.bind(this)
+    autobind(this)
 
     this.state = {
-      offset: {x: 0, y: 0},
+      offset: { x: 0, y: 0 },
       showMoveIcon: false,
       zoneDims: {}
     }
@@ -57,7 +51,7 @@ class GalleryFormComponent extends React.Component {
   }
 
   computePosition(position) {
-    position.x -= this.state.zoneDims.left - THUMB_X/2
+    position.x -= this.state.zoneDims.left - THUMB_X / 2
     position.y -= this.state.zoneDims.top
     let xIdx = Math.floor(position.x / THUMB_X)
     let yIdx = Math.floor(position.y / THUMB_Y)
@@ -65,13 +59,11 @@ class GalleryFormComponent extends React.Component {
     // constraints
     const npr = this.getNumPerRow()
     const nR = this.getNumRows() - 1
-    xIdx = xIdx < 0 ? 0 : xIdx
-    xIdx = xIdx > npr ? npr : xIdx
-    yIdx = yIdx < 0 ? 0 : yIdx
-    yIdx = yIdx > nR ? nR : yIdx
+    xIdx = Math.min(Math.max(xIdx, 0), npr)
+    yIdx = Math.min(Math.max(yIdx, 0), nR)
 
-    position.x = xIdx*THUMB_WIDTH
-    position.y = yIdx*THUMB_Y + this.state.zoneDims.top
+    position.x = xIdx * THUMB_WIDTH
+    position.y = yIdx * THUMB_Y + this.state.zoneDims.top
 
     return {
       xIdx,
