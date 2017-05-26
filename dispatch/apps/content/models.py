@@ -3,6 +3,7 @@ import StringIO
 import os
 import re
 
+
 from jsonfield import JSONField
 from PIL import Image as Img
 
@@ -405,46 +406,55 @@ class Image(Model):
         'square': (250, 250)
     }
 
+    jpg_formats = {
+        'jpg',
+        'JPG',
+        'JPEG',
+        'jpeg'
+    }
+
+    image_formats = '.(jpg|JPEG|jpeg|JPG|gif|png)'
+
     THUMBNAIL_SIZE = 'square'
 
     def filename(self):
-        """
-        Returns the image filename.
-        """
+        """Returns the image filename."""
         return os.path.basename(self.img.name)
 
+    def get_file_name(self):
+        """Returns the image filename."""
+        return self.img.name
+
     def get_name(self):
-        """
-        Returns the image filename without extension.
-        """
-        return re.split('.(jpg|gif|png)', self.img.name)[0]
+        """Returns the filename without extension."""
+        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        return file_name[0]
+
+
+    def get_file_extension(self):
+        """Returns the file extension."""
+        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        return file_name[1]
 
     def get_absolute_url(self):
-        """
-        Returns the full size image URL.
-        """
+        """Returns the full size image URL."""
         return settings.MEDIA_URL + str(self.img)
 
     def get_medium_url(self):
-        """
-        Returns the medium size image URL.
-        """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'medium')
+        """Returns the medium size image URL."""
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
-        """
-        Returns the thumbnail URL.
-        """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
+        """Returns the thumbnail URL."""
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
 
     def get_wide_url(self):
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
+        """Returns the wide URL."""
+        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'wide', self.get_file_extension())
 
     # Overriding
     def save(self, **kwargs):
-        """
-        Custom save method to process thumbnails and save image dimensions.
-        """
+        """Custom save method to process thumbnails and save image dimensions."""
 
         is_new = self.pk is None
 
@@ -455,13 +465,14 @@ class Image(Model):
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
-            name = re.split('.(jpg|gif|png)', self.img.name)[0]
+            name = re.split(self.image_formats, self.img.name)[0]
+            file_type = re.split(self.image_formats, self.img.name)[1]
 
             for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size)
+                self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
 
 
-    def save_thumbnail(self, image, size, name, label):
+    def save_thumbnail(self, image, size, name, label, fileType):
         width, height = size
         (imw, imh) = image.size
 
@@ -470,11 +481,13 @@ class Image(Model):
             image.thumbnail(size, Img.ANTIALIAS)
 
         # Attach new thumbnail label to image filename
-        name = "%s-%s.jpg" % (name, label)
-
+        name = "%s-%s.%s" % (name, label, fileType)
+        # Image.save format takes JPEG not jpg
+        if fileType in self.jpg_formats:
+            fileType = 'JPEG'
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
-        image.save(image_io, format='JPEG', quality=75)
+        image.save(image_io, format=fileType, quality=75)
 
         # Convert StringIO object to Django File object
         thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
