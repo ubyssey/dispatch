@@ -5,14 +5,16 @@ import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import Measure from 'react-measure'
 
-import { Popover, Position } from '@blueprintjs/core'
+import { Popover, Position, AnchorButton } from '@blueprintjs/core'
 
 import imagesActions from '../../actions/ImagesActions'
+import * as modalActions from '../../actions/ModalActions'
 
-import { FormInput, TextInput, ImageInput } from '../inputs'
+import { FormInput, TextInput } from '../inputs'
 import DnDThumb from './DnDThumb'
 import DnDZone from './DnDZone'
 import AttachmentForm from './AttachmentForm'
+import ImageManager from '../modals/ImageManager'
 
 require('../../../styles/components/imagegallery_editor.scss')
 
@@ -33,6 +35,8 @@ class GalleryFormComponent extends React.Component {
     this.moveWithinGallery = this.moveWithinGallery.bind(this)
     this.galleryDragHover = this.galleryDragHover.bind(this)
     this.endDrag = this.endDrag.bind(this)
+    this.openImageSelector = this.openImageSelector.bind(this)
+    this.clearGallery = this.clearGallery.bind(this)
 
     this.state = {
       offset: {x: 0, y: 0},
@@ -114,27 +118,22 @@ class GalleryFormComponent extends React.Component {
     this.props.update('images', newImages)
   }
 
-  addToGallery(id) {
-    this.setState({ showMoveIcon: false })
-
+  addToGallery(ids) {
     const images = this.props.listItem.images
 
-    // check if image with id is already in gallery
-    // and return if it is
-    for (let i in images) {
-      const image = images[i]
-      if (id == image.image_id || (image.image && image.image.id == id)) {
-        return
+    let newImages = R.filter(id => R.findIndex(R.either(
+        R.propSatisfies(image => image && image.id == id, 'image'),
+        R.propEq('image_id', id)
+      ), images) === -1, ids)
+    .map(id => {
+      return {
+        image_id: id,
+        caption: '',
+        credit: ''
       }
-    }
+    })
 
-    // construct new image list with new image appended
-    const newImages = [...(this.props.listItem.images || {}), {
-      image_id: id,
-      caption: '',
-      credit: ''
-    }]
-
+    newImages = [...(images || []), ...newImages]
     this.props.update('images', newImages)
   }
 
@@ -151,6 +150,23 @@ class GalleryFormComponent extends React.Component {
     const images = this.props.listItem.images
     images[idx][field] = value
     this.props.update('images', images)
+  }
+
+  openImageSelector() {
+    this.props.openModal(
+      ImageManager,
+      {
+        onSubmit: function(ids) {
+          this.props.closeModal()
+          this.addToGallery(ids)
+        }.bind(this),
+        many: true
+      }
+    )
+  }
+
+  clearGallery() {
+    this.props.update('images', [])
   }
 
   render() {
@@ -249,10 +265,15 @@ class GalleryFormComponent extends React.Component {
           </DnDZone>
         </Measure>
 
-        <FormInput>
-          <ImageInput
-            onUpdate={(id) => { this.addToGallery(id) }} />
-        </FormInput>
+        <AnchorButton onClick={this.openImageSelector}>
+          Choose Images
+        </AnchorButton>
+
+        <div style={{marginLeft: 25}}>
+          <AnchorButton onClick={this.clearGallery}>
+            Clear Gallery
+          </AnchorButton>
+        </div>
       </form>
     )
   }
@@ -274,6 +295,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     selectImage: (imageId) => {
       dispatch(imagesActions.select(imageId))
+    },
+    openModal: (component, props) => {
+      dispatch(modalActions.openModal(component, props))
+    },
+    closeModal: () => {
+      dispatch(modalActions.closeModal())
     }
   }
 }
