@@ -94,7 +94,7 @@ class ItemSelectInput extends React.Component {
   }
 
   getSelected() {
-    return this.props.many ? this.props.selected : (this.props.selected ? [this.props.selected] : [])
+    return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
   }
 
   isNotSelected(id) {
@@ -173,7 +173,9 @@ class ItemSelectInput extends React.Component {
 }
 
 ItemSelectInput.defaultProps = {
-  many: true
+  many: true,
+  results: [],
+  entities: {}
 }
 
 export default ItemSelectInput
