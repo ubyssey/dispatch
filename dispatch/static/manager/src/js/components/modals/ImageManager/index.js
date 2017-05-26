@@ -151,9 +151,10 @@ class ImageManagerComponent extends React.Component {
               className='c-image-manager__images__container'
               ref={(node) => { this.images = node }}>{images}</div>
           </Dropzone>
+          {!this.props.many ?
           <div className='c-image-manager__active'>
             {image ? imagePanel : null}
-          </div>
+          </div> : null}
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
