@@ -418,61 +418,43 @@ class Image(Model):
     THUMBNAIL_SIZE = 'square'
 
     def filename(self):
-        """
-        Returns the image filename.
-        """
+        """Returns the image filename."""
         return os.path.basename(self.img.name)
 
     def get_file_name(self):
-        """
-        Returns the image filename.
-        """
+        """Returns the image filename."""
         return self.img.name
 
     def get_name(self):
-        """
-        Returns the filename without extension.
-        """
+        """Returns the filename without extension."""
         file_name = re.split('.(jpg|gif|png)',self.get_file_name())
         return file_name[0]
 
 
     def get_file_extension(self):
-        """
-        Returns the file extension.
-        """
+        """Returns the file extension."""
         file_name = re.split('.(jpg|gif|png)',self.get_file_name())
         return file_name[1]
 
     def get_absolute_url(self):
-        """
-        Returns the full size image URL.
-        """
+        """Returns the full size image URL."""
         return settings.MEDIA_URL + str(self.img)
 
     def get_medium_url(self):
-        """
-        Returns the medium size image URL.
-        """
+        """Returns the medium size image URL."""
         return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
-        """
-        Returns the thumbnail URL.
-        """
+        """Returns the thumbnail URL."""
         return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
 
     def get_wide_url(self):
-        """
-        Returns the wide URL.
-        """
+        """Returns the wide URL."""
         return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'wide', self.get_file_extension())
 
     # Overriding
     def save(self, **kwargs):
-        """
-        Custom save method to process thumbnails and save image dimensions.
-        """
+        """Custom save method to process thumbnails and save image dimensions."""
 
         is_new = self.pk is None
 
