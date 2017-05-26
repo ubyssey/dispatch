@@ -214,7 +214,7 @@ class GalleryFormComponent extends React.Component {
                     width: THUMB_WIDTH,
                     height: THUMB_HEIGHT
                   }}>
-                  <div className='c-imgegallery-thumb-overlay-text'>
+                  <div className='c-imagegallery-thumb-overlay-text'>
                     {i++}
                   </div>
                 </div>
@@ -266,10 +266,10 @@ class GalleryFormComponent extends React.Component {
         </Measure>
 
         <AnchorButton onClick={this.openImageSelector}>
-          Choose Images
+          Add Images
         </AnchorButton>
 
-        <div style={{marginLeft: 25}}>
+        <div className='c-imagegallery-clear-button'>
           <AnchorButton onClick={this.clearGallery}>
             Clear Gallery
           </AnchorButton>
