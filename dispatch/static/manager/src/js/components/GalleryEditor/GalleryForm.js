@@ -43,6 +43,7 @@ class GalleryFormComponent extends React.Component {
     // make sure hover events aren't triggering render unless the
     // position actually changes
     return this.props.listItem != nextProps.listItem
+      || this.props.errors != nextProps.errors
       || this.props.images != nextProps.images
       || this.props.image != nextProps.image
       || this.state.offset.x != nextState.offset.x
@@ -113,17 +114,24 @@ class GalleryFormComponent extends React.Component {
   addToGallery(ids) {
     const images = this.props.listItem.images
 
-    let newImages = R.filter(id => R.findIndex(R.either(
-        R.propSatisfies(image => image && image.id == id, 'image'),
-        R.propEq('image_id', id)
-      ), images) === -1, ids)
-    .map(id => {
+    const makeNewImage = id => {
       return {
         image_id: id,
         caption: '',
         credit: ''
       }
-    })
+    }
+
+    let newImages
+    if (images && images.length) {
+      newImages = R.filter(id => R.findIndex(R.either(
+          R.propSatisfies(image => image && image.id == id, 'image'),
+          R.propEq('image_id', id)
+        ), images) === -1, ids)
+        .map(makeNewImage)
+    } else {
+      newImages = R.map(makeNewImage, ids)
+    }
 
     newImages = [...(images || []), ...newImages]
     this.props.update('images', newImages)
