@@ -332,6 +332,7 @@ const DispatchAPI = {
     },
     delete: (token, galleryId) => {
       return deleteRequest('galleries', galleryId, null, token)
+    }
   },
   zones: {
     list: (token) => {
