@@ -452,7 +452,7 @@ class Image(Model):
         if self.is_gif():
             return self.get_absolute_url()
 
-        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_file_name(), 'medium', self.get_file_extension())
+        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
         """Returns the thumbnail URL."""
