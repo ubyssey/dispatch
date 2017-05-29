@@ -50,7 +50,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-function TagsPageComponent(props) {
+function GalleryPageComponent(props) {
   return (
     <ItemIndexPage
       typeSingular='gallery'
@@ -60,9 +60,9 @@ function TagsPageComponent(props) {
   )
 }
 
-const TagsPage = connect(
+const GalleryPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(TagsPageComponent)
+)(GalleryPageComponent)
 
-export default TagsPage
+export default GalleryPage

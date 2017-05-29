@@ -35,7 +35,7 @@ class DnDZone extends React.Component {
     const { connectDropTarget, isOver } = this.props
     return connectDropTarget(
       <div
-        className='c-imagegallery-dropzone'
+        className='c-gallery-dropzone'
         style={{
           boxShadow: isOver ? '0 0 50px 3px #aaa inset' : 'none'
         }}>

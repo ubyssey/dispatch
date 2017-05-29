@@ -1,13 +1,13 @@
 @import '../utilities/_colors.scss';
 
-.c-imagegallery-editor-heading {
+.c-gallery-editor-heading {
   font-size: 20px;
   font-weight: 600;
   color: #333;
   margin: 18px 0 12px;
 }
 
-.c-imagegallery-editor-movement-indicator {
+.c-gallery-editor-movement-indicator {
   position: absolute;
   font-size: 72px;
   color: #fffb91;
@@ -15,17 +15,17 @@
   transform: translate(75%, 50%);
 }
 
-.c-imagegallery-dropzone {
+.c-gallery-dropzone {
   min-height: 250px;
   border: 2px solid $color-border-gray;
   margin-bottom: 15px;
 }
 
-.c-imagegallery-thumb-overlay {
+.c-gallery-thumb-overlay {
   position: absolute;
 }
 
-.c-imagegallery-thumb-overlay-text {
+.c-gallery-thumb-overlay-text {
   font-size: 30px;
   font-weight: 700;
   color: white;
@@ -36,7 +36,7 @@
   left: 10px
 }
 
-.c-imagegallery-clear-button {
+.c-gallery-clear-button {
   margin-left: 15px;
   display: inline-block;
 }
