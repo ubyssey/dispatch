@@ -43,9 +43,7 @@ const DnDThumb = function(props) {
   }
 
   return connectDragSource(
-    <div
-      style={spanStyle}
-      >
+    <div style={spanStyle}>
       <ImageThumb
         width="100%"
         {...props} />

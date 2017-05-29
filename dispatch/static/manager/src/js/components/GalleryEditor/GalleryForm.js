@@ -17,7 +17,7 @@ import DnDZone from './DnDZone'
 import AttachmentForm from './AttachmentForm'
 import ImageManager from '../modals/ImageManager'
 
-require('../../../styles/components/imagegallery_editor.scss')
+require('../../../styles/components/gallery_editor.scss')
 
 const THUMB_HEIGHT = 175
 const THUMB_WIDTH = THUMB_HEIGHT
@@ -209,12 +209,12 @@ class GalleryFormComponent extends React.Component {
                 ? Position.LEFT : Position.RIGHT}
               >
                 <div
-                  className='c-imagegallery-thumb-overlay'
+                  className='c-gallery-thumb-overlay'
                   style={{
                     width: THUMB_WIDTH,
                     height: THUMB_HEIGHT
                   }}>
-                  <div className='c-imagegallery-thumb-overlay-text'>
+                  <div className='c-gallery-thumb-overlay-text'>
                     {i++}
                   </div>
                 </div>
@@ -244,7 +244,7 @@ class GalleryFormComponent extends React.Component {
             fill={true}
             onChange={ e => this.props.update('title', e.target.value) } />
         </FormInput>
-        <h2 className='c-imagegallery-editor-heading'>Gallery</h2>
+        <h2 className='c-gallery-editor-heading'>Gallery</h2>
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
           <DnDZone
@@ -255,7 +255,7 @@ class GalleryFormComponent extends React.Component {
             >
             {inGalleryImages}
             <span
-              className='c-imagegallery-editor-movement-indicator'
+              className='c-gallery-editor-movement-indicator'
               style={{
                 display: this.state.showMoveIcon ? 'block' : 'none',
                 top: this.state.offset.y,
@@ -269,7 +269,7 @@ class GalleryFormComponent extends React.Component {
           Add Images
         </AnchorButton>
 
-        <div className='c-imagegallery-clear-button'>
+        <div className='c-gallery-clear-button'>
           <AnchorButton onClick={this.clearGallery}>
             Clear Gallery
           </AnchorButton>
