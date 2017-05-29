@@ -11,11 +11,6 @@ class JSONField(serializers.Field):
         return value
 
 class PrimaryKeyField(serializers.Field):
-    """Special field to handle reading/writing foreign key relationships.
-
-    When reading, the field will return a serialized representation of the related object.
-    When performing a write, the field expects an integer representing the ID of the 
-    related object."""
 
     def __init__(self, serializer, *args, **kwargs):
         super(PrimaryKeyField, self).__init__(*args, **kwargs)
@@ -24,6 +19,25 @@ class PrimaryKeyField(serializers.Field):
 
     def to_internal_value(self, value):
         return value
+
+    def to_representation(self, value):
+        return self.serializer.to_representation(value)
+
+class ForeignKeyField(serializers.Field):
+    """Special field to handle reading/writing foreign key relationships.
+
+    When reading, the field will return a serialized representation of the related object.
+    When performing a write, the field expects an integer representing the ID of the
+    related object."""
+
+    def __init__(self, model, serializer, *args, **kwargs):
+        super(ForeignKeyField, self).__init__(*args, **kwargs)
+
+        self.model = model
+        self.serializer = serializer
+
+    def to_internal_value(self, value):
+        return self.model.objects.get(pk=value)
 
     def to_representation(self, value):
         return self.serializer.to_representation(value)

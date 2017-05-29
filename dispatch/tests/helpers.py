@@ -2,7 +2,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Article, Person, Section, Event
+from dispatch.apps.content.models import Article, Person, Section
+from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):
@@ -168,12 +169,18 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_event(cls, client, title='Test event', description='Test description', host='test host'):
+    def create_event(cls, client, title='Test event', description='Test description', host='test host', image=None, start_time='2017-05-25 12:00', end_time='2017-05-25 12:01', location='UBC', category='academic', facebook_url='https://facebook.com'):
 
         data = {
             'title': title,
             'description': description,
-            'host': host
+            'host': host,
+            'image': image,
+            'start_time': start_time,
+            'end_time': end_time,
+            'location': location,
+            'category': category,
+            'facebook_url': facebook_url
         }
 
         url = reverse('api-event-list')
