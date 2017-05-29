@@ -97,11 +97,15 @@ class Publishable(Model):
 
     def get_template_fields(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template(article_id=self.id).field_data_as_json()
+        if Template:
+            return Template(article_id=self.id).field_data_as_json()
+        return None
 
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template().to_json()
+        if Template:
+            return Template().to_json()
+        return None
 
     def get_html(self):
         """
@@ -395,7 +399,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author", related_name="authors")
+    authors = ManyToManyField(Person, through='Author', related_name='authors')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -406,16 +410,20 @@ class Image(Model):
         'square': (250, 250)
     }
 
-    jpg_formats = {
+    JPG_FORMATS = {
         'jpg',
         'JPG',
         'JPEG',
         'jpeg'
     }
 
-    image_formats = '.(jpg|JPEG|jpeg|JPG|gif|png)'
+    IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png)'
 
     THUMBNAIL_SIZE = 'square'
+
+    def is_gif(self):
+        """Returns true if image is a gif"""
+        return self.get_file_extension() in ('gif', 'GIF')
 
     def filename(self):
         """Returns the image filename."""
@@ -427,13 +435,12 @@ class Image(Model):
 
     def get_name(self):
         """Returns the filename without extension."""
-        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
         return file_name[0]
-
 
     def get_file_extension(self):
         """Returns the file extension."""
-        file_name = re.split('.(jpg|gif|png)',self.get_file_name())
+        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
         return file_name[1]
 
     def get_absolute_url(self):
@@ -442,15 +449,14 @@ class Image(Model):
 
     def get_medium_url(self):
         """Returns the medium size image URL."""
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
+        if self.is_gif():
+            return self.get_absolute_url()
+
+        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_file_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
         """Returns the thumbnail URL."""
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
-
-    def get_wide_url(self):
-        """Returns the wide URL."""
-        return "%s%s-%s.%s" % (settings.MEDIA_URL, self.get_name(), 'wide', self.get_file_extension())
+        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
 
     # Overriding
     def save(self, **kwargs):
@@ -465,8 +471,8 @@ class Image(Model):
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
-            name = re.split(self.image_formats, self.img.name)[0]
-            file_type = re.split(self.image_formats, self.img.name)[1]
+            name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
+            file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
@@ -482,9 +488,11 @@ class Image(Model):
 
         # Attach new thumbnail label to image filename
         name = "%s-%s.%s" % (name, label, fileType)
+
         # Image.save format takes JPEG not jpg
-        if fileType in self.jpg_formats:
+        if fileType in self.JPG_FORMATS:
             fileType = 'JPEG'
+
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
         image.save(image_io, format=fileType, quality=75)
