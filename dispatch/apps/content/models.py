@@ -97,11 +97,15 @@ class Publishable(Model):
 
     def get_template_fields(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template(article_id=self.id).field_data_as_json()
+        if Template:
+            return Template(article_id=self.id).field_data_as_json()
+        return None
 
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template().to_json()
+        if Template:
+            return Template().to_json()
+        return None
 
     def get_html(self):
         """
