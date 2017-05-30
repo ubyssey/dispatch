@@ -150,18 +150,18 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             full_name='Test Person',
             slug='test-person'
         )
+        person_id = response.data['id']
         # Generate detail URL
-        url = reverse('api-persons-detail', args=[response.data['id']])
+        url = reverse('api-persons-detail', args=[person_id])
 
         # Successful deletion should return 204
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
+        self.assertFalse(Person.objects.filter(id=person_id).exists())
+        
         # Can't delete an person that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-        #TODO: Check database for deletion
         
     def test_unauthorized_person_deletion(self):
         """Unauthorized deletion of a person isn't allowed"""
