@@ -2,10 +2,12 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.contrib.auth import authenticate
 
 from dispatch.apps.content.models import Person, User
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.test_api_persons import PersonsTests
+from dispatch.tests.helpers import DispatchTestHelpers
 
 class UserTests(DispatchAPITestCase):
     """A class to test the user API methods"""
@@ -13,7 +15,11 @@ class UserTests(DispatchAPITestCase):
     def test_user_creation(self):
         """Test simple person creation, checks the response and database"""
 
-        response = self._create_user(email='test@gmail.com', full_name='Attached Person')
+        response = DispatchTestHelpers.create_user(
+            self.client,
+            email='test@gmail.com', 
+            full_name='Attached Person'
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         user = User.objects.get(pk=response.data['id'])
@@ -21,7 +27,11 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_creation_fail(self):
         """Test to ensure user creation fails if wrong person ID is given"""
-        response = self._create_user(email="test@gmail.com", person_id=123)
+        response = DispatchTestHelpers.create_user(
+            self.client,
+            email="test@gmail.com",
+            person_id=123
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_empty_user(self):
@@ -32,8 +42,8 @@ class UserTests(DispatchAPITestCase):
 
     def test_duplicate_emails(self):
         """Creating a user with duplicate emails should fail"""
-        response1 = self._create_user('test@gmail.com')
-        response2 = self._create_user('test@gmail.com')
+        response1 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
+        response2 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_409_CONFLICT)
@@ -41,7 +51,7 @@ class UserTests(DispatchAPITestCase):
     def test_unauthorized_user_creation(self):
         """Test unauthorized user creation"""
         # Create person before clearing credentials
-        person_id = self._create_person("Attached Person").data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
 
         self.client.credentials()
         url = reverse('api-users-list')
@@ -57,7 +67,7 @@ class UserTests(DispatchAPITestCase):
 
     def test_unauthorized_user_update(self):
         """Test unauthorized user update"""
-        response = self._create_user('test@gmail.com')
+        response = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
 
         url = reverse('api-users-detail', args=[response.data['id']])
         data = {
@@ -95,13 +105,13 @@ class UserTests(DispatchAPITestCase):
     def test_create_user_with_password(self):
         """Check that creating a user with a password works correctly"""
         # NOTE: By default _create_user() supplies a good password
-        response = self._create_user("test@ubyssey.ca")
+        response = DispatchTestHelpers.create_user(self.client, "test@ubyssey.ca")
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
     def test_bad_passords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
-        person_id = self._create_person("Attached Person").data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
         url = reverse('api-users-list')
         data = {
             'email' : 'testemail123@ubyssey.ca',
@@ -134,7 +144,7 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_update(self):
         """Ensure that user updates works correctly"""
-        response = self._create_user('test@ubyssey.ca')
+        response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
 
         UPDATED_EMAIL = 'updateTest@gmail.com'
         UPDATED_PASSWORD = 'updatedPassword'
@@ -155,7 +165,8 @@ class UserTests(DispatchAPITestCase):
     def test_delete_user(self):
         """Simple user deletion test"""
 
-        response = self._create_user(
+        response = DispatchTestHelpers.create_user(
+            self.client,
             email='test@gmail.com',
             full_name='Attached Person'
         )
@@ -183,41 +194,11 @@ class UserTests(DispatchAPITestCase):
     def test_unauthorized_user_deletion(self):
         """Unauthorized deletion of a user isn't allowed"""
 
-        response = self._create_user(
+        response = DispatchTestHelpers.create_user(
+            self.client, 
             email='test@gmail.com'
         )
         url = reverse('api-users-detail', args=[response.data['id']])
         self.client.credentials()
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def _create_user(self, email, full_name='Attached Person', person_id=None):
-        """
-        A helper method that creates a simple user object with the given attributes
-        and returns the response
-        """
-
-        person_id = person_id or self._create_person(full_name).data['id']
-        url = reverse('api-users-list')
-        data = {
-            'email' : email,
-            'person_id' : person_id,
-            'password_a': 'TheBestPassword',
-            'password_b': 'TheBestPassword'
-        }
-
-        return self.client.post(url, data, format='json')
-
-    def _create_person(self, full_name='', image='', slug='', description=''):
-        """A helper method that creates a simple person object with the given attributes
-        and returns the response"""
-
-        url = reverse('api-persons-list')
-
-        data = {
-            'full_name': full_name,
-            'image': image,
-            'slug': slug,
-            "description": description
-        }
-        return self.client.post(url, data, format='multipart')
