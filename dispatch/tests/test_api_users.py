@@ -40,7 +40,7 @@ class UserTests(DispatchAPITestCase):
 
     def test_unauthorized_user_creation(self):
         """Test unauthorized user creation"""
-        #NOTE: Can't use helper method here, credential clear will break _create_person
+        # Create person before clearing credentials
         person_id = self._create_person("Attached Person").data['id']
 
         self.client.credentials()
