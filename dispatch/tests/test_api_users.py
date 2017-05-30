@@ -109,7 +109,6 @@ class UserTests(DispatchAPITestCase):
             'password_a': 'Matching',
             'password_b': 'NotMatching'
         }
-        # PASSWORD TESTS
 
         # Not matching
         response = self.client.post(url, data, format='json')
