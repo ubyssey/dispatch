@@ -18,12 +18,18 @@ class GallerySelectInputComponent extends React.Component {
   }
 
   componentWillMount() {
-    this.props.listGalleries(this.props.token, { q: '' })
+    if (!this.hasEntities()) {
+      this.props.listGalleries(this.props.token, { q: '' })
+    }
+  }
+
+  hasEntities() {
+    return (Object.keys(this.props.entities.galleries).length > 0)
   }
 
   render() {
-    if (!Object.keys(this.props.entities.galleries).length) {
-      return null
+    if (!this.hasEntities()) {
+      return <p>Loading...</p>
     }
 
     return (
