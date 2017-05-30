@@ -1,9 +1,11 @@
-from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
-from dispatch.apps.content.models import Person, User
-from django.core.urlresolvers import reverse
 from rest_framework import status
+
+from django.core.urlresolvers import reverse
 from django.conf import settings
-from test_api_persons import PersonsTests
+
+from dispatch.apps.content.models import Person, User
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+from dispatch.tests.test_api_persons import PersonsTests
 
 class UserTests(DispatchAPITestCase):
     """A class to test the user API methods"""
