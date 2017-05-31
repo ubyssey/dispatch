@@ -47,8 +47,8 @@ class UserSerializer(DispatchModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.person_id = validated_data.get('person_id', instance.person_id)
 
-        if validated_data.get('password'):
-            instance.set_password(validated.get('password'))
+        if validated_data.get('password_a'):
+            instance.set_password(validated_data.get('password_a'))
 
         instance.save()
 
