@@ -21,7 +21,7 @@ from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
-from dispatch.apps.api.exceptions import ProtectedResourceError
+from dispatch.apps.api.exceptions import ProtectedResourceError, DuplicateKeyError
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound
@@ -145,6 +145,13 @@ class UserViewSet(DispatchModelViewSet):
     queryset = User.objects.all()
 
     permission_classes = (IsAuthenticated,)
+
+    # # TODO: Add unique email check here?
+    # def perform_create(self, instance):
+    #     try:
+    #         instance.create()
+    #     except:
+    #         raise DuplicateKeyError("Email is already in use!")
 
 class TagViewSet(DispatchModelViewSet):
     """
