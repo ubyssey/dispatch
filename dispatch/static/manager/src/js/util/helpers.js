@@ -5,7 +5,8 @@ export function humanizeDatetime(timestamp) {
 }
 
 export function dateObjToAPIString(date) {
-  const DJANGO_DATETIME_INPUT_FORMAT = 'YYYY-MM-DD HH:mm:00'
-  date = moment(date)
-  return date.format(DJANGO_DATETIME_INPUT_FORMAT)
+  if (date instanceof Date) {
+    return date.toISOString()
+  }
+  return date
 }
