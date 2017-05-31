@@ -84,10 +84,12 @@ class DispatchTestHelpers(object):
         attachment = [
             {
                 'caption': 'test caption 1',
+                'credit': 'test credit 1',
                 'image_id': image_1
             },
             {
                 'caption': 'test caption 2',
+                'credit': 'test credit 2',
                 'image_id': image_2
             }
         ]
