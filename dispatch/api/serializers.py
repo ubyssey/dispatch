@@ -475,7 +475,7 @@ class ZoneSerializer(serializers.Serializer):
 
 class EventSerializer(DispatchModelSerializer):
 
-    image = ForeignKeyField(allow_null=True, model=Image, serializer=ImageSerializer(allow_null=True))
+    image = serializers.ImageField(required=False, validators=[ValidFilename])
 
     class Meta:
         model = Event
