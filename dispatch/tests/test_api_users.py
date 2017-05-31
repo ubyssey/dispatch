@@ -111,9 +111,9 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_authentication(self):
         """Test that user authenticates"""
-        response = DispatchTestHelpers.create_user(self.client,email='test@gmail.com',password='TheBestPassword!')
+        response = DispatchTestHelpers.create_user(self.client,email='test@gmail.com', password='TheBestPassword!')
         user = authenticate(username='test@gmail.com', password='TheBestPassword!')
-        self.assertIsNone(user)
+        self.assertIsNotNone(user)
 
     def test_bad_passords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
