@@ -17,7 +17,7 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
-            email='test@gmail.com', 
+            email='test@gmail.com',
             full_name='Attached Person'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -155,12 +155,14 @@ class UserTests(DispatchAPITestCase):
             'password_a' : UPDATED_PASSWORD,
             'password_b' : UPDATED_PASSWORD
         }
-        #TODO: Figure out how to test that password is updating
+
         response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['email'], UPDATED_EMAIL)
 
         user = User.objects.get(pk=response.data['id'])
         self.assertEqual(user.email, UPDATED_EMAIL)
+        self.assertTrue(user.check_password(UPDATED_PASSWORD))
 
     def test_delete_user(self):
         """Simple user deletion test"""
