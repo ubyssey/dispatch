@@ -105,9 +105,15 @@ class UserTests(DispatchAPITestCase):
     def test_create_user_with_password(self):
         """Check that creating a user with a password works correctly"""
         # NOTE: By default _create_user() supplies a good password
-        response = DispatchTestHelpers.create_user(self.client, "test@ubyssey.ca")
+        response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_authentication(self):
+        """Test that user authenticates"""
+        response = DispatchTestHelpers.create_user(self.client,email='test@gmail.com',password='TheBestPassword!')
+        user = authenticate(username='test@gmail.com', password='TheBestPassword!')
+        self.assertIsNone(user)
 
     def test_bad_passords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
