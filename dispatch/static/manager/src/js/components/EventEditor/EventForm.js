@@ -1,9 +1,11 @@
 import React from 'react'
+import Dropzone from 'react-dropzone'
+import { AnchorButton } from '@blueprintjs/core'
 
-import { FormInput, TextInput, TextAreaInput, DateTimeInput,
-ImageInput, SelectInput } from '../inputs'
+import { FormInput, TextInput, TextAreaInput, DateTimeInput, SelectInput } from '../inputs'
 
 const CATEGORY_CHOICES = [
+    { value: '', label: 'Please Select' },
     { value: 'sports', label: 'Sports' },
     { value: 'music', label: 'Music' },
     { value: 'academic', label: 'Academic' },
@@ -14,126 +16,155 @@ const CATEGORY_CHOICES = [
     { value: 'other', label: 'Other' }
 ]
 
-function ensureDate(date) {
-  let ret = date
-  if (!(date instanceof Date)) {
-    const time_ms = Date.parse(date)
-    if(isNaN(time_ms)) {
-      ret = new Date()
-    } else {
-      ret = new Date(time_ms)
+export default class EventForm extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      displayImg: null
     }
   }
-  return ret
-}
 
-export default function EventForm(props) {
+  onDrop(files) {
+    this.props.update('image', files[0])
+    this.setState({ displayImg: files[0].preview })
+  }
 
-  return (
-    <form onSubmit={e => e.preventDefault()}>
-      <FormInput
-        label='Title'
-        padded={false}
-        error={props.errors.title}>
-        <TextInput
-          placeholder='Name'
-          value={props.listItem.title || ''}
-          fill={true}
-          onChange={ e => props.update('title', e.target.value) } />
-      </FormInput>
+  ensureDate(date) {
+    let ret = date
+    if (!(date instanceof Date)) {
+      const time_ms = Date.parse(date)
+      if(isNaN(time_ms)) {
+        ret = new Date()
+      } else {
+        ret = new Date(time_ms)
+      }
+    }
+    return ret
+  }
 
-      <FormInput
-        label='Description'
-        padded={false}
-        error={props.errors.description}>
-        <TextAreaInput
-          placeholder='Description'
-          value={props.listItem.description || ''}
-          fill={true}
-          onChange={ e => props.update('description', e.target.value) } />
-      </FormInput>
+  render() {
+    return (
+      <form onSubmit={e => e.preventDefault()}>
+        <FormInput
+          label='Title'
+          padded={false}
+          error={this.props.errors.title}>
+          <TextInput
+            placeholder='Name'
+            value={this.props.listItem.title || ''}
+            fill={true}
+            onChange={ e => this.props.update('title', e.target.value) } />
+        </FormInput>
 
-      <FormInput
-        label='Host'
-        padded={false}
-        error={props.errors.host}>
-        <TextInput
-          placeholder='Host'
-          value={props.listItem.host || ''}
-          fill={true}
-          onChange={ e => props.update('host', e.target.value) } />
-      </FormInput>
+        <FormInput
+          label='Description'
+          padded={false}
+          error={this.props.errors.description}>
+          <TextAreaInput
+            placeholder='Description'
+            value={this.props.listItem.description || ''}
+            fill={true}
+            onChange={ e => this.props.update('description', e.target.value) } />
+        </FormInput>
 
-      <FormInput
-        label='Featured Image'
-        padded={false}
-        error={props.errors.image}>
-          <ImageInput
-            fill={false}
-            selected={props.listItem.image}
-            onChange={ image => props.update('image', image) } />
-      </FormInput>
+        <FormInput
+          label='Host'
+          padded={false}
+          error={this.props.errors.host}>
+          <TextInput
+            placeholder='Host'
+            value={this.props.listItem.host || ''}
+            fill={true}
+            onChange={ e => this.props.update('host', e.target.value) } />
+        </FormInput>
 
-      <FormInput
-        label='Start Time'
-        padded={false}
-        error={props.errors.start_time}>
-        <DateTimeInput
-          value={ensureDate(props.listItem.start_time)}
-          onChange={ dt => props.update('start_time', dt)} />
-      </FormInput>
+        <Dropzone
+          ref={(node) => { this.dropzone = node }}
+          className='c-person-form__image__dropzone'
+          onDrop={(files) => this.onDrop(files)}
+          disableClick={true}
+          activeClassName='c-person-form__image__dropzone--active'
+          multiple={false}>
+          <div
+            className='c-person-form__images__container'>
+            {this.state.displayImg || this.props.listItem.image ? null :
+              <div className='c-person-form__image__dropzone__text'>
+                Drop Image Here
+              </div>}
+            <img
+              className='c-person-form__images'
+              src={this.state.displayImg || this.props.listItem.image}/>
+          </div>
+        </Dropzone>
 
-      <FormInput
-        label='End Time'
-        padded={false}
-        error={props.errors.end_time}>
-        <DateTimeInput
-          value={ensureDate(props.listItem.end_time)}
-          onChange={ dt => props.update('end_time', dt)} />
-      </FormInput>
+        <div className='c-person-form__image__button'>
+          <AnchorButton
+            onClick={() => this.dropzone.open()}>Select Image
+          </AnchorButton>
+        </div>
 
-      <FormInput
-        label='Location'
-        padded={false}
-        error={props.errors.location}>
-        <TextInput
-          placeholder='Location'
-          value={props.listItem.location || ''}
-          fill={true}
-          onChange={ e => props.update('location', e.target.value) } />
-      </FormInput>
+        <FormInput
+          label='Start Time'
+          padded={false}
+          error={this.props.errors.start_time}>
+          <DateTimeInput
+            value={this.ensureDate(this.props.listItem.start_time)}
+            onChange={ dt => this.props.update('start_time', dt)} />
+        </FormInput>
 
-      <FormInput
-        label='Address'
-        padded={false}
-        error={props.errors.address}>
-        <TextInput
-          placeholder='Address'
-          value={props.listItem.address || ''}
-          fill={true}
-          onChange={ e => props.update('address', e.target.value) } />
-      </FormInput>
+        <FormInput
+          label='End Time'
+          padded={false}
+          error={this.props.errors.end_time}>
+          <DateTimeInput
+            value={this.ensureDate(this.props.listItem.end_time)}
+            onChange={ dt => this.props.update('end_time', dt)} />
+        </FormInput>
 
-      <FormInput
-        label='Category'
-        padded={false}
-        error={props.errors.category}>
-        <SelectInput
-          selected={props.listItem.category}
-          options={CATEGORY_CHOICES}
-          onChange={ e => props.update('category', e.target.value)} />
-      </FormInput>
+        <FormInput
+          label='Location'
+          padded={false}
+          error={this.props.errors.location}>
+          <TextInput
+            placeholder='Location'
+            value={this.props.listItem.location || ''}
+            fill={true}
+            onChange={ e => this.props.update('location', e.target.value) } />
+        </FormInput>
 
-      <FormInput
-        label='Facebook Link'
-        padded={false}
-        error={props.errors.facebook_url}>
-        <TextInput
-          placeholder='https://www.facebook.com/events/###'
-          value={props.listItem.facebook_url || ''}
-          fill={true}
-          onChange={ e => props.update('facebook_url', e.target.value) } />
-      </FormInput>
-    </form>
-  )
+        <FormInput
+          label='Address'
+          padded={false}
+          error={this.props.errors.address}>
+          <TextInput
+            placeholder='Address'
+            value={this.props.listItem.address || ''}
+            fill={true}
+            onChange={ e => this.props.update('address', e.target.value) } />
+        </FormInput>
+
+        <FormInput
+          label='Category'
+          padded={false}
+          error={this.props.errors.category}>
+          <SelectInput
+            selected={this.props.listItem.category}
+            options={CATEGORY_CHOICES}
+            onChange={ e => this.props.update('category', e.target.value)} />
+        </FormInput>
+
+        <FormInput
+          label='Facebook Link'
+          padded={false}
+          error={this.props.errors.facebook_url}>
+          <TextInput
+            placeholder='https://www.facebook.com/events/###'
+            value={this.props.listItem.facebook_url || ''}
+            fill={true}
+            onChange={ e => this.props.update('facebook_url', e.target.value) } />
+        </FormInput>
+      </form>
+    )
+  }
 }

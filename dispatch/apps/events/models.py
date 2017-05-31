@@ -10,7 +10,7 @@ class Event(Model):
     description = TextField(max_length=500)
     host = CharField(max_length=255)
 
-    image = ForeignKey(Image, null=True)
+    image = ImageField(upload_to='images', null=True)
 
     start_time = DateTimeField(null=True)
     end_time = DateTimeField(null=True)

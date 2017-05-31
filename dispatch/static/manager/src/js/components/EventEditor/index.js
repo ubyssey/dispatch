@@ -23,18 +23,20 @@ const mapStateToProps = (state) => {
 }
 
 const processData = (data) => {
-  return {
-    title: data.title,
-    description: data.description,
-    host: data.host,
-    image: typeof data.image === 'object' ? data.image.id : data.image,
-    start_time: data.start_time ? dateObjToAPIString(data.start_time) : null,
-    end_time: data.end_time ? dateObjToAPIString(data.end_time) : null,
-    location: data.location,
-    address: data.address,
-    category: data.category,
-    facebook_url: data.facebook_url
-  }
+  let formData = new FormData()
+
+  formData.append('title', data.title || '')
+  formData.append('description', data.description || '')
+  formData.append('host', data.host || '')
+  formData.append('image', data.image, data.image ? data.image.name : null)
+  formData.append('start_time', data.start_time ? dateObjToAPIString(data.start_time) : null)
+  formData.append('end_time', data.end_time ? dateObjToAPIString(data.end_time) : null)
+  formData.append('location', data.location || '')
+  formData.append('address', data.address || '')
+  formData.append('category', data.category || '')
+  formData.append('facebook_url', data.facebook_url || '')
+
+  return formData
 }
 
 const mapDispatchToProps = (dispatch) => {

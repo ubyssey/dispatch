@@ -339,10 +339,10 @@ const DispatchAPI = {
       return getRequest('event', eventId, null, token)
     },
     create: (token, data) => {
-      return postRequest('event', null, data, token)
+      return postMultipartRequest('event', null, data, token)
     },
     save: (token, eventId, data) => {
-      return patchRequest('event', eventId, data, token)
+      return patchMultipartRequest('event', eventId, data, token)
     },
     delete: (token, eventId) => {
       return deleteRequest('event', eventId, null, token)
