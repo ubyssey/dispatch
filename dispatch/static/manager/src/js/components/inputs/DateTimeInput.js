@@ -11,7 +11,7 @@ export default function DateTimeInput(props) {
 
   const picker = (
     <DateTimePicker
-      value={props.value}
+      value={props.value || new Date()}
       onChange={props.onChange}
       timePickerProps={{ // so that state updates when either
         // date or time are changed
