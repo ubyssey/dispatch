@@ -38,9 +38,7 @@ class Main extends React.Component {
       <div>
         <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
         <Header sections={sections} email={this.props.email} />
-        <div className="u-container-vertical-scroll">
-          {this.props.children}
-        </div>
+        {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>
     )
