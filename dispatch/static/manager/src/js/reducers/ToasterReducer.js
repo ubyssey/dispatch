@@ -115,7 +115,7 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.TAGS.SAVE):
     return showToast('Tag could not be saved', Intent.DANGER)
   case fulfilled(types.TAGS.DELETE_MANY):
-    return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
+    return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.TAGS.DELETE_MANY):
     return showToast('Some tags could not be deleted', Intent.DANGER)
 
@@ -127,7 +127,7 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.TOPICS.SAVE):
     return showToast('Topic could not be saved', Intent.DANGER)
   case fulfilled(types.TOPICS.DELETE_MANY):
-    return showToast(`${action.payload.length} section${action.payload.length > 1 ? 's' : ''} deleted`)
+    return showToast(`${action.payload.length} topic${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.TOPICS.DELETE_MANY):
     return showToast('Some topics could not be deleted', Intent.DANGER)
 
@@ -137,7 +137,7 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.ZONES.SAVE):
     return showToast('Zone could not be saved', Intent.DANGER)
 
-    // Persons
+  // Persons
   case fulfilled(types.PERSONS.CREATE):
   case fulfilled(types.PERSONS.SAVE):
     return showToast('Person saved')
@@ -156,6 +156,22 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast(`${action.payload.length} persons${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.PERSONS.DELETE_MANY):
     return showToast('Some persons could not be deleted', Intent.DANGER)
+
+  // Events
+  case fulfilled(types.EVENTS.CREATE):
+  case fulfilled(types.EVENTS.SAVE):
+    return showToast('Event saved')
+  case rejected(types.EVENTS.CREATE):
+  case rejected(types.EVENTS.SAVE):
+    return showToast('Event could not be saved', Intent.DANGER)
+  case fulfilled(types.EVENTS.DELETE):
+    return showToast('Event deleted')
+  case rejected(types.EVENTS.DELETE):
+    return showToast('Event could not be deleted')
+  case fulfilled(types.EVENTS.DELETE_MANY):
+    return showToast(`${action.payload.length} event${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.EVENTS.DELETE_MANY):
+    return showToast('Some events could not be deleted', Intent.DANGER)
 
   default:
     return toaster
