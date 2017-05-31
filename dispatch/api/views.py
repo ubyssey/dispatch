@@ -146,12 +146,11 @@ class UserViewSet(DispatchModelViewSet):
 
     permission_classes = (IsAuthenticated,)
 
-    # # TODO: Add unique email check here?
-    # def perform_create(self, instance):
-    #     try:
-    #         instance.create()
-    #     except:
-    #         raise DuplicateKeyError("Email is already in use!")
+    def perform_create(self, serializer):
+        try:
+            serializer.save()
+        except:
+            raise DuplicateKeyError("Email is already in use!")
 
 class TagViewSet(DispatchModelViewSet):
     """
