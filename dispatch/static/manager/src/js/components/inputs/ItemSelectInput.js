@@ -119,7 +119,8 @@ class ItemSelectInput extends React.Component {
           onClick={() => this.removeValue(item.id)} />
         ))
 
-    const results = this.props.results
+    const results = this.props.results ?
+      this.props.results
       .filter(this.isNotSelected)
       .map(id => this.props.entities[id])
       .map(item => (
@@ -128,7 +129,7 @@ class ItemSelectInput extends React.Component {
           isSelected={false}
           text={item[this.props.attribute]}
           onClick={() => this.addValue(item.id)} />
-      ))
+      )) : []
 
     return (
       <div className='c-input--item-select__dropdown'>
