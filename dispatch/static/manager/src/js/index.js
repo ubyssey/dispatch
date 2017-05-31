@@ -97,6 +97,12 @@ render((
             <Route path=':personId' component={Pages.Persons.Person} />
           </Route>
 
+          <Route path='events'>
+            <IndexRoute component={Pages.Events.Index} />
+            <Route path='new' component={Pages.Events.NewEvent} />
+            <Route path=':eventId' component={Pages.Events.Event} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>
