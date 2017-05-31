@@ -6,6 +6,7 @@
   display: flex;
   overflow: hidden;
   height: 50px;
+  min-height: 50px;
 
   // Border
   border-bottom: thin solid $color-border-gray;
