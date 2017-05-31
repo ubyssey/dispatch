@@ -317,6 +317,23 @@ const DispatchAPI = {
       return getRequest('dashboard/recent', null, {}, token)
     }
   },
+  galleries: {
+    list: (token, query) => {
+      return getRequest('galleries', null, query, token)
+    },
+    get: (token, galleryId) => {
+      return getRequest('galleries', galleryId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('galleries', null, data, token)
+    },
+    save: (token, galleryId, data) => {
+      return patchRequest('galleries', galleryId, data, token)
+    },
+    delete: (token, galleryId) => {
+      return deleteRequest('galleries', galleryId, null, token)
+    }
+  },
   zones: {
     list: (token) => {
       return getRequest('zones', null, null, token)
