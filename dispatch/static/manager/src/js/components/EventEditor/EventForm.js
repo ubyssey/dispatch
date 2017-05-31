@@ -35,7 +35,7 @@ export default class EventForm extends React.Component {
     if (!(date instanceof Date)) {
       const time_ms = Date.parse(date)
       if(isNaN(time_ms)) {
-        ret = new Date()
+        ret = null
       } else {
         ret = new Date(time_ms)
       }
