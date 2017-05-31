@@ -489,5 +489,6 @@ class EventSerializer(DispatchModelSerializer):
             'end_time',
             'location',
             'category',
-            'facebook_url'
+            'facebook_url',
+            'address'
         )

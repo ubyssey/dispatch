@@ -11,6 +11,7 @@ export const templateSchema = new Schema('templates')
 export const fileSchema = new Schema('files')
 export const zoneSchema = new Schema('zones')
 export const widgetSchema = new Schema('widgets')
+export const eventSchema = new Schema('events')
 
 articleSchema.define({
   section: sectionSchema,
