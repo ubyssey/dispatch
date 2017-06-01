@@ -84,8 +84,9 @@ export default class ListItemsPageComponent extends React.Component {
   }
 
   render() {
-    // Make the title start with uppercase letter
-    const titleString = this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
+    const titleString = this.props.pageTitle
+      // Make the title start with uppercase letter
+      || this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
 
     // The first column will always be a link, as defined here,
     // containing the item property associated with displayColumn
