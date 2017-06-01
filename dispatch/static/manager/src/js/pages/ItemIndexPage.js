@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
@@ -86,6 +87,17 @@ export default class ListItemsPageComponent extends React.Component {
     // Make the title start with uppercase letter
     const titleString = this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
 
+    // The first column will always be a link, as defined here,
+    // containing the item property associated with displayColumn
+    const columns = R.insert(0, item => (
+      <strong>
+        <Link
+          to={`/${this.props.typePlural}/${item.id}`}
+          dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.name}} />
+      </strong>
+    // extraColumns are after the main link column
+    ), this.props.extraColumns || [])
+
     return (
       <DocumentTitle title={titleString}>
         <ItemList
@@ -100,10 +112,8 @@ export default class ListItemsPageComponent extends React.Component {
           items={this.props.listItems}
           entities={this.props.entities.listItems}
 
-          columns={[
-            item => (<strong><Link to={`/${this.props.typePlural}/${item.id}`} dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.name}} /></strong>),
-            item => item.slug
-          ]}
+          columns={columns}
+          headers={this.props.headers}
 
           emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (

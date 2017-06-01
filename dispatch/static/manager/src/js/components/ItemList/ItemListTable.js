@@ -4,6 +4,7 @@ import R from 'ramda'
 import ItemListItem from './ItemListItem'
 import ItemListItemPlaceholder from './ItemListItemPlaceholder'
 import ItemListEmpty from './ItemListEmpty'
+import ItemListColumnHeaders from './ItemListColumnHeaders'
 
 export default function ItemListTable(props) {
 
@@ -47,7 +48,10 @@ export default function ItemListTable(props) {
 
     return (
       <div className='c-item-list__table u-container u-container--align-left'>
-        <ul>{items}</ul>
+        <ul>
+          <ItemListColumnHeaders headers={props.headers} />
+          {items}
+        </ul>
       </div>
     )
   }

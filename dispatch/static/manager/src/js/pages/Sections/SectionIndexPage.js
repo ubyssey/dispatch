@@ -54,6 +54,11 @@ function SectionsPageComponent(props) {
     <ItemIndexPage
       typeSingular='section'
       typePlural='sections'
+      displayColumn='name'
+      headers={[ 'Name', 'Slug' ]}
+      extraColumns={[
+        item => item.slug
+      ]}
       {... props} />
   )
 }
