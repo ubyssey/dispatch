@@ -1,163 +1,59 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import DocumentTitle from 'react-document-title'
 
-import { Link } from 'react-router'
-import { Intent } from '@blueprintjs/core'
-
+import ItemIndexPage from '../ItemIndexPage'
 import pagesActions from '../../actions/PagesActions'
 import { humanizeDatetime } from '../../util/helpers'
-
-import { LinkButton } from '../../components/inputs'
-import ItemList from '../../components/ItemList'
-
-const DEFAULT_LIMIT = 15
-
-class PagesPageComponent extends React.Component {
-
-  getQuery() {
-    var query = {
-      limit: DEFAULT_LIMIT,
-      drafts: true,
-      offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
-    }
-
-    // If section is present, add to query
-    if (this.props.location.query.section) {
-      query.section = this.props.location.query.section
-    }
-
-    // If search query is present, add to query
-    if (this.props.location.query.q) {
-      query.q = this.props.location.query.q
-    }
-
-    return query
-  }
-
-  getCurrentPage() {
-    return parseInt(this.props.location.query.page, 10) || 1
-  }
-
-  getTotalPages() {
-    return Math.ceil(
-      parseInt(this.props.pages.count, 10) / DEFAULT_LIMIT
-    )
-  }
-
-  componentWillMount() {
-    // Fetch pages
-    this.props.clearPages()
-    this.props.clearSelectedPages()
-    this.props.listPages(this.props.token, this.getQuery())
-  }
-
-  componentDidUpdate(prevProps) {
-
-    if (this.isNewQuery(prevProps, this.props)) {
-      this.props.clearPages()
-      this.props.clearSelectedPages()
-      this.props.listPages(this.props.token, this.getQuery())
-    }
-
-    else if (this.isNewPage(prevProps, this.props)) {
-      // Fetch pages
-      this.props.listPages(this.props.token, this.getQuery())
-      this.props.clearSelectedPages()
-    }
-  }
-
-  isNewQuery(prevProps, props) {
-    return prevProps.location.query.q !== props.location.query.q
-  }
-
-  isNewPage(prevProps, props) {
-    // Returns true if page number has changed
-    return prevProps.location.query.page !== props.location.query.page
-  }
-
-  deletePages(pageIds) {
-    this.props.deletePages(this.props.token, pageIds)
-    this.props.clearSelectedPages()
-  }
-
-  searchPages(query) {
-    this.props.searchPages(this.props.token, this.props.location.query.section, query)
-  }
-
-  render() {
-
-    return (
-      <DocumentTitle title='Pages'>
-        <ItemList
-          location={this.props.location}
-
-          typePlural='pages'
-          typeSingular='page'
-
-          currentPage={this.getCurrentPage()}
-          totalPages={this.getTotalPages()}
-
-          items={this.props.pages}
-          entities={this.props.entities.pages}
-
-          columns={[
-            item => (<strong><Link to={`/pages/${item.id}`} dangerouslySetInnerHTML={{__html: item.title}} /></strong>),
-            item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
-            item => item.latest_version + ' revisions'
-          ]}
-
-          emptyMessage={'You haven\'t created any pages yet.'}
-          createHandler={() => (<LinkButton intent={Intent.SUCCESS} to={'pages/new'}>Create page</LinkButton>)}
-
-          actions={{
-            toggleItem: this.props.togglePage,
-            toggleAllItems: this.props.toggleAllPages,
-            deleteItems: (pageIds) => this.deletePages(pageIds),
-            searchItems: (query) => this.searchPages(query)
-          }}
-
-          />
-      </DocumentTitle>
-    )
-  }
-
-}
 
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    pages: state.app.pages.list,
+    listItems: state.app.pages.list,
     entities: {
-      pages: state.app.entities.pages
+      listItems: state.app.entities.pages
     }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    listPages: (token, query) => {
+    listListItems: (token, query) => {
       dispatch(pagesActions.list(token, query))
     },
-    togglePage: (pageId) => {
+    toggleListItem: (pageId) => {
       dispatch(pagesActions.toggle(pageId))
     },
-    toggleAllPages: (pageIds) => {
+    toggleAllListItems: (pageIds) => {
       dispatch(pagesActions.toggleAll(pageIds))
     },
-    clearSelectedPages: () => {
+    clearSelectedListItems: () => {
       dispatch(pagesActions.clearSelected())
     },
-    clearPages: () => {
+    clearListItems: () => {
       dispatch(pagesActions.clearAll())
     },
-    deletePages: (token, pageIds) => {
+    deleteListItems: (token, pageIds) => {
       dispatch(pagesActions.deleteMany(token, pageIds))
     },
-    searchPages: (token, section, query) => {
+    searchListItems: (token, section, query) => {
       dispatch(pagesActions.search(section, query))
     }
   }
+}
+
+function PagesPageComponent(props) {
+  return (
+    <ItemIndexPage
+      typePlural='pages'
+      typeSingular='page'
+      displayColumn='title'
+      headers={[ 'Title', 'Published', 'Revisions' ]}
+      extraColumns={[
+        item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
+        item => item.latest_version + ' revisions'
+      ]}
+      {...props} />
+  )
 }
 
 const PagesPage = connect(
