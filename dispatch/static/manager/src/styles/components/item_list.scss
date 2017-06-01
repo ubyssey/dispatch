@@ -151,3 +151,13 @@
     @include font-size(20);
   }
 }
+
+// Component: ItemListColumnHeader
+.c-item-list__column__header {
+  font-weight: 700;
+}
+
+.c-item-list__column__header > .c-item-list__item__cell {
+  border-bottom-color: #aaa;
+  border-bottom-width: 1px;
+}
