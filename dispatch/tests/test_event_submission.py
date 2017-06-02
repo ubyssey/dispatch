@@ -36,7 +36,6 @@ class EventSubmissionTests(DispatchAPITestCase):
         url = reverse('api-event-list')
 
         response = Event.objects.all()
-        print response
 
 """view = {'category': u'party', 'description': u"Join us for one of Canada's most spectacular runs, here in the Coast Moutains of British Columbia.  With 5 different distances on offer, education sessions, lots of prizes - there is something for everyone.  Gather your family, friends and running partners - come make a weekend of it!", 'title': u'2017 The North Face Whistler Half Marathon, 30K, 10K and 5K', 'start_time': datetime.datetime(2017, 6, 2, 12, 0, tzinfo=<django.utils.timezone.LocalTimezone object at 0x1074ea2d0>), 'facebook_image_url': u'', 'host': u'df', 'end_time': datetime.datetime(2017, 6, 4, 12, 0, tzinfo=<django.utils.timezone.LocalTimezone object at 0x1074ea2d0>), 'facebook_url': u'', 'address': u'', 'image': None, 'location': u'Whistler Half Marathon'}
 """

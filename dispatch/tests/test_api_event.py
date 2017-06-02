@@ -3,10 +3,10 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from dispatch.apps.events.models import Event
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class EventTests(DispatchAPITestCase):
+class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_event_unauthorized(self):
         """Creating an event shold fail with unauthenticated request"""
@@ -210,21 +210,22 @@ class EventTests(DispatchAPITestCase):
     def test_custom_image(self):
         """Should be able to create an event with specific image"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
 
-        event = DispatchTestHelpers.create_event(self.client)
+        with open(self.get_input_file('test_image.jpg')) as test_image:
+            event = DispatchTestHelpers.create_event(self.client, image=test_image)
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
+
+        self.assertIn('test_image.jpg', event.data['image'])
 
     def test_delete_image(self):
         """Should be able to delete image that is associated with an event"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
-
-        event = DispatchTestHelpers.create_event(self.client)
-
+        with open(self.get_input_file('test_image.jpg')) as test_image:
+            event = DispatchTestHelpers.create_event(self.client, image=test_image)
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
+        self.assertIn('test_image.jpg', event.data['image'])
 
         # Now delete the image by updating with the image field as None
         url = reverse('api-event-detail', args=[event.data['id']])

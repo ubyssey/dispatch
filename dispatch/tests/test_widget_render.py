@@ -30,7 +30,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that to_json returns correct data"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         widget = TestWidget()
 
@@ -38,7 +38,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'test title',
             'description': 'test description',
             'article': article.data['id'],
-            'image' : image_id
+            'image' : image.data['id']
         })
 
         widget_json = widget.to_json()
@@ -52,7 +52,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that get_data returns the correct data"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         widget = TestWidget()
 
@@ -60,20 +60,18 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'test title',
             'description': 'test description',
             'article': article.data['id'],
-            'image' : image_id
+            'image' : image.data['id']
         })
 
         widget_data = widget.get_data()
 
         self.assertEqual(widget_data, {'article': 1, 'image': 1, 'description': 'test description', 'title': 'test title'})
 
-
-
     def test_widget_render(self):
         """Ensure that render will return correct html strings"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         widget = TestWidget()
 
@@ -81,12 +79,12 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'test title',
             'description': 'test description',
             'article': article.data['id'],
-            'image' : image_id
+            'image' : image.data['id']
         })
 
         widget_render = widget.render()
 
-        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="Article">Test headline</div>\n    <img class="image" src="images/2017/06/test_image.png"/>\n</div>\n'
+        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="Article">Test headline</div>\n    <img class="image" src="%s"/>\n</div>\n' % image.data['url']
 
         self.assertEqual(widget_render, html)
 
