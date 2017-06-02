@@ -195,22 +195,21 @@ class EventTests(DispatchAPITestCase):
     def test_custom_image(self):
         """Should be able to create an event with specific image"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
-        event = DispatchTestHelpers.create_event(self.client, image=image_id)
+        event = DispatchTestHelpers.create_event(self.client, image=image.data['id'])
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(event.data['image']['id'], image_id)
+        self.assertEqual(event.data['image']['id'], image.data['id'])
 
     def test_delete_image(self):
         """Should be able to delete image that is associated with an event"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
-
-        event = DispatchTestHelpers.create_event(self.client, image=image_id)
+        image = DispatchTestHelpers.create_image(self.client)
+        event = DispatchTestHelpers.create_event(self.client, image=image.data['id'])
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(event.data['image']['id'], image_id)
+        self.assertEqual(event.data['image']['id'], image.data['id'])
 
         # Now delete the image by updating with the image field as None
         url = reverse('api-event-detail', args=[event.data['id']])
