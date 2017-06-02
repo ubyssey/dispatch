@@ -146,6 +146,23 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='multipart')
 
     @classmethod
+    def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword'):
+        """
+        A helper method that creates a simple user object with the given attributes
+        and returns the response
+        """
+
+        person = person or cls.create_person(client, full_name).data['id']
+        url = reverse('api-users-list')
+        data = {
+            'email' : email,
+            'person' : person,
+            'password_a': password,
+            'password_b': password
+        }
+
+        return client.post(url, data, format='json')
+    @classmethod
     def create_tag(cls, client, name='testTag'):
         """Create a dummy tag instance"""
 

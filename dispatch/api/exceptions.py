@@ -6,7 +6,7 @@ class InvalidFilename(APIException):
     default_detail = 'Invalid filename'
 
 class ProtectedResourceError(APIException):
-    status_code = status.HTTP_409_CONFLICT
+    status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Deletion failed because resource is a member of a protected relationship'
 
 class InvalidGalleryAttachments(APIException):
