@@ -9,6 +9,9 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.test_api_persons import PersonsTests
 from dispatch.tests.helpers import DispatchTestHelpers
 
+TEST_USER_EMAIL = 'test_user@test.com'
+TEST_USER_FULL_NAME = 'John Doe'
+
 class UserTests(DispatchAPITestCase):
     """A class to test the user API methods"""
 
@@ -17,25 +20,46 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
-            email='test@gmail.com',
-            full_name='Attached Person'
+            email=TEST_USER_EMAIL,
+            full_name=TEST_USER_FULL_NAME
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        user = User.objects.get(pk=response.data['id'])
-        self.assertEqual(user.person.full_name, 'Attached Person')
+        self.assertEqual(response.data['email'], TEST_USER_EMAIL)
+        self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
 
-    def test_user_creation_fail(self):
+    def test_user_invalid_person(self):
         """Test to ensure user creation fails if wrong person ID is given"""
 
         response = DispatchTestHelpers.create_user(
             self.client,
-            email="test@gmail.com",
-            person_id=123
+            email=TEST_USER_EMAIL,
+            person=123
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_user_duplicate_person(self):
+        """Cannot associate a user with a person instance that already belongs to another user"""
+
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+
+        response = DispatchTestHelpers.create_user(
+            self.client,
+            email=TEST_USER_EMAIL,
+            person=person_id
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = DispatchTestHelpers.create_user(
+            self.client,
+            email='test_user2@test.com',
+            person=person_id
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
 
     def test_empty_user(self):
         """Creating an empty user should fail"""
@@ -48,8 +72,8 @@ class UserTests(DispatchAPITestCase):
     def test_duplicate_emails(self):
         """Creating a user with duplicate emails should fail"""
 
-        response1 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
-        response2 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
+        response1 = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
+        response2 = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_409_CONFLICT)
@@ -58,15 +82,15 @@ class UserTests(DispatchAPITestCase):
         """Test unauthorized user creation"""
 
         # Create person before clearing credentials
-        person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
 
         self.client.credentials()
 
         url = reverse('api-users-list')
 
         data = {
-            'email' : 'testemail123@ubyssey.ca',
-            'person_id' : person_id,
+            'email' : TEST_USER_EMAIL,
+            'person' : person_id,
             'password_a': 'Matching',
             'password_b': 'NotMatching'
         }
@@ -74,13 +98,15 @@ class UserTests(DispatchAPITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertFalse(User.objects.filter(email=TEST_USER_EMAIL).exists())
 
     def test_unauthorized_user_update(self):
         """Test unauthorized user update"""
 
-        response = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
+        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
-        url = reverse('api-users-detail', args=[response.data['id']])
+        user_id = response.data['id']
+        url = reverse('api-users-detail', args=[user_id])
 
         data = {
             'email' : 'newEmail@gmail.com'
@@ -91,6 +117,7 @@ class UserTests(DispatchAPITestCase):
         response = self.client.patch(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(User.objects.get(id=user_id).email, TEST_USER_EMAIL)
 
     def test_unauthorized_listing_get_request(self):
         """Test that an a get request for users listing without
@@ -121,29 +148,29 @@ class UserTests(DispatchAPITestCase):
         """Check that creating a user with a password works correctly"""
 
         # NOTE: By default _create_user() supplies a good password
-        response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
+        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_authentication(self):
         """Test that user authenticates"""
 
-        response = DispatchTestHelpers.create_user(self.client,email='test@gmail.com', password='TheBestPassword!')
+        response = DispatchTestHelpers.create_user(self.client, email=TEST_USER_EMAIL, password='TheBestPassword!')
 
-        user = authenticate(username='test@gmail.com', password='TheBestPassword!')
+        user = authenticate(username=TEST_USER_EMAIL, password='TheBestPassword!')
 
         self.assertIsNotNone(user)
 
     def test_bad_passwords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
 
-        person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
 
         url = reverse('api-users-list')
 
         data = {
             'email' : 'testemail123@ubyssey.ca',
-            'person_id' : person_id
+            'person' : person_id
         }
 
         # Not matching
@@ -201,12 +228,12 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
-            email='test@gmail.com',
-            full_name='Attached Person'
+            email=TEST_USER_EMAIL,
+            full_name=TEST_USER_FULL_NAME
         )
 
         user_id = response.data['id']
-        person_id = response.data['person_id']
+        person_id = response.data['person']['id']
 
         # Generate detail URL
         url = reverse('api-users-detail', args=[user_id])
@@ -232,7 +259,7 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
-            email='test@gmail.com'
+            email=TEST_USER_EMAIL
         )
 
         url = reverse('api-users-detail', args=[response.data['id']])
