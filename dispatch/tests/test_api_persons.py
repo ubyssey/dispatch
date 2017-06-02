@@ -158,11 +158,11 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Person.objects.filter(id=person_id).exists())
-        
+
         # Can't delete an person that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
+
     def test_unauthorized_person_deletion(self):
         """Unauthorized deletion of a person isn't allowed"""
 
@@ -201,7 +201,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         response = self.client.delete(url, format='json')
 
-        self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_image_url(self):
         """Test to ensure proper url is returned"""

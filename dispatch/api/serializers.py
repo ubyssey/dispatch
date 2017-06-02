@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
+
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -31,8 +33,15 @@ class UserSerializer(DispatchModelSerializer):
     Serializes the User model.
     """
 
-    email = serializers.EmailField(required=True)
-    person = ForeignKeyField(model=Person, serializer=PersonSerializer())
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     password_a = serializers.CharField(
         required=False,
         write_only=True,

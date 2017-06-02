@@ -59,7 +59,7 @@ class UserTests(DispatchAPITestCase):
             person=person_id
         )
 
-        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_empty_user(self):
         """Creating an empty user should fail"""
@@ -76,7 +76,7 @@ class UserTests(DispatchAPITestCase):
         response2 = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response2.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_unauthorized_user_creation(self):
         """Test unauthorized user creation"""
