@@ -18,21 +18,17 @@ export default class EventCard extends React.Component {
     super(props)
 
     this.state = {
-      right: false,
-      left: false
+      disableButtons: false
     }
   }
 
   render() {
-    let cardName = 'pt-card pt-elevation-2 c-event-audit-card'
-    if (this.state.right) {
-      cardName += ' c-event-audit-card-slideout-right'
-    } else if (this.state.left) {
-      cardName += ' c-event-audit-card-slideout-left'
-    }
-
     return (
-      <div className={cardName}>
+      <div
+        className='pt-card pt-elevation-2 c-event-audit-card'
+        style={{
+          // display: this.state.hidden ? 'none' : 'block'
+        }}>
         <div className='c-event-audit-card-title'>
           {this.props.event.title}
         </div>
@@ -62,8 +58,9 @@ export default class EventCard extends React.Component {
             transitionDuration={15}
             content="Delete">
             <AnchorButton
+              disabled={this.state.disableButtons}
               onClick={() => {
-                this.setState({ left: true })
+                this.setState({ disableButtons: true })
                 this.props.disapprove()
               }}>
               Disapprove
@@ -71,14 +68,16 @@ export default class EventCard extends React.Component {
           </Tooltip>
 
           <AnchorButton
+            disabled={this.state.disableButtons}
             onClick={() => {
-              this.setState({ right: true })
+              this.setState({ disableButtons: true })
               this.props.approve()
             }}>
             Approve
           </AnchorButton>
 
           <LinkButton
+            disabled={this.state.disableButtons}
             className='c-event-audit-card-button-edit'
             to={`/events/${this.props.event.id}`}>
             Edit
