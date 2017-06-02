@@ -45,28 +45,22 @@
 
 .c-event-audit-card-nottitle {
   padding: 10px 10px 0 10px;
+  width: 48%;
+  display: inline-block;
 }
 
 .c-event-audit-card-label {
   display: block;
-  clear: both;
   line-height: 1.35em;
 }
 
 .c-event-audit-card-label-label {
-  float: left;
-  display: inline-block;
   font-weight: 600;
 }
 
 .c-event-audit-card-label-prop {
-  float: right;
-  display: inline-block;
-}
-
-.c-event-audit-card-description {
-  clear: both;
-  padding: 0 15px;
+  padding-left: 10px;
+  line-height: 1.4em;
 }
 
 .c-event-audit-card-button-border {
@@ -86,4 +80,16 @@
 
 .c-event-audit-card-button-edit {
   margin-left: 5px;
+}
+
+.c-event-audit-card-image-cont {
+  display: inline-block;
+  float: right;
+  width: 48%;
+  margin-left: 4%;
+}
+
+.c-event-audit-card-image {
+  max-width: 100%;
+  max-height: 500px;
 }
