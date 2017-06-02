@@ -1,15 +1,10 @@
-from dispatch.apps.api.exceptions import InvalidFilename, InvalidGalleryAttachments
-from django.core.exceptions import ValidationError
-from dispatch.apps.content.models import Image
-from dispatch.apps.core.models import Person
+from rest_framework.exceptions import ValidationError
+
 from django.contrib.auth.password_validation import validate_password
 
-def validate_person_id(value):
-    if Person.objects.filter(id=value).exists():
-        return value
-    else:
-        error_string = 'PERSON doesn\'t exist with given person_id %s' % value
-        raise ValidationError(error_string)
+from dispatch.apps.api.exceptions import InvalidFilename, InvalidGalleryAttachments
+from dispatch.apps.content.models import Image
+from dispatch.apps.core.models import Person
 
 class PasswordValidator(object):
 
