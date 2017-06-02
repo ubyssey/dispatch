@@ -16,7 +16,6 @@ const PENDING_QUERY = null
 
 class EventAuditPage extends React.Component {
   componentWillMount() {
-    console.log('hi')
     this.props.listEvents(this.props.token, PENDING_QUERY)
   }
 

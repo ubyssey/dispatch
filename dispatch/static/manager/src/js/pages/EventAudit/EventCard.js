@@ -7,8 +7,8 @@ import { humanizeDatetime } from '../../util/helpers'
 function labelAndProp(label, prop) {
   return (
     <div className='c-event-audit-card-label'>
-      <div className='c-event-audit-card-label-prop'>{prop}</div>
       <div className='c-event-audit-card-label-label'>{label}</div>
+        <div className='c-event-audit-card-label-prop'>{prop}</div>
     </div>
   )
 }
@@ -32,16 +32,13 @@ export default class EventCard extends React.Component {
     }
 
     return (
-      <div
-        className={cardName}>
+      <div className={cardName}>
         <div className='c-event-audit-card-title'>
           {this.props.event.title}
         </div>
+
         <div className='c-event-audit-card-nottitle'>
-          {labelAndProp('Description', '')}
-          <div className='c-event-audit-card-description'>
-            {this.props.event.description}
-          </div>
+          {labelAndProp('Description', this.props.event.description)}
           {labelAndProp('Host', this.props.event.host)}
           {labelAndProp('Start', humanizeDatetime(this.props.event.start_time))}
           {labelAndProp('End', humanizeDatetime(this.props.event.end_time))}
@@ -50,6 +47,13 @@ export default class EventCard extends React.Component {
           {labelAndProp('Category', this.props.event.category)}
           {labelAndProp('FB Link', this.props.event.facebook_url)}
         </div>
+
+        <div className='c-event-audit-card-image-cont'>
+          <img
+            className='c-event-audit-card-image'
+            src={this.props.event.image} />
+        </div>
+
         <div className='c-event-audit-card-button-border' />
         <div className='c-event-audit-card-button-row'>
 
