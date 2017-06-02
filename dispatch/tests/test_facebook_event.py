@@ -12,5 +12,5 @@ class FacebookEventTests(DispatchAPITestCase):
 
         event = FacebookEvent(url)
 
-        print event.get_json()
+        # print event.get_json()
         # print event.get_image()
