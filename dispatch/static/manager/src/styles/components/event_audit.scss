@@ -1,0 +1,89 @@
+.c-event-audit-title {
+  padding: 15px 0;
+  font-size: 36px;
+}
+
+.c-event-audit-card {
+  margin-bottom: 15px;
+}
+
+.c-event-audit-card-slideout-right {
+  animation-duration: 1s;
+  animation-name: slideoutright;
+}
+
+@keyframes slideoutright {
+  from {
+    margin-left: 0%;
+    width: 100%
+  }
+  to {
+    margin-left: 100%;
+    width: 500%
+  }
+}
+
+.c-event-audit-card-slideout-left {
+  animation-duration: 1s;
+  animation-name: slideoutleft;
+}
+
+@keyframes slideoutleft {
+  from {
+    margin-left: 0%;
+    width: 100%
+  }
+  to {
+    margin-left: -100%;
+    width: 0%
+  }
+}
+
+.c-event-audit-card-title {
+  font-size: 26px;
+}
+
+.c-event-audit-card-nottitle {
+  padding: 10px 10px 0 10px;
+}
+
+.c-event-audit-card-label {
+  display: block;
+  clear: both;
+  line-height: 1.35em;
+}
+
+.c-event-audit-card-label-label {
+  float: left;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.c-event-audit-card-label-prop {
+  float: right;
+  display: inline-block;
+}
+
+.c-event-audit-card-description {
+  clear: both;
+  padding: 0 15px;
+}
+
+.c-event-audit-card-button-border {
+  clear: both;
+  width: 100%;
+  padding-top: 0.75em;
+  border-bottom: 1px #EEE solid;
+}
+
+.c-event-audit-card-button-row {
+  padding-top: 0.75em;
+}
+
+.c-event-audit-card-button-right {
+  float: right;
+}
+
+.c-event-audit-card-button-edit {
+  margin-left: 5px;
+}
