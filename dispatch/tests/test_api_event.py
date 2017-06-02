@@ -158,18 +158,22 @@ class EventTests(DispatchAPITestCase):
         DispatchTestHelpers.create_event(self.client, title='A math lecture', description='Reimann Hypothesis', host='UBC')
         DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC')
         DispatchTestHelpers.create_event(self.client, title='Block Party!', description='Partay on the block', host='AMS')
+        DispatchTestHelpers.create_event(self.client, title='This is a user submission', is_submission=True)
 
         url_1 = '%s?q=%s' % (reverse('api-event-list'), 'lecture')
         url_2 = '%s?q=%s' % (reverse('api-event-list'), 'UBC')
         url_3 = '%s?q=%s' % (reverse('api-event-list'), 'String Theory')
+        url_4 = '%s?pending=1' % reverse('api-event-list')
 
         response_1 = self.client.get(url_1, format='json')
         response_2 = self.client.get(url_2, format='json')
         response_3 = self.client.get(url_3, format='json')
+        response_4 = self.client.get(url_4, format='json')
 
         data_1 = response_1.data
         data_2 = response_2.data
         data_3 = response_3.data
+        data_4 = response_4.data
 
         self.assertEqual(data_1['results'][0]['title'], 'A math lecture')
         self.assertEqual(data_1['results'][1]['title'], 'A physics lecture')
@@ -181,6 +185,17 @@ class EventTests(DispatchAPITestCase):
 
         self.assertEqual(data_3['results'][0]['title'], 'A physics lecture')
         self.assertEqual(data_3['count'], 1)
+
+        self.assertEqual(data_4['results'][0]['title'], 'This is a user submission')
+        self.assertEqual(data_4['count'], 1)
+
+        self.client.credentials() # Clear credentials
+
+        response_5 = self.client.get(url_4, format='json')
+
+        data_5 = response_5.data
+
+        self.assertEqual(data_5['count'], 0)
 
     def test_start_end_times(self):
         """Should be able to create an event with specific start and end times"""
@@ -197,20 +212,19 @@ class EventTests(DispatchAPITestCase):
 
         image_id = DispatchTestHelpers.upload_image(self.client)
 
-        event = DispatchTestHelpers.create_event(self.client, image=image_id)
+        event = DispatchTestHelpers.create_event(self.client)
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(event.data['image']['id'], image_id)
 
     def test_delete_image(self):
         """Should be able to delete image that is associated with an event"""
 
         image_id = DispatchTestHelpers.upload_image(self.client)
 
-        event = DispatchTestHelpers.create_event(self.client, image=image_id)
+        event = DispatchTestHelpers.create_event(self.client)
+
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(event.data['image']['id'], image_id)
 
         # Now delete the image by updating with the image field as None
         url = reverse('api-event-detail', args=[event.data['id']])

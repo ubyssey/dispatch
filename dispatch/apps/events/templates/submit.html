@@ -1,0 +1,105 @@
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/ubyssey/static/css/jquery.datetimepicker.min.css" />
+<script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/ubyssey/static/js/jquery.datetimepicker.full.min.js"></script>
+
+{{ form.non_field_errors }}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="fieldWrapper">
+    {{ field.title.errors }}
+    <label for="{{ form.title.id_for_label }}">Title of Event:</label>
+    {{ form.title }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.description.errors }}
+    <label for="{{ form.description.id_for_label }}">Description:</label>
+    {{ form.description }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.host.errors }}
+    <label for="{{ form.host.id_for_label }}">Host:</label>
+    {{ form.host }}
+  </div>
+
+  {% if form.facebook_image_url.value %}
+  <div class="fieldWrapper">
+    {{ field.facebook_image_url.errors }}
+    <label for="{{ form.facebook_image_url.id_for_label }}">Image for the Event:</label>
+    <img style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" src="{{ form.facebook_image_url.value }}">
+    <label for="{{ form.image.id_for_label }}">Or upload an image:</label>
+    {{ form.image }}
+  </div>
+
+  {% elif form.image.value %}
+
+  <label for="{{ form.image.id_for_label }}">Upload Image:</label>
+  {{ form.image }}
+  <img style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" src="{{ field.image.url }}">
+
+  {% else %}
+  <div class="fieldWrapper">
+    {{ field.image.errors }}
+    <label for="{{ form.image.id_for_label }}">Upload Image:</label>
+    {{ form.image }}
+  </div>
+  {% endif %}
+
+  <div class="fieldWrapper">
+    {{ field.start_time.errors }}
+    <label for="{{ form.start_time.id_for_label }}">Start Time:</label>
+    {{ form.start_time }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.end_time.errors }}
+    <label for="{{ form.start_time.id_for_label }}">End Time:</label>
+    {{ form.end_time }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.location.errors }}
+    <label for="{{ form.title.id_for_label }}">Location:</label>
+    {{ form.location }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.address.errors }}
+    <label for="{{ form.title.id_for_label }}">Address:</label>
+    {{ form.address }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ field.category.errors }}
+    <label for="{{ form.category.id_for_label }}">Category of Event:</label>
+    {{ form.category }}
+  </div>
+
+  <!-- These are to pass the facebook_url and facebook_image_url on to the form. If you know a better way,
+  for the love of all that is holy let me know-->
+  <p hidden>{{ form.facebook_url }}</p>
+  <p hidden>{{ form.facebook_image_url }}</p>
+
+  <input type="submit" name="submit_event" value="Submit" />
+</form>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label for="facebook_url">Facebook Url:</label>
+  <input id="facebook_url" type="text" name="facebook_url"/>
+
+  <input type="submit" name="submit_facebook" value="Submit" />
+</form>
+
+<script type="text/javascript">
+  // javascript
+  jQuery('#id_start_time').datetimepicker({
+    minDate:new Date()
+  });
+  jQuery('#id_end_time').datetimepicker({
+    minDate:new Date()
+  });
+</script>
