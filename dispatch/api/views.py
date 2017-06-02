@@ -1,5 +1,6 @@
 from django.template.loader import render_to_string
 from django.db.models import Q, ProtectedError
+from django.db import IntegrityError
 from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
@@ -21,7 +22,7 @@ from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
-from dispatch.apps.api.exceptions import ProtectedResourceError, DuplicateKeyError
+from dispatch.apps.api.exceptions import ProtectedResourceError
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound
@@ -139,18 +140,13 @@ class PersonViewSet(DispatchModelViewSet):
 
 class UserViewSet(DispatchModelViewSet):
     """Viewset for User model views."""
+
     model = User
     serializer_class = UserSerializer
 
     queryset = User.objects.all()
 
     permission_classes = (IsAuthenticated,)
-
-    def perform_create(self, serializer):
-        try:
-            serializer.save()
-        except:
-            raise DuplicateKeyError("Email is already in use!")
 
 class TagViewSet(DispatchModelViewSet):
     """
