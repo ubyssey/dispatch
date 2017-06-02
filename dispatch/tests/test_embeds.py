@@ -197,15 +197,15 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_image_controller_render(self):
         """Should output html string"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
-            'image_id' : image_id,
+            'image_id' : image.data['id'],
             'caption' : 'This is a test caption',
             'credit' : 'This is a test credit'
         }
 
-        html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.png" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
+        html_str = u'<div class="image-embed">\n    <img class="image" src="%s" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n' % image.data['url']
 
         result = embeds.embedlib.render('image', data)
 
@@ -214,33 +214,16 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_image_controller_to_json(self):
         """Should output json data"""
 
-        url = reverse('api-images-list')
-
-        with open(self.get_input_file('test_image.jpg')) as test_image:
-            response = self.client.post(url, { 'img': test_image }, format='multipart')
-
-        image_id = response.data['id']
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
-            'image_id' : image_id,
+            'image_id' : image.data['id'],
             'caption' : 'This is a test caption',
             'credit' : 'This is a test credit'
         }
 
         json = {
-            'image': {
-                'title': None,
-                'url': u'images/2017/05/test_image.jpg',
-                'url_medium': u'images/2017/05/test_image-medium.jpg',
-                'created_at': response.data['created_at'],
-                'updated_at': response.data['updated_at'],
-                'url_thumb': u'images/2017/05/test_image-square.jpg',
-                'filename': u'test_image.jpg',
-                'width': 600,
-                'authors': [],
-                'height': 400,
-                'id': 1
-            },
+            'image': image.data,
             'caption': 'This is a test caption',
             'credit': 'This is a test credit'
         }
@@ -252,7 +235,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_invalid_image_id(self):
         """Should raise EmbedException"""
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
             'image_id' : -1,
@@ -268,30 +251,17 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_gallery_controller(self):
 
-        # Test "render" with gallery controller, uses "get_gallery" and "prepare_data"
-        # Make a gallery and get its data
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(0, self.client)
-        data = gallery.data
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(0, self.client)
 
-        # Render the data to html
-        result_1 = embeds.embedlib.render('gallery', data)
+        result_1 = embeds.embedlib.render('gallery', gallery.data)
 
-        # Get the unique url that is produced when creating the gallery
-        abs_url = data['images'][1]['image']['filename'].replace('.png', '')
-
-        # Expected output
-        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/2017/05/test_image.png" />\n        \n        <img src="images/2017/05/%s.png" />\n        \n    </div>\n</div>\n' % abs_url
+        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
 
         self.assertEqual(result_1, output)
 
-        # Test "to_json"
-        result_2 = embeds.GalleryController.to_json(data)
-
-        json_created_at = data['images'][0]['image']['created_at']
-        json_updated_at = data['images'][0]['image']['updated_at']
+        result_2 = embeds.GalleryController.to_json(gallery.data)
 
         self.assertEqual(result_2['title'], u'Gallery Title 0')
         self.assertEqual(result_2['id'], 1)
-        self.assertEqual(result_2['gallery']['images'][1]['image']['filename'], abs_url + '.png')
-        self.assertEqual(result_2['gallery']['images'][0]['image']['created_at'], json_created_at)
-        self.assertEqual(result_2['gallery']['images'][0]['image']['updated_at'], json_updated_at)
+        self.assertEqual(result_2['gallery']['images'][0]['image']['id'], img_1.data['id'])
+        self.assertEqual(result_2['gallery']['images'][1]['image']['id'], img_2.data['id'])
