@@ -54,6 +54,9 @@ export default function Header(props) {
                 <li className='c-header__dropdown__link'>
                   <Link to='/events/'><span className='pt-icon-standard pt-icon-timeline-events' /> events</Link>
                 </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/events/audit'><span className='pt-icon-standard pt-icon-endorsed' /> audit events</Link>
+                </li>
               </ul>
             </li>
             <li className='c-header__dropdown'>
