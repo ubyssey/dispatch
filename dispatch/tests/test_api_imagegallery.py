@@ -12,8 +12,8 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test that listing all the galleries works"""
 
         # insert 2 galleries
-        gallery1, img_id11, img_id12 = DispatchTestHelpers.create_gallery(0, self.client)
-        gallery2, img_id21, img_id22 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery1, img_1_a, img_1_b = DispatchTestHelpers.create_gallery(0, self.client)
+        gallery2, img_2_a, img_2_b = DispatchTestHelpers.create_gallery(1, self.client)
 
         url = reverse('api-galleries-list')
         response = self.client.get(url, format='json')
@@ -29,13 +29,13 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             self.assertEqual(response.data['results'][id]['images'][1]['caption'], 'test caption 2')
             self.assertEqual(response.data['results'][id]['images'][1]['image']['id'], img_id2)
 
-        checkOneGallery(0, img_id11, img_id12)
-        checkOneGallery(1, img_id21, img_id22)
+        checkOneGallery(0, img_1_a.data['id'], img_1_b.data['id'])
+        checkOneGallery(1, img_2_a.data['id'], img_2_b.data['id'])
 
     def test_imagegallery_get(self):
         """Test that getting a specific gallery works"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -45,9 +45,9 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['title'], 'Gallery Title 1')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
-        self.assertEqual(response.data['images'][0]['image']['id'], img_id1)
+        self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
-        self.assertEqual(response.data['images'][1]['image']['id'], img_id2)
+        self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_get_invalid_id(self):
         """Test that getting an invalid id returns appropriate error"""
@@ -61,7 +61,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Create gallery should fail with unauthenticated request"""
 
         url = reverse('api-galleries-list')
-        image_1 = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         # Clear authentication credentials (after uploading the image)
         self.client.credentials()
@@ -70,7 +70,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'Gallery Title',
             'attachment_json': {
                 'caption': 'test caption 1',
-                'image_id': image_1
+                'image_id': image.data['id']
             }
         }
 
@@ -102,7 +102,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_create(self):
         """Ensure that gallery can be created"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -111,9 +111,9 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['title'], 'Gallery Title 1')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
-        self.assertEqual(response.data['images'][0]['image']['id'], img_id1)
+        self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
-        self.assertEqual(response.data['images'][1]['image']['id'], img_id2)
+        self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_create_invalid_image_ids(self):
         """Ensure that an appropriate error is returned when an image gallery is
@@ -155,7 +155,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_patch_unauthorized(self):
         """Patch gallery should fail with unauthenticated request"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
 
@@ -167,7 +167,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'test caption 1',
-              'image_id': img_id1
+              'image_id': img_1.data['id']
             }
           ]
         }
@@ -181,14 +181,14 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.get(url, format='json')
         self.assertEqual(response.data['title'], 'Gallery Title 1')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
-        self.assertEqual(response.data['images'][0]['image']['id'], img_id1)
+        self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
-        self.assertEqual(response.data['images'][1]['image']['id'], img_id2)
+        self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_patch_single(self):
         """Ensure that patching a single gallery works"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         id = gallery.data['id']
         url = reverse('api-galleries-detail', args=[id])
@@ -198,11 +198,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'new test caption 1',
-              'image_id': img_id2
+              'image_id': img_2.data['id']
             },
             {
               'caption': 'new test caption 2',
-              'image_id': img_id1
+              'image_id': img_1.data['id']
             }
           ]
         }
@@ -217,9 +217,9 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check that the data was updated
         self.assertEqual(response.data['title'], 'New Gallery Title')
         self.assertEqual(response.data['images'][0]['caption'], 'new test caption 1')
-        self.assertEqual(response.data['images'][0]['image']['id'], img_id2)
+        self.assertEqual(response.data['images'][0]['image']['id'], img_2.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'new test caption 2')
-        self.assertEqual(response.data['images'][1]['image']['id'], img_id1)
+        self.assertEqual(response.data['images'][1]['image']['id'], img_1.data['id'])
 
     def test_imagegallery_patch_invalid_id(self):
         """Ensure that patching invalid id returns the appropriate error"""
@@ -233,7 +233,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that an appropriate error is returned when an image gallery is
         patched with an invalid image id"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -255,7 +255,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that an appropriate error is returned when an image gallery is
         patched with an invalid image id"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -275,7 +275,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_delete_unauthorized(self):
         """Delete gallery should fail with unauthenticated request"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         # Clear authentication credentials
@@ -294,7 +294,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_imagegallery_delete(self):
         """Ensure that galleries can be deleted"""
 
-        gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
         id = gallery.data['id']
 
         url = reverse('api-galleries-detail', args=[id])
@@ -317,7 +317,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_image_in_multiple_galleries(self):
         """Ensure that an image can be in multiple galleries"""
 
-        gallery1, img_id1, img_id2 = DispatchTestHelpers.create_gallery(1, self.client)
+        gallery1, img_1, img_2 = DispatchTestHelpers.create_gallery(1, self.client)
 
         url = reverse('api-galleries-list')
 
@@ -326,11 +326,11 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'attachment_json': [
                 {
                     'caption': 'test caption 1',
-                    'image_id': img_id1
+                    'image_id': img_1.data['id']
                 },
                 {
                     'caption': 'test caption 2',
-                    'image_id': img_id2
+                    'image_id': img_2.data['id']
                 }
             ]
         }
@@ -344,6 +344,6 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['title'], 'New Gallery Title')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
-        self.assertEqual(response.data['images'][0]['image']['id'], img_id1)
+        self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
-        self.assertEqual(response.data['images'][1]['image']['id'], img_id2)
+        self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])

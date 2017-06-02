@@ -250,10 +250,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = ImageField('Title', many=True)
 
-        image_id_1 = DispatchTestHelpers.upload_image(self.client)
-        image_id_2 = DispatchTestHelpers.upload_image(self.client)
+        image_1 = DispatchTestHelpers.create_image(self.client)
+        image_2 = DispatchTestHelpers.create_image(self.client)
 
-        data = [image_id_1, image_id_2]
+        data = [image_1.data['id'], image_2.data['id']]
 
         try:
             testfield.validate(data)
@@ -262,8 +262,8 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         json = testfield.to_json(data)
 
-        image_1 = Image.objects.get(pk=image_id_1)
-        image_2 = Image.objects.get(pk=image_id_2)
+        image_1 = Image.objects.get(pk=image_1.data['id'])
+        image_2 = Image.objects.get(pk=image_2.data['id'])
 
         self.assertEqual(json[0]['id'], 1)
         self.assertEqual(json[0]['filename'], image_1.filename())
@@ -276,16 +276,16 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = ImageField('Title')
 
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         try:
-            testfield.validate(image_id)
+            testfield.validate(image.data['id'])
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json(image_id)
+        json = testfield.to_json(image.data['id'])
 
-        image = Image.objects.get(pk=image_id)
+        image = Image.objects.get(pk=image.data['id'])
 
         self.assertEqual(json['id'], 1)
         self.assertEqual(json['filename'], image.filename())
@@ -295,18 +295,18 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = ImageField('Title', many=True)
 
-        image_id_1 = DispatchTestHelpers.upload_image(self.client)
-        image_id_2 = DispatchTestHelpers.upload_image(self.client)
+        image_1 = DispatchTestHelpers.create_image(self.client)
+        image_2 = DispatchTestHelpers.create_image(self.client)
 
-        data = [image_id_1, image_id_2]
+        data = [image_1.data['id'], image_2.data['id']]
 
         try:
             testfield.validate(data)
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        image_1 = Image.objects.get(pk=image_id_1)
-        image_2 = Image.objects.get(pk=image_id_2)
+        image_1 = Image.objects.get(pk=image_1.data['id'])
+        image_2 = Image.objects.get(pk=image_2.data['id'])
 
         result = testfield.prepare_data(data)
 
@@ -318,10 +318,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = ImageField('Title')
 
-        image_id_1 = DispatchTestHelpers.upload_image(self.client)
-        image_id_2 = DispatchTestHelpers.upload_image(self.client)
+        image_1 = DispatchTestHelpers.create_image(self.client)
+        image_2 = DispatchTestHelpers.create_image(self.client)
 
-        data = [image_id_1, image_id_2]
+        data = [image_1.data['id'], image_2.data['id']]
 
         try:
             testfield.validate(data)
@@ -347,12 +347,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = ImageField('Title', many=True)
 
-        image_id_1 = DispatchTestHelpers.upload_image(self.client)
-
-        data = image_id_1
+        image = DispatchTestHelpers.create_image(self.client)
 
         try:
-            testfield.validate(data)
+            testfield.validate(image.data['id'])
             self.fail('Field data is invalid, exception should have been thrown')
         except InvalidField:
             pass
@@ -385,7 +383,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         testwidget = TestWidget()
 
@@ -395,7 +393,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
                 'title': 'test title',
                 'description': 'test description',
                 'article': article.data['id'],
-                'image': image_id
+                'image': image.data['id']
             }
         }
 
@@ -418,7 +416,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         field_data = {
             'id': testwidget.id,
@@ -426,7 +424,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
                 'title': 'test title',
                 'description': 'test description',
                 'article': article.data['id'],
-                'image': image_id
+                'image': image.data['id']
             }
         }
 
@@ -455,7 +453,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
 
         testfield = WidgetField('Title')
 
@@ -465,7 +463,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
                 'title': 'test title',
                 'description': 'test description',
                 'article': article.data['id'],
-                'image': image_id
+                'image': image.data['id']
             }
         }
 
@@ -480,7 +478,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
         widget = TestWidget()
 
         testfield = WidgetField('Title')
@@ -491,7 +489,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
                 'title': 'test title',
                 'description': 'test description',
                 'article': article.data['id'],
-                'image': image_id
+                'image': image.data['id']
             }
         }
 
@@ -508,7 +506,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
-        image_id = DispatchTestHelpers.upload_image(self.client)
+        image = DispatchTestHelpers.create_image(self.client)
         widget1 = TestWidget()
         widget2 = TestWidget2()
         widget3 = TestWidget3()
@@ -521,14 +519,14 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
                 'title': 'test title',
                 'description': 'test description',
                 'article': article.data['id'],
-                'image': image_id,
+                'image': image.data['id'],
                 'widget': {
                     'id': 'test-widget-2',
                     'data': {
                         'title': 'test title',
                         'description': 'test description',
                         'article': article.data['id'],
-                        'image': image_id,
+                        'image': image.data['id'],
                         'widget': {
                             'id': 'test-widget-3',
                             'data': {
@@ -541,7 +539,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         json = testfield.to_json(field_data)
-        prepared_data =  testfield.prepare_data(field_data).data
+        prepared_data = testfield.prepare_data(field_data).data
 
         self.assertEqual(json['id'], 'test-widget')
         self.assertEqual(json['data']['widget']['id'], 'test-widget-2')
