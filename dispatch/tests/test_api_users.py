@@ -20,6 +20,7 @@ class UserTests(DispatchAPITestCase):
             email='test@gmail.com',
             full_name='Attached Person'
         )
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         user = User.objects.get(pk=response.data['id'])
@@ -27,21 +28,26 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_creation_fail(self):
         """Test to ensure user creation fails if wrong person ID is given"""
+
         response = DispatchTestHelpers.create_user(
             self.client,
             email="test@gmail.com",
             person_id=123
         )
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_empty_user(self):
         """Creating an empty user should fail"""
+
         url = reverse('api-users-list')
         response = self.client.post(url, {}, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_duplicate_emails(self):
         """Creating a user with duplicate emails should fail"""
+
         response1 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
         response2 = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
 
@@ -50,11 +56,14 @@ class UserTests(DispatchAPITestCase):
 
     def test_unauthorized_user_creation(self):
         """Test unauthorized user creation"""
+
         # Create person before clearing credentials
         person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
 
         self.client.credentials()
+
         url = reverse('api-users-list')
+
         data = {
             'email' : 'testemail123@ubyssey.ca',
             'person_id' : person_id,
@@ -63,18 +72,24 @@ class UserTests(DispatchAPITestCase):
         }
 
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthorized_user_update(self):
         """Test unauthorized user update"""
+
         response = DispatchTestHelpers.create_user(self.client, 'test@gmail.com')
 
         url = reverse('api-users-detail', args=[response.data['id']])
+
         data = {
             'email' : 'newEmail@gmail.com'
         }
+
         self.client.credentials()
+
         response = self.client.patch(url, data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthorized_listing_get_request(self):
@@ -104,6 +119,7 @@ class UserTests(DispatchAPITestCase):
 
     def test_create_user_with_password(self):
         """Check that creating a user with a password works correctly"""
+
         # NOTE: By default _create_user() supplies a good password
         response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
 
@@ -111,22 +127,28 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_authentication(self):
         """Test that user authenticates"""
+
         response = DispatchTestHelpers.create_user(self.client,email='test@gmail.com', password='TheBestPassword!')
+
         user = authenticate(username='test@gmail.com', password='TheBestPassword!')
+
         self.assertIsNotNone(user)
 
     def test_bad_passords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
+
         person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
+
         url = reverse('api-users-list')
+
         data = {
             'email' : 'testemail123@ubyssey.ca',
-            'person_id' : person_id,
-            'password_a': 'Matching',
-            'password_b': 'NotMatching'
+            'person_id' : person_id
         }
 
         # Not matching
+        data['password_a'] = 'matching'
+        data['password_b'] = 'notmatching'
         response = self.client.post(url, data, format='json')
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -150,12 +172,14 @@ class UserTests(DispatchAPITestCase):
 
     def test_user_update(self):
         """Ensure that user updates works correctly"""
+
         response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
 
         UPDATED_EMAIL = 'updateTest@gmail.com'
         UPDATED_PASSWORD = 'updatedPassword'
 
         url = reverse('api-users-detail', args=[response.data['id']])
+
         data = {
             'email' : UPDATED_EMAIL,
             'password_a' : UPDATED_PASSWORD,
@@ -163,10 +187,12 @@ class UserTests(DispatchAPITestCase):
         }
 
         response = self.client.patch(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['email'], UPDATED_EMAIL)
 
         user = User.objects.get(pk=response.data['id'])
+
         self.assertEqual(user.email, UPDATED_EMAIL)
         self.assertTrue(user.check_password(UPDATED_PASSWORD))
 
@@ -178,8 +204,10 @@ class UserTests(DispatchAPITestCase):
             email='test@gmail.com',
             full_name='Attached Person'
         )
+
         user_id = response.data['id']
         person_id = response.data['person_id']
+
         # Generate detail URL
         url = reverse('api-users-detail', args=[user_id])
 
@@ -203,10 +231,14 @@ class UserTests(DispatchAPITestCase):
         """Unauthorized deletion of a user isn't allowed"""
 
         response = DispatchTestHelpers.create_user(
-            self.client, 
+            self.client,
             email='test@gmail.com'
         )
+
         url = reverse('api-users-detail', args=[response.data['id']])
+
         self.client.credentials()
+
         response = self.client.delete(url, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
