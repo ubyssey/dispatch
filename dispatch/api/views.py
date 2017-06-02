@@ -1,6 +1,5 @@
 from django.template.loader import render_to_string
 from django.db.models import Q, ProtectedError
-from django.db import IntegrityError
 from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
