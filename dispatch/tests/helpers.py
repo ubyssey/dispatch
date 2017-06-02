@@ -175,7 +175,6 @@ class DispatchTestHelpers(object):
             'title': title,
             'description': description,
             'host': host,
-            'image': image,
             'start_time': start_time,
             'end_time': end_time,
             'location': location,
@@ -183,6 +182,9 @@ class DispatchTestHelpers(object):
             'facebook_url': facebook_url
         }
 
+        if image:
+            data['image'] = image
+
         url = reverse('api-event-list')
 
-        return client.post(url, data, format='json')
+        return client.post(url, data, format='multipart')
