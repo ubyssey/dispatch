@@ -49,7 +49,7 @@ class DispatchTestHelpers(object):
         return response
 
     @classmethod
-    def upload_image(cls, client):
+    def create_image(cls, client):
         """Upload an image that can be linked by galleries"""
 
         url = reverse('api-images-list')
@@ -59,7 +59,7 @@ class DispatchTestHelpers(object):
         with open(obj.get_input_file('test_image.png'), 'rb') as test_image:
             response = client.post(url, { 'img': test_image }, format='multipart')
 
-        return response.data['id']
+        return response
 
     @classmethod
     def _create_gallery_only(cls, id, attachments, client):
@@ -78,19 +78,19 @@ class DispatchTestHelpers(object):
     def create_gallery(cls, id, client):
         """Create a gallery instance for further testing"""
 
-        image_1 = cls.upload_image(client)
-        image_2 = cls.upload_image(client)
+        image_1 = cls.create_image(client)
+        image_2 = cls.create_image(client)
 
         attachment = [
             {
                 'caption': 'test caption 1',
                 'credit': 'test credit 1',
-                'image_id': image_1
+                'image_id': image_1.data['id']
             },
             {
                 'caption': 'test caption 2',
                 'credit': 'test credit 2',
-                'image_id': image_2
+                'image_id': image_2.data['id']
             }
         ]
 
