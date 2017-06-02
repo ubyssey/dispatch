@@ -86,6 +86,13 @@ render((
             <Route path=':topicId' component={Pages.Topics.Topic} />
           </Route>
 
+
+          <Route path='galleries'>
+            <IndexRoute component={Pages.Galleries.Index} />
+            <Route path='new' component={Pages.Galleries.NewGallery} />
+            <Route path=':galleryId' component={Pages.Galleries.Gallery} />
+          </Route>
+  
           <Route path='widgets'>
             <IndexRoute component={Pages.Widgets.Index} />
             <Route path=':zoneId' component={Pages.Widgets.Zone} />
@@ -96,7 +103,7 @@ render((
             <Route path='new' component={Pages.Persons.NewPerson} />
             <Route path=':personId' component={Pages.Persons.Person} />
           </Route>
-
+  
         </Route>
 
         <Route component={Containers.Basic}>
