@@ -1,3 +1,5 @@
+import datetime
+
 from django.template import loader
 from django.core.urlresolvers import reverse
 
@@ -198,6 +200,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Should output html string"""
 
         image_id = DispatchTestHelpers.upload_image(self.client)
+        today = datetime.date.today()
 
         data = {
             'image_id' : image_id,
@@ -205,7 +208,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'credit' : 'This is a test credit'
         }
 
-        html_str = u'<div class="image-embed">\n    <img class="image" src="images/2017/05/test_image.png" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n'
+        html_str = u'<div class="image-embed">\n    <img class="image" src="images/%d/%02d/test_image.png" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n' % (today.year, today.month)
 
         result = embeds.embedlib.render('image', data)
 
@@ -213,6 +216,8 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_image_controller_to_json(self):
         """Should output json data"""
+
+        today = datetime.date.today()
 
         url = reverse('api-images-list')
 
@@ -230,11 +235,11 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         json = {
             'image': {
                 'title': None,
-                'url': u'images/2017/05/test_image.jpg',
-                'url_medium': u'images/2017/05/test_image-medium.jpg',
+                'url': u'images/%d/%02d/test_image.jpg' % (today.year, today.month),
+                'url_medium': u'images/%d/%02d/test_image-medium.jpg' % (today.year, today.month),
                 'created_at': response.data['created_at'],
                 'updated_at': response.data['updated_at'],
-                'url_thumb': u'images/2017/05/test_image-square.jpg',
+                'url_thumb': u'images/%d/%02d/test_image-square.jpg' % (today.year, today.month),
                 'filename': u'test_image.jpg',
                 'width': 600,
                 'authors': [],
@@ -244,7 +249,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'caption': 'This is a test caption',
             'credit': 'This is a test credit'
         }
-
+        self.maxDiff = None
         result = embeds.embedlib.to_json('image', data)
 
         self.assertEqual(result, json)
@@ -267,8 +272,10 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             pass
 
     def test_gallery_controller(self):
+        """Test "render" with gallery controller, uses "get_gallery" and "prepare_data"""
 
-        # Test "render" with gallery controller, uses "get_gallery" and "prepare_data"
+        today = datetime.date.today()
+
         # Make a gallery and get its data
         gallery, img_id1, img_id2 = DispatchTestHelpers.create_gallery(0, self.client)
         data = gallery.data
@@ -280,7 +287,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         abs_url = data['images'][1]['image']['filename'].replace('.png', '')
 
         # Expected output
-        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/2017/05/test_image.png" />\n        \n        <img src="images/2017/05/%s.png" />\n        \n    </div>\n</div>\n' % abs_url
+        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="images/%(year)d/%(month)02d/test_image.png" />\n        \n        <img src="images/%(year)d/%(month)02d/%(url)s.png" />\n        \n    </div>\n</div>\n' % {'year': today.year, 'month': today.month, 'url': abs_url}
 
         self.assertEqual(result_1, output)
 
