@@ -15,6 +15,7 @@ import toasterReducer from './ToasterReducer'
 import editorReducer from './EditorReducer'
 import integrationsReducer from './IntegrationsReducer'
 import dashboardReducer from './DashboardReducer'
+import galleriesReducer from './GalleriesReducer'
 import zonesReducer from './ZonesReducer'
 import widgetsReducer from './WidgetsReducer'
 
@@ -34,6 +35,7 @@ export default combineReducers({
   editor: editorReducer,
   integrations: integrationsReducer,
   dashboard: dashboardReducer,
+  galleries: galleriesReducer,
   zones: zonesReducer,
   widgets: widgetsReducer
 })
