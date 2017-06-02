@@ -200,7 +200,7 @@ class UserTests(DispatchAPITestCase):
     def test_user_update(self):
         """Ensure that user updates works correctly"""
 
-        response = DispatchTestHelpers.create_user(self.client, 'test@ubyssey.ca')
+        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
         UPDATED_EMAIL = 'updateTest@gmail.com'
         UPDATED_PASSWORD = 'updatedPassword'
