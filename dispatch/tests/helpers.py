@@ -52,7 +52,7 @@ class DispatchTestHelpers(object):
         return response
 
     @classmethod
-    def upload_image(cls, client):
+    def create_image(cls, client):
         """Upload an image that can be linked by galleries"""
 
         obj = DispatchMediaTestMixin()
@@ -62,7 +62,7 @@ class DispatchTestHelpers(object):
         with open(obj.get_input_file('test_image.png'), 'rb') as test_image:
             response = client.post(url, { 'img': test_image }, format='multipart')
 
-        return response.data['id']
+        return response
 
     @classmethod
     def _create_gallery_only(cls, id, attachments, client):
@@ -81,17 +81,17 @@ class DispatchTestHelpers(object):
     def create_gallery(cls, id, client):
         """Create a gallery instance for further testing"""
 
-        image_1 = cls.upload_image(client)
-        image_2 = cls.upload_image(client)
+        image_1 = cls.create_image(client)
+        image_2 = cls.create_image(client)
 
         attachment = [
             {
                 'caption': 'test caption 1',
-                'image_id': image_1
+                'image_id': image_1.data['id']
             },
             {
                 'caption': 'test caption 2',
-                'image_id': image_2
+                'image_id': image_2.data['id']
             }
         ]
 
@@ -171,7 +171,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_event(cls, client, title='Test event', description='Test description', host='test host', start_time='2017-05-25T12:00', end_time='2017-05-25T12:01', location='UBC', address='123 UBC', category='academic', facebook_url='https://facebook.com/123456789101112131', facebook_image_url='some other similar fb url', is_submission=False):
+    def create_event(cls, client, title='Test event', description='Test description', host='test host', image=None, start_time='2017-05-25T12:00', end_time='2017-05-25T12:01', location='UBC', address='123 UBC', category='academic', facebook_url='https://facebook.com/123456789101112131', facebook_image_url='some other similar fb url', is_submission=False):
 
         obj = DispatchMediaTestMixin()
 
@@ -194,4 +194,3 @@ class DispatchTestHelpers(object):
             url = reverse('api-event-list')
 
             return client.post(url, data, format='multipart')
- 

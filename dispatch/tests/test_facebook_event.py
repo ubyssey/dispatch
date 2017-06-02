@@ -51,3 +51,5 @@ class FacebookEventTests(DispatchAPITestCase):
         self.assertEqual(image_url, 'https://scontent.xx.fbcdn.net/v/t1.0-9/s720x720/18582649_10207865367186885_5108374280709321204_n.jpg?oh=7cf8ee3a120261bbe2d6a28d38903c25&oe=59A955B6')
 
 # TODO: Find a way to test the different cases of get_image, get_json.
+        # event.get_json()
+        # event.get_image()

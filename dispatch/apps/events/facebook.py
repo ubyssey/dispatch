@@ -55,8 +55,6 @@ class FacebookEvent(object):
         start_time = datetime.datetime.strptime(json['start_time'][:-5], '%Y-%m-%dT%H:%M:%S')
         start_time = start_time.strftime('%Y/%m/%d %H:%M')
 
-        print self.facebook_url
-
         return {
             'title': json['name'],
             'description': json['description'],

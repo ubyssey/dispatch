@@ -12,7 +12,7 @@ class Event(Model):
     description = TextField(max_length=1000)
     host = CharField(max_length=255)
 
-    image = ImageField(upload_to='images/%Y/%m', null=True, blank=True)
+    image = ImageField(upload_to='events/', null=True)
 
     start_time = DateTimeField(null=True, blank=True)
     end_time = DateTimeField(null=True, blank=True)
