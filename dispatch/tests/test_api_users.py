@@ -134,7 +134,7 @@ class UserTests(DispatchAPITestCase):
 
         self.assertIsNotNone(user)
 
-    def test_bad_passords(self):
+    def test_bad_passwords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
 
         person_id = DispatchTestHelpers.create_person(self.client, "Attached Person").data['id']
