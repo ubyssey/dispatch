@@ -86,7 +86,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         widget_render = widget.render()
 
-        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="Article">Test headline</div>\n    <img class="image" src="images/2017/05/test_image.png"/>\n</div>\n'
+        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="Article">Test headline</div>\n    <img class="image" src="images/2017/06/test_image.png"/>\n</div>\n'
 
         self.assertEqual(widget_render, html)
 

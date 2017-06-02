@@ -1,8 +1,10 @@
+import datetime
+
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Article, Person, Section
+from dispatch.apps.content.models import Article, Person, Section, Image
 from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchMediaTestMixin
 
@@ -53,9 +55,9 @@ class DispatchTestHelpers(object):
     def upload_image(cls, client):
         """Upload an image that can be linked by galleries"""
 
-        url = reverse('api-images-list')
-
         obj = DispatchMediaTestMixin()
+
+        url = reverse('api-images-list')
 
         with open(obj.get_input_file('test_image.png'), 'rb') as test_image:
             response = client.post(url, { 'img': test_image }, format='multipart')
@@ -169,20 +171,27 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_event(cls, client, title='Test event', description='Test description', host='test host', image=None, start_time='2017-05-25 12:00', end_time='2017-05-25 12:01', location='UBC', category='academic', facebook_url='https://facebook.com'):
+    def create_event(cls, client, title='Test event', description='Test description', host='test host', start_time='2017-05-25T12:00', end_time='2017-05-25T12:01', location='UBC', address='123 UBC', category='academic', facebook_url='https://facebook.com/123456789101112131', facebook_image_url='some other similar fb url', is_submission=False):
 
-        data = {
-            'title': title,
-            'description': description,
-            'host': host,
-            'image': image,
-            'start_time': start_time,
-            'end_time': end_time,
-            'location': location,
-            'category': category,
-            'facebook_url': facebook_url
-        }
+        obj = DispatchMediaTestMixin()
 
-        url = reverse('api-event-list')
+        with open(obj.get_input_file('test_image.jpg')) as test_image:
 
-        return client.post(url, data, format='json')
+            data = {
+                'title': title,
+                'description': description,
+                'host': host,
+                'image': test_image,
+                'start_time': start_time,
+                'end_time': end_time,
+                'location': location,
+                'category': category,
+                'facebook_url': facebook_url,
+                'facebook_image_url': facebook_image_url,
+                'is_submission': is_submission
+            }
+
+            url = reverse('api-event-list')
+
+            return client.post(url, data, format='multipart')
+ 

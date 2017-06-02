@@ -393,8 +393,15 @@ class EventViewSet(DispatchModelViewSet):
     serializer_class = EventSerializer
 
     def get_queryset(self):
-        queryset = Event.objects.all()
+        # Only authenticated users can see submission events
+        if self.request.user.is_authenticated():
+            queryset = Event.objects.all()
+        else:
+            queryset = Event.objects.filter(is_submission=False)
+
         q = self.request.query_params.get('q', None)
+        pending = self.request.query_params.get('pending', None)
+
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             # TODO: Add query by category
@@ -403,6 +410,12 @@ class EventViewSet(DispatchModelViewSet):
                 Q(description__icontains=q) |
                 Q(host__icontains=q)
             )
+
+        elif pending is not None:
+            queryset = queryset.filter(
+                Q(is_submission__exact=True)
+            )
+
         return queryset
 
 

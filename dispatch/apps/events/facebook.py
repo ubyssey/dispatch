@@ -1,4 +1,4 @@
-import urllib2, requests, re
+import urllib2, requests, re, datetime
 
 from django.conf import settings
 
@@ -39,18 +39,32 @@ class FacebookEvent(object):
         except FacebookAPIError:
             raise FacebookAPIError('Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again')
 
+        # Get what data we can from the facebook event, and format start_time and end_time correctly
         try:
-            address = json['place']['location']['street'] + ', ' + json['place']['location']['city']  
+            address = json['place']['location']['street'] + ', ' + json['place']['location']['city']
         except:
             address = None
+
+        # start_time / end_time format AM/PM instead of 24 hr?
+        try:
+            end_time = datetime.datetime.strptime(json['end_time'][:-5], '%Y-%m-%dT%H:%M:%S')
+            end_time = end_time.strftime('%Y/%m/%d %H:%M')
+        except:
+            end_time = None
+
+        start_time = datetime.datetime.strptime(json['start_time'][:-5], '%Y-%m-%dT%H:%M:%S')
+        start_time = start_time.strftime('%Y/%m/%d %H:%M')
+
+        print self.facebook_url
 
         return {
             'title': json['name'],
             'description': json['description'],
-            'start_time': json['start_time'],
-            'end_time': json['end_time'],
+            'start_time': start_time,
+            'end_time': end_time,
             'location': json['place']['name'],
-            'adress': address
+            'address': address,
+            'facebook_url': self.facebook_url
         }
 
     def get_image(self):
