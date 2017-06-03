@@ -5,6 +5,8 @@ import { Button } from '@blueprintjs/core'
 import SelectInput from '../../inputs/SelectInput'
 
 import 'brace/mode/html'
+import 'brace/mode/css'
+import 'brace/mode/javascript'
 import 'brace/theme/chrome'
 
 
@@ -52,6 +54,7 @@ class CodeEmbedComponent extends React.Component {
       <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
     )
   }
+
   render() {
     return(
       <div className='o-embed o-embed--code'>
@@ -72,7 +75,7 @@ class CodeEmbedComponent extends React.Component {
             <SelectInput
               options={MODES}
               selected={this.props.data.mode}
-              onChange={(e) => this.changeMode(e.target.value)} />
+              onChange={(e) => this.changeMode(e.target.value)}/>
           </div>
         </div>
       </div>
