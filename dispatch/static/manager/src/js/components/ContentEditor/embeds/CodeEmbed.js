@@ -52,10 +52,9 @@ class CodeEmbedComponent extends React.Component {
       <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
     )
   }
-
-  renderEditor() {
-    return (
-      <div className='o-embed--code'>
+  render() {
+    return(
+      <div className='o-embed o-embed--code'>
         <AceEditor
           mode={this.props.data.mode}
           theme='chrome'
@@ -69,36 +68,13 @@ class CodeEmbedComponent extends React.Component {
           editorProps={{$blockScrolling: true}}
         />
         <div className='o-embed--code_editor_button_container'>
-          {(this.props.data.mode === 'html') && this.showPreviewButton()}
           <div className='o-embed--code_editor_mode_select'>
             <SelectInput
               options={MODES}
               selected={this.props.data.mode}
-              onChange={(e) => this.changeMode(e.target.value)}
-            />
+              onChange={(e) => this.changeMode(e.target.value)} />
           </div>
         </div>
-      </div>
-    )
-  }
-
-//TODO:Add article styling to this div so that preview is representative of the actual article
-  renderEmbed() {
-    return (
-      <div>
-        <div
-          dangerouslySetInnerHTML={{__html: this.props.data.embedValue}}>
-        </div>
-        <div className='o-embed--code_editor_button_container'>
-          <Button onClick={() => this.startEditing()}>Edit</Button>
-        </div>
-      </div>
-    )
-  }
-  render() {
-    return(
-      <div className='o-embed o-embed--code'>
-        {this.state.showEdit ? this.renderEditor() : this.renderEmbed()}
       </div>
     )
   }
