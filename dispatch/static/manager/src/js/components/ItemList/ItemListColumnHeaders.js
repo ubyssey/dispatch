@@ -18,7 +18,7 @@ export default function ItemListColumnHeaders(props) {
   })
 
   return (
-    <li className='c-item-list__item c-item-list__column__header'>
+    <li className='c-item-list__item c-item-list__column-headers'>
       {items}
     </li>
   )
