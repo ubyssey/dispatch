@@ -22,37 +22,12 @@ const DEFAULTVALUE = '<div>Enter html code here</div>'
 
 class CodeEmbedComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      showEdit: true
-    }
-  }
-
   onCodeChange(newValue) {
     this.props.updateField('embedValue', newValue)
   }
 
   changeMode(mode) {
     this.props.updateField('mode',mode)
-  }
-
-  previewCodeEmbed() {
-    this.setState({
-      showEdit: false
-    })
-  }
-
-  startEditing() {
-    this.setState({
-      showEdit: true
-    })
-  }
-
-  showPreviewButton() {
-    return (
-      <Button onClick={() => this.previewCodeEmbed()}>Preview</Button>
-    )
   }
 
   render() {
