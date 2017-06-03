@@ -28,7 +28,7 @@ class CodeEmbedComponent extends React.Component {
   }
 
   onCodeChange(newValue) {
-    this.props.data.embedValue = newValue
+    this.props.updateField('embedValue', newValue)
   }
 
   changeMode(mode) {
@@ -82,6 +82,7 @@ class CodeEmbedComponent extends React.Component {
     )
   }
 
+//TODO:Add article styling to this div so that preview is representative of the actual article
   renderEmbed() {
     return (
       <div>
