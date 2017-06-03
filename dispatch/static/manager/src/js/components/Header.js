@@ -51,6 +51,9 @@ export default function Header(props) {
                 <li className='c-header__dropdown__link'>
                   <Link to='/topics/'><span className='pt-icon-standard pt-icon-ninja' /> topics</Link>
                 </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/galleries/'><span className='pt-icon-standard pt-icon-media' /> galleries</Link>
+                </li>
               </ul>
             </li>
             <li className='c-header__dropdown'>
