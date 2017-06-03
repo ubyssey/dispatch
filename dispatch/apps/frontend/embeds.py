@@ -115,7 +115,7 @@ class ImageController(AbstractTemplateRenderController):
 
         image = self.get_image(id)
 
-        serializer = serializers.ImageSerializer(image)
+        serializer = ImageSerializer(image)
         image_data = serializer.data
 
         return {
