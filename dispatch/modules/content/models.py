@@ -522,7 +522,7 @@ class ImageGallery(Model):
         self.images.clear()
         ImageAttachment.objects.filter(gallery=self).delete()
         for attachment in attachments:
-            attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], image_id=attachment['image_id'])
+            attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], credit=attachment['credit'], image_id=attachment['image_id'])
             attachment_obj.save()
             self.images.add(attachment_obj)
 
