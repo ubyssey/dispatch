@@ -10,7 +10,7 @@ export default function ItemListTable(props) {
 
   if (props.items.isLoading) {
     return (
-      <div className='c-item-list__table u-container'>
+      <div className='c-item-list__table'>
         <ul>
           <ItemListItemPlaceholder />
           <ItemListItemPlaceholder />
@@ -47,7 +47,7 @@ export default function ItemListTable(props) {
     })
 
     return (
-      <div className='c-item-list__table u-container u-container--align-left'>
+      <div className='c-item-list__table'>
         <ul>
           <ItemListColumnHeaders headers={props.headers} />
           {items}
