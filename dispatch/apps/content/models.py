@@ -3,7 +3,6 @@ import StringIO
 import os
 import re
 
-
 from jsonfield import JSONField
 from PIL import Image as Img
 
@@ -23,7 +22,7 @@ from django.template import loader, Context
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
-from dispatch.apps.content import render
+from dispatch.apps.content.render import content_to_html
 from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -110,7 +109,8 @@ class Publishable(Model):
 
     @property
     def html(self):
-        return render.content_to_html(self.content)
+        """Return HTML representation of content"""
+        return content_to_html(self.content)
 
     def is_parent(self):
         return self.parent is None
