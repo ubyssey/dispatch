@@ -66,7 +66,7 @@ class FacebookEvent(object):
         }
 
     def get_image(self):
-        """Returns the picture from facebook event"""
+        """Returns the picture url from facebook event"""
 
         fb = Facebook()
 

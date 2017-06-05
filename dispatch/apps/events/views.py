@@ -23,13 +23,11 @@ def submit(request):
 
         form = EventForm(initial=event_data)
 
-    elif request.POST.get("submit_event"): #request.method == 'POST':
+    elif request.POST.get("submit_event"): 
 
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
-
-            print request.FILES
 
             event = form.save(commit=False)
 
