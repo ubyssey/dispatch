@@ -8,7 +8,7 @@ function labelAndProp(label, prop) {
   return (
     <div className='c-event-audit-card-label'>
       <div className='c-event-audit-card-label-label'>{label}</div>
-        <div className='c-event-audit-card-label-prop'>{prop}</div>
+      <div className='c-event-audit-card-label-prop'>{prop}</div>
     </div>
   )
 }
@@ -24,11 +24,7 @@ export default class EventCard extends React.Component {
 
   render() {
     return (
-      <div
-        className='pt-card pt-elevation-2 c-event-audit-card'
-        style={{
-          // display: this.state.hidden ? 'none' : 'block'
-        }}>
+      <div className='pt-card pt-elevation-2 c-event-audit-card'>
         <div className='c-event-audit-card-title'>
           {this.props.event.title}
         </div>
