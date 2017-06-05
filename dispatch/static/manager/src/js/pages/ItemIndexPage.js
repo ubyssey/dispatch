@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import R from 'ramda'
 import DocumentTitle from 'react-document-title'
 
@@ -22,6 +23,10 @@ export default class ListItemsPageComponent extends React.Component {
     // If listItem is present, add to query
     if (this.props.location.query.listItem) {
       query.listItem = this.props.location.query.listItem
+    }
+
+    if (typeof this.props.extraQueryHandler === 'function') {
+      query = this.props.extraQueryHandler(query, this.props)
     }
 
     // If search query is present, add to query
@@ -49,9 +54,17 @@ export default class ListItemsPageComponent extends React.Component {
     this.props.listListItems(this.props.token, this.getQuery())
   }
 
+  extraRelistCondition(prevProps, props) {
+    if (typeof this.props.extraRelistCondition !== 'function') {
+      return false
+    }
+    return this.props.extraRelistCondition(prevProps, props)
+  }
+
   componentDidUpdate(prevProps) {
 
-    if (this.isNewQuery(prevProps, this.props)) {
+    if (this.isNewQuery(prevProps, this.props)
+      || this.extraRelistCondition(prevProps, this.props)) {
       this.props.clearListItems()
       this.props.clearSelectedListItems()
       this.props.listListItems(this.props.token, this.getQuery())
@@ -84,10 +97,6 @@ export default class ListItemsPageComponent extends React.Component {
   }
 
   render() {
-    const titleString = this.props.pageTitle
-      // Make the title start with uppercase letter
-      || this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
-
     // The first column will always be a link, as defined here,
     // containing the item property associated with displayColumn
     const columns = R.insert(0, item => (
@@ -100,7 +109,7 @@ export default class ListItemsPageComponent extends React.Component {
     ), this.props.extraColumns || [])
 
     return (
-      <DocumentTitle title={titleString}>
+      <DocumentTitle title={this.props.pageTitle}>
         <ItemList
           location={this.props.location}
 
@@ -135,4 +144,8 @@ export default class ListItemsPageComponent extends React.Component {
     )
   }
 
+}
+
+ListItemsPageComponent.propTypes = {
+  pageTitle: PropTypes.string.isRequired
 }
