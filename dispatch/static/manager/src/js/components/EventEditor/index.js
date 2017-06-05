@@ -65,6 +65,7 @@ function EventEditorComponent(props) {
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={EventForm}
+      displayField='title'
       {... props} />
   )
 }
