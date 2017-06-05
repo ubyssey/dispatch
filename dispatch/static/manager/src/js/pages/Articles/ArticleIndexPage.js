@@ -58,7 +58,15 @@ function ArticlePageComponent(props) {
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
         item => item.latest_version + ' revisions'
       ]}
-
+      extraRelistCondition={(prevProps, props) => {
+        return prevProps.location.query.section !== props.location.query.section
+      }}
+      extraQueryHandler={(query, props) => {
+        if (props.location.query.section) {
+          query.section = props.location.query.section
+        }
+        return query
+      }}
       {...props} />
   )
 }

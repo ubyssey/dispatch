@@ -56,6 +56,7 @@ function TagsPageComponent(props) {
       typeSingular='tag'
       typePlural='tags'
       displayColumn='name'
+      pageTitle='Tags'
       headers={[ 'Name' ]}
       {... props} />
   )

@@ -55,6 +55,7 @@ function SectionsPageComponent(props) {
       typeSingular='section'
       typePlural='sections'
       displayColumn='name'
+      pageTitle='Sections'
       headers={[ 'Name', 'Slug' ]}
       extraColumns={[
         item => item.slug
