@@ -13,23 +13,22 @@ export default function DateTimeInput(props) {
     <DateTimePicker
       value={props.value || new Date()}
       onChange={props.onChange}
-      timePickerProps={{ // so that state updates when either
-        // date or time are changed
+      timePickerProps={{
         onChange: props.onChange
       }} />
   )
 
   return (
-    <div>
+    <div className='c-input--datetime'>
       <Popover
         content={picker}
         popoverClassName='pt-popover-content-sizing'
         position={Position.RIGHT}>
-        <AnchorButton className='c-datetimeinput-button'>
+        <AnchorButton className='c-input--datetime-button'>
           <span className='pt-icon-standard pt-icon-calendar' />
         </AnchorButton>
       </Popover>
-      <div className='c-datetimeinput-text'>
+      <div className='c-input--datetime-text'>
         {textString}
       </div>
     </div>
