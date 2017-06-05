@@ -4,12 +4,13 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
+from dispatch.apps.events.facebook import FacebookEvent
 from dispatch.apps.events.models import Event
 from dispatch.apps.events import views
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class EventSubmissionTests(DispatchAPITestCase):
+class EventTests(DispatchAPITestCase):
 
     def test_making_event(self):
         """Should be able to make and test an event"""
@@ -37,5 +38,12 @@ class EventSubmissionTests(DispatchAPITestCase):
 
         response = Event.objects.all()
 
-"""view = {'category': u'party', 'description': u"Join us for one of Canada's most spectacular runs, here in the Coast Moutains of British Columbia.  With 5 different distances on offer, education sessions, lots of prizes - there is something for everyone.  Gather your family, friends and running partners - come make a weekend of it!", 'title': u'2017 The North Face Whistler Half Marathon, 30K, 10K and 5K', 'start_time': datetime.datetime(2017, 6, 2, 12, 0, tzinfo=<django.utils.timezone.LocalTimezone object at 0x1074ea2d0>), 'facebook_image_url': u'', 'host': u'df', 'end_time': datetime.datetime(2017, 6, 4, 12, 0, tzinfo=<django.utils.timezone.LocalTimezone object at 0x1074ea2d0>), 'facebook_url': u'', 'address': u'', 'image': None, 'location': u'Whistler Half Marathon'}
-"""
+    def test_caching_image(self):
+        """We should be able to store the facebook image locally if uploading event w/ facebook url and image"""
+
+        facebook_image_url = FacebookEvent('https://www.facebook.com/events/280150289084959').get_image()
+
+        # This should cache the facebook image
+        event = DispatchTestHelpers.create_event(self.client, facebook_url='https://www.facebook.com/events/280150289084959', facebook_image_url=facebook_image_url, image=None)
+
+        self.assertEqual(event.status_code, status.HTTP_201_CREATED)
