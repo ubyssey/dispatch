@@ -111,9 +111,7 @@ const mapStateToProps = (state) => {
 
 function prepareData(data) {
   const ret = new FormData()
-
   ret.append('is_submission', data.is_submission)
-
   return ret
 }
 
