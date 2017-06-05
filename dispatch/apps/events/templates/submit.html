@@ -7,78 +7,87 @@
   {% csrf_token %}
 
   <div class="fieldWrapper">
-    {{ field.title.errors }}
+    {{ form.title.errors }}
     <label for="{{ form.title.id_for_label }}">Title of Event:</label>
     {{ form.title }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.description.errors }}
+    {{ form.description.errors }}
     <label for="{{ form.description.id_for_label }}">Description:</label>
     {{ form.description }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.host.errors }}
+    {{ form.host.errors }}
     <label for="{{ form.host.id_for_label }}">Host:</label>
     {{ form.host }}
   </div>
 
   {% if form.facebook_image_url.value %}
   <div class="fieldWrapper">
-    {{ field.facebook_image_url.errors }}
+    {{ form.facebook_image_url.errors }}
     <label for="{{ form.facebook_image_url.id_for_label }}">Image for the Event:</label>
     <img style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" src="{{ form.facebook_image_url.value }}">
     <label for="{{ form.image.id_for_label }}">Or upload an image:</label>
-    {{ form.image }}
+    <input type='file' onchange="upload_img(this);" />
+    <img id="img_id" src="{{ form.image.value }}" alt="User uploaded image" />
   </div>
-
-  {% elif form.image.value %}
-
-  <label for="{{ form.image.id_for_label }}">Upload Image:</label>
-  {{ form.image }}
-  <img style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" src="{{ field.image.url }}">
 
   {% else %}
   <div class="fieldWrapper">
-    {{ field.image.errors }}
-    <label for="{{ form.image.id_for_label }}">Upload Image:</label>
-    {{ form.image }}
+    {{ form.image.errors }}
+    <label for="{{ form.image.id_for_label }}">Image for the Event:</label>
+    <input type='file' onchange="upload_img(this);" />
+    <img id="img_id" src="{{ form.image.value }}" alt="User uploaded image" />
   </div>
   {% endif %}
 
   <div class="fieldWrapper">
-    {{ field.start_time.errors }}
+    {{ form.start_time.errors }}
     <label for="{{ form.start_time.id_for_label }}">Start Time:</label>
     {{ form.start_time }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.end_time.errors }}
-    <label for="{{ form.start_time.id_for_label }}">End Time:</label>
+    {{ form.end_time.errors }}
+    <label for="{{ form.end_time.id_for_label }}">End Time:</label>
     {{ form.end_time }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.location.errors }}
-    <label for="{{ form.title.id_for_label }}">Location:</label>
+    {{ form.location.errors }}
+    <label for="{{ form.location.id_for_label }}">Location:</label>
     {{ form.location }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.address.errors }}
-    <label for="{{ form.title.id_for_label }}">Address:</label>
+    {{ form.address.errors }}
+    <label for="{{ form.address.id_for_label }}">Address:</label>
     {{ form.address }}
   </div>
 
   <div class="fieldWrapper">
-    {{ field.category.errors }}
+    {{ form.category.errors }}
     <label for="{{ form.category.id_for_label }}">Category of Event:</label>
     {{ form.category }}
   </div>
 
-  <!-- These are to pass the facebook_url and facebook_image_url on to the form. If you know a better way,
-  for the love of all that is holy let me know-->
+  <p>Please add in your email and phone number! It will allow us to contact you in case we need to confirm any information.</p>
+
+  <div class="fieldWrapper">
+    {{ form.submitter_email.errors }}
+    <label for="{{ form.submitter_email.id_for_label }}">Email: </label>
+    {{ form.submitter_email }}
+  </div>
+
+  <div class="fieldWrapper">
+    {{ form.submitter_phone.errors }}
+    <label for="{{ form.submitter_phone.id_for_label }}">Phone Number: </label>
+    {{ form.submitter_phone }}
+  </div>
+
+  <!-- These are to pass the facebook_url and facebook_image_url on to the form. If you know a better way, please change! -->
   <p hidden>{{ form.facebook_url }}</p>
   <p hidden>{{ form.facebook_image_url }}</p>
 
@@ -94,6 +103,7 @@
   <input type="submit" name="submit_facebook" value="Submit" />
 </form>
 
+
 <script type="text/javascript">
   // javascript
   jQuery('#id_start_time').datetimepicker({
@@ -102,4 +112,19 @@
   jQuery('#id_end_time').datetimepicker({
     minDate:new Date()
   });
+</script>
+
+<script type="text/javascript">
+
+  function upload_img(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#img_id').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+  }
 </script>

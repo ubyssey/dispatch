@@ -1,18 +1,19 @@
 import urllib, os
 
 from django.core.files import File
+from django.core.validators import RegexValidator
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
-    SlugField, SET_NULL)
+    SlugField, EmailField, SET_NULL)
 
 class Event(Model):
     title = CharField(max_length=255)
     description = TextField(max_length=1000)
     host = CharField(max_length=255)
 
-    image = ImageField(upload_to='events/', null=True)
+    image = ImageField(upload_to='events/', null=True, blank=True)
 
     start_time = DateTimeField(null=True, blank=True)
     end_time = DateTimeField(null=True, blank=True)
@@ -37,6 +38,12 @@ class Event(Model):
     facebook_image_url = TextField(max_length=500, null=True, blank=True)
 
     is_submission = BooleanField(default=False, blank=True)
+
+    submitter_email = EmailField(null=True)
+
+    phone_regex = RegexValidator(regex=r'(\+?1-)?\(?([0-9]){3}(\)?)(|\s?|-?|\.?)([0-9]){3}(\)?|\s?|-?|\.?)([0-9]{4})$', message='Please enter a valid phone number')
+
+    submitter_phone = CharField(max_length=15, validators=[phone_regex], null=True)
 
     def cacheimage(self):
         """Store image locally if we have a facebook url"""

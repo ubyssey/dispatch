@@ -171,7 +171,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_event(cls, client, title='Test event', description='Test description', host='test host', image=None, start_time='2017-05-25T12:00', end_time='2017-05-25T12:01', location='UBC', address='123 UBC', category='academic', facebook_url='https://facebook.com/123456789101112131', facebook_image_url='some other similar fb url', is_submission=False):
+    def create_event(cls, client, title='Test event', description='Test description', host='test host', image=None, start_time='2017-05-25T12:00', end_time='2017-05-25T12:01', location='UBC', address='123 UBC', category='academic', facebook_url='https://www.facebook.com/events/280150289084959', facebook_image_url='some other similar fb url', is_submission=False):
 
         obj = DispatchMediaTestMixin()
 
@@ -193,4 +193,4 @@ class DispatchTestHelpers(object):
 
             url = reverse('api-event-list')
 
-            return client.post(url, data, format='multipart')
+            return client.post(url, data, format='multipart', QUERY_STRING="submit_event")
