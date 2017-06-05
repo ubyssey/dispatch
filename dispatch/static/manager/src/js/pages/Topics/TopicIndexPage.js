@@ -55,6 +55,7 @@ function TopicsPageComponent(props) {
       typeSingular='topic'
       typePlural='topics'
       displayColumn='name'
+      pageTitle='Topics'
       headers={[ 'Name' ]}
       {... props} />
   )
