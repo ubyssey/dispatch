@@ -9,6 +9,19 @@
   padding-left: 15px;
   padding-bottom: 15px;
   font-size: large;
+  width: 100%;
+  display: inline-block;
+}
+
+.c-event-audit-pagination {
+  float: right;
+  display: inline-block;
+}
+
+.c-event-audit-pagination-label {
+  margin-left: 15px;
+  font-size: 16px;
+  display: inline-block;
 }
 
 .c-event-audit-card {
@@ -43,7 +56,6 @@
 
 .c-event-audit-card-leave.c-event-audit-card-leave-active {
   opacity: 0.01;
-  width: 500%;
   margin-left: 100%;
   transition: all 300ms ease-in;
 }
