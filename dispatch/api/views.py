@@ -397,7 +397,10 @@ class EventViewSet(DispatchModelViewSet):
         if self.request.user.is_authenticated():
             queryset = Event.objects.all()
         else:
-            queryset = Event.objects.filter(is_submission=False, is_published=True)
+            queryset = Event.objects.filter(
+                Q(is_submission__exact=False),
+                Q(is_published__exact=True)
+            )
 
 
         q = self.request.query_params.get('q', None)
