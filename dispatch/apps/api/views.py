@@ -393,11 +393,12 @@ class EventViewSet(DispatchModelViewSet):
     serializer_class = EventSerializer
 
     def get_queryset(self):
-        # Only authenticated users can see submission events
+        # Only authenticated users can see submission or unpublished events
         if self.request.user.is_authenticated():
             queryset = Event.objects.all()
         else:
-            queryset = Event.objects.filter(is_submission=False)
+            queryset = Event.objects.filter(is_submission=False, is_published=True)
+
 
         q = self.request.query_params.get('q', None)
         pending = self.request.query_params.get('pending', None)

@@ -45,6 +45,8 @@ class Event(Model):
 
     submitter_phone = CharField(max_length=15, validators=[phone_regex], null=True)
 
+    is_published = BooleanField(default=False)
+
     def cacheimage(self):
         """Store image locally if we have a facebook url"""
 
