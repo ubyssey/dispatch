@@ -491,5 +491,6 @@ class EventSerializer(DispatchModelSerializer):
             'facebook_image_url',
             'is_submission',
             'submitter_email',
-            'submitter_phone'
+            'submitter_phone',
+            'is_published'
         )

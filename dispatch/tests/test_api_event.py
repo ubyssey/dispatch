@@ -202,7 +202,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(data_5['count'], 0)
 
         self.assertEqual(data_6['count'], 1)
-        self.assertEqual(data_6['results'][0]['title'], 'Block Party!')
+        self.assertEqual(data_6['results'][0]['title'], 'A physics lecture')
 
     def test_start_end_times(self):
         """Should be able to create an event with specific start and end times"""
