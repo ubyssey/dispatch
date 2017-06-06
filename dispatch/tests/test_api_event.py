@@ -156,7 +156,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Create events
         DispatchTestHelpers.create_event(self.client, title='A math lecture', description='Reimann Hypothesis', host='UBC')
-        DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC')
+        DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC', is_published=True)
         DispatchTestHelpers.create_event(self.client, title='Block Party!', description='Partay on the block', host='AMS')
         DispatchTestHelpers.create_event(self.client, title='This is a user submission', is_submission=True)
 
@@ -191,11 +191,18 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.client.credentials() # Clear credentials
 
+        url_1 = '%s' % (reverse('api-event-list'))
+
         response_5 = self.client.get(url_4, format='json')
+        response_6 = self.client.get(url_1, format='json')
 
         data_5 = response_5.data
+        data_6 = response_6.data
 
         self.assertEqual(data_5['count'], 0)
+
+        self.assertEqual(data_6['count'], 1)
+        self.assertEqual(data_6['results'][0]['title'], 'Block Party!')
 
     def test_start_end_times(self):
         """Should be able to create an event with specific start and end times"""
@@ -211,8 +218,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Should be able to create an event with specific image"""
 
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
-            event = DispatchTestHelpers.create_event(self.client, image=test_image)
+        event = DispatchTestHelpers.create_event(self.client)
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
 
@@ -221,8 +227,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_delete_image(self):
         """Should be able to delete image that is associated with an event"""
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
-            event = DispatchTestHelpers.create_event(self.client, image=test_image)
+        event = DispatchTestHelpers.create_event(self.client)
 
         self.assertEqual(event.status_code, status.HTTP_201_CREATED)
         self.assertIn('test_image.jpg', event.data['image'])
