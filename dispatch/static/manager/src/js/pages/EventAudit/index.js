@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
@@ -6,12 +7,15 @@ import DocumentTitle from 'react-document-title'
 import eventsActions from '../../actions/EventsActions'
 
 import EventCard from './EventCard'
+import EventAuditPagination from './EventAuditPagination'
 
 require('../../../styles/components/event_audit.scss')
 
+const PER_PAGE = 15
+
 const PENDING_QUERY = {
   pending: 1,
-  limit: 15
+  limit: PER_PAGE
 }
 
 class EventAuditPage extends React.Component {
@@ -23,6 +27,18 @@ class EventAuditPage extends React.Component {
     }
   }
 
+  getQuery(props) {
+    props = props || this.props
+
+    const query = R.clone(PENDING_QUERY)
+
+    if (props.location.query.page) {
+      query.offset = (Number(props.location.query.page) - 1) * PER_PAGE
+    }
+
+    return query
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.events.count != this.props.events.count) {
       this.setState({ count: nextProps.events.count })
@@ -30,13 +46,16 @@ class EventAuditPage extends React.Component {
 
     if (nextProps.events.count && !this.eventCount
         && !this.reloadListFlag) {
-      this.props.listEvents(this.props.token, PENDING_QUERY)
+      this.props.listEvents(this.props.token, this.getQuery(nextProps))
       this.reloadListFlag = true
+    } else if (this.props.location.query.page != nextProps.location.query.page){
+      this.props.listEvents(this.props.token, this.getQuery(nextProps))
     }
+
   }
 
   componentWillMount() {
-    this.props.listEvents(this.props.token, PENDING_QUERY)
+    this.props.listEvents(this.props.token, this.getQuery())
 
     if (this.props.events) {
       this.setState({ count: this.props.events.count })
@@ -69,7 +88,7 @@ class EventAuditPage extends React.Component {
 
       return (
         <EventCard
-          key={id}
+          key={idx}
           event={event}
           approve={() => {this.approve(id, idx)}}
           disapprove={() => {this.disapprove(id, idx)}} />
@@ -83,6 +102,11 @@ class EventAuditPage extends React.Component {
             Event Auditing
           </h2>
           <div className='c-event-audit-subtitle'>
+            {this.state.count > PER_PAGE ?
+              <EventAuditPagination
+                page={Number(this.props.location.query.page || 1)}
+                pages={Math.ceil(this.state.count / PER_PAGE)}
+                location={this.props.location} />: null}
             {this.state.count} event{this.state.count == 1 ? '' : 's'} pending approval
           </div>
           <ReactCSSTransitionGroup
