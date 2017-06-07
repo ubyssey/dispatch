@@ -23,7 +23,7 @@ def submit(request):
 
         form = EventForm(initial=event_data)
 
-    elif request.POST.get("submit_event"): 
+    elif request.POST.get("submit_event"):
 
         form = EventForm(request.POST, request.FILES)
 
@@ -33,13 +33,18 @@ def submit(request):
 
             event.is_submission = True
 
+            print '\nImage before facebook caching: ' + str(event.image)
+            print 'Facebook image url: ' + str(event.facebook_image_url)
+
             if event.facebook_image_url and not event.image:
                 event.cacheimage()
+                print 'Caching image!'
 
             event.save()
 
             print 'Is Submitted: ' + str(event.is_submission)
-            print 'Image: ' + str(event.image)
+            print 'Is Published: ' + str(event.is_published)
+            print 'Image: ' + str(event.image) + '\n'
 
             return redirect(success)
 
