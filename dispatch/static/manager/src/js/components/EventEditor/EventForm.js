@@ -5,7 +5,6 @@ import { AnchorButton } from '@blueprintjs/core'
 import { FormInput, TextInput, TextAreaInput, DateTimeInput, SelectInput } from '../inputs'
 
 const CATEGORY_CHOICES = [
-    // { value: '', label: 'Please Select' },
     { value: 'sports', label: 'Sports' },
     { value: 'music', label: 'Music' },
     { value: 'academic', label: 'Academic' },

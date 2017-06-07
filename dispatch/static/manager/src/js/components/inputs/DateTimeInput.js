@@ -23,7 +23,7 @@ export default function DateTimeInput(props) {
       <Popover
         content={picker}
         popoverClassName='pt-popover-content-sizing'
-        position={Position.RIGHT}>
+        position={props.position || Position.BOTTOM}>
         <div className='pt-control-group'>
           <button className='pt-button pt-icon-calendar c-input--datetime-button' />
           <input
