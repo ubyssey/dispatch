@@ -330,6 +330,23 @@ const DispatchAPI = {
     widgets: (token, zoneId) => {
       return getRequest('zones.widgets', zoneId, null, token)
     }
+  },
+  events: {
+    list: (token, query) => {
+      return getRequest('event', null, query, token)
+    },
+    get: (token, eventId) => {
+      return getRequest('event', eventId, null, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('event', null, data, token)
+    },
+    save: (token, eventId, data) => {
+      return patchMultipartRequest('event', eventId, data, token)
+    },
+    delete: (token, eventId) => {
+      return deleteRequest('event', eventId, null, token)
+    },
   }
 }
 

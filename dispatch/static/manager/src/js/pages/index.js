@@ -11,6 +11,7 @@ import * as Tags from './Tags'
 import * as Topics from './Topics'
 import * as Widgets from './Widgets'
 import * as Persons from './Persons'
+import * as Events from './Events'
 
 export {
   LoginPage as Login,
@@ -24,5 +25,6 @@ export {
   Tags as Tags,
   Topics as Topics,
   Widgets as Widgets,
-  Persons as Persons
+  Persons as Persons,
+  Events as Events
 }
