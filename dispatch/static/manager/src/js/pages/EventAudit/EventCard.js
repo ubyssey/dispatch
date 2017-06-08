@@ -22,6 +22,12 @@ export default class EventCard extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.event.id != nextProps.event.id) {
+      this.setState({ disableButtons: false })
+    }
+  }
+
   render() {
     return (
       <div className='pt-card pt-elevation-2 c-event-audit-card'>
