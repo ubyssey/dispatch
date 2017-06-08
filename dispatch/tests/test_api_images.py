@@ -77,6 +77,24 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertTrue(self.fileExists(response.data['url_medium']))
         self.assertTrue(self.fileExists(response.data['url_thumb']))
 
+    def test_upload_image_gif(self):
+        """
+        Should be able to upload a GIF.
+        """
+
+        url = reverse('api-images-list')
+
+        with open(self.get_input_file('test_image.gif')) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+
+        # Assert that resized versions were created
+        self.assertTrue(self.fileExists(response.data['url_medium']))
+        self.assertTrue(self.fileExists(response.data['url_thumb']))
+
     def test_upload_duplicate_filenames(self):
         """
         Should be able to upload an image with the same filename as an existing image.

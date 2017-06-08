@@ -9,6 +9,7 @@ import * as Pages from './Pages'
 import * as Integrations from './Integrations'
 import * as Tags from './Tags'
 import * as Topics from './Topics'
+import * as Galleries from './Galleries'
 import * as Widgets from './Widgets'
 import * as Persons from './Persons'
 
@@ -23,6 +24,7 @@ export {
   Integrations as Integrations,
   Tags as Tags,
   Topics as Topics,
+  Galleries as Galleries,
   Widgets as Widgets,
   Persons as Persons
 }

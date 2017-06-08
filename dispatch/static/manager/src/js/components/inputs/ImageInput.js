@@ -25,7 +25,7 @@ function Image(props) {
 class ImageInputComponent extends React.Component {
 
   getSelected() {
-    return this.props.many ? this.props.selected : (this.props.selected ? [this.props.selected] : [])
+    return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
   }
 
   addImage(imageId) {
