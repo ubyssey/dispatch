@@ -10,7 +10,7 @@ from dispatch.apps.events import views
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class EventTests(DispatchAPITestCase):
+class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_making_event(self):
         """Should be able to make and test an event"""
@@ -41,34 +41,36 @@ class EventTests(DispatchAPITestCase):
     def test_caching_image(self):
         """We should be able to store the facebook image locally if uploading event w/ facebook url and image"""
 
-        facebook_url = 'https://www.facebook.com/events/280150289084959'
+        facebook_url = 'https://www.facebook.com/events/001'
 
-        facebook_image_url = FacebookEvent('https://www.facebook.com/events/280150289084959').get_image()
+        facebook_image_url = 'https://static.ubyssey.ca/static/images/ubyssey-logo-small.svg'
 
         obj = DispatchMediaTestMixin()
 
-        with open(obj.get_input_file('test_image.jpg')) as test_image:
+        data = {
+            'title': 'title',
+            'description': 'description',
+            'host': 'host',
+            'start_time': '2017-05-25T12:00',
+            'end_time': '2017-05-25T12:01',
+            'location': 'location',
+            'category': 'academic',
+            'facebook_url': facebook_url,
+            'facebook_image_url': facebook_image_url,
+            'is_submission': False,
+            'is_published': False,
+            'submitter_email': 'fakeemail@ubyssey.com',
+            'submitter_phone': '604-555-5555'
+        }
 
-            data = {
-                'title': 'title',
-                'description': 'description',
-                'host': 'host',
-                'image': None,
-                'start_time': '2017-05-25T12:00',
-                'end_time': '2017-05-25T12:01',
-                'location': 'location',
-                'category': 'category',
-                'facebook_url': facebook_url,
-                'facebook_image_url': facebook_image_url,
-                'is_submission': False,
-                'is_published': False
-            }
+        url = reverse('api-event-list')
 
-            url = reverse('api-event-list')
+        response = self.client.post(url, data, format='multipart')
+        event = Event.objects.get(id=1)
 
-            response = self.client.post(url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(event.image.name, '')
 
-        # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # self.assertEqual(response.data['event'], None)
-        #
-        # event.cacheimage()
+        event.cacheimage()
+
+        self.assertEqual(event.image.name, 'events/ubyssey-logo-small.svg')
