@@ -475,8 +475,6 @@ class ZoneSerializer(serializers.Serializer):
 
 class EventSerializer(DispatchModelSerializer):
 
-    image = serializers.ImageField(required=False, validators=[ValidFilename])
-
     class Meta:
         model = Event
         fields = (
