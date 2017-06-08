@@ -10,6 +10,7 @@ export const PERSONS = resourceActionTypes('PERSONS')
 export const TOPICS = resourceActionTypes('TOPICS')
 export const TAGS = resourceActionTypes('TAGS')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
+export const GALLERIES = resourceActionTypes('GALLERIES')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

@@ -216,7 +216,6 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_image_controller_to_json(self):
         """Should output json data"""
 
-
         image = DispatchTestHelpers.create_image(self.client)
 
         data = {
@@ -226,7 +225,6 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         json = {
-
             'image': image.data,
             'caption': 'This is a test caption',
             'credit': 'This is a test credit'
@@ -256,17 +254,11 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_gallery_controller(self):
         """Test "render" with gallery controller, uses "get_gallery" and "prepare_data"""
 
-        today = datetime.date.today()
-
-
         gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(0, self.client)
 
         result_1 = embeds.embedlib.render('gallery', gallery.data)
 
-
         output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
-
-        self.assertEqual(result_1, output)
 
         result_2 = embeds.GalleryController.to_json(gallery.data)
 
