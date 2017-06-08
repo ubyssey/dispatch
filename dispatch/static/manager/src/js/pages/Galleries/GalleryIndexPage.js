@@ -56,6 +56,8 @@ function GalleryPageComponent(props) {
       typeSingular='gallery'
       typePlural='galleries'
       displayColumn='title'
+      pageTitle='Galleries'
+      headers={[ 'Title' ]}
       {... props} />
   )
 }

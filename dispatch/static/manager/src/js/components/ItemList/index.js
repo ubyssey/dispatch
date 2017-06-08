@@ -22,6 +22,7 @@ export default function ItemList(props) {
         items={props.items}
         entities={props.entities}
         columns={props.columns}
+        headers={props.headers}
         location={props.location}
         emptyMessage={props.emptyMessage}
         createHandler={props.createHandler}
