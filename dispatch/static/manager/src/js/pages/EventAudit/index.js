@@ -3,6 +3,7 @@ import R from 'ramda'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import { replace } from 'react-router-redux'
 
 import eventsActions from '../../actions/EventsActions'
 
@@ -62,16 +63,31 @@ class EventAuditPage extends React.Component {
     }
   }
 
+  checkPage() {
+    if (this.eventCount == 1 && this.props.location.query.page > 1) {
+      let query = R.clone(this.props.location.query)
+
+      query.page--
+
+      this.props.replace({
+        pathname: this.props.location.pathname,
+        query: query
+      })
+    }
+  }
+
   approve(id) {
     const event = this.props.entities.events[id]
     event.is_submission = 0
     this.props.saveEvent(this.props.token, id, event)
+    this.checkPage()
     this.setState({ count: this.state.count - 1 })
     this.reloadListFlag = false
   }
 
   disapprove(id) {
     this.props.deleteEvent(this.props.token, id)
+    this.checkPage()
     this.setState({ count: this.state.count - 1 })
     this.reloadListFlag = false
   }
@@ -149,6 +165,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteEvent: (token, eventId, next) => {
       dispatch(eventsActions.deleteMany(token, [eventId], next))
+    },
+    replace: (path) => {
+      dispatch(replace(path))
     }
   }
 }
