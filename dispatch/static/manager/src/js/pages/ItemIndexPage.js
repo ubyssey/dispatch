@@ -25,9 +25,7 @@ export default class ListItemsPageComponent extends React.Component {
       query.listItem = this.props.location.query.listItem
     }
 
-    if (typeof this.props.extraQueryHandler === 'function') {
-      query = this.props.extraQueryHandler(query, this.props)
-    }
+    query = this.props.queryHandler(query, this.props)
 
     // If search query is present, add to query
     if (this.props.location.query.q) {
@@ -54,17 +52,10 @@ export default class ListItemsPageComponent extends React.Component {
     this.props.listListItems(this.props.token, this.getQuery())
   }
 
-  extraRelistCondition(prevProps, props) {
-    if (typeof this.props.extraRelistCondition !== 'function') {
-      return false
-    }
-    return this.props.extraRelistCondition(prevProps, props)
-  }
-
   componentDidUpdate(prevProps) {
 
     if (this.isNewQuery(prevProps, this.props)
-      || this.extraRelistCondition(prevProps, this.props)) {
+      || this.props.shouldReload(prevProps, this.props)) {
       this.props.clearListItems()
       this.props.clearSelectedListItems()
       this.props.listListItems(this.props.token, this.getQuery())
@@ -147,5 +138,12 @@ export default class ListItemsPageComponent extends React.Component {
 }
 
 ListItemsPageComponent.propTypes = {
-  pageTitle: PropTypes.string.isRequired
+  pageTitle: PropTypes.string.isRequired,
+  shouldReload: PropTypes.func,
+  queryHandler: PropTypes.func
+}
+
+ListItemsPageComponent.defaultProps = {
+  shouldReload: () => { false },
+  queryHandler: (query) => { query }
 }
