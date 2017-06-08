@@ -2,15 +2,17 @@ import urllib2, requests, re, datetime
 
 from django.conf import settings
 
+from dispatch.tests.apis import FacebookTest
 from dispatch.vendor.apis import Facebook, FacebookAPIError
 
 
 class FacebookEvent(object):
 
-    def __init__(self, facebook_url):
+    def __init__(self, facebook_url, facebook_class=Facebook):
 
         self.facebook_url = facebook_url
         self.event_id = self.get_event_id(facebook_url)
+        self.facebook_class = facebook_class
 
     def get_event_id(self, facebook_url):
 
@@ -26,7 +28,7 @@ class FacebookEvent(object):
         """Returns the json for the event linked by the facebook url"""
 
         # Create instance of facebook
-        fb = Facebook()
+        fb = self.facebook_class()
 
         fb.get_access_token({
             'client_id': settings.FACEBOOK_CLIENT_ID,
@@ -68,7 +70,7 @@ class FacebookEvent(object):
     def get_image(self):
         """Returns the picture url from facebook event"""
 
-        fb = Facebook()
+        fb = self.facebook_class()
 
         fb.get_access_token({
             'client_id': settings.FACEBOOK_CLIENT_ID,
