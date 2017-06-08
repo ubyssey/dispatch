@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnchorButton, Popover, Position } from '@blueprintjs/core'
+import { Popover, Position } from '@blueprintjs/core'
 import { DateTimePicker } from '@blueprintjs/datetime'
 
 import { humanizeDatetime } from '../../util/helpers'
@@ -13,25 +13,26 @@ export default function DateTimeInput(props) {
     <DateTimePicker
       value={props.value || new Date()}
       onChange={props.onChange}
-      timePickerProps={{ // so that state updates when either
-        // date or time are changed
+      timePickerProps={{
         onChange: props.onChange
       }} />
   )
 
   return (
-    <div>
+    <div className='c-input--datetime'>
       <Popover
         content={picker}
         popoverClassName='pt-popover-content-sizing'
-        position={Position.RIGHT}>
-        <AnchorButton className='c-datetimeinput-button'>
-          <span className='pt-icon-standard pt-icon-calendar' />
-        </AnchorButton>
+        position={props.position || Position.BOTTOM}>
+        <div className='pt-control-group'>
+          <button className='pt-button pt-icon-calendar c-input--datetime-button' />
+          <input
+            type='text'
+            className='pt-input'
+            value={textString}
+            readOnly={true} />
+        </div>
       </Popover>
-      <div className='c-datetimeinput-text'>
-        {textString}
-      </div>
     </div>
   )
 }

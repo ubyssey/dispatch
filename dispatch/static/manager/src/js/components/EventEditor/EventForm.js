@@ -5,7 +5,6 @@ import { AnchorButton } from '@blueprintjs/core'
 import { FormInput, TextInput, TextAreaInput, DateTimeInput, SelectInput } from '../inputs'
 
 const CATEGORY_CHOICES = [
-    { value: '', label: 'Please Select' },
     { value: 'sports', label: 'Sports' },
     { value: 'music', label: 'Music' },
     { value: 'academic', label: 'Academic' },
@@ -150,6 +149,7 @@ export default class EventForm extends React.Component {
           error={this.props.errors.category}>
           <SelectInput
             selected={this.props.listItem.category}
+            placeholder='Please Select'
             options={CATEGORY_CHOICES}
             onChange={ e => this.props.update('category', e.target.value)} />
         </FormInput>
