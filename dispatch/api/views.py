@@ -13,9 +13,11 @@ from rest_framework.authtoken.models import Token
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
 from dispatch.apps.core.actions import list_actions, recent_articles
-from dispatch.apps.core.models import Person
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+
+from dispatch.apps.core.models import Person, User
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
 from dispatch.apps.events.models import Event
+
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
@@ -117,9 +119,7 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         return queryset
 
 class PersonViewSet(DispatchModelViewSet):
-    """
-    Viewset for Person model views.
-    """
+    """Viewset for Person model views."""
     model = Person
     serializer_class = PersonSerializer
 
@@ -138,6 +138,16 @@ class PersonViewSet(DispatchModelViewSet):
             instance.delete()
         except ProtectedError:
             raise ProtectedResourceError('Deletion failed because person belongs to a user')
+
+class UserViewSet(DispatchModelViewSet):
+    """Viewset for User model views."""
+
+    model = User
+    serializer_class = UserSerializer
+
+    queryset = User.objects.all()
+
+    permission_classes = (IsAuthenticated,)
 
 class TagViewSet(DispatchModelViewSet):
     """
