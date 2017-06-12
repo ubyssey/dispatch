@@ -11,9 +11,7 @@ class ItemEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      isSaved: true
-    }
+    this.state = { isSaved: true }
   }
 
   componentWillMount() {
@@ -28,13 +26,10 @@ class ItemEditor extends React.Component {
 
   componentDidMount() {
     if (this.props.route) {
-      this.props.router.setRouteLeaveHook(this.props.route, () => this.routerWillLeave())
-    }
-  }
-
-  routerWillLeave() {
-    if (!this.state.isSaved) {
-      return 'Unsaved changes. Are you sure you want to leave?'
+      this.props.router.setRouteLeaveHook(
+        this.props.route,
+        () => !this.state.isSaved ?
+          'Unsaved changes. Are you sure you want to leave?' : null)
     }
   }
 
