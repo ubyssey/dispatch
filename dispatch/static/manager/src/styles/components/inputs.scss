@@ -196,6 +196,21 @@
   transition: opacity 0.25s;
 }
 
+.c-input--datetime {
+  & > span {
+    width: calc(100% - 30px);
+
+    & > div {
+      width: 100%;
+    }
+  }
+}
+
 .c-input--datetime-button {
   margin-top: 5px;
+}
+
+.c-input--datetime--textfield {
+  width: 100%;
+  cursor: pointer;
 }
