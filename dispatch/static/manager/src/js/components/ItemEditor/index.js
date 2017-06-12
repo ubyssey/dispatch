@@ -28,7 +28,6 @@ class ItemEditor extends React.Component {
 
   componentDidMount() {
     if (this.props.route) {
-      console.log("Adding hook")
       this.props.router.setRouteLeaveHook(this.props.route, () => this.routerWillLeave())
     }
   }
