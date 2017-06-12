@@ -88,23 +88,30 @@ class ContentEditorComponent extends React.Component {
     this.initializeEditor()
   }
 
-  initializeEditor() {
+  initializeEditor(props) {
+    props = props || this.props
 
     const decorator = new CompositeDecorator([
       LinkEntity
     ])
 
-    if (this.props.isNew) {
+    if (props.isNew) {
       this.props.updateEditor(
         EditorState.createEmpty(decorator)
       )
     } else {
-      this.props.updateEditor(
+      props.updateEditor(
         EditorState.createWithContent(
-          ContentStateHelper.fromJSON(this.props.content),
+          ContentStateHelper.fromJSON(props.content),
           decorator
         )
       )
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.version != nextProps.version) {
+      this.initializeEditor(nextProps)
     }
   }
 
