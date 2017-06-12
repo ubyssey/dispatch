@@ -1,12 +1,20 @@
 import React from 'react'
 import R from 'ramda'
 import DocumentTitle from 'react-document-title'
+import { withRouter } from 'react-router'
 
 import ListItemToolbar from './ListItemToolbar'
 
 const NEW_LISTITEM_ID = 'new'
 
-export default class ItemEditor extends React.Component {
+class ItemEditor extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isSaved: true
+    }
+  }
 
   componentWillMount() {
     if (this.props.isNew) {
@@ -15,6 +23,19 @@ export default class ItemEditor extends React.Component {
     } else {
       // Fetch listItem
       this.props.getListItem(this.props.token, this.props.itemId)
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.route) {
+      console.log("Adding hook")
+      this.props.router.setRouteLeaveHook(this.props.route, () => this.routerWillLeave())
+    }
+  }
+
+  routerWillLeave() {
+    if (!this.state.isSaved) {
+      return 'Unsaved changes. Are you sure you want to leave?'
     }
   }
 
@@ -42,19 +63,22 @@ export default class ItemEditor extends React.Component {
   }
 
   saveListItem() {
-    if (this.props.isNew) {
-      this.props.createListItem(this.props.token, this.getListItem())
-    } else {
-      this.props.saveListItem(
-        this.props.token,
-        this.props.itemId,
-        this.getListItem()
-      )
-    }
+    this.setState({ isSaved: true }, () => {
+      if (this.props.isNew) {
+        this.props.createListItem(this.props.token, this.getListItem())
+      } else {
+        this.props.saveListItem(
+          this.props.token,
+          this.props.itemId,
+          this.getListItem()
+        )
+      }
+    })
   }
 
   handleUpdate(field, value) {
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
+    this.setState({ isSaved: false })
   }
 
   render() {
@@ -89,3 +113,5 @@ export default class ItemEditor extends React.Component {
   }
 
 }
+
+export default withRouter(ItemEditor)
