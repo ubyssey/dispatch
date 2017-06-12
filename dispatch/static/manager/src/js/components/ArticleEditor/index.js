@@ -107,11 +107,13 @@ class ArticleEditorComponent extends React.Component {
   }
 
   previewArticle() {
-    this.props.previewArticle(
-      this.props.token,
-      this.props.articleId,
-      this.getArticle()
-    )
+    this.setState({ isSaved: true }, () => {
+      this.props.previewArticle(
+        this.props.token,
+        this.props.articleId,
+        this.getArticle()
+      )
+    })
   }
 
   toggleStyle(style) {

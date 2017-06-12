@@ -6,6 +6,7 @@ export default function NewPagePage(props) {
   return (
     <PageEditor
       pageId={props.params.pageId}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }
