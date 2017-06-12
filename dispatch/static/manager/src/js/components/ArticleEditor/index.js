@@ -2,6 +2,7 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
+import { withRouter } from 'react-router'
 
 import articlesActions from '../../actions/ArticlesActions'
 import * as editorActions from '../../actions/EditorActions'
@@ -22,6 +23,10 @@ class ArticleEditorComponent extends React.Component {
     super(props)
 
     this.toggleStyle = this.toggleStyle.bind(this)
+
+    this.state = {
+      isSaved: true
+    }
   }
 
   componentWillMount() {
@@ -32,6 +37,16 @@ class ArticleEditorComponent extends React.Component {
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
+  }
+
+  componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, () => this.routerWillLeave())
+  }
+
+  routerWillLeave() {
+    if (!this.state.isSaved) {
+      return 'Unsaved changes. Are you sure you want to leave?'
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -61,23 +76,27 @@ class ArticleEditorComponent extends React.Component {
   }
 
   saveArticle() {
-    if (this.props.isNew) {
-      this.props.createArticle(this.props.token, this.getArticle())
-    } else {
-      this.props.saveArticle(
+    this.setState({ isSaved: true }, () => {
+      if (this.props.isNew) {
+        this.props.createArticle(this.props.token, this.getArticle())
+      } else {
+        this.props.saveArticle(
+          this.props.token,
+          this.props.articleId,
+          this.getArticle()
+        )
+      }
+    })
+  }
+
+  publishArticle() {
+    this.setState({ isSaved: true }, () => {
+      this.props.publishArticle(
         this.props.token,
         this.props.articleId,
         this.getArticle()
       )
-    }
-  }
-
-  publishArticle() {
-    this.props.publishArticle(
-      this.props.token,
-      this.props.articleId,
-      this.getArticle()
-    )
+    })
   }
 
   unpublishArticle() {
@@ -100,7 +119,9 @@ class ArticleEditorComponent extends React.Component {
   }
 
   handleUpdate(field, value) {
-    this.props.setArticle(R.assoc(field, value, this.getArticle()))
+    this.setState({ isSaved: false }, () => {
+      this.props.setArticle(R.assoc(field, value, this.getArticle()))
+    })
   }
 
   getArticleVersion(version) {
@@ -209,6 +230,6 @@ const mapDispatchToProps = (dispatch) => {
 const ArticleEditor = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ArticleEditorComponent)
+)(withRouter(ArticleEditorComponent))
 
 export default ArticleEditor
