@@ -27,6 +27,7 @@ export default class ArticleContentEditor extends React.Component {
             <ContentEditor
               scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
               content={this.props.article.content}
+              version={this.props.article.current_version}
               isNew={this.props.isNew}
               onUpdate={cs => this.props.onUpdate('_content', cs)}
               openModal={this.props.openModal}
