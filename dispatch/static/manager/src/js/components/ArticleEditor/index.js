@@ -24,9 +24,7 @@ class ArticleEditorComponent extends React.Component {
 
     this.toggleStyle = this.toggleStyle.bind(this)
 
-    this.state = {
-      isSaved: true
-    }
+    this.state = { isSaved: true }
   }
 
   componentWillMount() {
@@ -40,13 +38,10 @@ class ArticleEditorComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.router.setRouteLeaveHook(this.props.route, () => this.routerWillLeave())
-  }
-
-  routerWillLeave() {
-    if (!this.state.isSaved) {
-      return 'Unsaved changes. Are you sure you want to leave?'
-    }
+    this.props.router.setRouteLeaveHook(
+      this.props.route,
+      () => !this.state.isSaved ?
+        'Unsaved changes. Are you sure you want to leave?' : null)
   }
 
   componentDidUpdate(prevProps) {
