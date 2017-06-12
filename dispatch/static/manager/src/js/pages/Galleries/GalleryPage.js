@@ -6,6 +6,7 @@ export default function TagPage(props) {
   return (
     <GalleryEditor
       itemId={props.params.galleryId}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

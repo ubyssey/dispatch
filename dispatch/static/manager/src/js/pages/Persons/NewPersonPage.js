@@ -6,6 +6,7 @@ export default function NewPersonPage(props) {
   return (
     <PersonEditor
       isNew={true}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }
