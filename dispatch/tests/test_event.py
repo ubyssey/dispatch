@@ -60,7 +60,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'is_submission': False,
             'is_published': False,
             'submitter_email': 'fakeemail@ubyssey.com',
-            'submitter_phone': '604-555-5555'
+            'submitter_phone': '+1 604-567-8900'
         }
 
         url = reverse('api-event-list')
@@ -74,3 +74,42 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         event.cacheimage()
 
         self.assertEqual(event.image.name, 'events/ubyssey-logo-small.svg')
+
+    def test_phone_number_validation(self):
+        """Ensure that phone number validation is working for event submission"""
+
+        # These are number styles that are expected to be entered by users
+        correct_style_list = [
+            '+1 6045678900',
+            '+1 604 567 8900',
+            '+1 604-567-8900',
+            '+1 (604) 567 8900',
+            '+1 (604)-567-8900',
+        ]
+
+        # These are number styles that are incorrect. e.g. too few numbers, too many numbers
+        incorrect_style_list = [
+            '5045678900',
+            '+160456789000',
+            '+44 12 321 3876',
+        ]
+
+        index = 0
+
+        for number in correct_style_list:
+
+            response = DispatchTestHelpers.create_event(self.client, title=str(index), submitter_phone=number)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+            event = Event.objects.get(title=index)
+            self.assertEqual(event.submitter_phone, '+16045678900')
+            self.assertEqual(event.title, str(index))
+
+            index += 1
+
+        for number in incorrect_style_list:
+
+            response = DispatchTestHelpers.create_event(self.client, title=str(index), submitter_phone=number)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            index += 1
