@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Button } from '@blueprintjs/core'
 
-import { Toolbar, ToolbarLeft, ToolbarRight } from '../Toolbar'
+import { Toolbar, ToolbarLeft, ToolbarRight, ToolbarMiddle } from '../Toolbar'
 import ItemListPagination from './ItemListPagination'
 import ItemListSearchBar from './ItemListSearchBar'
 
@@ -33,11 +33,18 @@ export default function ItemListHeader(props) {
     </div>
   )
 
+  const toolbarMiddle = props.middleContent ? (
+    <ToolbarMiddle>
+      {props.middleContent}
+    </ToolbarMiddle>
+  ) : null
+
   return (
     <Toolbar alignLeft={true}>
       <ToolbarLeft>
         {props.actions.toggleAllItems ? toolbarLeft : null}
       </ToolbarLeft>
+      {toolbarMiddle}
       <ToolbarRight>
         {props.items.isLoaded && props.items.ids.length ? pagination : null}
         <ItemListSearchBar
