@@ -8,6 +8,8 @@ from django.db.models import (
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
     SlugField, EmailField, SET_NULL)
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 class Event(Model):
     title = CharField(max_length=255)
     description = TextField(max_length=1000)
@@ -41,9 +43,7 @@ class Event(Model):
 
     submitter_email = EmailField(null=True)
 
-    phone_regex = RegexValidator(regex=r'(\+?1-)?\(?([0-9]){3}(\)?)(|\s?|-?|\.?)([0-9]){3}(\)?|\s?|-?|\.?)([0-9]{4})$', message='Please enter a valid phone number')
-
-    submitter_phone = CharField(max_length=15, validators=[phone_regex], null=True)
+    submitter_phone = PhoneNumberField(null=True)
 
     is_published = BooleanField(default=False)
 
