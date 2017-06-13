@@ -11,14 +11,12 @@ class JSONField(Field):
     def to_representation(self, value):
         return value
 
-
 class PrimaryKeyField(Field):
 
     def __init__(self, serializer, *args, **kwargs):
         super(PrimaryKeyField, self).__init__(*args, **kwargs)
 
         self.serializer = serializer
-
 
     def to_internal_value(self, data):
         return data

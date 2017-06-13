@@ -1,4 +1,4 @@
-import urllib, os
+import urllib, requests, os
 
 from django.core.files import File
 from django.core.validators import RegexValidator
