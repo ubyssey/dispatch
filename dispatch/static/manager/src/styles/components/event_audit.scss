@@ -16,6 +16,10 @@
 .c-event-audit-pagination {
   float: right;
   display: inline-block;
+
+  & > a:first-child {
+    margin-right: 5px;
+  }
 }
 
 .c-event-audit-pagination-label {
@@ -26,38 +30,6 @@
 
 .c-event-audit-card {
   margin-bottom: 15px;
-}
-
-// fade in
-.c-event-audit-card-appear {
-  opacity: 0.01;
-}
-
-.c-event-audit-card-appear.c-event-audit-card-appear-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.c-event-audit-card-enter {
-  opacity: 0.01;
-}
-
-.c-event-audit-card-enter.c-event-audit-card-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-// fade out
-.c-event-audit-card-leave {
-  opacity: 1;
-  width: 100%;
-  margin-left: 0%;
-}
-
-.c-event-audit-card-leave.c-event-audit-card-leave-active {
-  opacity: 0.01;
-  margin-left: 100%;
-  transition: all 300ms ease-in;
 }
 
 .c-event-audit-card-title {

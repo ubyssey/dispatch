@@ -404,10 +404,10 @@ class EventViewSet(DispatchModelViewSet):
                 Q(description__icontains=q) |
                 Q(host__icontains=q)
             )
+
         if pending:
-            queryset = queryset.filter(
-                Q(is_submission__exact=1)
-            )
+            queryset = queryset.filter(is_submission=True)
+
         return queryset
 
 
