@@ -28,3 +28,9 @@ export function ToolbarTitle(props) {
     <h3 className='c-toolbar__title'>{props.children}</h3>
   )
 }
+
+export function ToolbarMiddle(props) {
+  return (
+    <div className='c-toolbar__middle'>{props.children}</div>
+  )
+}
