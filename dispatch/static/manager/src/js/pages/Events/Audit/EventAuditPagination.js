@@ -1,18 +1,8 @@
 import React from 'react'
-import R from 'ramda'
 
-import LinkButton from '../../components/inputs/LinkButton'
+import { getPath }  from '../../../util/helpers'
 
-function getPath(location, page) {
-  let query = R.clone(location.query)
-
-  query.page = page
-
-  return {
-    pathname: location.pathname,
-    query: query
-  }
-}
+import LinkButton from '../../../components/inputs/LinkButton'
 
 export default function EventAuditPagination(props) {
   const { page, pages } = props
@@ -22,7 +12,7 @@ export default function EventAuditPagination(props) {
       <LinkButton
         to={getPath(props.location, page - 1)}
         disabled={page <= 1}>Prev</LinkButton>
-      {' '}
+        
       <LinkButton
         to={getPath(props.location, page + 1)}
         disabled={page >= pages}>Next</LinkButton>
