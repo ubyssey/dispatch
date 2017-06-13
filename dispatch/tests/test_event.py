@@ -60,7 +60,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'is_submission': False,
             'is_published': False,
             'submitter_email': 'fakeemail@ubyssey.com',
-            'submitter_phone': '+1 604-988-1245'
+            'submitter_phone': '+1 604-567-8900'
         }
 
         url = reverse('api-event-list')
