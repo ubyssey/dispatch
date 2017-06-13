@@ -158,22 +158,26 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         DispatchTestHelpers.create_event(self.client, title='A math lecture', description='Reimann Hypothesis', host='UBC')
         DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC', is_published=True)
         DispatchTestHelpers.create_event(self.client, title='Block Party!', description='Partay on the block', host='AMS')
-        DispatchTestHelpers.create_event(self.client, title='This is a user submission', is_submission=True)
+        DispatchTestHelpers.create_event(self.client, title='This is a user submission', host='Ubyssey', is_submission=True)
+        DispatchTestHelpers.create_event(self.client, title='This is one more user submission', host='Ubyssey')
 
         url_1 = '%s?q=%s' % (reverse('api-event-list'), 'lecture')
         url_2 = '%s?q=%s' % (reverse('api-event-list'), 'UBC')
         url_3 = '%s?q=%s' % (reverse('api-event-list'), 'String Theory')
         url_4 = '%s?pending=1' % reverse('api-event-list')
+        url_5 = '%s?q=%s' % (reverse('api-event-list'), 'Ubyssey')
 
         response_1 = self.client.get(url_1, format='json')
         response_2 = self.client.get(url_2, format='json')
         response_3 = self.client.get(url_3, format='json')
         response_4 = self.client.get(url_4, format='json')
+        response_5 = self.client.get(url_5, format='json')
 
         data_1 = response_1.data
         data_2 = response_2.data
         data_3 = response_3.data
         data_4 = response_4.data
+        data_5 = response_5.data
 
         self.assertEqual(data_1['results'][0]['title'], 'A math lecture')
         self.assertEqual(data_1['results'][1]['title'], 'A physics lecture')
@@ -189,20 +193,23 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(data_4['results'][0]['title'], 'This is a user submission')
         self.assertEqual(data_4['count'], 1)
 
+        self.assertEqual(data_5['results'][0]['title'], 'This is one more user submission')
+        self.assertEqual(data_5['count'], 1)
+
         self.client.credentials() # Clear credentials
 
         url_1 = '%s' % (reverse('api-event-list'))
 
-        response_5 = self.client.get(url_4, format='json')
-        response_6 = self.client.get(url_1, format='json')
+        response_6 = self.client.get(url_4, format='json')
+        response_7 = self.client.get(url_1, format='json')
 
-        data_5 = response_5.data
         data_6 = response_6.data
+        data_7 = response_7.data
 
-        self.assertEqual(data_5['count'], 0)
+        self.assertEqual(data_6['count'], 0)
 
-        self.assertEqual(data_6['count'], 1)
-        self.assertEqual(data_6['results'][0]['title'], 'A physics lecture')
+        self.assertEqual(data_7['count'], 1)
+        self.assertEqual(data_7['results'][0]['title'], 'A physics lecture')
 
     def test_start_end_times(self):
         """Should be able to create an event with specific start and end times"""
