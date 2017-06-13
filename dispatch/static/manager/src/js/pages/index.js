@@ -12,7 +12,6 @@ import * as Topics from './Topics'
 import * as Widgets from './Widgets'
 import * as Persons from './Persons'
 import * as Events from './Events'
-import EventAudit from './EventAudit'
 
 export {
   LoginPage as Login,
@@ -27,6 +26,5 @@ export {
   Topics as Topics,
   Widgets as Widgets,
   Persons as Persons,
-  Events as Events,
-  EventAudit as EventAudit
+  Events as Events
 }
