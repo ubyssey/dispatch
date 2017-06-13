@@ -13,9 +13,8 @@ from dispatch.conf.default_settings import (
 SECRET_KEY = 'fake-key'
 BASE_URL = 'http://test.dispatch/'
 
-FACEBOOK_CLIENT_ID = '910205815715611'
-FACEBOOK_CLIENT_SECRET = '30e3d954b915a87eb51524a29738e6e8'
-# TODO: Remove this
+FACEBOOK_CLIENT_ID = ''
+FACEBOOK_CLIENT_SECRET = ''
 
 INSTALLED_APPS = ['dispatch.tests'] + DEFAULT_INSTALLED_APPS
 

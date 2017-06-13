@@ -13,7 +13,7 @@ class FacebookEventTests(DispatchAPITestCase):
         url = 'https://www.facebook.com/events/001/?fref=ts'
 
         try:
-            event = FacebookEvent(url, facebook_class=FacebookTest)
+            event = FacebookEvent(url, api_provider=FacebookTest)
         except FacebookAPIError:
             raise FacebookAPIError('Error in initializing event: the event may have been deleted, or there may be an error in the code')
 
@@ -23,7 +23,7 @@ class FacebookEventTests(DispatchAPITestCase):
         url = 'This is an aweful url'
 
         try:
-            event = FacebookEvent(url, facebook_class=FacebookTest)
+            event = FacebookEvent(url, api_provider=FacebookTest)
             self.fail('The initialization of the event should have failed, as the url is an invalid facebook event url')
         except:
             pass
@@ -33,7 +33,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/001/?fref=ts'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         json = event.get_json()
 
@@ -46,7 +46,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/000/'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         try:
             event_json = event.get_json()
@@ -59,7 +59,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/002/'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         event_json = event.get_json()
 
@@ -71,7 +71,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/001/?fref=ts'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         image_url = event.get_image()
 
@@ -82,7 +82,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/002/?fref=ts'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         image_url = event.get_image()
 
@@ -93,7 +93,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         url = 'https://www.facebook.com/events/003/?fref=ts'
 
-        event = FacebookEvent(url, facebook_class=FacebookTest)
+        event = FacebookEvent(url, api_provider=FacebookTest)
 
         try:
             image_url = event.get_image()
