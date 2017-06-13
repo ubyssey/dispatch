@@ -13,6 +13,10 @@ class PendingTagComponent extends React.Component {
   }
 
   render() {
+    if (!this.props.pending) {
+      return null
+    }
+
     return (
       <div className='c-event-list-pending-count'>
         <Link to='/events/audit'>
