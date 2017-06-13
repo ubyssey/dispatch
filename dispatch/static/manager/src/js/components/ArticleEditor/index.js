@@ -50,8 +50,8 @@ class ArticleEditorComponent extends React.Component {
 
   getLatestVersionFromArticle(props) {
     props = props || this.props
-    const a = props.entities.local[props.articleId] ||
-      props.entities.remote[props.articleId]
+    const a = R.prop(props.articleId, props.entities.local || {}) ||
+      R.prop(props.articleId, props.entities.remote || {})
     return a ? a.latest_version : null
   }
 
