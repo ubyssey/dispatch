@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'phonenumber_field'
 ]
 
 # Logging
@@ -77,19 +78,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'dispatch/templates'),
             os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.core.context_processors.debug',
-                'django.core.context_processors.i18n',
-                'django.core.context_processors.media',
-                'django.core.context_processors.static',
-                'django.core.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-                'dispatch.helpers.context_processors.static'
-            ]
-        }
+        'APP_DIRS': True
     }
 ]
 
