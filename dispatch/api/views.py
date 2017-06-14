@@ -415,11 +415,11 @@ class EventViewSet(DispatchModelViewSet):
         pending = self.request.query_params.get('pending', None)
 
         if q:
-            # TODO: Add query by category
             queryset = queryset.filter(
                 Q(title__icontains=q) |
                 Q(description__icontains=q) |
-                Q(host__icontains=q)
+                Q(host__icontains=q) |
+                Q(category__iexact=q)
             )
 
         if pending:
