@@ -3,13 +3,14 @@ import React from 'react'
 import Headline from '../Editor/Headline'
 import ContentEditor from '../ContentEditor'
 
-import { ImageEmbed, VideoEmbed, PullQuoteEmbed, CodeEmbed } from '../ContentEditor/embeds'
+import { ImageEmbed, VideoEmbed, PullQuoteEmbed, GalleryEmbed, CodeEmbed } from '../ContentEditor/embeds'
 
 const embeds = [
   ImageEmbed,
   VideoEmbed,
   CodeEmbed,
-  PullQuoteEmbed
+  PullQuoteEmbed,
+  GalleryEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {
@@ -22,7 +23,7 @@ export default class ArticleContentEditor extends React.Component {
             onUpdate={this.props.onUpdate}
             headline={this.props.article.headline}
             error={this.props.errors.headline}
-            field="title" />
+            field="headline" />
           <div className='c-article-editor__body'>
             <ContentEditor
               scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}

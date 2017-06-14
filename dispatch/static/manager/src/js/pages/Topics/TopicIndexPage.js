@@ -54,6 +54,9 @@ function TopicsPageComponent(props) {
     <ItemIndexPage
       typeSingular='topic'
       typePlural='topics'
+      displayColumn='name'
+      pageTitle='Topics'
+      headers={[ 'Name' ]}
       {... props} />
   )
 }
