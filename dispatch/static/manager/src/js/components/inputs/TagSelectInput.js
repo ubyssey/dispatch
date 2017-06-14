@@ -25,6 +25,7 @@ class TagSelectInputComponent extends React.Component {
         entities={this.props.entities.tags}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTags(query)}
+        create={(name, cb) => this.props.createAndAddTag(this.props.token, { name }, cb)}
         attribute='name'
         editMessage={this.props.selected.length ? 'Edit tags' : 'Add tags'} />
     )
@@ -46,6 +47,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     listTags: (token, query) => {
       dispatch(tagsActions.list(token, query))
+    },
+    createAndAddTag: (token, data, callback) => {
+      dispatch(tagsActions.createAndAdd(token, data, callback))
     }
   }
 }
