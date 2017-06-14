@@ -7,14 +7,22 @@ from dispatch.vendor.apis import Facebook, FacebookAPIError
 
 
 class FacebookEvent(object):
+    """Class to pull data from a Facebook Event"""
 
     def __init__(self, facebook_url, api_provider=Facebook):
 
         self.facebook_url = facebook_url
         self.event_id = self.get_event_id(facebook_url)
-        self.api_provider = api_provider
+        self.api = api_provider()
+
+        self.api.get_access_token({
+            'client_id': settings.FACEBOOK_CLIENT_ID,
+            'client_secret': settings.FACEBOOK_CLIENT_SECRET,
+            'grant_type': 'client_credentials'
+        })
 
     def get_event_id(self, facebook_url):
+        """Uses regex to pull the event id from facebook_url"""
 
         # Match numbers that is the event id from the facebook_url and return them
         m = re.search('.*facebook.com/events/([0-9]+).*', facebook_url)
@@ -27,17 +35,8 @@ class FacebookEvent(object):
     def get_json(self):
         """Returns the json for the event linked by the facebook url"""
 
-        # Create instance of facebook
-        fb = self.api_provider()
-
-        fb.get_access_token({
-            'client_id': settings.FACEBOOK_CLIENT_ID,
-            'client_secret': settings.FACEBOOK_CLIENT_SECRET,
-            'grant_type': 'client_credentials'
-        })
-
         try:
-            json = fb.get_event(self.event_id)
+            json = self.api.get_event(self.event_id)
         except FacebookAPIError:
             raise FacebookAPIError('Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again')
 
@@ -47,7 +46,6 @@ class FacebookEvent(object):
         except:
             address = None
 
-        # start_time / end_time format AM/PM instead of 24 hr?
         try:
             end_time = datetime.datetime.strptime(json['end_time'][:-5], '%Y-%m-%dT%H:%M:%S')
             end_time = end_time.strftime('%Y/%m/%d %H:%M')
@@ -67,24 +65,25 @@ class FacebookEvent(object):
             'facebook_url': self.facebook_url
         }
 
+    def get_data(self):
+        """returns data from the event"""
+
+        data = self.get_json()
+        data['facebook_url'] = self.facebook_url
+        data['facebook_image_url'] = self.get_image()
+
+        return data
+
     def get_image(self):
         """Returns the picture url from facebook event"""
 
-        fb = self.api_provider()
-
-        fb.get_access_token({
-            'client_id': settings.FACEBOOK_CLIENT_ID,
-            'client_secret': settings.FACEBOOK_CLIENT_SECRET,
-            'grant_type': 'client_credentials'
-        })
-
         try:
-            image_data = fb.get_photos(self.event_id)
+            image_data = self.api.get_photos(self.event_id)
 
             try:
-                image_url = fb.get_picture(image_data[0]['id'])
+                image_url = self.api.get_picture(image_data[0]['id'])
             except FacebookAPIError:
-                image_url = fb.get_picture(self.event_id)
+                image_url = self.api.get_picture(self.event_id)
 
         except FacebookAPIError:
             raise FacebookAPIError('Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again')

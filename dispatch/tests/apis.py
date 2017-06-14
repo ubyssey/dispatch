@@ -2,17 +2,17 @@ from dispatch.vendor.apis import Facebook, FacebookAPIError
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class FacebookTest(Facebook):
+class FacebookTest(object):
 
     API_ROOT = 'https://graph.facebook.com/v2.8'
 
     def __init__(self, access_token=None):
 
-        self.access_token = access_token
+        pass
 
     def get_access_token(self, params):
-
-        self.access_token = '910205815715611|3kuW-J0iWbdRiLTOULoSjTyweuA'
+        
+        pass
 
     def get_event(self, event_id):
 
