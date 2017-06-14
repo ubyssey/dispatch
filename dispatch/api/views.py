@@ -403,21 +403,18 @@ class EventViewSet(DispatchModelViewSet):
     serializer_class = EventSerializer
 
     def get_queryset(self):
-        # Only authenticated users can see submission or unpublished events
         if self.request.user.is_authenticated():
             queryset = Event.objects.all()
         else:
             queryset = Event.objects.filter(
-                Q(is_submission__exact=False),
-                Q(is_published__exact=True)
+                Q(is_submission=False),
+                Q(is_published=True)
             )
-
 
         q = self.request.query_params.get('q', None)
         pending = self.request.query_params.get('pending', None)
 
         if q:
-            # If a search term (q) is present, filter queryset by term against `name`
             # TODO: Add query by category
             queryset = queryset.filter(
                 Q(title__icontains=q) |

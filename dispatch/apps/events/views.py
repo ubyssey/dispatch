@@ -12,14 +12,13 @@ def success(request):
 
 def submit(request):
 
-    if request.POST.get("submit_facebook") and (request.POST.get('facebook_url') is not None):
-        # show form with facebook event data
+    facebook_url = request.POST.get('facebook_url')
 
-        event = FacebookEvent(request.POST.get('facebook_url'))
+    if request.POST.get("submit_facebook") and facebook_url:
 
-        event_data = event.get_json()
-        event_data['facebook_url'] = request.POST.get('facebook_url')
-        event_data['facebook_image_url'] = event.get_image()
+        event = FacebookEvent(facebook_url)
+
+        event_data = event.get_data()
 
         form = EventForm(initial=event_data)
 
@@ -39,10 +38,6 @@ def submit(request):
             event.save()
 
             return redirect(success)
-
-        else:
-            print "ERRORS: " + str(form.errors)
-            return HttpResponse('Invalid event data: Try again')
 
     else:
         form = EventForm()

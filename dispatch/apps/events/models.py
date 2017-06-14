@@ -1,7 +1,6 @@
-import urllib, requests, os
+import urllib, os
 
 from django.core.files import File
-from django.core.validators import RegexValidator
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
@@ -9,6 +8,7 @@ from django.db.models import (
     SlugField, EmailField, SET_NULL)
 
 class Event(Model):
+
     title = CharField(max_length=255)
     description = TextField(max_length=1000)
     host = CharField(max_length=255)
