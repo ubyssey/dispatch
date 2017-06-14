@@ -124,30 +124,22 @@
     minDate:new Date()
   });
 
-</script>
-
-<script type="text/javascript">
-
   function readURL(input) {
     if (input.files && input.files[0]) {
-
+      
         var reader = new FileReader();
         reader.onload = function(e) {
             $('#previewImage').attr('src', e.target.result);
         }
-
         reader.readAsDataURL(input.files[0]);
     }
-
     var x = document.getElementById('reset');
     x.style.display = 'inline';
-
   }
 
   $("#imgInp").change(function(){
         readURL(this);
     });
-
 
   function hideReset(){
     document.getElementById("reset").style.display = "none";
