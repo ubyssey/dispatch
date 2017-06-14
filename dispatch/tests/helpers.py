@@ -49,7 +49,7 @@ class DispatchTestHelpers(object):
         return response
 
     @classmethod
-    def upload_image(cls, client):
+    def create_image(cls, client):
         """Upload an image that can be linked by galleries"""
 
         url = reverse('api-images-list')
@@ -59,7 +59,7 @@ class DispatchTestHelpers(object):
         with open(obj.get_input_file('test_image.png'), 'rb') as test_image:
             response = client.post(url, { 'img': test_image }, format='multipart')
 
-        return response.data['id']
+        return response
 
     @classmethod
     def _create_gallery_only(cls, id, attachments, client):
@@ -78,17 +78,19 @@ class DispatchTestHelpers(object):
     def create_gallery(cls, id, client):
         """Create a gallery instance for further testing"""
 
-        image_1 = cls.upload_image(client)
-        image_2 = cls.upload_image(client)
+        image_1 = cls.create_image(client)
+        image_2 = cls.create_image(client)
 
         attachment = [
             {
                 'caption': 'test caption 1',
-                'image_id': image_1
+                'credit': 'test credit 1',
+                'image_id': image_1.data['id']
             },
             {
                 'caption': 'test caption 2',
-                'image_id': image_2
+                'credit': 'test credit 2',
+                'image_id': image_2.data['id']
             }
         ]
 
@@ -143,6 +145,23 @@ class DispatchTestHelpers(object):
 
         return client.post(url, data, format='multipart')
 
+    @classmethod
+    def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword'):
+        """
+        A helper method that creates a simple user object with the given attributes
+        and returns the response
+        """
+
+        person = person or cls.create_person(client, full_name).data['id']
+        url = reverse('api-users-list')
+        data = {
+            'email' : email,
+            'person' : person,
+            'password_a': password,
+            'password_b': password
+        }
+
+        return client.post(url, data, format='json')
     @classmethod
     def create_tag(cls, client, name='testTag'):
         """Create a dummy tag instance"""

@@ -1,5 +1,25 @@
+from rest_framework.exceptions import ValidationError
+
+from django.contrib.auth.password_validation import validate_password
+
 from dispatch.apps.api.exceptions import InvalidFilename, InvalidGalleryAttachments
 from dispatch.apps.content.models import Image
+from dispatch.apps.core.models import Person
+
+class PasswordValidator(object):
+
+    def __init__(self, confirm_field):
+        self.confirm_field = confirm_field
+
+    def set_context(self, serializer_field):
+        self.data = serializer_field.parent.initial_data
+        self.instance = serializer_field.parent.instance
+
+    def __call__(self, value):
+        if value != self.data.get(self.confirm_field):
+            raise ValidationError('Passwords do not match')
+
+        validate_password(value, user=self.instance)
 
 def all_ascii(s):
     return all(ord(c) < 128 for c in s)
