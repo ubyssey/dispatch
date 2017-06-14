@@ -157,6 +157,18 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.PERSONS.DELETE_MANY):
     return showToast('Some persons could not be deleted', Intent.DANGER)
 
+  // Galleries
+  case fulfilled(types.GALLERIES.CREATE):
+  case fulfilled(types.GALLERIES.SAVE):
+    return showToast('Gallery saved')
+  case rejected(types.GALLERIES.CREATE):
+  case rejected(types.GALLERIES.SAVE):
+    return showToast('Gallery could not be saved', Intent.DANGER)
+  case fulfilled(types.GALLERIES.DELETE_MANY):
+    return showToast(`${action.payload.length} galler${action.payload.length > 1 ? 'ies' : 'y'} deleted`)
+  case rejected(types.GALLERIES.DELETE_MANY):
+    return showToast('Some galleries could not be deleted', Intent.DANGER)
+
   default:
     return toaster
 

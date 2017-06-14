@@ -82,7 +82,12 @@ class ImageManagerComponent extends React.Component {
   }
 
   insertImage() {
-    this.props.onSubmit(this.getImage())
+    if (this.props.many) {
+      this.props.clearSelectedImages()
+      this.props.onSubmit(this.props.images.selected)
+    } else {
+      this.props.onSubmit(this.getImage())
+    }
   }
 
   onSearch(q) {
@@ -107,8 +112,8 @@ class ImageManagerComponent extends React.Component {
         <ImageThumb
           key={image.id}
           image={image}
-          isSelected={this.props.image.id === id}
-          selectImage={this.props.selectImage} />
+          isSelected={this.props.many ? R.contains(id, this.props.images.selected) : this.props.image.id === id}
+          selectImage={this.props.many ? this.props.toggleImage : this.props.selectImage} />
       )
     })
 
@@ -146,14 +151,15 @@ class ImageManagerComponent extends React.Component {
               className='c-image-manager__images__container'
               ref={(node) => { this.images = node }}>{images}</div>
           </Dropzone>
+          {!this.props.many ?
           <div className='c-image-manager__active'>
             {image ? imagePanel : null}
-          </div>
+          </div> : null}
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected'></div>
           <AnchorButton
-            disabled={!this.props.image.id}
+            disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
             onClick={() => this.insertImage()}>Insert</AnchorButton>
         </div>
       </div>
@@ -184,6 +190,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     selectImage: (imageId) => {
       dispatch(imagesActions.select(imageId))
+    },
+    toggleImage: (imageId) => {
+      dispatch(imagesActions.toggle(imageId))
+    },
+    clearSelectedImages: () => {
+      dispatch(imagesActions.clearSelected())
     },
     setImage: (imageId, image) => {
       dispatch(imagesActions.set(imageId, image))
