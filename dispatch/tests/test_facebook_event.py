@@ -38,8 +38,8 @@ class FacebookEventTests(DispatchAPITestCase):
         json = event.get_json()
 
         self.assertEqual(json['title'], u"Halley's Comet Viewing")
-        self.assertEqual(json['start_time'], '2061/07/28 21:00')
-        self.assertEqual(json['end_time'], '2061/07/29 01:00')
+        self.assertEqual(json['start_time'], '2061-07-28 21:00')
+        self.assertEqual(json['end_time'], '2061-07-29 01:00')
 
     def test_get_json_for_invalid_event(self):
         """get_json for an event that is private/non-existant should raise an error"""
