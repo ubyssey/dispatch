@@ -115,8 +115,16 @@ WSGI_APPLICATION = '%s.wsgi.application' % DISPATCH_PROJECT_MODULE
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
+USE_L10N = False
 USE_TZ = True
+
+DATETIME_INPUT_FORMATS = [
+    '%Y-%m-%d %H:%M:%S',
+    '%Y-%m-%d %H:%M:%S.%f',
+    '%Y-%m-%d %H:%M',
+    '%Y-%m-%d',
+    '%Y/%m/%d %H:%M'
+]
 
 # Static and media files
 STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
