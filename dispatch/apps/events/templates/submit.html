@@ -1,7 +1,7 @@
-
 <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/ubyssey/static/css/jquery.datetimepicker.min.css" />
 <script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/ubyssey/static/js/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript" src="http://momentjs.com/downloads/moment.min.js"></script>
 
 {{ form.non_field_errors }}
 <form method="post" enctype="multipart/form-data">
@@ -117,16 +117,34 @@
 
 <script type="text/javascript">
 
-  jQuery('#id_start_time').datetimepicker({
-    minDate:new Date()
+    $.datetimepicker.setDateFormatter({
+    parseDate: function (date, format) {
+        var d = moment(date, format);
+        return d.isValid() ? d.toDate() : false;
+    },
+
+    formatDate: function (date, format) {
+        return moment(date).format(format);
+    }
   });
+
+  jQuery('#id_start_time').datetimepicker({
+    minDate:new Date(),
+    format:'YYYY-MM-DD k:mm',
+    formatTime:'k:mm',
+    formatDate:'YYYY-MM-DD'
+  });
+
   jQuery('#id_end_time').datetimepicker({
-    minDate:new Date()
+    minDate:new Date(),
+    format:'YYYY-MM-DD k:mm',
+    formatTime:'k:mm',
+    formatDate:'YYYY-MM-DD'
   });
 
   function readURL(input) {
     if (input.files && input.files[0]) {
-      
+
         var reader = new FileReader();
         reader.onload = function(e) {
             $('#previewImage').attr('src', e.target.result);
