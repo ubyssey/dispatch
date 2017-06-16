@@ -36,7 +36,7 @@ class TestEventWidget(Widget):
     description = TextField('Description')
     events = EventField('Featured Events')
 
-    def context(self,data):
+    def context(self, data):
 
         data['events'] = Event.objects.filter(is_published=True).order_by('-start_time')
 

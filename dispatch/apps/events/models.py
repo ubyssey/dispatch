@@ -47,6 +47,8 @@ class Event(Model):
 
     is_published = BooleanField(default=False)
 
+    slug = SlugField(max_length=255)
+
     def cacheimage(self):
         """Store image locally if we have a facebook url"""
 
