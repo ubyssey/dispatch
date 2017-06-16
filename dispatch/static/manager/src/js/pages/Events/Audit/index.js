@@ -32,9 +32,12 @@ class EventAuditPage extends React.Component {
     return query
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.location.query.page != nextProps.location.query.page){
-      this.props.listEvents(this.props.token, this.getQuery(nextProps))
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.query.page != this.props.location.query.page){
+      this.props.listEvents(this.props.token, this.getQuery())
+    }
+    if (this.getDisplayedCount(prevProps) > this.getDisplayedCount()) {
+      this.props.listEvents(this.props.token, this.getQuery())
     }
   }
 
@@ -42,15 +45,15 @@ class EventAuditPage extends React.Component {
     this.props.listEvents(this.props.token, this.getQuery())
   }
 
-  getDisplayedCount() {
-    return this.props.events.ids
-       .map(id => this.props.entities.events[id])
-       .filter(event => event && event.is_submission)
-       .length
+  getDisplayedCount(props) {
+    props = props || this.props
+    return props.events.ids
+       .map(id => props.entities.events[id])
+       .filter(event => event && event.is_submission).length
   }
 
   checkPage() {
-    if (this.getDisplayedCount() == 1 && this.props.location.query.page > 1) {
+    if (this.getDisplayedCount(this.props) == 1 && this.props.location.query.page > 1) {
       let query = R.clone(this.props.location.query)
 
       query.page--
@@ -65,8 +68,8 @@ class EventAuditPage extends React.Component {
   }
 
   approve(id) {
-    const query = this.checkPage() ? null : this.getQuery()
-    this.props.approveEvent(this.props.token, id, query)
+    this.checkPage()
+    this.props.approveEvent(this.props.token, id)
   }
 
   disapprove(id) {
@@ -129,8 +132,10 @@ const mapDispatchToProps = (dispatch) => {
     listEvents: (token, query) => {
       dispatch(eventsActions.list(token, query))
     },
-    approveEvent: (token, eventId, queryAfter) => {
-      dispatch(eventsActions.approve(token, eventId, queryAfter))
+    approveEvent: (token, eventId) => {
+      const form = new FormData()
+      form.append('is_submission', false)
+      dispatch(eventsActions.save(token, eventId, form))
     },
     disapproveEvent: (token, eventId, next) => {
       dispatch(eventsActions.deleteMany(token, [eventId], next))
