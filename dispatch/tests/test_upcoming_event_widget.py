@@ -17,39 +17,10 @@ from dispatch.tests.helpers import DispatchTestHelpers
 
 class UpcomingEventsTestCase(DispatchAPITestCase):
 
-    def widgetSetUp(self):
-
-        register.zone(Sidebar)
-        register.widget(UpcomingEventsWidget)
-        zone = Sidebar()
-        widget = UpcomingEventsWidget()
-
-        # Make 7 events with increasing start dates
-        for index in xrange(5):
-
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
-
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        featured_event_id = 1
-
-        validated_data = {
-            'widget': 'upcoming-events',
-            'data': {
-              'title': 'Upcoming Events!',
-              'featured_event': featured_event_id
-            }
-        }
-
-        zone.save(validated_data)
-        widget.set_data(validated_data['data'])
-
-        return widget
-
     def test_upcoming_events(self):
         """Confirm that the widget can be created, and that we can pull data from it"""
 
-        widget = self.widgetSetUp()
+        widget = DispatchTestHelpers.create_upcoming_event_widget(self.client)
 
         widget_json = widget.to_json()
 
@@ -60,7 +31,7 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
     def test_widget_context(self):
         """Test the custom context method of the widget"""
 
-        widget = self.widgetSetUp()
+        widget = DispatchTestHelpers.create_upcoming_event_widget(self.client)
 
         widget_data = widget.context(widget.prepare_data())
 
@@ -78,12 +49,12 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
             """returns datetime object `days` in the future"""
             return (datetime.datetime.now() + datetime.timedelta(days=days)).strftime("%B %d, %Y, %I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace(" 0", " ")
 
-        widget = self.widgetSetUp()
+        widget = DispatchTestHelpers.create_upcoming_event_widget(self.client)
         img = widget.featured_event.get_model_json(widget.data['featured_event'])['image']
 
         widget_html = widget.render(widget.context(widget.prepare_data()))
 
-        html = u'<h1>Upcoming Events!</h1>\n<p>%s</p>\n<p>Title 1</p>\n<img src="%s"/>\n\n\n  <p>Title 2, %s</p>\n\n  <p>Title 3, %s</p>\n\n  <p>Title 4, %s</p>\n\n  <p>Title 5, %s</p>\n\n' % (days_in_future(1), img, days_in_future(2), days_in_future(3), days_in_future(4), days_in_future(5))
+        html = u'<h1>Upcoming Events!</h1>\n<p>%s</p>\n<p>Title 1</p>\n<p>test host</p>\n<img src="%s"/>\n\n\n  <p>Title 2, %s</p>\n\n  <p>Title 3, %s</p>\n\n  <p>Title 4, %s</p>\n\n  <p>Title 5, %s</p>\n\n' % (days_in_future(1), img, days_in_future(2), days_in_future(3), days_in_future(4), days_in_future(5))
 
         self.assertEqual(widget_html, html)
 
@@ -179,6 +150,7 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
             'widget': 'upcoming-events',
             'data': {
               'title': 'Upcoming Events!',
+              'featured_event': None
             }
         }
 
@@ -186,7 +158,6 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         widget.set_data(validated_data['data'])
 
         widget_data = widget.context(widget.prepare_data())
-
 
         self.assertEqual(widget_data['events'][0]['title'], u'Title 1')
         self.assertEqual(widget_data['events'][1]['title'], u'Title 2')
