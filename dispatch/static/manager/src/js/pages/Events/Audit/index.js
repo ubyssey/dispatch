@@ -35,8 +35,7 @@ class EventAuditPage extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.location.query.page != this.props.location.query.page){
       this.props.listEvents(this.props.token, this.getQuery())
-    }
-    if (this.getDisplayedCount(prevProps) > this.getDisplayedCount()) {
+    } else if (this.getDisplayedCount(prevProps) > this.getDisplayedCount()) {
       this.props.listEvents(this.props.token, this.getQuery())
     }
   }
@@ -53,7 +52,7 @@ class EventAuditPage extends React.Component {
   }
 
   checkPage() {
-    if (this.getDisplayedCount(this.props) == 1 && this.props.location.query.page > 1) {
+    if (this.getDisplayedCount() == 1 && this.props.location.query.page > 1) {
       let query = R.clone(this.props.location.query)
 
       query.page--
