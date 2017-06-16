@@ -231,7 +231,7 @@ class DispatchTestHelpers(object):
         zone = Sidebar()
         widget = UpcomingEventsWidget()
 
-        # Make 7 events with increasing start dates
+        # Make 5 events with increasing start dates
         for index in xrange(5):
 
             response = DispatchTestHelpers.create_event(client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
