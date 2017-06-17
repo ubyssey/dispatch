@@ -21,17 +21,6 @@ class UpcomingEventsWidget(Widget):
 
     def context(self, data):
 
-        events = Event.objects.filter(is_published=True).order_by('start_time')[:5]
-        data['events'] = []
-
-        for event in events:
-
-            # Pull the top five events, and automatically ignore the featured event
-            if event.id != self.data['featured_event']:
-
-                data['events'].append({
-                    'title': event.title,
-                    'date': event.start_time
-                })
+        data['events'] = Event.objects.filter(is_published=True).exclude(pk=self.data['featured_event']).order_by('start_time')[:5]
 
         return data

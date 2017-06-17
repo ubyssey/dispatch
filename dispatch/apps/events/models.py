@@ -12,6 +12,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Event(Model):
 
     title = CharField(max_length=255)
+    slug = SlugField(max_length=255)
     description = TextField(max_length=1000)
     host = CharField(max_length=255)
 
@@ -46,8 +47,6 @@ class Event(Model):
     submitter_phone = PhoneNumberField(null=True)
 
     is_published = BooleanField(default=False)
-
-    slug = SlugField(max_length=255)
 
     def cacheimage(self):
         """Store image locally if we have a facebook url"""

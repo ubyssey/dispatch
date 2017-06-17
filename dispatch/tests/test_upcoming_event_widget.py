@@ -37,10 +37,10 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         self.assertEqual(widget_data['title'], 'Upcoming Events!')
         self.assertEqual(widget_data['featured_event'].title, u'Title 1')
-        self.assertEqual(widget_data['events'][0]['title'], u'Title 2')
-        self.assertEqual(widget_data['events'][1]['title'], u'Title 3')
-        self.assertEqual(widget_data['events'][2]['title'], u'Title 4')
-        self.assertEqual(widget_data['events'][3]['title'], u'Title 5')
+        self.assertEqual(widget_data['events'][0].title, u'Title 2')
+        self.assertEqual(widget_data['events'][1].title, u'Title 3')
+        self.assertEqual(widget_data['events'][2].title, u'Title 4')
+        self.assertEqual(widget_data['events'][3].title, u'Title 5')
 
     def test_widget_render(self):
         """Test the rendering of the event widget"""
@@ -90,8 +90,8 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         self.assertEqual(widget_data['title'], 'Upcoming Events!')
         self.assertEqual(widget_data['featured_event'].title, u'Title 1')
-        self.assertEqual(widget_data['events'][0]['title'], u'Title 2')
-        self.assertEqual(widget_data['events'][1]['title'], u'Title 3')
+        self.assertEqual(widget_data['events'][0].title, u'Title 2')
+        self.assertEqual(widget_data['events'][1].title, u'Title 3')
 
     def test_six_events(self):
         """When a featured event is not in the first 5 events, there should be 5 events in the event list"""
@@ -125,11 +125,11 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         self.assertEqual(widget_data['title'], 'Upcoming Events!')
         self.assertEqual(widget_data['featured_event'].title, u'Title 6')
-        self.assertEqual(widget_data['events'][0]['title'], u'Title 1')
-        self.assertEqual(widget_data['events'][1]['title'], u'Title 2')
-        self.assertEqual(widget_data['events'][2]['title'], u'Title 3')
-        self.assertEqual(widget_data['events'][3]['title'], u'Title 4')
-        self.assertEqual(widget_data['events'][4]['title'], u'Title 5')
+        self.assertEqual(widget_data['events'][0].title, u'Title 1')
+        self.assertEqual(widget_data['events'][1].title, u'Title 2')
+        self.assertEqual(widget_data['events'][2].title, u'Title 3')
+        self.assertEqual(widget_data['events'][3].title, u'Title 4')
+        self.assertEqual(widget_data['events'][4].title, u'Title 5')
 
     def test_no_featured_event(self):
         """When the user forgets a featured event there should be 5 listed events"""
@@ -139,10 +139,10 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         zone = Sidebar()
         widget = UpcomingEventsWidget()
 
-        # Make 7 events with increasing start dates
-        for index in xrange(5):
+        # Make 5 events with increasing start dates
+        for index in xrange(1,6):
 
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index)), is_published=True)
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -159,8 +159,8 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         widget_data = widget.context(widget.prepare_data())
 
-        self.assertEqual(widget_data['events'][0]['title'], u'Title 1')
-        self.assertEqual(widget_data['events'][1]['title'], u'Title 2')
-        self.assertEqual(widget_data['events'][2]['title'], u'Title 3')
-        self.assertEqual(widget_data['events'][3]['title'], u'Title 4')
-        self.assertEqual(widget_data['events'][4]['title'], u'Title 5')
+        self.assertEqual(widget_data['events'][0].title, u'Title 1')
+        self.assertEqual(widget_data['events'][1].title, u'Title 2')
+        self.assertEqual(widget_data['events'][2].title, u'Title 3')
+        self.assertEqual(widget_data['events'][3].title, u'Title 4')
+        self.assertEqual(widget_data['events'][4].title, u'Title 5')

@@ -43,10 +43,10 @@ class ModelField(Field):
     def validate(self, data):
         if self.many:
             if not isinstance(data, list) or not all([isinstance(id, int) for id in data]):
-                raise InvalidField('Data must be list of integers (i.e. the ids of the models)')
+                raise InvalidField('Data must be list of integer IDs')
         else:
             if not isinstance(data, int):
-                raise InvalidField('Data must be an integer (i.e. the id of the model)')
+                raise InvalidField('Data must be an integer ID')
 
     def get_model(self, id):
         try:
