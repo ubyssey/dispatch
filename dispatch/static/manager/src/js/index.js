@@ -86,6 +86,12 @@ render((
             <Route path=':topicId' component={Pages.Topics.Topic} />
           </Route>
 
+          <Route path='galleries'>
+            <IndexRoute component={Pages.Galleries.Index} />
+            <Route path='new' component={Pages.Galleries.NewGallery} />
+            <Route path=':galleryId' component={Pages.Galleries.Gallery} />
+          </Route>
+
           <Route path='widgets'>
             <IndexRoute component={Pages.Widgets.Index} />
             <Route path=':zoneId' component={Pages.Widgets.Zone} />
@@ -100,7 +106,7 @@ render((
           <Route path='events'>
             <IndexRoute component={Pages.Events.Index} />
             <Route path='new' component={Pages.Events.NewEvent} />
-            <Route path='audit' component={Pages.Events.Audit} /> 
+            <Route path='audit' component={Pages.Events.Audit} />
             <Route path=':eventId' component={Pages.Events.Event} />
           </Route>
 

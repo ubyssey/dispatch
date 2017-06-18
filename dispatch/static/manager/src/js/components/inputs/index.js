@@ -7,6 +7,7 @@ import FormInput from './FormInput'
 import ItemSelectInput from './ItemSelectInput'
 import TextAreaInput from './TextAreaInput'
 import SelectInput from './SelectInput'
+import GallerySelectInput from './GallerySelectInput'
 import DateTimeInput from './DateTimeInput'
 
 require('../../../styles/components/inputs.scss')
@@ -21,5 +22,6 @@ export {
   ItemSelectInput as ItemSelectInput,
   TextAreaInput as TextAreaInput,
   SelectInput as SelectInput,
+  GallerySelectInput as GallerySelectInput,
   DateTimeInput as DateTimeInput
 }
