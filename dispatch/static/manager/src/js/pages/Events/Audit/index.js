@@ -6,8 +6,9 @@ import { replace } from 'react-router-redux'
 
 import eventsActions from '../../../actions/EventsActions'
 
+import { Toolbar, ToolbarLeft, ToolbarRight } from '../../../components/Toolbar'
+import ItemListPagination from '../../../components/ItemList/ItemListPagination'
 import EventCard from './EventCard'
-import EventAuditPagination from './EventAuditPagination'
 
 require('../../../../styles/components/event_audit.scss')
 
@@ -97,19 +98,21 @@ class EventAuditPage extends React.Component {
 
     return (
       <DocumentTitle title='Audit Event'>
-        <div className='u-container'>
-          <h2 className='c-event-audit-title'>
-            Event Auditing
-          </h2>
-          <div className='c-event-audit-subtitle'>
-            {this.props.events.count > PER_PAGE ?
-              <EventAuditPagination
-                page={parseInt(this.props.location.query.page || 1, 10)}
-                pages={Math.ceil(this.props.events.count / PER_PAGE)}
-                location={this.props.location} /> : null}
+        <div>
+          <Toolbar>
+            <ToolbarLeft>
             {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
+            </ToolbarLeft>
+            <ToolbarRight>
+              <ItemListPagination
+                currentPage={parseInt(this.props.location.query.page || 1, 10)}
+                totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
+                location={this.props.location} />
+            </ToolbarRight>
+          </Toolbar>
+          <div className='u-container'>
+            {events}
           </div>
-          {events}
         </div>
       </DocumentTitle>
     )
