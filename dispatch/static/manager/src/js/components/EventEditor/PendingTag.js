@@ -18,13 +18,11 @@ class PendingTagComponent extends React.Component {
     }
 
     return (
-      <div className='c-event-list-pending-count'>
-        <Link to='/events/audit'>
-          <div className="pt-tag pt-large pt-intent-warning">
-            {this.props.pending} pending events
-          </div>
-        </Link>
-      </div>
+      <Link to='/events/audit'>
+        <div className='pt-tag pt-large pt-intent-warning'>
+          {this.props.pending} pending events
+        </div>
+      </Link>
     )
   }
 }
