@@ -72,7 +72,9 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'Gallery Title',
             'attachment_json': {
                 'caption': 'test caption 1',
+
                 'credit': 'test credit 1',
+
                 'image_id': image.data['id']
             }
         }
@@ -174,7 +176,9 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'test caption 1',
+
               'credit': 'test credit 1',
+
               'image_id': img_1.data['id']
             }
           ]
@@ -208,12 +212,16 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'new test caption 1',
+
               'credit': 'new test credit 1',
+
               'image_id': img_2.data['id']
             },
             {
               'caption': 'new test caption 2',
+
               'credit': 'new test credit 2',
+
               'image_id': img_1.data['id']
             }
           ]
@@ -342,12 +350,16 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'attachment_json': [
                 {
                     'caption': 'test caption 1',
+
                     'credit': 'test credit 1',
+
                     'image_id': img_1.data['id']
                 },
                 {
                     'caption': 'test caption 2',
+
                     'credit': 'test credit 2',
+
                     'image_id': img_2.data['id']
                 }
             ]
