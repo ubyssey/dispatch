@@ -25,8 +25,10 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         def checkOneGallery(id, img_id1, img_id2):
             self.assertEqual(response.data['results'][id]['title'], 'Gallery Title %d' % id)
             self.assertEqual(response.data['results'][id]['images'][0]['caption'], 'test caption 1')
+            self.assertEqual(response.data['results'][id]['images'][0]['credit'], 'test credit 1')
             self.assertEqual(response.data['results'][id]['images'][0]['image']['id'], img_id1)
             self.assertEqual(response.data['results'][id]['images'][1]['caption'], 'test caption 2')
+            self.assertEqual(response.data['results'][id]['images'][1]['credit'], 'test credit 2')
             self.assertEqual(response.data['results'][id]['images'][1]['image']['id'], img_id2)
 
         checkOneGallery(0, img_1_a.data['id'], img_1_b.data['id'])
@@ -70,6 +72,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'Gallery Title',
             'attachment_json': {
                 'caption': 'test caption 1',
+                'credit': 'test credit 1',
                 'image_id': image.data['id']
             }
         }
@@ -111,8 +114,10 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['title'], 'Gallery Title 1')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
+        self.assertEqual(response.data['images'][0]['credit'], 'test credit 1')
         self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
+        self.assertEqual(response.data['images'][1]['credit'], 'test credit 2')
         self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_create_invalid_image_ids(self):
@@ -126,6 +131,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'test caption 1',
+              'credit': 'test credit 1',
               'image_id': -1
             }
           ]
@@ -144,7 +150,8 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'title': 'Gallery Title',
           'attachment_json': [
             {
-              'caption': 'test caption 1'
+              'caption': 'test caption 1',
+              'credit': 'test credit 1'
             }
           ]
         }
@@ -167,6 +174,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'test caption 1',
+              'credit': 'test credit 1',
               'image_id': img_1.data['id']
             }
           ]
@@ -181,8 +189,10 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.get(url, format='json')
         self.assertEqual(response.data['title'], 'Gallery Title 1')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
+        self.assertEqual(response.data['images'][0]['credit'], 'test credit 1')
         self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
+        self.assertEqual(response.data['images'][1]['credit'], 'test credit 2')
         self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_patch_single(self):
@@ -198,10 +208,12 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
           'attachment_json': [
             {
               'caption': 'new test caption 1',
+              'credit': 'new test credit 1',
               'image_id': img_2.data['id']
             },
             {
               'caption': 'new test caption 2',
+              'credit': 'new test credit 2',
               'image_id': img_1.data['id']
             }
           ]
@@ -217,8 +229,10 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check that the data was updated
         self.assertEqual(response.data['title'], 'New Gallery Title')
         self.assertEqual(response.data['images'][0]['caption'], 'new test caption 1')
+        self.assertEqual(response.data['images'][0]['credit'], 'new test credit 1')
         self.assertEqual(response.data['images'][0]['image']['id'], img_2.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'new test caption 2')
+        self.assertEqual(response.data['images'][1]['credit'], 'new test credit 2')
         self.assertEqual(response.data['images'][1]['image']['id'], img_1.data['id'])
 
     def test_imagegallery_patch_invalid_id(self):
@@ -243,6 +257,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'attachment_json': [
                 {
                     'caption': 'new test caption',
+                    'credit': 'new test credit',
                     'image_id': -1
                 }
             ]
@@ -264,7 +279,8 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'title': 'New Gallery Title',
             'attachment_json': [
                 {
-                    'caption': 'new test caption'
+                    'caption': 'new test caption',
+                    'credit': 'new test credit'
                 }
             ]
         }
@@ -326,10 +342,12 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
             'attachment_json': [
                 {
                     'caption': 'test caption 1',
+                    'credit': 'test credit 1',
                     'image_id': img_1.data['id']
                 },
                 {
                     'caption': 'test caption 2',
+                    'credit': 'test credit 2',
                     'image_id': img_2.data['id']
                 }
             ]
@@ -344,6 +362,8 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['title'], 'New Gallery Title')
         self.assertEqual(response.data['images'][0]['caption'], 'test caption 1')
+        self.assertEqual(response.data['images'][0]['credit'], 'test credit 1')
         self.assertEqual(response.data['images'][0]['image']['id'], img_1.data['id'])
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
+        self.assertEqual(response.data['images'][1]['credit'], 'test credit 2')
         self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])

@@ -23,6 +23,7 @@ const initialState = {
   persons: {},
   topics: {},
   tags: {},
+  galleries: {},
   zones: {},
   widgets: {},
   events: {},
@@ -30,6 +31,7 @@ const initialState = {
     articles: {},
     images: {},
     sections: {},
+    galleries: {},
     zones: {}
   }
 }
