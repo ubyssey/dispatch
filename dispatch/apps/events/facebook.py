@@ -1,18 +1,22 @@
-import urllib2, requests, re, datetime
+import re
+import datetime
 
 from django.conf import settings
 
-from dispatch.tests.apis import FacebookTest
 from dispatch.vendor.apis import Facebook, FacebookAPIError
 
+FACEBOOK_ERROR_MESSAGE = 'Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again'
+
+class FacebookEventError(Exception):
+    pass
 
 class FacebookEvent(object):
-    """Class to pull data from a Facebook Event"""
+    """Class to fetch Facebook event data"""
 
-    def __init__(self, facebook_url, api_provider=Facebook):
+    def __init__(self, url, api_provider=Facebook):
 
-        self.facebook_url = facebook_url
-        self.event_id = self.get_event_id(facebook_url)
+        self.url = url
+        self.event_id = self.get_event_id(url)
         self.api = api_provider()
 
         self.api.get_access_token({
@@ -21,11 +25,11 @@ class FacebookEvent(object):
             'grant_type': 'client_credentials'
         })
 
-    def get_event_id(self, facebook_url):
-        """Uses regex to pull the event id from facebook_url"""
+    def get_event_id(self, url):
+        """Uses regex to pull the event id from Facebook event URL"""
 
-        # Match numbers that is the event id from the facebook_url and return them
-        m = re.search('.*facebook.com/events/([0-9]+).*', facebook_url)
+        # Match numbers that is the event id from the url and return them
+        m = re.search('.*facebook.com/events/([0-9]+).*', url)
 
         if m:
             return m.group(1)
@@ -38,9 +42,9 @@ class FacebookEvent(object):
         try:
             json = self.api.get_event(self.event_id)
         except FacebookAPIError:
-            raise FacebookAPIError('Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again')
+            raise FacebookEventError(FACEBOOK_ERROR_MESSAGE)
 
-        # Get what data we can from the facebook event, and format start_time and end_time correctly
+        # Get what data we can from the Facebook event, and format start_time and end_time correctly
         try:
             address = json['place']['location']['street'] + ', ' + json['place']['location']['city']
         except:
@@ -66,10 +70,10 @@ class FacebookEvent(object):
         }
 
     def get_data(self):
-        """returns data from the event"""
+        """Returns data from the event"""
 
         data = self.get_json()
-        data['facebook_url'] = self.facebook_url
+        data['facebook_url'] = self.url
         data['facebook_image_url'] = self.get_image()
 
         return data
@@ -86,6 +90,6 @@ class FacebookEvent(object):
                 image_url = self.api.get_picture(self.event_id)
 
         except FacebookAPIError:
-            raise FacebookAPIError('Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again')
+            raise FacebookEventError(FACEBOOK_ERROR_MESSAGE)
 
         return image_url

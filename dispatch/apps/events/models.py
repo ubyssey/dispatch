@@ -15,7 +15,7 @@ class Event(Model):
     description = TextField()
     host = CharField(max_length=255)
 
-    image = ImageField(upload_to='events/', null=True, blank=True)
+    image = ImageField(upload_to='images/events/', null=True, blank=True)
 
     start_time = DateTimeField(null=True, blank=True)
     end_time = DateTimeField(null=True, blank=True)
