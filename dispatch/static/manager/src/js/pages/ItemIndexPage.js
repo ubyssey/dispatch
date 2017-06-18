@@ -119,6 +119,7 @@ export default class ListItemsPageComponent extends React.Component {
             searchItems: (query) => this.props.searchListItems(query)
           }}
 
+          toolbarContent={this.props.toolbarContent}
           />
       </DocumentTitle>
     )
