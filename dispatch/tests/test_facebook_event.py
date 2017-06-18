@@ -1,9 +1,8 @@
-from dispatch.apps.events.facebook import FacebookEvent
+from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
 from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.tests.apis import FacebookTest
-from dispatch.vendor.apis import FacebookAPIError
 
 class FacebookEventTests(DispatchAPITestCase):
 
@@ -15,7 +14,7 @@ class FacebookEventTests(DispatchAPITestCase):
         try:
             event = FacebookEvent(url, api_provider=FacebookTest)
         except FacebookAPIError:
-            raise FacebookAPIError('Error in initializing event: the event may have been deleted, or there may be an error in the code')
+            self.fail('Could not initialize Facebook Event')
 
     def test_invalid_event(self):
         """Making an event with invalid url should raise error"""
@@ -24,7 +23,7 @@ class FacebookEventTests(DispatchAPITestCase):
 
         try:
             event = FacebookEvent(url, api_provider=FacebookTest)
-            self.fail('The initialization of the event should have failed, as the url is an invalid facebook event url')
+            self.fail('The initialization of the event should have failed, as the url is an invalid Facebook event url')
         except:
             pass
 
@@ -50,8 +49,8 @@ class FacebookEventTests(DispatchAPITestCase):
 
         try:
             event_json = event.get_json()
-            self.fail('The URL was invalid- test should have failed with FacebookAPIError')
-        except FacebookAPIError:
+            self.fail('The URL was invalid - test should have failed with FacebookEventError')
+        except FacebookEventError:
             pass
 
     def test_get_json_no_address_or_end_time(self):
@@ -97,6 +96,6 @@ class FacebookEventTests(DispatchAPITestCase):
 
         try:
             image_url = event.get_image()
-            self.fail('This is an invalid image id - This test should have failed with FacebookAPIError')
-        except FacebookAPIError:
+            self.fail('The URL was invalid - test should have failed with FacebookEventError')
+        except FacebookEventError:
             pass
