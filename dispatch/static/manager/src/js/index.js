@@ -100,6 +100,7 @@ render((
           <Route path='events'>
             <IndexRoute component={Pages.Events.Index} />
             <Route path='new' component={Pages.Events.NewEvent} />
+            <Route path='audit' component={Pages.Events.Audit} /> 
             <Route path=':eventId' component={Pages.Events.Event} />
           </Route>
 

@@ -21,6 +21,14 @@ class EventsActions extends ResourceActions {
     }
   }
 
+  countPending(token) {
+    return {
+      type: types.EVENTS.COUNT_PENDING,
+      payload: DispatchAPI.events.list(token, { pending: 1, limit: 0 })
+        .then(json => json.count)
+    }
+  }
+
 }
 
 export default new EventsActions(

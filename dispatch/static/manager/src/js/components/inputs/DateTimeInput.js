@@ -28,7 +28,7 @@ export default function DateTimeInput(props) {
           <button className='pt-button pt-icon-calendar c-input--datetime-button' />
           <input
             type='text'
-            className='pt-input'
+            className='pt-input c-input--datetime--textfield'
             value={textString}
             readOnly={true} />
         </div>

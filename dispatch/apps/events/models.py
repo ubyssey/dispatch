@@ -31,3 +31,5 @@ class Event(Model):
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
 
     facebook_url = CharField(max_length=255, null=True)
+
+    is_submission = BooleanField(default=False)

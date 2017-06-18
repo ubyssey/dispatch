@@ -395,6 +395,7 @@ class EventViewSet(DispatchModelViewSet):
     def get_queryset(self):
         queryset = Event.objects.all()
         q = self.request.query_params.get('q', None)
+        pending = self.request.query_params.get('pending', 0)
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             # TODO: Add query by category
@@ -403,6 +404,10 @@ class EventViewSet(DispatchModelViewSet):
                 Q(description__icontains=q) |
                 Q(host__icontains=q)
             )
+
+        if pending:
+            queryset = queryset.filter(is_submission=True)
+
         return queryset
 
 
