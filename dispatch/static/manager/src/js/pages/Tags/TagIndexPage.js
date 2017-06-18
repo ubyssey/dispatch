@@ -55,6 +55,9 @@ function TagsPageComponent(props) {
     <ItemIndexPage
       typeSingular='tag'
       typePlural='tags'
+      displayColumn='name'
+      pageTitle='Tags'
+      headers={[ 'Name' ]}
       {... props} />
   )
 }

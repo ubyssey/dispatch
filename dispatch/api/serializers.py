@@ -1,26 +1,17 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
 from dispatch.apps.events.models import Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
+
+from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.apps.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
-from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
-
-class UserSerializer(DispatchModelSerializer):
-    """
-    Serializes the User model.
-    """
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email'
-        )
 
 class PersonSerializer(DispatchModelSerializer):
     """
@@ -38,6 +29,54 @@ class PersonSerializer(DispatchModelSerializer):
             'description',
             'image'
         )
+
+class UserSerializer(DispatchModelSerializer):
+    """
+    Serializes the User model.
+    """
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password_a = serializers.CharField(
+        required=False,
+        write_only=True,
+        validators=[PasswordValidator(confirm_field='password_b')]
+    )
+    password_b = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'person',
+            'password_a',
+            'password_b',
+        )
+
+    def create(self, validated_data):
+
+        instance = User()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+
+        instance.email = validated_data.get('email', instance.email)
+        instance.person = validated_data.get('person', instance.person)
+
+        if validated_data.get('password_a'):
+            instance.set_password(validated_data['password_a'])
+
+        instance.save()
+
+        return instance
 
 class FileSerializer(DispatchModelSerializer):
     """
@@ -488,6 +527,8 @@ class EventSerializer(DispatchModelSerializer):
             'location',
             'category',
             'facebook_url',
-            'address',
-            'is_submission'
+            'is_published',
+            'is_submission',
+            'submitter_email',
+            'submitter_phone',
         )

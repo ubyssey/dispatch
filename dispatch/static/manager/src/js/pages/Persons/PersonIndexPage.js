@@ -55,6 +55,11 @@ function PersonsPageComponent(props) {
       typeSingular='person'
       typePlural='persons'
       displayColumn='full_name'
+      pageTitle='Persons'
+      headers={[ 'Full Name', 'Slug' ]}
+      extraColumns={[
+        item => item.slug
+      ]}
       {... props} />
   )
 }
