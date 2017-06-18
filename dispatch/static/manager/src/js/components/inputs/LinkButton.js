@@ -6,6 +6,7 @@ export default function LinkButton(props) {
   return (
     <Link
       to={props.to}
+      role='button'
       onClick={e => {
         if (props.disabled) {
           e.preventDefault()

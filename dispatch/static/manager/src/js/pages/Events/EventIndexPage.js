@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
-import PendingTag from '../../components/EventEditor/PendingTag'
+import EventPendingTag from '../../components/EventEditor/EventPendingTag'
 import ItemIndexPage from '../ItemIndexPage'
 import eventsActions from '../../actions/EventsActions'
 
@@ -56,7 +56,7 @@ function EventsPageComponent(props) {
       typeSingular='event'
       typePlural='events'
       displayColumn='title'
-      toolbarContent={<PendingTag />}
+      toolbarContent={<EventPendingTag />}
       {... props} />
   )
 }

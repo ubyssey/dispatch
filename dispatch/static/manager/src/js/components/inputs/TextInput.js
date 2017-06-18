@@ -43,6 +43,7 @@ export default class TextInput extends React.Component {
         disabled={this.props.disabled}
         placeholder={this.props.placeholder}
         onChange={this.handleOnChange}
+        readOnly={this.props.readOnly}
         onKeyPress={this.props.onKeyPress} />
     )
   }
