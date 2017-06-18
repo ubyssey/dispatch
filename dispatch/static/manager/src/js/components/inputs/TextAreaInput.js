@@ -7,6 +7,7 @@ export default function TextAreaInput(props) {
       placeholder={props.placeholder}
       value={props.value}
       rows={props.rows}
+      readOnly={props.readOnly}
       onChange={props.onChange} />
   )
 }

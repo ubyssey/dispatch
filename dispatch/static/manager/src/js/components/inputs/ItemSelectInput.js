@@ -175,7 +175,7 @@ class ItemSelectInput extends React.Component {
 ItemSelectInput.defaultProps = {
   many: true,
   results: [],
-  entities: {}
+  entities: {},
 }
 
 export default ItemSelectInput
