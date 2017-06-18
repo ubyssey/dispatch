@@ -6,7 +6,7 @@ import eventsActions from '../../actions/EventsActions'
 
 require('../../../styles/components/event_audit.scss')
 
-class PendingTagComponent extends React.Component {
+class EventPendingTagComponent extends React.Component {
 
   componentWillMount() {
     this.props.countPending(this.props.token, { pending: 1, limit: 0 })
@@ -42,9 +42,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const PendingTag = connect(
+const EventPendingTag = connect(
   mapStateToProps,
   mapDispatchToProps
-)(PendingTagComponent)
+)(EventPendingTagComponent)
 
-export default PendingTag
+export default EventPendingTag

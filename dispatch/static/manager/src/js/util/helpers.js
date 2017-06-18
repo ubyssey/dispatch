@@ -2,6 +2,10 @@ import moment from 'moment'
 import R from 'ramda'
 
 export function humanizeDatetime(timestamp) {
+  if (!timestamp) {
+    return null
+  }
+  
   return moment(timestamp).format('lll') // April 18, 2017 12:50 PM
 }
 

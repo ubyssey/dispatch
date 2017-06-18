@@ -1,80 +1,75 @@
 @import '../utilities/fonts';
+@import '../utilities/colors';
 
-.c-event-audit-title {
-  padding: 15px 0;
-  font-size: 36px;
+.c-event-audit-cards {
+  // Structure
+  display: flex;
+  flex-wrap:wrap;
+  align-items: stretch;
 }
 
-.c-event-audit-subtitle {
-  padding-left: 15px;
-  padding-bottom: 15px;
-  font-size: large;
-  width: 100%;
-  display: inline-block;
-}
-
-.c-event-audit-card {
+.c-event-card {
   // Structure
   margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  flex-basis: 33.33%;
+
+  &:nth-child(4n+1) {
+    padding-left: 0;
+  }
 }
 
-.c-event-audit-card-title {
-  font-size: 26px;
+.c-event-card__fields {
+  // Structure
+  padding: 1rem;
 }
 
-.c-event-audit-card-nottitle {
-  padding: 10px 10px 0 10px;
-  width: 48%;
-  display: inline-block;
+.c-event-card__fields__row {
+  // Structure
+  display: flex;
+
+  .c-event-card__field:last-child {
+    // Structure
+    padding-left: 1rem;
+  }
 }
 
-.c-event-audit-card-label {
+.c-event-card__field {
+  // Structure
   display: block;
-  line-height: 1.35em;
+  margin-bottom: 1rem;
+
+  // Text
+  font-weight: $font-weight-bold;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .pt-input {
+    // Structure
+    margin-top: 10px;
+  }
 }
 
-.c-event-audit-card-label-label {
-  font-weight: 600;
-}
-
-.c-event-audit-card-label-prop {
-  padding-left: 10px;
-  line-height: 1.4em;
-}
-
-.c-event-audit-card-button-border {
-  clear: both;
+.c-event-card__image {
+  // Structure
   width: 100%;
-  padding-top: 0.75em;
-  border-bottom: 1px #EEE solid;
+  height: 200px;
+
+  // Background
+  background-size: cover;
 }
 
-.c-event-audit-card-button-row {
-  padding-top: 0.75em;
-}
+.c-event-card__buttons {
+  // Structure
+  padding: 1rem;
 
-.c-event-audit-card-button-right {
-  float: right;
-}
+  // Border
+  border-top: 1px solid $color-border-gray;
 
-.c-event-audit-card-button-edit {
-  margin-left: 5px;
-  font-family: $font-family-default;
-}
-
-.c-event-audit-card-image-cont {
-  display: inline-block;
-  float: right;
-  width: 48%;
-  margin-left: 4%;
-}
-
-.c-event-audit-card-image {
-  max-width: 100%;
-  max-height: 500px;
-}
-
-.c-event-list-pending-count {
-  padding-top: 2px;
-  margin-right: 25px;
+  *[role="button"] {
+    margin-right: 0.75em;
+  }
 }
