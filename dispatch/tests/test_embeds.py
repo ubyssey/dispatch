@@ -1,3 +1,5 @@
+import datetime
+
 from django.template import loader
 from django.core.urlresolvers import reverse
 
@@ -227,7 +229,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'caption': 'This is a test caption',
             'credit': 'This is a test credit'
         }
-
+        self.maxDiff = None
         result = embeds.embedlib.to_json('image', data)
 
         self.assertEqual(result, json)
@@ -250,14 +252,13 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             pass
 
     def test_gallery_controller(self):
+        """Test "render" with gallery controller, uses "get_gallery" and "prepare_data"""
 
         gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(0, self.client)
 
         result_1 = embeds.embedlib.render('gallery', gallery.data)
 
         output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
-
-        self.assertEqual(result_1, output)
 
         result_2 = embeds.GalleryController.to_json(gallery.data)
 
