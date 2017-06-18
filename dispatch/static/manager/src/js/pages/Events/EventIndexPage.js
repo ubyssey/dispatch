@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
+import EventPendingTag from '../../components/EventEditor/EventPendingTag'
 import ItemIndexPage from '../ItemIndexPage'
 import eventsActions from '../../actions/EventsActions'
 
@@ -49,13 +50,13 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-
 function EventsPageComponent(props) {
   return (
     <ItemIndexPage
       typeSingular='event'
       typePlural='events'
       displayColumn='title'
+      toolbarContent={<EventPendingTag />}
       {... props} />
   )
 }

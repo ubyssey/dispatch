@@ -30,6 +30,7 @@ export default function ItemListHeader(props) {
         className='c-item-list__header__delete'
         onClick={() => props.actions.deleteItems(props.items.selected)}
         disabled={!props.items.selected.length}>Delete</Button>
+      {props.toolbarContent}
     </div>
   )
 
