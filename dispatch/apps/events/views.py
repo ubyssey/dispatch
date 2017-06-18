@@ -14,7 +14,7 @@ def submit(request):
 
     facebook_url = request.POST.get('facebook_url')
 
-    if request.POST.get("submit_facebook") and facebook_url:
+    if request.POST.get('submit_facebook') and facebook_url:
 
         event = FacebookEvent(facebook_url)
 
@@ -22,20 +22,13 @@ def submit(request):
 
         form = EventForm(initial=event_data)
 
-    elif request.POST.get("submit_event"):
+    elif request.POST.get('submit_event'):
 
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
 
-            event = form.save(commit=False)
-
-            event.is_submission = True
-
-            if event.facebook_image_url and not event.image:
-                event.cacheimage()
-
-            event.save()
+            form.save()
 
             return redirect(success)
 

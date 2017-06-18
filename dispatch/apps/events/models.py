@@ -12,13 +12,14 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Event(Model):
 
     title = CharField(max_length=255)
-    description = TextField(max_length=1000)
+    description = TextField()
     host = CharField(max_length=255)
 
     image = ImageField(upload_to='events/', null=True, blank=True)
 
     start_time = DateTimeField(null=True, blank=True)
     end_time = DateTimeField(null=True, blank=True)
+
     location = CharField(max_length=500)
     address = CharField(max_length=500, null=True, blank=True)
 
@@ -35,27 +36,22 @@ class Event(Model):
 
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
 
-    facebook_url = TextField(max_length=500, null=True, blank=True)
+    facebook_url = TextField(null=True, blank=True)
 
-    facebook_image_url = TextField(max_length=500, null=True, blank=True)
-
+    is_published = BooleanField(default=False)
     is_submission = BooleanField(default=False, blank=True)
 
     submitter_email = EmailField(null=True)
-
     submitter_phone = PhoneNumberField(null=True)
 
-    is_published = BooleanField(default=False)
+    def save_image_from_url(self, url):
+        """Store image locally if a Facebook URL is passed"""
 
-    def cacheimage(self):
-        """Store image locally if we have a facebook url"""
+        result = urllib.urlretrieve(url)
 
-        if self.facebook_image_url and not self.image:
+        self.image.save(
+            os.path.basename(url),
+            File(open(result[0]))
+        )
 
-            result = urllib.urlretrieve(self.facebook_image_url)
-
-            self.image.save(
-                    os.path.basename(self.facebook_image_url),
-                    File(open(result[0]))
-                    )
-            self.save()
+        self.save()
