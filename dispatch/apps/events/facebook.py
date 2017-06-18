@@ -66,7 +66,7 @@ class FacebookEvent(object):
             'end_time': end_time,
             'location': json['place']['name'],
             'address': address,
-            'facebook_url': self.facebook_url
+            'facebook_url': self.url
         }
 
     def get_data(self):

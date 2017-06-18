@@ -151,6 +151,22 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test event 2')
 
+    def test_get_events_submissions(self):
+        """API listing should, by default, should not return events with is_submission=True"""
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test 1')
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test 2')
+        event_3 = DispatchTestHelpers.create_event(self.client, title='Test 3', is_submission=True)
+
+        # Confirm that the events exist
+        self.assertEqual(event_1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(event_2.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(event_3.status_code, status.HTTP_201_CREATED)
+
+        url = reverse('api-event-list')
+
+        response = Event.objects.all()
+
     def test_event_query(self):
         """Be able to search for events"""
 
