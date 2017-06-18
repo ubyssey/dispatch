@@ -13,6 +13,9 @@ from dispatch.conf.default_settings import (
 SECRET_KEY = 'fake-key'
 BASE_URL = 'http://test.dispatch/'
 
+FACEBOOK_CLIENT_ID = ''
+FACEBOOK_CLIENT_SECRET = ''
+
 INSTALLED_APPS = ['dispatch.tests'] + DEFAULT_INSTALLED_APPS
 
 DATABASES = {

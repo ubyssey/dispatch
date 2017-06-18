@@ -2,11 +2,11 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Event
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.apps.events.models import Event
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
-class EventTests(DispatchAPITestCase):
+class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_event_unauthorized(self):
         """Creating an event shold fail with unauthenticated request"""
@@ -44,7 +44,7 @@ class EventTests(DispatchAPITestCase):
     def test_create_event(self):
         """Should be able to create an event"""
 
-        response = DispatchTestHelpers.create_event(self.client)
+        response = DispatchTestHelpers.create_event(self.client, location='Ubyssey', category='sports')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -52,6 +52,8 @@ class EventTests(DispatchAPITestCase):
         self.assertEqual(response.data['title'], 'Test event')
         self.assertEqual(response.data['description'], 'Test description')
         self.assertEqual(response.data['host'], 'test host')
+        self.assertEqual(response.data['location'], 'Ubyssey')
+        self.assertEqual(response.data['category'], 'sports')
 
     def test_update_event(self):
         """Ensure that event can be updated"""
@@ -149,25 +151,56 @@ class EventTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test event 2')
 
+    def test_get_events_submissions(self):
+        """API listing should, by default, should not return events with is_submission=True"""
+
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test 1')
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test 2')
+        event_3 = DispatchTestHelpers.create_event(self.client, title='Test 3', is_submission=True)
+
+        # Confirm that the events exist
+        self.assertEqual(event_1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(event_2.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(event_3.status_code, status.HTTP_201_CREATED)
+
+        url = reverse('api-event-list')
+
+        response = Event.objects.all()
+
     def test_event_query(self):
         """Be able to search for events"""
 
         # Create events
         DispatchTestHelpers.create_event(self.client, title='A math lecture', description='Reimann Hypothesis', host='UBC')
-        DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC')
+        DispatchTestHelpers.create_event(self.client, title='A physics lecture', description='A String Theory Query', host='UBC', is_published=True)
         DispatchTestHelpers.create_event(self.client, title='Block Party!', description='Partay on the block', host='AMS')
+        DispatchTestHelpers.create_event(self.client, title='This is a user submission', host='Ubyssey', is_submission=True)
+        DispatchTestHelpers.create_event(self.client, title='This is one more user submission', host='Ubyssey')
+        DispatchTestHelpers.create_event(self.client, title='Category is music', category='music')
 
         url_1 = '%s?q=%s' % (reverse('api-event-list'), 'lecture')
         url_2 = '%s?q=%s' % (reverse('api-event-list'), 'UBC')
         url_3 = '%s?q=%s' % (reverse('api-event-list'), 'String Theory')
+        url_4 = '%s?pending=1' % reverse('api-event-list')
+        url_5 = '%s?q=%s' % (reverse('api-event-list'), 'Ubyssey')
+        url_6 = '%s?q=%s' % (reverse('api-event-list'), 'music')
+        url_7 = '%s?q=%s' % (reverse('api-event-list'), 'Music')
 
         response_1 = self.client.get(url_1, format='json')
         response_2 = self.client.get(url_2, format='json')
         response_3 = self.client.get(url_3, format='json')
+        response_4 = self.client.get(url_4, format='json')
+        response_5 = self.client.get(url_5, format='json')
+        response_6 = self.client.get(url_6, format='json')
+        response_7 = self.client.get(url_7, format='json')
 
         data_1 = response_1.data
         data_2 = response_2.data
         data_3 = response_3.data
+        data_4 = response_4.data
+        data_5 = response_5.data
+        data_6 = response_6.data
+        data_7 = response_7.data
 
         self.assertEqual(data_1['results'][0]['title'], 'A math lecture')
         self.assertEqual(data_1['results'][1]['title'], 'A physics lecture')
@@ -179,3 +212,75 @@ class EventTests(DispatchAPITestCase):
 
         self.assertEqual(data_3['results'][0]['title'], 'A physics lecture')
         self.assertEqual(data_3['count'], 1)
+
+        self.assertEqual(data_4['results'][0]['title'], 'This is a user submission')
+        self.assertEqual(data_4['count'], 1)
+
+        self.assertEqual(data_5['results'][0]['title'], 'This is one more user submission')
+        self.assertEqual(data_5['count'], 1)
+
+        self.assertEqual(data_6['results'][0]['title'], 'Category is music')
+        self.assertEqual(data_6['count'], 1)
+
+        self.assertEqual(data_7['results'][0]['title'], 'Category is music')
+        self.assertEqual(data_7['count'], 1)
+
+        self.client.credentials() # Clear credentials
+
+        url_1 = '%s' % (reverse('api-event-list'))
+
+        response_8 = self.client.get(url_4, format='json')
+        response_9 = self.client.get(url_1, format='json')
+
+        data_8 = response_8.data
+        data_9 = response_9.data
+
+        self.assertEqual(data_8['count'], 0)
+
+        self.assertEqual(data_9['count'], 1)
+        self.assertEqual(data_9['results'][0]['title'], 'A physics lecture')
+
+    def test_start_end_times(self):
+        """Should be able to create an event with specific start and end times"""
+
+        event = DispatchTestHelpers.create_event(self.client, start_time='2017-05-25 00:00', end_time='2017-05-26 00:00')
+
+        data = event.data
+
+        self.assertEqual(data['start_time'], '2017-05-25T00:00:00')
+        self.assertEqual(data['end_time'], '2017-05-26T00:00:00')
+
+    def test_custom_image(self):
+        """Should be able to create an event with specific image"""
+
+
+        event = DispatchTestHelpers.create_event(self.client)
+
+        self.assertEqual(event.status_code, status.HTTP_201_CREATED)
+
+        self.assertIn('test_image.jpg', event.data['image'])
+
+    def test_delete_image(self):
+        """Should be able to delete image that is associated with an event"""
+
+        event = DispatchTestHelpers.create_event(self.client)
+
+        self.assertEqual(event.status_code, status.HTTP_201_CREATED)
+        self.assertIn('test_image.jpg', event.data['image'])
+
+        # Now delete the image by updating with the image field as None
+        url = reverse('api-event-detail', args=[event.data['id']])
+
+        data = {
+          'title': 'Test event',
+          'description': 'Test description',
+          'host': 'test host',
+          'image': None,
+          'location': 'location',
+          'category': 'sports'
+        }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['image'], None)
