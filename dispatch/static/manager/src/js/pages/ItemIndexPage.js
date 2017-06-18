@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import R from 'ramda'
 import DocumentTitle from 'react-document-title'
 
 import { Link } from 'react-router'
@@ -22,6 +24,8 @@ export default class ListItemsPageComponent extends React.Component {
     if (this.props.location.query.listItem) {
       query.listItem = this.props.location.query.listItem
     }
+
+    query = this.props.queryHandler(query, this.props)
 
     // If search query is present, add to query
     if (this.props.location.query.q) {
@@ -50,7 +54,8 @@ export default class ListItemsPageComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
 
-    if (this.isNewQuery(prevProps, this.props)) {
+    if (this.isNewQuery(prevProps, this.props)
+      || this.props.shouldReload(prevProps, this.props)) {
       this.props.clearListItems()
       this.props.clearSelectedListItems()
       this.props.listListItems(this.props.token, this.getQuery())
@@ -83,11 +88,19 @@ export default class ListItemsPageComponent extends React.Component {
   }
 
   render() {
-    // Make the title start with uppercase letter
-    const titleString = this.props.typePlural.replace(/^\w/, m => m.toUpperCase())
+    // The first column will always be a link, as defined here,
+    // containing the item property associated with displayColumn
+    const columns = R.insert(0, item => (
+      <strong>
+        <Link
+          to={`/${this.props.typePlural}/${item.id}`}
+          dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.name}} />
+      </strong>
+    // extraColumns are after the main link column
+    ), this.props.extraColumns || [])
 
     return (
-      <DocumentTitle title={titleString}>
+      <DocumentTitle title={this.props.pageTitle}>
         <ItemList
           location={this.props.location}
 
@@ -100,10 +113,8 @@ export default class ListItemsPageComponent extends React.Component {
           items={this.props.listItems}
           entities={this.props.entities.listItems}
 
-          columns={[
-            item => (<strong><Link to={`/${this.props.typePlural}/${item.id}`} dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.name}} /></strong>),
-            item => item.slug
-          ]}
+          columns={columns}
+          headers={this.props.headers}
 
           emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
@@ -125,4 +136,15 @@ export default class ListItemsPageComponent extends React.Component {
     )
   }
 
+}
+
+ListItemsPageComponent.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+  shouldReload: PropTypes.func,
+  queryHandler: PropTypes.func
+}
+
+ListItemsPageComponent.defaultProps = {
+  shouldReload: () => { false },
+  queryHandler: (query) => { query }
 }
