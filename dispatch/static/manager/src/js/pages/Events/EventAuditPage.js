@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import { replace } from 'react-router-redux'
 
-import eventsActions from '../../../actions/EventsActions'
+import eventsActions from '../../actions/EventsActions'
 
-import { Toolbar, ToolbarLeft, ToolbarRight } from '../../../components/Toolbar'
-import ItemListPagination from '../../../components/ItemList/ItemListPagination'
-import EventCard from './EventCard'
+import { Toolbar, ToolbarLeft, ToolbarRight } from '../../components/Toolbar'
+import ItemListPagination from '../../components/ItemList/ItemListPagination'
+import EventCard from '../../components/EventEditor/EventCard'
 
-require('../../../../styles/components/event_audit.scss')
+require('../../../styles/components/event_audit.scss')
 
 const PER_PAGE = 3
 
@@ -62,9 +62,7 @@ class EventAuditPage extends React.Component {
         pathname: this.props.location.pathname,
         query: query
       })
-      return true
     }
-    return false
   }
 
   approve(id) {
@@ -111,7 +109,9 @@ class EventAuditPage extends React.Component {
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>
+            <div className='c-event-audit-cards'>
             {events}
+            </div>
           </div>
         </div>
       </DocumentTitle>
