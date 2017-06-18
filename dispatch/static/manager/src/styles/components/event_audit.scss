@@ -13,23 +13,9 @@
   display: inline-block;
 }
 
-.c-event-audit-pagination {
-  float: right;
-  display: inline-block;
-
-  & > a:first-child {
-    margin-right: 5px;
-  }
-}
-
-.c-event-audit-pagination-label {
-  margin-left: 15px;
-  font-size: 16px;
-  display: inline-block;
-}
-
 .c-event-audit-card {
-  margin-bottom: 15px;
+  // Structure
+  margin-top: 1rem;
 }
 
 .c-event-audit-card-title {
