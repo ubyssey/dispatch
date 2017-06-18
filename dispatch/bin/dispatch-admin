@@ -72,6 +72,7 @@ def run_coverage(*args):
         source=['dispatch'],
         omit=[
             os.path.join(PACKAGE_DIR, '*/migrations/*'),
+            os.path.join(PACKAGE_DIR, 'vendor/*'),
             os.path.join(PACKAGE_DIR, 'tests/*'),
             os.path.join(PACKAGE_DIR, 'bin/*')
         ]
