@@ -18,6 +18,7 @@ import dashboardReducer from './DashboardReducer'
 import galleriesReducer from './GalleriesReducer'
 import zonesReducer from './ZonesReducer'
 import widgetsReducer from './WidgetsReducer'
+import eventsReducer from './EventsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -37,5 +38,6 @@ export default combineReducers({
   dashboard: dashboardReducer,
   galleries: galleriesReducer,
   zones: zonesReducer,
-  widgets: widgetsReducer
+  widgets: widgetsReducer,
+  events: eventsReducer
 })
