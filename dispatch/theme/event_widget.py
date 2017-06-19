@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, EventField, InvalidField
 from dispatch.theme import register
 from dispatch.theme.widgets import Zone, Widget
@@ -21,6 +23,8 @@ class UpcomingEventsWidget(Widget):
 
     def context(self, data):
 
-        data['events'] = Event.objects.filter(is_published=True).exclude(pk=self.data['featured_event']).order_by('start_time')[:5]
+        today = datetime.now().date()
+
+        data['events'] = Event.objects.filter(is_published=True, start_time__gte = today).exclude(pk=self.data['featured_event']).order_by('start_time')[:5]
 
         return data

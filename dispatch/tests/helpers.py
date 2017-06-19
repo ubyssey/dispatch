@@ -232,9 +232,9 @@ class DispatchTestHelpers(object):
         widget = UpcomingEventsWidget()
 
         # Make 5 events with increasing start dates
-        for index in xrange(5):
+        for index in xrange(1,6):
 
-            response = DispatchTestHelpers.create_event(client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
+            response = DispatchTestHelpers.create_event(client, title=('Title ' + str(index)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index)), is_published=True)
 
         featured_event_id = 1
 

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 
 from django.template import loader
 
@@ -47,7 +47,7 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         def days_in_future(days):
             """returns datetime object `days` in the future"""
-            return (datetime.datetime.now() + datetime.timedelta(days=days)).strftime("%B %d, %Y, %I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace(" 0", " ")
+            return (datetime.now() + timedelta(days=days)).strftime("%B %d, %Y, %I:%M %p").replace('AM', 'a.m.').replace('PM', 'p.m.').replace(" 0", " ")
 
         widget = DispatchTestHelpers.create_upcoming_event_widget(self.client)
         img = widget.featured_event.get_model_json(widget.data['featured_event'])['image']
@@ -66,10 +66,10 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         zone = Sidebar()
         widget = UpcomingEventsWidget()
 
-        # Make 7 events with increasing start dates
+        # Make 3 events with increasing start dates
         for index in xrange(3):
 
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.now() + timedelta(days=index+1)), is_published=True)
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -101,10 +101,10 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         zone = Sidebar()
         widget = UpcomingEventsWidget()
 
-        # Make 7 events with increasing start dates
+        # Make 6 events with increasing start dates
         for index in xrange(6):
 
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index+1)), is_published=True)
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index+1)), start_time=(datetime.now() + timedelta(days=index+1)), is_published=True)
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -142,7 +142,7 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         # Make 5 events with increasing start dates
         for index in xrange(1,6):
 
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index)), is_published=True)
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.now() + timedelta(days=index)), is_published=True)
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -164,3 +164,36 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         self.assertEqual(widget_data['events'][2].title, u'Title 3')
         self.assertEqual(widget_data['events'][3].title, u'Title 4')
         self.assertEqual(widget_data['events'][4].title, u'Title 5')
+
+    def test_past_events(self):
+        """Events that have occured yesterday or before should not be displayed"""
+
+        register.zone(Sidebar)
+        register.widget(UpcomingEventsWidget)
+        zone = Sidebar()
+        widget = UpcomingEventsWidget()
+
+        # Make 5 events with increasing start dates
+        for index in xrange(-3,3):
+
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.now() + timedelta(days=index)), is_published=True)
+
+        featured_event_id = 1
+
+        validated_data = {
+            'widget': 'upcoming-events',
+            'data': {
+              'title': 'Upcoming Events!',
+              'featured_event': featured_event_id
+            }
+        }
+
+        zone.save(validated_data)
+        widget.set_data(validated_data['data'])
+
+        widget_data = widget.context(widget.prepare_data())
+
+        self.assertEqual(widget_data['events'].count(), 3)
+        self.assertEqual(widget_data['events'][0].title, u'Title 0')
+        self.assertEqual(widget_data['events'][1].title, u'Title 1')
+        self.assertEqual(widget_data['events'][2].title, u'Title 2')
