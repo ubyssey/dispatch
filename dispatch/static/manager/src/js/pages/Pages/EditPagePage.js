@@ -2,7 +2,7 @@ import React from 'react'
 
 import PageEditor from '../../components/PageEditor'
 
-export default function NewPagePage(props) {
+export default function EditPagePage(props) {
   return (
     <PageEditor
       pageId={props.params.pageId}

@@ -1,12 +1,13 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
-import DocumentTitle from 'react-document-title'
 import { withRouter } from 'react-router'
+import DocumentTitle from 'react-document-title'
 
 import pagesActions from '../../actions/PagesActions'
-import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import PageToolbar from './PageToolbar'
 import PageContentEditor from './PageContentEditor'
@@ -18,14 +19,6 @@ const NEW_PAGE_ID = 'new'
 
 class PageEditorComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.toggleStyle = this.toggleStyle.bind(this)
-
-    this.state = { isSaved: true }
-  }
-
   componentWillMount() {
     if (this.props.isNew) {
       this.props.setPage({ id: NEW_PAGE_ID })
@@ -35,10 +28,11 @@ class PageEditorComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.router.setRouteLeaveHook(
+    confirmNavigation(
+      this.props.router,
       this.props.route,
-      () => !this.state.isSaved ?
-        'Unsaved changes. Are you sure you want to leave?' : null)
+      () => !this.props.page.isSaved
+    )
   }
 
   componentDidUpdate(prevProps) {
@@ -72,27 +66,23 @@ class PageEditorComponent extends React.Component {
   }
 
   savePage() {
-    this.setState({ isSaved: true }, () => {
-      if (this.props.isNew) {
-        this.props.createPage(this.props.token, this.getPage())
-      } else {
-        this.props.savePage(
-          this.props.token,
-          this.props.pageId,
-          this.getPage()
-        )
-      }
-    })
-  }
-
-  publishPage() {
-    this.setState({ isSaved: true }, () => {
-      this.props.publishPage(
+    if (this.props.isNew) {
+      this.props.createPage(this.props.token, this.getPage())
+    } else {
+      this.props.savePage(
         this.props.token,
         this.props.pageId,
         this.getPage()
       )
-    })
+    }
+  }
+
+  publishPage() {
+    this.props.publishPage(
+      this.props.token,
+      this.props.pageId,
+      this.getPage()
+    )
   }
 
   unpublishPage() {
@@ -103,23 +93,15 @@ class PageEditorComponent extends React.Component {
   }
 
   previewPage() {
-    this.setState({ isSaved: true }, () => {
-      this.props.previewPage(
-        this.props.token,
-        this.props.pageId,
-        this.getPage()
-      )
-    })
-  }
-
-  toggleStyle(style) {
-    this.props.toggleEditorStyle(style)
+    this.props.previewPage(
+      this.props.token,
+      this.props.pageId,
+      this.getPage()
+    )
   }
 
   handleUpdate(field, value) {
-    this.setState({ isSaved: false }, () => {
-      this.props.setPage(R.assoc(field, value, this.getPage()))
-    })
+    this.props.setPage(R.assoc(field, value, this.getPage()))
   }
 
   getPageVersion(version) {
@@ -215,9 +197,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())
-    },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
     }
   }
 }
@@ -225,6 +204,6 @@ const mapDispatchToProps = (dispatch) => {
 const PageEditor = connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(PageEditorComponent))
+)(PageEditorComponent)
 
-export default PageEditor
+export default withRouter(PageEditor)
