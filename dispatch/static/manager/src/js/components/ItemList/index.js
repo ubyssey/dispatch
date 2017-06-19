@@ -17,11 +17,13 @@ export default function ItemList(props) {
         currentPage={props.currentPage}
         totalPages={props.totalPages}
         createHandler={props.createHandler}
+        toolbarContent={props.toolbarContent}
         actions={props.actions || {}} />
       <ItemListTable
         items={props.items}
         entities={props.entities}
         columns={props.columns}
+        headers={props.headers}
         location={props.location}
         emptyMessage={props.emptyMessage}
         createHandler={props.createHandler}

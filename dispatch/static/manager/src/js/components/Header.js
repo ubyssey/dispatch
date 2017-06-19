@@ -17,7 +17,7 @@ export default function Header(props) {
 
   return (
     <header className='c-header'>
-      <div className='c-header__inner u-container'>
+      <div className='c-header__inner'>
         <Link to='/' className='c-header__logo'>dispatch</Link>
         <nav className='c-header__sections'>
           <ul>{sections}</ul>
@@ -53,6 +53,9 @@ export default function Header(props) {
                 </li>
                 <li className='c-header__dropdown__link'>
                   <Link to='/galleries/'><span className='pt-icon-standard pt-icon-media' /> galleries</Link>
+                </li>
+                <li className='c-header__dropdown__link'>
+                  <Link to='/events/'><span className='pt-icon-standard pt-icon-timeline-events' /> events</Link>
                 </li>
               </ul>
             </li>

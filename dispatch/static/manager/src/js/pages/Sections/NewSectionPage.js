@@ -6,6 +6,7 @@ export default function NewSectionPage(props) {
   return (
     <SectionEditor
       isNew={true}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

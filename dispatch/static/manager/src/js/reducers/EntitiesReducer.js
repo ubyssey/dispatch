@@ -26,6 +26,7 @@ const initialState = {
   galleries: {},
   zones: {},
   widgets: {},
+  events: {},
   local: {
     articles: {},
     images: {},
