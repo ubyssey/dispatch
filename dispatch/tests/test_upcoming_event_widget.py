@@ -176,7 +176,7 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         # Make 5 events with increasing start dates
         for index in xrange(-3,3):
 
-            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.now() + timedelta(days=index)), is_published=True)
+            response = DispatchTestHelpers.create_event(self.client, title=('Title ' + str(index)), start_time=(datetime.now() + timedelta(days=index, hours=-1)), is_published=True)
 
         featured_event_id = 1
 
@@ -195,5 +195,6 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
 
         self.assertEqual(widget_data['events'].count(), 3)
         self.assertEqual(widget_data['events'][0].title, u'Title 0')
+        self.assertTrue(widget_data['events'][0].start_time < datetime.now())
         self.assertEqual(widget_data['events'][1].title, u'Title 1')
         self.assertEqual(widget_data['events'][2].title, u'Title 2')
