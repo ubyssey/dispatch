@@ -4,6 +4,8 @@ import ArticleEditor from '../../components/ArticleEditor'
 
 export default function NewArticlePage(props) {
   return (
-    <ArticleEditor isNew={true} route={props.route} />
+    <ArticleEditor
+      isNew={true}
+      route={props.route} />
   )
 }
