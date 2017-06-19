@@ -12,6 +12,7 @@ import * as Topics from './Topics'
 import * as Galleries from './Galleries'
 import * as Widgets from './Widgets'
 import * as Persons from './Persons'
+import * as Events from './Events'
 
 export {
   LoginPage as Login,
@@ -26,5 +27,6 @@ export {
   Topics as Topics,
   Galleries as Galleries,
   Widgets as Widgets,
-  Persons as Persons
+  Persons as Persons,
+  Events as Events
 }

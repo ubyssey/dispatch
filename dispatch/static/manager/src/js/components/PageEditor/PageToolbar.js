@@ -22,7 +22,7 @@ export default function PageToolbar(props) {
   return (
     <Toolbar>
       <div className='c-article-editor__toolbar'>
-        <div className='c-article-editor__toolbar__page-buttons'>
+        <div className='c-article-editor__toolbar__article-buttons'>
           <AnchorButton
             intent={Intent.SUCCESS}
             onClick={() => props.savePage()}>Update</AnchorButton>

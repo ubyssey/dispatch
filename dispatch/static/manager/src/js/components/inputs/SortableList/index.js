@@ -22,6 +22,7 @@ class SortableList extends React.Component {
   render() {
 
     const items = this.props.items.map(id => this.props.entities[id])
+      .filter(i => typeof i !== 'undefined')
 
     return (
       <ul className='c-sortable-list'>

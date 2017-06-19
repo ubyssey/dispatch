@@ -6,6 +6,7 @@ export default function NewTagPage(props) {
   return (
     <TagEditor
       isNew={true}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

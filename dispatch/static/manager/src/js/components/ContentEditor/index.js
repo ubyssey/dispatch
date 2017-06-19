@@ -110,7 +110,11 @@ class ContentEditorComponent extends React.Component {
 
   onChange(editorState) {
     this.props.updateEditor(editorState)
-    this.props.onUpdate(editorState.getCurrentContent())
+
+    // Only trigger update when content changes
+    if (editorState.getLastChangeType() !== null) {
+      this.props.onUpdate(editorState.getCurrentContent())
+    }
   }
 
   insertEmbed(type, data={}) {
