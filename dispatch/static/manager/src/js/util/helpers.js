@@ -5,8 +5,15 @@ export function humanizeDatetime(timestamp) {
   if (!timestamp) {
     return null
   }
-  
+
   return moment(timestamp).format('lll') // April 18, 2017 12:50 PM
+}
+
+export function confirmNavigation(router, route, shouldConfirm) {
+  router.setRouteLeaveHook(
+    route,
+    () => shouldConfirm() ? 'Unsaved changes. Are you sure you want to leave?' : null
+  )
 }
 
 export function dateObjToAPIString(date) {
