@@ -5,9 +5,10 @@ import DocumentTitle from 'react-document-title'
 import { withRouter } from 'react-router'
 
 import articlesActions from '../../actions/ArticlesActions'
-import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
 import * as integrationActions from '../../actions/IntegrationActions'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import ArticleToolbar from './ArticleToolbar'
 import ArticleContentEditor from './ArticleContentEditor'
@@ -18,14 +19,6 @@ require('../../../styles/components/article_editor.scss')
 const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.toggleStyle = this.toggleStyle.bind(this)
-
-    this.state = { isSaved: true }
-  }
 
   componentWillMount() {
     if (this.props.isNew) {
@@ -38,10 +31,11 @@ class ArticleEditorComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.router.setRouteLeaveHook(
+    confirmNavigation(
+      this.props.router,
       this.props.route,
-      () => !this.state.isSaved ?
-        'Unsaved changes. Are you sure you want to leave?' : null)
+      () => !this.props.article.isSaved
+    )
   }
 
   componentDidUpdate(prevProps) {
@@ -71,27 +65,23 @@ class ArticleEditorComponent extends React.Component {
   }
 
   saveArticle() {
-    this.setState({ isSaved: true }, () => {
-      if (this.props.isNew) {
-        this.props.createArticle(this.props.token, this.getArticle())
-      } else {
-        this.props.saveArticle(
-          this.props.token,
-          this.props.articleId,
-          this.getArticle()
-        )
-      }
-    })
-  }
-
-  publishArticle() {
-    this.setState({ isSaved: true }, () => {
-      this.props.publishArticle(
+    if (this.props.isNew) {
+      this.props.createArticle(this.props.token, this.getArticle())
+    } else {
+      this.props.saveArticle(
         this.props.token,
         this.props.articleId,
         this.getArticle()
       )
-    })
+    }
+  }
+
+  publishArticle() {
+    this.props.publishArticle(
+      this.props.token,
+      this.props.articleId,
+      this.getArticle()
+    )
   }
 
   unpublishArticle() {
@@ -102,23 +92,15 @@ class ArticleEditorComponent extends React.Component {
   }
 
   previewArticle() {
-    this.setState({ isSaved: true }, () => {
-      this.props.previewArticle(
-        this.props.token,
-        this.props.articleId,
-        this.getArticle()
-      )
-    })
-  }
-
-  toggleStyle(style) {
-    this.props.toggleEditorStyle(style)
+    this.props.previewArticle(
+      this.props.token,
+      this.props.articleId,
+      this.getArticle()
+    )
   }
 
   handleUpdate(field, value) {
-    this.setState({ isSaved: false }, () => {
-      this.props.setArticle(R.assoc(field, value, this.getArticle()))
-    })
+    this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
   getArticleVersion(version) {
@@ -215,9 +197,6 @@ const mapDispatchToProps = (dispatch) => {
     closeModal: () => {
       dispatch(modalActions.closeModal())
     },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
-    },
     fetchIntegration: (token, integrationId) => {
       dispatch(integrationActions.fetchIntegration(token, integrationId))
     }
@@ -227,6 +206,6 @@ const mapDispatchToProps = (dispatch) => {
 const ArticleEditor = connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(ArticleEditorComponent))
+)(ArticleEditorComponent)
 
-export default ArticleEditor
+export default withRouter(ArticleEditor)
