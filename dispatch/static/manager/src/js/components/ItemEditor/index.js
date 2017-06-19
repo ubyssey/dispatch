@@ -1,12 +1,15 @@
 import React from 'react'
 import R from 'ramda'
 import DocumentTitle from 'react-document-title'
+import { withRouter } from 'react-router'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import ListItemToolbar from './ListItemToolbar'
 
 const NEW_LISTITEM_ID = 'new'
 
-export default class ItemEditor extends React.Component {
+class ItemEditor extends React.Component {
 
   componentWillMount() {
     if (this.props.isNew) {
@@ -15,6 +18,16 @@ export default class ItemEditor extends React.Component {
     } else {
       // Fetch listItem
       this.props.getListItem(this.props.token, this.props.itemId)
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.route) {
+      confirmNavigation(
+        this.props.router,
+        this.props.route,
+        () => !this.props.listItem.isSaved
+      )
     }
   }
 
@@ -89,3 +102,5 @@ export default class ItemEditor extends React.Component {
   }
 
 }
+
+export default withRouter(ItemEditor)

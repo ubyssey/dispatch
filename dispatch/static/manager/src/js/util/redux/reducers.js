@@ -92,6 +92,7 @@ export function handleSuccess(state, action) {
   return R.merge(state, {
     isLoading: false,
     isLoaded: true,
+    isSaved: true,
     errors: {},
     id: action.payload.data.result
   })
@@ -108,13 +109,19 @@ export function buildSingleResourceReducer(types) {
   const initialState = {
     isLoading: false,
     isLoaded: false,
+    isSaved: true,
     errors: {},
     id: null
   }
 
   let reducer = new Reducer(initialState)
 
-  reducer.handle(pending(types.GET), (state) => R.merge(state, { isLoading: true }))
+  reducer.handle(pending(types.GET), (state) => {
+    return R.merge(state, {
+      isLoading: true,
+      isSaved: true,
+    })
+  })
 
   reducer.handle(fulfilled(types.GET), handleSuccess)
   reducer.handle(fulfilled(types.SAVE), handleSuccess)
@@ -126,6 +133,7 @@ export function buildSingleResourceReducer(types) {
     return R.merge(state, {
       isLoading: false,
       isLoaded: true,
+      isSaved: false,
       id: action.payload.data.result
     })
   })
