@@ -1,17 +1,7 @@
 import React from 'react'
-import R from 'ramda'
 import { LinkButton, InputGroup } from '../inputs'
 
-function getPath(location, page) {
-  let query = R.clone(location.query)
-
-  query.page = page
-
-  return {
-    pathname: location.pathname,
-    query: query
-  }
-}
+import { getPath }  from '../../util/helpers'
 
 export default function ItemListPagination(props) {
 

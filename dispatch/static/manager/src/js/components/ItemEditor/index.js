@@ -90,7 +90,7 @@ class ItemEditor extends React.Component {
             saveListItem={() => this.saveListItem()}
             deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}
             goBack={this.props.goBack} />
-          <div className='u-container u-container--padded'>
+          <div className='u-container u-container--padded' style={{ overflowY: 'scroll' }}>
             <this.props.form
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}

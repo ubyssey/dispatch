@@ -34,7 +34,7 @@ class ZoneIndexPageComponent extends React.Component {
             zone => zone.widget ? this.props.entities.widgets[zone.widget].name : 'No widget'
           ]}
 
-          emptyMessage={`You haven\'t defined any ${this.props.typePlural} yet.`}
+          emptyMessage={'You haven\'t defined any zones yet.'}
 
           />
       </DocumentTitle>
