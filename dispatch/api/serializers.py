@@ -257,7 +257,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = JSONField()
 
-    authors = PersonSerializer(many=True, read_only=True)
+    authors = PersonSerializer(many=True, read_only=True, source='get_authors')
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
