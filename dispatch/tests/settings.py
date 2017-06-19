@@ -6,11 +6,15 @@ from dispatch.conf.default_settings import (
     AUTH_USER_MODEL,
     INSTALLED_APPS as DEFAULT_INSTALLED_APPS,
     DISPATCH_PROJECT_MODULE,
-    TEMPLATES
+    TEMPLATES,
+    AUTH_PASSWORD_VALIDATORS
 )
 
 SECRET_KEY = 'fake-key'
 BASE_URL = 'http://test.dispatch/'
+
+FACEBOOK_CLIENT_ID = ''
+FACEBOOK_CLIENT_SECRET = ''
 
 INSTALLED_APPS = ['dispatch.tests'] + DEFAULT_INSTALLED_APPS
 
