@@ -172,15 +172,21 @@ This will do the same thing as above. After you have done this once, you can jus
 
 ### Pull requests
 Once you have pushed the code, you should see something like this on the Github Dispatch Page:
-  ![Test](/docs/pull_req.png)
+
+  ![The picture failed to render; thats OK, the button is just `Compare and pull request` in a large yellow bar on the top of the page.](/docs/pull_req.png)
+
+If you click `Compare and pull request`, it will bring you to a page where you can explain the changes you made and create the pull request. The code will then be reviewed and merged.
 
 ### Some other useful commands
 
-##### Git stash
+##### git stash
   Lets say that you have made some changes to files in one branch, then decide they should be in another, or would just like to look around at other branches. You can use `git stash`. This temporarily saves your changes. Now you can look around other branches all you want. If you want the changes that you have stashed to be in a different branch, navigate to that branch with `git checkout <branch>`, and run `git stash apply`. All of your changes will now be in that new branch. If you want to commit your changes in the original branch, just navigate back and then run `git stash apply`.
 
-##### Git pull
+##### git pull
   This command 'pulls' the changes from the remote branch onto your local branch. This is useful for when people have been merging a bunch of pull requests and your local master branch is out of date. Simply run `git pull`, and it will copy all of the files that you don't have into your local repository. Think of `git pull` as updating your master branch.
 
 ##### See the commits
   `git log --oneline --abbrev-commit --all --graph --decorate` - This shows you a tree view of the commits, merges, etc of the working branches. Not super useful, but its interesting. [This](http://think-like-a-git.net/sections/graph-theory.html) is an interesting read on the connection of git and graph theory, and where this command comes from.
+
+##### Make them colorful
+  `git config color.ui true` - Makes your output of some git commands colorful
