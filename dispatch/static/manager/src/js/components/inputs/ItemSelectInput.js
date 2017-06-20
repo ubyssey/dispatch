@@ -110,6 +110,7 @@ class ItemSelectInput extends React.Component {
   renderDropdown() {
 
     const selected = this.getSelected()
+      .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
       .filter(item => item)
       .map(item => (
@@ -187,7 +188,7 @@ class ItemSelectInput extends React.Component {
 ItemSelectInput.defaultProps = {
   many: true,
   results: [],
-  entities: {}
+  entities: {},
 }
 
 export default ItemSelectInput
