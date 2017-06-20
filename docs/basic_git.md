@@ -181,3 +181,6 @@ Once you have pushed the code, you should see something like this on the Github 
 
 ##### Git pull
   This command 'pulls' the changes from the remote branch onto your local branch. This is useful for when people have been merging a bunch of pull requests and your local master branch is out of date. Simply run `git pull`, and it will copy all of the files that you don't have into your local repository. Think of `git pull` as updating your master branch.
+
+##### See the commits
+  `git log --oneline --abbrev-commit --all --graph --decorate` - This shows you a tree view of the commits, merges, etc of the working branches. Not super useful, but its interesting. [This](http://think-like-a-git.net/sections/graph-theory.html) is an interesting read on the connection of git and graph theory, and where this command comes from.
