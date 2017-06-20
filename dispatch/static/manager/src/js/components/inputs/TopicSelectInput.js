@@ -23,10 +23,11 @@ class TopicSelectInputComponent extends React.Component {
         many={false}
         selected={this.props.selected}
         results={this.props.topics.ids}
+        newId={this.props.newId}
         entities={this.props.entities.topics}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTopics(query)}
-        create={(name, cb) => this.props.createAndAddTopic(this.props.token, { name }, cb)}
+        create={(name) => this.props.createTopic(this.props.token, { name })}
         attribute='name'
         editMessage={this.props.selected ? 'Edit topic' : 'Add topic'} />
     )
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => {
     entities: {
       topics: state.app.entities.topics
     },
+    newId: state.app.topics.newId,
     token: state.app.auth.token
   }
 }
@@ -49,8 +51,8 @@ const mapDispatchToProps = (dispatch) => {
     listTopics: (token, query) => {
       dispatch(topicsActions.list(token, query))
     },
-    createAndAddTopic: (token, data, callback) => {
-      dispatch(topicsActions.createAndAdd(token, data, callback))
+    createTopic: (token, data) => {
+      dispatch(topicsActions.create(token, data))
     }
   }
 }
