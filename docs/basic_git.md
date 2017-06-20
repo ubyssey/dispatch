@@ -5,6 +5,7 @@ This is your basic git usage guide - by no means is this supposed to be a comple
 Here are some great resources that are most definitely better than this one:
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Interactive Guide to git](https://try.github.io/levels/1/challenges/1)
+* [Another lightweight simple guide](http://guides.beanstalkapp.com/version-control/common-git-commands.html)
 * [You can also use Github desktop - some like it, some don't](https://desktop.github.com)
 ---
 
@@ -14,9 +15,9 @@ Github is just a super popular platform to view git repositories, and definitely
 
 ### Get yourself Git
 First make sure you install git correctly! For that, go to these places:
-* [Download git for OSX](https://git-scm.com/download/mac)
-* [Download git for Windows](https://git-for-windows.github.io)
-* [Download git for Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Install git for OSX](https://git-scm.com/download/mac)
+* [Install git for Windows](https://git-for-windows.github.io)
+* [Install git for Linux](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 Also clone Dispatch
 `git clone https://github.com/ubyssey/dispatch.git`
@@ -171,5 +172,12 @@ This will do the same thing as above. After you have done this once, you can jus
 
 ### Pull requests
 Once you have pushed the code, you should see something like this on the Github Dispatch Page:
-  // TODO: Include pictures of creating pull request, add explanation of what is going on
-  // TODO: Go over git stash, some common errors and their solutions
+  ![Test](/docs/pull_req.png)
+
+### Some other useful commands
+
+##### Git stash
+  Lets say that you have made some changes to files in one branch, then decide they should be in another, or would just like to look around at other branches. You can use `git stash`. This temporarily saves your changes. Now you can look around other branches all you want. If you want the changes that you have stashed to be in a different branch, navigate to that branch with `git checkout <branch>`, and run `git stash apply`. All of your changes will now be in that new branch. If you want to commit your changes in the original branch, just navigate back and then run `git stash apply`.
+
+##### Git pull
+  This command 'pulls' the changes from the remote branch onto your local branch. This is useful for when people have been merging a bunch of pull requests and your local master branch is out of date. Simply run `git pull`, and it will copy all of the files that you don't have into your local repository. Think of `git pull` as updating your master branch.
