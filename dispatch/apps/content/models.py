@@ -23,6 +23,7 @@ from django.template import loader, Context
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
 from dispatch.apps.content.render import content_to_html
+from dispatch.apps.content.images import ImageSave
 from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -362,7 +363,7 @@ class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Model):
+class Image(ImageSave):
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
     width = PositiveIntegerField(blank=True, null=True)
@@ -445,32 +446,6 @@ class Image(Model):
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
-
-
-    def save_thumbnail(self, image, size, name, label, fileType):
-        width, height = size
-        (imw, imh) = image.size
-
-        # If image is larger than thumbnail size, resize image
-        if (imw > width) or (imh > height):
-            image.thumbnail(size, Img.ANTIALIAS)
-
-        # Attach new thumbnail label to image filename
-        name = "%s-%s.%s" % (name, label, fileType)
-
-        # Image.save format takes JPEG not jpg
-        if fileType in self.JPG_FORMATS:
-            fileType = 'JPEG'
-
-        # Write new thumbnail to StringIO object
-        image_io = StringIO.StringIO()
-        image.save(image_io, format=fileType, quality=75)
-
-        # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
-
-        # Save the new file to the default storage system
-        default_storage.save(name, thumb_file)
 
     def save_authors(self, authors):
         Author.objects.filter(image=self).delete()
