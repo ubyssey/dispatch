@@ -22,10 +22,11 @@ class TagSelectInputComponent extends React.Component {
       <ItemSelectInput
         selected={this.props.selected}
         results={this.props.tags.ids}
+        newId={this.props.newId}
         entities={this.props.entities.tags}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTags(query)}
-        create={(name, cb) => this.props.createAndAddTag(this.props.token, { name }, cb)}
+        create={(name) => this.props.createTag(this.props.token, { name })}
         attribute='name'
         editMessage={this.props.selected.length ? 'Edit tags' : 'Add tags'} />
     )
@@ -39,6 +40,7 @@ const mapStateToProps = (state) => {
     entities: {
       tags: state.app.entities.tags
     },
+    newId: state.app.tags.newId,
     token: state.app.auth.token
   }
 }
@@ -48,8 +50,8 @@ const mapDispatchToProps = (dispatch) => {
     listTags: (token, query) => {
       dispatch(tagsActions.list(token, query))
     },
-    createAndAddTag: (token, data, callback) => {
-      dispatch(tagsActions.createAndAdd(token, data, callback))
+    createTag: (token, data) => {
+      dispatch(tagsActions.create(token, data))
     }
   }
 }
