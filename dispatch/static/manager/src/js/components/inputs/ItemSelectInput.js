@@ -72,6 +72,12 @@ class ItemSelectInput extends React.Component {
     this.closeDropdown()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.newId && this.props.newId != nextProps.newId) {
+      this.addValue(nextProps.newId)
+    }
+  }
+
   removeValue(id) {
     const selected = this.getSelected()
 
@@ -135,7 +141,7 @@ class ItemSelectInput extends React.Component {
     const createButton = this.props.create ? (
       <button
         className='pt-button c-input--item-select__search__button'
-        onClick={() => this.props.create(this.state.query, id => this.addValue(id))}>
+        onClick={() => this.props.create(this.state.query)}>
         Add
       </button>
     ) : null
