@@ -19,6 +19,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
+      if (!query) {
+        query = {}
+      }
+      query.pending = 0
       dispatch(eventsActions.list(token, query))
     },
     toggleListItem: (eventId) => {
@@ -45,6 +49,10 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     searchListItems: (query) => {
+      if (!query) {
+        query = {}
+      }
+      query.pending = 0
       dispatch(eventsActions.search(query))
     }
   }

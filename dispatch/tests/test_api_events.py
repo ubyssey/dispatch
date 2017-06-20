@@ -182,7 +182,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url_2 = '%s?q=%s' % (reverse('api-event-list'), 'UBC')
         url_3 = '%s?q=%s' % (reverse('api-event-list'), 'String Theory')
         url_4 = '%s?pending=1' % reverse('api-event-list')
-        url_5 = '%s?q=%s' % (reverse('api-event-list'), 'Ubyssey')
+        url_5 = '%s?q=%s&pending=0' % (reverse('api-event-list'), 'Ubyssey')
         url_6 = '%s?q=%s' % (reverse('api-event-list'), 'music')
         url_7 = '%s?q=%s' % (reverse('api-event-list'), 'Music')
 
@@ -284,3 +284,20 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['image'], None)
+
+    def test_approve_event(self):
+        """Should be able change is_submission=1 to 0"""
+
+        event = DispatchTestHelpers.create_event(self.client, title='This is a user submission', host='Ubyssey', is_submission=True)
+
+        self.assertEqual(event.data['is_submission'], True)
+
+        data = {
+            'is_submission': False
+        }
+
+        url = reverse('api-event-detail', args=[event.data['id']])
+
+        updated_event = self.client.patch(url, data, format='json')
+
+        self.assertEqual(updated_event.data['is_submission'], False)
