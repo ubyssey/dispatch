@@ -6,6 +6,7 @@ export default function NewPagePage(props) {
   return (
     <PageEditor
       isNew={true}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

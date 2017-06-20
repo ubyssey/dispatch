@@ -15,7 +15,9 @@ from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound,
 from dispatch.apps.core.actions import list_actions, recent_articles
 
 from dispatch.apps.core.models import Person, User
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.events.models import Event
+
 from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
@@ -401,16 +403,31 @@ class EventViewSet(DispatchModelViewSet):
     serializer_class = EventSerializer
 
     def get_queryset(self):
-        queryset = Event.objects.all()
+
+        if self.request.user.is_authenticated():
+            queryset = Event.objects.all()
+        else:
+            queryset = Event.objects.filter(
+                Q(is_submission=False),
+                Q(is_published=True)
+            )
+
         q = self.request.query_params.get('q', None)
-        if q is not None:
-            # If a search term (q) is present, filter queryset by term against `name`
-            # TODO: Add query by category
+        pending = self.request.query_params.get('pending', None)
+
+        if q:
             queryset = queryset.filter(
                 Q(title__icontains=q) |
                 Q(description__icontains=q) |
-                Q(host__icontains=q)
+                Q(host__icontains=q) |
+                Q(category__iexact=q)
             )
+
+        if pending:
+            queryset = queryset.filter(is_submission=True)
+        else:
+            queryset = queryset.filter(is_submission=False)
+
         return queryset
 
 
