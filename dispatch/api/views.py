@@ -423,9 +423,9 @@ class EventViewSet(DispatchModelViewSet):
                 Q(category__iexact=q)
             )
 
-        if pending:
+        if pending == '1':
             queryset = queryset.filter(is_submission=True)
-        else:
+        elif pending == '0':
             queryset = queryset.filter(is_submission=False)
 
         return queryset
