@@ -450,4 +450,4 @@ def user_authenticate(request):
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
     else:
-        return Response({'Error': 'User Not Found'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Error': 'Invalid user credentials'}, status=status.HTTP_400_BAD_REQUEST)
