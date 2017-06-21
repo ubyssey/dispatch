@@ -514,6 +514,8 @@ class ZoneSerializer(serializers.Serializer):
 
 class EventSerializer(DispatchModelSerializer):
 
+    image = serializers.ImageField(required=False, validators=[ValidFilename])
+
     class Meta:
         model = Event
         fields = (
@@ -525,6 +527,7 @@ class EventSerializer(DispatchModelSerializer):
             'start_time',
             'end_time',
             'location',
+            'address',
             'category',
             'facebook_url',
             'is_published',
