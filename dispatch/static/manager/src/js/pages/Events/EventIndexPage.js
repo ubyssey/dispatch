@@ -64,6 +64,7 @@ function EventsPageComponent(props) {
       typeSingular='event'
       typePlural='events'
       displayColumn='title'
+      pageTitle='Events'
       toolbarContent={<EventPendingTag />}
       {... props} />
   )
