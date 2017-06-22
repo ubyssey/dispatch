@@ -164,6 +164,28 @@ export default class EventForm extends React.Component {
             fill={true}
             onChange={ e => this.props.update('facebook_url', e.target.value) } />
         </FormInput>
+
+        <FormInput
+          label='Submitter Email'
+          padded={false}
+          error={this.props.errors.submitter_email}>
+          <TextInput
+            placeholder='student@ubc.ca'
+            value={this.props.listItem.submitter_email || ''}
+            fill={true}
+            onChange={ e => this.props.update('submitter_email', e.target.value) } />
+        </FormInput>
+
+        <FormInput
+          label='Submitter Phone'
+          padded={false}
+          error={this.props.errors.submitter_phone}>
+          <TextInput
+            placeholder='(604) ###-####'
+            value={this.props.listItem.submitter_phone || ''}
+            fill={true}
+            onChange={ e => this.props.update('submitter_phone', e.target.value) } />
+        </FormInput>
       </form>
     )
   }
