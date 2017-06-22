@@ -181,7 +181,7 @@ export default class EventForm extends React.Component {
           padded={false}
           error={this.props.errors.submitter_phone}>
           <TextInput
-            placeholder='(604) ###-###'
+            placeholder='(604) ###-####'
             value={this.props.listItem.submitter_phone || ''}
             fill={true}
             onChange={ e => this.props.update('submitter_phone', e.target.value) } />
