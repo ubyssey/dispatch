@@ -525,6 +525,7 @@ class EventSerializer(DispatchModelSerializer):
             'start_time',
             'end_time',
             'location',
+            'address',
             'category',
             'facebook_url',
             'is_published',

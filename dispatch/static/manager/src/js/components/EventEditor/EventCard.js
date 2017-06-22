@@ -56,6 +56,27 @@ export default function EventCard(props) {
           <EventField label='Location' value={props.event.location} />
           <EventField label='Address' value={props.event.address} />
           <EventField label='Category' value={props.event.category} />
+
+          <label className='c-event-card__field'>
+            Submitter Email
+            <a href={`mailto:${props.event.submitter_email}`}>
+              <TextInput
+                readOnly={true}
+                fill={true}
+                value={props.event.submitter_email} />
+            </a>
+          </label>
+
+          <label className='c-event-card__field'>
+            Submitter Phone
+            <a href={`tel:${props.event.submitter_phone}`}>
+              <TextInput
+                readOnly={true}
+                fill={true}
+                value={props.event.submitter_phone} />
+            </a>
+          </label>
+
         </div>
 
         <div className='c-event-card__buttons'>
