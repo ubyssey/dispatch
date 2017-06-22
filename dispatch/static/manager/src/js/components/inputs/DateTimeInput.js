@@ -17,7 +17,9 @@ export default function DateTimeInput(props) {
       value={props.value || new Date()}
       onChange={props.onChange}
       timePickerProps={{
-        onChange: props.onChange
+        onChange: props.onChange,
+        selectAllOnFocus: true,
+        showArrowButtons: true
       }}
       datePickerProps={{
         minDate: TODAY,
