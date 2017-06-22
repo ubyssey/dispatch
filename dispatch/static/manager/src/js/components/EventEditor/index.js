@@ -28,7 +28,9 @@ const processData = (data) => {
   formData.append('title', data.title || '')
   formData.append('description', data.description || '')
   formData.append('host', data.host || '')
-  formData.append('image', data.image, data.image ? data.image.name : null)
+  if (data.image instanceof File) {
+    formData.append('image', data.image, data.image.name)
+  }
   formData.append('start_time', data.start_time ? dateObjToAPIString(data.start_time) : '')
   formData.append('end_time', data.end_time ? dateObjToAPIString(data.end_time) : '')
   formData.append('location', data.location || '')
