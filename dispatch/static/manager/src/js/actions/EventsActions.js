@@ -29,6 +29,26 @@ class EventsActions extends ResourceActions {
     }
   }
 
+  publish(data) {
+
+    data.is_published = true
+
+    return {
+      type: types.EVENTS.PUBLISH,
+      payload: data
+    }
+  }
+
+  unpublish(data) {
+
+    data.is_published = false
+
+    return {
+      type: types.EVENTS.UNPUBLISH,
+      payload: data
+    }
+  }
+
 }
 
 export default new EventsActions(

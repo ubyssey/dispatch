@@ -59,6 +59,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteListItem: (token, eventId, next) => {
       dispatch(eventsActions.delete(token, eventId, next))
+    },
+    publish: (data) => {
+      dispatch(eventsActions.publish(data))
+    },
+    unpublish: (data) => {
+      dispatch(eventsActions.unpublish(data))
     }
   }
 }

@@ -184,6 +184,15 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast(`${action.payload.length} event${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.EVENTS.DELETE_MANY):
     return showToast('Some events could not be deleted', Intent.DANGER)
+  case fulfilled(types.EVENTS.PUBLISH):
+    return showToast('Event Published')
+  case fulfilled(types.EVENTS.UNPUBLISH):
+    return showToast('Event UnPublished')
+  case rejected(types.EVENTS.PUBLISH):
+    return showToast('Event could not be published')
+  case rejected(types.EVENTS.UNPUBLISH):
+    return showToast('Event could not be unpublished')
+
 
   default:
     return toaster
