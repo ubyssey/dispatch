@@ -4,7 +4,7 @@ import { Entity } from 'draft-js'
 function Link(props) {
   const { url } = Entity.get(props.entityKey).getData()
   return (
-    <a href={url} className='c-content-editor__entity c-content-editor__entity--link'>
+    <a href={url} className='c-dispatch-editor__entity c-dispatch-editor__entity--link'>
       {props.children}
     </a>
   )

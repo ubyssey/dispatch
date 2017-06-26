@@ -1,9 +1,12 @@
 import React from 'react'
 
 import Headline from '../Editor/Headline'
-import ContentEditor from '../ContentEditor'
 
-import { ImageEmbed, VideoEmbed } from '../ContentEditor/embeds'
+import {
+  Editor,
+  ImageEmbed,
+  VideoEmbed,
+} from '../../vendor/dispatch-editor'
 
 const embeds = [
   ImageEmbed,
@@ -11,7 +14,6 @@ const embeds = [
 ]
 
 export default class PageContentEditor extends React.Component {
-
   render() {
     return (
       <div ref='container' className='c-article-editor'>
@@ -22,18 +24,13 @@ export default class PageContentEditor extends React.Component {
             error={this.props.errors.title}
             field="title" />
           <div className='c-article-editor__body'>
-            <ContentEditor
-              scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
+            <Editor
               content={this.props.page.content}
-              isNew={this.props.isNew}
-              onUpdate={cs => this.props.onUpdate('_content', cs)}
-              openModal={this.props.openModal}
-              closeModal={this.props.closeModal}
+              onUpdate={content => this.props.onUpdate('content', content)}
               embeds={embeds} />
           </div>
         </div>
       </div>
     )
   }
-
 }

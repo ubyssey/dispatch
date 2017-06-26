@@ -10,7 +10,7 @@ import {
 
 import { List, OrderedMap } from 'immutable'
 
-import convertToHTML from './helpers/convertToHTML'
+import convertToHTML from './convertToHTML'
 
 function parseBlock(block) {
   const type = block.getType()
@@ -78,31 +78,29 @@ function createBlock(acc, block) {
 
 }
 
-const ContentStateHelper = {
-
-  fromJSON: (jsonBlocks) => {
-
-    const blocksFromHTML =
-      jsonBlocks.reduce(
-        createBlock,
-        { contentBlocks: new Array(), entityMap: new OrderedMap() }
-      )
-
-    // Create new ContentState from contentBlocks and entityMap
-    return ContentState.createFromBlockArray(
-      blocksFromHTML.contentBlocks,
-      blocksFromHTML.entityMap
+function fromJSON(jsonBlocks) {
+  const blocksFromHTML =
+    jsonBlocks.reduce(
+      createBlock,
+      { contentBlocks: new Array(), entityMap: new OrderedMap() }
     )
-  },
 
-  toJSON: (contentState) => {
-    // Converts from ContentState to JSON
-    return contentState.getBlockMap()
-      .map(parseBlock)
-      .toList()
-      .toJS()
-  }
-
+  // Create new ContentState from contentBlocks and entityMap
+  return ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
+  )
 }
 
-export default ContentStateHelper
+function toJSON(contentState) {
+  // Converts from ContentState to JSON
+  return contentState.getBlockMap()
+    .map(parseBlock)
+    .toList()
+    .toJS()
+}
+
+export {
+  toJSON,
+  fromJSON
+}

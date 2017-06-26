@@ -1,16 +1,16 @@
 import React from 'react'
 
-import ContentEditorLinkEditor from './ContentEditorLinkEditor'
+import ContentEditorLinkEditor from './LinkEditor'
 
 const LINK_INPUT_WIDTH = 334
 
-export default function ContentEditorPopover(props) {
+export default function LinkPopover(props) {
 
   const style = {width: LINK_INPUT_WIDTH}
 
   return (
     <div
-      className='c-content-editor__popover'
+      className='c-dispatch-editor__popover'
       onMouseUp={e => e.stopPropagation()}
       style={style}>
       <ContentEditorLinkEditor
