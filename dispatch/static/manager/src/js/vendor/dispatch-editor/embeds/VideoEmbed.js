@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../../inputs'
+import { FormInput, TextInput } from '../../../components/inputs'
 import { Button } from '@blueprintjs/core'
 
-require('../../../../styles/components/embeds/video.scss')
+require('../styles/embeds/video.scss')
 
 class VideoEmbedComponent extends React.Component {
 
