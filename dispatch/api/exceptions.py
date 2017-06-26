@@ -12,3 +12,7 @@ class ProtectedResourceError(APIException):
 class InvalidGalleryAttachments(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Invalid gallery data'
+
+class BadCredentials(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Invalid user credentials'
