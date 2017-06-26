@@ -2,8 +2,6 @@ import React from 'react'
 
 import { ImageInput, FormInput, TextInput } from '../../../components/inputs'
 
-require('../../../../styles/components/embeds/image.scss')
-
 function ImageEmbedComponent(props) {
   return (
     <div className='o-embed o-embed--image'>
