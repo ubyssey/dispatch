@@ -202,22 +202,22 @@ class ContentEditor extends React.Component {
 
       if ( !isCollapsed || showLinkPopover ) {
 
-        var selection = getSelected().getRangeAt(0).getBoundingClientRect()
+        var selected = getSelected().getRangeAt(0).getBoundingClientRect()
         var container = this.refs.container.getBoundingClientRect()
 
         var position,
-          left = selection.left - container.left,
-          center = left + (selection.width / 2),
+          left = selected.left - container.left,
+          center = left + (selected.width / 2),
           third = container.width / 3
 
         if (center > 2 * third) {
           position = Position.TOP_RIGHT
-          left = left - 600 + (selection.width / 2) + 15
+          left = left - 600 + (selected.width / 2) + 15
         } else if (center > third ) {
           position = Position.TOP
-          left = left - 300 + (selection.width / 2)
+          left = left - 300 + (selected.width / 2)
         } else {
-          if (selection.width == 0) {
+          if (selected.width == 0) {
             left = left - 15
           }
           position = Position.TOP_LEFT
@@ -226,7 +226,7 @@ class ContentEditor extends React.Component {
         this.setState({
           showPopover: true,
           popover: {
-            top: selection.top - container.top,
+            top: selected.top - container.top,
             left: left,
             position: position,
             renderContent: showLinkPopover ? this.renderLinkPopover.bind(this) : this.renderPopover.bind(this),
