@@ -25,8 +25,8 @@ export default class PageContentEditor extends React.Component {
             field="title" />
           <div className='c-article-editor__body'>
             <Editor
-              content={this.props.page._content}
-              onUpdate={content => this.props.onUpdate('_content', content)}
+              content={this.props.page.content}
+              onUpdate={content => this.props.onUpdate('content', content)}
               embeds={embeds} />
           </div>
         </div>
