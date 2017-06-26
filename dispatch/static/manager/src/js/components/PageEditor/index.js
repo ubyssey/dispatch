@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import { withRouter } from 'react-router'
 import DocumentTitle from 'react-document-title'
 
@@ -23,7 +24,7 @@ class PageEditorComponent extends React.Component {
     if (this.props.isNew) {
       this.props.setPage({ id: NEW_PAGE_ID })
     } else {
-      this.props.getPage(this.props.token, this.props.pageId)
+      this.loadPage()
     }
   }
 
@@ -37,13 +38,40 @@ class PageEditorComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!this.props.isNew) {
-      if (prevProps.pageId !== this.props.pageId) {
-        this.props.getPage(this.props.token, this.props.pageId)
-
-        this.props.fetchIntegration(this.props.token, 'fb-instant-pages')
+      if (prevProps.pageId !== this.props.pageId
+        || this.getVersion() != this.getVersion(prevProps)) {
+        this.loadPage()
+      } else if (this.versionComparison(prevProps)) {
+        this.setVersion(this.getLatestVersionFromPage())
       }
     }
   }
+
+  getLatestVersionFromPage(props) {
+    props = props || this.props
+    const a = R.prop(props.pageId, props.entities.local || {}) ||
+      R.prop(props.pageId, props.entities.remote || {})
+    return a ? a.latest_version : null
+  }
+
+  versionComparison(prevProps) {
+    const prev = this.getLatestVersionFromPage(prevProps)
+    const now = this.getLatestVersionFromPage(this.props)
+    if (prev && now && prev !== now) {
+      return now
+    }
+    return false
+  }
+
+  loadPage() {
+    const version = this.getVersion()
+    let query = null
+    if (version) {
+      query = { version }
+    }
+    this.props.getPage(this.props.token, this.props.pageId, query)
+  }
+
 
   getPage() {
     if (!this.props.entities.local) {
@@ -59,6 +87,19 @@ class PageEditorComponent extends React.Component {
     }
 
     return page
+  }
+
+  setVersion(version) {
+    this.props.push({
+      pathname: this.props.location.pathname,
+      query: { v: version }
+    })
+  }
+
+  getVersion(props) {
+    props = props || this.props
+
+    return props.location.query.v
   }
 
   savePage() {
@@ -100,14 +141,6 @@ class PageEditorComponent extends React.Component {
     this.props.setPage(R.assoc(field, value, this.getPage()))
   }
 
-  getPageVersion(version) {
-    return this.props.getPage(
-      this.props.token,
-      this.props.pageId,
-      { version: version }
-    )
-  }
-
   render() {
 
     const page = this.getPage()
@@ -126,7 +159,7 @@ class PageEditorComponent extends React.Component {
             publishPage={() => this.publishPage()}
             unpublishPage={() => this.unpublishPage()}
             previewPage={() => this.previewPage()}
-            getVersion={(version) => this.getPageVersion(version)}
+            getVersion={(version) => this.setVersion(version)}
             page={page}
             isNew={this.props.isNew} />
           <div className='u-container-editor'>
@@ -193,6 +226,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     closeModal: () => {
       dispatch(modalActions.closeModal())
+    },
+    push: (loc) => {
+      dispatch(push(loc))
     }
   }
 }
