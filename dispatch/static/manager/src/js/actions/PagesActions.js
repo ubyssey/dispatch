@@ -1,3 +1,4 @@
+import R from 'ramda'
 import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
@@ -5,16 +6,15 @@ import { pageSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
 import PublishableActions from './PublishableActions'
-import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
+
+import { toJSON, fromJSON } from '../vendor/dispatch-editor'
 
 class PagesActions extends PublishableActions {
 
-  prepareData(data) {
-    if (data._content) {
-      // Convert page contentState to JSON array
-      data.content = ContentStateHelper.toJSON(data._content)
-      delete data._content
-    }
+  toRemote(data) {
+    data = R.clone(data)
+
+    data.content = toJSON(data.content)
 
     data.template_id = data.template
     delete data.template
@@ -23,6 +23,11 @@ class PagesActions extends PublishableActions {
       data.featured_image.image_id = data.featured_image.image
     }
 
+    return data
+  }
+
+  fromRemote(data) {
+    data.content = fromJSON(data.content)
     return data
   }
 

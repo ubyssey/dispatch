@@ -5,7 +5,7 @@
   // Structure
   display: flex;
   overflow: hidden;
-  height: 50px;
+  min-height: 50px;
   padding-left: 2rem;
   padding-right: 2rem;
 
@@ -28,6 +28,10 @@
       // Structure
       margin-right: 0;
     }
+  }
+
+  .pt-tag {
+    vertical-align: middle;
   }
 }
 

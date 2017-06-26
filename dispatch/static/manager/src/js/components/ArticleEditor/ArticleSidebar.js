@@ -11,7 +11,6 @@ import SEOTab from '../Editor/tabs/SEOTab'
 require('../../../styles/components/article_sidebar.scss')
 
 export default function ArticleSidebar(props) {
-
   return (
     <div className='c-article-sidebar'>
       <Tabs>
