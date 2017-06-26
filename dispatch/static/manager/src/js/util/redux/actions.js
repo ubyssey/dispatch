@@ -61,7 +61,11 @@ export class ResourceActions {
     this.schema = schema
   }
 
-  prepareData(data) {
+  toRemote(data) {
+    return data
+  }
+
+  fromRemote(data) {
     return data
   }
 
@@ -70,7 +74,10 @@ export class ResourceActions {
       type: this.types.GET,
       payload: this.api.get(token, id, params)
         .then(json => ({
-          data: normalize(json, this.schema)
+          data: normalize(
+            this.fromRemote(json),
+            this.schema
+          )
         }))
     }
   }
@@ -81,7 +88,10 @@ export class ResourceActions {
       payload: this.api.list(token, params)
         .then(json => ({
           count: json.count,
-          data: normalize(json.results, arrayOf(this.schema))
+          data: normalize(
+            json.results.map(this.fromRemote),
+            arrayOf(this.schema)
+          )
         }))
     }
   }
@@ -95,7 +105,10 @@ export class ResourceActions {
           next: json.next,
           previous: json.previous,
           append: true,
-          data: normalize(json.results, arrayOf(this.schema))
+          data: normalize(
+            json.results.map(this.fromRemote),
+            arrayOf(this.schema)
+          )
         }))
     }
   }
@@ -103,9 +116,12 @@ export class ResourceActions {
   save(token, id, data) {
     return {
       type: this.types.SAVE,
-      payload: this.api.save(token, id, this.prepareData(data))
+      payload: this.api.save(token, id, this.toRemote(data))
         .then(json => ({
-          data: normalize(json, this.schema)
+          data: normalize(
+            this.fromRemote(json),
+            this.schema
+          )
         }))
     }
   }
@@ -115,7 +131,7 @@ export class ResourceActions {
 
       dispatch({ type: pending(this.types.CREATE) })
 
-      this.api.create(token, this.prepareData(data))
+      this.api.create(token, this.toRemote(data))
         .then(json => {
           if (next) {
             dispatch(replace(`${next}/${json.id}`))
@@ -124,7 +140,10 @@ export class ResourceActions {
           dispatch({
             type: fulfilled(this.types.CREATE),
             payload: {
-              data: normalize(json, this.schema)
+              data: normalize(
+                this.fromRemote(json),
+                this.schema
+              )
             }
           })
         })

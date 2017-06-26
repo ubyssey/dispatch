@@ -6,13 +6,11 @@ import { ResourceActions } from '../util/redux'
 
 class ImagesActions extends ResourceActions {
 
-  prepareData(data) {
-    
+  toRemote(data) {
     data.author_ids = data.authors
-
     return data
   }
-
+  
 }
 
 export default new ImagesActions(

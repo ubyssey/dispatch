@@ -6,6 +6,7 @@ export default function TopicPage(props) {
   return (
     <TopicEditor
       itemId={props.params.topicId}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

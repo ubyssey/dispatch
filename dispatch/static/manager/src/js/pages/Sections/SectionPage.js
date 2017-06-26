@@ -6,6 +6,7 @@ export default function SectionPage(props) {
   return (
     <SectionEditor
       itemId={props.params.sectionId}
-      goBack={props.history.goBack} />
+      goBack={props.history.goBack}
+      route={props.route} />
   )
 }

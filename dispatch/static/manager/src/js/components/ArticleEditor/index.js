@@ -3,11 +3,13 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
+import { withRouter } from 'react-router'
 
 import articlesActions from '../../actions/ArticlesActions'
-import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
 import * as integrationActions from '../../actions/IntegrationActions'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import ArticleToolbar from './ArticleToolbar'
 import ArticleContentEditor from './ArticleContentEditor'
@@ -19,12 +21,6 @@ const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.toggleStyle = this.toggleStyle.bind(this)
-  }
-
   componentWillMount() {
     if (this.props.isNew) {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
@@ -33,6 +29,14 @@ class ArticleEditorComponent extends React.Component {
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
+  }
+
+  componentDidMount() {
+    confirmNavigation(
+      this.props.router,
+      this.props.route,
+      () => !this.props.article.isSaved
+    )
   }
 
   componentDidUpdate(prevProps) {
@@ -86,7 +90,7 @@ class ArticleEditorComponent extends React.Component {
       return false
     }
 
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
+    return article
   }
 
   saveArticle() {
@@ -124,10 +128,6 @@ class ArticleEditorComponent extends React.Component {
     )
   }
 
-  toggleStyle(style) {
-    this.props.toggleEditorStyle(style)
-  }
-
   handleUpdate(field, value) {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
@@ -146,7 +146,6 @@ class ArticleEditorComponent extends React.Component {
   }
 
   render() {
-
     const article = this.getArticle()
 
     if (!article) {
@@ -191,7 +190,6 @@ class ArticleEditorComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.single,
-    editorState: state.app.editor,
     entities: {
       remote: state.app.entities.articles,
       local: state.app.entities.local.articles,
@@ -232,9 +230,6 @@ const mapDispatchToProps = (dispatch) => {
     closeModal: () => {
       dispatch(modalActions.closeModal())
     },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
-    },
     fetchIntegration: (token, integrationId) => {
       dispatch(integrationActions.fetchIntegration(token, integrationId))
     },
@@ -249,4 +244,4 @@ const ArticleEditor = connect(
   mapDispatchToProps
 )(ArticleEditorComponent)
 
-export default ArticleEditor
+export default withRouter(ArticleEditor)

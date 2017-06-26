@@ -1,2 +1,0 @@
-class BasePage(object):
-    pass
