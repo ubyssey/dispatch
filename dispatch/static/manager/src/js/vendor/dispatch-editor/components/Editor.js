@@ -24,7 +24,7 @@ import LinkPopover from './LinkPopover'
 
 import LinkEntity from '../entities/LinkEntity'
 
-require('../../../../styles/components/content_editor.scss')
+require('../styles/editor.scss')
 
 // Helper functions
 function buildEmbedMap(embeds) {
