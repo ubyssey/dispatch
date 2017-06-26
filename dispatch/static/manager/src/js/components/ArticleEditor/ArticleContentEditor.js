@@ -18,7 +18,6 @@ const embeds = [
 ]
 
 export default class ArticleContentEditor extends React.Component {
-
   render() {
     return (
       <div ref='container' className='c-article-editor'>
@@ -38,15 +37,4 @@ export default class ArticleContentEditor extends React.Component {
       </div>
     )
   }
-
 }
-//
-//
-// <ContentEditor
-//   scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
-//   content={this.props.article.content}
-//   isNew={this.props.isNew}
-//   onUpdate={cs => this.props.onUpdate('_content', cs)}
-//   openModal={this.props.openModal}
-//   closeModal={this.props.closeModal}
-//   embeds={embeds} />
