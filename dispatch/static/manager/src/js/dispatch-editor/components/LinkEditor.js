@@ -2,7 +2,7 @@ import React from 'react'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
-import { TextInput } from '../../inputs'
+import { TextInput } from '../../components/inputs'
 
 export default class ContentEditorLinkEditor extends React.Component {
 
@@ -30,7 +30,7 @@ export default class ContentEditorLinkEditor extends React.Component {
   }
 
   updateLink(urlValue) {
-    this.props.insertLink(urlValue, this.props.selection)
+    this.props.insertLink(this.props.selection, urlValue)
     this.setState({ urlValue: urlValue })
   }
 

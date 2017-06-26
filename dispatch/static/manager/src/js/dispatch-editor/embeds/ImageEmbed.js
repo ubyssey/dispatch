@@ -1,18 +1,20 @@
 import React from 'react'
 
-import ImageManager from '../../modals/ImageManager'
+import { ImageInput, FormInput, TextInput } from '../../components/inputs'
 
-import { FormInput, TextInput } from '../../inputs'
-
-require('../../../../styles/components/embeds/image.scss')
+require('../../../styles/components/embeds/image.scss')
 
 function ImageEmbedComponent(props) {
-
   return (
     <div className='o-embed o-embed--image'>
-      <img className='o-embed--image__image' src={props.data.url} />
       <form>
-        <FormInput label='Caption'>
+        <FormInput label='Image'>
+          <ImageInput
+            fill={true}
+            selected={props.data.image_id}
+            onChange={imageId => props.updateField('image_id', imageId)} />
+        </FormInput>
+        <FormInput label='Caption2'>
           <TextInput
             fill={true}
             value={props.data.caption}
@@ -27,7 +29,6 @@ function ImageEmbedComponent(props) {
       </form>
     </div>
   )
-
 }
 
 export default {
@@ -35,17 +36,9 @@ export default {
   component: ImageEmbedComponent,
   defaultData: {
     image_id: null,
-    attachmend_id: null,
     caption: '',
     credit: '',
     url: null
-  },
-  modal: ImageManager,
-  modalCallback: (image) => {
-    return {
-      image_id: image.id,
-      url: image.url
-    }
   },
   showEdit: true
 }

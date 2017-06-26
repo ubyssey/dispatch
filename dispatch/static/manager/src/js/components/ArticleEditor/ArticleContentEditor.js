@@ -1,9 +1,14 @@
 import React from 'react'
 
 import Headline from '../Editor/Headline'
-import ContentEditor from '../ContentEditor'
 
-import { ImageEmbed, VideoEmbed, PullQuoteEmbed, GalleryEmbed } from '../ContentEditor/embeds'
+import {
+  Editor,
+  ImageEmbed,
+  VideoEmbed,
+  PullQuoteEmbed,
+  GalleryEmbed
+} from '../../dispatch-editor'
 
 const embeds = [
   ImageEmbed,
@@ -24,13 +29,9 @@ export default class ArticleContentEditor extends React.Component {
             error={this.props.errors.headline}
             field="headline" />
           <div className='c-article-editor__body'>
-            <ContentEditor
-              scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
+            <Editor
               content={this.props.article.content}
-              isNew={this.props.isNew}
-              onUpdate={cs => this.props.onUpdate('_content', cs)}
-              openModal={this.props.openModal}
-              closeModal={this.props.closeModal}
+              onUpdate={content => this.props.onUpdate('content', content)}
               embeds={embeds} />
           </div>
         </div>
@@ -39,3 +40,13 @@ export default class ArticleContentEditor extends React.Component {
   }
 
 }
+//
+//
+// <ContentEditor
+//   scrollOffset={this.refs.container ? this.refs.container.scrollTop : 0}
+//   content={this.props.article.content}
+//   isNew={this.props.isNew}
+//   onUpdate={cs => this.props.onUpdate('_content', cs)}
+//   openModal={this.props.openModal}
+//   closeModal={this.props.closeModal}
+//   embeds={embeds} />
