@@ -5,7 +5,7 @@ import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
-import { toJSON, fromJSON } from '../dispatch-editor'
+import { toJSON, fromJSON } from '../vendor/dispatch-editor'
 
 import PublishableActions from './PublishableActions'
 

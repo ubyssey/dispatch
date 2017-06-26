@@ -6,7 +6,7 @@ import DispatchAPI from '../api/dispatch'
 
 import PublishableActions from './PublishableActions'
 
-import { toJSON } from '../dispatch-editor'
+import { toJSON } from '../vendor/dispatch-editor'
 
 class PagesActions extends PublishableActions {
 

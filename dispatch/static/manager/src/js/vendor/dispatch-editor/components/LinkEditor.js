@@ -2,7 +2,7 @@ import React from 'react'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
-import { TextInput } from '../../components/inputs'
+import { TextInput } from '../../../components/inputs'
 
 export default class ContentEditorLinkEditor extends React.Component {
 
