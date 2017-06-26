@@ -5,14 +5,15 @@ import { pageSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
 import PublishableActions from './PublishableActions'
-import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
+
+import { toJSON } from '../dispatch-editor'
 
 class PagesActions extends PublishableActions {
 
-  prepareData(data) {
+  toRemote(data) {
     if (data._content) {
       // Convert page contentState to JSON array
-      data.content = ContentStateHelper.toJSON(data._content)
+      data.content = toJSON(data._content)
       delete data._content
     }
 

@@ -61,7 +61,7 @@ class ArticleEditorComponent extends React.Component {
       return false
     }
 
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
+    return article
   }
 
   saveArticle() {
@@ -112,7 +112,6 @@ class ArticleEditorComponent extends React.Component {
   }
 
   render() {
-
     const article = this.getArticle()
 
     if (!article) {
@@ -157,7 +156,6 @@ class ArticleEditorComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.single,
-    editorState: state.app.editor,
     entities: {
       remote: state.app.entities.articles,
       local: state.app.entities.local.articles,

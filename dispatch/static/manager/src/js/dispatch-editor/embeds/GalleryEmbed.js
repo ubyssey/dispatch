@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { FormInput, GallerySelectInput, TextInput } from '../../inputs'
+import { FormInput, GallerySelectInput, TextInput } from '../../components/inputs'
 
-require('../../../../styles/components/embeds/image.scss')
+require('../../../styles/components/embeds/image.scss')
 
 function GalleryEmbedComponent(props) {
 
