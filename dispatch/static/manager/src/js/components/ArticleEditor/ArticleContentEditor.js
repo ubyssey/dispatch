@@ -8,7 +8,7 @@ import {
   VideoEmbed,
   PullQuoteEmbed,
   GalleryEmbed
-} from '../../dispatch-editor'
+} from '../../vendor/dispatch-editor'
 
 const embeds = [
   ImageEmbed,

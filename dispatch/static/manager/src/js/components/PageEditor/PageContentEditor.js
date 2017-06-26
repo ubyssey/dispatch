@@ -6,7 +6,7 @@ import {
   Editor,
   ImageEmbed,
   VideoEmbed,
-} from '../../dispatch-editor'
+} from '../../vendor/dispatch-editor'
 
 const embeds = [
   ImageEmbed,
