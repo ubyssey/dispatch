@@ -23,7 +23,7 @@ from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
-from dispatch.apps.api.exceptions import ProtectedResourceError
+from dispatch.apps.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound
@@ -450,4 +450,4 @@ def user_authenticate(request):
 
         return Response(data, status=status.HTTP_202_ACCEPTED)
     else:
-        return Response({'Error': 'Invalid user credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        raise BadCredentials()
