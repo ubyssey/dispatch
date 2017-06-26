@@ -26,7 +26,7 @@ class ItemEditor extends React.Component {
       confirmNavigation(
         this.props.router,
         this.props.route,
-        () => !this.props.listItem.isSaved
+        () => !this.props.listItem.isCreatingNew && !this.props.listItem.isSaved
       )
     }
   }
