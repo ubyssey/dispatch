@@ -1,5 +1,6 @@
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
-from dispatch.apps.content.models import Article, Image, Event
+from dispatch.apps.content.models import Article, Image
+from dispatch.apps.events.models import Event
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
@@ -114,6 +115,14 @@ class ImageField(ModelField):
     model = Image
     serializer = ImageSerializer
 
+class EventField(ModelField):
+
+    type = 'event'
+
+    model = Event
+    serializer = EventSerializer
+
+
 class WidgetField(Field):
 
     type = 'widget'
@@ -147,10 +156,3 @@ class WidgetField(Field):
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
-
-class EventField(ModelField):
-
-    type = 'event'
-
-    model = Event
-    serializer = EventSerializer

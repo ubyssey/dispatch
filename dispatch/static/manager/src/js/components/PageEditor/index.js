@@ -2,11 +2,13 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
+import { withRouter } from 'react-router'
 import DocumentTitle from 'react-document-title'
 
 import pagesActions from '../../actions/PagesActions'
-import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import PageToolbar from './PageToolbar'
 import PageContentEditor from './PageContentEditor'
@@ -18,18 +20,20 @@ const NEW_PAGE_ID = 'new'
 
 class PageEditorComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.toggleStyle = this.toggleStyle.bind(this)
-  }
-
   componentWillMount() {
     if (this.props.isNew) {
       this.props.setPage({ id: NEW_PAGE_ID })
     } else {
       this.loadPage()
     }
+  }
+
+  componentDidMount() {
+    confirmNavigation(
+      this.props.router,
+      this.props.route,
+      () => !this.props.page.isSaved
+    )
   }
 
   componentDidUpdate(prevProps) {
@@ -82,11 +86,7 @@ class PageEditorComponent extends React.Component {
         this.props.entities.remote[this.props.pageId] || false
     }
 
-    if (!page) {
-      return false
-    }
-
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, page)
+    return page
   }
 
   setVersion(version) {
@@ -135,10 +135,6 @@ class PageEditorComponent extends React.Component {
       this.props.pageId,
       this.getPage()
     )
-  }
-
-  toggleStyle(style) {
-    this.props.toggleEditorStyle(style)
   }
 
   handleUpdate(field, value) {
@@ -231,9 +227,6 @@ const mapDispatchToProps = (dispatch) => {
     closeModal: () => {
       dispatch(modalActions.closeModal())
     },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
-    },
     push: (loc) => {
       dispatch(push(loc))
     }
@@ -245,4 +238,4 @@ const PageEditor = connect(
   mapDispatchToProps
 )(PageEditorComponent)
 
-export default PageEditor
+export default withRouter(PageEditor)

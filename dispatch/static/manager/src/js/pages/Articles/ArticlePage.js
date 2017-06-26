@@ -6,6 +6,7 @@ export default function ArticlePage(props) {
   return (
     <ArticleEditor
       articleId={props.params.articleId}
-      location={props.location} />
+      location={props.location}
+      route={props.route} />
   )
 }
