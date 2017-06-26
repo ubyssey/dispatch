@@ -42,14 +42,14 @@ export default class EmbedToolbar extends React.Component {
       display: this.props.showToolbar ? 'block' : 'none'
     }
 
-    const buttonClass = 'c-content-editor__embed-toolbar__button'
+    const buttonClass = 'c-dispatch-editor__embed-toolbar__button'
 
     return (
-      <div className='c-content-editor__embed-toolbar' style={style}>
+      <div className='c-dispatch-editor__embed-toolbar' style={style}>
         <div
           className={this.state.showButtons ? `${buttonClass} ${buttonClass}--active` : buttonClass}
           onClick={() => this.toggleButtons()}></div>
-        <div className='c-content-editor__embed-toolbar__buttons'>
+        <div className='c-dispatch-editor__embed-toolbar__buttons'>
           {this.state.showButtons ? this.renderButtons() : null}
         </div>
       </div>

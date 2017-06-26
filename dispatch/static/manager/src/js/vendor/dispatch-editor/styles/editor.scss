@@ -1,15 +1,15 @@
 @import '../../../../styles/utilities/colors';
 
 // Component: ContentEditor
-.c-content-editor {
+.c-dispatch-editor {
   position: relative;
 }
 
-.c-content-editor__editor {
+.c-dispatch-editor__editor {
   margin-left: 50px;
 }
 
-.c-content-editor__editor__block {
+.c-dispatch-editor__editor__block {
   margin-bottom: 20px;
 
   &--unstyled {
@@ -21,11 +21,11 @@
 }
 
 // Component: ContentEditorEmbedToolbar
-.c-content-editor__embed-toolbar {
+.c-dispatch-editor__embed-toolbar {
   position: absolute;
 }
 
-.c-content-editor__embed-toolbar__button {
+.c-dispatch-editor__embed-toolbar__button {
   // Structure
   display: inline-block;
   width: 31px;
@@ -58,7 +58,7 @@
   }
 }
 
-.c-content-editor__embed-toolbar__buttons {
+.c-dispatch-editor__embed-toolbar__buttons {
   // Structure
   display: inline-block;
   margin-left: 15px;
@@ -68,12 +68,12 @@
 }
 
 // Component: ContentEditorPopover
-.c-content-editor__popover {
+.c-dispatch-editor__popover {
   // Structure
   padding: 0.5rem;
 }
 
-.c-content-editor__popover__button {
+.c-dispatch-editor__popover__button {
   // Structure
   margin-right: 0.5rem;
 
@@ -84,22 +84,22 @@
 }
 
 // Component: ContentEditorLinkPopover
-.c-content-editor__link-popover__input {
+.c-dispatch-editor__link-popover__input {
   // Structure
   width: 275px;
 }
 
-.c-content-editor__popover .pt-button .pt-icon-standard {
+.c-dispatch-editor__popover .pt-button .pt-icon-standard {
   // Structure
   margin-right: 0;
 }
 
-.c-content-editor__link-popover__back {
+.c-dispatch-editor__link-popover__back {
   // Structure
   margin-right: 0.5rem;
 }
 
-.c-content-editor__link-popover__remove {
+.c-dispatch-editor__link-popover__remove {
   // Structure
   margin-left: 0.5rem;
 }
@@ -111,7 +111,7 @@
 
 // Entities
 
-.c-content-editor__entity--link {
+.c-dispatch-editor__entity--link {
   // Text
   text-decoration: underline;
 }

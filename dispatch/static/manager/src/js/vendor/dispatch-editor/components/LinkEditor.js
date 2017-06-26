@@ -42,7 +42,7 @@ export default class ContentEditorLinkEditor extends React.Component {
   renderBackButton() {
     return (
       <AnchorButton
-        className='c-content-editor__link-popover__back'
+        className='c-dispatch-editor__link-popover__back'
         onClick={this.props.back}>
         <span className='pt-icon-standard pt-icon-arrow-left' />
       </AnchorButton>
@@ -57,17 +57,17 @@ export default class ContentEditorLinkEditor extends React.Component {
 
   render() {
     return (
-      <div className='c-content-editor__link-popover'>
+      <div className='c-dispatch-editor__link-popover'>
         {this.props.back ? this.renderBackButton() : null}
         <TextInput
-          className='c-content-editor__link-popover__input'
+          className='c-dispatch-editor__link-popover__input'
           ref='textInput'
           value={this.state.urlValue}
           onKeyPress={this.handleKeyPress}
           onChange={e => this.updateLink(e.target.value)}
           placeholder='Enter a URL here' />
         <AnchorButton
-          className='c-content-editor__link-popover__remove'
+          className='c-dispatch-editor__link-popover__remove'
           intent={Intent.DANGER}
           onClick={() => this.removeLink()}>
           <span className='pt-icon-standard pt-icon-trash' />
