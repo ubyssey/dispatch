@@ -14,7 +14,6 @@ const embeds = [
 ]
 
 export default class PageContentEditor extends React.Component {
-
   render() {
     return (
       <div ref='container' className='c-article-editor'>
@@ -34,5 +33,4 @@ export default class PageContentEditor extends React.Component {
       </div>
     )
   }
-
 }
