@@ -2,7 +2,7 @@ import React from 'react'
 import R from 'ramda'
 import {Entity} from 'draft-js'
 
-require('../../../../styles/components/embeds/embed_container.scss')
+require('../styles/embeds/embed.scss')
 
 export default class Embed extends React.Component {
 
