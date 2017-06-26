@@ -58,11 +58,7 @@ class PageEditorComponent extends React.Component {
         this.props.entities.remote[this.props.pageId] || false
     }
 
-    if (!page) {
-      return false
-    }
-
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, page)
+    return page
   }
 
   savePage() {
