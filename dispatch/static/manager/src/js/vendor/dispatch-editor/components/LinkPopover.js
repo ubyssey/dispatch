@@ -10,7 +10,7 @@ export default function LinkPopover(props) {
 
   return (
     <div
-      className='c-content-editor__popover'
+      className='c-dispatch-editor__popover'
       onMouseUp={e => e.stopPropagation()}
       style={style}>
       <ContentEditorLinkEditor

@@ -39,7 +39,7 @@ function buildEmbedMap(embeds) {
 
 function blockStyleFn(contentBlock) {
   const type = contentBlock.getType()
-  const baseStyle = 'c-content-editor__editor__block c-content-editor__editor__block'
+  const baseStyle = 'c-dispatch-editor__editor__block c-dispatch-editor__editor__block'
 
   switch(type) {
   case 'unstyled':
@@ -365,9 +365,9 @@ class ContentEditor extends React.Component {
     return (
       <div
         ref='container'
-        className='c-content-editor'
+        className='c-dispatch-editor'
         onMouseUp={e => this.handleMouseUp(e)}>
-        <div className='c-content-editor__editor'>
+        <div className='c-dispatch-editor__editor'>
           <Editor
             ref='editor'
             readOnly={this.state.readOnly}
