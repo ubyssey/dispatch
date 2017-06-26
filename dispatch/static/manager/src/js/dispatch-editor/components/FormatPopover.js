@@ -1,11 +1,11 @@
 import React from 'react'
 import { AnchorButton } from '@blueprintjs/core'
 
-import ContentEditorLinkEditor from './ContentEditorLinkEditor'
+import ContentEditorLinkEditor from './LinkEditor'
 
 const LINK_INPUT_WIDTH = 379
 
-export default class ContentEditorPopover extends React.Component {
+export default class FormatPopover extends React.Component {
 
   constructor(props) {
     super(props)

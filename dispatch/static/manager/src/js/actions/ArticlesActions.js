@@ -1,20 +1,21 @@
+import R from 'ramda'
 import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { articleSchema } from '../constants/Schemas'
 import DispatchAPI from '../api/dispatch'
 
+import { toJSON, fromJSON } from '../dispatch-editor'
+
 import PublishableActions from './PublishableActions'
-import ContentStateHelper from '../components/ContentEditor/ContentStateHelper'
 
 class ArticlesActions extends PublishableActions {
 
-  prepareData(data) {
-    if (data._content) {
-      // Convert article contentState to JSON array
-      data.content = ContentStateHelper.toJSON(data._content)
-      delete data._content
-    }
+  toRemote(data) {
+    data = R.clone(data)
+
+    // Convert article contentState to JSON array
+    data.content = toJSON(data.content)
 
     data.section_id = data.section
 
@@ -31,6 +32,11 @@ class ArticlesActions extends PublishableActions {
       data.featured_image.image_id = data.featured_image.image
     }
 
+    return data
+  }
+
+  fromRemote(data) {
+    data.content = fromJSON(data.content)
     return data
   }
 
