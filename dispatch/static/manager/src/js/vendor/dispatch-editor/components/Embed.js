@@ -2,9 +2,9 @@ import React from 'react'
 import R from 'ramda'
 import {Entity} from 'draft-js'
 
-require('../../../styles/components/embeds/embed_container.scss')
+require('../styles/embeds/embed.scss')
 
-export default class ContentEditorEmbed extends React.Component {
+export default class Embed extends React.Component {
 
   constructor(props) {
     super(props)
@@ -15,25 +15,8 @@ export default class ContentEditorEmbed extends React.Component {
     }
   }
 
-  updateEmbed() {
-
-    this.props.blockProps.openModal(this.props.blockProps.modal, {
-      onSubmit: data => {
-
-        this.props.blockProps.closeModal()
-
-        let newData = R.merge(
-          this.state.data,
-          this.props.blockProps.modalCallback(data)
-        )
-
-        // Update entity and state
-        Entity.mergeData(this.props.block.getEntityAt(0), newData)
-        this.setState({ data: newData }, this.render)
-
-      }
-    })
-
+  getData() {
+    return Entity.get(this.props.block.getEntityAt(0)).getData()
   }
 
   removeEmbed() {
@@ -41,13 +24,11 @@ export default class ContentEditorEmbed extends React.Component {
   }
 
   updateField(field, value) {
-    this.setState({
-      data: R.assoc(field, value, this.state.data)
-    })
-  }
-
-  getData() {
-    return Entity.get(this.props.block.getEntityAt(0)).getData()
+    Entity.mergeData(
+      this.props.block.getEntityAt(0),
+      R.assoc(field, value, {})
+    )
+    this.forceUpdate()
   }
 
   startEditing() {
@@ -56,9 +37,6 @@ export default class ContentEditorEmbed extends React.Component {
   }
 
   stopEditing() {
-
-    Entity.mergeData(this.props.block.getEntityAt(0), this.state.data)
-
     this.setState({ editMode: false })
     this.props.blockProps.onBlur()
   }
@@ -70,7 +48,7 @@ export default class ContentEditorEmbed extends React.Component {
   render() {
 
     const embedProps = {
-      data: this.state.editMode ? this.state.data : this.getData(),
+      data: this.getData(),
       updateField: (field, value) => this.updateField(field, value),
       stopEditing: this.stopEditing
     }
