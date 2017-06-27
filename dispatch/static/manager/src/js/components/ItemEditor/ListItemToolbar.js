@@ -31,6 +31,7 @@ export default function ListItemToolbar(props) {
           <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
         </AnchorButton>
         {props.isNew ? newTitle : editTitle}
+        {props.extraButton}
       </ToolbarLeft>
       <ToolbarRight>
         <AnchorButton
