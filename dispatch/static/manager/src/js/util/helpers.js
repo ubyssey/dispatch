@@ -17,18 +17,10 @@ export function confirmNavigation(router, route, shouldConfirm) {
 }
 
 export function dateObjToAPIString(date) {
-  let ret
   if (date instanceof Date) {
-    ret = date.toISOString()
-  } else {
-    const time_ms = Date.parse(date)
-    if(!isNaN(time_ms)) {
-      ret - new Date(time_ms).toISOString()
-    } else {
-      ret = ''
-    }
+    return date.toISOString()
   }
-  return ret
+  return date
 }
 
 export function getPath(location, page) {
