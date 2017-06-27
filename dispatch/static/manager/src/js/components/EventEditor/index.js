@@ -60,22 +60,46 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItem: (token, eventId, next) => {
       dispatch(eventsActions.delete(token, eventId, next))
     },
-    publish: (data) => {
-      dispatch(eventsActions.publish(data))
+    publishEvent(token, id) {
+      const form = new FormData()
+      form.append('is_published', true)
+      dispatch(eventsActions.save(token, id, form))
     },
-    unpublish: (data) => {
-      dispatch(eventsActions.unpublish(data))
+    unpublishEvent(token, id) {
+      const form = new FormData()
+      form.append('is_published', false)
+      dispatch(eventsActions.save(token, id, form))
     }
   }
 }
 
 function EventEditorComponent(props) {
+
+  const publishButton = (
+    <button onClick={() => props.publishEvent(
+      props.token,
+      props.listItem.id)} >
+      Publish
+    </button>
+  )
+
+  const unpublishButton = (
+    <button onClick={() => props.unpublishEvent(
+      props.token,
+      props.listItem.id)} >
+      Unpublish
+    </button>
+  )
+
+  const event_is_published = props.entities.local ? props.entities.local[props.listItem.id].is_published : false
+
   return (
     <ItemEditor
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={EventForm}
       displayField='title'
+      extraButton={event_is_published ? unpublishButton : publishButton}
       {... props} />
   )
 }
