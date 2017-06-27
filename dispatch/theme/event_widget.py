@@ -12,6 +12,9 @@ class Sidebar(Zone):
 class UpcomingEventsWidget(Widget):
     """Widget to display the next 5 widgets that are upcoming in the sidebar"""
 
+    def __init__(self, num_events=5):
+        self.num_events = num_events
+
     id = 'upcoming-events'
     name = 'Upcoming Events'
     template = 'widgets/test-upcoming-events.html'
@@ -25,6 +28,6 @@ class UpcomingEventsWidget(Widget):
 
         today = datetime.now().date()
 
-        data['events'] = Event.objects.filter(is_published=True, start_time__gte = today).exclude(pk=self.data['featured_event']).order_by('start_time')[:5]
+        data['events'] = Event.objects.filter(is_published=True, start_time__gte = today).exclude(pk=self.data['featured_event']).order_by('start_time')[:self.num_events]
 
         return data

@@ -224,15 +224,16 @@ class DispatchTestHelpers(object):
             return client.post(url, data, format='multipart')
 
     @classmethod
-    def create_upcoming_event_widget(cls, client):
+    def create_upcoming_event_widget(cls, client, num_events=5):
 
         register.zone(Sidebar)
         register.widget(UpcomingEventsWidget)
         zone = Sidebar()
-        widget = UpcomingEventsWidget()
+        widget = UpcomingEventsWidget(num_events)
 
+        num_events += 1 # Just so num_events and titles of the events aren't 0-indexed
         # Make 5 events with increasing start dates
-        for index in xrange(1,6):
+        for index in xrange(1,num_events):
 
             response = DispatchTestHelpers.create_event(client, title=('Title ' + str(index)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index)), is_published=True)
 

@@ -12,3 +12,5 @@ node_modules/
 htmlcov/
 
 *.vscode/
+
+media/

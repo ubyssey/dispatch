@@ -198,3 +198,16 @@ class UpcomingEventsTestCase(DispatchAPITestCase):
         self.assertTrue(widget_data['events'][0].start_time < datetime.now())
         self.assertEqual(widget_data['events'][1].title, u'Title 1')
         self.assertEqual(widget_data['events'][2].title, u'Title 2')
+
+    def test_variable_number_of_upcoming_events(self):
+        """Should be able to choose more than 5 upcoming events"""
+
+        register.zone(Sidebar)
+        register.widget(UpcomingEventsWidget)
+        zone = Sidebar()
+        widget = DispatchTestHelpers.create_upcoming_event_widget(self.client, num_events=10)
+
+        widget_data = widget.context(widget.prepare_data())
+
+        self.assertEqual(len(widget_data['events']), 9)
+        self.assertEqual(widget_data['featured_event'].id, 1)
