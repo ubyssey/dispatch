@@ -10,8 +10,7 @@ import {
   Entity,
   getDefaultKeyBinding,
   KeyBindingUtil,
-  CompositeDecorator,
-  ContentState
+  CompositeDecorator
 } from 'draft-js'
 
 const {hasCommandModifier} = KeyBindingUtil
@@ -66,12 +65,8 @@ const decorator = new CompositeDecorator([
 
 class ContentEditor extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.embedMap = buildEmbedMap(this.props.embeds)
-
-    this.state = {
+  initialState() {
+    return {
       editorState: EditorState.createEmpty(decorator),
       readOnly: false,
       showEmbedToolbar: false,
@@ -83,19 +78,33 @@ class ContentEditor extends React.Component {
       activeBlock: null,
       isLinkInputActive: false
     }
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.embedMap = buildEmbedMap(this.props.embeds)
+
+    this.state = this.initialState()
 
   }
 
   componentWillReceiveProps(nextProps) {
     // Push content to editor state
-    this.setState({
-      editorState: EditorState.push(this.state.editorState, nextProps.content || ContentState.createFromText(''))
-    })
+    if (nextProps.content) {
+      this.setState({
+        editorState: EditorState.push(this.state.editorState, nextProps.content)
+      })
+    } else {
+      this.setState(this.initialState())
+    }
   }
 
   componentWillMount() {
     // Push content to editor state
-    this.onChange(EditorState.push(this.state.editorState, this.props.content || ContentState.createFromText('')))
+    if (this.props.content) {
+      this.onChange(EditorState.push(this.state.editorState, this.props.content))
+    }
   }
 
   onChange(editorState) {
