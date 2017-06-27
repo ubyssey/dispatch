@@ -28,7 +28,7 @@ class EventsActions extends ResourceActions {
         .then(json => json.count)
     }
   }
-  
+
 }
 
 export default new EventsActions(
