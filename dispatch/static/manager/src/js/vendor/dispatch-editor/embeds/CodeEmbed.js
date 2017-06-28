@@ -8,7 +8,7 @@ import 'brace/mode/css'
 import 'brace/mode/javascript'
 import 'brace/theme/chrome'
 
-require('../../../../styles/components/embeds/code.scss')
+require('../styles/embeds/code.scss')
 
 const MODES = [
   { value: 'html', label: 'html' },
@@ -20,7 +20,7 @@ function CodeEmbedComponent(props) {
   return(
     <div className='o-embed o-embed--code'>
       <AceEditor
-        className='o-embed--code_editor'
+        className='o-embed--code__editor'
         mode={props.data.mode}
         theme='chrome'
         width='100%'
@@ -30,8 +30,8 @@ function CodeEmbedComponent(props) {
         onChange={(content) => props.updateField('content', content)}
         editorProps={{$blockScrolling: true}}
       />
-      <div className='o-embed--code_editor_button_container'>
-        <div className='o-embed--code_editor_mode_select'>
+      <div className='o-embed--code__footer'>
+        <div className='o-embed--code__mode'>
           <SelectInput
             options={MODES}
             selected={props.data.mode}
