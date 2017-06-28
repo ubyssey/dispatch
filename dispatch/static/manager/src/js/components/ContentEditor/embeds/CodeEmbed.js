@@ -9,7 +9,6 @@ import 'brace/mode/css'
 import 'brace/mode/javascript'
 import 'brace/theme/chrome'
 
-
 require('../../../../styles/components/embeds/code.scss')
 
 const MODES = [

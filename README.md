@@ -1,4 +1,4 @@
-Dispatch 
+Dispatch
 =====================
 [![Travis branch](https://img.shields.io/travis/ubyssey/dispatch/develop.svg)](https://travis-ci.org/ubyssey/dispatch)
 [![Coveralls](https://img.shields.io/coveralls/ubyssey/dispatch/develop.svg)](https://coveralls.io/github/ubyssey/dispatch)
@@ -40,6 +40,7 @@ yarn start
 ```bash
 
 # Run tests
+# make sure your current working directory is ubyssey-dev/dispatch
 dispatch-admin test
 
 # Generate coverage report
