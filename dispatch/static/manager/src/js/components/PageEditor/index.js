@@ -31,7 +31,7 @@ class PageEditorComponent extends React.Component {
     confirmNavigation(
       this.props.router,
       this.props.route,
-      () => !this.props.page.isCreatingNew && !this.page.article.isSaved
+      () => !this.props.page.isSaved
     )
   }
 

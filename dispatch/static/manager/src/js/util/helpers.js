@@ -12,7 +12,13 @@ export function humanizeDatetime(timestamp) {
 export function confirmNavigation(router, route, shouldConfirm) {
   router.setRouteLeaveHook(
     route,
-    () => shouldConfirm() ? 'Unsaved changes. Are you sure you want to leave?' : null
+    (nextLocation) => {
+      if (shouldConfirm() &&
+        !(route.path == 'new' && nextLocation.pathname.match(/\/[0-9]+\/?$/))) {
+        return 'Unsaved changes. Are you sure you want to leave?'
+      }
+      return null
+    }
   )
 }
 
