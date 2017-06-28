@@ -4,6 +4,9 @@ import ArticleEditor from '../../components/ArticleEditor'
 
 export default function ArticlePage(props) {
   return (
-    <ArticleEditor articleId={props.params.articleId} />
+    <ArticleEditor
+      articleId={props.params.articleId}
+      location={props.location}
+      route={props.route} />
   )
 }

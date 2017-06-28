@@ -1,2 +1,0 @@
-class BaseComponent(object):
-    pass

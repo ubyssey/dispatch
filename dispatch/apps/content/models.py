@@ -3,7 +3,6 @@ import StringIO
 import os
 import re
 
-
 from jsonfield import JSONField
 from PIL import Image as Img
 
@@ -23,6 +22,7 @@ from django.template import loader, Context
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
+from dispatch.apps.content.render import content_to_html
 from dispatch.apps.core.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
@@ -107,49 +107,10 @@ class Publishable(Model):
             return Template().to_json()
         return None
 
-    def get_html(self):
-        """
-        Returns article content as HTML.
-        """
-        def prepare_html(nodes):
-            """
-            Processes each in the document, returning its rendered HTML representation.
-            """
-            html = ""
-            for node in nodes:
-                if type(node) is dict:
-                    # If node is a dictionary, append its rendered HTML.
-                    data = node['data']
-                    # If node is an ad, include section/id info for DFP
-                    if node['type'] == 'advertisement':
-                        data['id'] = len(html) % 1000
-                        data['section'] = self.section
-                        data['template'] = self.template
-
-                    if node['type'] == 'paragraph':
-                        html += "<p>%s</p>" % node['data']
-                    if node['type'] == 'code':
-                        if node.get('data',{}).get('mode',{}) == 'html':
-                            html += "<div>%s</div>" % node.get('data',{}).get('embedValue',{})
-                        if node.get('data',{}).get('mode',{}) == 'css':
-                            html += "<style>%s</style>" % node.get('data',{}).get('embedValue',{})
-                        if node.get('data',{}).get('mode',{}) == 'javascript':
-                            html += "<script>%s</script>" % node.get('data',{}).get('embedValue',{})
-
-                    else:
-                        pass
-                        # TODO: Need to find better solution for this
-                        # html += embedlib.render(node['type'], data)
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    html += "<p>%s</p>" % node
-            return html
-
-        try:
-            # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(self.content)
-        except ValueError:
-            return self.content
+    @property
+    def html(self):
+        """Return HTML representation of content"""
+        return content_to_html(self.content)
 
     def is_parent(self):
         return self.parent is None
@@ -578,29 +539,3 @@ class File(Model):
         Returns the absolute file URL.
         """
         return settings.MEDIA_URL + str(self.file)
-
-class Event(Model):
-    title = CharField(max_length=255)
-    description = TextField(max_length=500)
-    host = CharField(max_length=255)
-
-    image = ForeignKey('Image', null=True)
-
-    start_time = DateTimeField(null=True)
-    end_time = DateTimeField(null=True)
-    location = CharField(max_length=500)
-
-    CATEGORY_CHOICES = (
-        ('sports', 'Sports'),
-        ('music', 'Music'),
-        ('academic', 'Academic'),
-        ('party', 'Party'),
-        ('business', 'Business'),
-        ('ceremony', 'Ceremony'),
-        ('workshop', 'Workshop'),
-        ('other', 'Other')
-    )
-
-    category = CharField(max_length=20, choices=CATEGORY_CHOICES)
-
-    facebook_url = CharField(max_length=255, null=True)
