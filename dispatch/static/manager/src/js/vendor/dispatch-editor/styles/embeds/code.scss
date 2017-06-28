@@ -1,12 +1,12 @@
-@import '../../utilities/colors';
+@import '../../../../../styles/utilities/colors';
 
-.o-embed--code_editor {
+.o-embed--code__editor {
   width: 100%;
   border-style: solid;
   border-color: black;
 }
 
-.o-embed--code_editor_button_container {
+.o-embed--code__footer {
   padding: 5px;
   border-style: solid;
   border-top-width: 1px;
@@ -14,10 +14,6 @@
   overflow: auto;
 }
 
-.o-embed--code_editor_mode_select {
+.o-embed--code__mode {
   float: right;
-}
-
-.o-embed--code {
-
 }
