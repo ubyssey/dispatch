@@ -36,9 +36,9 @@ class TestEventWidget(Widget):
     description = TextField('Description')
     events = EventField('Featured Events')
 
-    def context(self,data):
+    def context(self, data):
 
-        data['events'] = Event.objects.filter(is_published=True).order_by('-start_time')
+        data['events'] = Event.objects.filter(is_published=True)
 
         return data
 
@@ -182,7 +182,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         zone.save(validated_data)
         widget.set_data(validated_data['data'])
 
-        html = u'<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n      <div class="events">event 2</div>\n    \n      <div class="events">event 1</div>\n    \n</div>\n'
+        html = u'<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n      <div class="events">event 1</div>\n    \n      <div class="events">event 2</div>\n    \n</div>\n'
 
         result = widget.render(widget.context(widget.prepare_data()))
 

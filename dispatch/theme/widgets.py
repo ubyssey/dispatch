@@ -143,13 +143,13 @@ class Widget(object):
         """Renders the widget as HTML"""
 
         template = loader.get_template(self.template)
-        
+
         if not data:
             return template.render(self.prepare_data())
         else:
             return template.render(data)
 
     def context(self, data):
-        """Optional method to add additional data to the deplate context before rendering"""
+        """Optional method to add additional data to the template context before rendering"""
 
         return data

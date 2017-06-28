@@ -12,7 +12,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Event(Model):
 
     title = CharField(max_length=255)
-    description = TextField()
+    slug = SlugField(max_length=255)
+    description = TextField(max_length=1000)
     host = CharField(max_length=255)
 
     image = ImageField(upload_to='images/events/', null=True, blank=True)
