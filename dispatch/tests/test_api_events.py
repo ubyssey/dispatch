@@ -163,7 +163,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(event_2.status_code, status.HTTP_201_CREATED)
         self.assertEqual(event_3.status_code, status.HTTP_201_CREATED)
 
-        self.client.credentials() # Clear Credentials
+        self.client.credentials() # Clear credentials
 
         url = reverse('api-event-list')
 
@@ -171,6 +171,7 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.data['results'][0]['title'], 'Test 1')
         self.assertEqual(response.data['results'][1]['title'], 'Test 2')
+        self.assertEqual(len(response.data['results']), 2)
 
     def test_event_query(self):
         """Be able to search for events"""
