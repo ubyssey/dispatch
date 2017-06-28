@@ -34,7 +34,7 @@ class ArticleEditorComponent extends React.Component {
     confirmNavigation(
       this.props.router,
       this.props.route,
-      () => !this.props.article.isCreatingNew && !this.props.article.isSaved      
+      () => !this.props.article.isSaved
     )
   }
 

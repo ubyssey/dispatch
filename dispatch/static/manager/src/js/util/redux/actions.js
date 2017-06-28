@@ -190,8 +190,7 @@ export class ResourceActions {
       type: this.types.SET,
       isLocalAction: true,
       payload: {
-        data: normalize(resource, this.schema),
-        stillSaved: resource.id == 'new' && Object.keys(resource).length == 1
+        data: normalize(resource, this.schema)
       }
     }
   }
