@@ -110,7 +110,7 @@ export class ResourceActions {
     }
   }
 
-  create(token, data, next=null) {
+  create(token, data, next=null, callback) {
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.CREATE) })
@@ -127,6 +127,10 @@ export class ResourceActions {
               data: normalize(json, this.schema)
             }
           })
+
+          if (typeof callback === 'function') {
+            callback(json)
+          }
         })
         .catch(error => {
           dispatch({
