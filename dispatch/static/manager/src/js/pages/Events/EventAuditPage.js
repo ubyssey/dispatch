@@ -104,7 +104,7 @@ class EventAuditPage extends React.Component {
             <ToolbarRight>
               <ItemListPagination
                 currentPage={parseInt(this.props.location.query.page || 1, 10)}
-                totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
+                totalPages={Math.ceil(this.props.events.count / PER_PAGE) !== 0 ? Math.ceil(this.props.events.count / PER_PAGE) : 1}
                 location={this.props.location} />
             </ToolbarRight>
           </Toolbar>
