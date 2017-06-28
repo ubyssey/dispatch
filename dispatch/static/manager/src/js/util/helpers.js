@@ -12,7 +12,14 @@ export function humanizeDatetime(timestamp) {
 export function confirmNavigation(router, route, shouldConfirm) {
   router.setRouteLeaveHook(
     route,
-    () => shouldConfirm() ? 'Unsaved changes. Are you sure you want to leave?' : null
+    (location) => {
+      const ignoreLeaveHook = location.state ? location.state.ignoreLeaveHook : false
+
+      if (!ignoreLeaveHook && shouldConfirm()) {
+        return 'Unsaved changes. Are you sure you want to leave?'
+      }
+      return null
+    }
   )
 }
 
