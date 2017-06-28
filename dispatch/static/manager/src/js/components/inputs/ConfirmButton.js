@@ -19,9 +19,9 @@ export default class ConfirmButton extends React.Component {
 
   render() {
     return (
-      <div className='c-input-confirmbutton'>
+      <div className={`${this.props.className} c-input-confirmbutton`}>
         <AnchorButton
-          className={this.props.className}
+          className={this.props.buttonClassName}
           intent={this.props.intent}
           disabled={this.props.disabled}
           onClick={() => this.setState({ alertOpen: true })}>
