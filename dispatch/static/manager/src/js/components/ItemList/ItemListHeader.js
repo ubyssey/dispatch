@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button } from '@blueprintjs/core'
+import ConfirmButton from '../inputs/ConfirmButton'
 
 import { Toolbar, ToolbarLeft, ToolbarRight } from '../Toolbar'
 import ItemListPagination from './ItemListPagination'
@@ -26,10 +26,10 @@ export default function ItemListHeader(props) {
           onChange={() => props.actions.toggleAllItems(props.items.ids)} />
       </div>
       {`${props.items.selected.length} ${props.typePlural} selected`}
-      <Button
+      <ConfirmButton
         className='c-item-list__header__delete'
-        onClick={() => props.actions.deleteItems(props.items.selected)}
-        disabled={!props.items.selected.length}>Delete</Button>
+        onConfirm={() => props.actions.deleteItems(props.items.selected)}
+        disabled={!props.items.selected.length}>Delete</ConfirmButton>
       {props.toolbarContent}
     </div>
   )
