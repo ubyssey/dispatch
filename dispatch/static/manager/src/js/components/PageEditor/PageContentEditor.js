@@ -6,11 +6,13 @@ import {
   Editor,
   ImageEmbed,
   VideoEmbed,
+  CodeEmbed
 } from '../../vendor/dispatch-editor'
 
 const embeds = [
   ImageEmbed,
-  VideoEmbed
+  VideoEmbed,
+  CodeEmbed
 ]
 
 export default class PageContentEditor extends React.Component {

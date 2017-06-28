@@ -4,7 +4,8 @@ import {
   GalleryEmbed,
   ImageEmbed,
   PullQuoteEmbed,
-  VideoEmbed
+  VideoEmbed,
+  CodeEmbed,
 } from './embeds'
 
 import {
@@ -24,5 +25,6 @@ export {
   GalleryEmbed,
   ImageEmbed,
   PullQuoteEmbed,
-  VideoEmbed
+  VideoEmbed,
+  CodeEmbed
 }
