@@ -3,6 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import { replace } from 'react-router-redux'
+import { AnchorButton } from '@blueprintjs/core'
 
 import eventsActions from '../../actions/EventsActions'
 
@@ -75,6 +76,13 @@ class EventAuditPage extends React.Component {
     this.props.disapproveEvent(this.props.token, id)
   }
 
+  pagination() {
+    return <ItemListPagination
+      currentPage={parseInt(this.props.location.query.page || 1, 10)}
+      totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
+      location={this.props.location} />
+  }
+
   render() {
     const events = this.props.events.ids
       .map(id => this.props.entities.events[id])
@@ -93,19 +101,19 @@ class EventAuditPage extends React.Component {
         )
       })
 
-
     return (
       <DocumentTitle title='Audit Event'>
         <div>
           <Toolbar>
             <ToolbarLeft>
+              <AnchorButton
+                onClick={() => this.props.history.goBack()}>
+                <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
+              </AnchorButton>
             {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
-              <ItemListPagination
-                currentPage={parseInt(this.props.location.query.page || 1, 10)}
-                totalPages={Math.ceil(this.props.events.count / PER_PAGE) !== 0 ? Math.ceil(this.props.events.count / PER_PAGE) : 1}
-                location={this.props.location} />
+            {Math.ceil(this.props.events.count / PER_PAGE) ? this.pagination() : null}
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>
