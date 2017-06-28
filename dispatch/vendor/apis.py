@@ -73,3 +73,39 @@ class Facebook(object):
         }
 
         return self._post(uri, params)
+
+    def get_event(self, event_id):
+
+        url = '%s/%s' % (self.API_ROOT, event_id)
+
+        params = {
+            'access_token': self.access_token
+        }
+
+        return self._get(url, params)
+
+    def get_picture(self, id, type='normal'):
+
+        url = '%s/%s/picture' % (self.API_ROOT, id)
+
+        params = {
+            'access_token': self.access_token,
+            'redirect': False,
+            'type': type
+        }
+
+        json = self._get(url, params)
+
+        return json['data']['url']
+
+    def get_photos(self, id):
+
+        url = '%s/%s/photos' % (self.API_ROOT, id)
+
+        params = {
+            'access_token': self.access_token
+        }
+
+        json = self._get(url, params)
+
+        return json['data']

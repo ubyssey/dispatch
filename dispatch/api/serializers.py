@@ -2,9 +2,11 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File, Event
+from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.events.models import Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
+
 from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.apps.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
@@ -255,7 +257,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = JSONField()
 
-    authors = PersonSerializer(many=True, read_only=True)
+    authors = PersonSerializer(many=True, read_only=True, source='get_authors')
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
@@ -518,5 +520,16 @@ class EventSerializer(DispatchModelSerializer):
             'id',
             'title',
             'description',
-            'host'
+            'host',
+            'image',
+            'start_time',
+            'end_time',
+            'location',
+            'address',
+            'category',
+            'facebook_url',
+            'is_published',
+            'is_submission',
+            'submitter_email',
+            'submitter_phone',
         )

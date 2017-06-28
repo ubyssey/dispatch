@@ -1,10 +1,6 @@
 from django.template import loader, Context
-from dispatch.apps.api.serializers import ImageSerializer, ImageGallerySerializer
-from dispatch.apps.content.models import Image
-from dispatch.apps.content.models import ImageGallery
 
-class EmbedException(Exception):
-    pass
+from dispatch.apps.frontend.exceptions import EmbedException
 
 class EmbedLibrary(object):
 
@@ -15,6 +11,7 @@ class EmbedLibrary(object):
         self.library[type] = function
 
     def get_controller(self, type):
+
         if type in self.library:
             return self.library[type]
         else:
@@ -26,9 +23,7 @@ class EmbedLibrary(object):
     def render(self, type, data):
         return self.get_controller(type).render(data)
 
-
 embedlib = EmbedLibrary()
-
 
 def tag(tag, content):
     return u'<{tag}>{content}</{tag}>'.format(tag=tag, content=content)
@@ -37,7 +32,6 @@ def maptag(tagname, contents):
     """Returns the HTML produced from enclosing each item in
     `contents` in a tag of type `tagname`"""
     return u''.join(tag(tagname, item) for item in contents)
-
 
 class AbstractController(object):
 
@@ -104,6 +98,9 @@ class ImageController(AbstractTemplateRenderController):
 
     @classmethod
     def get_image(self, id):
+
+        from dispatch.apps.content.models import Image
+
         try:
             return Image.objects.get(pk=id)
         except Image.DoesNotExist:
@@ -111,6 +108,8 @@ class ImageController(AbstractTemplateRenderController):
 
     @classmethod
     def to_json(self, data):
+
+        from dispatch.apps.api.serializers import ImageSerializer
 
         id = data['image_id']
 
@@ -144,6 +143,9 @@ class GalleryController(AbstractTemplateRenderController):
 
     @classmethod
     def get_gallery(self, id):
+
+        from dispatch.apps.content.models import ImageGallery
+
         try:
             return ImageGallery.objects.get(pk=id)
         except ImageGallery.DoesNotExist:
@@ -151,6 +153,8 @@ class GalleryController(AbstractTemplateRenderController):
 
     @classmethod
     def to_json(self, data):
+
+        from dispatch.apps.api.serializers import ImageGallerySerializer
 
         id = data['id']
 
