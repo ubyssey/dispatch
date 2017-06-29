@@ -5,6 +5,8 @@ import DocumentTitle from 'react-document-title'
 import { replace } from 'react-router-redux'
 import { AnchorButton } from '@blueprintjs/core'
 
+import { AnchorButton } from '@blueprintjs/core'
+
 import eventsActions from '../../actions/EventsActions'
 
 import { Toolbar, ToolbarLeft, ToolbarRight } from '../../components/Toolbar'
@@ -110,7 +112,7 @@ class EventAuditPage extends React.Component {
                 onClick={() => this.props.history.goBack()}>
                 <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
               </AnchorButton>
-            {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
+              {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
             {this.props.events.count ? pagination : null}
