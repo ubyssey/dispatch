@@ -76,13 +76,6 @@ class EventAuditPage extends React.Component {
     this.props.disapproveEvent(this.props.token, id)
   }
 
-  pagination() {
-    return <ItemListPagination
-      currentPage={parseInt(this.props.location.query.page || 1, 10)}
-      totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
-      location={this.props.location} />
-  }
-
   render() {
     const events = this.props.events.ids
       .map(id => this.props.entities.events[id])
@@ -101,6 +94,13 @@ class EventAuditPage extends React.Component {
         )
       })
 
+    const pagination = (
+      <ItemListPagination
+        currentPage={parseInt(this.props.location.query.page || 1, 10)}
+        totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
+        location={this.props.location} />
+    )
+
     return (
       <DocumentTitle title='Audit Event'>
         <div>
@@ -113,7 +113,7 @@ class EventAuditPage extends React.Component {
             {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
-            {Math.ceil(this.props.events.count / PER_PAGE) ? this.pagination() : null}
+            {this.props.events.count ? pagination : null}
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>
