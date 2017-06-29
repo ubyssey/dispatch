@@ -13,6 +13,6 @@ htmlcov/
 
 *.vscode/
 
-media/
+dispatch/tests/media
 
-migrations/
+dispatch/apps/**/migrations/
