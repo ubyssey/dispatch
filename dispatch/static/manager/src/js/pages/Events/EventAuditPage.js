@@ -3,6 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import { replace } from 'react-router-redux'
+import { AnchorButton } from '@blueprintjs/core'
 
 import { AnchorButton } from '@blueprintjs/core'
 
@@ -95,6 +96,13 @@ class EventAuditPage extends React.Component {
         )
       })
 
+    const pagination = (
+      <ItemListPagination
+        currentPage={parseInt(this.props.location.query.page || 1, 10)}
+        totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
+        location={this.props.location} />
+    )
+
     return (
       <DocumentTitle title='Audit Event'>
         <div>
@@ -107,10 +115,7 @@ class EventAuditPage extends React.Component {
               {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
-              <ItemListPagination
-                currentPage={parseInt(this.props.location.query.page || 1, 10)}
-                totalPages={Math.ceil(this.props.events.count / PER_PAGE)}
-                location={this.props.location} />
+            {this.props.events.count ? pagination : null}
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>

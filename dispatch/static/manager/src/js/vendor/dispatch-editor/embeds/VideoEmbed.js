@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../../inputs'
+import { FormInput, TextInput } from '../../../components/inputs'
 import { Button } from '@blueprintjs/core'
 
-require('../../../../styles/components/embeds/video.scss')
+require('../styles/embeds/video.scss')
 
 class VideoEmbedComponent extends React.Component {
 
@@ -30,7 +30,9 @@ class VideoEmbedComponent extends React.Component {
               onChange={e => this.props.updateField('url', e.target.value)} />
           </FormInput>
         </form>
-        <Button onClick={() => this.insertVideo()}>Insert</Button>
+        <div className='o-embed--video__button__container'>
+          <Button onClick={() => this.insertVideo()}>Insert</Button>
+        </div>
       </div>
     )
 
