@@ -36,7 +36,9 @@ export default function ListItemToolbar(props) {
         <AnchorButton
           intent={Intent.SUCCESS}
           onClick={() => props.saveListItem()}>
-          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
+          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}
+        </AnchorButton>
+        {props.extraButton}
         {props.deleteListItem ? deleteButton : null}
       </ToolbarRight>
     </Toolbar>

@@ -95,7 +95,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'UNICODE_JSON': True,
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DATETIME_INPUT_FORMATS': ['iso-8601']
 }
 
 MIDDLEWARE_CLASSES = [
