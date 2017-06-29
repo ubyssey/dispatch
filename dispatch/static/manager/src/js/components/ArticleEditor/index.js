@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
 import { withRouter } from 'react-router'
 
@@ -24,7 +25,7 @@ class ArticleEditorComponent extends React.Component {
     if (this.props.isNew) {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
-      this.props.getArticle(this.props.token, this.props.articleId)
+      this.loadArticle()
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
@@ -40,12 +41,40 @@ class ArticleEditorComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!this.props.isNew) {
-      if (prevProps.articleId !== this.props.articleId) {
-        this.props.getArticle(this.props.token, this.props.articleId)
-
+      if (prevProps.articleId !== this.props.articleId
+        || this.getVersion() != this.getVersion(prevProps)) {
+        this.loadArticle()
         this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
+      } else if (this.versionComparison(prevProps)) {
+        // article was updated, set the version query
+        this.setVersion(this.getLatestVersionFromArticle())
       }
     }
+  }
+
+  getLatestVersionFromArticle(props) {
+    props = props || this.props
+    const a = R.prop(props.articleId, props.entities.local || {}) ||
+      R.prop(props.articleId, props.entities.remote || {})
+    return a ? a.latest_version : null
+  }
+
+  versionComparison(prevProps) {
+    const prev = this.getLatestVersionFromArticle(prevProps)
+    const now = this.getLatestVersionFromArticle(this.props)
+    if (prev && now && prev !== now) {
+      return now
+    }
+    return false
+  }
+
+  loadArticle() {
+    const version = this.getVersion()
+    let query = null
+    if (version) {
+      query = { version }
+    }
+    this.props.getArticle(this.props.token, this.props.articleId, query)
   }
 
   getArticle() {
@@ -61,7 +90,7 @@ class ArticleEditorComponent extends React.Component {
       return false
     }
 
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
+    return article
   }
 
   saveArticle() {
@@ -103,16 +132,20 @@ class ArticleEditorComponent extends React.Component {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
-  getArticleVersion(version) {
-    return this.props.getArticle(
-      this.props.token,
-      this.props.articleId,
-      { version: version }
-    )
+  setVersion(version) {
+    this.props.push({
+      pathname: this.props.location.pathname,
+      query: { v: version }
+    })
+  }
+
+  getVersion(props) {
+    props = props || this.props
+
+    return props.location.query.v
   }
 
   render() {
-
     const article = this.getArticle()
 
     if (!article) {
@@ -129,7 +162,7 @@ class ArticleEditorComponent extends React.Component {
             publishArticle={() => this.publishArticle()}
             unpublishArticle={() => this.unpublishArticle()}
             previewArticle={() => this.previewArticle()}
-            getVersion={(version) => this.getArticleVersion(version)}
+            getVersion={(version) => this.setVersion(version)}
             article={article}
             isNew={this.props.isNew} />
           <div className='u-container-editor'>
@@ -157,13 +190,13 @@ class ArticleEditorComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.single,
-    editorState: state.app.editor,
     entities: {
       remote: state.app.entities.articles,
       local: state.app.entities.local.articles,
       images: state.app.entities.images
     },
     integrations: state.app.integrations.integrations,
+
     token: state.app.auth.token
   }
 }
@@ -199,6 +232,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetchIntegration: (token, integrationId) => {
       dispatch(integrationActions.fetchIntegration(token, integrationId))
+    },
+    push: (loc) => {
+      dispatch(push(loc))
     }
   }
 }

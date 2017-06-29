@@ -1,9 +1,8 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../../inputs'
+import { FormInput, TextInput } from '../../../components/inputs'
 
 function PullQuoteEmbedComponent(props) {
-
   return (
     <div className='o-embed o-embed--quote'>
       <form>
@@ -22,7 +21,6 @@ function PullQuoteEmbedComponent(props) {
       </form>
     </div>
   )
-
 }
 
 export default {

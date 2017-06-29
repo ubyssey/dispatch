@@ -7,6 +7,7 @@ export default function EditPagePage(props) {
     <PageEditor
       pageId={props.params.pageId}
       goBack={props.history.goBack}
+      location={props.location}
       route={props.route} />
   )
 }
