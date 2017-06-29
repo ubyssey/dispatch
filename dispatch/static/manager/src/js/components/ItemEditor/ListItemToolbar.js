@@ -31,13 +31,14 @@ export default function ListItemToolbar(props) {
           <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
         </AnchorButton>
         {props.isNew ? newTitle : editTitle}
-        {props.extraButton}
       </ToolbarLeft>
       <ToolbarRight>
         <AnchorButton
           intent={Intent.SUCCESS}
           onClick={() => props.saveListItem()}>
-          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}</AnchorButton>
+          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}
+        </AnchorButton>
+        {props.extraButton}
         {props.deleteListItem ? deleteButton : null}
       </ToolbarRight>
     </Toolbar>

@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { AnchorButton, Intent } from '@blueprintjs/core'
+
 import { dateObjToAPIString } from '../../util/helpers'
 
 import eventsActions from '../../actions/EventsActions'
@@ -76,19 +78,21 @@ const mapDispatchToProps = (dispatch) => {
 function EventEditorComponent(props) {
 
   const publishButton = (
-    <button onClick={() => props.publishEvent(
-      props.token,
-      props.listItem.id)} >
+    <AnchorButton onClick={() => props.publishEvent(props.token, props.listItem.id)}
+      intent={Intent.PRIMARY}
+      disabled={props.isNew} >
+      <span className='pt-icon-standard pt-icon-th'></span>
       Publish
-    </button>
+    </AnchorButton>
   )
 
   const unpublishButton = (
-    <button onClick={() => props.unpublishEvent(
-      props.token,
-      props.listItem.id)} >
+    <AnchorButton onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
+      intent={Intent.PRIMARY}
+      disabled={props.isNew} >
+      <span className='pt-icon-standard pt-icon-th'></span>
       Unpublish
-    </button>
+    </AnchorButton>
   )
 
   const event_is_published = props.entities.local && props.listItem.id
