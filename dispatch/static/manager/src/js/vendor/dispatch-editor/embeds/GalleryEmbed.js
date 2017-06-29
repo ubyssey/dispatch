@@ -1,14 +1,10 @@
 import React from 'react'
 
-import { FormInput, GallerySelectInput, TextInput } from '../../inputs'
-
-require('../../../../styles/components/embeds/image.scss')
+import { FormInput, GallerySelectInput, TextInput } from '../../../components/inputs'
 
 function GalleryEmbedComponent(props) {
-
   return (
-    <div className='o-embed o-embed--image'>
-      <img className='o-embed--image__image' src={props.data.url} />
+    <div className='o-embed o-embed--gallery'>
       <form>
         <FormInput label='Title'>
           <TextInput
@@ -26,7 +22,6 @@ function GalleryEmbedComponent(props) {
       </form>
     </div>
   )
-
 }
 
 export default {

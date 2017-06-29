@@ -50,10 +50,3 @@ export const ZONES = actionTypes('ZONES', [
 
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
-
-// Editor actions
-export const UPDATE_EDITOR = 'UPDATE_EDITOR'
-export const TOGGLE_EDITOR_STYLE = 'TOGGLE_EDITOR_STYLE'
-export const EDITOR_KEY_COMMAND = 'EDITOR_KEY_COMMAND'
-export const EDITOR_INSERT_LINK = 'EDITOR_INSERT_LINK'
-export const EDITOR_REMOVE_LINK = 'EDITOR_REMOVE_LINK'

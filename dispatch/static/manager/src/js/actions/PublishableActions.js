@@ -15,13 +15,16 @@ export default class PublishableActions extends ResourceActions {
 
       dispatch({ type: pending(this.types.PUBLISH) })
 
-      this.api.save(token, id, this.prepareData(data))
+      this.api.save(token, id, this.toRemote(data))
         .then(() => this.api.publish(token, id))
         .then(json => {
           dispatch({
             type: fulfilled(this.types.PUBLISH),
             payload: {
-              data: normalize(json, this.schema)
+              data: normalize(
+                this.fromRemote(json),
+                this.schema
+              )
             }
           })
         })
@@ -39,7 +42,10 @@ export default class PublishableActions extends ResourceActions {
       type: this.types.UNPUBLISH,
       payload: this.api.unpublish(token, id)
         .then(json => ({
-          data: normalize(json, this.schema)
+          data: normalize(
+            this.fromRemote(json),
+            this.schema
+          )
         }))
     }
   }
@@ -49,12 +55,15 @@ export default class PublishableActions extends ResourceActions {
 
       dispatch({ type: pending(this.types.SAVE) })
 
-      this.api.save(token, id, this.prepareData(data))
+      this.api.save(token, id, this.toRemote(data))
         .then(json => {
           dispatch({
             type: fulfilled(this.types.SAVE),
             payload: {
-              data: normalize(json, this.schema)
+              data: normalize(
+                this.fromRemote(json),
+                this.schema
+              )
             }
           })
 

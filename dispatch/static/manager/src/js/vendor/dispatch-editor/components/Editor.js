@@ -1,6 +1,5 @@
 import React from 'react'
 import qwery from 'qwery'
-import { connect } from 'react-redux'
 
 import { Popover, Position } from '@blueprintjs/core'
 
@@ -8,27 +7,24 @@ import {
   Editor,
   EditorState,
   SelectionState,
-  AtomicBlockUtils,
   Entity,
-  Modifier,
-  CompositeDecorator,
   getDefaultKeyBinding,
-  KeyBindingUtil
+  KeyBindingUtil,
+  CompositeDecorator
 } from 'draft-js'
 
 const {hasCommandModifier} = KeyBindingUtil
 
-import * as editorActions from '../../actions/EditorActions'
+import * as actions from '../actions'
 
-import ContentEditorEmbedToolbar from './ContentEditorEmbedToolbar'
-import ContentEditorEmbed from './ContentEditorEmbed'
-import ContentEditorPopover from './popovers/ContentEditorPopover'
-import ContentEditorLinkPopover from './popovers/ContentEditorLinkPopover'
-import ContentStateHelper from './ContentStateHelper'
+import EmbedToolbar from './EmbedToolbar'
+import Embed from './Embed'
+import FormatPopover from './FormatPopover'
+import LinkPopover from './LinkPopover'
 
-import LinkEntity from './entities/LinkEntity'
+import LinkEntity from '../entities/LinkEntity'
 
-require('../../../styles/components/content_editor.scss')
+require('../styles/editor.scss')
 
 // Helper functions
 function buildEmbedMap(embeds) {
@@ -43,7 +39,7 @@ function buildEmbedMap(embeds) {
 
 function blockStyleFn(contentBlock) {
   const type = contentBlock.getType()
-  const baseStyle = 'c-content-editor__editor__block c-content-editor__editor__block'
+  const baseStyle = 'c-dispatch-editor__editor__block c-dispatch-editor__editor__block'
 
   switch(type) {
   case 'unstyled':
@@ -63,7 +59,11 @@ function keyBindingFn(e) {
   return getDefaultKeyBinding(e)
 }
 
-class ContentEditorComponent extends React.Component {
+const decorator = new CompositeDecorator([
+  LinkEntity
+])
+
+class ContentEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -71,6 +71,7 @@ class ContentEditorComponent extends React.Component {
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = {
+      editorState: EditorState.createEmpty(decorator),
       readOnly: false,
       showEmbedToolbar: false,
       showPopover: false,
@@ -84,102 +85,45 @@ class ContentEditorComponent extends React.Component {
 
   }
 
-  componentWillMount() {
-    this.initializeEditor()
+  componentWillReceiveProps(nextProps) {
+    // Push content to editor state
+    this.setState({
+      editorState: EditorState.push(this.state.editorState, nextProps.content)
+    })
   }
 
-  initializeEditor() {
-
-    const decorator = new CompositeDecorator([
-      LinkEntity
-    ])
-
-    if (this.props.isNew) {
-      this.props.updateEditor(
-        EditorState.createEmpty(decorator)
-      )
-    } else {
-      this.props.updateEditor(
-        EditorState.createWithContent(
-          ContentStateHelper.fromJSON(this.props.content),
-          decorator
-        )
-      )
-    }
+  componentWillMount() {
+    // Push content to editor state
+    this.onChange(EditorState.push(this.state.editorState, this.props.content))
   }
 
   onChange(editorState) {
-    this.props.updateEditor(editorState)
-
-    // Only trigger update when content changes
-    if (editorState.getLastChangeType() !== null) {
-      this.props.onUpdate(editorState.getCurrentContent())
-    }
+    this.setState(
+      { editorState: editorState },
+      function() {
+        if (this.state.editorState.getLastChangeType()) {
+          // Only emit update if content changes
+          this.props.onUpdate(this.state.editorState.getCurrentContent())
+        }
+      }
+    )
   }
 
   insertEmbed(type, data={}) {
-
-    // Get active block key
-    const blockKey = this.state.activeBlock
-
-    // Create new entity with given type and data
-    const entityKey = Entity.create(type, 'IMMUTABLE', data)
-
-    // Fetch editorState and contentState
-    let editorState = this.props.editorState
-    let contentState = editorState.getCurrentContent()
-
-    // Add entity to contentState
-    const contentStateWithEntity = Modifier.applyEntity(
-      contentState,
-      contentState.getSelectionAfter(),
-      entityKey
-    )
-
-    // Update editorState with new contentState
-    editorState = EditorState.set(
-      editorState,
-      {'currentContent': contentStateWithEntity}
-    )
-
-    // Insert atomic block
-    editorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ')
-
-    // Fetch the new contentState
-    contentState = editorState.getCurrentContent()
-
-    // Remove the empty block from the blockMap
-    let blockMap = contentState.getBlockMap()
-    contentState = contentState.set('blockMap', blockMap.delete(blockKey))
-
-    // Update editorState with new contentState
-    editorState = EditorState.set(
-      editorState,
-      {currentContent: contentState}
-    )
-
-    this.onChange(editorState)
-
+    this.onChange(actions.insertEmbed(this.state.editorState, this.state.activeBlock, type, data))
   }
 
   removeEmbed(blockKey) {
-
-    // Fetch editorState and contentState
-    let editorState = this.props.editorState
-    let contentState = editorState.getCurrentContent()
-
-    // Remove the block from the blockMap
-    let blockMap = contentState.getBlockMap()
-    contentState = contentState.set('blockMap', blockMap.delete(blockKey))
-
-    // Update editorState with new contentState
-    editorState = EditorState.set(
-      editorState,
-      {currentContent: contentState}
-    )
-
-    this.onChange(editorState)
+    this.onChange(actions.removeEmbed(this.state.editorState, blockKey))
     this.focusEditor()
+  }
+
+  insertLink(selection, url) {
+    this.onChange(actions.insertLink(this.state.editorState, selection, url))
+  }
+
+  removeLink(selection) {
+    this.onChange(actions.removeLink(this.state.editorState, selection))
   }
 
   startEditingEntity() {
@@ -191,8 +135,7 @@ class ContentEditorComponent extends React.Component {
   }
 
   handleMouseUp() {
-
-    const contentState = this.props.editorState.getCurrentContent()
+    const contentState = this.state.editorState.getCurrentContent()
 
     function getSelected() {
       var t = ''
@@ -252,29 +195,29 @@ class ContentEditorComponent extends React.Component {
     }
 
     setTimeout(()=> {
-      const selection = this.props.editorState.getSelection(),
+      const selection = this.state.editorState.getSelection(),
         isCollapsed = selection.isCollapsed(),
         linkEntity = getLinkEntity(selection),
         showLinkPopover = isCollapsed && linkEntity
 
       if ( !isCollapsed || showLinkPopover ) {
 
-        var selected = getSelected(),
-          rect = selected.getRangeAt(0).getBoundingClientRect()
+        var selected = getSelected().getRangeAt(0).getBoundingClientRect()
+        var container = this.refs.container.getBoundingClientRect()
 
         var position,
-          left = rect.left - this.refs.container.offsetLeft,
-          center = left + (rect.width / 2),
-          third = this.refs.container.offsetWidth / 3
+          left = selected.left - container.left,
+          center = left + (selected.width / 2),
+          third = container.width / 3
 
         if (center > 2 * third) {
           position = Position.TOP_RIGHT
-          left = left - 600 + (rect.width / 2) + 15
+          left = left - 600 + (selected.width / 2) + 15
         } else if (center > third ) {
           position = Position.TOP
-          left = left - 300 + (rect.width / 2)
+          left = left - 300 + (selected.width / 2)
         } else {
-          if (rect.width == 0) {
+          if (selected.width == 0) {
             left = left - 15
           }
           position = Position.TOP_LEFT
@@ -283,7 +226,7 @@ class ContentEditorComponent extends React.Component {
         this.setState({
           showPopover: true,
           popover: {
-            top: rect.top - this.refs.container.offsetTop + this.props.scrollOffset,
+            top: selected.top - container.top,
             left: left,
             position: position,
             renderContent: showLinkPopover ? this.renderLinkPopover.bind(this) : this.renderPopover.bind(this),
@@ -301,9 +244,7 @@ class ContentEditorComponent extends React.Component {
         )
       }
 
-
     }, 1)
-
   }
 
   handleKeyCommand(command) {
@@ -312,7 +253,7 @@ class ContentEditorComponent extends React.Component {
       return 'handled'
     }
 
-    return this.props.editorKeyCommand(command)
+    this.onChange(actions.handleKeyCommand(this.state.editorState, command))
   }
 
   blockRenderer(contentBlock) {
@@ -323,7 +264,7 @@ class ContentEditorComponent extends React.Component {
       const embed = this.embedMap[embedType]
 
       return {
-        component: ContentEditorEmbed,
+        component: Embed,
         editable: false,
         props: {
           type: embedType,
@@ -342,8 +283,8 @@ class ContentEditorComponent extends React.Component {
   }
 
   componentDidUpdate() {
-    let contentState = this.props.editorState.getCurrentContent()
-    let key = this.props.editorState.getSelection().getStartKey()
+    let contentState = this.state.editorState.getCurrentContent()
+    let key = this.state.editorState.getSelection().getStartKey()
     let block = contentState.getBlockForKey(key)
 
     if (!block) {
@@ -377,7 +318,8 @@ class ContentEditorComponent extends React.Component {
   }
 
   toggleInlineStyle(style) {
-    this.props.toggleEditorStyle(style)
+    this.onChange(actions.toggleInlineStyle(this.state.editorState, style))
+    this.closePopover()
   }
 
   focusEditor() {
@@ -385,35 +327,34 @@ class ContentEditorComponent extends React.Component {
   }
 
   closePopover() {
-    this.setState({ showPopover: false }, this.focusEditor)
+    this.setState({ showPopover: false })
   }
 
   renderPopover() {
     return (
-      <ContentEditorPopover
-        insertLink={this.props.insertLink}
-        removeLink={this.props.removeLink}
+      <FormatPopover
+        insertLink={(selection, url) => this.insertLink(selection, url)}
+        removeLink={(selection) => this.removeLink(selection)}
         toggleStyle={s => this.toggleInlineStyle(s)}
         isLinkInputActive={this.state.isLinkInputActive}
         closeLinkInput={() => this.setState({isLinkInputActive : false})}
-        focusEditor={() => this.focusEditor() }
+        focusEditor={() => null }
         close={() => this.closePopover} />
     )
   }
 
   renderLinkPopover(linkEntity) {
     return (
-      <ContentEditorLinkPopover
+      <LinkPopover
+        insertLink={(selection, url) => this.insertLink(selection, url)}
+        removeLink={(selection) => this.removeLink(selection)}
         url={linkEntity.entity.get('data').url}
         selection={linkEntity.selection}
-        insertLink={this.props.insertLink}
-        removeLink={this.props.removeLink}
         close={this.closePopover} />
     )
   }
 
   render() {
-
     const popoverContainerStyle = {
       position: 'absolute',
       top: this.state.popover.top,
@@ -424,13 +365,13 @@ class ContentEditorComponent extends React.Component {
     return (
       <div
         ref='container'
-        className='c-content-editor'
+        className='c-dispatch-editor'
         onMouseUp={e => this.handleMouseUp(e)}>
-        <div className='c-content-editor__editor'>
+        <div className='c-dispatch-editor__editor'>
           <Editor
             ref='editor'
             readOnly={this.state.readOnly}
-            editorState={this.props.editorState}
+            editorState={this.state.editorState}
             handleKeyCommand={c => this.handleKeyCommand(c)}
             keyBindingFn={keyBindingFn}
             blockRendererFn={cb => this.blockRenderer(cb)}
@@ -448,45 +389,14 @@ class ContentEditorComponent extends React.Component {
             <div></div>
           </Popover>
         </div>
-        <ContentEditorEmbedToolbar
+        <EmbedToolbar
           embeds={this.props.embeds}
           showToolbar={this.state.showEmbedToolbar}
           offset={this.state.embedToolbarOffset}
-          insertEmbed={(t, d) => this.insertEmbed(t, d)}
-          openModal={this.props.openModal}
-          closeModal={this.props.closeModal} />
+          insertEmbed={(t, d) => this.insertEmbed(t, d)} />
       </div>
     )
   }
 }
-
-const mapStateToProps = (state) => {
-  return { editorState: state.app.editor }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateEditor: (editorState) => {
-      dispatch(editorActions.updateEditor(editorState))
-    },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
-    },
-    editorKeyCommand: (command) => {
-      dispatch(editorActions.editorKeyCommand(command))
-    },
-    insertLink: (url, selection) => {
-      dispatch(editorActions.insertLink(url, selection))
-    },
-    removeLink: (selection) => {
-      dispatch(editorActions.removeLink(selection))
-    }
-  }
-}
-
-const ContentEditor = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ContentEditorComponent)
 
 export default ContentEditor
