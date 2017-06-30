@@ -126,7 +126,7 @@ export class ResourceActions {
     }
   }
 
-  create(token, data, next=null) {
+  create(token, data, next=null, callback) {
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.CREATE) })
@@ -134,7 +134,10 @@ export class ResourceActions {
       this.api.create(token, this.toRemote(data))
         .then(json => {
           if (next) {
-            dispatch(replace(`${next}/${json.id}`))
+            dispatch(replace({
+              pathname: `${next}/${json.id}`,
+              state: { ignoreLeaveHook: true }
+            }))
           }
 
           dispatch({
@@ -146,6 +149,10 @@ export class ResourceActions {
               )
             }
           })
+
+          if (typeof callback === 'function') {
+            callback(json)
+          }
         })
         .catch(error => {
           dispatch({

@@ -16,7 +16,7 @@ export default function ArticleHeadline(props) {
       minLines={1}
       maxLines={4}
       placeholder='Enter a headline'
-      value={props.headline}
+      value={props.headline || ''}
       onChange={handleUpdate} />
   )
 
