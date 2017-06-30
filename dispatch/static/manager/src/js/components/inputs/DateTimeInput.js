@@ -5,6 +5,7 @@ import { DateTimePicker } from '@blueprintjs/datetime'
 import { humanizeDatetime } from '../../util/helpers'
 
 const TODAY = new Date()
+const MIN_DATE = new Date(0)
 const MAX_DATE = new Date(TODAY.getFullYear()+1, 12, 31)
 
 export default function DateTimeInput(props) {
@@ -22,8 +23,9 @@ export default function DateTimeInput(props) {
         showArrowButtons: true
       }}
       datePickerProps={{
-        minDate: TODAY,
-        maxDate: MAX_DATE
+        minDate: MIN_DATE,
+        maxDate: MAX_DATE,
+        showActionsBar: true
       }} />
   )
 
