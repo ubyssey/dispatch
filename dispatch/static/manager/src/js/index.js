@@ -1,7 +1,13 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router, Route, IndexRoute } from 'react-router'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import { Router, Route, IndexRoute, useRouterHistory } from 'react-router'
+import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux'
+import { createHistory } from 'history'
+import { loadingBarReducer, loadingBarMiddleware } from 'react-redux-loading-bar'
+import promiseMiddleware from 'redux-promise-middleware'
 
 // Base CSS styles
 require('../styles/admin.scss')
@@ -9,6 +15,35 @@ require('../styles/admin.scss')
 import { store, history } from './store'
 import * as Pages from './pages'
 import * as Containers from './containers'
+import appReducer from './reducers/AppReducer'
+import modalReducer from './reducers/ModalReducer'
+
+const BASE_PATH = '/admin'
+
+const browserHistory = useRouterHistory(createHistory)({ basename: BASE_PATH })
+const router = routerMiddleware(browserHistory)
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const store = createStore(
+  combineReducers({
+    app: appReducer,
+    routing: routerReducer,
+    loadingBar: loadingBarReducer,
+    modal: modalReducer
+  }),
+  composeEnhancers(
+    applyMiddleware(
+      thunk,
+      router,
+      promiseMiddleware(),
+      loadingBarMiddleware({
+        promiseTypeSuffixes: ['PENDING', 'FULFILLED', 'REJECTED'],
+      })
+    )
+  )
+)
+
+const history = syncHistoryWithStore(browserHistory, store)
 
 render((
   <Provider store={store}>
