@@ -34,7 +34,7 @@ export default class ConfirmButton extends React.Component {
           iconName='trash'
           onCancel={() => this.setState({ alertOpen: false })}
           onConfirm={() => this.onConfirm()}
-          intent={Intent.DANGER} >
+          intent={Intent.DANGER}>
           <p>{this.props.message}</p>
         </Alert>
       </div>
