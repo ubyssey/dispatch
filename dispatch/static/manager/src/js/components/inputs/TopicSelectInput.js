@@ -26,6 +26,7 @@ class TopicSelectInputComponent extends React.Component {
         entities={this.props.entities.topics}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTopics(query)}
+        create={(name, cb) => this.props.createTopic(this.props.token, { name }, cb)}
         attribute='name'
         editMessage={this.props.selected ? 'Edit topic' : 'Add topic'} />
     )
@@ -47,6 +48,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     listTopics: (token, query) => {
       dispatch(topicsActions.list(token, query))
+    },
+    createTopic: (token, data, callback) => {
+      dispatch(topicsActions.create(token, data, null, callback))
     }
   }
 }
