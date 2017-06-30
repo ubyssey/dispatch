@@ -12,3 +12,7 @@ node_modules/
 htmlcov/
 
 *.vscode/
+
+dispatch/tests/media
+
+dispatch/apps/**/migrations/

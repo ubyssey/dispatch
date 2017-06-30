@@ -56,6 +56,10 @@
   border-bottom: 1px solid $color-border-gray;
 }
 
+.c-input--item-select__search__button {
+  margin-top: 5px;
+}
+
 // Component: InputGroup
 .c-input-group {
   // Structure
@@ -213,4 +217,8 @@
 .c-input--datetime--textfield {
   width: 100%;
   cursor: pointer;
+}
+
+.c-input--confirm {
+  display: inline-block;
 }
