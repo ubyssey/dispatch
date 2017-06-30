@@ -3,6 +3,7 @@ import React from 'react'
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import { Toolbar, ToolbarLeft, ToolbarRight, ToolbarTitle } from '../Toolbar'
+import ConfirmButtom from '../inputs/ConfirmButton'
 
 export default function ListItemToolbar(props) {
 
@@ -15,12 +16,12 @@ export default function ListItemToolbar(props) {
   )
 
   const deleteButton = (
-    <AnchorButton
+    <ConfirmButtom
       intent={Intent.DANGER}
       disabled={props.isNew}
-      onClick={() => props.deleteListItem()}>
+      onConfirm={() => props.deleteListItem()}>
       <span className='pt-icon-standard pt-icon-trash'></span>Delete
-    </AnchorButton>
+    </ConfirmButtom>
   )
 
   return (

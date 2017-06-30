@@ -154,18 +154,24 @@ class EventTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_get_events_submissions(self):
         """API listing should, by default, should not return events with is_submission=True"""
 
-        event_1 = DispatchTestHelpers.create_event(self.client, title='Test 1')
-        event_2 = DispatchTestHelpers.create_event(self.client, title='Test 2')
-        event_3 = DispatchTestHelpers.create_event(self.client, title='Test 3', is_submission=True)
+        event_1 = DispatchTestHelpers.create_event(self.client, title='Test 1', is_published=True)
+        event_2 = DispatchTestHelpers.create_event(self.client, title='Test 2', is_published=True)
+        event_3 = DispatchTestHelpers.create_event(self.client, title='Test 3', is_published=True, is_submission=True)
 
         # Confirm that the events exist
         self.assertEqual(event_1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(event_2.status_code, status.HTTP_201_CREATED)
         self.assertEqual(event_3.status_code, status.HTTP_201_CREATED)
 
+        self.client.credentials() # Clear credentials
+
         url = reverse('api-event-list')
 
-        response = Event.objects.all()
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.data['results'][0]['title'], 'Test 1')
+        self.assertEqual(response.data['results'][1]['title'], 'Test 2')
+        self.assertEqual(len(response.data['results']), 2)
 
     def test_event_query(self):
         """Be able to search for events"""
