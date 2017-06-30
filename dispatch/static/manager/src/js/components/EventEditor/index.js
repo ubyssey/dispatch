@@ -95,8 +95,8 @@ function EventEditorComponent(props) {
     </AnchorButton>
   )
 
-  const event_is_published = props.entities.local && props.listItem.id
-  ? props.entities.local[props.listItem.id].is_published : false // default if not rendered to 'false', i.e. not published
+  // const isPublished = props.entities.local && props.listItem.id
+  // ? props.entities.local[props.listItem.id].is_published : false // default if not rendered to 'false', i.e. not published
 
   return (
     <ItemEditor
@@ -104,9 +104,14 @@ function EventEditorComponent(props) {
       afterDelete={AFTER_DELETE}
       form={EventForm}
       displayField='title'
-      extraButton={event_is_published ? unpublishButton : publishButton}
+      extraButton={isPublished(props) ? unpublishButton : publishButton}
       {... props} />
   )
+}
+
+const isPublished = (obj) => {
+  return obj.entities.local && obj.listItem.id
+  ? obj.entities.local[obj.listItem.id].is_published : false
 }
 
 const EventEditor = connect(

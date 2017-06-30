@@ -3,7 +3,6 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import { replace } from 'react-router-redux'
-import { AnchorButton } from '@blueprintjs/core'
 
 import { AnchorButton } from '@blueprintjs/core'
 
