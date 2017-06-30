@@ -112,6 +112,7 @@ class ItemSelectInput extends React.Component {
     const selected = this.getSelected()
       .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
+      .filter(item => item)
       .map(item => (
         <Item
           key={item.id}
@@ -131,14 +132,25 @@ class ItemSelectInput extends React.Component {
           onClick={() => this.addValue(item.id)} />
       ))
 
+    const createButton = this.props.create ? (
+      <button
+        className='pt-button c-input--item-select__search__button'
+        onClick={() => this.props.create(this.state.query, data => this.addValue(data.id))}>
+        Add
+      </button>
+    ) : null
+
     return (
       <div className='c-input--item-select__dropdown'>
         <div className='c-input--item-select__search'>
-          <TextInput
-            onChange={e => this.handleInputChange(e)}
-            value={this.state.query}
-            fill={true}
-            placeholder='Search' />
+          <div className='pt-control-group'>
+            <TextInput
+              onChange={e => this.handleInputChange(e)}
+              value={this.state.query}
+              fill={true}
+              placeholder='Search' />
+              {createButton}
+          </div>
         </div>
         <ul className='o-dropdown-list'>
           {selected.length ? selected : null}

@@ -93,6 +93,10 @@ function fromJSON(jsonBlocks) {
 }
 
 function toJSON(contentState) {
+  if (!contentState) {
+    contentState =  ContentState.createFromText('')
+  }
+
   // Converts from ContentState to JSON
   return contentState.getBlockMap()
     .map(parseBlock)
