@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { AnchorButton, Intent } from '@blueprintjs/core'
+
 import { dateObjToAPIString } from '../../util/helpers'
 
 import eventsActions from '../../actions/EventsActions'
@@ -59,19 +61,54 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteListItem: (token, eventId, next) => {
       dispatch(eventsActions.delete(token, eventId, next))
+    },
+    publishEvent(token, id) {
+      const form = new FormData()
+      form.append('is_published', true)
+      dispatch(eventsActions.save(token, id, form))
+    },
+    unpublishEvent(token, id) {
+      const form = new FormData()
+      form.append('is_published', false)
+      dispatch(eventsActions.save(token, id, form))
     }
   }
 }
 
 function EventEditorComponent(props) {
+
+  const publishButton = (
+    <AnchorButton onClick={() => props.publishEvent(props.token, props.listItem.id)}
+      intent={Intent.PRIMARY}
+      disabled={props.isNew} >
+      <span className='pt-icon-standard pt-icon-th'></span>
+      Publish
+    </AnchorButton>
+  )
+
+  const unpublishButton = (
+    <AnchorButton onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
+      intent={Intent.PRIMARY}
+      disabled={props.isNew} >
+      <span className='pt-icon-standard pt-icon-th'></span>
+      Unpublish
+    </AnchorButton>
+  )
+
   return (
     <ItemEditor
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={EventForm}
       displayField='title'
+      extraButton={isPublished(props) ? unpublishButton : publishButton}
       {... props} />
   )
+}
+
+const isPublished = (obj) => {
+  return obj.entities.local && obj.listItem.id
+  ? obj.entities.local[obj.listItem.id].is_published : false
 }
 
 const EventEditor = connect(
