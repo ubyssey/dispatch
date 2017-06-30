@@ -95,9 +95,6 @@ function EventEditorComponent(props) {
     </AnchorButton>
   )
 
-  // const isPublished = props.entities.local && props.listItem.id
-  // ? props.entities.local[props.listItem.id].is_published : false // default if not rendered to 'false', i.e. not published
-
   return (
     <ItemEditor
       type={TYPE}
