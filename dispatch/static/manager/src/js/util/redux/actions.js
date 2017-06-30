@@ -134,7 +134,10 @@ export class ResourceActions {
       this.api.create(token, this.toRemote(data))
         .then(json => {
           if (next) {
-            dispatch(replace(`${next}/${json.id}`))
+            dispatch(replace({
+              pathname: `${next}/${json.id}`,
+              state: { ignoreLeaveHook: true }
+            }))
           }
 
           dispatch({
