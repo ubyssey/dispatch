@@ -19,9 +19,9 @@ export default class ConfirmButton extends React.Component {
 
   render() {
     return (
-      <div className={`${this.props.className} c-input-confirmbutton`}>
+      <div className='c-input--confirm'>
         <AnchorButton
-          className={this.props.buttonClassName}
+          className={this.props.className}
           intent={this.props.intent}
           disabled={this.props.disabled}
           onClick={() => this.setState({ alertOpen: true })}>
@@ -34,11 +34,14 @@ export default class ConfirmButton extends React.Component {
           iconName='trash'
           onCancel={() => this.setState({ alertOpen: false })}
           onConfirm={() => this.onConfirm()}
-          intent={Intent.DANGER}
-          >
-          <p>Are you sure you want to delete this?</p>
+          intent={Intent.DANGER} >
+          <p>{this.props.message}</p>
         </Alert>
       </div>
     )
   }
+}
+
+ConfirmButton.defaultProps = {
+  message: 'Are you sure you want to delete this?'
 }
