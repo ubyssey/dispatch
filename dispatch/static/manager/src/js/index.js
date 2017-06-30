@@ -12,6 +12,7 @@ import promiseMiddleware from 'redux-promise-middleware'
 // Base CSS styles
 require('../styles/admin.scss')
 
+import { store, history } from './store'
 import * as Pages from './pages'
 import * as Containers from './containers'
 import appReducer from './reducers/AppReducer'

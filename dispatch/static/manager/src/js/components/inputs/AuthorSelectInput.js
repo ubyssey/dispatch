@@ -21,7 +21,7 @@ class AuthorSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         selected={this.props.selected}
-        results={this.props.persons.list.ids}
+        results={this.props.persons.ids}
         entities={this.props.entities.persons}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
