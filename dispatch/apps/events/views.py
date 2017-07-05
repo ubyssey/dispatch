@@ -28,11 +28,11 @@ def submit(request):
 
         if form.is_valid():
 
-            event = form.save(commit=False)
+            form.is_submission = True
 
-            event.is_submission = True
+            form.save()
 
-            event.save()
+            print form.is_submission
 
             return redirect(success)
 
