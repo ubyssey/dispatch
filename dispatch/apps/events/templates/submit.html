@@ -1,131 +1,135 @@
+{% extends 'base.html' %}
 {% load static %}
-<head>
-  <!-- <link rel="stylesheet" href="{% static 'css/public_event_form-1.0.13.css' %}" type="text/css"/> -->
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
-  <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/ubyssey/static/css/jquery.datetimepicker.min.css" />
-  <script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/ubyssey/static/js/jquery.datetimepicker.full.min.js"></script>
-</head>
 
-{% include 'headers/topbar.html' %}
-<body>
-  <div class="u-container u-container--padded" >
-    <h2 class="headline">Submit an Event</h2>
-    {{ form.non_field_errors }}
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
+{% block header %}
+    {% include 'headers/topbar.html' with article=article section=article.section.slug %}
+    {% include 'headers/mobile.html' %}
+{% endblock %}
 
-      <div class="fieldWrapper">
-        {{ form.title.errors }}
-        <label for="{{ form.title.id_for_label }}">Title of Event<br></label>
-        {{ form.title }}
-      </div>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/public_event_form-1.0.13.css' %}" type="text/css"/>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/ubyssey/static/css/jquery.datetimepicker.min.css" />
+<script type="text/javascript" src="https://s3-us-west-1.amazonaws.com/ubyssey/static/js/jquery.datetimepicker.full.min.js"></script>
 
-      <div class="fieldWrapper">
-        {{ form.description.errors }}
-        <label for="{{ form.description.id_for_label }}">Description<br></label>
-        {{ form.description }}
-      </div>
+<div class="u-container u-container--padded" >
 
-      <div class="fieldWrapper">
-        {{ form.host.errors }}
-        <label for="{{ form.host.id_for_label }}">Host<br></label>
-        {{ form.host }}
-      </div>
+  <h2 class="headline">Submit an Event</h2>
 
-      {% if form.facebook_image_url.value %}
-      <div class="fieldWrapper">
-
-        {{ form.facebook_image_url.errors }}
-
-        <label for="{{ form.facebook_image_url.id_for_label }}">Image for the Event<br></label>
-
-        <img id="previewImage" src="{{ form.facebook_image_url.value }}" style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" >
-
-        {{ form.image.errors }}
-        <label for="{{ form.image.id_for_label }}">Or choose your own image<br></label>
-        <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
-
-        <input id="reset" type=reset onclick="
-        document.getElementById('previewImage').src='{{ form.facebook_image_url.value }}';
-        document.getElementById('reset').style.display = 'none';"
-        value="Or stick with the facebook image" />
-
-      </div>
-
-      {% else %}
-      <div class="fieldWrapper">
-        {{ form.image.errors }}
-        <label for="{{ form.image.id_for_label }}">Image for the Event<br></label>
-        <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
-        <img id="previewImage" src="#" alt="User uploaded image"/>
-      </div>
-      {% endif %}
-
-      <div class="fieldWrapper">
-        {{ form.start_time.errors }}
-        <label for="{{ form.start_time.id_for_label }}">Start Time<br></label>
-        {{ form.start_time }}
-      </div>
-
-      <div class="fieldWrapper">
-        {{ form.end_time.errors }}
-        <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
-        {{ form.end_time }}
-      </div>
-
-      <div class="fieldWrapper">
-        {{ form.location.errors }}
-        <label for="{{ form.location.id_for_label }}">Location<br></label>
-        {{ form.location }}
-      </div>
-
-      <div class="fieldWrapper">
-        {{ form.address.errors }}
-        <label for="{{ form.address.id_for_label }}">Address<br></label>
-        {{ form.address }}
-      </div>
-
-      <div class="fieldWrapper">
-        {{ form.category.errors }}
-        <label for="{{ form.category.id_for_label }}">Category of Event<br></label>
-        {{ form.category }}
-      </div>
-
-      <p>Please add in your email and phone number! It will allow us to contact you in case we need to confirm any information.</p>
-
-      <div class="fieldWrapper">
-        {{ form.submitter_email.errors }}
-        <label for="{{ form.submitter_email.id_for_label }}">Email <br></label>
-        {{ form.submitter_email }}
-      </div>
-
-      <div class="fieldWrapper">
-        {{ form.submitter_phone.errors }}
-        <label for="{{ form.submitter_phone.id_for_label }}">Phone Number <br></label>
-        {{ form.submitter_phone }}
-      </div>
-
-      <p hidden>{{ form.facebook_url }}</p>
-      <p hidden>{{ form.facebook_image_url }}</p>
-
-      <input type="submit" name="submit_event" value="Submit" />
-    </form>
-
-    <form method="post">
-      {% csrf_token %}
-
+  <form method="post">
+    {% csrf_token %}
+    <hr>
+    <div class="fieldWrapper">
       <label for="facebook_url">Facebook Url<br></label>
       <input id="facebook_url" type="text" name="facebook_url"/>
+    </div>
+    <!-- TODO: Write description of facebook url functionality -->
+    <input type="submit" name="submit_facebook" value="Enter Facebook URL" />
+    <hr>
+  </form>
 
-      <input type="submit" name="submit_facebook" value="Submit" />
-    </form>
+  {{ form.non_field_errors }}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
+    <div class="fieldWrapper">
+      {{ form.title.errors }}
+      <label for="{{ form.title.id_for_label }}">Title of Event<br></label>
+      {{ form.title }}
+    </div>
 
-  </div>
+    <div class="fieldWrapper">
+      {{ form.description.errors }}
+      <label for="{{ form.description.id_for_label }}">Description<br></label>
+      {{ form.description }}
+    </div>
 
-  {% include 'homepage/footer.html' %}
-</body>
+    <div class="fieldWrapper">
+      {{ form.host.errors }}
+      <label for="{{ form.host.id_for_label }}">Host<br></label>
+      {{ form.host }}
+    </div>
 
+    {% if form.facebook_image_url.value %}
+    <div class="fieldWrapper">
+
+      {{ form.facebook_image_url.errors }}
+
+      <label for="{{ form.facebook_image_url.id_for_label }}">Image for the Event<br></label>
+
+      <img id="previewImage" src="{{ form.facebook_image_url.value }}" style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" >
+
+      {{ form.image.errors }}
+      <label for="{{ form.image.id_for_label }}">Or choose your own image<br></label>
+      <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
+
+      <input id="reset" type=reset onclick="
+        document.getElementById('previewImage').src='{{ form.facebook_image_url.value }}';
+        document.getElementById('reset').style.display = 'none';"
+      value="Or stick with the facebook image" />
+
+    </div>
+
+    {% else %}
+    <div class="fieldWrapper">
+      {{ form.image.errors }}
+      <label for="{{ form.image.id_for_label }}">Image for the Event<br></label>
+      <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
+      <img id="previewImage" src="#" alt="User uploaded image"/>
+    </div>
+    {% endif %}
+
+    <div class="fieldWrapper">
+      {{ form.start_time.errors }}
+      <label class="starttime" for="{{ form.start_time.id_for_label }}">Start Time<br></label>
+      {{ form.start_time }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ form.end_time.errors }}
+      <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
+      {{ form.end_time }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ form.location.errors }}
+      <label for="{{ form.location.id_for_label }}">Location<br></label>
+      {{ form.location }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ form.address.errors }}
+      <label for="{{ form.address.id_for_label }}">Address<br></label>
+      {{ form.address }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ form.category.errors }}
+      <label for="{{ form.category.id_for_label }}">Category of Event<br></label>
+      {{ form.category }}
+    </div>
+
+    <i>Please add in your email and phone number! It will allow us to contact you in case we need to confirm any information.</i>
+
+    <div class="fieldWrapper">
+      {{ form.submitter_email.errors }}
+      <label for="{{ form.submitter_email.id_for_label }}">Email <br></label>
+      {{ form.submitter_email }}
+    </div>
+
+    <div class="fieldWrapper">
+      {{ form.submitter_phone.errors }}
+      <label for="{{ form.submitter_phone.id_for_label }}">Phone Number <br></label>
+      {{ form.submitter_phone }}
+    </div>
+
+    <p hidden>{{ form.facebook_url }}</p>
+    <p hidden>{{ form.facebook_image_url }}</p>
+
+    <input type="submit" name="submit_event" value="Submit Event" />
+  </form>
+
+</div>
 
 <script type="text/javascript">
 
@@ -154,13 +158,13 @@
       reader.onload = function(e) {
         $('#previewImage').attr('src', e.target.result);
       }
+      // TODO: Hidden vs unhidden for the image
 
       reader.readAsDataURL(input.files[0]);
     }
 
     var x = document.getElementById('reset');
     x.style.display = 'inline';
-
   }
 
   $("#imgInp").change(function() {
@@ -169,9 +173,10 @@
 
 
   function hideReset() {
-    document.getElementById("reset").style.display;
+    {document.getElementById("reset") ? document.getElementById("reset").style.display = 'none': null};
   }
 
   window.onload = hideReset
 
 </script>
+{% endblock %}
