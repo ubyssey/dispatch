@@ -34,7 +34,7 @@ class AuthorSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    persons: state.app.persons,
+    persons: state.app.persons.list,
     entities: {
       persons: state.app.entities.persons
     },
