@@ -18,14 +18,16 @@
 
   <form method="post">
     {% csrf_token %}
+
     <hr>
     <div class="fieldWrapper">
       <label for="facebook_url">Facebook Url<br></label>
+      <p id="info">If you have uploaded your event to Facebook, you can enter the URL and we will fill in some info for you!</p>
       <input id="facebook_url" type="text" name="facebook_url"/>
     </div>
-    <!-- TODO: Write description of facebook url functionality -->
     <input type="submit" name="submit_facebook" value="Enter Facebook URL" />
     <hr>
+
   </form>
 
   {{ form.non_field_errors }}
@@ -44,10 +46,18 @@
       {{ form.description }}
     </div>
 
-    <div class="fieldWrapper">
-      {{ form.host.errors }}
-      <label for="{{ form.host.id_for_label }}">Host<br></label>
-      {{ form.host }}
+    <div class="two-col">
+      <div class="fieldWrapper" type="left">
+        {{ form.host.errors }}
+        <label for="{{ form.host.id_for_label }}">Host<br></label>
+        {{ form.host }}
+      </div>
+
+      <div class="fieldWrapper" type="right">
+        {{ form.category.errors }}
+        <label for="{{ form.category.id_for_label }}">Category of Event<br></label>
+        {{ form.category }}
+      </div>
     </div>
 
     {% if form.facebook_image_url.value %}
@@ -57,16 +67,16 @@
 
       <label for="{{ form.facebook_image_url.id_for_label }}">Image for the Event<br></label>
 
-      <img id="previewImage" src="{{ form.facebook_image_url.value }}" style="-webkit-user-select: none; display: block; margin: auto; cursor: zoom-in;" >
+      <img id="previewImage" src="{{ form.facebook_image_url.value }}" >
 
       {{ form.image.errors }}
-      <label for="{{ form.image.id_for_label }}">Or choose your own image<br></label>
-      <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
+      <label for="{{ form.image.id_for_label }}"><br>Or choose your own image<br></label>
+      <input id="imgInp" type="file" onchange="readUrl(this);" name="image"/>
 
-      <input id="reset" type=reset onclick="
+      <input id="reset" type="reset"
+      value="Or stick with the facebook image" onclick="
         document.getElementById('previewImage').src='{{ form.facebook_image_url.value }}';
-        document.getElementById('reset').style.display = 'none';"
-      value="Or stick with the facebook image" />
+        document.getElementById('reset').style.display = 'none';" />
 
     </div>
 
@@ -74,21 +84,23 @@
     <div class="fieldWrapper">
       {{ form.image.errors }}
       <label for="{{ form.image.id_for_label }}">Image for the Event<br></label>
-      <input id="imgInp" type='file' onchange="readUrl(this);" name="image"/>
-      <img id="previewImage" src="#" alt="User uploaded image"/>
+      <input id="imgInp" type="file" onchange="readUrl(this);" name="image"/>
+      <img id="previewImage"/>
     </div>
     {% endif %}
 
-    <div class="fieldWrapper">
-      {{ form.start_time.errors }}
-      <label class="starttime" for="{{ form.start_time.id_for_label }}">Start Time<br></label>
-      {{ form.start_time }}
-    </div>
+    <div class="two-col">
+      <div class="fieldWrapper" type="left">
+        {{ form.start_time.errors }}
+        <label class="starttime" for="{{ form.start_time.id_for_label }}">Start Time<br></label>
+        {{ form.start_time }}
+      </div>
 
-    <div class="fieldWrapper">
-      {{ form.end_time.errors }}
-      <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
-      {{ form.end_time }}
+      <div class="fieldWrapper" type="right">
+        {{ form.end_time.errors }}
+        <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
+        {{ form.end_time }}
+      </div>
     </div>
 
     <div class="fieldWrapper">
@@ -101,12 +113,6 @@
       {{ form.address.errors }}
       <label for="{{ form.address.id_for_label }}">Address<br></label>
       {{ form.address }}
-    </div>
-
-    <div class="fieldWrapper">
-      {{ form.category.errors }}
-      <label for="{{ form.category.id_for_label }}">Category of Event<br></label>
-      {{ form.category }}
     </div>
 
     <i>Please add in your email and phone number! It will allow us to contact you in case we need to confirm any information.</i>
@@ -159,6 +165,7 @@
         $('#previewImage').attr('src', e.target.result);
       }
       // TODO: Hidden vs unhidden for the image
+      // If (not facebook image or image) display else dont
 
       reader.readAsDataURL(input.files[0]);
     }
@@ -170,7 +177,6 @@
   $("#imgInp").change(function() {
     readURL(this);
   });
-
 
   function hideReset() {
     {document.getElementById("reset") ? document.getElementById("reset").style.display = 'none': null};
