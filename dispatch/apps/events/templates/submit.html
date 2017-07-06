@@ -60,6 +60,20 @@
       </div>
     </div>
 
+    <div class="two-col">
+      <div class="fieldWrapper" type="left">
+        {{ form.start_time.errors }}
+        <label class="starttime" for="{{ form.start_time.id_for_label }}">Start Time<br></label>
+        {{ form.start_time }}
+      </div>
+
+      <div class="fieldWrapper" type="right">
+        {{ form.end_time.errors }}
+        <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
+        {{ form.end_time }}
+      </div>
+    </div>
+
     {% if form.facebook_image_url.value %}
     <div class="fieldWrapper">
 
@@ -88,20 +102,6 @@
       <img id="previewImage"/>
     </div>
     {% endif %}
-
-    <div class="two-col">
-      <div class="fieldWrapper" type="left">
-        {{ form.start_time.errors }}
-        <label class="starttime" for="{{ form.start_time.id_for_label }}">Start Time<br></label>
-        {{ form.start_time }}
-      </div>
-
-      <div class="fieldWrapper" type="right">
-        {{ form.end_time.errors }}
-        <label for="{{ form.end_time.id_for_label }}">End Time<br></label>
-        {{ form.end_time }}
-      </div>
-    </div>
 
     <div class="fieldWrapper">
       {{ form.location.errors }}
