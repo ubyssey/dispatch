@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    {% include 'headers/topbar.html' with article=article section=article.section.slug %}
+    {% include 'headers/mobile.html' %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/public_event_form_success-1.2.4.css' %}" type="text/css"/>
+
+<div class="u-container u-container--padded" >
+
+  <h1>Your event has been created!</h1>
+  <a href="http://www.ubyssey.ca">back to the home page</a>
+
+</div>
+{% endblock %}
