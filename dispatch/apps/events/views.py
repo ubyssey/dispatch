@@ -8,7 +8,7 @@ from dispatch.apps.events.models import Event
 
 def success(request):
 
-    return HttpResponse('Your event has been created')
+    return render(request, 'success.html')
 
 def submit(request):
 
@@ -32,9 +32,7 @@ def submit(request):
 
             form.save()
 
-            print form.is_submission
-
-            return redirect(success)
+            return redirect('/events/success')
 
     else:
         form = EventForm()
