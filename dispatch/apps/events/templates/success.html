@@ -9,10 +9,12 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/public_event_form_success-1.2.4.css' %}" type="text/css"/>
 
-<div class="u-container u-container--padded" >
+<main>
+  <div class="u-container u-container--padded" >
 
-  <h1>Your event has been created!</h1>
-  <a href="http://www.ubyssey.ca">back to the home page</a>
+    <h1 class="c-success c-success--title">Thanks for your submission!</h1>
+    <a href="http://www.ubyssey.ca" class="c-success c-success--message">Your event has been submitted for approval. We’ll email you once it goes live on our site. In the meantime, please don’t hesitate to contact events@ubyssey.ca if you have any questions.</a>
 
-</div>
+  </div>
+</main>
 {% endblock %}
