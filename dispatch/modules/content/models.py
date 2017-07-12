@@ -90,7 +90,7 @@ class Publishable(Model):
         if self.template != 'default':
             return 'article/%s.html' % self.template
         else:
-            return 'article/base.html'
+            return 'article/default.html'
 
     def save_template_fields(self, template_fields):
         return TemplateManager.save_fields(self.id, self.template, template_fields)

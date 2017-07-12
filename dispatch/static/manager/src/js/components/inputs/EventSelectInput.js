@@ -24,7 +24,7 @@ class EventSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={this.props.many}
-        selected={this.props.selected.id}
+        selected={this.props.selected ? this.props.selected.id : null}
         results={this.props.events.ids}
         entities={this.props.entities.events}
         onChange={(selected) => this.props.onChange(selected)}
