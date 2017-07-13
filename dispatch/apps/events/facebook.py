@@ -14,7 +14,6 @@ class FacebookEvent(object):
     """Class to fetch Facebook event data"""
 
     def __init__(self, url, api_provider=Facebook):
-
         self.url = url
         self.event_id = self.get_event_id(url)
         self.api = api_provider()
@@ -34,7 +33,7 @@ class FacebookEvent(object):
         if m:
             return m.group(1)
         else:
-            raise Exception('URL provided is not a valid facebook event url')
+            raise FacebookEventError('URL provided is not a valid facebook event url')
 
     def get_json(self):
         """Returns the json for the event linked by the facebook url"""
