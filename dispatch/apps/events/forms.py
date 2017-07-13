@@ -2,11 +2,9 @@ from django.forms import ModelForm, DateTimeField, CharField, TextInput
 from dispatch.apps.events.models import Event
 
 class EventForm(ModelForm):
-
     facebook_image_url = CharField(required=False)
 
     class Meta:
-
         model = Event
 
         fields = [
@@ -39,11 +37,7 @@ class EventForm(ModelForm):
         }
 
     def save(self):
-
         event = super(EventForm, self).save(commit=False)
-
-        print event.facebook_url
-
         event.is_submission = True
 
         facebook_image_url = self.data.get('facebook_image_url')
