@@ -41,6 +41,7 @@ def submit(request):
             form.save()
 
             return redirect(success)
+            
+        return render(request, 'form.html', {'form': form})
 
-    else:
-        return render(request, 'submit.html')
+    return render(request, 'submit.html')
