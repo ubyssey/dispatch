@@ -2,41 +2,38 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from dispatch.apps.events.facebook import FacebookEvent
+from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
 from dispatch.apps.events.forms import EventForm
 from dispatch.apps.events.models import Event
 
-def success(request):
+def submit_landing(request):
+    return render(request, 'events/submit/landing.html')
 
-    return HttpResponse('Your event has been created')
+def submit_success(request):
+    return render(request, 'events/submit/success.html')
 
-def submit(request):
-
+def submit_form(request):
     facebook_url = request.POST.get('facebook_url')
+    facebook_error = False
 
-    if request.POST.get('submit_facebook') and facebook_url:
+    if request.POST.get('facebook_import') and facebook_url is not None:
+        try:
+            event = FacebookEvent(facebook_url)
+            data = event.get_data()
+            form = EventForm(initial=data)
+        except FacebookEventError:
+            facebook_error = True
+            form = EventForm()
 
-        event = FacebookEvent(facebook_url)
-
-        event_data = event.get_data()
-
-        form = EventForm(initial=event_data)
-
-    elif request.POST.get('submit_event'):
-
+    elif request.method == 'POST':
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
+            form.is_submission = True
+            form.save()
 
-            event = form.save(commit=False)
-
-            event.is_submission = True
-
-            event.save()
-
-            return redirect(success)
-
+            return redirect(submit_success)
     else:
         form = EventForm()
 
-    return render(request, 'submit.html', {'form': form})
+    return render(request, 'events/submit/form.html', {'form': form, 'facebook_error': facebook_error})
