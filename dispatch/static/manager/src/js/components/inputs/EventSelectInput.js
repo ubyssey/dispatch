@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
@@ -17,16 +18,31 @@ class EventSelectInputComponent extends React.Component {
     this.props.listEvents(this.props.token, queryObj)
   }
 
+  componentDidMount() {
+    this.props.onChange(this.getSelected())
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.selected != this.props.selected) {
+      const selected = this.getSelected()
+      if ((this.props.many && this.props.selected.length && R.difference(selected, this.props.selected).length)
+        || (!this.props.many && selected != this.props.selected)) {
+        this.props.onChange(selected)
+      }
+    }
+  }
+
+  getSelected() {
+    return this.props.many ? this.props.selected.map(item => item.id || item) : this.props.selected.id || this.props.selected
+  }
+
   render() {
     const label = this.props.many ? 'events' : 'event'
-
-    const selected = this.props.many ? this.props.selected.map(item => item.id || item) :
-      (this.props.selected ? this.props.selected.id || this.props.selected : null)
 
     return (
       <ItemSelectInput
         many={this.props.many}
-        selected={selected}
+        selected={this.getSelected()}
         results={this.props.events.ids}
         entities={this.props.entities.events}
         onChange={(selected) => this.props.onChange(selected)}
