@@ -1,7 +1,7 @@
 from django import template
 
 from dispatch.theme import ThemeManager
-from dispatch.theme.exceptions import ZoneNotFound
+from dispatch.theme.exceptions import ZoneNotFound, WidgetNotFound
 
 register = template.Library()
 
@@ -13,7 +13,9 @@ def zone(zone_id):
     except ZoneNotFound:
         return ''
 
-    if zone.widget:
+    try:
         return zone.widget.render()
+    except WidgetNotFound:
+        pass
 
     return ''
