@@ -33,7 +33,10 @@ class EventSelectInputComponent extends React.Component {
   }
 
   getSelected() {
-    return this.props.many ? this.props.selected.map(item => item.id || item) : this.props.selected.id || this.props.selected
+    if (this.props.selected) {
+      return this.props.many ? this.props.selected.map(item => item.id || item) : this.props.selected.id || this.props.selected
+    }
+    return null
   }
 
   render() {
