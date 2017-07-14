@@ -215,3 +215,35 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(data, widget.prepare_data())
         self.assertEqual(result, html)
+
+    def test_empty_zone_render(self):
+        """Zone without widget attached should render empty"""
+
+        register.zone(TestZone)
+
+        zone = TestZone()
+
+        validated_data = {
+            'widget': None,
+            'data': {}
+        }
+
+        zone.save(validated_data)
+
+        template = loader.get_template('widgets/zones.html')
+
+        result = template.render()
+
+        html = u'\n\n<div class="zone">\n\n</div>\n'
+
+        self.assertEqual(result,  html)
+
+    def test_invalid_zone(self):
+
+        template = loader.get_template('widgets/test-invalid-zone.html')
+
+        result = template.render()
+
+        html = u'\n\n<div class="zone">\n\n</div>\n'
+
+        self.assertEqual(result, html)
