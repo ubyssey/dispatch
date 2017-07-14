@@ -21,7 +21,7 @@ class EventSelectInputComponent extends React.Component {
     const label = this.props.many ? 'events' : 'event'
 
     const selected = this.props.many ? this.props.selected.map(item => item.id || item) :
-      (this.props.selected ? this.props.selected.id : null)
+      (this.props.selected ? this.props.selected.id || this.props.selected : null)
 
     return (
       <ItemSelectInput
