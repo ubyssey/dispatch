@@ -1,4 +1,3 @@
-
 from django import template
 
 from dispatch.theme import ThemeManager
@@ -14,8 +13,7 @@ def zone(zone_id):
     except ZoneNotFound:
         return ''
 
-    widget = zone.widget
-    if widget is not None:
-        return widget.render()
+    if zone.widget:
+        return zone.widget.render()
 
     return ''
