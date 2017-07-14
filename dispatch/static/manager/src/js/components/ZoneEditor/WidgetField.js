@@ -5,7 +5,6 @@ import * as fields from '../fields'
 import { FormInput } from '../inputs'
 
 export default function WidgetField(props) {
-
   const Field = fields[props.field.type]
 
   return (
