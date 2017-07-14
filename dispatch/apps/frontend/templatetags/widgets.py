@@ -13,4 +13,9 @@ def zone(zone_id):
     except ZoneNotFound:
         return None
 
-    return zone.widget.render()
+    widget = zone.widget
+
+    if widget is not None:
+        return zone.widget.render()
+
+    return ''
