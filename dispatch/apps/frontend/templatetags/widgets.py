@@ -11,11 +11,11 @@ def zone(zone_id):
     try:
         zone = ThemeManager.Zones.get(zone_id)
     except ZoneNotFound:
-        return None
+        return ''
 
-    widget = zone.widget
-
-    if widget is not None:
+    try:
         return zone.widget.render()
+    except:
+        pass        
 
     return ''
