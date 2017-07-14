@@ -15,7 +15,7 @@ def zone(zone_id):
 
     try:
         return zone.widget.render()
-    except WidgetNotFound:
+    except (WidgetNotFound, AttributeError):
         pass
 
     return ''
