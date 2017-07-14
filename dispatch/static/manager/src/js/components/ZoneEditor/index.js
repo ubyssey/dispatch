@@ -35,14 +35,13 @@ class ZoneEditorComponent extends React.Component {
   }
 
   render() {
-
     if (!this.props.zone) {
       return (<div>Loading</div>)
     }
 
     const fields = this.props.widget ? this.props.widget.fields.map((field) => (
       <WidgetField
-        key={field.name}
+        key={`widget-field__${this.props.widget.id}__${field.name}`}
         field={field}
         data={this.props.zone.data[field.name] || null}
         onChange={(data) => this.updateField(field.name, data)} />
