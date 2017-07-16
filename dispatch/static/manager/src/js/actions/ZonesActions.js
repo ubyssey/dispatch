@@ -3,7 +3,13 @@ import { normalize, arrayOf } from 'normalizr'
 
 import DispatchAPI from '../api/dispatch'
 import * as types from '../constants/ActionTypes'
-import { zoneSchema, widgetSchema, articleSchema, imageSchema } from '../constants/Schemas'
+import {
+  zoneSchema,
+  widgetSchema,
+  articleSchema,
+  imageSchema,
+  eventSchema
+} from '../constants/Schemas'
 
 function normalizeZoneData(field, data) {
   switch (field.type) {
@@ -11,6 +17,8 @@ function normalizeZoneData(field, data) {
     return field.many ? normalize(data, arrayOf(articleSchema)) : normalize(data, articleSchema)
   case 'image':
     return field.many ? normalize(data, arrayOf(imageSchema)) : normalize(data, imageSchema)
+  case 'event':
+    return field.many ? normalize(data, arrayOf(eventSchema)) : normalize(data, eventSchema)
   default:
     return {
       result: data,
@@ -20,13 +28,11 @@ function normalizeZoneData(field, data) {
 }
 
 function normalizeZone(zone) {
-
   const fields = R.path(['widget', 'fields'], zone) || []
 
   let fieldEntities = {}
 
   fields.forEach(field => {
-
     if (!zone.data[field.name]) {
       return
     }
@@ -54,7 +60,6 @@ function normalizeZone(zone) {
 }
 
 function normalizeZones(zones) {
-
   let results = []
   let entities = {}
 
