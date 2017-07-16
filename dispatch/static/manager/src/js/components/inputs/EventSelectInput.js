@@ -18,13 +18,12 @@ class EventSelectInputComponent extends React.Component {
   }
 
   render() {
-
     const label = this.props.many ? 'events' : 'event'
 
     return (
       <ItemSelectInput
         many={this.props.many}
-        selected={this.props.selected ? this.props.selected.id : null}
+        selected={this.props.selected}
         results={this.props.events.ids}
         entities={this.props.entities.events}
         onChange={(selected) => this.props.onChange(selected)}
