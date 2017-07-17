@@ -143,9 +143,9 @@ class Widget(object):
         """Renders the widget as HTML"""
 
         template = loader.get_template(self.template)
-        
+
         if not data:
-            return template.render(self.prepare_data())
+            return template.render(self.context(self.prepare_data()))
         else:
             return template.render(data)
 
