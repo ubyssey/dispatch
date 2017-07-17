@@ -1,3 +1,5 @@
+from django.utils.dateparse import parse_datetime
+
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
 from dispatch.apps.content.models import Article, Image
 from dispatch.apps.events.models import Event
@@ -100,6 +102,44 @@ class TextField(Field):
     def validate(self, data):
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
+
+class DateTimeField(Field):
+
+    type = 'datetime'
+
+    def validate(self, data):
+        if not parse_datetime(data):
+            raise InvalidField('%s must be valid format' % self.label)
+
+    def prepare_data(self, data):
+        return parse_datetime(data)
+
+class IntField(Field):
+
+    type = 'int'
+
+    def validate(self, data):
+        try:
+            if isinstance(data, int):
+                return int
+            return int(data, base=10)
+        except ValueError:
+            raise InvalidField('%s must be integer' % self.label)
+
+    def prepare_data(self, data):
+        if isinstance(data, int):
+            return data
+        return int(data, base=10)
+
+class UIntField(IntField):
+
+    type = 'uint'
+
+    def validate(self, data):
+        val = super(UIntField, self).validate(data)
+
+        if val < 0:
+            raise InvalidField('%s must be greater than or equal to  0' % self.label)
 
 class ArticleField(ModelField):
 
