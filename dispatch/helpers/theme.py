@@ -13,22 +13,22 @@ class ThemeHelper():
     def get_theme_templates(theme_name=None):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        try:
-            templates = importlib.import_module(theme_name + '.templates')
-            templates = templates.templates.all()
-        except ImportError:
-            templates = []
+        #try:
+        templates = importlib.import_module(theme_name + '.templates')
+        templates = templates.templates.all()
+        #except ImportError:
+        #    templates = []
         return templates
 
     @staticmethod
     def get_theme_template(theme_name=None, template_slug=None):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        try:
-            templates = importlib.import_module(theme_name + '.templates')
-            template = templates.templates.get(template_slug)
-        except ImportError:
-            template = None
+        #try:
+        templates = importlib.import_module(theme_name + '.templates')
+        template = templates.templates.get(template_slug)
+        #except ImportError:
+        #    template = None
 
         return template
 
@@ -36,10 +36,10 @@ class ThemeHelper():
     def get_theme_urls(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        try:
-            return ThemeHelper.fetch_theme_urls(theme_name)
-        except ImportError:
-            return ThemeHelper.fetch_theme_urls('default')
+        #try:
+        return ThemeHelper.fetch_theme_urls(theme_name)
+        #except ImportError:
+        #    return ThemeHelper.fetch_theme_urls('default')
 
     @staticmethod
     def fetch_theme_urls(theme_name):
