@@ -24,7 +24,6 @@ export default class IntegerField extends React.Component {
     } else {
       val = val.replace(/-/g, '')
     }
-    this.props.onChange(val)
 
     // the change in position of the caret is equal to the difference
     // in the length of the value
@@ -32,7 +31,7 @@ export default class IntegerField extends React.Component {
     selectionStart += dLength
     selectionEnd += dLength
 
-    this.setState({ selectionStart, selectionEnd })
+    this.setState({ selectionStart, selectionEnd }, () => this.props.onChange(val))
   }
 
   componentDidUpdate() {
