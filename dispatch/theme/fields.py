@@ -114,32 +114,34 @@ class DateTimeField(Field):
     def prepare_data(self, data):
         return parse_datetime(data)
 
-class IntField(Field):
+class IntegerField(Field):
 
-    type = 'int'
+    type = 'integer'
+    def __init__(self, label, many=False, min_value=None, max_value=None):
+        self.min_value = min_value
+        self.max_value = max_value
+
+        super(IntegerField, self).__init__(label=label, many=many)
 
     def validate(self, data):
         try:
             if isinstance(data, int):
-                return int
-            return int(data, base=10)
+                value = data
+            else:
+                value =  int(data, base=10)
         except ValueError:
             raise InvalidField('%s must be integer' % self.label)
+            
+        if self.min_value is not None and value < self.min_value:
+            raise InvalidField('%s must be greater than %d' % (self.label, self.min_value))
+
+        if self.max_value is not None and value > self.max_value:
+            raise InvalidField('%s must be less than than %d' % (self.label, self.max_value))
 
     def prepare_data(self, data):
         if isinstance(data, int):
             return data
         return int(data, base=10)
-
-class UIntField(IntField):
-
-    type = 'uint'
-
-    def validate(self, data):
-        val = super(UIntField, self).validate(data)
-
-        if val < 0:
-            raise InvalidField('%s must be greater than or equal to  0' % self.label)
 
 class ArticleField(ModelField):
 

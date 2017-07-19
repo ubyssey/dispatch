@@ -4,8 +4,7 @@ import ArticleField from './ArticleField'
 import ImageField from './ImageField'
 import EventField from './EventField'
 import DateTimeField from './DateTimeField'
-import IntField from './IntField'
-import UIntField from './UIntField'
+import IntegerField from './IntegerField'
 
 export {
   CharField as char,
@@ -14,6 +13,5 @@ export {
   ImageField as image,
   EventField as event,
   DateTimeField as datetime,
-  IntField as int,
-  UIntField as uint
+  IntegerField as integer,
 }
