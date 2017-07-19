@@ -11,20 +11,23 @@ export default function ItemList(props) {
     <div className='c-item-list'>
       <ItemListHeader
         items={props.items}
-        type={props.type}
+        typeSingular={props.typeSingular}
+        typePlural={props.typePlural}
         location={props.location}
         currentPage={props.currentPage}
         totalPages={props.totalPages}
         createHandler={props.createHandler}
-        actions={props.actions} />
+        toolbarContent={props.toolbarContent}
+        actions={props.actions || {}} />
       <ItemListTable
         items={props.items}
         entities={props.entities}
         columns={props.columns}
+        headers={props.headers}
         location={props.location}
         emptyMessage={props.emptyMessage}
         createHandler={props.createHandler}
-        actions={props.actions} />
+        actions={props.actions || {}} />
     </div>
   )
 

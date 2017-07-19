@@ -1,19 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 
 import topicsActions from '../../actions/TopicsActions'
 
 class TopicSelectInputComponent extends React.Component {
-
-  addTopic(topicId) {
-    this.props.update(topicId)
-  }
-
-  removeTopic() {
-    this.props.update(null)
-  }
 
   listTopics(query) {
     let queryObj = {}
@@ -27,13 +19,14 @@ class TopicSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <MultiSelectInput
-        selected={this.props.selected ? [this.props.selected] : []}
+      <ItemSelectInput
+        many={false}
+        selected={this.props.selected}
         results={this.props.topics.ids}
         entities={this.props.entities.topics}
-        addValue={(id) => this.addTopic(id)}
-        removeValue={(id) => this.removeTopic(id)}
+        onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listTopics(query)}
+        create={(name, cb) => this.props.createTopic(this.props.token, { name }, cb)}
         attribute='name'
         editMessage={this.props.selected ? 'Edit topic' : 'Add topic'} />
     )
@@ -43,7 +36,7 @@ class TopicSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    topics: state.app.topics,
+    topics: state.app.topics.list,
     entities: {
       topics: state.app.entities.topics
     },
@@ -55,6 +48,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     listTopics: (token, query) => {
       dispatch(topicsActions.list(token, query))
+    },
+    createTopic: (token, data, callback) => {
+      dispatch(topicsActions.create(token, data, null, callback))
     }
   }
 }

@@ -1,6 +1,6 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
-import { push } from 'react-router-redux'
+import { replace } from 'react-router-redux'
 
 import DispatchAPI from '../../api/dispatch'
 
@@ -18,6 +18,7 @@ const DEFAULT_RESOURCE_ACTION_TYPES = [
   'SET',
   'TOGGLE',
   'TOGGLE_ALL',
+  'SELECT',
   'CLEAR_SELECTED',
   'CLEAR_ALL'
 ]
@@ -60,7 +61,11 @@ export class ResourceActions {
     this.schema = schema
   }
 
-  prepareData(data) {
+  toRemote(data) {
+    return data
+  }
+
+  fromRemote(data) {
     return data
   }
 
@@ -69,7 +74,10 @@ export class ResourceActions {
       type: this.types.GET,
       payload: this.api.get(token, id, params)
         .then(json => ({
-          data: normalize(json, this.schema)
+          data: normalize(
+            this.fromRemote(json),
+            this.schema
+          )
         }))
     }
   }
@@ -80,7 +88,10 @@ export class ResourceActions {
       payload: this.api.list(token, params)
         .then(json => ({
           count: json.count,
-          data: normalize(json.results, arrayOf(this.schema))
+          data: normalize(
+            json.results.map(this.fromRemote),
+            arrayOf(this.schema)
+          )
         }))
     }
   }
@@ -94,7 +105,10 @@ export class ResourceActions {
           next: json.next,
           previous: json.previous,
           append: true,
-          data: normalize(json.results, arrayOf(this.schema))
+          data: normalize(
+            json.results.map(this.fromRemote),
+            arrayOf(this.schema)
+          )
         }))
     }
   }
@@ -102,20 +116,50 @@ export class ResourceActions {
   save(token, id, data) {
     return {
       type: this.types.SAVE,
-      payload: this.api.save(token, id, this.prepareData(data))
+      payload: this.api.save(token, id, this.toRemote(data))
         .then(json => ({
-          data: normalize(json, this.schema)
+          data: normalize(
+            this.fromRemote(json),
+            this.schema
+          )
         }))
     }
   }
 
-  create(token, id, data) {
-    return {
-      type: this.types.CREATE,
-      payload: this.api.create(token, this.prepareData(data))
-        .then(json => ({
-          data: normalize(json, this.schema)
-        }))
+  create(token, data, next=null, callback) {
+    return (dispatch) => {
+
+      dispatch({ type: pending(this.types.CREATE) })
+
+      this.api.create(token, this.toRemote(data))
+        .then(json => {
+          if (next) {
+            dispatch(replace({
+              pathname: `${next}/${json.id}`,
+              state: { ignoreLeaveHook: true }
+            }))
+          }
+
+          dispatch({
+            type: fulfilled(this.types.CREATE),
+            payload: {
+              data: normalize(
+                this.fromRemote(json),
+                this.schema
+              )
+            }
+          })
+
+          if (typeof callback === 'function') {
+            callback(json)
+          }
+        })
+        .catch(error => {
+          dispatch({
+            type: rejected(this.types.CREATE),
+            payload: error
+          })
+        })
     }
   }
 
@@ -127,7 +171,7 @@ export class ResourceActions {
       this.api.delete(token, id)
         .then(() => {
           if (next) {
-            dispatch(push(next))
+            dispatch(replace(next))
           }
         })
         .then(() => {
@@ -170,6 +214,7 @@ export class ResourceActions {
   set(resource) {
     return {
       type: this.types.SET,
+      isLocalAction: true,
       payload: {
         data: normalize(resource, this.schema)
       }
@@ -187,6 +232,13 @@ export class ResourceActions {
     return {
       type: this.types.TOGGLE_ALL,
       ids: ids
+    }
+  }
+
+  select(id) {
+    return {
+      type: this.types.SELECT,
+      id: id
     }
   }
 

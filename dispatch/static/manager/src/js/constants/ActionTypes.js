@@ -10,6 +10,8 @@ export const PERSONS = resourceActionTypes('PERSONS')
 export const TOPICS = resourceActionTypes('TOPICS')
 export const TAGS = resourceActionTypes('TAGS')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
+export const GALLERIES = resourceActionTypes('GALLERIES')
+export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [
@@ -38,12 +40,14 @@ export const DASHBOARD = actionTypes('DASHBOARD', [
   'LIST_RECENT_ARTICLES'
 ])
 
+// Zones actions
+export const ZONES = actionTypes('ZONES', [
+  'LIST',
+  'GET',
+  'SAVE',
+  'LIST_WIDGETS',
+  'SET'
+])
+
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
-
-// Editor actions
-export const UPDATE_EDITOR = 'UPDATE_EDITOR'
-export const TOGGLE_EDITOR_STYLE = 'TOGGLE_EDITOR_STYLE'
-export const EDITOR_KEY_COMMAND = 'EDITOR_KEY_COMMAND'
-export const EDITOR_INSERT_LINK = 'EDITOR_INSERT_LINK'
-export const EDITOR_REMOVE_LINK = 'EDITOR_REMOVE_LINK'

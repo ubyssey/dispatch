@@ -3,7 +3,7 @@ import shutil
 
 from django.test import TestCase
 
-from rest_framework.test import APIRequestFactory, APIClient
+from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 
 from dispatch.apps.core.models import User

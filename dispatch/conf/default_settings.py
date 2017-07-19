@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'dispatch.apps.content',
     'dispatch.apps.core',
     'dispatch.apps.frontend',
+    'dispatch.apps.events',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -28,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'phonenumber_field'
 ]
 
 # Logging
@@ -52,6 +54,21 @@ LOGGING = {
 # Replace default user model
 AUTH_USER_MODEL = 'core.User'
 
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 9,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
 # Templates
 TEMPLATES = [
     {
@@ -61,19 +78,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'dispatch/templates'),
             os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.core.context_processors.debug',
-                'django.core.context_processors.i18n',
-                'django.core.context_processors.media',
-                'django.core.context_processors.static',
-                'django.core.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-                'dispatch.helpers.context_processors.static'
-            ]
-        }
+        'APP_DIRS': True
     }
 ]
 
@@ -90,7 +95,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'UNICODE_JSON': True,
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DATETIME_INPUT_FORMATS': ['iso-8601']
 }
 
 MIDDLEWARE_CLASSES = [
@@ -124,3 +130,6 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
+
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'CA'

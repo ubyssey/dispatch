@@ -15,7 +15,7 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 
 class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
-    def test_upload_image_unauthorized(self):
+    def test_create_image_unauthorized(self):
         """
         Should not be able to upload an image without authorization.
         """
@@ -31,7 +31,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Image.objects.count(), 0)
 
-    def test_upload_image_empty(self):
+    def test_create_image_empty(self):
         """
         Should not be able to upload an empty image.
         """
@@ -43,7 +43,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Image.objects.count(), 0)
 
-    def test_upload_image_jpeg(self):
+    def test_create_image_jpeg(self):
         """
         Should be able to upload a JPEG image.
         """
@@ -60,7 +60,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertTrue(self.fileExists(response.data['url_medium']))
         self.assertTrue(self.fileExists(response.data['url_thumb']))
 
-    def test_upload_image_png(self):
+    def test_create_image_png(self):
         """
         Should be able to upload a PNG image.
         """
@@ -70,6 +70,24 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         with open(self.get_input_file('test_image.png')) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+
+        # Assert that resized versions were created
+        self.assertTrue(self.fileExists(response.data['url_medium']))
+        self.assertTrue(self.fileExists(response.data['url_thumb']))
+
+    def test_upload_image_gif(self):
+        """
+        Should be able to upload a GIF.
+        """
+
+        url = reverse('api-images-list')
+
+        with open(self.get_input_file('test_image.gif')) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
 
@@ -99,7 +117,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check that filenames are different
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
 
-    def test_upload_image_invalid_filename(self):
+    def test_create_image_invalid_filename(self):
         """
         Should not be able to upload image with non-ASCII characters in filename.
         """

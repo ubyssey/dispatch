@@ -49,7 +49,7 @@ def start_project(name):
         os.path.join(os.getcwd(), name)
     )
 
-def run_tests():
+def run_tests(*args):
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.settings'
 
@@ -58,21 +58,21 @@ def run_tests():
     TestRunner = get_runner(settings)
     test_runner = TestRunner()
 
-    failures = test_runner.run_tests(
-        [os.path.join(PACKAGE_DIR, 'tests')]
-    )
+    test_labels = args if args else [os.path.join(PACKAGE_DIR, 'tests')]
+
+    failures = test_runner.run_tests(test_labels)
 
     if failures:
         sys.exit(1)
 
-
-def run_coverage():
+def run_coverage(*args):
     # Setup coverage
     cov = coverage.Coverage(
         branch=True,
         source=['dispatch'],
         omit=[
             os.path.join(PACKAGE_DIR, '*/migrations/*'),
+            os.path.join(PACKAGE_DIR, 'vendor/*'),
             os.path.join(PACKAGE_DIR, 'tests/*'),
             os.path.join(PACKAGE_DIR, 'bin/*')
         ]
@@ -82,7 +82,7 @@ def run_coverage():
     cov.start()
 
     # Run tests
-    run_tests()
+    run_tests(*args)
 
     # Stop tracking coverage
     cov.stop()

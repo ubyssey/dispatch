@@ -1,5 +1,14 @@
+import { combineReducers } from 'redux'
+
 import * as types from '../constants/ActionTypes'
 
-import { buildManyResourceReducer } from '../util/redux'
+import {
+  buildManyResourceReducer,
+  buildSingleResourceReducer
+} from '../util/redux'
 
-export default buildManyResourceReducer(types.TOPICS).getReducer()
+
+export default combineReducers({
+  list: buildManyResourceReducer(types.TOPICS).getReducer(),
+  single: buildSingleResourceReducer(types.TOPICS).getReducer(),
+})

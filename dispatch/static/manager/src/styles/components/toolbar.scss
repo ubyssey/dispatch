@@ -5,7 +5,9 @@
   // Structure
   display: flex;
   overflow: hidden;
-  height: 50px;
+  min-height: 50px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 
   // Border
   border-bottom: thin solid $color-border-gray;
@@ -19,7 +21,17 @@
   line-height: 48px;
 
   .pt-button {
+    // Structure
     margin-right: 0.75rem;
+
+    &:last-child {
+      // Structure
+      margin-right: 0;
+    }
+  }
+
+  .pt-tag {
+    vertical-align: middle;
   }
 }
 

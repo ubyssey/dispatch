@@ -1,5 +1,5 @@
 recursive-include dispatch/templates *
 recursive-include dispatch/apps *
 include dispatch/core/management/templates/*
-recursive-include dispatch/static/dist *
-recursive-exclude dispatch/static/node_modules *
+recursive-include dispatch/static/manager/dist *
+recursive-exclude dispatch/static/manager/node_modules *
