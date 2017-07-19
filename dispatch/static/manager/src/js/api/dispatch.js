@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import url from 'url'
 
-const API_URL = 'http://localhost:8000/api/'
+const API_URL = process.env.API_URL || 'http://localhost:8000/api/'
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
@@ -94,7 +94,6 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: payload
     }
   )
-  .then(handleError)
   .then(parseJSON)
 }
 
@@ -117,6 +116,18 @@ function patchRequest(route, id=null, payload={}, token=null) {
       method: 'PATCH',
       headers: buildHeaders(token),
       body: JSON.stringify(payload)
+    }
+  )
+  .then(parseJSON)
+}
+
+function patchMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token, false),
+      body: payload
     }
   )
   .then(parseJSON)
@@ -235,27 +246,54 @@ const DispatchAPI = {
   },
   persons: {
     list: (token, query) => {
-      return getRequest('people', null, query, token)
+      return getRequest('persons', null, query, token)
     },
-    create: (token, fullName) => {
-      return postRequest('people', null, {full_name: fullName}, token)
+    get: (token, personId) => {
+      return getRequest('persons', personId, null, token)
+    },
+    save: (token, personId, data) => {
+      return patchMultipartRequest('persons', personId, data, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('persons', null, data, token)
+    },
+    delete: (token, personId) => {
+      return deleteRequest('persons', personId, null, token)
     }
   },
   topics: {
     list: (token, query) => {
       return getRequest('topics', null, query, token)
     },
-    create: (token, name) => {
-      return postRequest('topics', null, {name: name}, token)
-    }
+    get: (token, topicId) => {
+      return getRequest('topics', topicId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('topics', null, data, token)
+    },
+    save: (token, topicId, data) => {
+      return patchRequest('topics', topicId, data, token)
+    },
+    delete: (token, topicId) => {
+      return deleteRequest('topics', topicId, null, token)
+    },
   },
   tags: {
     list: (token, query) => {
       return getRequest('tags', null, query, token)
     },
-    create: (token, name) => {
-      return postRequest('tags', null, {name: name}, token)
-    }
+    get: (token, tagId) => {
+      return getRequest('tags', tagId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('tags', null, data, token)
+    },
+    save: (token, tagId, data) => {
+      return patchRequest('tags', tagId, data, token)
+    },
+    delete: (token, tagId) => {
+      return deleteRequest('tags', tagId, null, token)
+    },
   },
   integrations: {
     get: (token, integrationId) => {
@@ -278,6 +316,54 @@ const DispatchAPI = {
     recent: (token) => {
       return getRequest('dashboard/recent', null, {}, token)
     }
+  },
+  galleries: {
+    list: (token, query) => {
+      return getRequest('galleries', null, query, token)
+    },
+    get: (token, galleryId) => {
+      return getRequest('galleries', galleryId, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('galleries', null, data, token)
+    },
+    save: (token, galleryId, data) => {
+      return patchRequest('galleries', galleryId, data, token)
+    },
+    delete: (token, galleryId) => {
+      return deleteRequest('galleries', galleryId, null, token)
+    }
+  },
+  zones: {
+    list: (token) => {
+      return getRequest('zones', null, null, token)
+    },
+    get: (token, zoneId) => {
+      return getRequest('zones', zoneId, null, token)
+    },
+    save: (token, zoneId, data) => {
+      return patchRequest('zones', zoneId, data, token)
+    },
+    widgets: (token, zoneId) => {
+      return getRequest('zones.widgets', zoneId, null, token)
+    }
+  },
+  events: {
+    list: (token, query) => {
+      return getRequest('event', null, query, token)
+    },
+    get: (token, eventId) => {
+      return getRequest('event', eventId, null, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('event', null, data, token)
+    },
+    save: (token, eventId, data) => {
+      return patchMultipartRequest('event', eventId, data, token)
+    },
+    delete: (token, eventId) => {
+      return deleteRequest('event', eventId, null, token)
+    },
   }
 }
 

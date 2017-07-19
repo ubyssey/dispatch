@@ -1,26 +1,11 @@
 import React from 'react'
-import R from 'ramda'
 import { connect } from 'react-redux'
 
-import MultiSelectInput from './MultiSelectInput'
+import ItemSelectInput from './ItemSelectInput'
 
 import personsActions from '../../actions/PersonsActions'
 
 class AuthorSelectInputComponent extends React.Component {
-
-  addAuthor(authorId) {
-    let newAuthors = R.append(authorId, this.props.selected)
-    this.props.update(newAuthors)
-  }
-
-  removeAuthor(authorId) {
-    let newAuthors = R.remove(
-      R.findIndex(R.equals(authorId), this.props.selected),
-      1,
-      this.props.selected
-    )
-    this.props.update(newAuthors)
-  }
 
   listPersons(query) {
     let queryObj = {}
@@ -34,12 +19,11 @@ class AuthorSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <MultiSelectInput
+      <ItemSelectInput
         selected={this.props.selected}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
-        addValue={(id) => this.addAuthor(id)}
-        removeValue={(id) => this.removeAuthor(id)}
+        onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
@@ -50,7 +34,7 @@ class AuthorSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    persons: state.app.persons,
+    persons: state.app.persons.list,
     entities: {
       persons: state.app.entities.persons
     },

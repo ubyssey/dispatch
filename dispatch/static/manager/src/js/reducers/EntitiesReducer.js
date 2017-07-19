@@ -6,18 +6,34 @@ function containsEntities(action) {
   return R.path(['payload', 'data', 'entities'], action)
 }
 
+function mergeEntities(state, entities) {
+  return R.mergeWith(
+    R.merge,
+    state,
+    entities
+  )
+}
+
 const initialState = {
   articles: {},
-  article: {},
   sections: {},
-  section: {},
   files: {},
   images: {},
-  image: {},
   templates: {},
   persons: {},
   topics: {},
-  tags: {}
+  tags: {},
+  galleries: {},
+  zones: {},
+  widgets: {},
+  events: {},
+  local: {
+    articles: {},
+    images: {},
+    sections: {},
+    galleries: {},
+    zones: {}
+  }
 }
 
 let reducer = new Reducer(initialState)
@@ -28,11 +44,22 @@ reducer.handleDefault((state, action) => {
     return state
   }
 
-  return R.mergeWith(
-    R.merge,
-    state,
-    action.payload.data.entities
-  )
+  if (action.isLocalAction) {
+    return R.merge(
+      state,
+      {
+        local: mergeEntities(state.local, action.payload.data.entities)
+      }
+    )
+  } else {
+    return R.merge(
+      mergeEntities(state, action.payload.data.entities),
+      {
+        local: mergeEntities(state.local, action.payload.data.entities)
+      }
+    )
+  }
+
 })
 
 export default reducer.getReducer()

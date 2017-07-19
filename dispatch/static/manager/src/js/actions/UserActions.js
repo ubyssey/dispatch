@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux'
+import { replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
@@ -7,7 +7,7 @@ import { pending, fulfilled, rejected } from '../util/redux'
 
 export function requireLogin(nextPath) {
   return function (dispatch) {
-    dispatch(push('/login'))
+    dispatch(replace('/login'))
     dispatch({
       type: types.AUTH.LOGIN_REQUIRED,
       nextPath: nextPath
@@ -27,7 +27,7 @@ export function authenticateUser(email, password, nextPath = '/') {
           email: email
         })
 
-        dispatch(push(nextPath))
+        dispatch(replace(nextPath))
       })
       .catch(() => {
         dispatch({ type: rejected(types.AUTH.GET_TOKEN) })

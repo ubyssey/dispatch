@@ -3,15 +3,14 @@ import React from 'react'
 import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
-import FeaturedImageTab from './tabs/FeaturedImageTab'
-import DeliveryTab from './tabs/DeliveryTab'
-import TemplateTab from './tabs/TemplateTab'
-import SEOTab from './tabs/SEOTab'
+import FeaturedImageTab from '../Editor/tabs/FeaturedImageTab'
+import DeliveryTab from '../Editor/tabs/DeliveryTab'
+import TemplateTab from '../Editor/tabs/TemplateTab'
+import SEOTab from '../Editor/tabs/SEOTab'
 
 require('../../../styles/components/article_sidebar.scss')
 
 export default function ArticleSidebar(props) {
-
   return (
     <div className='c-article-sidebar'>
       <Tabs>

@@ -1,20 +1,14 @@
-from django.db.models import Model, IntegerField, CharField, TextField, ManyToManyField, SlugField
+from jsonfield import JSONField
 
-class ComponentSet(Model):
-    slug = SlugField()
-    components = ManyToManyField('Component')
-
-class Component(Model):
-    slug = CharField(max_length=50)
-    spot = CharField(max_length=50)
-    fields = ManyToManyField('ComponentField')
-
-class ComponentField(Model):
-    name = CharField(max_length=50)
-    value = TextField()
+from django.db.models import Model, IntegerField, CharField, TextField, SlugField
 
 class TemplateVariable(Model):
     article_id = IntegerField()
     template_slug = CharField(max_length=255)
     variable = CharField(max_length=50)
     value = TextField()
+
+class Zone(Model):
+    zone_id = SlugField(primary_key=True)
+    widget_id = SlugField(null=True)
+    data = JSONField(null=True)

@@ -1,8 +1,3 @@
-def print_templates(name):
-    module = __import__(name)
-    for member in dir(module):
-        print member
-
 class TemplateRegistry:
 
     def __init__(self):
@@ -21,14 +16,6 @@ class TemplateRegistry:
     def all(self):
         return [self.templates[slug] for slug in self.template_list]
 
-class ComponentRegistry(TemplateRegistry):
-    def get_for_spot(self, spot):
-        templates = []
-        for template in self.all():
-            if spot in template.compatible_spots:
-                templates.append(template)
-        return templates
-
-theme_components = ComponentRegistry()
+theme_components = TemplateRegistry()
 theme_pages = TemplateRegistry()
 templates = TemplateRegistry()
