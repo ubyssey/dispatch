@@ -431,7 +431,6 @@ class EventViewSet(DispatchModelViewSet):
         return queryset
 
 
-@api_view(['POST'])
 @permission_classes((AllowAny,))
 class AuthenticationViewSet(viewsets.GenericViewSet):
 
@@ -452,7 +451,7 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
 
             return Response(data, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            return BadCredentials()
 
     def user_unauthenticate(self, request):
         #Get token for current user
@@ -460,6 +459,4 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
 
         token.delete()
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
-    else:
-        raise BadCredentials()
+        return Response({})

@@ -25,6 +25,10 @@ router.register(r'event', views.EventViewSet, base_name='api-event')
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
+authentication_management = views.AuthenticationViewSet.as_view({
+    'post': 'user_authenticate',
+    'delete': 'user_unauthenticate'
+})
 
 authentication_management = views.AuthenticationViewSet.as_view({
     'post': 'user_authenticate',

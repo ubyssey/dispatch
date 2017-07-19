@@ -1,4 +1,5 @@
 import LoginPage from './LoginPage'
+import LogoutPage from './LogoutPage'
 import DashboardPage from './DashboardPage'
 import FilesPage from './FilesPage'
 import ProfilePage from './ProfilePage'
@@ -16,6 +17,7 @@ import * as Events from './Events'
 
 export {
   LoginPage as Login,
+  LogoutPage as Logout,
   DashboardPage as Dashboard,
   FilesPage as Files,
   ProfilePage as Profile,
