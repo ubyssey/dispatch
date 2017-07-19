@@ -83,6 +83,7 @@ render((
 
         <Route component={Containers.Basic}>
           <Route path='/login' component={Pages.Login} />
+          <Route path='/logout' component={Pages.Logout} />
         </Route>
 
       </Route>

@@ -31,4 +31,11 @@ reducer.handle(fulfilled(types.AUTH.GET_TOKEN), (state, action) => {
   })
 })
 
+reducer.handle(fulfilled(types.AUTH.LOGOUT), () => {
+  Cookies.remove('token')
+  Cookies.remove('email')
+
+  return initialState
+})
+
 export default reducer.getReducer()
