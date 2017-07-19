@@ -25,11 +25,15 @@ router.register(r'event', views.EventViewSet, base_name='api-event')
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
+authentication_management = views.AuthenticationViewSet.as_view({
+    'post': 'user_authenticate',
+    'delete': 'user_unauthenticate'
+})
 
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
     url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
     # User authorization
-    url(r'^auth/token', views.user_authenticate, name='user-token'),
+    url(r'^auth/token', authentication_management, name='auth-token'),
 ]) + router.urls
