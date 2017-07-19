@@ -92,11 +92,11 @@ function fromJSON(jsonBlocks) {
   )
 }
 
-function doEscape(obj) {
-  if (obj.type == 'paragraph') {
-    obj.data = escape(obj.data)
+function escapeHTML(block) {
+  if (block.type == 'paragraph') {
+    block.data = escape(block.data)
   }
-  return obj
+  return block
 }
 
 function toJSON(contentState) {
@@ -109,7 +109,7 @@ function toJSON(contentState) {
     .map(parseBlock)
     .toList()
     .toJS()
-    .map(doEscape)
+    .map(escapeHTML)
 }
 
 export {
