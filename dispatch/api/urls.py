@@ -30,11 +30,6 @@ authentication_management = views.AuthenticationViewSet.as_view({
     'delete': 'user_unauthenticate'
 })
 
-authentication_management = views.AuthenticationViewSet.as_view({
-    'post': 'user_authenticate',
-    'delete': 'user_unauthenticate'
-})
-
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
