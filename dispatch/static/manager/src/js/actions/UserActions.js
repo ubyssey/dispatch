@@ -35,8 +35,25 @@ export function authenticateUser(email, password, nextPath = '/') {
   }
 }
 
-export function unauthenticateUser(nextPath = '/') {
-  return dispatch => {
-    //TODO: hook up the API call
+
+export function logoutUser(token) {
+  return (dispatch) => {
+    dispatch({ type: pending(types.AUTH.LOGOUT) })
+
+    return DispatchAPI.auth.logout(token)
+      .then(() => {
+        dispatch({
+          type: fulfilled(types.AUTH.LOGOUT)
+        })
+
+        dispatch(replace('/login'))
+        dispatch({
+          type: types.AUTH.LOGIN_REQUIRED,
+          nextPath: '/'
+        })
+      })
+      .catch(() => {
+        dispatch({ type: rejected(types.AUTH.LOGOUT)})
+      })
   }
 }
