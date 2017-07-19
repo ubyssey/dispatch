@@ -1,0 +1,19 @@
+@import '../../../../../styles/utilities/colors';
+
+.o-embed--code__editor {
+  width: 100%;
+  border-style: solid;
+  border-color: black;
+}
+
+.o-embed--code__footer {
+  padding: 5px;
+  border-style: solid;
+  border-top-width: 1px;
+  border-top-color: $color-border-gray;
+  overflow: auto;
+}
+
+.o-embed--code__mode {
+  float: right;
+}

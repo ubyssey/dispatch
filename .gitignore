@@ -10,3 +10,9 @@ node_modules/
 
 .coverage
 htmlcov/
+
+*.vscode/
+
+dispatch/tests/media
+
+dispatch/apps/**/migrations/

@@ -106,6 +106,85 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Authentication successful')
   case rejected(types.INTEGRATIONS.CALLBACK):
     return showToast(action.payload.detail, Intent.DANGER)
+
+  // Tags
+  case fulfilled(types.TAGS.CREATE):
+  case fulfilled(types.TAGS.SAVE):
+    return showToast('Tag saved')
+  case rejected(types.TAGS.CREATE):
+  case rejected(types.TAGS.SAVE):
+    return showToast('Tag could not be saved', Intent.DANGER)
+  case fulfilled(types.TAGS.DELETE_MANY):
+    return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.TAGS.DELETE_MANY):
+    return showToast('Some tags could not be deleted', Intent.DANGER)
+
+  // Topics
+  case fulfilled(types.TOPICS.CREATE):
+  case fulfilled(types.TOPICS.SAVE):
+    return showToast('Topic saved')
+  case rejected(types.TOPICS.CREATE):
+  case rejected(types.TOPICS.SAVE):
+    return showToast('Topic could not be saved', Intent.DANGER)
+  case fulfilled(types.TOPICS.DELETE_MANY):
+    return showToast(`${action.payload.length} topic${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.TOPICS.DELETE_MANY):
+    return showToast('Some topics could not be deleted', Intent.DANGER)
+
+  // Zones
+  case fulfilled(types.ZONES.SAVE):
+    return showToast('Zone saved')
+  case rejected(types.ZONES.SAVE):
+    return showToast('Zone could not be saved', Intent.DANGER)
+
+  // Persons
+  case fulfilled(types.PERSONS.CREATE):
+  case fulfilled(types.PERSONS.SAVE):
+    return showToast('Person saved')
+  case rejected(types.PERSONS.CREATE):
+  case rejected(types.PERSONS.SAVE):
+    return showToast('Person could not be saved', Intent.DANGER)
+  case fulfilled(types.PERSONS.DELETE):
+    return showToast('Person deleted')
+  case rejected(types.PERSONS.DELETE):
+    if (action.payload === 'Conflict') {
+      return showToast('Can not delete currently logged in person', Intent.DANGER)
+    } else {
+      return showToast('Could not delete person', Intent.DANGER)
+    }
+  case fulfilled(types.PERSONS.DELETE_MANY):
+    return showToast(`${action.payload.length} persons${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PERSONS.DELETE_MANY):
+    return showToast('Some persons could not be deleted', Intent.DANGER)
+
+  // Galleries
+  case fulfilled(types.GALLERIES.CREATE):
+  case fulfilled(types.GALLERIES.SAVE):
+    return showToast('Gallery saved')
+  case rejected(types.GALLERIES.CREATE):
+  case rejected(types.GALLERIES.SAVE):
+    return showToast('Gallery could not be saved', Intent.DANGER)
+  case fulfilled(types.GALLERIES.DELETE_MANY):
+    return showToast(`${action.payload.length} galler${action.payload.length > 1 ? 'ies' : 'y'} deleted`)
+  case rejected(types.GALLERIES.DELETE_MANY):
+    return showToast('Some galleries could not be deleted', Intent.DANGER)
+
+  // Events
+  case fulfilled(types.EVENTS.CREATE):
+  case fulfilled(types.EVENTS.SAVE):
+    return showToast('Event saved')
+  case rejected(types.EVENTS.CREATE):
+  case rejected(types.EVENTS.SAVE):
+    return showToast('Event could not be saved', Intent.DANGER)
+  case fulfilled(types.EVENTS.DELETE):
+    return showToast('Event deleted')
+  case rejected(types.EVENTS.DELETE):
+    return showToast('Event could not be deleted')
+  case fulfilled(types.EVENTS.DELETE_MANY):
+    return showToast(`${action.payload.length} event${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.EVENTS.DELETE_MANY):
+    return showToast('Some events could not be deleted', Intent.DANGER)
+
   default:
     return toaster
 

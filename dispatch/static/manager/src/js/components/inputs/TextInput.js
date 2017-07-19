@@ -39,10 +39,11 @@ export default class TextInput extends React.Component {
         ref='input'
         className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
         type={this.props.type || 'text'}
-        value={this.props.value}
+        value={this.props.value || ''}
         disabled={this.props.disabled}
         placeholder={this.props.placeholder}
         onChange={this.handleOnChange}
+        readOnly={this.props.readOnly}
         onKeyPress={this.props.onKeyPress} />
     )
   }

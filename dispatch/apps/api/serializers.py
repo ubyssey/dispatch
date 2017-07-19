@@ -1,32 +1,82 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.apps.events.models import Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.apps.api.fields import JSONField
-from dispatch.apps.api.validators import ValidFilename
 
-class UserSerializer(DispatchModelSerializer):
-    """
-    Serializes the User model.
-    """
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email'
-        )
+from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
+from dispatch.apps.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
+
+from dispatch.theme import ThemeManager
+from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class PersonSerializer(DispatchModelSerializer):
     """
     Serializes the Person model.
     """
+
+    image = serializers.ImageField(required=False, validators=[ValidFilename])
+
     class Meta:
         model = Person
         fields = (
             'id',
             'full_name',
+            'slug',
+            'description',
+            'image'
         )
+
+class UserSerializer(DispatchModelSerializer):
+    """
+    Serializes the User model.
+    """
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password_a = serializers.CharField(
+        required=False,
+        write_only=True,
+        validators=[PasswordValidator(confirm_field='password_b')]
+    )
+    password_b = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'person',
+            'password_a',
+            'password_b',
+        )
+
+    def create(self, validated_data):
+
+        instance = User()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+
+        instance.email = validated_data.get('email', instance.email)
+        instance.person = validated_data.get('person', instance.person)
+
+        if validated_data.get('password_a'):
+            instance.set_password(validated_data['password_a'])
+
+        instance.save()
+
+        return instance
 
 class FileSerializer(DispatchModelSerializer):
     """
@@ -147,7 +197,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
     """
 
     images = ImageAttachmentSerializer(read_only=True, many=True)
-    attachment_json = JSONField(required=False, write_only=True)
+    attachment_json = JSONField(required=False, write_only=True, validators=[ValidateImageGallery])
 
     class Meta:
         model = ImageGallery
@@ -207,7 +257,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = JSONField()
 
-    authors = PersonSerializer(many=True, read_only=True)
+    authors = PersonSerializer(many=True, read_only=True, source='get_authors')
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
@@ -403,3 +453,83 @@ class IntegrationSerializer(serializers.Serializer):
             self.instance.save(settings)
 
         return self.instance
+
+class FieldSerializer(serializers.Serializer):
+
+    type = serializers.CharField()
+    name = serializers.CharField()
+    label = serializers.CharField()
+    many = serializers.BooleanField()
+
+class WidgetSerializer(serializers.Serializer):
+
+    id = serializers.SlugField()
+    name = serializers.CharField(read_only=True)
+    fields = serializers.ListField(read_only=True, child=FieldSerializer())
+
+class ZoneSerializer(serializers.Serializer):
+
+    id = serializers.SlugField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    widget = PrimaryKeyField(allow_null=True, serializer=WidgetSerializer(allow_null=True))
+    data = JSONField(required=False)
+
+    def validate(self, data):
+        """Perform validation of the widget data"""
+
+        errors = {}
+
+        if data.get('widget') is not None:
+
+            try:
+                widget = ThemeManager.Widgets.get(data['widget'])
+            except WidgetNotFound as e:
+                errors['widget'] = str(e)
+            else:
+                for field in widget.fields:
+
+                    field_data = data['data'].get(field.name)
+
+                    if field_data is not None:
+                        try:
+                            field.validate(field_data)
+                        except InvalidField as e:
+                            errors[field.name] = str(e)
+
+        if errors:
+            raise ValidationError(errors)
+
+        return data
+
+    def update(self, instance, validated_data):
+
+        widget = validated_data.get('widget')
+
+        if not widget:
+            instance.delete()
+        else:
+            instance.save(validated_data)
+
+        return instance
+
+class EventSerializer(DispatchModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = (
+            'id',
+            'title',
+            'description',
+            'host',
+            'image',
+            'start_time',
+            'end_time',
+            'location',
+            'address',
+            'category',
+            'facebook_url',
+            'is_published',
+            'is_submission',
+            'submitter_email',
+            'submitter_phone',
+        )

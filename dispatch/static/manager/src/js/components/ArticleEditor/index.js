@@ -1,12 +1,15 @@
 import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
+import { withRouter } from 'react-router'
 
 import articlesActions from '../../actions/ArticlesActions'
-import * as editorActions from '../../actions/EditorActions'
 import * as modalActions from '../../actions/ModalActions'
 import * as integrationActions from '../../actions/IntegrationActions'
+
+import { confirmNavigation } from '../../util/helpers'
 
 import ArticleToolbar from './ArticleToolbar'
 import ArticleContentEditor from './ArticleContentEditor'
@@ -18,46 +21,76 @@ const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.toggleStyle = this.toggleStyle.bind(this)
-  }
-
   componentWillMount() {
     if (this.props.isNew) {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
-      this.props.getArticle(this.props.token, this.props.articleId)
+      this.loadArticle()
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
   }
 
+  componentDidMount() {
+    confirmNavigation(
+      this.props.router,
+      this.props.route,
+      () => !this.props.article.isSaved
+    )
+  }
+
   componentDidUpdate(prevProps) {
     if (!this.props.isNew) {
-      if (prevProps.articleId !== this.props.articleId) {
-        this.props.getArticle(this.props.token, this.props.articleId)
-
+      if (prevProps.articleId !== this.props.articleId
+        || this.getVersion() != this.getVersion(prevProps)) {
+        this.loadArticle()
         this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
+      } else if (this.versionComparison(prevProps)) {
+        // article was updated, set the version query
+        this.setVersion(this.getLatestVersionFromArticle())
       }
     }
+  }
+
+  getLatestVersionFromArticle(props) {
+    props = props || this.props
+    const a = R.prop(props.articleId, props.entities.local || {}) ||
+      R.prop(props.articleId, props.entities.remote || {})
+    return a ? a.latest_version : null
+  }
+
+  versionComparison(prevProps) {
+    const prev = this.getLatestVersionFromArticle(prevProps)
+    const now = this.getLatestVersionFromArticle(this.props)
+    if (prev && now && prev !== now) {
+      return now
+    }
+    return false
+  }
+
+  loadArticle() {
+    const version = this.getVersion()
+    let query = null
+    if (version) {
+      query = { version }
+    }
+    this.props.getArticle(this.props.token, this.props.articleId, query)
   }
 
   getArticle() {
     var article
     if (this.props.isNew) {
-      article = this.props.entities.article[NEW_ARTICLE_ID]
+      article = this.props.entities.local[NEW_ARTICLE_ID]
     } else {
-      article = this.props.entities.article[this.props.articleId] ||
-        this.props.entities.articles[this.props.articleId] || false
+      article = this.props.entities.local[this.props.articleId] ||
+        this.props.entities.remote[this.props.articleId] || false
     }
 
     if (!article) {
       return false
     }
 
-    return R.merge({ _content: this.props.editorState.getCurrentContent() }, article)
+    return article
   }
 
   saveArticle() {
@@ -95,24 +128,24 @@ class ArticleEditorComponent extends React.Component {
     )
   }
 
-  toggleStyle(style) {
-    this.props.toggleEditorStyle(style)
-  }
-
   handleUpdate(field, value) {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
-  getArticleVersion(version) {
-    return this.props.getArticle(
-      this.props.token,
-      this.props.articleId,
-      { version: version }
-    )
+  setVersion(version) {
+    this.props.push({
+      pathname: this.props.location.pathname,
+      query: { v: version }
+    })
+  }
+
+  getVersion(props) {
+    props = props || this.props
+
+    return props.location.query.v
   }
 
   render() {
-
     const article = this.getArticle()
 
     if (!article) {
@@ -129,7 +162,7 @@ class ArticleEditorComponent extends React.Component {
             publishArticle={() => this.publishArticle()}
             unpublishArticle={() => this.unpublishArticle()}
             previewArticle={() => this.previewArticle()}
-            getVersion={(version) => this.getArticleVersion(version)}
+            getVersion={(version) => this.setVersion(version)}
             article={article}
             isNew={this.props.isNew} />
           <div className='u-container-editor'>
@@ -157,13 +190,13 @@ class ArticleEditorComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     article: state.app.articles.single,
-    editorState: state.app.editor,
     entities: {
-      articles: state.app.entities.articles,
-      article: state.app.entities.article,
+      remote: state.app.entities.articles,
+      local: state.app.entities.local.articles,
       images: state.app.entities.images
     },
     integrations: state.app.integrations.integrations,
+
     token: state.app.auth.token
   }
 }
@@ -180,7 +213,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(articlesActions.save(token, articleId, data))
     },
     createArticle: (token, data) => {
-      dispatch(articlesActions.create(token, data))
+      dispatch(articlesActions.create(token, data, 'articles'))
     },
     publishArticle: (token, articleId, data) => {
       dispatch(articlesActions.publish(token, articleId, data))
@@ -197,11 +230,11 @@ const mapDispatchToProps = (dispatch) => {
     closeModal: () => {
       dispatch(modalActions.closeModal())
     },
-    toggleEditorStyle: (style) => {
-      dispatch(editorActions.toggleEditorStyle(style))
-    },
     fetchIntegration: (token, integrationId) => {
       dispatch(integrationActions.fetchIntegration(token, integrationId))
+    },
+    push: (loc) => {
+      dispatch(push(loc))
     }
   }
 }
@@ -211,4 +244,4 @@ const ArticleEditor = connect(
   mapDispatchToProps
 )(ArticleEditorComponent)
 
-export default ArticleEditor
+export default withRouter(ArticleEditor)

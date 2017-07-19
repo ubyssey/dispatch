@@ -22,8 +22,8 @@ from django.template import loader, Context
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.content.managers import ArticleManager
+from dispatch.apps.content.render import content_to_html
 from dispatch.apps.core.models import Person, User
-from dispatch.apps.frontend.embeds import embedlib
 from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
@@ -90,52 +90,27 @@ class Publishable(Model):
         if self.template != 'default':
             return 'article/%s.html' % self.template
         else:
-            return 'article/base.html'
+            return 'article/default.html'
 
     def save_template_fields(self, template_fields):
         return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def get_template_fields(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template(article_id=self.id).field_data_as_json()
+        if Template:
+            return Template(article_id=self.id).field_data_as_json()
+        return None
 
     def get_template(self):
         Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        return Template().to_json()
+        if Template:
+            return Template().to_json()
+        return None
 
-    def get_html(self):
-        """
-        Returns article content as HTML.
-        """
-        def prepare_html(nodes):
-            """
-            Processes each in the document, returning its rendered HTML representation.
-            """
-            html = ""
-            for node in nodes:
-                if type(node) is dict:
-                    # If node is a dictionary, append its rendered HTML.
-                    data = node['data']
-                    # If node is an ad, include section/id info for DFP
-                    if node['type'] == 'advertisement':
-                        data['id'] = len(html) % 1000
-                        data['section'] = self.section
-                        data['template'] = self.template
-
-                    if node['type'] == 'paragraph':
-                        html += "<p>%s</p>" % node['data']
-                    else:
-                        html += embedlib.render(node['type'], data)
-                else:
-                    # If node isn't a dictionary, then it's assumed to be a paragraph.
-                    html += "<p>%s</p>" % node
-            return html
-
-        try:
-            # Attempt to load content as JSON, return raw content as fallback
-            return prepare_html(self.content)
-        except ValueError:
-            return self.content
+    @property
+    def html(self):
+        """Return HTML representation of content"""
+        return content_to_html(self.content)
 
     def is_parent(self):
         return self.parent is None
@@ -393,7 +368,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through="Author", related_name="authors")
+    authors = ManyToManyField(Person, through='Author', related_name='authors')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -404,46 +379,57 @@ class Image(Model):
         'square': (250, 250)
     }
 
+    JPG_FORMATS = {
+        'jpg',
+        'JPG',
+        'JPEG',
+        'jpeg'
+    }
+
+    IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png)'
+
     THUMBNAIL_SIZE = 'square'
 
+    def is_gif(self):
+        """Returns true if image is a gif"""
+        return self.get_file_extension() in ('gif', 'GIF')
+
     def filename(self):
-        """
-        Returns the image filename.
-        """
+        """Returns the image filename."""
         return os.path.basename(self.img.name)
 
+    def get_file_name(self):
+        """Returns the image filename."""
+        return self.img.name
+
     def get_name(self):
-        """
-        Returns the image filename without extension.
-        """
-        return re.split('.(jpg|gif|png)', self.img.name)[0]
+        """Returns the filename without extension."""
+        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
+        return file_name[0]
+
+    def get_file_extension(self):
+        """Returns the file extension."""
+        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
+        return file_name[1]
 
     def get_absolute_url(self):
-        """
-        Returns the full size image URL.
-        """
+        """Returns the full size image URL."""
         return settings.MEDIA_URL + str(self.img)
 
     def get_medium_url(self):
-        """
-        Returns the medium size image URL.
-        """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'medium')
+        """Returns the medium size image URL."""
+        if self.is_gif():
+            return self.get_absolute_url()
+
+        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
 
     def get_thumbnail_url(self):
-        """
-        Returns the thumbnail URL.
-        """
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
-
-    def get_wide_url(self):
-        return "%s%s-%s.jpg" % (settings.MEDIA_URL, self.get_name(), 'wide')
+        """Returns the thumbnail URL."""
+        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
 
     # Overriding
     def save(self, **kwargs):
-        """
-        Custom save method to process thumbnails and save image dimensions.
-        """
+        """Custom save method to process thumbnails and save image dimensions."""
 
         is_new = self.pk is None
 
@@ -454,13 +440,14 @@ class Image(Model):
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
             super(Image, self).save()
-            name = re.split('.(jpg|gif|png)', self.img.name)[0]
+            name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
+            file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
 
             for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size)
+                self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
 
 
-    def save_thumbnail(self, image, size, name, label):
+    def save_thumbnail(self, image, size, name, label, fileType):
         width, height = size
         (imw, imh) = image.size
 
@@ -469,11 +456,15 @@ class Image(Model):
             image.thumbnail(size, Img.ANTIALIAS)
 
         # Attach new thumbnail label to image filename
-        name = "%s-%s.jpg" % (name, label)
+        name = "%s-%s.%s" % (name, label, fileType)
+
+        # Image.save format takes JPEG not jpg
+        if fileType in self.JPG_FORMATS:
+            fileType = 'JPEG'
 
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
-        image.save(image_io, format='JPEG', quality=75)
+        image.save(image_io, format=fileType, quality=75)
 
         # Convert StringIO object to Django File object
         thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
@@ -520,40 +511,6 @@ class ImageAttachment(Model):
 
     order = PositiveIntegerField(null=True)
 
-    class EmbedController:
-        @staticmethod
-        def json(data):
-            id = data['attachment_id']
-
-            try:
-                attach = ImageAttachment.objects.get(id=id)
-            except ImageAttachment.DoesNotExist:
-                return
-
-            return {
-                'image_id': attach.image.id,
-                'url': attach.image.get_absolute_url(),
-                'caption': attach.caption,
-                'credit': attach.credit,
-                'width': attach.image.width,
-                'height': attach.image.height,
-            }
-
-        @staticmethod
-        def render(data):
-            template = loader.get_template("image.html")
-            id = data['attachment_id']
-            attach = ImageAttachment.objects.get(id=id)
-            c = Context({
-                'id': attach.id,
-                'src': attach.image.get_absolute_url(),
-                'caption': attach.caption,
-                'credit': attach.credit
-            })
-            return template.render(c)
-
-    embedlib.register('image', EmbedController)
-
 class ImageGallery(Model):
     title = CharField(max_length=255)
     images = ManyToManyField(ImageAttachment, related_name="images")
@@ -565,36 +522,9 @@ class ImageGallery(Model):
         self.images.clear()
         ImageAttachment.objects.filter(gallery=self).delete()
         for attachment in attachments:
-            attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], image_id=attachment['image_id'])
+            attachment_obj = ImageAttachment(gallery=self, caption=attachment['caption'], credit=attachment['credit'], image_id=attachment['image_id'])
             attachment_obj.save()
             self.images.add(attachment_obj)
-
-    class EmbedController:
-        @staticmethod
-        def json(data):
-            return data
-
-        @staticmethod
-        def render(data):
-            template = loader.get_template("article/embeds/gallery.html")
-            id = data['id']
-            try:
-                gallery = ImageGallery.objects.get(id=id)
-                images = gallery.images.all()
-                c = Context({
-                    'id': gallery.id,
-                    'title': gallery.title,
-                    'cover': images[0],
-                    'thumbs': images[1:5],
-                    'images': images,
-                    'size': len(images)
-                })
-                return template.render(c)
-            except:
-                return "Gallery not found"
-
-    embedlib.register('gallery', EmbedController)
-
 
 class File(Model):
 
