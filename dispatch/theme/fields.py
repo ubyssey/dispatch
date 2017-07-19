@@ -121,8 +121,9 @@ class IntegerField(Field):
         self.min_value = min_value
         self.max_value = max_value
 
-        if min_value > max_value:
-            raise InvalidField('IntegerField: min_value must be less than max_value')
+        if min_value is not None and max_value is not None:
+            if min_value > max_value:
+                raise InvalidField('IntegerField: min_value must be less than max_value')
 
         super(IntegerField, self).__init__(label=label, many=many)
 
