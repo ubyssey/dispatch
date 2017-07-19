@@ -121,6 +121,9 @@ class IntegerField(Field):
         self.min_value = min_value
         self.max_value = max_value
 
+        if min_value > max_value:
+            raise InvalidField('IntegerField: min_value must be less than max_value')
+
         super(IntegerField, self).__init__(label=label, many=many)
 
     def validate(self, data):
@@ -131,7 +134,7 @@ class IntegerField(Field):
                 value =  int(data, base=10)
         except ValueError:
             raise InvalidField('%s must be integer' % self.label)
-            
+
         if self.min_value is not None and value < self.min_value:
             raise InvalidField('%s must be greater than %d' % (self.label, self.min_value))
 
