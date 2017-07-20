@@ -38,7 +38,13 @@
 .c-toolbar__left {
   // Structure
   flex: 1;
-}
+
+  .pt-button:last-child {
+      // Structure
+      margin-right: 0.75rem;
+    }
+  }
+
 
 .c-toolbar__title {
   // Structure
