@@ -451,7 +451,7 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
 
             return Response(data, status=status.HTTP_202_ACCEPTED)
         else:
-            return BadCredentials()
+            raise BadCredentials()
 
     def user_unauthenticate(self, request):
         #Get token for current user
