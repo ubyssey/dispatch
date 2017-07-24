@@ -31,6 +31,7 @@ class Event(Model):
         ('business', 'Business'),
         ('ceremony', 'Ceremony'),
         ('workshop', 'Workshop'),
+        ('clubs', 'Clubs'),
         ('other', 'Other')
     )
 
