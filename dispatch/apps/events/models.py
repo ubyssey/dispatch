@@ -7,6 +7,13 @@ from django.db.models import (
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
     SlugField, EmailField, SET_NULL)
 
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.core.mail import send_mail
+
+from dispatch.core.signals import post_create, post_update
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 class Event(Model):
@@ -38,8 +45,9 @@ class Event(Model):
 
     facebook_url = TextField(null=True, blank=True)
 
-    is_published = BooleanField(default=False)
     is_submission = BooleanField(default=False, blank=True)
+    is_published = BooleanField(default=False)
+    is_published_email = BooleanField(default=False)
 
     submitter_email = EmailField(null=True)
     submitter_phone = PhoneNumberField(null=True)
@@ -55,3 +63,22 @@ class Event(Model):
         )
 
         self.save()
+
+
+@receiver(post_update, sender=Event)
+def send_published_email(sender, instance, **kwargs):
+
+    if instance.is_published and not instance.is_published_email:
+
+        template = render_to_string('events/email/success.html', {'id': instance.id})
+
+        send_mail(
+                'Your event has been published!',
+                template,
+                settings.EMAIL_HOST_USER,
+                [instance.submitter_email],
+                fail_silently=True,
+            )
+
+        instance.is_published_email = True
+        instance.save()
