@@ -1,7 +1,10 @@
+from datetime import datetime
+
 from dispatch.apps.content.models import Article, Image
 from dispatch.apps.events.models import Event
 from dispatch.theme import register
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, WidgetField, EventField, Field
+from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, \
+    WidgetField, EventField, Field, DateTimeField, IntegerField
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -691,3 +694,65 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         data = None
 
         self.assertEqual(testfield.to_json(data), None)
+
+    def test_datetimefield(self):
+        """DateTimeField should correctly parse at least ISO format"""
+        testfield = DateTimeField('Test')
+
+        date = datetime.today()
+        date_sz = date.isoformat()
+
+        testfield.validate(date_sz)
+
+        self.assertEqual(testfield.prepare_data(date_sz), date)
+
+    def test_datetimefield_invalid_data(self):
+        """DateTimeField should throw InvalidField when it is given an unparsable string"""
+        testfield = DateTimeField('Test')
+        date_sz = 'garbage'
+
+        try:
+            testfield.validate(date_sz)
+            self.fail('Field date is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+    def test_intfield(self):
+        """IntegerField should correctly parse integer strings"""
+        testfield = IntegerField('Test')
+
+        def value_test(value):
+            value_sz = str(value)
+
+            testfield.validate(value_sz)
+
+            self.assertEqual(value, testfield.prepare_data(value_sz))
+
+        value_test(-7418529)
+        value_test(0)
+        value_test(4573495)
+
+    def test_intfield_invalid_data(self):
+        """IntegerField should throw InvalidField when given a string that
+            can not be parsed into an int"""
+        testfield = IntegerField('Test')
+
+        def validate_test(input):
+            with self.assertRaises(InvalidField):
+                testfield.validate(input)
+
+        validate_test('1234.56789')
+        validate_test('text')
+
+    def test_intfield_bounds(self):
+        """IntegerField should throw InvalidField when given a string that parses
+            into a value outside the bounds defined by min_value and max_value"""
+
+        # test the bounds sanity check
+        with self.assertRaises(InvalidField):
+            testfield = IntegerField('Test', min_value=1, max_value=0)
+
+        testfield = IntegerField('Test', min_value=0, max_value=100)
+        with self.assertRaises(InvalidField):
+            testfield.validate('101')
+            testfield.validate('-1')

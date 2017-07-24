@@ -8,7 +8,9 @@ export default function WidgetField(props) {
   const Field = fields[props.field.type]
 
   return (
-    <FormInput label={props.field.label}>
+    <FormInput
+      error={props.error}
+      label={props.field.label}>
       <Field
         label={props.field.label}
         many={props.field.many}
