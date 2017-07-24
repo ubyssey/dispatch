@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
+from dispatch.theme import register
+from dispatch.theme.event_widget import UpcomingEventsWidget, Sidebar
 from dispatch.apps.content.models import Article, Person, Section, Image
 from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchMediaTestMixin
@@ -216,3 +218,32 @@ class DispatchTestHelpers(object):
             url = reverse('api-event-list')
 
             return client.post(url, data, format='multipart')
+
+    @classmethod
+    def create_upcoming_event_widget(cls, client, num_events=5):
+
+        register.zone(Sidebar)
+        register.widget(UpcomingEventsWidget)
+        zone = Sidebar()
+        widget = UpcomingEventsWidget(num_events)
+
+        num_events += 1 # Just so num_events and titles of the events aren't 0-indexed
+        # Make 5 events with increasing start dates
+        for index in xrange(1,num_events):
+
+            response = DispatchTestHelpers.create_event(client, title=('Title ' + str(index)), start_time=(datetime.datetime.now() + datetime.timedelta(days=index)), is_published=True)
+
+        featured_event_id = 1
+
+        validated_data = {
+            'widget': 'upcoming-events',
+            'data': {
+              'title': 'Upcoming Events!',
+              'featured_event': featured_event_id
+            }
+        }
+
+        zone.save(validated_data)
+        widget.set_data(validated_data['data'])
+
+        return widget

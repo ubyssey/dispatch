@@ -150,6 +150,6 @@ class Widget(object):
             return template.render(data)
 
     def context(self, data):
-        """Optional method to add additional data to the deplate context before rendering"""
+        """Optional method to add additional data to the template context before rendering"""
 
         return data

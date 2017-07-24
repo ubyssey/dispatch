@@ -1,0 +1,9 @@
+<h1>{{ title }}</h1>
+<p>{{ featured_event.start_time }}</p>
+<p>{{ featured_event.title }}</p>
+<p>{{ featured_event.host }}</p>
+<img src="{{ featured_event.image }}"/>
+
+{% for event in events %}
+  <p>{{ event.title}}, {{ event.start_time }}</p>
+{% endfor %}
