@@ -19,6 +19,7 @@ class EventForm(ModelForm):
             'category',
             'facebook_url',
             'facebook_image_url',
+            'ticket_url',
             'is_submission',
             'submitter_email',
             'submitter_phone'
@@ -32,6 +33,7 @@ class EventForm(ModelForm):
             'end_time': TextInput(attrs={'placeholder': 'End Time'}),
             'location': TextInput(attrs={'placeholder': 'Location'}),
             'address': TextInput(attrs={'placeholder': 'Address'}),
+            'ticket_url': TextInput(attrs={'placeholder': 'Link to where people can purchase tickets (optional)'}),
             'submitter_email': TextInput(attrs={'placeholder': 'Email'}),
             'submitter_phone': TextInput(attrs={'placeholder': 'Phone Number'}),
         }
