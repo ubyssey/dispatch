@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateTimeField, CharField, TextInput
+from django.forms import ModelForm, DateTimeField, CharField, TextInput, Textarea
 from dispatch.apps.events.models import Event
 
 class EventForm(ModelForm):
@@ -26,7 +26,7 @@ class EventForm(ModelForm):
 
         widgets = {
             'title': TextInput(attrs={'placeholder': 'Title'}),
-            'description': TextInput(attrs={'placeholder': 'Description'}),
+            'description': Textarea(attrs={'placeholder': 'Description'}),
             'host': TextInput(attrs={'placeholder': 'Host'}),
             'start_time': TextInput(attrs={'placeholder': 'Start Time'}),
             'end_time': TextInput(attrs={'placeholder': 'End Time'}),
