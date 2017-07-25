@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.forms import ModelForm, DateTimeField, CharField, TextInput, Textarea
 from dispatch.apps.events.models import Event
 
@@ -48,3 +50,14 @@ class EventForm(ModelForm):
             event.save_image_from_url(facebook_image_url)
 
         event.save()
+
+    def clean(self):
+        cleaned_data = super(EventForm, self).clean()
+
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        if end_time < start_time:
+            msg = 'The start time of the event must be before the end time of the event'
+            self.add_error('start_time', msg)
+            self.add_error('end_time', msg)
