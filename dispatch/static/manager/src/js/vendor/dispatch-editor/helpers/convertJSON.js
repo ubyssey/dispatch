@@ -95,7 +95,7 @@ function escapeHTML(block) {
   if (block.type == 'paragraph') {
     let data = block.data
 
-    data = data.replace('&', '&amp')
+    data = data.replace('&', '&amp;')
     data = data.replace(/<(?![ab]|em|h[1-6]|li|ul|\/[ab]|\/em|\/h[1-6]|\/li|\/ul)/g, '&lt;')
 
     block.data = data
