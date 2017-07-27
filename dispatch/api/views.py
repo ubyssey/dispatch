@@ -432,9 +432,11 @@ class EventViewSet(DispatchModelViewSet):
 
 
 @permission_classes((AllowAny,))
-class AuthenticationViewSet(viewsets.GenericViewSet):
+class TokenViewSet(viewsets.ModelViewSet):
 
-    def user_authenticate(self, request):
+    model = Token
+
+    def create(self, request):
 
         email = request.data.get('email', None)
         password = request.data.get('password', None)
@@ -453,10 +455,9 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
         else:
             raise BadCredentials()
 
-    def user_unauthenticate(self, request):
-        #Get token for current user
+    def delete(self, request):
         token = get_object_or_404(Token, user=request.user)
 
         token.delete()
 
-        return Response({})
+        return Response(status=status.HTTP_204_NO_CONTENT)
