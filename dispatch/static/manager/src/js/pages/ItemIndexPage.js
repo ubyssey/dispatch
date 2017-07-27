@@ -146,5 +146,5 @@ ListItemsPageComponent.propTypes = {
 
 ListItemsPageComponent.defaultProps = {
   shouldReload: () => { false },
-  queryHandler: (query) => { query }
+  queryHandler: (query) => query
 }

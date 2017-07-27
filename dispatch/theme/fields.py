@@ -1,3 +1,5 @@
+from django.utils.dateparse import parse_datetime
+
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
 from dispatch.apps.content.models import Article, Image
 from dispatch.apps.events.models import Event
@@ -100,6 +102,50 @@ class TextField(Field):
     def validate(self, data):
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
+
+class DateTimeField(Field):
+
+    type = 'datetime'
+
+    def validate(self, data):
+        if not parse_datetime(data):
+            raise InvalidField('%s must be valid format' % self.label)
+
+    def prepare_data(self, data):
+        return parse_datetime(data)
+
+class IntegerField(Field):
+
+    type = 'integer'
+    def __init__(self, label, many=False, min_value=None, max_value=None):
+        self.min_value = min_value
+        self.max_value = max_value
+
+        if min_value is not None and max_value is not None:
+            if min_value > max_value:
+                raise InvalidField('IntegerField: min_value must be less than max_value')
+
+        super(IntegerField, self).__init__(label=label, many=many)
+
+    def validate(self, data):
+        try:
+            if isinstance(data, int):
+                value = data
+            else:
+                value =  int(data, base=10)
+        except ValueError:
+            raise InvalidField('%s must be integer' % self.label)
+
+        if self.min_value is not None and value < self.min_value:
+            raise InvalidField('%s must be greater than %d' % (self.label, self.min_value))
+
+        if self.max_value is not None and value > self.max_value:
+            raise InvalidField('%s must be less than than %d' % (self.label, self.max_value))
+
+    def prepare_data(self, data):
+        if isinstance(data, int):
+            return data
+        return int(data, base=10)
 
 class ArticleField(ModelField):
 

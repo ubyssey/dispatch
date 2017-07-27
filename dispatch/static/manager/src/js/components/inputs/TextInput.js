@@ -40,6 +40,9 @@ export default class TextInput extends React.Component {
         className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
         type={this.props.type || 'text'}
         value={this.props.value || ''}
+        step={this.props.step || ''}
+        min={this.props.min}
+        max={this.props.max}
         disabled={this.props.disabled}
         placeholder={this.props.placeholder}
         onChange={this.handleOnChange}

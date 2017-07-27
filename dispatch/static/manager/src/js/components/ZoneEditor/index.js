@@ -41,6 +41,7 @@ class ZoneEditorComponent extends React.Component {
 
     const fields = this.props.widget ? this.props.widget.fields.map((field) => (
       <WidgetField
+        error={this.props.errors[field.name]}
         key={`widget-field__${this.props.widget.id}__${field.name}`}
         field={field}
         data={this.props.zone.data[field.name] || null}
@@ -83,7 +84,8 @@ const mapStateToProps = (state) => {
   return {
     zone: zone,
     widget: widget,
-    token: state.app.auth.token
+    token: state.app.auth.token,
+    errors: state.app.zones.single.errors
   }
 }
 
