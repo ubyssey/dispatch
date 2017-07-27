@@ -13,11 +13,11 @@ class LogoutPageComponent extends React.Component {
     return (
       <div>
         Logging out...
-        <br />
       </div>
     )
   }
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
     logoutUser: (token) => {
