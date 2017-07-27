@@ -7,7 +7,7 @@ import {
   genKey,
   convertFromHTML
 } from 'draft-js'
-
+import escape from 'escape-html'
 import { List, OrderedMap } from 'immutable'
 
 import convertToHTML from './convertToHTML'
@@ -92,6 +92,13 @@ function fromJSON(jsonBlocks) {
   )
 }
 
+function escapeHTML(block) {
+  if (block.type == 'paragraph') {
+    block.data = escape(block.data)
+  }
+  return block
+}
+
 function toJSON(contentState) {
   if (!contentState) {
     contentState =  ContentState.createFromText('')
@@ -102,6 +109,7 @@ function toJSON(contentState) {
     .map(parseBlock)
     .toList()
     .toJS()
+    .map(escapeHTML)
 }
 
 export {
