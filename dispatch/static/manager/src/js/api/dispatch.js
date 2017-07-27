@@ -143,10 +143,10 @@ const DispatchAPI = {
         password: password
       }
 
-      return postRequest('auth/token', null, payload)
+      return postRequest('token', null, payload)
     },
     logout: (token) => {
-      return deleteRequest('auth/token', null, null, token)
+      return deleteRequest('token', null, null, token)
     }
   },
   sections: {
