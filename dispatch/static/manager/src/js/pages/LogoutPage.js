@@ -11,7 +11,10 @@ class LogoutPageComponent extends React.Component {
 
   render() {
     return (
-      <div>Logging out...</div>
+      <div>
+        Logging out...
+        <br />
+      </div>
     )
   }
 }
