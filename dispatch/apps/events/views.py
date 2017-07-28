@@ -18,17 +18,26 @@ def submit_form(request):
 
     if request.POST.get('url_import') and event_url is not None:
 
-        if 'calendar.events.ubc.ca' in event_url:
-            url_handler = UBCEvent
-            url_handler_error = UBCEventError
+        handlers = {
+            'calendar.events.ubc.ca': {
+                'url_handler': UBCEvent,
+                'url_handler_error': UBCEventError
+            },
+            'facebook.com/events/': {
+                'url_handler': FacebookEvent,
+                'url_handler_error': FacebookEventError
+            }
+        }
 
-        elif 'facebook.com/events/' in event_url:
-            url_handler = FacebookEvent
-            url_handler_error = FacebookEventError
+        url_handler = NoEventHandler
+        url_handler_error = NoEventHandlerError
 
-        else:
-            url_handler = NoEventHandler
-            url_handler_error = NoEventHandlerError
+        for url_snippet, url_dict in handlers.items():
+            if url_snippet in event_url:
+
+                url_handler = url_dict['url_handler']
+                url_handler_error = url_dict['url_handler_error']
+                break
 
         try:
             event = url_handler(event_url)
