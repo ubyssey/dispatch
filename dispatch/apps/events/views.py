@@ -2,8 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
-from dispatch.apps.events.ubc_event import UBCEvent, UBCEventError, NoEventHandler, NoEventHandlerError
+from dispatch.apps.events.event_integrations import FacebookEvent, FacebookEventError, UBCEvent, UBCEventError, NoEventHandler, NoEventHandlerError
 from dispatch.apps.events.forms import EventForm
 from dispatch.apps.events.models import Event
 
@@ -50,5 +49,5 @@ def submit_form(request):
             return redirect(submit_success)
     else:
         form = EventForm()
-    print url_error
+
     return render(request, 'events/submit/form.html', {'form': form, 'url_error': url_error})
