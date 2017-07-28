@@ -35,16 +35,6 @@ def submit_form(request):
             form.is_submission = True
             form.save()
 
-            template = render_to_string('events/email/confirm.html', form.cleaned_data)
-
-            send_mail(
-                    'Your event has been created!',
-                    template,
-                    settings.EMAIL_HOST_USER,
-                    [form.cleaned_data['submitter_email']],
-                    fail_silently=True,
-                )
-
             return redirect(submit_success)
     else:
         form = EventForm()

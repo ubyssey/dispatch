@@ -70,11 +70,11 @@ def send_published_email(sender, instance, **kwargs):
 
     if instance.is_published and not instance.is_published_email:
 
-        template = render_to_string('events/email/success.html', {'id': instance.id})
+        body = render_to_string('events/email/success.html', {'id': instance.id})
 
         send_mail(
                 'Your event has been published!',
-                template,
+                body,
                 settings.EMAIL_HOST_USER,
                 [instance.submitter_email],
                 fail_silently=True,
@@ -82,3 +82,16 @@ def send_published_email(sender, instance, **kwargs):
 
         instance.is_published_email = True
         instance.save()
+
+@receiver(post_create, sender=Event)
+def send_approved_email(sender, instance, **kwargs):
+
+    body = render_to_string('events/email/confirm.html', form.cleaned_data)
+
+    send_mail(
+            'Your event has been created!',
+            body,
+            settings.EMAIL_HOST_USER,
+            [form.cleaned_data['submitter_email']],
+            fail_silently=True,
+        )
