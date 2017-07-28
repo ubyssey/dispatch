@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
+from dispatch.apps.events.ubc_event import UBCEvent, UBCEventError
 from dispatch.apps.events.forms import EventForm
 from dispatch.apps.events.models import Event
 
@@ -17,11 +18,21 @@ def submit_form(request):
     facebook_error = False
 
     if request.POST.get('facebook_import') and facebook_url is not None:
+
+        if 'calendar.events.ubc.ca' in facebook_url:
+            url_handler = UBCEvent
+            url_handler_error = UBCEventError
+
+        else:
+            url_handler = FacebookEvent
+            url_handler_error = FacebookEventError
+
         try:
-            event = FacebookEvent(facebook_url)
+            event = url_handler(facebook_url)
             data = event.get_data()
             form = EventForm(initial=data)
-        except FacebookEventError:
+
+        except url_handler_error:
             facebook_error = True
             form = EventForm()
 
