@@ -29,19 +29,6 @@ export default class EventForm extends React.Component {
     this.setState({ displayImg: files[0].preview })
   }
 
-  ensureDate(date) {
-    let ret = date
-    if (!(date instanceof Date)) {
-      const time_ms = Date.parse(date)
-      if(isNaN(time_ms)) {
-        ret = null
-      } else {
-        ret = new Date(time_ms)
-      }
-    }
-    return ret
-  }
-
   render() {
     return (
       <form onSubmit={e => e.preventDefault()}>
@@ -108,7 +95,7 @@ export default class EventForm extends React.Component {
           padded={false}
           error={this.props.errors.start_time}>
           <DateTimeInput
-            value={this.ensureDate(this.props.listItem.start_time)}
+            value={this.props.listItem.start_time}
             onChange={ dt => this.props.update('start_time', dt)} />
         </FormInput>
 
@@ -117,7 +104,7 @@ export default class EventForm extends React.Component {
           padded={false}
           error={this.props.errors.end_time}>
           <DateTimeInput
-            value={this.ensureDate(this.props.listItem.end_time)}
+            value={this.props.listItem.end_time}
             onChange={ dt => this.props.update('end_time', dt)} />
         </FormInput>
 
@@ -163,6 +150,17 @@ export default class EventForm extends React.Component {
             value={this.props.listItem.facebook_url || ''}
             fill={true}
             onChange={ e => this.props.update('facebook_url', e.target.value) } />
+        </FormInput>
+
+        <FormInput
+          label='Ticket Link'
+          padded={false}
+          error={this.props.errors.ticket_url}>
+          <TextInput
+            placeholder='Ticket Link'
+            value={this.props.listItem.ticket_url || ''}
+            fill={true}
+            onChange={ e => this.props.update('ticket_url', e.target.value) } />
         </FormInput>
 
         <FormInput
