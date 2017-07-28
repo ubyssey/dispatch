@@ -49,10 +49,6 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     searchListItems: (query) => {
-      if (!query) {
-        query = {}
-      }
-      query.pending = 0
       dispatch(eventsActions.search(query))
     }
   }

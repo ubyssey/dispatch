@@ -38,12 +38,14 @@ class Event(Model):
         ('business', 'Business'),
         ('ceremony', 'Ceremony'),
         ('workshop', 'Workshop'),
+        ('clubs', 'Clubs'),
         ('other', 'Other')
     )
 
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
 
     facebook_url = TextField(null=True, blank=True)
+    ticket_url = TextField(null=True, blank=True)
 
     is_submission = BooleanField(default=False, blank=True)
     is_published = BooleanField(default=False)
