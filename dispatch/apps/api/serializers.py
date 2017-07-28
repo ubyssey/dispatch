@@ -527,7 +527,7 @@ class EventSerializer(DispatchModelSerializer):
             'location',
             'address',
             'category',
-            'facebook_url',
+            'event_url',
             'is_published',
             'is_submission',
             'submitter_email',

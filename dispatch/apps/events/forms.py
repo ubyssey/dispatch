@@ -17,7 +17,7 @@ class EventForm(ModelForm):
             'location',
             'address',
             'category',
-            'facebook_url',
+            'event_url',
             'facebook_image_url',
             'is_submission',
             'submitter_email',
