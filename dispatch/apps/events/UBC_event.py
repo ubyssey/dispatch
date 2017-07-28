@@ -26,6 +26,7 @@ class UBCEvent(object):
 
             return self.get_data()
 
+
     def __init__(self, url):
         self.url = url
 
@@ -56,3 +57,12 @@ class UBCEvent(object):
         return {
             'description': description
         }
+
+class NoEventHandler(object):
+    """Class for when no event handler can be assigned"""
+
+    def __init__(self, url):
+        raise NoEventHandlerError
+
+class NoEventHandlerError(Exception):
+    pass

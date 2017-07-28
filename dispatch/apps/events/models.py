@@ -36,7 +36,7 @@ class Event(Model):
 
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
 
-    facebook_url = TextField(null=True, blank=True)
+    event_url = TextField(null=True, blank=True)
 
     is_published = BooleanField(default=False)
     is_submission = BooleanField(default=False, blank=True)
