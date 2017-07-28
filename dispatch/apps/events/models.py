@@ -51,7 +51,7 @@ class Event(Model):
     is_submission = BooleanField(default=False, blank=True)
     is_published = BooleanField(default=False)
     is_published_email = BooleanField(default=False)
-    is_created = BooleanField(default=False)
+    is_approved = BooleanField(default=False)
 
     submitter_email = EmailField(null=True)
     submitter_phone = PhoneNumberField(null=True)
@@ -69,20 +69,23 @@ class Event(Model):
         self.save()
 
 
-@receiver(post_create, sender=Event)
+@receiver(post_update, sender=Event)
 def send_approved_email(sender, instance, **kwargs):
 
-    body = render_to_string('events/email/confirm.html', {'title': instance.title})
+    if not instance.is_approved:
 
-    send_mail(
-            'Your event has been approved!',
-            body,
-            settings.EMAIL_HOST_USER,
-            [instance.submitter_email],
-            fail_silently=True,
-        )
+        body = render_to_string('events/email/confirm.html', {'title': instance.title})
 
+        send_mail(
+                'Your event has been approved!',
+                body,
+                settings.EMAIL_HOST_USER,
+                [instance.submitter_email],
+                fail_silently=True,
+            )
 
+        instance.is_approved = True
+        instance.save()
 
 @receiver(post_update, sender=Event)
 def send_published_email(sender, instance, **kwargs):
