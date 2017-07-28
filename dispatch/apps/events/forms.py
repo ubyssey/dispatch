@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.forms import ModelForm, DateTimeField, CharField, TextInput, Textarea
+
 from dispatch.apps.events.models import Event
 
 class EventForm(ModelForm):
