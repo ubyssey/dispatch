@@ -153,6 +153,17 @@ export default class EventForm extends React.Component {
         </FormInput>
 
         <FormInput
+          label='Ticket Link'
+          padded={false}
+          error={this.props.errors.ticket_url}>
+          <TextInput
+            placeholder='Ticket Link'
+            value={this.props.listItem.ticket_url || ''}
+            fill={true}
+            onChange={ e => this.props.update('ticket_url', e.target.value) } />
+        </FormInput>
+
+        <FormInput
           label='Submitter Email'
           padded={false}
           error={this.props.errors.submitter_email}>
