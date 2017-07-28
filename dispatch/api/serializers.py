@@ -528,6 +528,7 @@ class EventSerializer(DispatchModelSerializer):
             'address',
             'category',
             'facebook_url',
+            'ticket_url',
             'is_published',
             'is_submission',
             'submitter_email',
