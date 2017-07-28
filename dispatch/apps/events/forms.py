@@ -1,4 +1,7 @@
-from django.forms import ModelForm, DateTimeField, CharField, TextInput
+from datetime import datetime
+
+from django.forms import ModelForm, DateTimeField, CharField, TextInput, Textarea
+
 from dispatch.apps.events.models import Event
 
 class EventForm(ModelForm):
@@ -19,6 +22,7 @@ class EventForm(ModelForm):
             'category',
             'event_url',
             'facebook_image_url',
+            'ticket_url',
             'is_submission',
             'submitter_email',
             'submitter_phone'
@@ -26,12 +30,13 @@ class EventForm(ModelForm):
 
         widgets = {
             'title': TextInput(attrs={'placeholder': 'Title'}),
-            'description': TextInput(attrs={'placeholder': 'Description'}),
+            'description': Textarea(attrs={'placeholder': 'Description'}),
             'host': TextInput(attrs={'placeholder': 'Host'}),
             'start_time': TextInput(attrs={'placeholder': 'Start Time'}),
             'end_time': TextInput(attrs={'placeholder': 'End Time'}),
             'location': TextInput(attrs={'placeholder': 'Location'}),
             'address': TextInput(attrs={'placeholder': 'Address'}),
+            'ticket_url': TextInput(attrs={'placeholder': 'Link to where people can purchase tickets (optional)'}),
             'submitter_email': TextInput(attrs={'placeholder': 'Email'}),
             'submitter_phone': TextInput(attrs={'placeholder': 'Phone Number'}),
         }
@@ -46,3 +51,14 @@ class EventForm(ModelForm):
             event.save_image_from_url(facebook_image_url)
 
         event.save()
+
+    def clean(self):
+        cleaned_data = super(EventForm, self).clean()
+
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        if end_time < start_time:
+            msg = 'The start time of the event must be before the end time of the event'
+            self.add_error('start_time', msg)
+            self.add_error('end_time', msg)
