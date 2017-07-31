@@ -3,12 +3,13 @@ import Cookies from 'js-cookie'
 
 import * as types from '../constants/ActionTypes'
 
-import { Reducer, fulfilled } from '../util/redux'
+import { Reducer, fulfilled, rejected } from '../util/redux'
 
 const initialState = {
   token: Cookies.get('token'), // Get token stored in browser cookie
   email: Cookies.get('email'), // Get email stored in browser cookie
-  nextPath: null
+  nextPath: null,
+  validToken: null
 }
 
 let reducer = new Reducer(initialState)
@@ -36,6 +37,21 @@ reducer.handle(fulfilled(types.AUTH.DELETE_TOKEN), () => {
   Cookies.remove('email')
 
   return initialState
+})
+
+reducer.handle(fulfilled(types.AUTH.VERIFY_TOKEN), (state) => {
+  return R.merge(state, { validToken: true })
+})
+
+reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state) => {
+  Cookies.remove('token')
+  Cookies.remove('email')
+
+  return R.merge(state, {
+    token: null,
+    email: null,
+    validToken: false
+  })
 })
 
 export default reducer.getReducer()

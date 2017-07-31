@@ -17,7 +17,8 @@ export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
 export const AUTH = actionTypes('AUTH', [
   'LOGIN_REQUIRED',
   'CREATE_TOKEN',
-  'DELETE_TOKEN'
+  'DELETE_TOKEN',
+  'VERIFY_TOKEN'
 ])
 
 // Integration actions
