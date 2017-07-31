@@ -455,6 +455,12 @@ class TokenViewSet(viewsets.ModelViewSet):
         else:
             raise BadCredentials()
 
+    def retrieve(self, request, pk):
+
+        token_provided = pk
+        get_object_or_404(Token, key=token_provided, user=request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def delete(self, request):
         token = get_object_or_404(Token, user=request.user)
 
