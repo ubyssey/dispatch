@@ -17,12 +17,12 @@ export function requireLogin(nextPath) {
 
 export function authenticateUser(email, password, nextPath = '/') {
   return (dispatch) => {
-    dispatch({ type: pending(types.AUTH.GET_TOKEN) })
+    dispatch({ type: pending(types.AUTH.CREATE_TOKEN) })
 
     return DispatchAPI.auth.getToken(email, password)
       .then((response) => {
         dispatch({
-          type: fulfilled(types.AUTH.GET_TOKEN),
+          type: fulfilled(types.AUTH.CREATE_TOKEN),
           token: response.token,
           email: email
         })
@@ -30,7 +30,7 @@ export function authenticateUser(email, password, nextPath = '/') {
         dispatch(replace(nextPath))
       })
       .catch(() => {
-        dispatch({ type: rejected(types.AUTH.GET_TOKEN) })
+        dispatch({ type: rejected(types.AUTH.CREATE_TOKEN) })
       })
   }
 }
@@ -38,12 +38,12 @@ export function authenticateUser(email, password, nextPath = '/') {
 
 export function logoutUser(token) {
   return (dispatch) => {
-    dispatch({ type: pending(types.AUTH.LOGOUT) })
+    dispatch({ type: pending(types.AUTH.DELETE_TOKEN) })
 
     return DispatchAPI.auth.logout(token)
       .then(() => {
         dispatch({
-          type: fulfilled(types.AUTH.LOGOUT)
+          type: fulfilled(types.AUTH.DELETE_TOKEN)
         })
 
         dispatch(replace('/login'))
@@ -53,7 +53,7 @@ export function logoutUser(token) {
         })
       })
       .catch(() => {
-        dispatch({ type: rejected(types.AUTH.LOGOUT)})
+        dispatch({ type: rejected(types.AUTH.DELETE_TOKEN)})
       })
   }
 }
