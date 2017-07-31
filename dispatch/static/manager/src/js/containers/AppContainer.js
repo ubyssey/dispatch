@@ -6,13 +6,19 @@ import * as userActions from '../actions/UserActions'
 class App extends React.Component {
 
   componentWillMount() {
-    if (!this.isAuthenticated()) {
-      this.props.onRequireLogin('/')
+    this.checkAuthenticated()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.validToken != this.props.validToken) {
+      if (this.props.validToken === false) {
+        this.props.onRequireLogin('/')
+      }
     }
   }
 
-  isAuthenticated() {
-    return !!this.props.auth.token
+  checkAuthenticated() {
+    this.props.verifyToken(this.props.token)
   }
 
   render() {
@@ -21,13 +27,19 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return state.app
+  return {
+    token: state.app.auth.token,
+    validToken: state.app.auth.validToken
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onRequireLogin: (nextPath) => {
       dispatch(userActions.requireLogin(nextPath))
+    },
+    verifyToken: (token) => {
+      dispatch(userActions.verifyToken(token))
     }
   }
 }
