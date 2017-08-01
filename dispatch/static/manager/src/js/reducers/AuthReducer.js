@@ -43,10 +43,8 @@ reducer.handle(fulfilled(types.AUTH.VERIFY_TOKEN), (state) => {
   return R.merge(state, { validToken: true })
 })
 
-reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state) => {    
-  return R.merge(state, {
-    validToken: false
-  })
+reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state) => {
+  return R.merge(state, { validToken: false })
 })
 
 export default reducer.getReducer()
