@@ -19,7 +19,7 @@ reducer.handle(types.AUTH.LOGIN_REQUIRED, (state, action) => {
   })
 })
 
-reducer.handle(fulfilled(types.AUTH.GET_TOKEN), (state, action) => {
+reducer.handle(fulfilled(types.AUTH.CREATE_TOKEN), (state, action) => {
 
   Cookies.set('token', action.token) // Persist token in browser cookie
   Cookies.set('email', action.email) // Persist email in browser cookie
@@ -29,6 +29,13 @@ reducer.handle(fulfilled(types.AUTH.GET_TOKEN), (state, action) => {
     email: action.email,
     nextPath: null
   })
+})
+
+reducer.handle(fulfilled(types.AUTH.DELETE_TOKEN), () => {
+  Cookies.remove('token')
+  Cookies.remove('email')
+
+  return initialState
 })
 
 export default reducer.getReducer()
