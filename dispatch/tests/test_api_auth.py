@@ -106,3 +106,33 @@ class AuthenticationTests(DispatchAPITestCase):
 
         response = self.client.delete(url, {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_verify_token(self):
+        """
+        Test that token verification works
+        """
+
+        url = reverse('api-token-list')
+        data = {
+            'email': 'test@test.com',
+            'password': 'testing123'
+        }
+        response = self.client.post(url, data, format='json')
+
+        url = reverse('api-token-detail', args=[response.data['token']])
+
+        response = self.client.get(url, None, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['token-valid'], True)
+
+        def test_verify_token_invalid_token(self):
+            """
+            Test that token verification rejects an invalid token
+            """
+
+            invalid_token = 'thisisnotavalidtoken'
+
+            url = reverse('api-token-detail', args=[invalid_token])
+
+            response = self.client.get(url, None, format='json')
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
