@@ -125,14 +125,14 @@ class AuthenticationTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['token-valid'], True)
 
-        def test_verify_token_invalid_token(self):
-            """
-            Test that token verification rejects an invalid token
-            """
+    def test_verify_token_invalid_token(self):
+        """
+        Test that token verification rejects an invalid token
+        """
 
-            invalid_token = 'thisisnotavalidtoken'
+        invalid_token = 'thisisnotavalidtoken'
 
-            url = reverse('api-token-detail', args=[invalid_token])
+        url = reverse('api-token-detail', args=[invalid_token])
 
-            response = self.client.get(url, None, format='json')
-            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.get(url, None, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
