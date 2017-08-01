@@ -22,6 +22,7 @@ router.register(r'integrations', views.IntegrationViewSet, base_name='api-integr
 router.register(r'files',views.FileViewSet, base_name='api-files')
 router.register(r'zones', views.ZoneViewSet, base_name='api-zones')
 router.register(r'event', views.EventViewSet, base_name='api-event')
+router.register(r'token', views.TokenViewSet, base_name='api-token')
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
@@ -29,7 +30,5 @@ dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'}
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
-    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
-    # User authorization
-    url(r'^auth/token', views.user_authenticate, name='user-token'),
+    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions')
 ]) + router.urls
