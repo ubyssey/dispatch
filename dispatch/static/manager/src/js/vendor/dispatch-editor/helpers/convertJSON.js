@@ -7,7 +7,6 @@ import {
   genKey,
   convertFromHTML
 } from 'draft-js'
-import escape from 'escape-html'
 import { List, OrderedMap } from 'immutable'
 
 import convertToHTML from './convertToHTML'
@@ -94,7 +93,12 @@ function fromJSON(jsonBlocks) {
 
 function escapeHTML(block) {
   if (block.type == 'paragraph') {
-    block.data = escape(block.data)
+    let data = block.data
+
+    data = data.replace('&', '&amp;')
+    data = data.replace(/<(?![ab]|em|h[1-6]|li|ul|\/[ab]|\/em|\/h[1-6]|\/li|\/ul)/g, '&lt;')
+
+    block.data = data
   }
   return block
 }
