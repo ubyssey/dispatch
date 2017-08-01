@@ -431,23 +431,33 @@ class EventViewSet(DispatchModelViewSet):
         return queryset
 
 
-@api_view(['POST'])
 @permission_classes((AllowAny,))
-def user_authenticate(request):
+class TokenViewSet(viewsets.ModelViewSet):
 
-    email = request.data.get('email', None)
-    password = request.data.get('password', None)
+    model = Token
 
-    user = authenticate(username=email, password=password)
+    def create(self, request):
 
-    if user is not None and user.is_active:
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
 
-        (token, created) = Token.objects.get_or_create(user=user)
+        user = authenticate(username=email, password=password)
 
-        data = {
-            'token': unicode(token)
-        }
+        if user is not None and user.is_active:
 
-        return Response(data, status=status.HTTP_202_ACCEPTED)
-    else:
-        raise BadCredentials()
+            (token, created) = Token.objects.get_or_create(user=user)
+
+            data = {
+                'token': unicode(token)
+            }
+
+            return Response(data, status=status.HTTP_202_ACCEPTED)
+        else:
+            raise BadCredentials()
+
+    def delete(self, request):
+        token = get_object_or_404(Token, user=request.user)
+
+        token.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

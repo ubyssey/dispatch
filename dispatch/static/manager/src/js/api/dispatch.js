@@ -35,9 +35,7 @@ function buildHeaders(token, useDefaultHeaders=true) {
   if (useDefaultHeaders) {
     headers = DEFAULT_HEADERS
   }
-  if (token) {
-    headers['Authorization'] = `Token ${token}`
-  }
+  headers['Authorization'] = token ? `Token ${token}` : ''
   return headers
 }
 
@@ -145,7 +143,10 @@ const DispatchAPI = {
         password: password
       }
 
-      return postRequest('auth/token', null, payload)
+      return postRequest('token', null, payload)
+    },
+    logout: (token) => {
+      return deleteRequest('token', null, null, token)
     }
   },
   sections: {

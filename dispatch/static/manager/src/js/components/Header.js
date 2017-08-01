@@ -66,7 +66,7 @@ export default function Header(props) {
                   <Link to='/profile'>manage profile</Link>
                 </li>
                 <li className='c-header__dropdown__link'>
-                  <Link to='/logout'>logout</Link>
+                  <Link to='/logout'>Logout</Link>
                 </li>
               </ul>
             </li>
