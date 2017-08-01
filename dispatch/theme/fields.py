@@ -112,7 +112,7 @@ class DateTimeField(Field):
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):
-        return parse_datetime(data)
+        return parse_datetime(data) if data else None
 
 class IntegerField(Field):
 
