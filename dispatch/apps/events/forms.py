@@ -41,16 +41,18 @@ class EventForm(ModelForm):
             'submitter_phone': TextInput(attrs={'placeholder': 'Phone Number'}),
         }
 
-    def save(self):
+    def save(self, commit=True):
         event = super(EventForm, self).save(commit=False)
-        event.is_submission = True
 
         facebook_image_url = self.data.get('facebook_image_url')
 
         if not event.image and facebook_image_url:
             event.save_image_from_url(facebook_image_url)
 
-        event.save()
+        if commit:
+            event.save()
+
+        return event
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()

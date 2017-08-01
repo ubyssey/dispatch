@@ -4,7 +4,7 @@ from django.core.files import File
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
+    ImageField, FileField, BooleanField, ForeignKey,
     SlugField, EmailField, SET_NULL)
 
 from django.dispatch import receiver
@@ -48,7 +48,7 @@ class Event(Model):
     facebook_url = TextField(null=True, blank=True)
     ticket_url = TextField(null=True, blank=True)
 
-    is_submission = BooleanField(default=False, blank=True)
+    is_submission = BooleanField(default=False)
     is_published = BooleanField(default=False)
     is_published_email = BooleanField(default=False)
     is_approved_email = BooleanField(default=False)
@@ -72,7 +72,9 @@ class Event(Model):
 @receiver(post_update, sender=Event)
 def send_approved_email(sender, instance, **kwargs):
 
-    if not instance.is_approved_email:
+    print instance.is_submission
+
+    if not instance.is_approved_email and instance.is_submission:
 
         body = render_to_string('events/email/confirm.html', {'title': instance.title})
 

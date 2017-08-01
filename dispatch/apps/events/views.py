@@ -1,8 +1,5 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.mail import send_mail
-from django.conf import settings
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.http import HttpResponse
 
 from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
@@ -32,8 +29,11 @@ def submit_form(request):
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.is_submission = True
-            form.save()
+
+            event = form.save(commit=False)
+
+            event.is_submission = True
+            event.save()
 
             return redirect(submit_success)
     else:
