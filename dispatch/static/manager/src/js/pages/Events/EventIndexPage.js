@@ -64,7 +64,7 @@ function EventsPageComponent(props) {
       pageTitle='Events'
       headers={[ 'Title', 'Published', 'Time', 'Location', 'Type']}
       extraColumns={[
-        event => event.is_published ? 'Published' : 'Unpublished',
+        event => event.is_published ? 'Published' : 'Not Published',
         event => `${humanizeDatetime(event.start_time)} - ${humanizeDatetime(event.end_time)}`,
         event => event.location,
         event => event.category
