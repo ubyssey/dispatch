@@ -31,7 +31,6 @@ def submit_form(request):
         if form.is_valid():
 
             event = form.save(commit=False)
-
             event.is_submission = True
             event.save()
 

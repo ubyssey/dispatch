@@ -72,7 +72,7 @@ class Event(Model):
 @receiver(post_update, sender=Event)
 def send_approved_email(sender, instance, **kwargs):
 
-    print instance.is_submission
+    print 'SENDING EMAIL IF is_submission IS TRUE:', instance.is_submission
 
     if not instance.is_approved_email and instance.is_submission:
 
