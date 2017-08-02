@@ -761,7 +761,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
             testfield.validate('-1')
 
     def test_boolfield(self):
-        """Ensure that BoolField works stores the value correctly"""
+        """Ensure that BoolField stores the value correctly"""
 
         testfield = BoolField('Test')
 
