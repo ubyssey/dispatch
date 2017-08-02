@@ -147,6 +147,14 @@ class IntegerField(Field):
             return data
         return int(data, base=10)
 
+class BoolField(Field):
+
+    type = 'bool'
+
+    def validate(self, data):
+        if type(data) is not bool:
+            raise InvalidField('%s must be boolean' % self.label)
+
 class ArticleField(ModelField):
 
     type = 'article'
