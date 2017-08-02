@@ -3,8 +3,11 @@ from datetime import datetime
 from dispatch.apps.content.models import Article, Image
 from dispatch.apps.events.models import Event
 from dispatch.theme import register
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, \
-    WidgetField, EventField, Field, DateTimeField, IntegerField
+from dispatch.theme.fields import (
+    CharField, TextField, ArticleField, ImageField,
+    WidgetField, EventField, Field, DateTimeField,
+    IntegerField, BoolField
+)
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -756,3 +759,27 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         with self.assertRaises(InvalidField):
             testfield.validate('101')
             testfield.validate('-1')
+
+    def test_boolfield(self):
+        """Ensure that BoolField stores the value correctly"""
+
+        testfield = BoolField('Test')
+
+        testfield.validate(True)
+        self.assertEqual(True, testfield.prepare_data(True))
+
+        testfield.validate(False)
+        self.assertEqual(False, testfield.prepare_data(False))
+
+    def test_boolfield_invalid_data(self):
+        """Ensure that BoolField correctly rejects invalid data"""
+
+        testfield = BoolField('Test')
+
+        def test_value(value):
+            with self.assertRaises(InvalidField):
+                testfield.validate(value)
+
+        test_value(1)
+        test_value('True')
+        test_value({})
