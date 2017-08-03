@@ -335,6 +335,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
     def list(self, request):
 
         zones = ThemeManager.Zones.list()
+        zones = filter(lambda z: z.nested is False, zones)
 
         serializer = ZoneSerializer(zones, many=True)
 
