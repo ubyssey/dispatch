@@ -17,14 +17,12 @@ class WidgetFieldComponent extends React.Component {
   }
 
   updateField(name, data) {
-    const newInnerData = {}
-    newInnerData[name] = data
+    const widgetData = {}
+    widgetData[name] = data
 
-    const newData = R.merge(this.props.data || {}, {
-      data: R.merge(this.props.data.data || {}, newInnerData)
-    })
-
-    this.props.onChange(newData)
+    this.props.onChange(R.merge(this.props.data || {}, {
+      data: R.merge(this.props.data.data || {}, widgetData)
+    }))
   }
 
   getWidgetId() {
@@ -41,22 +39,25 @@ class WidgetFieldComponent extends React.Component {
 
   render() {
     const widget = this.getWidget()
+    const widgetData = this.getWidgetData()
     const fields = widget ? widget.fields.map((field) => (
       <WidgetFieldWrapper
         // nested widget's fields aren't validated! (fix this)
         // error={this.props.errors[field.name]}
         key={`widget-field__${widget.id}__${field.name}`}
         field={field}
-        data={this.getWidgetData()[field.name] || null}
+        data={widgetData[field.name] || null}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
     return (
       <div>
-        <WidgetSelectInput
-          zoneId={this.props.zone_id}
-          selected={this.getWidgetId()}
-          update={widgetId => this.handleWidgetChange(widgetId)} />
+        <div style={{ marginBottom: 15 }}>
+          <WidgetSelectInput
+            zoneId={this.props.zone_id}
+            selected={this.getWidgetId()}
+            update={widgetId => this.handleWidgetChange(widgetId)} />
+        </div>
         <Panel title={`Edit ${this.props.label}`}>
           {fields}
         </Panel>
