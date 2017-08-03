@@ -130,7 +130,8 @@ export function listWidgets(token, zoneId) {
       })
       .then(json => ({
         count: json.count,
-        data: normalize(json.results, arrayOf(widgetSchema))
+        data: normalize(json.results, arrayOf(widgetSchema)),
+        zoneId
       }))
   }
 }

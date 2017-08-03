@@ -22,7 +22,7 @@ class WidgetSelectInputComponent extends React.Component {
       <ItemSelectInput
         many={false}
         selected={this.props.selected}
-        results={this.props.widgets.ids}
+        results={this.props.widgets.zones[this.props.zoneId]}
         entities={this.props.entities.widgets}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listWidgets(query)}
