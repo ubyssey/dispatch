@@ -181,9 +181,14 @@ class WidgetField(Field):
 
     type = 'widget'
 
+    def __init__(self, label, zone):
+        super(WidgetField, self).__init__(label)
+        self.zone_id = zone.id
+
     def validate(self, data):
-        if not isinstance(data, basestring):
-            raise InvalidField('Data must be a string')
+        #if not isinstance(data, basestring):
+        #    raise InvalidField('Data must be a string')
+        pass # TODO: fix this
 
     def get_widget(self, id):
         try:

@@ -460,6 +460,7 @@ class FieldSerializer(serializers.Serializer):
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()
+    zone_id = serializers.CharField(required=False)
 
 class WidgetSerializer(serializers.Serializer):
 
