@@ -191,6 +191,9 @@ class WidgetField(Field):
         pass # TODO: fix this
 
     def get_widget(self, id):
+        if id is None:
+            return None
+            
         try:
             return ThemeManager.Widgets.get(id)
         except WidgetNotFound:
