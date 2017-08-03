@@ -15,7 +15,8 @@ const initialState = {
   isLoaded: false,
   selected: [],
   count: null,
-  ids: []
+  ids: [],
+  zones: {}
 }
 
 let reducer = new Reducer(initialState)
@@ -37,7 +38,10 @@ reducer.handle(fulfilled(types.ZONES.LIST_WIDGETS), (state, action) => {
       isLoading: false,
       selected: [],
       count: action.payload.data.count,
-      ids: action.payload.data.result
+      ids: action.payload.data.result,
+      zones: R.merge(state.zones, R.objOf(
+          action.payload.zoneId, action.payload.data.result
+      ))
     }
   )
 })
