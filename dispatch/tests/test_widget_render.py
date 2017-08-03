@@ -19,7 +19,7 @@ class TestWidget(Widget):
     name = 'Test widget'
     template = 'widgets/test-widget.html'
 
-    valid_extra_ctx_kw = ('extra',)
+    accepted_keywords = ('extra',)
 
     zones = [TestZone]
 

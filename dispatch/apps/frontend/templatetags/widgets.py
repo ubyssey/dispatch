@@ -14,7 +14,7 @@ def zone(zone_id, **kwargs):
         return ''
 
     try:
-        return zone.widget.render(extra_ctx_kw=kwargs)
+        return zone.widget.render(add_context=kwargs)
     except (WidgetNotFound, AttributeError):
         pass
 
