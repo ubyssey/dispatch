@@ -186,14 +186,21 @@ class WidgetField(Field):
         self.zone_id = zone.id
 
     def validate(self, data):
-        #if not isinstance(data, basestring):
-        #    raise InvalidField('Data must be a string')
-        pass # TODO: fix this
+        if data['id'] and data['data']:
+            try:
+                widget = self.get_widget(data['id'])
+
+                for key, val in data['data'].iteritems():
+                    getattr(widget, key).validate(val)
+
+            except Exception as e: # TODO: check exceptions specifically
+                raise InvalidField(str(e))  # TODO: better error messages
+
 
     def get_widget(self, id):
         if id is None:
             return None
-            
+
         try:
             return ThemeManager.Widgets.get(id)
         except WidgetNotFound:
