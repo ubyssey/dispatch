@@ -5,5 +5,5 @@
     {% if image %}<img class="image" src="{{ image.get_absolute_url }}"/>{% endif %}
     {% if events %}{% for event in events %}
       <div class="events">{{ event.title|safe }}</div>
-    {% endfor %}{% endif %}
+    {% endfor %}{% endif %}{{ extra }}
 </div>
