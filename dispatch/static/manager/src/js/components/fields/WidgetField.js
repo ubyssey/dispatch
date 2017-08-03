@@ -40,7 +40,8 @@ class WidgetFieldComponent extends React.Component {
   render() {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
-    const fields = widget ? widget.fields.map((field) => (
+
+    let fields = widget ? widget.fields.map((field) => (
       <WidgetFieldWrapper
         // nested widget's fields aren't validated! (fix this)
         // error={this.props.errors[field.name]}
@@ -50,6 +51,13 @@ class WidgetFieldComponent extends React.Component {
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
+    if (fields) {
+      fields = (<Panel title={`Edit ${this.props.label}`}>
+          {fields}
+        </Panel>
+      )
+    }
+
     return (
       <div>
         <div style={{ marginBottom: 15 }}>
@@ -58,9 +66,7 @@ class WidgetFieldComponent extends React.Component {
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
-        <Panel title={`Edit ${this.props.label}`}>
-          {fields}
-        </Panel>
+      {fields}
       </div>
     )
   }

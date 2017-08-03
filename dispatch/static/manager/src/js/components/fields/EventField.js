@@ -3,12 +3,12 @@ import React from 'react'
 import EventSelectInput from '../inputs/EventSelectInput'
 
 export default function EventField(props) {
-  const selected = props.data.map((event) => {
+  const selected = props.data ? props.data.map((event) => {
     if (typeof event === 'object') {
       return event.id
     }
     return event
-  })
+  }) : []
 
   return (
     <EventSelectInput
