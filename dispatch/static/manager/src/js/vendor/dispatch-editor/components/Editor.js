@@ -82,7 +82,6 @@ class ContentEditor extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
