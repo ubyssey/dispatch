@@ -186,6 +186,16 @@ class GalleryController(AbstractTemplateRenderController):
             'size': len(images)
         }
 
+class WidgetController(AbstractController):
+
+    @classmethod
+    def render(self, data):
+
+            return {
+                'id': data['id'],
+                'data': data['data']
+                }
+
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
@@ -194,3 +204,4 @@ embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
 embedlib.register('image', ImageController)
 embedlib.register('gallery', GalleryController)
+embedlib.register('widget', WidgetController)
