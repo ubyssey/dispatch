@@ -457,9 +457,8 @@ class TokenViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk):
 
-        token_provided = pk
-        get_object_or_404(Token, key=token_provided)
-        return Response({'token-valid': True})
+        get_object_or_404(Token, key=pk)
+        return Response({'token_valid': True})
 
     def delete(self, request):
         token = get_object_or_404(Token, user=request.user)
