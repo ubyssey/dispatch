@@ -190,8 +190,9 @@ class WidgetField(Field):
             try:
                 widget = self.get_widget(data['id'])
 
-                for key, val in data['data'].iteritems():
-                    getattr(widget, key).validate(val)
+                if type(data['data']) is dict:
+                    for key, val in data['data'].iteritems():
+                        getattr(widget, key).validate(val)
 
             except Exception as e: # TODO: check exceptions specifically
                 raise InvalidField(str(e))  # TODO: better error messages
@@ -212,7 +213,8 @@ class WidgetField(Field):
 
         return {
             'id': data['id'],
-            'data': widget.to_json()
+            'data': widget.to_json(),
+            'widget': WidgetSerializer(widget).data
         }
 
     def to_json(self, data):
