@@ -10,8 +10,12 @@ export default function WidgetField(props) {
   let error = ''
   let errors = null
   if (props.field.type == 'widget' && props.error) {
-    errors = JSON.parse(props.error)
-    error = errors.self
+    try {
+      errors = JSON.parse(props.error)
+      error = errors.self
+    } catch (e) {
+      error = props.error
+    }
   } else {
     error = props.error
   }
