@@ -15,12 +15,13 @@ function WidgetEmbedComponent(props) {
             value={props.data.content}
             onChange={e => props.updateField('content', e.target.value)} />
 
-          <FormInput>
-            <WidgetSelectInput
-              zoneId="embed"
-              selected="upcoming-events"
-              update={widgetId => this.updateWidget("upcoming-events")} />
-          </FormInput>
+        </FormInput>
+
+        <FormInput>
+          <WidgetSelectInput
+            zoneId={props.data.zoneId}
+            selected={props.data.zone.widget}
+            update={widgetId => props.updateField('widget', widgetId)} />
 
         </FormInput>
 
@@ -34,7 +35,7 @@ export default {
   defaultData: {
     zoneId: 'embed',
     zone: {
-      widget: 'event-widget'
+      widget: 'upcoming-events'
     }
   }
 }
