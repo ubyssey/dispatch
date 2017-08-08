@@ -1,3 +1,5 @@
+import json
+
 from django.utils.dateparse import parse_datetime
 
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
@@ -187,15 +189,22 @@ class WidgetField(Field):
 
     def validate(self, data):
         if data['id'] and data['data']:
+            errors = {}
+
             try:
                 widget = self.get_widget(data['id'])
+            except WidgetNotFound:
+                errors['self'] = 'Invalid Widget'
 
-                if type(data['data']) is dict:
-                    for key, val in data['data'].iteritems():
+            if type(data['data']) is dict:
+                for key, val in data['data'].iteritems():
+                    try:
                         getattr(widget, key).validate(val)
+                    except InvalidField as e:
+                        errors[key] = str(e)
 
-            except Exception as e: # TODO: check exceptions specifically
-                raise InvalidField(str(e))  # TODO: better error messages
+            if len(errors):
+                raise InvalidField(json.dumps(errors))
 
 
     def get_widget(self, id):
