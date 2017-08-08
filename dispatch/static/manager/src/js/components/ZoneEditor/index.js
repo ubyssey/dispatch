@@ -85,9 +85,7 @@ const mapStateToProps = (state) => {
     zone: zone,
     widget: widget,
     token: state.app.auth.token,
-    errors: state.app.zones.single.errors,
-    zones: state.app.entities.zones,
-    widgets: state.app.entities.widgets
+    errors: state.app.zones.single.errors
   }
 }
 
