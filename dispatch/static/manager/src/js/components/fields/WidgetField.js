@@ -51,7 +51,8 @@ class WidgetFieldComponent extends React.Component {
     )) : null
 
     if (fields) {
-      fields = (<Panel title={`Edit ${this.props.label}`}>
+      fields = (
+        <Panel title={`Edit ${this.props.label}`}>
           {fields}
         </Panel>
       )
@@ -73,7 +74,6 @@ class WidgetFieldComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    zones: state.app.entities.zones,
     widgets: state.app.entities.widgets
   }
 }
