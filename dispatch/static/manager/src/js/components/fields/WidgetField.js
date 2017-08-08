@@ -43,8 +43,7 @@ class WidgetFieldComponent extends React.Component {
 
     let fields = widget ? widget.fields.map((field) => (
       <WidgetFieldWrapper
-        // nested widget's fields aren't validated! (fix this)
-        // error={this.props.errors[field.name]}
+        error={R.prop(field.name, this.props.errors || {})}
         key={`widget-field__${widget.id}__${field.name}`}
         field={field}
         data={R.prop(field.name, widgetData || {}) || null}
