@@ -28,7 +28,7 @@ class TestWidget(Widget):
     description = TextField('Description')
     article = ArticleField('Featured article')
     image = ImageField('Featured image')
-    widget = WidgetField('Featured Widget')
+    widget = WidgetField('Featured Widget', TestZone)
 
 class TestWidget2(Widget):
     id = 'test-widget-2'
@@ -41,7 +41,7 @@ class TestWidget2(Widget):
     description = TextField('Description 2')
     article = ArticleField('Featured article 2')
     image = ImageField('Featured image 2')
-    widget = WidgetField('Featured Widget 2')
+    widget = WidgetField('Featured Widget 2', TestZone)
 
 class TestWidget3(Widget):
     id = 'test-widget-3'
@@ -404,10 +404,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         # a test Widget is now initialized, initilize a widget field to put the test Widget in
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         try:
-            testfield.validate(field_data['id'])
+            testfield.validate(field_data)
         except InvalidField:
             self.fail('Widget should be valid')
 
@@ -418,7 +418,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testwidget = TestWidget()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
@@ -441,7 +441,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_widget_field_invalid_data(self):
         """Trying to validate invalid data should result in InvalidField error"""
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         # The data to be validated - valid data are basestrings
         widget_id = 1
@@ -461,7 +461,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         article = DispatchTestHelpers.create_article(self.client)
         image = DispatchTestHelpers.create_image(self.client)
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         field_data = {
             'id': 'test-widget',
@@ -487,7 +487,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         image = DispatchTestHelpers.create_image(self.client)
         widget = TestWidget()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         field_data = {
             'id': 'test-widget',
@@ -517,7 +517,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         widget2 = TestWidget2()
         widget3 = TestWidget3()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', TestZone)
 
         field_data = {
             'id': 'test-widget',
@@ -558,7 +558,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Initilaizing a widget field with invalid data should raise an error"""
 
         try:
-            widget = WidgetField(6)
+            widget = WidgetField(6, TestZone)
             self.fail('InvalidField Error should have been raised')
         except InvalidField:
             pass
@@ -566,7 +566,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_get_non_existant_widget(self):
         """Using get_widget with non-existant widget_id should fail"""
 
-        widget = WidgetField('Title')
+        widget = WidgetField('Title', TestZone)
 
         try:
             widget.get_widget('this_is_not_a_widget_id')
@@ -578,7 +578,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Using to_json with no data should return None for data"""
 
         data = None
-        widget = WidgetField('Title')
+        widget = WidgetField('Title', TestZone)
 
         self.assertEqual(widget.to_json(data), None)
 
