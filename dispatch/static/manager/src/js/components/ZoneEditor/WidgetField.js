@@ -7,11 +7,21 @@ import { FormInput } from '../inputs'
 export default function WidgetField(props) {
   const Field = fields[props.field.type]
 
+  let error = ''
+  let errors = null
+  if (props.field.type == 'widget' && props.error) {
+    errors = JSON.parse(props.error)
+    error = errors.self
+  } else {
+    error = props.error
+  }
+
   return (
     <FormInput
-      error={props.error}
+      error={error}
       label={props.field.label}>
       <Field
+        errors={errors}
         label={props.field.label}
         many={props.field.many}
         data={props.data}
