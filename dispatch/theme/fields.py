@@ -188,23 +188,35 @@ class WidgetField(Field):
         self.zone_id = zone.id
 
     def validate(self, data):
-        if data['id'] and data['data']:
-            errors = {}
+        if not data or not data['id']:
+            raise InvalidField('Widget must be selected')
 
-            try:
-                widget = self.get_widget(data['id'])
-            except WidgetNotFound:
-                errors['self'] = 'Invalid Widget'
+        try:
+            if data['id'] and data['data'] is not None:
+                errors = {}
 
-            if type(data['data']) is dict:
-                for key, val in data['data'].iteritems():
-                    try:
-                        getattr(widget, key).validate(val)
-                    except InvalidField as e:
-                        errors[key] = str(e)
+                try:
+                    widget = self.get_widget(data['id'])
+                except WidgetNotFound:
+                    errors['self'] = 'Invalid Widget'
 
-            if len(errors):
-                raise InvalidField(json.dumps(errors))
+                if type(data['data']) is dict:
+                    for key, val in data['data'].iteritems():
+                        try:
+                            getattr(widget, key).validate(val)
+                        except InvalidField as e:
+                            errors[key] = str(e)
+                        except Exception:
+                            pass
+
+                if len(errors):
+                    raise InvalidField(json.dumps(errors))
+            else:
+                raise InvalidField('Invalid Widget Data')
+        except InvalidField as e:
+            raise e
+        except Exception as e:
+            raise InvalidField('Problem with widget data %s' % str(e))
 
 
     def get_widget(self, id):
