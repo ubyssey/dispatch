@@ -31,18 +31,18 @@ class ZoneEditorComponent extends React.Component {
   }
 
   processZone(zone) {
-    // recursively strip out the extra widget data
+    // strip out the extra widget data
 
-    function processWidget(widget, widgetdata) {
-      if (!widgetdata || !widgetdata.fields) {
+    function processWidget(widget, fields) {
+      if (!fields) {
         return widget
       }
 
-      widgetdata.fields.forEach((field) => {
+      fields.forEach((field) => {
         if (field.type == 'widget') {
           const newWidget = R.path(['data', field.name], widget)
           if (newWidget) {
-            widget.data[field.name] = this.processWidget(newWidget, R.prop('widget', newWidget))
+            widget.data[field.name] = processWidget(newWidget, R.path(['widget', 'fields'], newWidget))
             widget = R.dissocPath(['data', field.name, 'widget'], widget)
           }
         }
@@ -50,7 +50,7 @@ class ZoneEditorComponent extends React.Component {
       return widget
     }
 
-    return processWidget(zone, this.props.widget)
+    return processWidget(zone, R.prop('fields', this.props.widget))
   }
 
   saveZone() {
