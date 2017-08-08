@@ -123,7 +123,7 @@ class AuthenticationTests(DispatchAPITestCase):
 
         response = self.client.get(url, None, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['token-valid'], True)
+        self.assertEqual(response.data['token_valid'], True)
 
     def test_verify_token_invalid_token(self):
         """
