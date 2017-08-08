@@ -47,7 +47,7 @@ class WidgetFieldComponent extends React.Component {
         // error={this.props.errors[field.name]}
         key={`widget-field__${widget.id}__${field.name}`}
         field={field}
-        data={widgetData[field.name] || null}
+        data={R.prop(field.name, widgetData || {}) || null}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
@@ -74,6 +74,7 @@ class WidgetFieldComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    zones: state.app.entities.zones,
     widgets: state.app.entities.widgets
   }
 }
