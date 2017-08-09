@@ -191,10 +191,10 @@ class WidgetController(AbstractController):
     @classmethod
     def render(self, data):
 
-            return {
-                'id': data['id'],
-                'data': data['data']
-                }
+        widget = ThemeManager.Widgets.get(data['widget_id'])
+        widget.set_data(data['data'])
+
+        return widget.render()
 
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
