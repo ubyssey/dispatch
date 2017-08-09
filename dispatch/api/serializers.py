@@ -7,8 +7,8 @@ from dispatch.modules.content.models import (
     Image, ImageAttachment, ImageGallery, File)
 from dispatch.modules.events.models import Event
 from dispatch.modules.auth.models import User, Person
-from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 
+from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 

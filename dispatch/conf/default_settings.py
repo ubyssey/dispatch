@@ -49,7 +49,7 @@ LOGGING = {
 }
 
 # Replace default user model
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'dispatch.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
