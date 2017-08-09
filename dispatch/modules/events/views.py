@@ -2,9 +2,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
-from dispatch.apps.events.forms import EventForm
-from dispatch.apps.events.models import Event
+from dispatch.modules.events.facebook import FacebookEvent, FacebookEventError
+from dispatch.modules.events.forms import EventForm
+from dispatch.modules.events.models import Event
 
 def submit_landing(request):
     return render(request, 'events/submit/landing.html')

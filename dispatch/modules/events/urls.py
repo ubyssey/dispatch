@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from dispatch.apps.events import views
+from dispatch.modules.events import views
 
 urlpatterns = [
     url(r'^submit/form/', views.submit_form, name='events-submit-form'),

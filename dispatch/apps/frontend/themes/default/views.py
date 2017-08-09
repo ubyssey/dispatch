@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 
-from dispatch.apps.content.models import Article, Page
+from dispatch.models import Article, Page
 
 class DefaultTheme:
 

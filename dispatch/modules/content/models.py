@@ -21,9 +21,9 @@ from django.dispatch import receiver
 from django.template import loader, Context
 
 from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.content.managers import ArticleManager
-from dispatch.apps.content.render import content_to_html
-from dispatch.apps.core.models import Person, User
+from dispatch.modules.content.managers import ArticleManager
+from dispatch.modules.content.render import content_to_html
+from dispatch.modules.auth.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):

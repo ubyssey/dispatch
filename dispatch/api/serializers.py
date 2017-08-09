@@ -2,13 +2,15 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.events.models import Event
-from dispatch.apps.core.models import User, Person
-from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
+from dispatch.modules.content.models import (
+    Article, Page, Section, Tag, Topic,
+    Image, ImageAttachment, ImageGallery, File)
+from dispatch.modules.events.models import Event
+from dispatch.modules.auth.models import User, Person
+from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 
-from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
-from dispatch.apps.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
+from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
+from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField

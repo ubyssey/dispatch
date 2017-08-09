@@ -1,9 +1,9 @@
 from django.template import loader, Context
 
-from dispatch.apps.frontend.exceptions import EmbedException
+class EmbedException(Exception):
+    pass
 
 class EmbedLibrary(object):
-
     def __init__(self):
         self.library = {}
 
@@ -34,13 +34,11 @@ def maptag(tagname, contents):
     return u''.join(tag(tagname, item) for item in contents)
 
 class AbstractController(object):
-
     @staticmethod
     def to_json(data):
         return data
 
 class AbstractTemplateRenderController(AbstractController):
-
     TEMPLATE = None
 
     @classmethod
@@ -54,13 +52,11 @@ class AbstractTemplateRenderController(AbstractController):
 
 
 class ListController(AbstractController):
-
     @classmethod
     def render(self, data):
         return tag('ul', maptag('li', data))
 
 class HeaderController(AbstractController):
-
     @classmethod
     def render(self, data):
         size = data.get('size').lower()
@@ -68,7 +64,6 @@ class HeaderController(AbstractController):
                    data['content'])
 
 class CodeController(AbstractController):
-
     @classmethod
     def render(self, data):
         tags = {
@@ -81,19 +76,15 @@ class CodeController(AbstractController):
             return data['content']
 
 class VideoController(AbstractTemplateRenderController):
-
     TEMPLATE = 'embeds/video.html'
 
 class AdvertisementController(AbstractTemplateRenderController):
-
     TEMPLATE = 'embeds/advertisement.html'
 
 class PullQuoteController(AbstractTemplateRenderController):
-
     TEMPLATE = 'embeds/quote.html'
 
 class ImageController(AbstractTemplateRenderController):
-
     TEMPLATE = 'embeds/image.html'
 
     @classmethod
@@ -138,7 +129,6 @@ class ImageController(AbstractTemplateRenderController):
         }
 
 class GalleryController(AbstractTemplateRenderController):
-
     TEMPLATE = 'embeds/gallery.html'
 
     @classmethod

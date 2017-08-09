@@ -18,10 +18,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Application definition
 INSTALLED_APPS = [
-    'dispatch.apps.content',
-    'dispatch.apps.core',
-    'dispatch.apps.frontend',
-    'dispatch.apps.events',
+    'dispatch',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

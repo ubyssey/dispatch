@@ -3,7 +3,6 @@ import datetime
 from django.db.models import Manager
 
 class PublishableManager(Manager):
-
     def get(self, *args, **kwargs):
         if 'pk' in kwargs:
             kwargs['parent'] = kwargs['pk']
@@ -15,9 +14,7 @@ class PublishableManager(Manager):
         return super(PublishableManager, self).get(*args, **kwargs)
 
 class ArticleManager(PublishableManager):
-
     def get_popular(self, dur='week'):
-
         durations = {
             'week': 7,
             'month': 30

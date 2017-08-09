@@ -3,8 +3,8 @@ import datetime
 from django.dispatch import receiver
 
 from dispatch.core.signals import post_create, post_update
-from dispatch.apps.core.models import Action
-from dispatch.apps.content.models import Article
+from dispatch.modules.actions.models import Action
+from dispatch.modules.content.models import Article
 
 def perform_action(action, object_type, object_id, user):
 

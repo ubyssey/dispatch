@@ -36,10 +36,10 @@ class ThemeHelper():
     def get_theme_urls(theme_name=False):
         if not theme_name:
             theme_name = ThemeHelper.get_current_theme()
-        try:
-            return ThemeHelper.fetch_theme_urls(theme_name)
-        except ImportError:
-            return ThemeHelper.fetch_theme_urls('default')
+        #try:
+        return ThemeHelper.fetch_theme_urls(theme_name)
+        #except ImportError:
+        #    return ThemeHelper.fetch_theme_urls('default')
 
     @staticmethod
     def fetch_theme_urls(theme_name):

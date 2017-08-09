@@ -11,19 +11,19 @@ from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
 
 from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
-from dispatch.apps.core.actions import list_actions, recent_articles
+from dispatch.modules.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
+from dispatch.modules.actions import list_actions, recent_articles
 
-from dispatch.apps.core.models import Person, User
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.events.models import Event
+from dispatch.modules.auth.models import Person, User
+from dispatch.modules.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.modules.events.models import Event
 
-from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
-from dispatch.apps.api.serializers import (
+from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
+from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
-from dispatch.apps.api.exceptions import ProtectedResourceError, BadCredentials
+from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound
