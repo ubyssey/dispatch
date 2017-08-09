@@ -60,7 +60,7 @@ class WidgetFieldComponent extends React.Component {
 
     return (
       <div>
-        <div style={{ marginBottom: 15 }}>
+        <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
             zoneId={this.props.zone_id}
             selected={this.getWidgetId()}
