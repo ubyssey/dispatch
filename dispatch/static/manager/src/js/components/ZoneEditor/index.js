@@ -31,7 +31,9 @@ class ZoneEditorComponent extends React.Component {
   }
 
   processZone(zone) {
-    // strip out the extra widget data
+    if (!zone) {
+      return zone
+    }
 
     function processWidget(widget, fields) {
       if (!fields) {
@@ -50,7 +52,7 @@ class ZoneEditorComponent extends React.Component {
       return widget
     }
 
-    return processWidget(zone, R.prop('fields', this.props.widget))
+    return processWidget(zone, R.prop('fields', this.props.widget || {}))
   }
 
   saveZone() {
