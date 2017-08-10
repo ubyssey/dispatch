@@ -771,6 +771,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         testfield = IntegerField('Test', min_value=0, max_value=100)
         with self.assertRaises(InvalidField):
             testfield.validate('101')
+        with self.assertRaises(InvalidField):
             testfield.validate('-1')
 
     def test_boolfield(self):
@@ -817,6 +818,26 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         testfield = IntegerField('Test', required=True)
         testfield.validate('5')
         self.assertEqual(5, testfield.prepare_data('5'))
+
+    def test_fields_notrequired_empty(self):
+        """Not required fields should accept empty values"""
+
+        testfield = CharField('Test')
+        testfield.validate('')
+        self.assertEqual('', testfield.prepare_data(''))
+
+        testfield = TextField('Test')
+        testfield.validate('')
+        self.assertEqual('', testfield.prepare_data(''))
+
+        testfield = DateTimeField('Test')
+        testfield.validate('')
+        self.assertEqual(None, testfield.prepare_data(''))
+
+        testfield = IntegerField('Test')
+        testfield.validate('')
+        self.assertEqual(None, testfield.prepare_data(''))
+
 
     def test_fields_required_empty(self):
         """Test fields with the required prop and ensure they raise an error
