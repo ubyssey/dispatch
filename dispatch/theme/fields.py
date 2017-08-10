@@ -166,7 +166,10 @@ class IntegerField(Field):
     def prepare_data(self, data):
         if isinstance(data, int):
             return data
-        return int(data, base=10)
+        try:
+            return int(data, base=10)
+        except ValueError:
+            return None
 
 class BoolField(Field):
 
