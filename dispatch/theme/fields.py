@@ -143,18 +143,18 @@ class IntegerField(Field):
         super(IntegerField, self).__init__(label=label, many=many, required=required)
 
     def validate(self, data):
+        if not data or (isinstance(data, basestring) and not len(data)):
+            if self.required:
+                raise InvalidField('%s is required')
+            else:
+                return
+
         try:
             if isinstance(data, int):
                 value = data
             else:
                 value =  int(data, base=10)
         except ValueError:
-            if not data or (isinstance(data, basestring) and not len(data)):
-                if self.required:
-                    raise InvalidField('%s is required')
-                else:
-                    return
-
             raise InvalidField('%s must be integer' % self.label)
 
         if self.min_value is not None and value < self.min_value:
