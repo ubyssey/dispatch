@@ -1,8 +1,10 @@
+import re
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from dispatch.apps.events.event_integrations import FacebookEvent, FacebookEventError, UBCEvent, UBCEventError, NoEventHandler, NoEventHandlerError
+from dispatch.apps.events.sources import FacebookEvent, UBCEvent, NoEventHandler, EventError
 from dispatch.apps.events.forms import EventForm
 from dispatch.apps.events.models import Event
 
@@ -15,36 +17,25 @@ def submit_success(request):
 def submit_form(request):
     event_url = request.POST.get('event_url')
     url_error = False
-
     if request.POST.get('url_import') and event_url is not None:
 
-        handlers = {
-            'calendar.events.ubc.ca': {
-                'url_handler': UBCEvent,
-                'url_handler_error': UBCEventError
-            },
-            'facebook.com/events/': {
-                'url_handler': FacebookEvent,
-                'url_handler_error': FacebookEventError
-            }
+        sources = {
+            'calendar.events.ubc.ca': UBCEvent,
+            'facebook.com': FacebookEvent
         }
 
-        url_handler = NoEventHandler
-        url_handler_error = NoEventHandlerError
+        hostname = get_host_from_url(event_url)
 
-        for url_snippet, url_dict in handlers.items():
-            if url_snippet in event_url:
-
-                url_handler = url_dict['url_handler']
-                url_handler_error = url_dict['url_handler_error']
-                break
+        if hostname in sources:
+            handler = sources[hostname]
+        else:
+            handler = NoEventHandler
 
         try:
-            event = url_handler(event_url)
+            event = handler(event_url)
             data = event.get_data()
             form = EventForm(initial=data)
-
-        except url_handler_error:
+        except EventError:
             url_error = True
             form = EventForm()
 
@@ -60,3 +51,14 @@ def submit_form(request):
         form = EventForm()
 
     return render(request, 'events/submit/form.html', {'form': form, 'url_error': url_error})
+
+def get_host_from_url(url):
+    """Parses URL against regex to pull out the hostname"""
+
+    # Match numbers that is the event id from the url and return them
+    m = re.search('.*(facebook\.com|calendar\.events\.ubc\.ca)+.*', url)
+
+    if m:
+        return m.group(1)
+    else:
+        raise EventError('URL provided is not a valid facebook event or UBC event url')
