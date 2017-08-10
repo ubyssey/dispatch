@@ -14,9 +14,10 @@ class Field(object):
 
     _creation_counter = 0
 
-    def __init__(self, label, many=False):
+    def __init__(self, label, many=False, required=False):
         self.label = label
         self.many = many
+        self.required = required
 
         if self.many:
             self.default = []
@@ -97,6 +98,9 @@ class CharField(Field):
         if len(data) > 255:
             raise InvalidField('Max length for charfield data is 255')
 
+        if not len(data) and self.required:
+            raise InvalidField('%s is required' % self.label)
+
 class TextField(Field):
 
     type = 'text'
@@ -105,21 +109,30 @@ class TextField(Field):
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
+        if not len(data) and self.required:
+            raise InvalidField('%s is required' % self.label)
+
 class DateTimeField(Field):
 
     type = 'datetime'
 
     def validate(self, data):
+        if not data or (isinstance(data, basestring) and not len(data)):
+            if self.required:
+                raise InvalidField('%s is required')
+            else:
+                return
+
         if not parse_datetime(data):
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):
-        return parse_datetime(data) if data else None
+        return parse_datetime(data) if data and isinstance(data, basestring) else None
 
 class IntegerField(Field):
 
     type = 'integer'
-    def __init__(self, label, many=False, min_value=None, max_value=None):
+    def __init__(self, label, many=False, min_value=None, max_value=None, required=False):
         self.min_value = min_value
         self.max_value = max_value
 
@@ -127,7 +140,7 @@ class IntegerField(Field):
             if min_value > max_value:
                 raise InvalidField('IntegerField: min_value must be less than max_value')
 
-        super(IntegerField, self).__init__(label=label, many=many)
+        super(IntegerField, self).__init__(label=label, many=many, required=required)
 
     def validate(self, data):
         try:
@@ -136,6 +149,12 @@ class IntegerField(Field):
             else:
                 value =  int(data, base=10)
         except ValueError:
+            if not data or (isinstance(data, basestring) and not len(data)):
+                if self.required:
+                    raise InvalidField('%s is required')
+                else:
+                    return
+
             raise InvalidField('%s must be integer' % self.label)
 
         if self.min_value is not None and value < self.min_value:
@@ -178,36 +197,40 @@ class EventField(ModelField):
     model = Event
     serializer = EventSerializer
 
-
 class WidgetField(Field):
 
     type = 'widget'
 
-    def __init__(self, label, zone):
-        super(WidgetField, self).__init__(label)
+    def __init__(self, label, zone, required=False):
+        super(WidgetField, self).__init__(label, required=required)
         self.zone_id = zone.id
 
     def validate(self, data):
         if not data or not data['id']:
-            raise InvalidField('Widget must be selected')
+            if self.required:
+                raise InvalidField('Widget must be selected')
+            return
 
         try:
             if data['id'] and data['data'] is not None:
                 errors = {}
+                widget = None
 
                 try:
                     widget = self.get_widget(data['id'])
                 except WidgetNotFound:
                     errors['self'] = 'Invalid Widget'
 
-                if type(data['data']) is dict:
-                    for key, val in data['data'].iteritems():
-                        try:
-                            getattr(widget, key).validate(val)
-                        except InvalidField as e:
-                            errors[key] = str(e)
-                        except Exception:
-                            pass
+                if widget:
+                    for field in widget.fields:
+                        if field.name in data['data'] and data['data'][field.name]:
+                            try:
+                                field.validate(data['data'][field.name])
+                            except InvalidField as e:
+                                errors[field.name] = str(e)
+                        else:
+                            if field.required:
+                                errors[field.name] = 'This field is required'
 
                 if len(errors):
                     raise InvalidField(json.dumps(errors))
