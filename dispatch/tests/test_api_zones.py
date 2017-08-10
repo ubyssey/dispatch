@@ -23,6 +23,10 @@ TEST_WIDGET_B_ID = 'test-widget-b'
 TEST_WIDGET_B_NAME = 'Test Widget B'
 TEST_WIDGET_B_TEMPLATE  = 'widgets/test-widget-b.html'
 
+TEST_WIDGET_R_ID = 'test-widget-r'
+TEST_WIDGET_R_NAME = 'Test Widget R'
+TEST_WIDGET_R_TEMPLATE  = 'widgets/test-widget-r.html'
+
 class TestZoneA(Zone):
     id = TEST_ZONE_A_ID
     name = TEST_ZONE_A_NAME
@@ -48,6 +52,15 @@ class TestWidgetB(Widget):
     zones = [TestZoneA, TestZoneB]
 
     title = CharField('Title')
+
+class TestWidgetR(Widget):
+        id = TEST_WIDGET_R_ID
+        name = TEST_WIDGET_R_NAME
+        template = TEST_WIDGET_R_TEMPLATE
+
+        zones = [TestZoneA, TestZoneB]
+
+        title = CharField('Title', required=True)
 
 class ZonesTests(DispatchAPITestCase):
 
@@ -382,3 +395,40 @@ class ZonesTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['title'][0], 'Title data must be a string')
+
+    def test_widget_required_field(self):
+        """Widget with required field should work as expected"""
+
+        register.zone(TestZoneA)
+        register.widget(TestWidgetR)
+
+        url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
+
+        data = {
+            'widget': TEST_WIDGET_R_ID,
+            'data': {
+                'title': 'Test R'
+            }
+        }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.data['data']['title'], 'Test R')
+
+    def test_widget_empty_required_field(self):
+        """Widget with empty required field should raise an error"""
+
+        register.zone(TestZoneA)
+        register.widget(TestWidgetR)
+
+        url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
+
+        data = {
+            'widget': TEST_WIDGET_R_ID,
+            'data': {}
+        }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['title'][0], 'Title is required')
