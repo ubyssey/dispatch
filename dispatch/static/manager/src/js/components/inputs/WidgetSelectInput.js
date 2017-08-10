@@ -24,8 +24,8 @@ class WidgetSelectInputComponent extends React.Component {
         selected={this.props.selected}
         results={this.props.widgets.ids}
         entities={this.props.entities.widgets}
-        onChange={(selected) => this.props.update(selected)}
-        fetchResults={(query) => this.listWidgets(query)}
+        onChange={selected => this.props.update(selected)}
+        fetchResults={query => this.listWidgets(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Change widget' : 'Set widget'} />
     )
