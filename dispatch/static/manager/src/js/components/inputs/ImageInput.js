@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { AnchorButton } from '@blueprintjs/core'
 
 import * as modalActions from '../../actions/ModalActions'
+import imagesActions from '../../actions/ImagesActions'
 
 import ImageManager from '../modals/ImageManager'
 
@@ -23,6 +24,10 @@ function Image(props) {
 }
 
 class ImageInputComponent extends React.Component {
+
+  componentDidMount() {
+    this.getSelected().map(id => this.props.getImage(this.props.token, id))
+  }
 
   getSelected() {
     return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
@@ -89,13 +94,17 @@ class ImageInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    entities: state.app.entities.images
+    entities: state.app.entities.images,
+    token: state.app.auth.token
   }
 }
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getImage: (token, imageId) => {
+      dispatch(imagesActions.get(token, imageId))
+    },
     openModal: (component, props) => {
       dispatch(modalActions.openModal(component, props))
     },
