@@ -52,6 +52,19 @@ class TestWidget3(Widget):
 
     title = CharField('Title')
 
+class TestWidgetR(Widget):
+    id = 'test-widget-r'
+    name = 'Test Widget R'
+    template = 'widget/test-widget.html'
+
+    zones = [TestZone]
+
+    title = CharField('Title', required=True)
+    description = TextField('Description', required=True)
+    article = ArticleField('Featured article', required=True)
+    image = ImageField('Featured image', required=True)
+    widget = WidgetField('Featured Widget', TestZone, required=True)
+
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_char_field(self):
@@ -783,3 +796,53 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         test_value(1)
         test_value('True')
         test_value({})
+
+    def test_fields_required(self):
+        """Test fields with the required prop and ensure they validate"""
+
+        testfield = CharField('Test', required=True)
+        testfield.validate('test')
+        self.assertEqual('test', testfield.prepare_data('test'))
+
+        testfield = TextField('Test', required=True)
+        testfield.validate('test')
+        self.assertEqual('test', testfield.prepare_data('test'))
+
+        testfield = DateTimeField('Test', required=True)
+        date = datetime.today()
+        date_sz = date.isoformat()
+        testfield.validate(date_sz)
+        self.assertEqual(testfield.prepare_data(date_sz), date)
+
+        testfield = IntegerField('Test', required=True)
+        testfield.validate('5')
+        self.assertEqual(5, testfield.prepare_data('5'))
+
+    def test_fields_required_empty(self):
+        """Test fields with the required prop and ensure they raise an error
+        when given empty data
+        """
+
+        testfield = CharField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = TextField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = DateTimeField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = IntegerField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
