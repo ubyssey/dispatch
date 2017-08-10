@@ -227,6 +227,9 @@ const DispatchAPI = {
     list: (token, query) => {
       return getRequest('images', null, query, token)
     },
+    get: (token, imageId) => {
+      return getRequest('images', imageId, null, token)
+    },
     save: (token, imageId, data) => {
       return patchRequest('images', imageId, data, token)
     },
