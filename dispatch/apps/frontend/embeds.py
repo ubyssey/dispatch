@@ -1,6 +1,7 @@
 from django.template import loader, Context
 
 from dispatch.apps.frontend.exceptions import EmbedException
+from dispatch.theme import ThemeManager
 
 class EmbedLibrary(object):
 

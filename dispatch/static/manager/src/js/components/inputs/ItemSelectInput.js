@@ -37,8 +37,6 @@ class ItemSelectInput extends React.Component {
   constructor(props) {
     super(props)
 
-    this.isNotSelected = this.isNotSelected.bind(this)
-
     this.state = {
       query: ''
     }
@@ -57,7 +55,7 @@ class ItemSelectInput extends React.Component {
   }
 
   fetchResults() {
-    this.props.fetchResults(this.state.query)
+    setTimeout(() => this.props.fetchResults(this.state.query), 1)
   }
 
   addValue(id) {
@@ -122,7 +120,7 @@ class ItemSelectInput extends React.Component {
         ))
 
     const results = this.props.results
-      .filter(this.isNotSelected)
+      .filter(id => this.isNotSelected(id))
       .map(id => this.props.entities[id])
       .map(item => (
         <Item
@@ -175,7 +173,7 @@ class ItemSelectInput extends React.Component {
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
-          inline={true}>
+          inline={false}>
           <a onClick={() => this.refs.dropdown.open()}>
             {this.props.editMessage}
           </a>
