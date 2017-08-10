@@ -17,8 +17,8 @@ class Event(Model):
 
     image = ImageField(upload_to='images/events/', null=True, blank=True)
 
-    start_time = DateTimeField(null=True, blank=True)
-    end_time = DateTimeField(null=True, blank=True)
+    start_time = DateTimeField()
+    end_time = DateTimeField()
 
     location = CharField(max_length=500)
     address = CharField(max_length=500, null=True, blank=True)
