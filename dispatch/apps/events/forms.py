@@ -58,7 +58,11 @@ class EventForm(ModelForm):
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
 
-        if end_time < start_time:
+        if not start_time:
+            self.add_error('start_time', 'You must have a start time for the event')
+        elif not end_time:
+            self.add_error('end_time', 'You must have an end time for the event')
+        elif end_time < start_time:
             msg = 'The start time of the event must be before the end time of the event'
             self.add_error('start_time', msg)
             self.add_error('end_time', msg)
