@@ -26,6 +26,10 @@ function Image(props) {
 class ImageInputComponent extends React.Component {
 
   componentDidMount() {
+    this.loadSelected()
+  }
+
+  loadSelected() {
     this.getSelected().map(id => this.props.getImage(this.props.token, id))
   }
 
