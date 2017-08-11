@@ -50,12 +50,12 @@ class FacebookEvent(object):
             address = None
 
         try:
-            end_time = datetime.datetime.strptime(json['end_time'][:-5], '%Y-%m-%dT%H:%M:%S')
+            end_time = datetime.strptime(json['end_time'][:-5], '%Y-%m-%dT%H:%M:%S')
             end_time = end_time.strftime('%Y-%m-%d %H:%M')
         except:
             end_time = None
 
-        start_time = datetime.datetime.strptime(json['start_time'][:-5], '%Y-%m-%dT%H:%M:%S')
+        start_time = datetime.strptime(json['start_time'][:-5], '%Y-%m-%dT%H:%M:%S')
         start_time = start_time.strftime('%Y-%m-%d %H:%M')
 
         return {
