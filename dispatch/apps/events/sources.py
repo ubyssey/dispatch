@@ -1,6 +1,6 @@
 import re
 import requests
-import datetime
+from datetime import datetime
 
 from django.conf import settings
 
@@ -104,13 +104,29 @@ class UBCEvent(object):
 
         html = requests.get(self.url).text
         soup = BeautifulSoup(html, 'html.parser')
-        group = soup.find_all('td', class_='fieldval')
+        sub_fields = soup.find_all('td', class_='fieldval')
+
+        title = soup.find('table', id='eventTitle').find('h2', class_='bwStatusConfirmed').find('a').text
+
+        time_string = str(sub_fields[0].text)
+        time_strings = map(str.strip, time_string.split('-'))
+
+        try:
+            start_time = datetime.strptime(time_strings[0], '%A, %B %d, %Y %I:%M %p')
+            end_time = datetime.strptime(time_strings[1], '%A, %B %d, %Y %I:%M %p')
+        except ValueError:
+            start_time = datetime.strptime(time_strings[0], '%A, %B %d, %Y %I:%M %p')
+            date = start_time.date()
+            time = datetime.strptime(time_strings[1], '%I:%M %p').time()
+            end_time = datetime.combine(date, time)
 
         try:
             data = {
-                'start_time': group[0].text,
-                'description': group[2].text,
-                'location': group[1].text,
+                'title': title,
+                'start_time': start_time,
+                'end_time': end_time,
+                'description': sub_fields[2].text,
+                'location': sub_fields[1].text
             }
         except IndexError:
             raise EventError
