@@ -21,7 +21,7 @@ router.register(r'dashboard', views.DashboardViewSet, base_name='api-dashboard')
 router.register(r'integrations', views.IntegrationViewSet, base_name='api-integrations')
 router.register(r'files',views.FileViewSet, base_name='api-files')
 router.register(r'zones', views.ZoneViewSet, base_name='api-zones')
-router.register(r'event', views.EventViewSet, base_name='api-event')
+router.register(r'events', views.EventViewSet, base_name='api-event')
 router.register(r'token', views.TokenViewSet, base_name='api-token')
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
