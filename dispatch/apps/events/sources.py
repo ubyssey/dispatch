@@ -104,34 +104,55 @@ class UBCEvent(object):
 
         html = requests.get(self.url).text
         soup = BeautifulSoup(html, 'html.parser')
-        sub_fields = soup.find_all('td', class_='fieldval')
+        value_fields = soup.find_all('td', class_='fieldval')
 
         title = soup.find('table', id='eventTitle').find('h2', class_='bwStatusConfirmed').find('a').text
 
-        time_string = str(sub_fields[0].text)
-        time_strings = map(str.strip, time_string.split('-'))
-
-        try:
-            start_time = datetime.strptime(time_strings[0], '%A, %B %d, %Y %I:%M %p')
-            end_time = datetime.strptime(time_strings[1], '%A, %B %d, %Y %I:%M %p')
-        except ValueError:
-            start_time = datetime.strptime(time_strings[0], '%A, %B %d, %Y %I:%M %p')
-            date = start_time.date()
-            time = datetime.strptime(time_strings[1], '%I:%M %p').time()
-            end_time = datetime.combine(date, time)
+        start_time, end_time = self.get_date_groups(value_fields[0])
 
         try:
             data = {
                 'title': title,
                 'start_time': start_time,
                 'end_time': end_time,
-                'description': sub_fields[2].text,
-                'location': sub_fields[1].text
+                'description': value_fields[2].text,
+                'location': value_fields[1].text
             }
         except IndexError:
             raise EventError
 
         return data
+
+    def get_date_groups(self, dates_string):
+        """Returns the date groups from string. Dates have one of two forms:
+           -  Saturday, August 12, 2017 9:00 AM - Sunday, August 13, 2017 1:00 PM
+           -  Saturday, August 12, 2017 9:00 AM - 1:00 PM
+        """
+
+        # Split the start and end times into two elements in a list
+        date_time_string = str(dates_string.text)
+        time_strings = map(str.strip, date_time_string.split('-'))
+
+        # Start time is always the same format.
+        start_time = datetime.strptime(time_strings[0], '%A, %B %d, %Y %I:%M %p')
+
+        # End time is either the same format as the start time, or just a time (and no date). Search between the two
+        re_date_and_time = re.search('.*(\w{6,9}, \w{3,9} \d{1,2}, \d{4} \d{1}:\d{2} (?:AM|PM)).*', time_strings[1])
+        re_time = re.search('.*(\d{1}:\d{2} (?:AM|PM)).*', time_strings[1])
+
+        if re_date_and_time:
+            found_date_and_time = re_date_and_time.group(1)
+            end_time = datetime.strptime(found_date_and_time, '%A, %B %d, %Y %I:%M %p')
+
+        elif re_time:
+            found_time = re_time.group(1)
+            date = start_time.date()
+            time = datetime.strptime(found_time, '%I:%M %p').time()
+            end_time = datetime.combine(date, time)
+        else:
+            raise EventError('Error Parsing start and end times from UBC Event')
+
+        return start_time, end_time
 
 class NoEventHandler(object):
     """Class for when no event handler can be assigned"""
