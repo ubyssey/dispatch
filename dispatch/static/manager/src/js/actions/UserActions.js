@@ -51,6 +51,7 @@ export function verifyToken(token) {
           type: rejected(types.AUTH.VERIFY_TOKEN),
           response
         })
+        dispatch(requireLogin('/'))
       })
   }
 }

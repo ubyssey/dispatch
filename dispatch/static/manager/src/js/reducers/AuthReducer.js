@@ -8,8 +8,7 @@ import { Reducer, fulfilled, rejected } from '../util/redux'
 const initialState = {
   token: Cookies.get('token'), // Get token stored in browser cookie
   email: Cookies.get('email'), // Get email stored in browser cookie
-  nextPath: null,
-  validToken: null
+  nextPath: null
 }
 
 let reducer = new Reducer(initialState)
@@ -39,10 +38,6 @@ reducer.handle(fulfilled(types.AUTH.DELETE_TOKEN), () => {
   return initialState
 })
 
-reducer.handle(fulfilled(types.AUTH.VERIFY_TOKEN), (state) => {
-  return R.merge(state, { validToken: true })
-})
-
 reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state, action) => {
   const validToken = R.path(['response', 'valid_token'], action)
 
@@ -53,7 +48,7 @@ reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state, action) => {
     return initialState
   }
 
-  return R.merge(state, { validToken: false })
+  return state
 })
 
 export default reducer.getReducer()
