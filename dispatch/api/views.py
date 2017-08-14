@@ -432,9 +432,7 @@ class EventViewSet(DispatchModelViewSet):
 
 
 @permission_classes((AllowAny,))
-class TokenViewSet(viewsets.ModelViewSet):
-
-    model = Token
+class TokenViewSet(viewsets.ViewSet):
 
     def create(self, request):
 
@@ -469,6 +467,3 @@ class TokenViewSet(viewsets.ModelViewSet):
         token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def get_queryset(self):
-        return None
