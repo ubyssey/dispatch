@@ -10,7 +10,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 
 class Event(Model):
     title = CharField(max_length=255)
@@ -43,9 +43,9 @@ class Event(Model):
     ticket_url = TextField(null=True, blank=True)
 
     is_submission = BooleanField(default=False)
+    is_submitted_email = BooleanField(default=False)
     is_published = BooleanField(default=False)
     is_published_email = BooleanField(default=False)
-    is_approved_email = BooleanField(default=False)
 
     submitter_email = EmailField(null=True)
     submitter_phone = PhoneNumberField(null=True)
@@ -61,11 +61,11 @@ class Event(Model):
 
         self.save()
 
-@receiver(post_save, sender=Event)
+@receiver(pre_save, sender=Event)
 def send_approved_email(sender, instance, **kwargs):
     """Send an email to the submitter when the event is approved."""
-    if not instance.is_approved_email and not instance.is_submission:
-        body = render_to_string('events/email/confirm.html', {'title': instance.title})
+    if instance.is_submission and not instance.is_submitted_email:
+        body = render_to_string('events/email/submitted.html', {'title': instance.title})
 
         send_mail(
             'Your event has been approved!',
@@ -75,7 +75,7 @@ def send_approved_email(sender, instance, **kwargs):
             fail_silently=True,
         )
 
-        instance.is_approved_email = True
+        instance.is_submitted_email = True
         instance.save()
 
 @receiver(post_save, sender=Event)
