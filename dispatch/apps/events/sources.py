@@ -32,10 +32,10 @@ class FacebookEvent(object):
         if m:
             return m.group(1)
         else:
-            raise EventError('URL provided is not a valid facebook event url')
+            raise EventError('URL provided is not a valid Facebook event url')
 
     def get_json(self):
-        """Returns the json for the event linked by the facebook url"""
+        """Returns the json for the event linked by the Facebook url"""
 
         try:
             json = self.api.get_event(self.event_id)
@@ -77,7 +77,7 @@ class FacebookEvent(object):
         return data
 
     def get_image(self):
-        """Returns the picture url from facebook event"""
+        """Returns the picture url from Facebook event"""
 
         try:
             image_data = self.api.get_photos(self.event_id)
