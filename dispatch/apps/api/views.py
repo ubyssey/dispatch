@@ -459,7 +459,7 @@ class TokenViewSet(viewsets.ModelViewSet):
         try:
             token = Token.objects.get(key=pk)
         except Token.DoesNotExist:
-            return Response({'token_valid': False}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'token_valid': False}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({'token_valid': True})
 
