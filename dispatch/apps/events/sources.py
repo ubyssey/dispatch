@@ -142,7 +142,6 @@ class UBCEvent(object):
         if re_date_and_time:
             found_date_and_time = re_date_and_time.group(1)
             end_time = datetime.strptime(found_date_and_time, '%A, %B %d, %Y %I:%M %p')
-
         elif re_time:
             found_time = re_time.group(1)
             date = start_time.date()
