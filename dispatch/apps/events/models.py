@@ -43,7 +43,7 @@ class Event(Model):
     ticket_url = TextField(null=True, blank=True)
 
     is_submission = BooleanField(default=False)
-    is_submitted_email = BooleanField(default=False)
+    is_submission_email = BooleanField(default=False)
     is_published = BooleanField(default=False)
     is_published_email = BooleanField(default=False)
 
@@ -64,7 +64,7 @@ class Event(Model):
 @receiver(pre_save, sender=Event)
 def send_approved_email(sender, instance, **kwargs):
     """Send an email to the submitter when the event is approved."""
-    if instance.is_submission and not instance.is_submitted_email:
+    if instance.is_submission and not instance.is_submission_email:
         body = render_to_string('events/email/submitted.html', {'title': instance.title})
 
         send_mail(
@@ -75,7 +75,7 @@ def send_approved_email(sender, instance, **kwargs):
             fail_silently=True,
         )
 
-        instance.is_submitted_email = True
+        instance.is_submission_email = True
         instance.save()
 
 @receiver(post_save, sender=Event)
