@@ -456,8 +456,11 @@ class TokenViewSet(viewsets.ModelViewSet):
             raise BadCredentials()
 
     def retrieve(self, request, pk):
+        try:
+            token = Token.objects.get(key=pk)
+        except Token.DoesNotExist:
+            return Response({'token_valid': False}, status=status.HTTP_400_BAD_REQUEST)
 
-        get_object_or_404(Token, key=pk)
         return Response({'token_valid': True})
 
     def delete(self, request):
@@ -466,3 +469,6 @@ class TokenViewSet(viewsets.ModelViewSet):
         token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self):
+        return None
