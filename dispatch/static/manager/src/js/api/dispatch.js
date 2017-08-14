@@ -354,19 +354,19 @@ const DispatchAPI = {
   },
   events: {
     list: (token, query) => {
-      return getRequest('event', null, query, token)
+      return getRequest('events', null, query, token)
     },
     get: (token, eventId) => {
-      return getRequest('event', eventId, null, token)
+      return getRequest('events', eventId, null, token)
     },
     create: (token, data) => {
-      return postMultipartRequest('event', null, data, token)
+      return postMultipartRequest('events', null, data, token)
     },
     save: (token, eventId, data) => {
-      return patchMultipartRequest('event', eventId, data, token)
+      return patchMultipartRequest('events', eventId, data, token)
     },
     delete: (token, eventId) => {
-      return deleteRequest('event', eventId, null, token)
+      return deleteRequest('events', eventId, null, token)
     },
   }
 }
