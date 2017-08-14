@@ -1,12 +1,11 @@
 import re
 import requests
 from datetime import datetime
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 
 from dispatch.vendor.apis import Facebook, FacebookAPIError
-
-from bs4 import BeautifulSoup
 
 ERROR_MESSAGE = 'Invalid url: The event could be private, or there could be an error in the url itself. Check that the event is "public" and try again'
 
