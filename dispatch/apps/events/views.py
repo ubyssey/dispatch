@@ -61,4 +61,4 @@ def get_host_from_url(url):
     if m:
         return m.group(1)
     else:
-        raise EventError('URL provided is not a valid facebook event or UBC event url')
+        raise EventError('URL provided is not a valid Facebook event or UBC event url')
