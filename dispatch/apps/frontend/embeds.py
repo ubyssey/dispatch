@@ -1,6 +1,7 @@
 from django.template import loader, Context
 
 from dispatch.apps.frontend.exceptions import EmbedException
+from dispatch.theme import ThemeManager
 
 class EmbedLibrary(object):
 
@@ -186,6 +187,16 @@ class GalleryController(AbstractTemplateRenderController):
             'size': len(images)
         }
 
+class WidgetController(AbstractController):
+
+    @classmethod
+    def render(self, data):
+
+        widget = ThemeManager.Widgets.get(data['widget_id'])
+        widget.set_data(data['data'])
+
+        return widget.render()
+
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
@@ -194,3 +205,4 @@ embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
 embedlib.register('image', ImageController)
 embedlib.register('gallery', GalleryController)
+embedlib.register('widget', WidgetController)
