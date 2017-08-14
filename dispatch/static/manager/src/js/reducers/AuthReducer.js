@@ -43,7 +43,16 @@ reducer.handle(fulfilled(types.AUTH.VERIFY_TOKEN), (state) => {
   return R.merge(state, { validToken: true })
 })
 
-reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state) => {
+reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state, action) => {
+  const validToken = R.path(['response', 'valid_token'], action)
+
+  if (validToken === false) {
+    Cookies.remove('token')
+    Cookies.remove('email')
+
+    return initialState
+  }
+
   return R.merge(state, { validToken: false })
 })
 
