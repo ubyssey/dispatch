@@ -135,4 +135,5 @@ class AuthenticationTests(DispatchAPITestCase):
         url = reverse('api-token-detail', args=[invalid_token])
 
         response = self.client.get(url, None, format='json')
+        self.assertEqual(response.data['token_valid'], False)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
