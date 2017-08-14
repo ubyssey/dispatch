@@ -40,14 +40,16 @@ export function verifyToken(token) {
     dispatch({ type: pending(types.AUTH.VERIFY_TOKEN )})
 
     return DispatchAPI.auth.verifyToken(token)
-      .then(() => {
+      .then((response) => {
         dispatch({
-          type: fulfilled(types.AUTH.VERIFY_TOKEN)
+          type: fulfilled(types.AUTH.VERIFY_TOKEN),
+          response
         })
       })
-      .catch(() => {
+      .catch((response) => {
         dispatch({
-          type: rejected(types.AUTH.VERIFY_TOKEN)
+          type: rejected(types.AUTH.VERIFY_TOKEN),
+          response
         })
       })
   }
