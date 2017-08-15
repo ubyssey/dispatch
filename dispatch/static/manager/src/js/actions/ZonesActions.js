@@ -35,7 +35,7 @@ function normalizeZone(zone, isNestedWidget=false) {
   let fieldEntities = {}
 
   fields.forEach(field => {
-    if (!zone.data[field.name]) {
+    if (!zone.data || !zone.data[field.name]) {
       return
     }
 
