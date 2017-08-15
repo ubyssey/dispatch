@@ -29,9 +29,10 @@ def submit_form(request):
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.is_submission = True
-            form.save()
 
+            event = form.save(commit=False)
+            event.is_submission = True
+            event.save()
             return redirect(submit_success)
     else:
         form = EventForm()
