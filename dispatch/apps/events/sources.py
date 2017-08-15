@@ -12,6 +12,8 @@ ERROR_MESSAGE = 'Invalid url: The event could be private, or there could be an e
 class FacebookEvent(object):
     """Class to fetch Facebook event data"""
 
+    event_type = 'facebook'
+
     def __init__(self, url, api_provider=Facebook):
         self.url = url
         self.event_id = self.get_event_id(url)
@@ -95,19 +97,31 @@ class FacebookEvent(object):
 class UBCEvent(object):
     """Class to scrape event information from UBC Event webpages"""
 
+    event_type = 'ubc'
+
     def __init__(self, url):
         self.url = url
 
     def get_data(self):
         """Gets the html page from self.url and returns the relevent data"""
 
-        html = requests.get(self.url).text
-        soup = BeautifulSoup(html, 'html.parser')
-        value_fields = soup.find_all('td', class_='fieldval')
+        html = requests.get(self.url)
 
+        try:
+            html.raise_for_status()
+        except:
+            raise EventError('Error in importing UBC Event')
+
+        html = html.text
+        soup = BeautifulSoup(html, 'html.parser')
+
+        value_fields = soup.find_all('td', class_='fieldval')
         title = soup.find('table', id='eventTitle').find('h2', class_='bwStatusConfirmed').find('a').text
 
-        start_time, end_time = self.get_date_groups(value_fields[0])
+        try:
+            start_time, end_time = self.get_date_groups(value_fields[0])
+        except:
+            start_time, end_time = None, None
 
         try:
             data = {
@@ -123,7 +137,7 @@ class UBCEvent(object):
         return data
 
     def get_date_groups(self, dates_string):
-        """Returns the date groups from string. Dates have one of two forms:
+        """Returns the date groups from string. Dates have one of three forms:
            -  Saturday, August 12, 2017 9:00 AM - Sunday, August 13, 2017 1:00 PM
            -  Saturday, August 12, 2017 9:00 AM - 1:00 PM
         """
