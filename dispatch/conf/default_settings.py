@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'dispatch.apps.content',
     'dispatch.apps.core',
     'dispatch.apps.frontend',
-    'dispatch.apps.events',
+    'ubyssey.events',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

@@ -2,7 +2,7 @@ from django.utils.dateparse import parse_datetime
 
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
 from dispatch.apps.content.models import Article, Image
-from dispatch.apps.events.models import Event
+from ubyssey.events.models import Event
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
