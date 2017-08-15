@@ -432,9 +432,7 @@ class EventViewSet(DispatchModelViewSet):
 
 
 @permission_classes((AllowAny,))
-class TokenViewSet(viewsets.ModelViewSet):
-
-    model = Token
+class TokenViewSet(viewsets.ViewSet):
 
     def create(self, request):
 
@@ -454,6 +452,14 @@ class TokenViewSet(viewsets.ModelViewSet):
             return Response(data, status=status.HTTP_202_ACCEPTED)
         else:
             raise BadCredentials()
+
+    def retrieve(self, request, pk):
+        try:
+            token = Token.objects.get(key=pk)
+        except Token.DoesNotExist:
+            return Response({'token_valid': False}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'token_valid': True})
 
     def delete(self, request):
         token = get_object_or_404(Token, user=request.user)
