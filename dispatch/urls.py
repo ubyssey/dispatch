@@ -5,7 +5,7 @@ from rest_framework import routers
 
 from dispatch.helpers.theme import ThemeHelper
 from dispatch.apps.api.urls import urlpatterns as api_urls
-from dispatch.apps.events.urls import urlpatterns as events_urls
+from ubyssey.events.urls import urlpatterns as events_urls
 
 def admin(request):
     """Render HTML entry point for manager app."""

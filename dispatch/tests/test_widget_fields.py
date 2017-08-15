@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from dispatch.apps.content.models import Article, Image
-from dispatch.apps.events.models import Event
+from ubyssey.events.models import Event
 from dispatch.theme import register
 from dispatch.theme.fields import (
     CharField, TextField, ArticleField, ImageField,

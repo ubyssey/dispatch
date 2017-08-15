@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.events.models import Event
+from ubyssey.events.models import Event
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
