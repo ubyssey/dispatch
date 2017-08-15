@@ -204,9 +204,13 @@ class WidgetField(Field):
 
     type = 'widget'
 
-    def __init__(self, label, zone, required=False):
+    def __init__(self, label, widgets, required=False):
         super(WidgetField, self).__init__(label, required=required)
-        self.zone_id = zone.id
+        self.widgets = {}
+
+        for widget in widgets:
+            self.widgets[widget.id] = WidgetSerializer(widget).data
+
 
     def validate(self, data):
         if not data or not data['id']:

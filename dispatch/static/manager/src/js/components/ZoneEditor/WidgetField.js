@@ -29,7 +29,7 @@ export default function WidgetField(props) {
         label={props.field.label}
         many={props.field.many}
         data={props.data}
-        zone_id={props.field.zone_id}
+        cWidgets={props.field.widgets}
         onChange={props.onChange} />
     </FormInput>
   )
