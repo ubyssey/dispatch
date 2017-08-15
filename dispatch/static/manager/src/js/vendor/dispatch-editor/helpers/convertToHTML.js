@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-
+import R from 'ramda'
 import { Entity } from 'draft-js'
 
 const TAG_MAP = {
@@ -29,9 +29,11 @@ function generateTag(tag, tagType) {
     const entity = Entity.get(tag)
     const entityType = entity.getType()
 
-    const generator = TAG_MAP[entityType][tagType]
-
-    return generator(entity.get('data'))
+    const generator = R.path([entityType, tagType], TAG_MAP)
+    if (generator) {
+      return generator(entity.get('data'))
+    }
+    return ''
 
   } else {
     return TAG_MAP[tag][tagType]
