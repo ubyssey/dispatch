@@ -68,7 +68,7 @@ def send_approved_email(sender, instance, **kwargs):
         body = render_to_string('events/email/submitted.html', {'title': instance.title})
 
         send_mail(
-            'Your event has been approved!',
+            'Your event has been submitted!',
             body,
             settings.EMAIL_HOST_USER,
             [instance.submitter_email],
