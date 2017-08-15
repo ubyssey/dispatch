@@ -18,8 +18,6 @@ class Zone(object):
 
     __metaclass__ = MetaZone
 
-    nested = False
-
     def __init__(self):
         self._is_loaded = False
         self._zone = None
