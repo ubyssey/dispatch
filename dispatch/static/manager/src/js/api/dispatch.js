@@ -145,6 +145,9 @@ const DispatchAPI = {
 
       return postRequest('token', null, payload)
     },
+    verifyToken: (token) => {
+      return getRequest('token', token, null)
+    },
     logout: (token) => {
       return deleteRequest('token', null, null, token)
     }
