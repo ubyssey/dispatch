@@ -30,7 +30,8 @@ class WidgetFieldComponent extends React.Component {
   }
 
   getWidget() {
-    return R.prop(this.getWidgetId(), this.props.widgets || {})
+    const id = this.getWidgetId()
+    return R.prop(id, this.props.cWidgets || {}) || R.prop(id, this.props.widgets || {})
   }
 
   getWidgetData() {
@@ -62,7 +63,7 @@ class WidgetFieldComponent extends React.Component {
       <div>
         <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
-            zoneId={this.props.zone_id}
+            cWidgets={this.props.cWidgets}
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
