@@ -1,19 +1,16 @@
 import React from 'react'
 import R from 'ramda'
-import { connect } from 'react-redux'
 
 import Panel from '../Panel'
 import WidgetSelectInput from '../inputs/WidgetSelectInput'
 import WidgetFieldWrapper from '../ZoneEditor/WidgetField'
 
-class WidgetFieldComponent extends React.Component {
+export default class WidgetFieldComponent extends React.Component {
   handleWidgetChange(widgetId) {
-    const data = R.merge(this.props.data || {}, {
+    this.props.onChange({
       id: widgetId,
-      data: this.props.data || {}
+      data: {}
     })
-
-    this.props.onChange(data)
   }
 
   updateField(name, data) {
@@ -31,7 +28,7 @@ class WidgetFieldComponent extends React.Component {
 
   getWidget() {
     const id = this.getWidgetId()
-    return R.prop(id, this.props.cWidgets || {}) || R.prop(id, this.props.widgets || {})
+    return R.prop(id, this.props.cWidgets || {})
   }
 
   getWidgetData() {
@@ -72,20 +69,3 @@ class WidgetFieldComponent extends React.Component {
     )
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-    widgets: state.app.entities.widgets
-  }
-}
-
-const mapDispatchToProps = () => {
-  return {}
-}
-
-const WidgetField = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WidgetFieldComponent)
-
-export default WidgetField

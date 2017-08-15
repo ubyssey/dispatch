@@ -69,7 +69,7 @@ class ZoneEditorComponent extends React.Component {
         error={this.props.errors[field.name]}
         key={`widget-field__${this.props.widget.id}__${field.name}`}
         field={field}
-        data={this.props.zone.data[field.name] || null}
+        data={R.prop(field.name, this.props.zone.data || {})}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
