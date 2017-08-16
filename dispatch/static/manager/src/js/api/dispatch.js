@@ -371,6 +371,14 @@ const DispatchAPI = {
     delete: (token, eventId) => {
       return deleteRequest('events', eventId, null, token)
     },
+  },
+  'users': {
+    get: (token, userId) => {
+      return getRequest('users', userId, null, token)
+    },
+    save: (token, userId, data) => {
+      return patchMultipartRequest('users', userId, data, token)
+    }
   }
 }
 
