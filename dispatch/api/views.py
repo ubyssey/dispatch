@@ -22,7 +22,7 @@ from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMi
 from dispatch.apps.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, EventSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer)
 from dispatch.apps.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
@@ -395,41 +395,6 @@ class DashboardViewSet(viewsets.GenericViewSet):
         }
 
         return Response(data)
-
-class EventViewSet(DispatchModelViewSet):
-    """ViewSet for Event"""
-
-    model = Event
-    serializer_class = EventSerializer
-
-    def get_queryset(self):
-
-        if self.request.user.is_authenticated():
-            queryset = Event.objects.all()
-        else:
-            queryset = Event.objects.filter(
-                Q(is_submission=False),
-                Q(is_published=True)
-            )
-
-        q = self.request.query_params.get('q', None)
-        pending = self.request.query_params.get('pending', None)
-
-        if q:
-            queryset = queryset.filter(
-                Q(title__icontains=q) |
-                Q(description__icontains=q) |
-                Q(host__icontains=q) |
-                Q(category__iexact=q)
-            )
-
-        if pending == '1':
-            queryset = queryset.filter(is_submission=True)
-        elif pending == '0':
-            queryset = queryset.filter(is_submission=False)
-
-        return queryset
-
 
 @permission_classes((AllowAny,))
 class TokenViewSet(viewsets.ModelViewSet):

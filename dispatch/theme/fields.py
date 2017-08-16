@@ -1,6 +1,6 @@
 from django.utils.dateparse import parse_datetime
 
-from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
+from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.apps.content.models import Article, Image
 from ubyssey.events.models import Event
 
@@ -168,14 +168,6 @@ class ImageField(ModelField):
 
     model = Image
     serializer = ImageSerializer
-
-class EventField(ModelField):
-
-    type = 'event'
-
-    model = Event
-    serializer = EventSerializer
-
 
 class WidgetField(Field):
 
