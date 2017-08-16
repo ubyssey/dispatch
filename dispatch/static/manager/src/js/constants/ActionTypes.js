@@ -12,6 +12,7 @@ export const TAGS = resourceActionTypes('TAGS')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
+export const USERS = resourceActionTypes('USERS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [
