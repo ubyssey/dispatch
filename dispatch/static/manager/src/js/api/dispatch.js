@@ -377,7 +377,7 @@ const DispatchAPI = {
       return getRequest('users', userId, null, token)
     },
     save: (token, userId, data) => {
-      return patchMultipartRequest('users', userId, data, token)
+      return patchRequest('users', userId, data, token)
     }
   }
 }
