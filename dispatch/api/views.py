@@ -335,7 +335,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
     def list(self, request):
 
         zones = ThemeManager.Zones.list()
-
+        
         serializer = ZoneSerializer(zones, many=True)
 
         return self.get_paginated_response(serializer.data)
