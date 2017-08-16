@@ -3,7 +3,11 @@ import React from 'react'
 export default function FormInput(props) {
 
   const className = props.padded ? 'c-form-input' : 'c-form-input c-form-input--no-padding'
-  const error = (<span className='c-form-input__error pt-tag pt-intent-danger'>{props.error}</span>)
+  const error = (
+    <span className='c-form-input__error pt-tag pt-intent-danger'>
+      {Array.isArray(props.error) ? props.error.join(' ') : props.error}
+    </span>
+  )
 
   if (props.label) {
     return (
