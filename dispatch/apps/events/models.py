@@ -38,8 +38,9 @@ class Event(Model):
     )
 
     category = CharField(max_length=20, choices=CATEGORY_CHOICES)
+    event_type = CharField(max_length=30, default=None, null=True, blank=True)
 
-    facebook_url = TextField(null=True, blank=True)
+    event_url = TextField(null=True, blank=True)
     ticket_url = TextField(null=True, blank=True)
 
     is_submission = BooleanField(default=False)
