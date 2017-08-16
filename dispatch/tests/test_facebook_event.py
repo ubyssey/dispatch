@@ -1,4 +1,4 @@
-from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
+from dispatch.apps.events.sources import FacebookEvent, FacebookEventError
 from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
