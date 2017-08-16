@@ -22,9 +22,9 @@ class WidgetSelectInputComponent extends React.Component {
   }
 
   render() {
-    const results = this.props.cWidgets ? R.keys(this.props.cWidgets) : this.props.widgets.zones[this.props.zoneId]
-    const entities = this.props.cWidgets || this.props.entities.widgets
-    
+    const results = this.props.compatibleWidgets ? R.keys(this.props.compatibleWidgets) : this.props.widgets.zones
+    const entities = this.props.compatibleWidgets || this.props.entities.widgets
+
     return (
       <ItemSelectInput
         many={false}
@@ -42,7 +42,7 @@ class WidgetSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    widgets: state.app.widgets.list,
+    widgets: state.app.widgets.list.ids,
     entities: {
       widgets: state.app.entities.widgets
     },
