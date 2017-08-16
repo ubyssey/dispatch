@@ -527,6 +527,7 @@ class EventSerializer(DispatchModelSerializer):
             'location',
             'address',
             'category',
+            'event_type',
             'event_url',
             'ticket_url',
             'is_published',

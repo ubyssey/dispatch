@@ -34,6 +34,7 @@ def submit_form(request):
         try:
             event = handler(event_url)
             data = event.get_data()
+            data['event_type'] = event.event_type
             form = EventForm(initial=data)
         except EventError:
             url_error = True

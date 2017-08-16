@@ -20,6 +20,7 @@ class EventForm(ModelForm):
             'location',
             'address',
             'category',
+            'event_type',
             'event_url',
             'facebook_image_url',
             'ticket_url',
