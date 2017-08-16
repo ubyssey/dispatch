@@ -16,7 +16,8 @@ setup(name='dispatch',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
-        'django-phonenumber-field == 1.3.0'
+        'django-phonenumber-field == 1.3.0',
+        'beautifulsoup4'
     ],
     extras_require={
         'dev': [
