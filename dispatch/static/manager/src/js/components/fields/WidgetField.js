@@ -28,7 +28,7 @@ export default class WidgetFieldComponent extends React.Component {
 
   getWidget() {
     const id = this.getWidgetId()
-    return this.props.compatibleWidgets[id]
+    return R.path(['widgets', id], this.props.field)
   }
 
   getWidgetData() {
@@ -50,7 +50,7 @@ export default class WidgetFieldComponent extends React.Component {
 
     if (fields) {
       fields = (
-        <Panel title={`Edit ${this.props.label}`}>
+        <Panel title={`Edit ${this.props.field.label}`}>
           {fields}
         </Panel>
       )
@@ -60,7 +60,7 @@ export default class WidgetFieldComponent extends React.Component {
       <div>
         <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
-            compatibleWidgets={this.props.compatibleWidgets}
+            compatibleWidgets={this.props.field.widgets}
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
@@ -71,6 +71,6 @@ export default class WidgetFieldComponent extends React.Component {
 }
 
 WidgetFieldComponent.defaultProps = {
-  compatibleWidgets: {},
-  data: {}
+  data: {},
+  field: {}
 }

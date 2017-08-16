@@ -6,7 +6,7 @@ export default function ImageField(props) {
   return (
     <ImageInput
       selected={props.data}
-      many={props.many}
+      many={props.field.many}
       onChange={selected => props.onChange(selected)} />
   )
 }

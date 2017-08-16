@@ -26,10 +26,8 @@ export default function WidgetField(props) {
       label={props.field.label}>
       <Field
         errors={childErrors}
-        label={props.field.label}
-        many={props.field.many}
+        field={props.field}
         data={props.data}
-        compatibleWidgets={props.field.widgets}
         onChange={props.onChange} />
     </FormInput>
   )
