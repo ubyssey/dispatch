@@ -153,7 +153,7 @@ class IntegerField(Field):
             if isinstance(data, int):
                 value = data
             else:
-                value =  int(data, base=10)
+                value = int(data, base=10)
         except ValueError:
             raise InvalidField('%s must be integer' % self.label)
 
@@ -168,7 +168,7 @@ class IntegerField(Field):
             return data
         try:
             return int(data, base=10)
-        except ValueError:
+        except ValueError, TypeError:
             return None
 
 class BoolField(Field):

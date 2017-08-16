@@ -17,22 +17,22 @@ export default class WidgetFieldComponent extends React.Component {
     const widgetData = {}
     widgetData[name] = data
 
-    this.props.onChange(R.merge(this.props.data || {}, {
+    this.props.onChange(R.merge(this.props.data, {
       data: R.merge(this.props.data.data || {}, widgetData)
     }))
   }
 
   getWidgetId() {
-    return R.prop('id', this.props.data || {})
+    return this.props.data.id
   }
 
   getWidget() {
     const id = this.getWidgetId()
-    return R.prop(id, this.props.cWidgets || {})
+    return this.props.compatibleWidgets[id]
   }
 
   getWidgetData() {
-    return R.prop('data', this.props.data || {})
+    return this.props.data.data || {}
   }
 
   render() {
@@ -44,7 +44,7 @@ export default class WidgetFieldComponent extends React.Component {
         error={R.prop(field.name, this.props.errors || {})}
         key={`widget-field__${widget.id}__${field.name}`}
         field={field}
-        data={R.prop(field.name, widgetData || {}) || null}
+        data={widgetData[field.name]}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
@@ -60,7 +60,7 @@ export default class WidgetFieldComponent extends React.Component {
       <div>
         <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
-            cWidgets={this.props.cWidgets}
+            compatibleWidgets={this.props.compatibleWidgets}
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
@@ -68,4 +68,9 @@ export default class WidgetFieldComponent extends React.Component {
       </div>
     )
   }
+}
+
+WidgetFieldComponent.defaultProps = {
+  compatibleWidgets: {},
+  data: {}
 }
