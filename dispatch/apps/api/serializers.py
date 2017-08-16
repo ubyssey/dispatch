@@ -511,26 +511,3 @@ class ZoneSerializer(serializers.Serializer):
             instance.save(validated_data)
 
         return instance
-
-class EventSerializer(DispatchModelSerializer):
-
-    class Meta:
-        model = Event
-        fields = (
-            'id',
-            'title',
-            'description',
-            'host',
-            'image',
-            'start_time',
-            'end_time',
-            'location',
-            'address',
-            'category',
-            'facebook_url',
-            'ticket_url',
-            'is_published',
-            'is_submission',
-            'submitter_email',
-            'submitter_phone',
-        )
