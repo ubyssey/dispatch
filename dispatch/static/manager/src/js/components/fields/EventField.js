@@ -6,7 +6,7 @@ export default function EventField(props) {
   return (
     <EventSelectInput
       selected={props.data}
-      many={props.many}
+      many={props.field.many}
       onChange={selected => props.onChange(selected)} />
   )
 }
