@@ -7,6 +7,8 @@ import userActions from '../actions/userActions'
 import PersonEditor from '../components/PersonEditor'
 import { FormInput, TextInput } from '../components/inputs'
 
+require('../../styles/components/user_form.scss')
+
 class ProfilePageComponent extends React.Component {
   loadUser() {
     this.props.getUser(this.props.token, 'me')
@@ -53,11 +55,12 @@ class ProfilePageComponent extends React.Component {
     ) : null
 
     const userForm = userId ? (
-      <div>
+      <div className='u-container u-container--padded c-user-form'>
+        <div className='c-user-form__heading'>Account Details</div>
         <form onSubmit={e => e.preventDefault()}>
           <FormInput
             label='Email'
-            padded={true}
+            padded={false}
             error={errors.email}>
             <TextInput
               placeholder='name@domain.tld'
@@ -67,7 +70,7 @@ class ProfilePageComponent extends React.Component {
           </FormInput>
           <FormInput
             label='Password'
-            padded={true}
+            padded={false}
             error={errors.password_a}>
             <TextInput
               placeholder=''
@@ -78,7 +81,7 @@ class ProfilePageComponent extends React.Component {
           </FormInput>
           <FormInput
             label='Password Again'
-            padded={true}
+            padded={false}
             error={errors.password_b}>
             <TextInput
               placeholder=''
