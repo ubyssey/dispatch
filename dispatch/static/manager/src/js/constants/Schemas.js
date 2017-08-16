@@ -13,6 +13,7 @@ export const gallerySchema = new Schema('galleries')
 export const zoneSchema = new Schema('zones')
 export const widgetSchema = new Schema('widgets')
 export const eventSchema = new Schema('events')
+export const userSchema = new Schema('users')
 
 articleSchema.define({
   section: sectionSchema,
@@ -38,4 +39,8 @@ imageSchema.define({
 
 zoneSchema.define({
   widget: widgetSchema
+})
+
+userSchema.define({
+  person: personSchema
 })
