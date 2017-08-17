@@ -3,7 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import { Button, Intent } from '@blueprintjs/core'
 
-import userActions from '../actions/userActions'
+import userActions from '../actions/UserActions'
 import PersonEditor from '../components/PersonEditor'
 import { FormInput, TextInput } from '../components/inputs'
 
