@@ -22,7 +22,7 @@ class WidgetSelectInputComponent extends React.Component {
   }
 
   render() {
-    const results = this.props.compatibleWidgets ? R.keys(this.props.compatibleWidgets) : this.props.widgets.zones
+    const results = this.props.compatibleWidgets ? R.keys(this.props.compatibleWidgets) : this.props.widgets
     const entities = this.props.compatibleWidgets || this.props.entities.widgets
 
     return (
