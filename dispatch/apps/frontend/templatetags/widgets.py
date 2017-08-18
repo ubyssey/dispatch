@@ -1,4 +1,5 @@
 from django import template
+from django.core.exceptions import ObjectDoesNotExist
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, WidgetNotFound
@@ -15,7 +16,7 @@ def zone(zone_id, **kwargs):
 
     try:
         return zone.widget.render(add_context=kwargs)
-    except (WidgetNotFound, AttributeError):
+    except (WidgetNotFound, AttributeError, ObjectDoesNotExist):
         pass
 
     return ''
