@@ -66,14 +66,14 @@ class FacebookEvent(object):
             'end_time': end_time,
             'location': json['place']['name'],
             'address': address,
-            'facebook_url': self.url
+            'event_url': self.url
         }
 
     def get_data(self):
         """Returns data from the event"""
 
         data = self.get_json()
-        data['facebook_url'] = self.url
+        data['event_url'] = self.url
         data['facebook_image_url'] = self.get_image()
 
         return data
