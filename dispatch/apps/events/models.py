@@ -63,8 +63,8 @@ class Event(Model):
         self.save()
 
 @receiver(pre_save, sender=Event)
-def send_approved_email(sender, instance, **kwargs):
-    """Send an email to the submitter when the event is approved."""
+def send_submitted_email(sender, instance, **kwargs):
+    """Send an email to the submitter when the event is submitted."""
     if instance.is_submission and not instance.is_submission_email:
         body = render_to_string('events/email/submitted.html', {'title': instance.title})
 
@@ -77,7 +77,6 @@ def send_approved_email(sender, instance, **kwargs):
         )
 
         instance.is_submission_email = True
-        instance.save()
 
 @receiver(post_save, sender=Event)
 def send_published_email(sender, instance, **kwargs):
