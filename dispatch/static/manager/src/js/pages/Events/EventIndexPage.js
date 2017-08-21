@@ -5,6 +5,7 @@ import { replace } from 'react-router-redux'
 import EventPendingTag from '../../components/EventEditor/EventPendingTag'
 import ItemIndexPage from '../ItemIndexPage'
 import eventsActions from '../../actions/EventsActions'
+import { humanizeDatetime } from  '../../util/helpers'
 
 const mapStateToProps = (state) => {
   return {
@@ -61,6 +62,13 @@ function EventsPageComponent(props) {
       typePlural='events'
       displayColumn='title'
       pageTitle='Events'
+      headers={[ 'Title', 'Published', 'Time', 'Location', 'Type']}
+      extraColumns={[
+        event => event.is_published ? 'Published' : 'Not Published',
+        event => `${humanizeDatetime(event.start_time)} - ${humanizeDatetime(event.end_time)}`,
+        event => event.location,
+        event => event.category
+      ]}
       toolbarContent={<EventPendingTag />}
       {... props} />
   )

@@ -1,4 +1,5 @@
 import React from 'react'
+import R from 'ramda'
 import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
@@ -8,6 +9,9 @@ import * as zonesActions from '../../actions/ZonesActions'
 class WidgetSelectInputComponent extends React.Component {
 
   listWidgets(query) {
+    if (!this.props.zoneId) {
+      return
+    }
     let queryObj = {}
 
     if (query) {
@@ -18,14 +22,17 @@ class WidgetSelectInputComponent extends React.Component {
   }
 
   render() {
+    const results = this.props.compatibleWidgets ? R.keys(this.props.compatibleWidgets) : this.props.widgets
+    const entities = this.props.compatibleWidgets || this.props.entities.widgets
+
     return (
       <ItemSelectInput
         many={false}
         selected={this.props.selected}
-        results={this.props.widgets.ids}
-        entities={this.props.entities.widgets}
-        onChange={selected => this.props.update(selected)}
-        fetchResults={query => this.listWidgets(query)}
+        results={results}
+        entities={entities}
+        onChange={(selected) => this.props.update(selected)}
+        fetchResults={(query) => this.listWidgets(query)}
         attribute='name'
         editMessage={this.props.selected ? 'Change widget' : 'Set widget'} />
     )
@@ -35,7 +42,7 @@ class WidgetSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    widgets: state.app.widgets.list,
+    widgets: state.app.widgets.list.ids,
     entities: {
       widgets: state.app.entities.widgets
     },
