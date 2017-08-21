@@ -173,7 +173,7 @@ class ItemSelectInput extends React.Component {
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
-          inline={false}>
+          inline={true}>
           <a onClick={() => this.refs.dropdown.open()}>
             {this.props.editMessage}
           </a>
