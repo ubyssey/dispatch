@@ -102,6 +102,11 @@ class Widget(object):
 
     __metaclass__ = MetaWidget
 
+    accepted_keywords = ()
+    """Accepted extra keyword arguments when rendered via template tag.
+    Added to context for render if provided to templatetag.
+    """
+
     def __init__(self):
         self.data = {}
 
@@ -139,15 +144,20 @@ class Widget(object):
 
         return result
 
-    def render(self, data=None):
+    def render(self, data=None, add_context=None):
         """Renders the widget as HTML"""
 
         template = loader.get_template(self.template)
 
         if not data:
-            return template.render(self.context(self.prepare_data()))
-        else:
-            return template.render(data)
+            data = self.context(self.prepare_data())
+
+        if add_context is not None:
+            for key, value in add_context.iteritems():
+                if key in self.accepted_keywords:
+                    data[key] = value
+
+        return template.render(data)
 
     def context(self, data):
         """Optional method to add additional data to the deplate context before rendering"""

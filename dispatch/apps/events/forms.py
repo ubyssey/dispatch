@@ -20,7 +20,8 @@ class EventForm(ModelForm):
             'location',
             'address',
             'category',
-            'facebook_url',
+            'event_type',
+            'event_url',
             'facebook_image_url',
             'ticket_url',
             'is_submission',
@@ -41,16 +42,18 @@ class EventForm(ModelForm):
             'submitter_phone': TextInput(attrs={'placeholder': 'Phone Number'}),
         }
 
-    def save(self):
+    def save(self, commit=True):
         event = super(EventForm, self).save(commit=False)
-        event.is_submission = True
 
         facebook_image_url = self.data.get('facebook_image_url')
 
         if not event.image and facebook_image_url:
             event.save_image_from_url(facebook_image_url)
 
-        event.save()
+        if commit:
+            event.save()
+
+        return event
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
@@ -58,7 +61,11 @@ class EventForm(ModelForm):
         start_time = cleaned_data.get('start_time')
         end_time = cleaned_data.get('end_time')
 
-        if end_time < start_time:
+        if not start_time:
+            self.add_error('start_time', 'You must have a start time for the event')
+        elif not end_time:
+            self.add_error('end_time', 'You must have an end time for the event')
+        elif end_time < start_time:
             msg = 'The start time of the event must be before the end time of the event'
             self.add_error('start_time', msg)
             self.add_error('end_time', msg)

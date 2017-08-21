@@ -3,8 +3,11 @@ from datetime import datetime
 from dispatch.apps.content.models import Article, Image
 from dispatch.apps.events.models import Event
 from dispatch.theme import register
-from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, \
-    WidgetField, EventField, Field, DateTimeField, IntegerField
+from dispatch.theme.fields import (
+    CharField, TextField, ArticleField, ImageField,
+    WidgetField, EventField, Field, DateTimeField,
+    IntegerField, BoolField
+)
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -13,6 +16,13 @@ from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 class TestZone(Zone):
      id = 'test-zone'
      name = 'Test zone'
+
+class TestWidgetSub(Widget):
+    id = 'test-widget-sub'
+    name = 'Test Widget Sub'
+    template = 'widgets/test-widget.html'
+
+    title = CharField('title')
 
 class TestWidget(Widget):
     id = 'test-widget'
@@ -25,7 +35,7 @@ class TestWidget(Widget):
     description = TextField('Description')
     article = ArticleField('Featured article')
     image = ImageField('Featured image')
-    widget = WidgetField('Featured Widget')
+    widget = WidgetField('Featured Widget', [TestWidgetSub])
 
 class TestWidget2(Widget):
     id = 'test-widget-2'
@@ -38,7 +48,7 @@ class TestWidget2(Widget):
     description = TextField('Description 2')
     article = ArticleField('Featured article 2')
     image = ImageField('Featured image 2')
-    widget = WidgetField('Featured Widget 2')
+    widget = WidgetField('Featured Widget 2', [TestWidgetSub])
 
 class TestWidget3(Widget):
     id = 'test-widget-3'
@@ -48,6 +58,19 @@ class TestWidget3(Widget):
     zones = [TestZone]
 
     title = CharField('Title')
+
+class TestWidgetR(Widget):
+    id = 'test-widget-r'
+    name = 'Test Widget R'
+    template = 'widget/test-widget.html'
+
+    zones = [TestZone]
+
+    title = CharField('Title', required=True)
+    description = TextField('Description', required=True)
+    article = ArticleField('Featured article', required=True)
+    image = ImageField('Featured image', required=True)
+    widget = WidgetField('Featured Widget', [TestWidgetSub], required=True)
 
 class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -401,10 +424,10 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         # a test Widget is now initialized, initilize a widget field to put the test Widget in
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         try:
-            testfield.validate(field_data['id'])
+            testfield.validate(field_data)
         except InvalidField:
             self.fail('Widget should be valid')
 
@@ -415,7 +438,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testwidget = TestWidget()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         # Create article and image for testing
         article = DispatchTestHelpers.create_article(self.client)
@@ -438,7 +461,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_widget_field_invalid_data(self):
         """Trying to validate invalid data should result in InvalidField error"""
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         # The data to be validated - valid data are basestrings
         widget_id = 1
@@ -458,7 +481,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         article = DispatchTestHelpers.create_article(self.client)
         image = DispatchTestHelpers.create_image(self.client)
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         field_data = {
             'id': 'test-widget',
@@ -484,7 +507,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         image = DispatchTestHelpers.create_image(self.client)
         widget = TestWidget()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         field_data = {
             'id': 'test-widget',
@@ -514,7 +537,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         widget2 = TestWidget2()
         widget3 = TestWidget3()
 
-        testfield = WidgetField('Title')
+        testfield = WidgetField('Title', [TestWidgetSub])
 
         field_data = {
             'id': 'test-widget',
@@ -555,7 +578,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Initilaizing a widget field with invalid data should raise an error"""
 
         try:
-            widget = WidgetField(6)
+            widget = WidgetField(6, [TestWidgetSub])
             self.fail('InvalidField Error should have been raised')
         except InvalidField:
             pass
@@ -563,7 +586,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_get_non_existant_widget(self):
         """Using get_widget with non-existant widget_id should fail"""
 
-        widget = WidgetField('Title')
+        widget = WidgetField('Title', [TestWidgetSub])
 
         try:
             widget.get_widget('this_is_not_a_widget_id')
@@ -575,7 +598,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Using to_json with no data should return None for data"""
 
         data = None
-        widget = WidgetField('Title')
+        widget = WidgetField('Title', [TestWidgetSub])
 
         self.assertEqual(widget.to_json(data), None)
 
@@ -755,4 +778,99 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         testfield = IntegerField('Test', min_value=0, max_value=100)
         with self.assertRaises(InvalidField):
             testfield.validate('101')
+        with self.assertRaises(InvalidField):
             testfield.validate('-1')
+
+    def test_boolfield(self):
+        """Ensure that BoolField stores the value correctly"""
+
+        testfield = BoolField('Test')
+
+        testfield.validate(True)
+        self.assertEqual(True, testfield.prepare_data(True))
+
+        testfield.validate(False)
+        self.assertEqual(False, testfield.prepare_data(False))
+
+    def test_boolfield_invalid_data(self):
+        """Ensure that BoolField correctly rejects invalid data"""
+
+        testfield = BoolField('Test')
+
+        def test_value(value):
+            with self.assertRaises(InvalidField):
+                testfield.validate(value)
+
+        test_value(1)
+        test_value('True')
+        test_value({})
+
+    def test_fields_required(self):
+        """Test fields with the required prop and ensure they validate"""
+
+        testfield = CharField('Test', required=True)
+        testfield.validate('test')
+        self.assertEqual('test', testfield.prepare_data('test'))
+
+        testfield = TextField('Test', required=True)
+        testfield.validate('test')
+        self.assertEqual('test', testfield.prepare_data('test'))
+
+        testfield = DateTimeField('Test', required=True)
+        date = datetime.today()
+        date_sz = date.isoformat()
+        testfield.validate(date_sz)
+        self.assertEqual(testfield.prepare_data(date_sz), date)
+
+        testfield = IntegerField('Test', required=True)
+        testfield.validate('5')
+        self.assertEqual(5, testfield.prepare_data('5'))
+
+    def test_fields_notrequired_empty(self):
+        """Not required fields should accept empty values"""
+
+        testfield = CharField('Test')
+        testfield.validate('')
+        self.assertEqual('', testfield.prepare_data(''))
+
+        testfield = TextField('Test')
+        testfield.validate('')
+        self.assertEqual('', testfield.prepare_data(''))
+
+        testfield = DateTimeField('Test')
+        testfield.validate('')
+        self.assertEqual(None, testfield.prepare_data(''))
+
+        testfield = IntegerField('Test')
+        testfield.validate('')
+        self.assertEqual(None, testfield.prepare_data(''))
+
+
+    def test_fields_required_empty(self):
+        """Test fields with the required prop and ensure they raise an error
+        when given empty data
+        """
+
+        testfield = CharField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = TextField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = DateTimeField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')
+
+        testfield = IntegerField('Test', required=True)
+        with self.assertRaises(InvalidField):
+            testfield.validate(None)
+        with self.assertRaises(InvalidField):
+            testfield.validate('')

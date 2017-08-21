@@ -1,4 +1,4 @@
-from dispatch.apps.events.facebook import FacebookEvent, FacebookEventError
+from dispatch.apps.events.sources import FacebookEvent, EventError
 from dispatch.apps.events.models import Event
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -49,8 +49,8 @@ class FacebookEventTests(DispatchAPITestCase):
 
         try:
             event_json = event.get_json()
-            self.fail('The URL was invalid - test should have failed with FacebookEventError')
-        except FacebookEventError:
+            self.fail('The URL was invalid - test should have failed with EventError')
+        except EventError:
             pass
 
     def test_get_json_no_address_or_end_time(self):
@@ -96,6 +96,6 @@ class FacebookEventTests(DispatchAPITestCase):
 
         try:
             image_url = event.get_image()
-            self.fail('The URL was invalid - test should have failed with FacebookEventError')
-        except FacebookEventError:
+            self.fail('The URL was invalid - test should have failed with EventError')
+        except EventError:
             pass

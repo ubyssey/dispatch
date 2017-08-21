@@ -5,6 +5,8 @@ import ImageField from './ImageField'
 import EventField from './EventField'
 import DateTimeField from './DateTimeField'
 import IntegerField from './IntegerField'
+import BoolField from './BoolField'
+import WidgetField from './WidgetField'
 
 export {
   CharField as char,
@@ -14,4 +16,6 @@ export {
   EventField as event,
   DateTimeField as datetime,
   IntegerField as integer,
+  BoolField as bool,
+  WidgetField as widget
 }
