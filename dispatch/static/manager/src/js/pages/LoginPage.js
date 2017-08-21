@@ -35,7 +35,7 @@ class LoginPageComponent extends React.Component {
   render() {
     return (
       <div className='c-login-page'>
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
           <div className='c-login-page__heading'>
             Dispatch Login
           </div>
