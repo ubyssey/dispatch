@@ -269,3 +269,24 @@ class UserTests(DispatchAPITestCase):
         response = self.client.delete(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_retrieve_authorized_user(self):
+        """Test that retrieving the user model for the authenticated user works as expected"""
+
+        user = User.objects.get(email='test@test.com')
+
+        url = reverse('api-users-detail', args=['me'])
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(user.id, response.data['id'])
+
+    def test_retrieve_authorized_user_when_unauthenticated(self):
+        """Test that the users/me api route does not work when unauthenticated"""
+
+        self.client.credentials()
+
+        url = reverse('api-users-detail', args=['me'])
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
