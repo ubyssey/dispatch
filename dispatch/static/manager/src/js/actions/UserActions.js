@@ -31,8 +31,11 @@ export function authenticateUser(email, password, nextPath = '/') {
 
         dispatch(replace(nextPath))
       })
-      .catch(() => {
-        dispatch({ type: rejected(types.AUTH.CREATE_TOKEN) })
+      .catch((error) => {
+        dispatch({
+          type: rejected(types.AUTH.CREATE_TOKEN),
+          error
+        })
       })
   }
 }
