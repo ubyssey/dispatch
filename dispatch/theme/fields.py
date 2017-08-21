@@ -1,3 +1,5 @@
+import json
+
 from django.utils.dateparse import parse_datetime
 
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
@@ -12,9 +14,10 @@ class Field(object):
 
     _creation_counter = 0
 
-    def __init__(self, label, many=False):
+    def __init__(self, label, many=False, required=False):
         self.label = label
         self.many = many
+        self.required = required
 
         if self.many:
             self.default = []
@@ -95,6 +98,9 @@ class CharField(Field):
         if len(data) > 255:
             raise InvalidField('Max length for charfield data is 255')
 
+        if not len(data) and self.required:
+            raise InvalidField('%s is required' % self.label)
+
 class TextField(Field):
 
     type = 'text'
@@ -103,21 +109,30 @@ class TextField(Field):
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
+        if not len(data) and self.required:
+            raise InvalidField('%s is required' % self.label)
+
 class DateTimeField(Field):
 
     type = 'datetime'
 
     def validate(self, data):
+        if not data or (isinstance(data, basestring) and not len(data)):
+            if self.required:
+                raise InvalidField('%s is required')
+            else:
+                return
+
         if not parse_datetime(data):
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):
-        return parse_datetime(data)
+        return parse_datetime(data) if data and isinstance(data, basestring) else None
 
 class IntegerField(Field):
 
     type = 'integer'
-    def __init__(self, label, many=False, min_value=None, max_value=None):
+    def __init__(self, label, many=False, min_value=None, max_value=None, required=False):
         self.min_value = min_value
         self.max_value = max_value
 
@@ -125,14 +140,20 @@ class IntegerField(Field):
             if min_value > max_value:
                 raise InvalidField('IntegerField: min_value must be less than max_value')
 
-        super(IntegerField, self).__init__(label=label, many=many)
+        super(IntegerField, self).__init__(label=label, many=many, required=required)
 
     def validate(self, data):
+        if not data or (isinstance(data, basestring) and not len(data)):
+            if self.required:
+                raise InvalidField('%s is required')
+            else:
+                return
+
         try:
             if isinstance(data, int):
                 value = data
             else:
-                value =  int(data, base=10)
+                value = int(data, base=10)
         except ValueError:
             raise InvalidField('%s must be integer' % self.label)
 
@@ -145,7 +166,18 @@ class IntegerField(Field):
     def prepare_data(self, data):
         if isinstance(data, int):
             return data
-        return int(data, base=10)
+        try:
+            return int(data, base=10)
+        except ValueError, TypeError:
+            return None
+
+class BoolField(Field):
+
+    type = 'bool'
+
+    def validate(self, data):
+        if type(data) is not bool:
+            raise InvalidField('%s must be boolean' % self.label)
 
 class ArticleField(ModelField):
 
@@ -168,16 +200,59 @@ class EventField(ModelField):
     model = Event
     serializer = EventSerializer
 
-
 class WidgetField(Field):
 
     type = 'widget'
 
+    def __init__(self, label, widgets, required=False):
+        super(WidgetField, self).__init__(label, required=required)
+        self.widgets = {}
+
+        for widget in widgets:
+            self.widgets[widget.id] = WidgetSerializer(widget).data
+
+
     def validate(self, data):
-        if not isinstance(data, basestring):
-            raise InvalidField('Data must be a string')
+        if not data or not data['id']:
+            if self.required:
+                raise InvalidField('Widget must be selected')
+            return
+
+        try:
+            if data['id'] and data['data'] is not None:
+                errors = {}
+                widget = None
+
+                try:
+                    widget = self.get_widget(data['id'])
+                except WidgetNotFound:
+                    errors['self'] = 'Invalid Widget'
+
+                if widget:
+                    for field in widget.fields:
+                        if field.name in data['data'] and data['data'][field.name]:
+                            try:
+                                field.validate(data['data'][field.name])
+                            except InvalidField as e:
+                                errors[field.name] = str(e)
+                        else:
+                            if field.required:
+                                errors[field.name] = 'This field is required'
+
+                if len(errors):
+                    raise InvalidField(json.dumps(errors))
+            else:
+                raise InvalidField('Invalid Widget Data')
+        except InvalidField as e:
+            raise e
+        except Exception as e:
+            raise InvalidField('Problem with widget data %s' % str(e))
+
 
     def get_widget(self, id):
+        if id is None:
+            return None
+
         try:
             return ThemeManager.Widgets.get(id)
         except WidgetNotFound:
@@ -189,7 +264,8 @@ class WidgetField(Field):
 
         return {
             'id': data['id'],
-            'data': widget.to_json()
+            'data': widget.to_json(),
+            'widget': WidgetSerializer(widget).data
         }
 
     def to_json(self, data):

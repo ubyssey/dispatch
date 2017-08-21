@@ -1,5 +1,4 @@
 import React from 'react'
-import R from 'ramda'
 import { connect } from 'react-redux'
 
 import WidgetField from './ZoneEditor/WidgetField'
@@ -7,9 +6,7 @@ import WidgetField from './ZoneEditor/WidgetField'
 class WidgetFieldsComponent extends React.Component {
 
   render() {
-    console.log('TEST3')
     const widget = this.props.entities.widgets[this.props.widgetId]
-    console.log('TEST4')
     const fields = widget ? widget.fields.map((field) => (
       <WidgetField
         key={`widget-field__${widget.id}__${field.name}`}
@@ -17,7 +14,7 @@ class WidgetFieldsComponent extends React.Component {
         data={this.props.data[field.name] || null}
         onChange={(data) => this.props.updateField(field.name, data)} />
     )) : null
-    console.log('TEST5')
+    
     return (
       <div>
       {fields}

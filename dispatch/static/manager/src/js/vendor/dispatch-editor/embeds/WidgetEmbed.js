@@ -7,29 +7,27 @@ import WidgetFields from '../../../components/WidgetFields'
 import Panel from '../../../components/Panel'
 
 function WidgetEmbedComponent(props) {
-  console.log(props)
+
   function updateWidgetField(fieldName, fieldValue) {
-    console.log('TESTA1')
     props.updateField('data', R.assoc(fieldName, fieldValue, props.data.data))
   }
+
   return (
-    <div>
-      <div className='o-embed o-embed--widget'>
-        <Panel title='Widget'>
-          <FormInput>
-            <WidgetSelectInput
-              zoneId='embed'
-              selected={props.data.widget_id}
-              update={widgetId => props.updateField('widget_id', widgetId)} />
-          </FormInput>
-        </Panel>
-        <Panel title='Fields'>
-          <WidgetFields
-            updateField={updateWidgetField}
-            widgetId = {props.data.widget_id}
-            data = {props.data.data} />
-        </Panel>
-      </div>
+    <div className='o-embed o-embed--widget'>
+      <Panel title='Widget'>
+        <FormInput>
+          <WidgetSelectInput
+            zoneId='embed'
+            selected={props.data.widget_id}
+            update={widgetId => props.updateField('widget_id', widgetId)} />
+        </FormInput>
+      </Panel>
+      <Panel title='Fields'>
+        <WidgetFields
+          updateField={updateWidgetField}
+          widgetId = {props.data.widget_id}
+          data = {props.data.data} />
+      </Panel>
     </div>
   )
 }
