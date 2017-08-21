@@ -1,6 +1,7 @@
 import json
 
 from django.utils.dateparse import parse_datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
 from dispatch.apps.content.models import Article, Image
@@ -80,10 +81,13 @@ class ModelField(Field):
         if not data:
             return self.default
 
-        if self.many:
-            return map(self.get_model, data)
-        else:
-            return self.get_model(data)
+        try:
+            if self.many:
+                return map(self.get_model, data)
+            else:
+                return self.get_model(data)
+        except ObjectDoesNotExist:
+            return self.default
 
 
 class CharField(Field):
