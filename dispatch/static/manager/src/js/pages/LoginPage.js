@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import * as userActions from '../actions/UserActions'
 
+require('../../styles/components/login_page.scss')
+
 class LoginPageComponent extends React.Component {
 
   constructor(props) {
@@ -32,19 +34,35 @@ class LoginPageComponent extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='c-login-page'>
         <form onSubmit={this.onSubmit}>
+          <div className='c-login-page__heading'>
+            Dispatch Login
+          </div>
           <input
+            className='pt-input pt-round'
             name="email"
             type="email"
+            placeholder='Email'
             value={this.state.email}
             onChange={this.onChangeEmail} /><br/>
           <input
+            className='pt-input pt-round'
             name="password"
             type="password"
+            placeholder='Password'
             value={this.state.password}
             onChange={this.onChangePassword} /><br/>
-          <input type="submit" />
+          <button
+            className='pt-button pt-large'
+            type="submit">
+            Login
+          </button>
+          {this.props.error ? (
+            <div className='pt-callout pt-intent-danger'>
+              {this.props.error}
+            </div>
+          ): null}
         </form>
       </div>
     )
@@ -53,7 +71,8 @@ class LoginPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    nextPath: state.app.nextPath
+    nextPath: state.app.nextPath,
+    error: state.app.auth.error
   }
 }
 
