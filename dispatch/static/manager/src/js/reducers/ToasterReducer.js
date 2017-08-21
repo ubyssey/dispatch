@@ -185,6 +185,12 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.EVENTS.DELETE_MANY):
     return showToast('Some events could not be deleted', Intent.DANGER)
 
+  // Users
+  case fulfilled(types.USERS.SAVE):
+    return showToast('User saved')
+  case rejected(types.USERS.SAVE):
+    return showToast('User could not be saved', Intent.DANGER)
+
   default:
     return toaster
 
