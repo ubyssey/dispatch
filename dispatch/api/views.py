@@ -149,6 +149,14 @@ class UserViewSet(DispatchModelViewSet):
 
     permission_classes = (IsAuthenticated,)
 
+    def retrieve(self, request, pk=None):
+        queryset = User.objects.all()
+        if pk == 'me':
+            pk = request.user.id
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
 class TagViewSet(DispatchModelViewSet):
     """
     Viewset for Tag model views.

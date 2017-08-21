@@ -142,14 +142,14 @@ export default class EventForm extends React.Component {
         </FormInput>
 
         <FormInput
-          label='Facebook Link'
+          label='Event Link'
           padded={false}
-          error={this.props.errors.facebook_url}>
+          error={this.props.errors.event_url}>
           <TextInput
-            placeholder='https://www.facebook.com/events/###'
-            value={this.props.listItem.facebook_url || ''}
+            placeholder='Event URL Here'
+            value={this.props.listItem.event_url || ''}
             fill={true}
-            onChange={ e => this.props.update('facebook_url', e.target.value) } />
+            onChange={ e => this.props.update('event_url', e.target.value) } />
         </FormInput>
 
         <FormInput

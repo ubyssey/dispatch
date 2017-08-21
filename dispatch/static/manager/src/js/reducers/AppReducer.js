@@ -18,6 +18,7 @@ import galleriesReducer from './GalleriesReducer'
 import zonesReducer from './ZonesReducer'
 import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
+import userReducer from './UserReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -37,5 +38,6 @@ export default combineReducers({
   galleries: galleriesReducer,
   zones: zonesReducer,
   widgets: widgetsReducer,
-  events: eventsReducer
+  events: eventsReducer,
+  users: userReducer
 })
