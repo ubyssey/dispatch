@@ -91,7 +91,7 @@ class ItemEditor extends React.Component {
             deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}
             goBack={this.props.goBack}
             extraButton={this.props.extraButton} />
-          <div className='u-container u-container--padded' style={{ overflowY: 'scroll' }}>
+          <div className='u-container u-container--padded u-container--vscroll'>
             <this.props.form
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}

@@ -2,6 +2,8 @@ import { replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
+import { userSchema } from '../constants/Schemas'
+import { ResourceActions } from '../util/redux'
 
 import { pending, fulfilled, rejected } from '../util/redux'
 
@@ -77,3 +79,9 @@ export function logoutUser(token) {
       })
   }
 }
+
+export default new ResourceActions(
+  types.USERS,
+  DispatchAPI.users,
+  userSchema
+)
