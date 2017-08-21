@@ -172,7 +172,7 @@ class IntegerField(Field):
             return data
         try:
             return int(data, base=10)
-        except ValueError, TypeError:
+        except (ValueError, TypeError):
             return None
 
 class BoolField(Field):
