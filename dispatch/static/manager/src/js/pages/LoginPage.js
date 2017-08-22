@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import DocumentTitle from 'react-document-title'
 
 import * as userActions from '../actions/UserActions'
 
@@ -34,37 +35,39 @@ class LoginPageComponent extends React.Component {
 
   render() {
     return (
-      <div className='c-login-page'>
-        <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
-          <div className='c-login-page__heading'>
-            Dispatch
-          </div>
-          <input
-            className='pt-input'
-            name="email"
-            type="email"
-            placeholder='Email'
-            value={this.state.email}
-            onChange={this.onChangeEmail} /><br/>
-          <input
-            className='pt-input'
-            name="password"
-            type="password"
-            placeholder='Password'
-            value={this.state.password}
-            onChange={this.onChangePassword} /><br/>
-          <button
-            className='pt-button'
-            type="submit">
-            Login
-          </button>
-          {this.props.error ? (
-            <div className='pt-callout pt-intent-danger'>
-              {this.props.error}
+      <DocumentTitle title='Dispatch'>
+        <div className='c-login-page'>
+          <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
+            <div className='c-login-page__heading'>
+              Dispatch
             </div>
-          ): null}
-        </form>
-      </div>
+            <input
+              className='pt-input'
+              name="email"
+              type="email"
+              placeholder='Email'
+              value={this.state.email}
+              onChange={this.onChangeEmail} /><br/>
+            <input
+              className='pt-input'
+              name="password"
+              type="password"
+              placeholder='Password'
+              value={this.state.password}
+              onChange={this.onChangePassword} /><br/>
+            <button
+              className='pt-button'
+              type="submit">
+              Login
+            </button>
+            {this.props.error ? (
+              <div className='pt-callout pt-intent-danger'>
+                {this.props.error}
+              </div>
+            ): null}
+          </form>
+        </div>
+      </DocumentTitle>
     )
   }
 }
