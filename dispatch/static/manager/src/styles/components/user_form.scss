@@ -1,0 +1,17 @@
+@import '../utilities/colors';
+@import '../utilities/fonts';
+
+.c-user-form {
+  margin-top: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  border-top: 1px solid $color-border-gray;
+}
+
+.c-user-form__heading {
+  @include font-size(16);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: $font-weight-bold;
+}

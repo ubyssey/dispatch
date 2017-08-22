@@ -45,7 +45,7 @@ export default class IntegerField extends React.Component {
     return (
       <TextInput
         ref='input'
-        placeholder={this.props.label}
+        placeholder={this.props.field.label}
         value={this.props.data || ''}
         fill={true}
         type="text"

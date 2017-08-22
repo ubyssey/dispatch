@@ -19,6 +19,8 @@ function normalizeZoneData(field, data) {
     return field.many ? normalize(data, arrayOf(imageSchema)) : normalize(data, imageSchema)
   case 'event':
     return field.many ? normalize(data, arrayOf(eventSchema)) : normalize(data, eventSchema)
+  case 'widget':
+    return normalizeZone(data, true)
   default:
     return {
       result: data,
@@ -27,13 +29,13 @@ function normalizeZoneData(field, data) {
   }
 }
 
-function normalizeZone(zone) {
+function normalizeZone(zone, isNestedWidget=false) {
   const fields = R.path(['widget', 'fields'], zone) || []
 
   let fieldEntities = {}
 
   fields.forEach(field => {
-    if (!zone.data[field.name]) {
+    if (!zone.data || !zone.data[field.name]) {
       return
     }
 
@@ -45,10 +47,12 @@ function normalizeZone(zone) {
       normalizedData.entities
     )
 
-    zone.data[field.name] = normalizedData.result
+    if (field.type != 'widget') {
+      zone.data[field.name] = normalizedData.result
+    }
   })
 
-  let result = normalize(zone, zoneSchema)
+  let result = !isNestedWidget ? normalize(zone, zoneSchema) : {}
 
   result.entities = R.mergeWith(
     R.merge,
@@ -130,7 +134,8 @@ export function listWidgets(token, zoneId) {
       })
       .then(json => ({
         count: json.count,
-        data: normalize(json.results, arrayOf(widgetSchema))
+        data: normalize(json.results, arrayOf(widgetSchema)),
+        zoneId
       }))
   }
 }

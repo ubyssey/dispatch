@@ -145,6 +145,9 @@ const DispatchAPI = {
 
       return postRequest('token', null, payload)
     },
+    verifyToken: (token) => {
+      return getRequest('token', token, null)
+    },
     logout: (token) => {
       return deleteRequest('token', null, null, token)
     }
@@ -368,6 +371,14 @@ const DispatchAPI = {
     delete: (token, eventId) => {
       return deleteRequest('events', eventId, null, token)
     },
+  },
+  'users': {
+    get: (token, userId) => {
+      return getRequest('users', userId, null, token)
+    },
+    save: (token, userId, data) => {
+      return patchRequest('users', userId, data, token)
+    }
   }
 }
 
