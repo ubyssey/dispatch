@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 
 import * as types from '../constants/ActionTypes'
 
-import { Reducer, fulfilled } from '../util/redux'
+import { Reducer, fulfilled, rejected } from '../util/redux'
 
 const initialState = {
   token: Cookies.get('token'), // Get token stored in browser cookie
@@ -36,6 +36,19 @@ reducer.handle(fulfilled(types.AUTH.DELETE_TOKEN), () => {
   Cookies.remove('email')
 
   return initialState
+})
+
+reducer.handle(rejected(types.AUTH.VERIFY_TOKEN), (state, action) => {
+  const validToken = R.path(['response', 'valid_token'], action)
+
+  if (validToken === false) {
+    Cookies.remove('token')
+    Cookies.remove('email')
+
+    return initialState
+  }
+
+  return state
 })
 
 export default reducer.getReducer()

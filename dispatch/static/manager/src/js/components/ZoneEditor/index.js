@@ -30,8 +30,33 @@ class ZoneEditorComponent extends React.Component {
     )
   }
 
+  processZone(zone) {
+    if (!zone) {
+      return zone
+    }
+
+    function processWidget(widget, fields) {
+      if (!fields) {
+        return widget
+      }
+
+      fields.forEach((field) => {
+        if (field.type == 'widget') {
+          const newWidget = R.path(['data', field.name], widget)
+          if (newWidget) {
+            widget.data[field.name] = processWidget(newWidget, R.path(['widget', 'fields'], newWidget))
+            widget = R.dissocPath(['data', field.name, 'widget'], widget)
+          }
+        }
+      })
+      return widget
+    }
+
+    return processWidget(zone, R.prop('fields', this.props.widget || {}))
+  }
+
   saveZone() {
-    this.props.saveZone(this.props.token, this.props.zoneId, this.props.zone)
+    this.props.saveZone(this.props.token, this.props.zoneId, this.processZone(this.props.zone))
   }
 
   render() {
@@ -44,7 +69,7 @@ class ZoneEditorComponent extends React.Component {
         error={this.props.errors[field.name]}
         key={`widget-field__${this.props.widget.id}__${field.name}`}
         field={field}
-        data={this.props.zone.data[field.name] || null}
+        data={R.prop(field.name, this.props.zone.data || {})}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 

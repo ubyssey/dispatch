@@ -38,7 +38,8 @@ const processData = (data) => {
   formData.append('location', data.location || '')
   formData.append('address', data.address || '')
   formData.append('category', data.category || '')
-  formData.append('facebook_url', data.facebook_url || '')
+  formData.append('event_url', data.event_url || '')
+  formData.append('ticket_url', data.ticket_url || '')
   formData.append('submitter_email', data.submitter_email || '')
   formData.append('submitter_phone', data.submitter_phone || '')
 

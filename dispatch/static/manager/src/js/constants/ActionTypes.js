@@ -12,12 +12,14 @@ export const TAGS = resourceActionTypes('TAGS')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
+export const USERS = resourceActionTypes('USERS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [
   'LOGIN_REQUIRED',
   'CREATE_TOKEN',
-  'DELETE_TOKEN'
+  'DELETE_TOKEN',
+  'VERIFY_TOKEN'
 ])
 
 // Integration actions

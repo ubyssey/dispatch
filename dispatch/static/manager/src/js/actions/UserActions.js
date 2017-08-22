@@ -2,6 +2,8 @@ import { replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
+import { userSchema } from '../constants/Schemas'
+import { ResourceActions } from '../util/redux'
 
 import { pending, fulfilled, rejected } from '../util/redux'
 
@@ -35,6 +37,26 @@ export function authenticateUser(email, password, nextPath = '/') {
   }
 }
 
+export function verifyToken(token) {
+  return (dispatch) => {
+    dispatch({ type: pending(types.AUTH.VERIFY_TOKEN )})
+
+    return DispatchAPI.auth.verifyToken(token)
+      .then((response) => {
+        dispatch({
+          type: fulfilled(types.AUTH.VERIFY_TOKEN),
+          response
+        })
+      })
+      .catch((response) => {
+        dispatch({
+          type: rejected(types.AUTH.VERIFY_TOKEN),
+          response
+        })
+        dispatch(requireLogin('/'))
+      })
+  }
+}
 
 export function logoutUser(token) {
   return (dispatch) => {
@@ -57,3 +79,9 @@ export function logoutUser(token) {
       })
   }
 }
+
+export default new ResourceActions(
+  types.USERS,
+  DispatchAPI.users,
+  userSchema
+)
