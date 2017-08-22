@@ -192,16 +192,6 @@ class ImageField(ModelField):
     model = Image
     serializer = ImageSerializer
 
-<<<<<<< HEAD
-=======
-class EventField(ModelField):
-
-    type = 'event'
-
-    model = Event
-    serializer = EventSerializer
-
->>>>>>> develop
 class WidgetField(Field):
 
     type = 'widget'
