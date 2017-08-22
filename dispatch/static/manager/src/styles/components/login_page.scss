@@ -5,6 +5,7 @@
   background-color: #f9f9f9;
 
   form {
+    min-width: 325px;
     position: absolute;
     top: 30%;
     left: 50%;
@@ -21,6 +22,7 @@
     }
 
     input {
+      width: 100%;
       text-align: center;
 
       &:not(:last-of-type) {
