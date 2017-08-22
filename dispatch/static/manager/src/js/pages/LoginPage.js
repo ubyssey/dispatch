@@ -37,24 +37,24 @@ class LoginPageComponent extends React.Component {
       <div className='c-login-page'>
         <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
           <div className='c-login-page__heading'>
-            Dispatch Login
+            Dispatch
           </div>
           <input
-            className='pt-input pt-round'
+            className='pt-input'
             name="email"
             type="email"
             placeholder='Email'
             value={this.state.email}
             onChange={this.onChangeEmail} /><br/>
           <input
-            className='pt-input pt-round'
+            className='pt-input'
             name="password"
             type="password"
             placeholder='Password'
             value={this.state.password}
             onChange={this.onChangePassword} /><br/>
           <button
-            className='pt-button pt-large'
+            className='pt-button'
             type="submit">
             Login
           </button>
