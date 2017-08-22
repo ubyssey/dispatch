@@ -3,7 +3,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.events.models import Event
 from dispatch.apps.core.models import User, Person
 from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 
@@ -514,27 +513,3 @@ class ZoneSerializer(serializers.Serializer):
             instance.save(validated_data)
 
         return instance
-
-class EventSerializer(DispatchModelSerializer):
-
-    class Meta:
-        model = Event
-        fields = (
-            'id',
-            'title',
-            'description',
-            'host',
-            'image',
-            'start_time',
-            'end_time',
-            'location',
-            'address',
-            'category',
-            'event_type',
-            'event_url',
-            'ticket_url',
-            'is_published',
-            'is_submission',
-            'submitter_email',
-            'submitter_phone',
-        )
