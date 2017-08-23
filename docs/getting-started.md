@@ -19,7 +19,7 @@ python setup.py install
 
 # Getting Started
 
-Dispatch provides a layer on top of Django, so Django views and templating are still necessary to build your website. Please read the [Django documentation](https://www.djangoproject.com/) for reference.
+Dispatch provides a layer on top of Django, so Django views and templating are still necessary to build your website. Please read the [Django documentation](https://docs.djangoproject.com/en/1.11/) for reference.
 
 ## Starting a New Dispatch Project
 
@@ -64,9 +64,11 @@ python manage.py runserver
 
 You should now be able to navigate to [http://localhost/admin](http://localhost/admin) and log in using the email and password you configured in the previous step.
 
-**REF: Dispatch Manager Doc**
+For more information on how to use the manager, see [it's docs](./manager.md)
 
 Note that if you go to [http://localhost/](http://localhost/), it won't work. You need to create some views!
+
+## Using Dispatch Features in Your Project
 
 ### Creating a View
 
@@ -128,4 +130,4 @@ def view_render_article_page(request):
 </div>
 ```
 
-**REF: API docs**
+To learn about the functionality of Article and other dispatch classes, see the [Dispatch Class Reference](./class-reference/)
