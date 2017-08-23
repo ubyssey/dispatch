@@ -5,8 +5,6 @@
 // Component: Header
 .c-header {
   // Structure
-  padding-left: 1rem;
-  padding-right: 1rem;
   box-sizing: border-box;
 
   // Background
@@ -26,6 +24,8 @@
 
 .c-header__inner {
   // Structure
+  padding-left: 1rem;
+  padding-right: 1rem;
   display: flex;
   flex-direction: row;
 }
