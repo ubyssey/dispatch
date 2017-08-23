@@ -14,6 +14,19 @@ Made with :heart: by [_The Ubyssey_](https://www.ubyssey.ca/), the University of
 pip install dispatch
 ```
 
+### From Source
+```bash
+git clone https://github.com/ubyssey/dispatch.git
+cd dispatch/dispatch/static/manager
+
+# build the front-end
+yarn setup
+yarn start
+
+cd ../../..
+python setup.py install
+```
+
 ## Contribute
 
 ```bash
