@@ -18,7 +18,7 @@ Extends `Publishable` > `django.db.models.Model`
 - `reading_time`: *Char ('anytime', 'morning', 'midday', or 'evening')*
 - `objects`: *ArticleManager*
 
-Inherited from `Publishable`:
+#### Inherited from `Publishable`:
 
 - `revision_id`: *PositiveInteger*
 - `head`: *Boolean*
@@ -43,7 +43,7 @@ Inherited from `Publishable`:
 
 - `title`: Title of the article
 
-Inherited from `Publishable`:
+#### Inherited from `Publishable`:
 - `html`: Rendered html of the article
 
 ## Methods
