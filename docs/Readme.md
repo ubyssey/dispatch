@@ -4,7 +4,7 @@ Using Dispatch
 
 - [Getting Started](./getting-started.md)
 - [Class Reference](./class-reference/)
-- [Widget Into](./widget-intro.md)
+- [Widget Intro](./widget-intro.md)
 - [Using the Manager](./manager.md)
 
 Dispatch Developer
