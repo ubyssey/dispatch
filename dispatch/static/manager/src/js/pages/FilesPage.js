@@ -2,12 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 import Dropzone from 'react-dropzone'
-import moment from 'moment'
 import { Button } from '@blueprintjs/core'
 
 import filesActions from '../actions/FilesActions'
-
 import ItemList from '../components/ItemList'
+import { humanizeDatetime } from  '../util/helpers'
 
 require('../../styles/components/files.scss')
 
@@ -102,7 +101,8 @@ class FilesPageComponent extends React.Component {
             <ItemList
               location={this.props.location}
 
-              type='files'
+              typeSingular='file'
+              typePlural='files'
 
               currentPage={this.getCurrentPage()}
               totalPages={this.getTotalPages()}
@@ -110,10 +110,11 @@ class FilesPageComponent extends React.Component {
               items={this.props.files}
               entities={this.props.entities.files}
 
+              headers={['Filename', 'Created', 'Updated']}
               columns={[
-                item => (<a href={item.file}>{item.name}</a>),
-                item => moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a'),
-                item => moment(item.updated_at).format('MMMM Do YYYY, h:mm:ss a'),
+                item => (<a href={item.url} target='_blank'>{item.name}</a>),
+                item => humanizeDatetime(item.created_at),
+                item => humanizeDatetime(item.updated_at),
               ]}
 
               emptyMessage={'You haven\'t uploaded any files yet.'}
