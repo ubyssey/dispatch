@@ -4,7 +4,7 @@ One of the main features of dispatch is a fast, powerful admin tool.
 
 It can be accessed via http at '/admin'. Create users using `python manage.py createsuperuser`.
 
-# Creating and Editing Sections, Persons, Tags, Topics
+# Creating and Editing Sections, Persons, Tags, Topics, Galleries
 
 Use the manage menu in the top right hand corner to select the type of entity you wish to create/edit.
 
@@ -30,12 +30,12 @@ You can view previous versions by pressing the 'Version *' dropdown on the toolb
 
 Also note that a slug, section, and author must be set in order for an article to be saved.
 
-# Creating and Editing Pages
+## Creating and Editing Pages
 
 Pages are edited in a similar manner as articles, except are accessed via the pages of the manage menu. They are not associated with a section and have less optional metadata.
 
-# Creating and Editing Galleries
-
-
-
 # Configuring Zones and Widgets
+
+Go to the manage page and select the zone that you wish to edit. From here you can choose the widget to use in that zone.
+
+Once a widget has been selected, various options for that widget will appear. Adjust them accordingly and press save.
