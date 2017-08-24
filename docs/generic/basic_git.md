@@ -173,7 +173,7 @@ This will do the same thing as above. After you have done this once, you can jus
 ### Pull requests
 Once you have pushed the code, you should see something like this on the Github Dispatch Page:
 
-  ![The picture failed to render; thats OK, the button is just `Compare and pull request` in a large yellow bar on the top of the page.](/docs/pull_req.png)
+  ![The picture failed to render; thats OK, the button is just `Compare and pull request` in a large yellow bar on the top of the page.](./pull_req.png)
 
 If you click `Compare and pull request`, it will bring you to a page where you can explain the changes you made and create the pull request. The code will then be reviewed and merged.
 
