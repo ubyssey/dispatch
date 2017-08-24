@@ -10,7 +10,8 @@ import {
   Entity,
   getDefaultKeyBinding,
   KeyBindingUtil,
-  CompositeDecorator
+  CompositeDecorator,
+  ContentState
 } from 'draft-js'
 
 const {hasCommandModifier} = KeyBindingUtil
@@ -90,7 +91,7 @@ class ContentEditor extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // Push content to editor state
-    if (nextProps.content) {
+    if (nextProps.content instanceof ContentState) {
       this.setState({
         editorState: EditorState.push(this.state.editorState, nextProps.content)
       })
@@ -101,7 +102,7 @@ class ContentEditor extends React.Component {
 
   componentWillMount() {
     // Push content to editor state
-    if (this.props.content) {
+    if (this.props.content instanceof ContentState) {
       this.onChange(EditorState.push(this.state.editorState, this.props.content))
     }
   }

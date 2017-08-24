@@ -59,7 +59,7 @@ class DashboardPageComponent extends React.Component {
             <h2 className='c-dashboard__header'>Quick Actions</h2>
             <ul className='c-dashboard_quick-actions'>
               <li className='c-dashboard_quick-actions__item'><LinkButton to='/articles/new'>New Article</LinkButton></li>
-              <li className='c-dashboard_quick-actions__item'><LinkButton to=''>New Page</LinkButton></li>
+              <li className='c-dashboard_quick-actions__item'><LinkButton to='/pages/new'>New Page</LinkButton></li>
             </ul>
             <Panel title='Recent Articles'>
               <ul>{this.props.recent.isLoaded ? this.renderRecent() : null}</ul>
