@@ -100,3 +100,55 @@ class DefaultFrontPage(Widget):
 ```
 
 ## Field Reference
+
+The first argument to all types of fields is it's label, that will appear in the manager.
+
+common kwargs:
+- `many`: whether multiple or only one can be selected
+- `required`: whether the field must be set in order to be saved
+
+### CharField
+
+Renders in manager as a textfield, provides a python string.
+
+### TextField
+
+Renders in manager as a textarea, provides a python string.
+
+### DateTimeField
+
+Renders in manager as a datetime selected, provides a python datetime object.
+
+### IntegerField
+
+Renders in manager as texfield, but only accepts integer, provides a python int.
+
+additional kwargs:
+
+- `min_value`
+- `max_value`
+
+### BoolField
+
+Renders in manager as a checkbox, provides a bool.
+
+---
+
+*Note*: Only the following fields accept the `many` kwarg
+
+### ArticleField
+
+Allows the user to select one or more articles, provides a single or a list of [Article](./class-reference/Article.md) objects accordingly
+
+### ImageField
+
+Allows the user to select one or more images, provides a single or a list of images objects accordingly
+
+### WidgetField
+
+Allows the user to select a widget, allowing for nested widgets.
+
+additional kwargs:
+- `widgets`: list of widget classes that this WidgetField accepts
+
+Caution: currently using more than a few levels of nested widgets is inefficient on API calls in the manager. Avoid allowing a Widget's WidgetField to accept itself.
