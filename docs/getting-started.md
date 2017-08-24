@@ -11,7 +11,7 @@ cd dispatch/dispatch/static/manager
 
 # build the front-end
 yarn setup
-yarn start
+yarn build
 
 cd ../../..
 python setup.py install
