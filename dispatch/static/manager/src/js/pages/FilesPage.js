@@ -101,7 +101,8 @@ class FilesPageComponent extends React.Component {
             <ItemList
               location={this.props.location}
 
-              type='files'
+              typeSingular='file'
+              typePlural='files'
 
               currentPage={this.getCurrentPage()}
               totalPages={this.getTotalPages()}
@@ -111,7 +112,7 @@ class FilesPageComponent extends React.Component {
 
               headers={['Filename', 'Created', 'Updated']}
               columns={[
-                item => (<a href={item.file}>{item.name}</a>),
+                item => (<a href={item.url} target='_blank'>{item.name}</a>),
                 item => humanizeDatetime(item.created_at),
                 item => humanizeDatetime(item.updated_at),
               ]}
