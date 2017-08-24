@@ -20,19 +20,19 @@ After creating at least one section, you can start creating articles.
 
 Click on the 'New Article' button on the dashboard, or on the section along the top to choose an existing article to edit.
 
-You can edit the article using the rich text editor on the left. Highlight a portion of text to bring up a menu to choose text styling options.
+You can edit the article using the rich text editor on the left. Highlight a portion of text to bring up a menu to choose text styling options. (1)
 
-To insert an embedded entity, such as an image, video, quote, image gallery, widget, or to add custom html, js, or css to the article, start a new (blank) line, and press the + sign that appears to left. Select the type of embed you would like to use. Fill in the parameters that appear.
+To insert an embedded entity, such as an image, video, quote, image gallery, widget, or to add custom html, js, or css to the article, start a new (blank) line, and press the + sign that appears to left. Select the type of embed you would like to use. Fill in the parameters that appear. (2)
 
 ![Article Editing Interface](./img/article_interface.png)
 
-When you save an article, it is not published immediately. You must press the publish button in order for it be flagged as published.
+When you save an article, it is not published immediately. You must press the publish button in order for it be flagged as published. (3)
 
 The editor also maintains previous versions. Updating a published article will not changed the published version. You must republish the new version.
 
-You can view previous versions by pressing the 'Version *' dropdown on the toolbar.
+You can view previous versions by pressing the 'Version *' dropdown on the toolbar. (4)
 
-Also note that a slug, section, and author must be set in order for an article to be saved.
+Also note that a slug, section, and author must be set in order for an article to be saved. (5)
 
 ## Creating and Editing Pages
 
