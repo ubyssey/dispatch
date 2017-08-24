@@ -83,7 +83,6 @@ class ContentEditor extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
@@ -108,11 +107,11 @@ class ContentEditor extends React.Component {
     }
   }
 
-  onChange(editorState) {
+  onChange(editorState, force=false) {
     this.setState(
       { editorState: editorState },
       function() {
-        if (this.state.editorState.getLastChangeType()) {
+        if (force || this.state.editorState.getLastChangeType()) {
           // Only emit update if content changes
           this.props.onUpdate(this.state.editorState.getCurrentContent())
         }
@@ -125,7 +124,7 @@ class ContentEditor extends React.Component {
   }
 
   removeEmbed(blockKey) {
-    this.onChange(actions.removeEmbed(this.state.editorState, blockKey))
+    this.onChange(actions.removeEmbed(this.state.editorState, blockKey), true)
     this.focusEditor()
   }
 
