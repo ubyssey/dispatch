@@ -2,6 +2,8 @@ import { replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import DispatchAPI from '../api/dispatch'
+import { userSchema } from '../constants/Schemas'
+import { ResourceActions } from '../util/redux'
 
 import { pending, fulfilled, rejected } from '../util/redux'
 
@@ -29,8 +31,11 @@ export function authenticateUser(email, password, nextPath = '/') {
 
         dispatch(replace(nextPath))
       })
-      .catch(() => {
-        dispatch({ type: rejected(types.AUTH.CREATE_TOKEN) })
+      .catch((error) => {
+        dispatch({
+          type: rejected(types.AUTH.CREATE_TOKEN),
+          error
+        })
       })
   }
 }
@@ -77,3 +82,9 @@ export function logoutUser(token) {
       })
   }
 }
+
+export default new ResourceActions(
+  types.USERS,
+  DispatchAPI.users,
+  userSchema
+)

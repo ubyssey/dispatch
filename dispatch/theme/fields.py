@@ -1,10 +1,10 @@
 import json
 
 from django.utils.dateparse import parse_datetime
+from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, EventSerializer
+from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.apps.content.models import Article, Image
-from dispatch.apps.events.models import Event
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
@@ -80,10 +80,13 @@ class ModelField(Field):
         if not data:
             return self.default
 
-        if self.many:
-            return map(self.get_model, data)
-        else:
-            return self.get_model(data)
+        try:
+            if self.many:
+                return map(self.get_model, data)
+            else:
+                return self.get_model(data)
+        except ObjectDoesNotExist:
+            return self.default
 
 
 class CharField(Field):
@@ -168,7 +171,7 @@ class IntegerField(Field):
             return data
         try:
             return int(data, base=10)
-        except ValueError, TypeError:
+        except (ValueError, TypeError):
             return None
 
 class BoolField(Field):
@@ -192,13 +195,6 @@ class ImageField(ModelField):
 
     model = Image
     serializer = ImageSerializer
-
-class EventField(ModelField):
-
-    type = 'event'
-
-    model = Event
-    serializer = EventSerializer
 
 class WidgetField(Field):
 

@@ -8,7 +8,8 @@ import { Reducer, fulfilled, rejected } from '../util/redux'
 const initialState = {
   token: Cookies.get('token'), // Get token stored in browser cookie
   email: Cookies.get('email'), // Get email stored in browser cookie
-  nextPath: null
+  nextPath: null,
+  error: null
 }
 
 let reducer = new Reducer(initialState)
@@ -28,6 +29,12 @@ reducer.handle(fulfilled(types.AUTH.CREATE_TOKEN), (state, action) => {
     token: action.token,
     email: action.email,
     nextPath: null
+  })
+})
+
+reducer.handle(rejected(types.AUTH.CREATE_TOKEN), (state, action) => {
+  return R.merge(state, {
+    error: action.error.detail ? action.error.detail : 'An error occured'
   })
 })
 

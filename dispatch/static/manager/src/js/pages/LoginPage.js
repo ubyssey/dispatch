@@ -1,7 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import DocumentTitle from 'react-document-title'
 
 import * as userActions from '../actions/UserActions'
+
+require('../../styles/components/login_page.scss')
 
 class LoginPageComponent extends React.Component {
 
@@ -32,28 +35,47 @@ class LoginPageComponent extends React.Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <input
-            name="email"
-            type="email"
-            value={this.state.email}
-            onChange={this.onChangeEmail} /><br/>
-          <input
-            name="password"
-            type="password"
-            value={this.state.password}
-            onChange={this.onChangePassword} /><br/>
-          <input type="submit" />
-        </form>
-      </div>
+      <DocumentTitle title='Dispatch'>
+        <div className='c-login-page'>
+          <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
+            <div className='c-login-page__heading'>
+              Dispatch
+            </div>
+            <input
+              className='pt-input'
+              name="email"
+              type="email"
+              placeholder='Email'
+              value={this.state.email}
+              onChange={this.onChangeEmail} /><br/>
+            <input
+              className='pt-input'
+              name="password"
+              type="password"
+              placeholder='Password'
+              value={this.state.password}
+              onChange={this.onChangePassword} /><br/>
+            <button
+              className='pt-button'
+              type="submit">
+              Login
+            </button>
+            {this.props.error ? (
+              <div className='pt-callout pt-intent-danger'>
+                {this.props.error}
+              </div>
+            ): null}
+          </form>
+        </div>
+      </DocumentTitle>
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    nextPath: state.app.nextPath
+    nextPath: state.app.nextPath,
+    error: state.app.auth.error
   }
 }
 
