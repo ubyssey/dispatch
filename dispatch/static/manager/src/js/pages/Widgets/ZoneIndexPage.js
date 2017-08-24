@@ -29,6 +29,7 @@ class ZoneIndexPageComponent extends React.Component {
           items={this.props.zones}
           entities={this.props.entities.zones}
 
+          headers={['Zone', 'Current Widget']}
           columns={[
             zone => (<strong><Link to={`/widgets/${zone.id}`} dangerouslySetInnerHTML={{__html: zone.name}} /></strong>),
             zone => zone.widget ? this.props.entities.widgets[zone.widget].name : 'No widget'
