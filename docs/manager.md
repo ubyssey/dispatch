@@ -8,6 +8,8 @@ It can be accessed via http at '/admin'. Create users using `python manage.py cr
 
 Use the manage menu in the top right hand corner to select the type of entity you wish to create/edit.
 
+![The Manage Menu](./img/manage_menu.png)
+
 From this interface, entities can be created with the 'create' button on the right, or edited by selecting an existing one from the tabulation. There is a search bar for easily finding the entity you are looking for.
 
 Fill out the form with your desired values and press save.
@@ -18,9 +20,11 @@ After creating at least one section, you can start creating articles.
 
 Click on the 'New Article' button on the dashboard, or on the section along the top to choose an existing article to edit.
 
-You can edit the article using the rich text editor on the left. Highlight a portion of text to bring up a menu to chose text styling options.
+You can edit the article using the rich text editor on the left. Highlight a portion of text to bring up a menu to choose text styling options.
 
 To insert an embedded entity, such as an image, video, quote, image gallery, widget, or to add custom html, js, or css to the article, start a new (blank) line, and press the + sign that appears to left. Select the type of embed you would like to use. Fill in the parameters that appear.
+
+![Article Editing Interface](./img/article_interface.png)
 
 When you save an article, it is not published immediately. You must press the publish button in order for it be flagged as published.
 
