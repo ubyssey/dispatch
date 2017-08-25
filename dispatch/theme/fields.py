@@ -53,14 +53,23 @@ class ModelField(Field):
             if not isinstance(data, int):
                 raise InvalidField('Data must be an integer')
 
-    def get_model(self, id):
+    def get_many(self, ids):
+        ids_list = ','.join(map(str, ids))
+        return self.model.objects \
+            .filter(pk__in=ids) \
+            .extra(
+                select={'ids': 'FIELD(%s, %s)' % (self.model._meta.pk.name, ids_list)},
+                order_by=['ids']
+            )
+
+    def get_single(self, id):
         try:
             return self.model.objects.get(pk=id)
         except self.model.DoesNotExist:
             raise self.model.DoesNotExist('%s with id %s does not exist' % (self.model, id))
 
     def get_model_json(self, id):
-        model = self.get_model(id)
+        model = self.get_single(id)
         serializer = self.serializer(model)
         return serializer.data
 
@@ -82,9 +91,9 @@ class ModelField(Field):
 
         try:
             if self.many:
-                return map(self.get_model, data)
+                return self.get_many(data)
             else:
-                return self.get_model(data)
+                return self.get_single(data)
         except ObjectDoesNotExist:
             return self.default
 
