@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -54,13 +55,10 @@ class ModelField(Field):
                 raise InvalidField('Data must be an integer')
 
     def get_many(self, ids):
-        ids_list = ','.join(map(str, ids))
+        id_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids)])
         return self.model.objects \
             .filter(pk__in=ids) \
-            .extra(
-                select={'ids': 'FIELD(%s, %s)' % (self.model._meta.pk.name, ids_list)},
-                order_by=['ids']
-            )
+            .order_by(id_order)
 
     def get_single(self, id):
         try:
