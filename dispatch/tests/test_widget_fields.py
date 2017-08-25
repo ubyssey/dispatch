@@ -250,7 +250,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         id = -1
 
         try:
-            testfield.get_model(id)
+            testfield.get_single(id)
             self.fail('Field data is invalid, exception should have been thrown')
         except Article.DoesNotExist:
             pass
@@ -388,7 +388,7 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         id = 1
 
         try:
-            testfield.get_model(id)
+            testfield.get_single(id)
         except Image.DoesNotExist:
             pass
 
