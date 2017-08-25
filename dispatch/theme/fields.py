@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -53,14 +54,20 @@ class ModelField(Field):
             if not isinstance(data, int):
                 raise InvalidField('Data must be an integer')
 
-    def get_model(self, id):
+    def get_many(self, ids):
+        id_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids)])
+        return self.model.objects \
+            .filter(pk__in=ids) \
+            .order_by(id_order)
+
+    def get_single(self, id):
         try:
             return self.model.objects.get(pk=id)
         except self.model.DoesNotExist:
             raise self.model.DoesNotExist('%s with id %s does not exist' % (self.model, id))
 
     def get_model_json(self, id):
-        model = self.get_model(id)
+        model = self.get_single(id)
         serializer = self.serializer(model)
         return serializer.data
 
@@ -82,9 +89,9 @@ class ModelField(Field):
 
         try:
             if self.many:
-                return map(self.get_model, data)
+                return self.get_many(data)
             else:
-                return self.get_model(data)
+                return self.get_single(data)
         except ObjectDoesNotExist:
             return self.default
 
