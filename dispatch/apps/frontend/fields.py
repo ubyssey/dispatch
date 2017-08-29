@@ -1,5 +1,6 @@
-from dispatch.apps.content.models import Article
 from django.template import loader, Context
+
+from dispatch.models import Article
 
 class BaseField(object):
 
