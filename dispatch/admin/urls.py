@@ -6,5 +6,5 @@ def admin(request):
     return render_to_response('manager/index.html')
 
 urlpatterns = [
-    url(r'/?.*/', admin),
+    url(r'/?.*/', admin, name='dispatch-admin'),
 ]
