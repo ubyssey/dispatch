@@ -24,7 +24,6 @@ from dispatch.theme import ThemeManager
 from dispatch.modules.content.managers import ArticleManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.auth.models import Person, User
-from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -92,9 +91,6 @@ class Publishable(Model):
             return 'article/%s.html' % self.template
         else:
             return 'article/default.html'
-
-    def save_template_fields(self, template_fields):
-        return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def get_template_fields(self):
         template = ThemeManager.Templates.get(self.template)
