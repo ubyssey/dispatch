@@ -2,12 +2,13 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
-from dispatch.apps.core.models import User, Person
-from dispatch.apps.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
+from dispatch.models import (
+    Article, Image, ImageAttachment, ImageGallery,
+    File, Page, Person, Section, Tag, Topic, User)
 
-from dispatch.apps.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
-from dispatch.apps.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
+from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
+from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
+from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -274,7 +275,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     template = JSONField(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
-    template_fields = JSONField(required=False, source='get_template_fields')
+    template_data = JSONField(required=False)
 
     integrations = JSONField(required=False)
 
@@ -306,7 +307,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'reading_time',
             'template',
             'template_id',
-            'template_fields',
+            'template_data',
             'seo_keyword',
             'seo_description',
             'integrations'
@@ -327,21 +328,18 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
-        instance.template = validated_data.get('template_id', instance.template)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
         instance.integrations = validated_data.get('integrations', instance.integrations)
+        instance.template = validated_data.get('template_id', instance.template)
+        instance.template_data = validated_data.get('template_data', instance.template_data)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
-
-        template_fields = validated_data.get('get_template_fields')
-        if template_fields:
-            instance.save_template_fields(template_fields)
 
         featured_image = validated_data.get('featured_image', False)
         if featured_image != False:
@@ -381,7 +379,9 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
     latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
-    template_fields = JSONField(required=False, source='get_template_fields')
+    template = JSONField(required=False, source='get_template')
+    template_id = serializers.CharField(required=False, write_only=True)
+    template_data = JSONField(required=False)
 
     class Meta:
         model = Page
@@ -399,7 +399,8 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'current_version',
             'latest_version',
             'template',
-            'template_fields',
+            'template_id',
+            'template_data',
             'seo_keyword',
             'seo_description'
         )
@@ -417,18 +418,15 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
-        instance.template = validated_data.get('template', instance.template)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
+        instance.template = validated_data.get('template_id', instance.template)
+        instance.template_data = validated_data.get('template_data', instance.template_data)
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
-
-        template_fields = validated_data.get('get_template_fields')
-        if template_fields:
-            instance.save_template_fields(template_fields)
 
         featured_image = validated_data.get('featured_image', False)
         if featured_image != False:
@@ -459,7 +457,6 @@ class FieldSerializer(serializers.Serializer):
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()
-    widgets = serializers.JSONField(required=False)
 
 class WidgetSerializer(serializers.Serializer):
 
@@ -495,8 +492,6 @@ class ZoneSerializer(serializers.Serializer):
                             field.validate(field_data)
                         except InvalidField as e:
                             errors[field.name] = str(e)
-                    elif field.required:
-                            errors[field.name] = '%s is required' % field.label
 
         if errors:
             raise ValidationError(errors)

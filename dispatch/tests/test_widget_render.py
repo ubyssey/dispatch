@@ -4,7 +4,7 @@ from django.utils.html import mark_safe
 from dispatch.theme import register
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.theme.fields import CharField, TextField, ArticleField, ImageField, InvalidField
-from dispatch.apps.content.models import Article, Image
+from dispatch.models import Article, Image
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers

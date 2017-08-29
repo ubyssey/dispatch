@@ -1,12 +1,10 @@
 from datetime import datetime
 
-from dispatch.apps.content.models import Article, Image
+from dispatch.models import Article, Image
 from dispatch.theme import register
 from dispatch.theme.fields import (
     CharField, TextField, ArticleField, ImageField,
-    WidgetField, Field, DateTimeField,
-    IntegerField, BoolField
-)
+    WidgetField, Field, DateTimeField, IntegerField, BoolField)
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers

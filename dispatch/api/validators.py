@@ -2,9 +2,8 @@ from rest_framework.exceptions import ValidationError
 
 from django.contrib.auth.password_validation import validate_password
 
-from dispatch.apps.api.exceptions import InvalidFilename, InvalidGalleryAttachments
-from dispatch.apps.content.models import Image
-from dispatch.apps.core.models import Person
+from dispatch.api.exceptions import InvalidFilename, InvalidGalleryAttachments
+from dispatch.models import Image, Person
 
 class PasswordValidator(object):
 

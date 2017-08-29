@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from dispatch.apps.content.models import Article, Section
+from dispatch.models import Article, Section
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers

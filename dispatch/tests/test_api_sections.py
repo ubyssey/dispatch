@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.apps.content.models import Section
+from dispatch.models import Section
 
 class SectionsTests(DispatchAPITestCase):
 

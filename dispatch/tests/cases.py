@@ -6,7 +6,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 
-from dispatch.apps.core.models import User
+from dispatch.models import User
 
 TEST_EMAIL = 'test@test.com'
 TEST_PASSWORD = 'testing123'

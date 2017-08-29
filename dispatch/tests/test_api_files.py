@@ -9,7 +9,7 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.apps.content.models import File
+from dispatch.models import File
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 
@@ -30,7 +30,6 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_upload_file(self):
         """Upload test file"""
-
 
         response = DispatchTestHelpers.upload_file(self.client)
 

@@ -3,24 +3,12 @@ Default Dispatch settings
 """
 
 import os
-import sys
 
-from django.conf.global_settings import *
-
-DISPATCH_PROJECT_MODULE = os.environ.get('DISPATCH_PROJECT_MODULE', '')
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-BASE_PROJECT_DIR = os.environ.get('DISPATCH_PROJECT_DIR', BASE_DIR)
-
-BASE_URL = 'http://localhost:8000/'
-
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Application definition
 INSTALLED_APPS = [
-    'dispatch.apps.content',
-    'dispatch.apps.core',
-    'dispatch.apps.frontend',
+    'dispatch',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -31,26 +19,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken'
 ]
 
-# Logging
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers':['console'],
-            'propagate': True,
-            'level':'DEBUG',
-        }
-    },
-}
-
 # Replace default user model
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'dispatch.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -72,11 +42,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_PROJECT_DIR, DISPATCH_PROJECT_MODULE, 'templates'),
             os.path.join(BASE_DIR, 'dispatch/templates'),
-            os.path.join(BASE_DIR, 'dispatch/apps/frontend/themes/default/templates')
         ],
-        'APP_DIRS': True
     }
 ]
 
@@ -106,28 +73,9 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-ROOT_URLCONF = 'dispatch.urls'
-APPEND_SLASH = True
-WSGI_APPLICATION = '%s.wsgi.application' % DISPATCH_PROJECT_MODULE
-
-# Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-# Static and media files
-STATIC_ROOT = os.path.join(BASE_PROJECT_DIR, 'static')
-STATIC_URL = '/static/'
-
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'dispatch/static/dist'),
-    os.path.join(BASE_DIR, 'dispatch/static/manager/dist')
+    os.path.join(BASE_DIR, 'dispatch/static/manager/dist'),
 )
-
-MEDIA_ROOT = os.path.join(BASE_PROJECT_DIR, 'media')
-MEDIA_URL = '/media/'
 
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'CA'

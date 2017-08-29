@@ -4,8 +4,8 @@ from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.apps.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
-from dispatch.apps.content.models import Article, Image
+from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
+from dispatch.models import Article, Image
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound

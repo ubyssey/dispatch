@@ -6,7 +6,7 @@ from django.conf import settings
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.apps.content.models import Person, User
+from dispatch.models import Person, User
 
 class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     """A class to test the person API methods"""

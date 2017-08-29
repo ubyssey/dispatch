@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.apps.content.models import ImageGallery
+from dispatch.models import ImageGallery
 
 class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
 

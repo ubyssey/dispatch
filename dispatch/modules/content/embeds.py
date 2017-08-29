@@ -1,7 +1,7 @@
 from django.template import loader, Context
 
-from dispatch.apps.frontend.exceptions import EmbedException
-from dispatch.theme import ThemeManager
+class EmbedException(Exception):
+    pass
 
 class EmbedLibrary(object):
 
@@ -100,7 +100,7 @@ class ImageController(AbstractTemplateRenderController):
     @classmethod
     def get_image(self, id):
 
-        from dispatch.apps.content.models import Image
+        from dispatch.models import Image
 
         try:
             return Image.objects.get(pk=id)
@@ -110,7 +110,7 @@ class ImageController(AbstractTemplateRenderController):
     @classmethod
     def to_json(self, data):
 
-        from dispatch.apps.api.serializers import ImageSerializer
+        from dispatch.api.serializers import ImageSerializer
 
         id = data['image_id']
 
@@ -145,7 +145,7 @@ class GalleryController(AbstractTemplateRenderController):
     @classmethod
     def get_gallery(self, id):
 
-        from dispatch.apps.content.models import ImageGallery
+        from dispatch.models import ImageGallery
 
         try:
             return ImageGallery.objects.get(pk=id)
@@ -155,7 +155,7 @@ class GalleryController(AbstractTemplateRenderController):
     @classmethod
     def to_json(self, data):
 
-        from dispatch.apps.api.serializers import ImageGallerySerializer
+        from dispatch.api.serializers import ImageGallerySerializer
 
         id = data['id']
 
@@ -187,16 +187,6 @@ class GalleryController(AbstractTemplateRenderController):
             'size': len(images)
         }
 
-class WidgetController(AbstractController):
-
-    @classmethod
-    def render(self, data):
-
-        widget = ThemeManager.Widgets.get(data['widget_id'])
-        widget.set_data(data['data'])
-
-        return widget.render()
-
 embedlib.register('quote', PullQuoteController)
 embedlib.register('code', CodeController)
 embedlib.register('advertisement', AdvertisementController)
@@ -205,4 +195,3 @@ embedlib.register('list', ListController)
 embedlib.register('video', VideoController)
 embedlib.register('image', ImageController)
 embedlib.register('gallery', GalleryController)
-embedlib.register('widget', WidgetController)

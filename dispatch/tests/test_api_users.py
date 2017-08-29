@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth import authenticate
 
-from dispatch.apps.content.models import Person, User
+from dispatch.models import Person, User
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.test_api_persons import PersonsTests
 from dispatch.tests.helpers import DispatchTestHelpers
