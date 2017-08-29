@@ -5,6 +5,4 @@ def admin(request):
     """Render HTML entry point for manager app."""
     return render_to_response('manager/index.html')
 
-urlpatterns = [
-    url(r'/?.*/', admin, name='dispatch-admin'),
-]
+urlpatterns = [url(r'/?.*/', admin, name='dispatch-admin')]
