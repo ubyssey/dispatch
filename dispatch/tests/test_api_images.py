@@ -9,7 +9,7 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.apps.content.models import Image, Person
+from dispatch.models import Image, Person
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 

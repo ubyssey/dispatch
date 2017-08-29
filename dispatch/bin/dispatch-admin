@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-import tarfile
-import tempfile
-import shutil
-import fileinput
 import dispatch
 import coverage
 
@@ -14,43 +10,7 @@ from django.test.utils import get_runner
 
 PACKAGE_DIR = os.path.dirname(dispatch.__file__)
 
-def rename_path(base, before, after):
-    os.rename(os.path.join(base, before), os.path.join(base, after))
-
-def replace_in_file(path, before, after):
-    lines = []
-    with open(path) as infile:
-        for line in infile:
-            lines.append(line.replace(before, after))
-    with open(path, 'w') as outfile:
-        for line in lines:
-            outfile.write(line)
-
-def start_project(name):
-    template_path = os.path.join(PACKAGE_DIR, 'core/management/templates/project.tar.gz')
-
-    # Use temporary directory to prepare new project files
-    tmp_dir = tempfile.mkdtemp()
-
-    # Open and extract the project template tar archive
-    tar = tarfile.open(template_path)
-    tar.extractall(tmp_dir)
-
-    # Insert project name into manage.py
-    replace_in_file(os.path.join(tmp_dir, 'project/manage.py'), '{{project}}', name)
-
-    # Rename default directories using new project name
-    rename_path(tmp_dir, 'project/project', 'project/%s' % name)
-    rename_path(tmp_dir, 'project', name)
-
-    # Move temporary directory into current working directory
-    shutil.move(
-        os.path.join(tmp_dir, name),
-        os.path.join(os.getcwd(), name)
-    )
-
 def run_tests(*args):
-
     os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.settings'
 
     django.setup()
@@ -103,7 +63,6 @@ def coverage_html_report():
     cov.html_report()
 
 commands = {
-    'startproject': start_project,
     'test': run_tests,
     'coverage': run_coverage,
     'report': coverage_report,

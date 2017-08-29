@@ -20,10 +20,10 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.template import loader, Context
 
-from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.content.managers import ArticleManager
-from dispatch.apps.content.render import content_to_html
-from dispatch.apps.core.models import Person, User
+from dispatch.theme import ThemeManager
+from dispatch.modules.content.managers import ArticleManager
+from dispatch.modules.content.render import content_to_html
+from dispatch.modules.auth.models import Person, User
 from dispatch.apps.frontend.templates import TemplateManager
 
 class Tag(Model):
@@ -69,6 +69,7 @@ class Publishable(Model):
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
+    template_data = JSONField(default={})
 
     seo_keyword = CharField(max_length=100, null=True)
     seo_description = TextField(null=True)
@@ -96,15 +97,15 @@ class Publishable(Model):
         return TemplateManager.save_fields(self.id, self.template, template_fields)
 
     def get_template_fields(self):
-        Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        if Template:
-            return Template(article_id=self.id).field_data_as_json()
+        template = ThemeManager.Templates.get(self.template)
+        if template:
+            return template.fields_to_json()
         return None
 
     def get_template(self):
-        Template = ThemeHelper.get_theme_template(template_slug=self.template)
-        if Template:
-            return Template().to_json()
+        template = ThemeManager.Templates.get(self.template)
+        if template:
+            return template.to_json()
         return None
 
     @property

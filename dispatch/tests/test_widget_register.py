@@ -4,7 +4,6 @@ from dispatch.theme import register
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.theme.exceptions import InvalidWidget, InvalidZone
 
-
 class TestZone(Zone):
      id = 'test-zone'
      name = 'Test zone'

@@ -10,19 +10,19 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
 
-from dispatch.helpers.theme import ThemeHelper
-from dispatch.apps.core.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
-from dispatch.apps.core.actions import list_actions, recent_articles
+from dispatch.modules.integrations.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
+from dispatch.modules.actions.actions import list_actions, recent_articles
 
-from dispatch.apps.core.models import Person, User
-from dispatch.apps.content.models import Article, Page, Section, Tag, Topic, Image, ImageAttachment, ImageGallery, File
+from dispatch.models import (
+    Article, File, Image, ImageAttachment, ImageGallery,
+    Page, Person, Section, Tag, Topic, User)
 
-from dispatch.apps.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
-from dispatch.apps.api.serializers import (
+from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
+from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer)
-from dispatch.apps.api.exceptions import ProtectedResourceError, BadCredentials
+from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound
@@ -237,8 +237,7 @@ class TemplateViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
-
-        templates = [T().to_json() for T in ThemeHelper.get_theme_templates()]
+        templates = [t.to_json() for t in ThemeManager.Templates.list()]
 
         data = {
             'results': templates
@@ -247,10 +246,8 @@ class TemplateViewSet(viewsets.GenericViewSet):
         return Response(data)
 
     def retrieve(self, request, pk=None):
-
-        Template = ThemeHelper.get_theme_template(template_slug=pk)
-
-        data = Template().to_json()
+        template = ThemeManager.Templates.get(pk)
+        data = template.to_json()
 
         return Response(data)
 
@@ -342,7 +339,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
     def list(self, request):
 
         zones = ThemeManager.Zones.list()
-        
+
         serializer = ZoneSerializer(zones, many=True)
 
         return self.get_paginated_response(serializer.data)

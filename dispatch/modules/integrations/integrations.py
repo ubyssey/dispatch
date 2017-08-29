@@ -5,8 +5,8 @@ from django.template import loader, Context
 from django.utils.html import escape
 
 from dispatch.core.signals import post_create, post_update
-from dispatch.apps.core.models import Integration
-from dispatch.apps.content.models import Article
+from dispatch.modules.content.models import Article
+from dispatch.modules.integrations.models import Integration
 
 from dispatch.vendor.apis import Facebook, FacebookAPIError
 

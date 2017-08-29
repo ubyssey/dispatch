@@ -1,12 +1,11 @@
 from django.db.models import (
-    Model, CharField, SlugField, TextField, BooleanField, 
-    ForeignKey, OneToOneField, ManyToManyField, 
-    ImageField, DateTimeField, PositiveIntegerField, PROTECT)
+    Model, CharField, SlugField, TextField,
+    BooleanField, OneToOneField, ImageField, PROTECT)
 from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
 
-from dispatch.apps.core.managers import UserManager, IntegrationManager
+from dispatch.modules.auth.managers import UserManager
 
 class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
@@ -46,24 +45,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return self.is_staff
-
-class Setting(Model):
-    name = CharField(max_length=255)
-    value = CharField(max_length=255)
-
-class Action(Model):
-    user = ForeignKey(User)
-    action = CharField(max_length=50)
-    object_type = CharField(max_length=50)
-    object_id = PositiveIntegerField()
-    timestamp = DateTimeField(auto_now=True)
-
-class Integration(Model):
-    """
-    Stores information about a Dispatch integration setting.
-    """
-
-    integration_id = CharField(unique=True, max_length=100)
-    settings = TextField(default='{}')
-
-    objects = IntegrationManager()

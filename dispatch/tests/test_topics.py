@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.apps.content.models import Topic
+from dispatch.models import Topic
 
 class TopicsTests(DispatchAPITestCase):
 

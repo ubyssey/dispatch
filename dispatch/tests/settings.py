@@ -1,22 +1,19 @@
 import os
 
-from dispatch.conf.default_settings import (
-    ROOT_URLCONF,
-    REST_FRAMEWORK,
-    AUTH_USER_MODEL,
-    INSTALLED_APPS as DEFAULT_INSTALLED_APPS,
-    DISPATCH_PROJECT_MODULE,
-    TEMPLATES,
-    AUTH_PASSWORD_VALIDATORS
-)
+from dispatch.default_settings import *
 
+BASE_DIR = os.path.dirname(__file__)
+
+ROOT_URLCONF = 'dispatch.tests.urls'
+
+DEBUG = False
 SECRET_KEY = 'fake-key'
 BASE_URL = 'http://test.dispatch/'
 
 FACEBOOK_CLIENT_ID = ''
 FACEBOOK_CLIENT_SECRET = ''
 
-INSTALLED_APPS = ['dispatch.tests'] + DEFAULT_INSTALLED_APPS
+INSTALLED_APPS += ['dispatch.tests']
 
 DATABASES = {
     'default': {
@@ -25,4 +22,14 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
+TEMPLATES += [
+    {
+        'NAME': 'test',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+    }
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

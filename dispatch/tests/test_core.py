@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from dispatch.apps.core.integrations import BaseIntegration
+from dispatch.modules.integrations import BaseIntegration
 
 class IntegrationTestCase(TestCase):
 

@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.apps.content.models import Article, Person, Section, Image
+from dispatch.models import Article, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):

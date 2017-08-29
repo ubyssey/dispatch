@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 
 from dispatch.tests.cases import DispatchAPITestCase
 
-from dispatch.apps.content.models import Article, User
+from dispatch.models import Article, User
 
 class AuthenticationTests(DispatchAPITestCase):
 
