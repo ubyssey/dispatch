@@ -12,16 +12,15 @@ from django.db.models import (
     ImageField, FileField, BooleanField, ForeignKey, ManyToManyField,
     SlugField, SET_NULL)
 from django.conf import settings
-from django.core.validators import MaxValueValidator, MinLengthValidator, MaxLengthValidator
+from django.core.validators import MaxValueValidator
 from django.utils import timezone
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.template import loader, Context
 
 from dispatch.theme import ThemeManager
-from dispatch.modules.content.managers import ArticleManager
+from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.auth.models import Person, User
 
@@ -81,6 +80,8 @@ class Publishable(Model):
     created_at = DateTimeField()
     updated_at = DateTimeField(auto_now=True)
     published_at = DateTimeField(null=True)
+
+    objects = PublishableManager()
 
     def add_view(self):
         self.views += 1
@@ -255,8 +256,6 @@ class Article(Publishable):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
-
-    objects = ArticleManager()
 
     def __str__(self):
         return self.headline
