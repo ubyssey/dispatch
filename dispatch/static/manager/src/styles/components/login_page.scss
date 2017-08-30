@@ -1,8 +1,10 @@
+@import '../utilities/fonts';
+
 .c-login-page {
   height: 100%;
   width: 100%;
   position: relative;
-  background-color: #f9f9f9;
+  background-color: darken(#30404d, 10%);
 
   form {
     min-width: 325px;
@@ -33,5 +35,11 @@
 }
 
 .c-login-page__heading {
-  font-size: 1.5em;
+  // Structure
+  margin-bottom: 1.5rem;
+
+  // Text
+  font-weight: 600;
+  @include font-size(22);
+  -webkit-font-smoothing: antialiased;
 }

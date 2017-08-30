@@ -37,10 +37,10 @@ class LoginPageComponent extends React.Component {
     return (
       <DocumentTitle title='Dispatch'>
         <div className='c-login-page'>
-          <form onSubmit={this.onSubmit} className='pt-card pt-elevation-2'>
-            <div className='c-login-page__heading'>
-              Dispatch
-            </div>
+          <form onSubmit={this.onSubmit} className='pt-card pt-dark pt-elevation-1'>
+            <h1 className='c-login-page__heading'>
+              <span className="pt-icon pt-icon-selection" /> dispatch
+            </h1>
             <input
               className='pt-input'
               name="email"
