@@ -115,7 +115,6 @@ class ModelField(Field):
 
 
 class CharField(Field):
-
     type = 'char'
 
     def validate(self, data):
@@ -130,7 +129,6 @@ class CharField(Field):
             raise InvalidField('%s is required' % self.label)
 
 class TextField(Field):
-
     type = 'text'
 
     def validate(self, data):
@@ -141,7 +139,6 @@ class TextField(Field):
             raise InvalidField('%s is required' % self.label)
 
 class DateTimeField(Field):
-
     type = 'datetime'
 
     def validate(self, data):
@@ -200,7 +197,6 @@ class IntegerField(Field):
             return None
 
 class BoolField(Field):
-
     type = 'bool'
 
     def validate(self, data):
@@ -221,25 +217,22 @@ class SelectField(Field):
             raise InvalidField('%s is not a valid option' % data)
 
 class ArticleField(ModelField):
+    type = 'article'
 
     from dispatch.models import Article
-
-    type = 'article'
 
     model = Article
     serializer = ArticleSerializer
 
 class ImageField(ModelField):
+    type = 'image'
 
     from dispatch.models import Image
-
-    type = 'image'
 
     model = Image
     serializer = ImageSerializer
 
 class WidgetField(Field):
-
     type = 'widget'
 
     def __init__(self, label, widgets, required=False):
