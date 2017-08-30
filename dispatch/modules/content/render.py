@@ -1,6 +1,6 @@
 from django.utils.safestring import mark_safe
 
-from dispatch.apps.frontend.embeds import embedlib
+from dispatch.modules.content.embeds import embedlib
 
 def content_to_html(content):
     """Returns artilce/page content as HTML"""

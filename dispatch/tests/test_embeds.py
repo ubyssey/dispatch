@@ -3,10 +3,10 @@ import datetime
 from django.template import loader
 from django.core.urlresolvers import reverse
 
-from dispatch.apps.frontend import embeds
+from dispatch.modules.content import embeds
+from dispatch.models import ImageGallery
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.models import ImageGallery
 
 class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 

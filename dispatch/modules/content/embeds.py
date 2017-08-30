@@ -1,4 +1,4 @@
-from django.template import loader, Context
+from django.template import loader
 
 class EmbedException(Exception):
     pass
