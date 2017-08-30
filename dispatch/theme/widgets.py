@@ -2,10 +2,10 @@ from collections import OrderedDict
 
 from django.template import loader
 
-from dispatch.apps.frontend.models import Zone as ZoneModel
 from dispatch.theme import ThemeManager
-from dispatch.theme.fields import Field
+from dispatch.theme.fields import MetaFields, Field
 from dispatch.theme.exceptions import InvalidField
+from dispatch.theme.models import Zone as ZoneModel
 
 class MetaZone(type):
     def __init__(cls, name, bases, nmspc):
@@ -44,7 +44,6 @@ class Zone(object):
 
     @property
     def widget(self):
-
         if not self._is_loaded:
             self._load_zone()
 
@@ -79,28 +78,9 @@ class Zone(object):
         """Delete widget data for this zone"""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
-class MetaWidget(type):
-
-    def __new__(cls, name, bases, classdict):
-
-        def prepare_fields():
-
-            def get_field(name, field):
-                field.name = name
-                return field
-
-            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
-            fields.sort(key=lambda f: f[1]._creation_counter)
-
-            return [get_field(name, field) for name, field in fields]
-
-        classdict['fields'] = prepare_fields()
-
-        return type.__new__(cls, name, bases, classdict)
-
 class Widget(object):
 
-    __metaclass__ = MetaWidget
+    __metaclass__ = MetaFields
 
     accepted_keywords = ()
     """Accepted extra keyword arguments when rendered via template tag.

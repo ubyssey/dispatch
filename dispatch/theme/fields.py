@@ -4,14 +4,32 @@ from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.models import Article, Image
+from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 
-from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 
+class MetaFields(type):
+    """Metaclass that adds field support to an object"""
+
+    def __new__(cls, name, bases, classdict):
+        def prepare_fields():
+
+            def get_field(name, field):
+                field.name = name
+                return field
+
+            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+            fields.sort(key=lambda f: f[1]._creation_counter)
+
+            return [get_field(name, field) for name, field in fields]
+
+        classdict['fields'] = prepare_fields()
+
+        return type.__new__(cls, name, bases, classdict)
+
 class Field(object):
-    """Base class for all widget fields"""
+    """Base class for all fields"""
 
     _creation_counter = 0
 
@@ -44,7 +62,7 @@ class Field(object):
         return data
 
 class ModelField(Field):
-    """Base class for model widget fields"""
+    """Base class for model fields"""
 
     def validate(self, data):
         if self.many:
@@ -191,12 +209,16 @@ class BoolField(Field):
 
 class ArticleField(ModelField):
 
+    from dispatch.models import Article
+
     type = 'article'
 
     model = Article
     serializer = ArticleSerializer
 
 class ImageField(ModelField):
+
+    from dispatch.models import Image
 
     type = 'image'
 
@@ -253,6 +275,8 @@ class WidgetField(Field):
 
 
     def get_widget(self, id):
+        from dispatch.theme import ThemeManager
+
         if id is None:
             return None
 

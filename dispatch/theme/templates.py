@@ -1,18 +1,33 @@
+from dispatch.theme.fields import MetaFields
+
 class Template:
 
-    fields = ()
+    __metaclass__ = MetaFields
+
+    def __init__(self):
+        self.data = {}
+
+    def set_data(self, data):
+        """Sets data for each field"""
+        self.data = data
 
     def to_json(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'fields': self.fields_to_json() if hasattr(self, 'fields') else []
-        }
+        """Return JSON representation for this widget"""
 
-    def fields_to_json(self):
-        return [dict(field_class.as_json(),
-                     name=field, label=label)
-                for field, label, field_class in self.fields]
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.to_json(self.data.get(field.name))
+
+    def to_json(self):
+        """Return JSON representation for this template"""
+
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.to_json(self.data.get(field.name))
+
+        return result
 
 class Default(Template):
     id = 'default'

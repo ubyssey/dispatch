@@ -2,15 +2,15 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
-from dispatch.models import (
+from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
-    File, Page, Person, Section, Tag, Topic, User)
+    File, Page, Section, Tag, Topic)
+from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
-from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -452,20 +452,17 @@ class IntegrationSerializer(serializers.Serializer):
         return self.instance
 
 class FieldSerializer(serializers.Serializer):
-
     type = serializers.CharField()
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()
 
 class WidgetSerializer(serializers.Serializer):
-
     id = serializers.SlugField()
     name = serializers.CharField(read_only=True)
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
 
 class ZoneSerializer(serializers.Serializer):
-
     id = serializers.SlugField(read_only=True)
     name = serializers.CharField(read_only=True)
     widget = PrimaryKeyField(allow_null=True, serializer=WidgetSerializer(allow_null=True))
@@ -473,6 +470,8 @@ class ZoneSerializer(serializers.Serializer):
 
     def validate(self, data):
         """Perform validation of the widget data"""
+        
+        from dispatch.theme import ThemeManager
 
         errors = {}
 
@@ -508,3 +507,8 @@ class ZoneSerializer(serializers.Serializer):
             instance.save(validated_data)
 
         return instance
+
+class TemplateSerializer(serializers.Serializer):
+    id = serializers.SlugField()
+    name = serializers.CharField(read_only=True)
+    fields = serializers.ListField(read_only=True, child=FieldSerializer())
