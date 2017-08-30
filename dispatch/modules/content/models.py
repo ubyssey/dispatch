@@ -19,7 +19,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from dispatch.theme import ThemeManager
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.auth.models import Person, User
@@ -84,17 +83,13 @@ class Publishable(Model):
         else:
             return 'article/default.html'
 
-    def get_template_fields(self):
-        template = ThemeManager.Templates.get(self.template)
-        if template:
-            return template.fields_to_json()
-        return None
-
     def get_template(self):
-        template = ThemeManager.Templates.get(self.template)
-        if template:
-            return template.to_json()
-        return None
+        from dispatch.theme import ThemeManager
+
+        try:
+            return ThemeManager.Templates.get(self.template)
+        except:
+            return None
 
     @property
     def html(self):

@@ -4,7 +4,9 @@ from dispatch.models import Article, Image
 from dispatch.theme import register
 from dispatch.theme.fields import (
     CharField, TextField, ArticleField, ImageField,
-    WidgetField, Field, DateTimeField, IntegerField, BoolField)
+    WidgetField, Field, DateTimeField,
+    IntegerField, BoolField, SelectField
+)
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -69,7 +71,7 @@ class TestWidgetR(Widget):
     image = ImageField('Featured image', required=True)
     widget = WidgetField('Featured Widget', [TestWidgetSub], required=True)
 
-class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
+class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_char_field(self):
         """Should be able to initialize charfield and set data"""
@@ -143,6 +145,72 @@ class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
         try:
             testfield.validate(6)
             self.fail('Setting TextField data to a number should raise InvalidField')
+        except InvalidField:
+            pass
+
+    def test_select_field(self):
+        """Should be able to initialize select field and set data"""
+
+        TEST_OPTIONS = [
+            ['1', 'Option 1'],
+            ['2', 'Option 2']
+        ]
+
+        testfield = SelectField('Test', options=TEST_OPTIONS)
+
+        try:
+            testfield.validate('2')
+        except InvalidField:
+            self.fail('"2" is a valid option for this field')
+
+        try:
+            testfield.validate('3')
+            self.fail('"3" is not a valid option for this field, exception expected')
+        except InvalidField:
+            pass
+
+    def test_select_field_required(self):
+        """Required select fields should not accept empty values"""
+
+        TEST_OPTIONS = [
+            ['1', 'Option 1'],
+            ['2', 'Option 2']
+        ]
+
+        testfield = SelectField('Test', options=TEST_OPTIONS, required=True)
+
+        try:
+            testfield.validate('')
+            self.fail('Empty string is not a valid option for this field, exception expected')
+        except InvalidField:
+            pass
+
+    def test_select_field_optional(self):
+        """Optional select field should accept empty values"""
+
+        TEST_OPTIONS = [
+            ['1', 'Option 1'],
+            ['2', 'Option 2']
+        ]
+
+        testfield = SelectField('Test', options=TEST_OPTIONS, required=False)
+
+        try:
+            testfield.validate('')
+        except InvalidField:
+            self.fail('Empty values are valid for optional select fields')
+
+        try:
+            testfield.validate(None)
+        except InvalidField:
+            self.fail('Empty values are valid for optional select fields')
+
+    def test_select_field_empty(self):
+        """Empty select fields cannot be required fields"""
+
+        try:
+            testfield = SelectField('Test', options=[], required=True)
+            self.fail('Empty select fields cannot be required fields')
         except InvalidField:
             pass
 

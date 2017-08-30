@@ -5,14 +5,14 @@ import { AnchorButton } from '@blueprintjs/core'
 import { FormInput, TextInput, TextAreaInput, DateTimeInput, SelectInput } from '../inputs'
 
 const CATEGORY_CHOICES = [
-    { value: 'sports', label: 'Sports' },
-    { value: 'music', label: 'Music' },
-    { value: 'academic', label: 'Academic' },
-    { value: 'party', label: 'Party' },
-    { value: 'business', label: 'Business' },
-    { value: 'ceremony', label: 'Ceremony' },
-    { value: 'workshop', label: 'Workshop' },
-    { value: 'other', label: 'Other' }
+    ['sports', 'Sports'],
+    ['music', 'Music'],
+    ['academic', 'Academic'],
+    ['party', 'Party'],
+    ['business', 'Business'],
+    ['ceremony', 'Ceremony'],
+    ['workshop', 'Workshop'],
+    ['other', 'Other']
 ]
 
 export default class EventForm extends React.Component {

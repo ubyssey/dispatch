@@ -20,11 +20,11 @@ from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer)
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
-from dispatch.theme.exceptions import ZoneNotFound
+from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
 
 class SectionViewSet(DispatchModelViewSet):
     """
@@ -213,23 +213,34 @@ class ImageGalleryViewSet(DispatchModelViewSet):
     queryset = ImageGallery.objects.all()
 
 class TemplateViewSet(viewsets.GenericViewSet):
+    """Viewset for Template views"""
 
     permission_classes = (IsAuthenticated,)
 
+    def get_object_or_404(self, pk=None):
+        try:
+            return ThemeManager.Templates.get(pk)
+        except TemplateNotFound:
+            raise NotFound("The template with id '%s' does not exist" % pk)
+
+    def get_paginated_response(self, data):
+        return Response({
+            'count': len(data),
+            'results': data
+        })
+
     def list(self, request):
-        templates = [t.to_json() for t in ThemeManager.Templates.list()]
-
-        data = {
-            'results': templates
-        }
-
-        return Response(data)
+        templates = ThemeManager.Templates.list()
+        for t in templates:
+            print t
+            print t.fields
+        serializer = TemplateSerializer(templates, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        template = ThemeManager.Templates.get(pk)
-        data = template.to_json()
-
-        return Response(data)
+        template = self.get_object_or_404(pk)
+        serializer = TemplateSerializer(template)
+        return Response(serializer.data)
 
 class IntegrationViewSet(viewsets.GenericViewSet):
     """

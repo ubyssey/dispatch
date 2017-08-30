@@ -54,7 +54,7 @@ export default function ArticleSidebar(props) {
           <TemplateTab
             update={props.update}
             template={props.article.template || 'default'}
-            template_fields={props.article.template_fields || {}} />
+            data={props.article.template_data || {}} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

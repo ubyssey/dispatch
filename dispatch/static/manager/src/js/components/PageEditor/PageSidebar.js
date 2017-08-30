@@ -43,7 +43,7 @@ export default function PageSidebar(props) {
           <TemplateTab
             update={props.update}
             template={props.page.template || 'default'}
-            template_fields={props.page.template_fields || {}} />
+            data={props.page.template_data || {}} />
         </TabPanel>
 
         <TabPanel className='c-article-sidebar__panel'>

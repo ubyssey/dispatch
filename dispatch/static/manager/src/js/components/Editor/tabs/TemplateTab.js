@@ -4,110 +4,50 @@ import { connect } from 'react-redux'
 
 import templatesActions from '../../../actions/TemplatesActions'
 
-import { FormInput, TextInput, SelectInput } from '../../inputs'
-
+import WidgetField from '../../ZoneEditor/WidgetField'
+import { FormInput } from '../../inputs'
 import TemplateSelectInput from '../../inputs/TemplateSelectInput'
 
-function renderSelectField(field, value, handleOnChange) {
-
-  let options = field.options.map( option => {
-    return { value: option[0], label: option[1] }
-  })
-
-  return (
-    <SelectInput
-      options={options}
-      selected={value} onChange={handleOnChange} /> )
-}
-
-function renderTextField(field, value, handleOnChange) {
-  return (
-    <TextInput
-      value={value}
-      fill={true}
-      placeholder={field.label}
-      onChange={handleOnChange} /> )
-}
-
-function renderField(field, value, handleOnChange) {
-  switch (field.type) {
-  case 'text':
-    return renderTextField(field, value, handleOnChange)
-  case 'select':
-    return renderSelectField(field, value, handleOnChange)
-  }
-}
-
 class TemplateTabComponent extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.handleFieldChange = this.handleFieldChange.bind(this)
-  }
 
   componentWillMount() {
     this.props.getTemplate(this.props.token, this.props.template)
   }
 
-  handleFieldChange(field, e) {
+  updateField(fieldName, value) {
     this.props.update(
-      'template_fields',
-      R.assoc(field.name, e.target.value, this.props.template_fields)
+      'template_data',
+      R.assoc(fieldName, value, this.props.data)
     )
   }
 
   render() {
+    const template = this.props.entities.templates[this.props.template] || null
 
-    let template = this.props.entities.templates[this.props.template] || false
+    const fields = template ? template.fields.map((field) => (
+      <WidgetField
+        key={`template-field__${template.id}__${field.name}`}
+        field={field}
+        data={this.props.data[field.name] || null}
+        onChange={(data) => this.updateField(field.name, data)} />
+    )) : null
 
-    if (template) {
-
-      return (
-        <div>
-
-          <FormInput label='Template'>
-            <TemplateSelectInput
-              selected={this.props.template}
-              update={ template => this.props.update('template', template) } />
-          </FormInput>
-
-          <div>{this.renderTemplateFields(template)}</div>
-
-        </div>
-      )
-
-    } else {
-      return (
-        <div>Loading</div>
-      )
-    }
-
-  }
-
-  renderTemplateFields(template) {
-
-    template.fields = template.fields || []
-
-    return template.fields.map( field => {
-      let value = this.props.template_fields[field.name]
-      return (
-        <FormInput key={field.name} label={field.label}>
-          {renderField(
-            field,
-            value,
-            e => this.handleFieldChange(field, e)
-          )}
+    return (
+      <div>
+        <FormInput label='Template'>
+          <TemplateSelectInput
+            selected={this.props.template}
+            update={template => this.props.update('template', template) } />
         </FormInput>
-      )
-    })
-
+        <div>{fields}</div>
+      </div>
+    )
   }
-
 }
 
 const mapStateToProps = (state) => {
   return {
+    templates: state.app.templates,
     entities: {
       templates: state.app.entities.templates
     },

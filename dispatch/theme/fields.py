@@ -4,14 +4,32 @@ from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 from dispatch.models import Article, Image
+from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 
-from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 
+class MetaFields(type):
+    """Metaclass that adds field support to an object"""
+
+    def __new__(cls, name, bases, classdict):
+        def prepare_fields():
+
+            def get_field(name, field):
+                field.name = name
+                return field
+
+            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+            fields.sort(key=lambda f: f[1]._creation_counter)
+
+            return [get_field(name, field) for name, field in fields]
+
+        classdict['fields'] = prepare_fields()
+
+        return type.__new__(cls, name, bases, classdict)
+
 class Field(object):
-    """Base class for all widget fields"""
+    """Base class for all fields"""
 
     _creation_counter = 0
 
@@ -44,7 +62,7 @@ class Field(object):
         return data
 
 class ModelField(Field):
-    """Base class for model widget fields"""
+    """Base class for model fields"""
 
     def validate(self, data):
         if self.many:
@@ -97,7 +115,6 @@ class ModelField(Field):
 
 
 class CharField(Field):
-
     type = 'char'
 
     def validate(self, data):
@@ -112,7 +129,6 @@ class CharField(Field):
             raise InvalidField('%s is required' % self.label)
 
 class TextField(Field):
-
     type = 'text'
 
     def validate(self, data):
@@ -123,7 +139,6 @@ class TextField(Field):
             raise InvalidField('%s is required' % self.label)
 
 class DateTimeField(Field):
-
     type = 'datetime'
 
     def validate(self, data):
@@ -140,8 +155,8 @@ class DateTimeField(Field):
         return parse_datetime(data) if data and isinstance(data, basestring) else None
 
 class IntegerField(Field):
-
     type = 'integer'
+
     def __init__(self, label, many=False, min_value=None, max_value=None, required=False):
         self.min_value = min_value
         self.max_value = max_value
@@ -182,29 +197,50 @@ class IntegerField(Field):
             return None
 
 class BoolField(Field):
-
     type = 'bool'
 
     def validate(self, data):
         if type(data) is not bool:
             raise InvalidField('%s must be boolean' % self.label)
 
-class ArticleField(ModelField):
+class SelectField(Field):
+    type = 'select'
 
+    def __init__(self, label, options=[], required=False):
+        self.options = options
+        self.valid_options = set(option[0] for option in self.options)
+
+        if required and not self.options:
+            raise InvalidField('Empty select fields cannot be required fields')
+
+        super(SelectField, self).__init__(label=label, many=False, required=required)
+
+    def validate(self, data):
+        if data == '' or data is None:
+            if self.required:
+                raise InvalidField('%s is required' % self.label)
+            return
+
+        if data not in self.valid_options:
+            raise InvalidField('%s is not a valid option' % data)
+
+class ArticleField(ModelField):
     type = 'article'
+
+    from dispatch.models import Article
 
     model = Article
     serializer = ArticleSerializer
 
 class ImageField(ModelField):
-
     type = 'image'
+
+    from dispatch.models import Image
 
     model = Image
     serializer = ImageSerializer
 
 class WidgetField(Field):
-
     type = 'widget'
 
     def __init__(self, label, widgets, required=False):
@@ -253,6 +289,8 @@ class WidgetField(Field):
 
 
     def get_widget(self, id):
+        from dispatch.theme import ThemeManager
+
         if id is None:
             return None
 
