@@ -43,7 +43,6 @@ class ItemSelectInput extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounting')
     this.fetchResults()
   }
 
