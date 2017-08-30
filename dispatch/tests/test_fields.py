@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from dispatch.models import Article, Image
+from dispatch.apps.content.models import Article, Image
 from dispatch.theme import register
 from dispatch.theme.fields import (
     CharField, TextField, ArticleField, ImageField,
-    WidgetField, Field, DateTimeField, IntegerField, BoolField)
+    WidgetField, Field, DateTimeField,
+    IntegerField, BoolField
+)
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -69,7 +71,7 @@ class TestWidgetR(Widget):
     image = ImageField('Featured image', required=True)
     widget = WidgetField('Featured Widget', [TestWidgetSub], required=True)
 
-class WidgetFieldTest(DispatchAPITestCase, DispatchMediaTestMixin):
+class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_char_field(self):
         """Should be able to initialize charfield and set data"""
