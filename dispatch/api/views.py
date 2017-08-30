@@ -1,4 +1,3 @@
-from django.template.loader import render_to_string
 from django.db.models import Q, ProtectedError
 from django.contrib.auth import authenticate
 
@@ -71,25 +70,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(section_id=section)
 
         return queryset
-
-    @detail_route(methods=['get'],)
-    def rendered(self, request, parent_id=None):
-
-        article = Article.objects.get(parent_id=parent_id, head=True)
-
-        context = {
-            'article': article,
-            'base_template': 'blank.html',
-        }
-
-        data = {
-            'id': article.parent_id,
-            'headline': article.headline,
-            'url': article.get_absolute_url(),
-            'html': render_to_string(article.get_template(), context)
-        }
-
-        return Response(data)
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """
