@@ -11,9 +11,9 @@ import 'brace/theme/chrome'
 require('../styles/embeds/code.scss')
 
 const MODES = [
-  { value: 'html', label: 'html' },
-  { value: 'css', label:'css' },
-  { value: 'javascript', label: 'javascript' }
+  ['html', 'html'],
+  ['css', 'css'],
+  ['javascript', 'javascript']
 ]
 
 function CodeEmbedComponent(props) {

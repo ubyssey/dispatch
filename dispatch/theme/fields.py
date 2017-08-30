@@ -158,8 +158,8 @@ class DateTimeField(Field):
         return parse_datetime(data) if data and isinstance(data, basestring) else None
 
 class IntegerField(Field):
-
     type = 'integer'
+
     def __init__(self, label, many=False, min_value=None, max_value=None, required=False):
         self.min_value = min_value
         self.max_value = max_value
@@ -206,6 +206,19 @@ class BoolField(Field):
     def validate(self, data):
         if type(data) is not bool:
             raise InvalidField('%s must be boolean' % self.label)
+
+class SelectField(Field):
+    type = 'select'
+
+    def __init__(self, label, options=[], required=False):
+        self.options = options
+        self.valid_options = set(option[0] for option in self.options)
+
+        super(SelectField, self).__init__(label=label, many=False, required=required)
+
+    def validate(self, data):
+        if data not in self.valid_options:
+            raise InvalidField('%s is not a valid option' % data)
 
 class ArticleField(ModelField):
 

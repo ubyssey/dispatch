@@ -243,6 +243,18 @@ class SectionSerializer(DispatchModelSerializer):
             'slug',
         )
 
+class FieldSerializer(serializers.Serializer):
+    type = serializers.CharField()
+    name = serializers.CharField()
+    label = serializers.CharField()
+    many = serializers.BooleanField()
+    options = serializers.ListField(required=False)
+
+class TemplateSerializer(serializers.Serializer):
+    id = serializers.SlugField()
+    name = serializers.CharField(read_only=True)
+    fields = serializers.ListField(read_only=True, child=FieldSerializer())
+
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Article model.
@@ -273,7 +285,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
     latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
-    template = JSONField(required=False, source='get_template')
+    template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
     template_data = JSONField(required=False)
 
@@ -336,6 +348,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
 
+        print instance.template
+
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
@@ -379,7 +393,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
     latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
-    template = JSONField(required=False, source='get_template')
+    template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
     template_data = JSONField(required=False)
 
@@ -451,12 +465,6 @@ class IntegrationSerializer(serializers.Serializer):
 
         return self.instance
 
-class FieldSerializer(serializers.Serializer):
-    type = serializers.CharField()
-    name = serializers.CharField()
-    label = serializers.CharField()
-    many = serializers.BooleanField()
-
 class WidgetSerializer(serializers.Serializer):
     id = serializers.SlugField()
     name = serializers.CharField(read_only=True)
@@ -470,7 +478,7 @@ class ZoneSerializer(serializers.Serializer):
 
     def validate(self, data):
         """Perform validation of the widget data"""
-        
+
         from dispatch.theme import ThemeManager
 
         errors = {}
@@ -507,8 +515,3 @@ class ZoneSerializer(serializers.Serializer):
             instance.save(validated_data)
 
         return instance
-
-class TemplateSerializer(serializers.Serializer):
-    id = serializers.SlugField()
-    name = serializers.CharField(read_only=True)
-    fields = serializers.ListField(read_only=True, child=FieldSerializer())

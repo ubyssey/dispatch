@@ -86,10 +86,10 @@ class Publishable(Model):
     def get_template(self):
         from dispatch.theme import ThemeManager
 
-        template = ThemeManager.Templates.get(self.template)
-        if template:
-            return template.to_json()
-        return None
+        try:
+            return ThemeManager.Templates.get(self.template)
+        except:
+            return None
 
     @property
     def html(self):

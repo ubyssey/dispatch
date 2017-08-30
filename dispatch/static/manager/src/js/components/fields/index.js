@@ -6,6 +6,7 @@ import EventField from './EventField'
 import DateTimeField from './DateTimeField'
 import IntegerField from './IntegerField'
 import BoolField from './BoolField'
+import SelectField from './SelectField'
 import WidgetField from './WidgetField'
 
 export {
@@ -17,5 +18,6 @@ export {
   DateTimeField as datetime,
   IntegerField as integer,
   BoolField as bool,
+  SelectField as select,
   WidgetField as widget
 }

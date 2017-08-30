@@ -231,6 +231,9 @@ class TemplateViewSet(viewsets.GenericViewSet):
 
     def list(self, request):
         templates = ThemeManager.Templates.list()
+        for t in templates:
+            print t
+            print t.fields
         serializer = TemplateSerializer(templates, many=True)
         return self.get_paginated_response(serializer.data)
 

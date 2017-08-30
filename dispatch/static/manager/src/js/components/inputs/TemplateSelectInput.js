@@ -36,7 +36,7 @@ class TemplateSelectInputComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    templates: state.app.templates,
+    templates: state.app.templates.list,
     entities: {
       templates: state.app.entities.templates
     },
