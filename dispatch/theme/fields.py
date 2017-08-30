@@ -210,9 +210,17 @@ class SelectField(Field):
         self.options = options
         self.valid_options = set(option[0] for option in self.options)
 
+        if required and not self.options:
+            raise InvalidField('Empty select fields cannot be required fields')
+
         super(SelectField, self).__init__(label=label, many=False, required=required)
 
     def validate(self, data):
+        if data == '' or data is None:
+            if self.required:
+                raise InvalidField('%s is required' % self.label)
+            return
+
         if data not in self.valid_options:
             raise InvalidField('%s is not a valid option' % data)
 

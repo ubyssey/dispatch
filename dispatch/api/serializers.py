@@ -348,8 +348,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
 
-        print instance.template
-
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
