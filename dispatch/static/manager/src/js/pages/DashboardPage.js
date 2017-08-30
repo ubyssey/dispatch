@@ -3,6 +3,7 @@ import DocumentTitle from 'react-document-title'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import { Intent } from '@blueprintjs/core'
 
 import { LinkButton } from '../components/inputs'
 import Panel from '../components/Panel'
@@ -58,8 +59,16 @@ class DashboardPageComponent extends React.Component {
           <div className='c-dashboard__sidebar'>
             <h2 className='c-dashboard__header'>Quick Actions</h2>
             <ul className='c-dashboard_quick-actions'>
-              <li className='c-dashboard_quick-actions__item'><LinkButton to='/articles/new'>New Article</LinkButton></li>
-              <li className='c-dashboard_quick-actions__item'><LinkButton to='/pages/new'>New Page</LinkButton></li>
+              <li className='c-dashboard_quick-actions__item'>
+                <LinkButton to='/articles/new/' intent={Intent.SUCCESS}>
+                  <span className='pt-icon-standard pt-icon-add'></span>New Article
+                </LinkButton>
+              </li>
+              <li className='c-dashboard_quick-actions__item'>
+                <LinkButton to='/pages/new/' intent={Intent.SUCCESS}>
+                  <span className='pt-icon-standard pt-icon-add'></span>New Page
+                </LinkButton>
+              </li>
             </ul>
             <Panel title='Recent Articles'>
               <ul>{this.props.recent.isLoaded ? this.renderRecent() : null}</ul>
