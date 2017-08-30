@@ -100,7 +100,7 @@ class PagesTest(DispatchAPITestCase):
         self.assertEqual(response.data['slug'], 'new-test-page')
         self.assertEqual(response.data['snippet'], 'This is a new test snippet')
 
-        old_page = Page.objects.get(pk=response.data['id'])
+        old_page = Page.objects.get(parent_id=response.data['id'], revision_id=1)
 
         self.assertEqual(old_page.title, 'Test Page')
         self.assertEqual(old_page.slug, 'test-page')

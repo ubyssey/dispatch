@@ -290,7 +290,7 @@ class ArticlesTests(DispatchAPITestCase):
         article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
 
         section = Section.objects.create(name='Test section 2', slug='test-section-2')
-        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3', section, section.slug)
+        article_3 = DispatchTestHelpers.create_article(self.client, 'Article 3', 'article-3', section.name, section.slug)
 
         section_id =  article_1.data['section']['id']
 

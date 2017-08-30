@@ -27,9 +27,6 @@ from dispatch.modules.auth.models import Person, User
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
 
-    def __str__(self):
-        return self.name
-
 class Topic(Model):
     name = CharField(max_length=255)
     last_used = DateTimeField(null=True)
@@ -38,15 +35,9 @@ class Topic(Model):
         self.last_used = datetime.datetime.now()
         self.save()
 
-    def __str__(self):
-        return self.name
-
 class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
-
-    def __str__(self):
-        return self.name
 
 class Publishable(Model):
     """
@@ -256,9 +247,6 @@ class Article(Publishable):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
-
-    def __str__(self):
-        return self.headline
 
     @property
     def title(self):
