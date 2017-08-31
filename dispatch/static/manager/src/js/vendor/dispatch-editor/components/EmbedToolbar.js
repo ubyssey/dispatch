@@ -24,6 +24,7 @@ export default class EmbedToolbar extends React.Component {
     return this.props.embeds.map( embed => {
       return (
         <button
+          className='pt-button'
           key={embed.type}
           onClick={e => this.insertEmbed(e, embed)}>{embed.type}</button>
       )
