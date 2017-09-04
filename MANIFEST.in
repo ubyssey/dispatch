@@ -1,5 +1,10 @@
 recursive-include dispatch/templates *
-recursive-include dispatch/apps *
-include dispatch/core/management/templates/*
+recursive-include dispatch/modules *
+recursive-include dispatch/api *
+recursive-include dispatch/core *
+recursive-include dispatch/admin *
+recursive-include dispatch/vendor *
+recursive-include dispatch/theme *
+recursive-include dispatch/templatetags *
 recursive-include dispatch/static/manager/dist *
 recursive-exclude dispatch/static/manager/node_modules *

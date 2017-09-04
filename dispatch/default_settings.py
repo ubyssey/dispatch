@@ -22,6 +22,8 @@ INSTALLED_APPS = [
 # Replace default user model
 AUTH_USER_MODEL = 'dispatch.User'
 
+API_URL = '/api/'
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',

@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import url from 'url'
 
-const API_URL = process.env.API_URL || 'http://localhost:8000/api/'
+const API_URL = window.API_URL
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'

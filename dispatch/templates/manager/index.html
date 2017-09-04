@@ -4,6 +4,7 @@
 </head>
 <body>
   <div id="container" class="u-container-root"></div>
-  <script src="{% static 'js/index-0.2.21.js' %}" type="application/javascript"></script>
+  <script type="text/javascript">var API_URL = '{{ api_url }}';</script>
+  <script src="{% static app_bundle %}" type="application/javascript"></script>
 </body>
 </html>
