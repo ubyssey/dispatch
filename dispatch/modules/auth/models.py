@@ -14,6 +14,7 @@ class Person(Model):
     image = ImageField(upload_to='images', null=True)
     slug = SlugField(null=True, unique=True)
     description = TextField(null=True, blank=True)
+    title = CharField(max_length=255, null=True, blank=True)
 
     def get_image_url(self):
         return settings.MEDIA_URL + str(self.image)

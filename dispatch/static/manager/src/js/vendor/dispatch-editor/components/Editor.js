@@ -47,6 +47,10 @@ function blockStyleFn(contentBlock) {
     return baseStyle + '--unstyled'
   case 'atomic':
     return baseStyle + '--embed'
+  case 'unordered-list-item':
+    return baseStyle + '--list-item'
+  case 'header-two':
+    return baseStyle + '--header'
   }
 }
 
@@ -297,7 +301,7 @@ class ContentEditor extends React.Component {
     let key = this.state.editorState.getSelection().getStartKey()
     let block = contentState.getBlockForKey(key)
 
-    if (!block) {
+    if (!block || block.getType() !== 'unstyled') {
       return
     }
 
@@ -332,6 +336,10 @@ class ContentEditor extends React.Component {
     this.closePopover()
   }
 
+  toggleBlockType(blockType) {
+    this.onChange(actions.toggleBlockType(this.state.editorState, blockType))
+  }
+
   focusEditor() {
     this.refs.editor.focus()
   }
@@ -345,9 +353,10 @@ class ContentEditor extends React.Component {
       <FormatPopover
         insertLink={(selection, url) => this.insertLink(selection, url)}
         removeLink={(selection) => this.removeLink(selection)}
-        toggleStyle={s => this.toggleInlineStyle(s)}
         isLinkInputActive={this.state.isLinkInputActive}
         closeLinkInput={() => this.setState({isLinkInputActive : false})}
+        toggleInlineStyle={style => this.toggleInlineStyle(style)}
+        toggleBlockType={blockType => this.toggleBlockType(blockType)}
         focusEditor={() => null }
         close={() => this.closePopover} />
     )

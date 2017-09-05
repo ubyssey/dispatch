@@ -7,16 +7,36 @@
 
 .c-dispatch-editor__editor {
   margin-left: 50px;
+
+  .o-embed-container {
+    margin-bottom: 1.5rem;
+  }
+
+  ul.public-DraftStyleDefault-ul {
+    list-style-type: disc;
+    margin-bottom: 1rem;
+    padding-left: 20px;
+  }
 }
 
 .c-dispatch-editor__editor__block {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 
-  &--unstyled {
+  &--unstyled,
+  &--list-item {
     font-family: Georgia;
     font-size: 16px;
     color: #2F2F2F;
     line-height: 26px;
+  }
+
+  &--list-item {
+    margin-bottom: 0;
+  }
+
+  &--header {
+    font-weight: 500;
+    font-size: 1.5rem;
   }
 }
 

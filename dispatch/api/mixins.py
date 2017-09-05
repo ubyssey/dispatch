@@ -26,15 +26,15 @@ class DispatchPublishableMixin(object):
         # Only show unpublished articles to authenticated users
         if self.request.user.is_authenticated():
             queryset = self.model.objects.all()
+
+            version = self.request.query_params.get('version', None)
+
+            if version is not None:
+                queryset = queryset.filter(revision_id=version)
+            else:
+                queryset = queryset.filter(head=True)
         else:
             queryset = self.model.objects.filter(is_published=True)
-
-        version = self.request.query_params.get('version', None)
-
-        if version is not None:
-            queryset = queryset.filter(revision_id=version)
-        else:
-            queryset = queryset.filter(head=True)
 
         return queryset
 

@@ -12,20 +12,20 @@ class Template:
         self.data = data
 
     def to_json(self):
-        """Return JSON representation for this widget"""
-
-        result = {}
-
-        for field in self.fields:
-            result[field.name] = field.to_json(self.data.get(field.name))
-
-    def to_json(self):
         """Return JSON representation for this template"""
-
         result = {}
 
         for field in self.fields:
             result[field.name] = field.to_json(self.data.get(field.name))
+
+        return result
+
+    def prepare_data(self):
+        """Prepare data for Django template"""
+        result = {}
+
+        for field in self.fields:
+            result[field.name] = field.prepare_data(self.data.get(field.name))
 
         return result
 

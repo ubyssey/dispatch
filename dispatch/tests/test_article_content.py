@@ -88,8 +88,7 @@ class ArticleContentTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 'type': 'gallery',
                 'data': {
                     'id': gallery.data['id'],
-                    'caption': 'Test caption 1',
-                    'credit': 'Test credit 1'
+                    'title': 'Test title'
                 }
             },
             {

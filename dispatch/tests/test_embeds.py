@@ -224,15 +224,11 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'credit' : 'This is a test credit'
         }
 
-        json = {
-            'image': image.data,
-            'caption': 'This is a test caption',
-            'credit': 'This is a test credit'
-        }
-        self.maxDiff = None
         result = embeds.embedlib.to_json('image', data)
 
-        self.assertEqual(result, json)
+        self.assertEqual(result['caption'], data['caption'])
+        self.assertEqual(result['credit'], data['credit'])
+        self.assertEqual(result['image']['id'], data['image_id'])
 
     def test_invalid_image_id(self):
         """Should raise EmbedException"""

@@ -30,6 +30,10 @@ export function toggleInlineStyle(editorState, style) {
   return RichUtils.toggleInlineStyle(editorState, style)
 }
 
+export function toggleBlockType(editorState, blockType) {
+  return RichUtils.toggleBlockType(editorState, blockType)
+}
+
 export function insertEmbed(editorState, blockKey, type, data={}) {
   // Create new entity with given type and data
   const entityKey = Entity.create(type, 'IMMUTABLE', data)

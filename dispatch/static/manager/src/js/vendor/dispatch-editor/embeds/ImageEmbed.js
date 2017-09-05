@@ -12,7 +12,7 @@ function ImageEmbedComponent(props) {
             selected={props.data.image_id}
             onChange={imageId => props.updateField('image_id', imageId)} />
         </FormInput>
-        <FormInput label='Caption2'>
+        <FormInput label='Caption'>
           <TextInput
             fill={true}
             value={props.data.caption}

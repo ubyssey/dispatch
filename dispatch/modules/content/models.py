@@ -20,7 +20,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
-from dispatch.modules.content.render import content_to_html
+from dispatch.modules.content.render import content_to_html, content_to_json
 from dispatch.modules.auth.models import Person, User
 
 class Tag(Model):
@@ -64,7 +64,7 @@ class Publishable(Model):
 
     integrations = JSONField(default={})
 
-    content = JSONField(default=[])
+    _content = JSONField(db_column='content', default=[])
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
@@ -72,6 +72,23 @@ class Publishable(Model):
     published_at = DateTimeField(null=True)
 
     objects = PublishableManager()
+
+    def get_content(self):
+        return content_to_json(self._content)
+
+    def set_content(self, content):
+        self._content = content
+
+    content = property(get_content, set_content)
+
+    @property
+    def template_fields(self):
+        if not hasattr(self, '_template_fields'):
+            template = self.get_template()
+            if template:
+                template.set_data(self.template_data)
+                self._template_fields = template.prepare_data()
+        return self._template_fields
 
     def add_view(self):
         self.views += 1
@@ -84,12 +101,15 @@ class Publishable(Model):
             return 'article/default.html'
 
     def get_template(self):
-        from dispatch.theme import ThemeManager
+        if not hasattr(self, '_template'):
+            from dispatch.theme import ThemeManager
 
-        try:
-            return ThemeManager.Templates.get(self.template)
-        except:
-            return None
+            try:
+                self._template = ThemeManager.Templates.get(self.template)
+            except:
+                self._template = None
+
+        return self._template
 
     @property
     def html(self):
@@ -143,7 +163,7 @@ class Publishable(Model):
 
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
-            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
+           raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
         # Set created_at to current time, but only for first version
         if not self.created_at:
@@ -366,6 +386,7 @@ class Image(Model):
     }
 
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png)'
+    VALID_IMAGE_FORMATS = '.(jpg|gif|png)'
 
     THUMBNAIL_SIZE = 'square'
 
@@ -383,13 +404,16 @@ class Image(Model):
 
     def get_name(self):
         """Returns the filename without extension."""
-        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
+        file_name = re.split(self.VALID_IMAGE_FORMATS, self.get_file_name())
         return file_name[0]
 
     def get_file_extension(self):
         """Returns the file extension."""
-        file_name = re.split(self.IMAGE_FORMATS, self.get_file_name())
-        return file_name[1]
+        file_name = re.split(self.VALID_IMAGE_FORMATS, self.get_file_name())
+        try:
+            return file_name[1]
+        except IndexError:
+            return ''
 
     def get_absolute_url(self):
         """Returns the full size image URL."""
@@ -399,18 +423,24 @@ class Image(Model):
         """Returns the medium size image URL."""
         if self.is_gif():
             return self.get_absolute_url()
-
-        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), 'medium', self.get_file_extension())
+        return '%s%s-%s.jpg' % (settings.MEDIA_URL, self.get_name(), 'medium')
 
     def get_thumbnail_url(self):
         """Returns the thumbnail URL."""
-        return '%s%s-%s.%s' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE, self.get_file_extension())
+        return '%s%s-%s.jpg' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
     # Overriding
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
 
         is_new = self.pk is None
+
+        name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
+        file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
+
+        # Standardize jpg extension
+        if file_type in self.JPG_FORMATS:
+            self.img.name = '%s.jpg' % name
 
         # Call super method
         super(Image, self).save(**kwargs)
@@ -435,7 +465,7 @@ class Image(Model):
             image.thumbnail(size, Img.ANTIALIAS)
 
         # Attach new thumbnail label to image filename
-        name = "%s-%s.%s" % (name, label, fileType)
+        name = "%s-%s.jpg" % (name, label)
 
         # Image.save format takes JPEG not jpg
         if fileType in self.JPG_FORMATS:

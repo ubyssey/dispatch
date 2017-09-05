@@ -15,16 +15,23 @@ export default class FormatPopover extends React.Component {
     }
   }
 
-  toggleStyle(e, style) {
+  toggleInlineStyle(e, style) {
     e.stopPropagation()
     this.props.focusEditor()
-    this.props.toggleStyle(style)
+    this.props.toggleInlineStyle(style)
+  }
+
+  toggleBlockType(e, blockType) {
+    e.stopPropagation()
+    this.props.focusEditor()
+    this.props.toggleBlockType(blockType)
   }
 
   showLinkInput() {
     this.props.focusEditor()
     this.setState({ showLinkInput: true })
   }
+
   renderLinkInput() {
     return (
       <ContentEditorLinkEditor
@@ -43,19 +50,19 @@ export default class FormatPopover extends React.Component {
       <div>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleStyle(e, 'BOLD') }
+          onClick={ e => this.toggleInlineStyle(e, 'BOLD') }
           title='Bold'>
           <span className='pt-icon-standard pt-icon-bold'></span>
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleStyle(e, 'ITALIC') }
+          onClick={ e => this.toggleInlineStyle(e, 'ITALIC') }
           title='Italic'>
           <span className='pt-icon-standard pt-icon-italic'></span>
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleStyle(e, 'UNDERLINE') }
+          onClick={ e => this.toggleInlineStyle(e, 'UNDERLINE') }
           title='Underline'>
           <span className='pt-icon-standard pt-icon-underline'></span>
         </AnchorButton>
@@ -66,6 +73,7 @@ export default class FormatPopover extends React.Component {
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
+          onClick={ e => this.toggleBlockType(e, 'unordered-list-item') }
           title='List'>
           <span className='pt-icon-standard pt-icon-properties'></span>
         </AnchorButton>

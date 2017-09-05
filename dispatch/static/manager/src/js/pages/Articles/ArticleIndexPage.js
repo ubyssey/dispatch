@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItems: (token, articleIds) => {
       dispatch(articlesActions.deleteMany(token, articleIds))
     },
-    searchListItems: (token, section, query) => {
+    searchArticles: (section, query) => {
       dispatch(articlesActions.search(section, query))
     }
   }
@@ -67,6 +67,7 @@ function ArticlePageComponent(props) {
         }
         return query
       }}
+      searchListItems={(query) => props.searchArticles(props.location.query.section, query)}
       {...props} />
   )
 }

@@ -11,30 +11,84 @@ import { List, OrderedMap } from 'immutable'
 
 import convertToHTML from './convertToHTML'
 
-function parseBlock(block) {
-  const type = block.getType()
+const DRAFT_TYPES = {
+  PARAGRAPH: 'unstyled',
+  EMBED: 'atomic',
+  HEADER: 'header-two',
+  LIST: 'unordered-list-item'
+}
 
-  if (type === 'atomic') {
-    const entity = Entity.get(block.getEntityAt(0))
-    return {
-      type: entity.getType().toLowerCase(),
-      data: entity.getData()
-    }
-  } else {
-    return {
-      type: 'paragraph',
-      data: convertToHTML(block)
+const DISPATCH_TYPES = {
+  PARAGRAPH: 'paragraph',
+  HEADER: 'header',
+  LIST: 'list'
+}
+
+function embedToJSON(jsonBlocks, block) {
+  const entity = Entity.get(block.getEntityAt(0))
+  const jsonBlock = {
+    type: entity.getType().toLowerCase(),
+    data: entity.getData()
+  }
+  return jsonBlocks.push(jsonBlock)
+}
+
+function paragraphToJSON(jsonBlocks, block) {
+  const jsonBlock = {
+    type: 'paragraph',
+    data: convertToHTML(block)
+  }
+  return jsonBlocks.push(jsonBlock)
+}
+
+function headerToJSON(jsonBlocks, block) {
+  const jsonBlock = {
+    type: 'header',
+    data: {
+      'content': convertToHTML(block),
+      'size': 'h2'
     }
   }
-
+  return jsonBlocks.push(jsonBlock)
 }
 
-function createParagraphBlock(block) {
-  return convertFromHTML(block.data)
+function listToJSON(jsonBlocks, block, lastType) {
+  const data = convertToHTML(block)
+
+  if (lastType == DISPATCH_TYPES.LIST) {
+    const jsonBlock = {
+      type: DISPATCH_TYPES.LIST,
+      data: jsonBlocks.last().data.push(data)
+    }
+    return jsonBlocks.set(jsonBlock.size - 1, jsonBlock)
+  } else {
+    const jsonBlock = {
+      type: DISPATCH_TYPES.LIST,
+      data: [data]
+    }
+    return jsonBlocks.push(jsonBlock)
+  }
 }
 
-function createEntityBlock(block) {
+function blockToJSON(jsonBlocks, block) {
+  const type = block.getType()
+  const lastType = jsonBlocks.last() ? jsonBlocks.last().type : null
 
+  switch(type) {
+  case DRAFT_TYPES.EMBED:
+    return embedToJSON(jsonBlocks, block, lastType)
+  case DRAFT_TYPES.PARAGRAPH:
+    return paragraphToJSON(jsonBlocks, block, lastType)
+  case DRAFT_TYPES.HEADER:
+    return headerToJSON(jsonBlocks, block, lastType)
+  case DRAFT_TYPES.LIST:
+    return listToJSON(jsonBlocks, block, lastType)
+  default:
+    return jsonBlocks
+  }
+}
+
+function embedToBlock(block) {
   const entity = new EntityInstance({
     type: block.type,
     mutability: 'IMMUTABLE',
@@ -55,17 +109,48 @@ function createEntityBlock(block) {
     contentBlocks: [contentBlock],
     entityMap: {entityKey: entity}
   }
-
 }
 
-function createBlock(acc, block) {
+function paragraphToBlock(block) {
+  return convertFromHTML(block.data)
+}
 
+function headerToBlock(block) {
+  const contentBlocks = convertFromHTML(block.data.content).contentBlocks
+    .map(contentBlock => contentBlock.set('type', DRAFT_TYPES.HEADER))
+
+  return {
+    contentBlocks: contentBlocks,
+    entityMap: {}
+  }
+}
+
+function listToBlock(block) {
+  const contentBlocks = block.data
+    .map(text => convertFromHTML(text).contentBlocks[0])
+    .map(contentBlock => contentBlock.set('type', DRAFT_TYPES.LIST))
+
+  return {
+    contentBlocks: contentBlocks,
+    entityMap: {}
+  }
+}
+
+function JSONToBlock(acc, block) {
   let blocksFromJSON
 
-  if (block.type === 'paragraph') {
-    blocksFromJSON = createParagraphBlock(block)
-  } else {
-    blocksFromJSON = createEntityBlock(block)
+  switch (block.type) {
+  case DISPATCH_TYPES.PARAGRAPH:
+    blocksFromJSON = paragraphToBlock(block)
+    break
+  case DISPATCH_TYPES.LIST:
+    blocksFromJSON = listToBlock(block)
+    break
+  case DISPATCH_TYPES.HEADER:
+    blocksFromJSON = headerToBlock(block)
+    break
+  default:
+    blocksFromJSON = embedToBlock(block)
   }
 
   if (blocksFromJSON) {
@@ -74,13 +159,16 @@ function createBlock(acc, block) {
   }
 
   return acc
-
 }
 
 function fromJSON(jsonBlocks) {
+  if (!jsonBlocks.length) {
+    return ContentState.createFromText('')
+  }
+
   const blocksFromHTML =
     jsonBlocks.reduce(
-      createBlock,
+      JSONToBlock,
       { contentBlocks: new Array(), entityMap: new OrderedMap() }
     )
 
@@ -91,29 +179,13 @@ function fromJSON(jsonBlocks) {
   )
 }
 
-function escapeHTML(block) {
-  if (block.type == 'paragraph') {
-    let data = block.data
-
-    data = data.replace('&', '&amp;')
-    data = data.replace(/<(?![ab]|em|h[1-6]|li|ul|\/[ab]|\/em|\/h[1-6]|\/li|\/ul)/g, '&lt;')
-
-    block.data = data
-  }
-  return block
-}
-
 function toJSON(contentState) {
   if (!contentState) {
-    contentState =  ContentState.createFromText('')
+    contentState = ContentState.createFromText('')
   }
 
   // Converts from ContentState to JSON
-  return contentState.getBlockMap()
-    .map(parseBlock)
-    .toList()
-    .toJS()
-    .map(escapeHTML)
+  return contentState.getBlockMap().reduce(blockToJSON, List()).toJSON()
 }
 
 export {

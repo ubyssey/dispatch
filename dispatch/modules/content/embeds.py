@@ -53,7 +53,6 @@ class AbstractTemplateRenderController(AbstractController):
     def prepare_data(self, data):
         return data
 
-
 class ListController(AbstractController):
 
     @classmethod
@@ -99,7 +98,6 @@ class ImageController(AbstractTemplateRenderController):
 
     @classmethod
     def get_image(self, id):
-
         from dispatch.models import Image
 
         try:
@@ -109,17 +107,17 @@ class ImageController(AbstractTemplateRenderController):
 
     @classmethod
     def to_json(self, data):
-
         from dispatch.api.serializers import ImageSerializer
 
-        id = data['image_id']
+        image_id = data['image_id']
 
-        image = self.get_image(id)
+        image = self.get_image(image_id)
 
         serializer = ImageSerializer(image)
         image_data = serializer.data
 
         return {
+            'image_id': image_id,
             'image': image_data,
             'caption' : data['caption'],
             'credit' : data['credit']
@@ -127,7 +125,6 @@ class ImageController(AbstractTemplateRenderController):
 
     @classmethod
     def prepare_data(self, data):
-
         id = data['image_id']
 
         image = self.get_image(id)

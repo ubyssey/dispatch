@@ -248,6 +248,7 @@ class FieldSerializer(serializers.Serializer):
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()
+    widgets = serializers.JSONField(required=False)
     options = serializers.ListField(required=False)
 
 class TemplateSerializer(serializers.Serializer):
@@ -370,7 +371,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
+        instance.save(update_fields=['_content', 'featured_image', 'topic'], revision=False)
 
         return instance
 
@@ -445,7 +446,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_featured_image(featured_image)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image'], revision=False)
+        instance.save(update_fields=['_content', 'featured_image'], revision=False)
 
         return instance
 
@@ -497,6 +498,8 @@ class ZoneSerializer(serializers.Serializer):
                             field.validate(field_data)
                         except InvalidField as e:
                             errors[field.name] = str(e)
+                    elif field.required:
+                        errors[field.name] = '%s is required' % field.label
 
         if errors:
             raise ValidationError(errors)

@@ -9,7 +9,7 @@ class VideoEmbedComponent extends React.Component {
 
   insertVideo() {
     const id = this.getYoutubeID(this.props.data.url)
-    this.props.updateField('video_id', id)
+    this.props.updateField('id', id)
     this.props.stopEditing()
   }
 
@@ -43,7 +43,7 @@ class VideoEmbedComponent extends React.Component {
       <div>
         <img
           className='o-embed--video__image'
-          src={`http://img.youtube.com/vi/${this.props.data.video_id}/0.jpg`} />
+          src={`http://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
         <form>
           <FormInput label='Title'>
             <TextInput
@@ -72,7 +72,7 @@ class VideoEmbedComponent extends React.Component {
   render(){
     return (
       <div className='o-embed o-embed--video'>
-        {this.props.data.video_id ? this.renderVideo() : this.renderInput()}
+        {this.props.data.id ? this.renderVideo() : this.renderInput()}
       </div>
     )
   }
@@ -82,7 +82,7 @@ export default {
   type: 'video',
   component: VideoEmbedComponent,
   defaultData: {
-    video_id: null,
+    id: null,
     url: '',
     title: '',
     caption: '',
