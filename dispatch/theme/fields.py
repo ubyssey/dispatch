@@ -250,7 +250,6 @@ class WidgetField(Field):
         for widget in widgets:
             self.widgets[widget.id] = WidgetSerializer(widget).data
 
-
     def validate(self, data):
         if not data or not data['id']:
             if self.required:

@@ -43,13 +43,13 @@ class Publishable(Model):
     Base model for Article and Page models.
     """
 
-    revision_id = PositiveIntegerField(default=0)
-    head = BooleanField(default=False)
+    revision_id = PositiveIntegerField(default=0, db_index=True)
+    head = BooleanField(default=False, db_index=True)
 
-    is_published = BooleanField(default=False)
+    is_published = BooleanField(default=False, db_index=True)
     is_active = BooleanField(default=True)
 
-    slug = SlugField(max_length=255)
+    slug = SlugField(max_length=255, db_index=True)
 
     shares = PositiveIntegerField(default=0, blank=True, null=True)
     views = PositiveIntegerField(default=0)
