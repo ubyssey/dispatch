@@ -6,7 +6,7 @@ Here are some great resources that are most definitely better than this one:
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Interactive Guide to git](https://try.github.io/levels/1/challenges/1)
 * [Another lightweight simple guide](http://guides.beanstalkapp.com/version-control/common-git-commands.html)
-* [You can also use Github desktop - some like it, some don't](https://desktop.github.com)
+* [You can also use Github desktop instead of the command line](https://desktop.github.com)
 ---
 
 ### Quick Overview
