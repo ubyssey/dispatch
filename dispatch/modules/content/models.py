@@ -20,7 +20,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
-from dispatch.modules.content.render import content_to_html, content_to_json
+from dispatch.modules.content.render import content_to_html
 from dispatch.modules.auth.models import Person, User
 
 class Tag(Model):
@@ -49,6 +49,9 @@ class Publishable(Model):
     is_published = BooleanField(default=False, db_index=True)
     is_active = BooleanField(default=True)
 
+    published_version = PositiveIntegerField(null=True)
+    latest_version = PositiveIntegerField(null=True)
+
     slug = SlugField(max_length=255, db_index=True)
 
     shares = PositiveIntegerField(default=0, blank=True, null=True)
@@ -64,22 +67,14 @@ class Publishable(Model):
 
     integrations = JSONField(default={})
 
-    _content = JSONField(db_column='content', default=[])
+    content = JSONField(default=[])
     snippet = TextField(null=True)
 
     created_at = DateTimeField()
-    updated_at = DateTimeField(auto_now=True)
+    updated_at = DateTimeField()
     published_at = DateTimeField(null=True)
 
     objects = PublishableManager()
-
-    def get_content(self):
-        return content_to_json(self._content)
-
-    def set_content(self, content):
-        self._content = content
-
-    content = property(get_content, set_content)
 
     @property
     def template_fields(self):
@@ -126,11 +121,21 @@ class Publishable(Model):
         if self.published_at is None:
             self.published_at = datetime.datetime.now()
         self.save(revision=False)
+
+        # Set published version for all articles
+        type(self).objects.filter(parent=self.parent).update(published_version=self.revision_id)
+        self.published_version = self.revision_id
+
         return self
 
     def unpublish(self):
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
         self.is_published = False
+
+        # Unset published version for all articles
+        type(self).objects.filter(parent=self.parent).update(published_version=None)
+        self.published_version = None
+
         return self
 
     # Overriding
@@ -163,11 +168,15 @@ class Publishable(Model):
 
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
-           raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
+            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
 
         # Set created_at to current time, but only for first version
         if not self.created_at:
             self.created_at = timezone.now()
+            self.updated_at = timezone.now()
+
+        if revision:
+            self.updated_at = timezone.now()
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -175,6 +184,11 @@ class Publishable(Model):
         if not self.parent:
             self.parent = self
             super(Publishable, self).save(update_fields=['parent'])
+
+        if revision:
+            # Set latest version for all articles
+            type(self).objects.filter(parent=self.parent).update(latest_version=self.revision_id)
+            self.latest_version = self.revision_id
 
         return self
 
@@ -214,20 +228,6 @@ class Publishable(Model):
 
         self.featured_image = attachment
 
-    def get_published_version(self):
-        try:
-            published = type(self).objects.get(parent=self.parent, is_published=True)
-            return published.revision_id
-        except:
-            return None
-
-    def get_latest_version(self):
-        try:
-            head = type(self).objects.get(parent=self.parent, head=True)
-            return head.revision_id
-        except:
-            return None
-
     def get_previous_revision(self):
         if self.parent == self:
             return self
@@ -246,7 +246,7 @@ class Article(Publishable):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    authors = ManyToManyField(Person, through="Author")
+    authors = ManyToManyField(Person, through='Author')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
@@ -266,9 +266,6 @@ class Article(Publishable):
     @property
     def title(self):
         return self.headline
-
-    def get_authors(self):
-        return self.authors.order_by('author__order')
 
     def get_related(self):
         return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
@@ -317,10 +314,10 @@ class Article(Publishable):
         """
         def format_author(author):
             if links and author.slug:
-                return '<a href="/author/%s/">%s</a>' % (author.slug, author.full_name)
+                return '<a href="/authors/%s/">%s</a>' % (author.slug, author.full_name)
             return author.full_name
 
-        authors = map(format_author, self.authors.order_by('author__order'))
+        authors = map(format_author, self.authors.all())
 
         if not authors:
             return ""
@@ -357,6 +354,9 @@ class Author(Model):
     person = ForeignKey(Person)
     order = PositiveIntegerField()
 
+    class Meta:
+        ordering = ['order']
+
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
@@ -385,8 +385,8 @@ class Image(Model):
         'jpeg'
     }
 
-    IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png)'
-    VALID_IMAGE_FORMATS = '.(jpg|gif|png)'
+    IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
+    VALID_IMAGE_FORMATS = '.(jpg|gif|png|PNG|tiff|tif|dng)'
 
     THUMBNAIL_SIZE = 'square'
 
@@ -435,12 +435,12 @@ class Image(Model):
 
         is_new = self.pk is None
 
-        name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
-        file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
+        # name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
+        # file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
 
-        # Standardize jpg extension
-        if file_type in self.JPG_FORMATS:
-            self.img.name = '%s.jpg' % name
+        # # Standardize jpg extension
+        # if file_type in self.JPG_FORMATS:
+        #     self.img.name = '%s.jpg' % name
 
         # Call super method
         super(Image, self).save(**kwargs)

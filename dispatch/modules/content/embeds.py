@@ -106,24 +106,6 @@ class ImageController(AbstractTemplateRenderController):
             raise EmbedException('Image with id %d does not exist' % id)
 
     @classmethod
-    def to_json(self, data):
-        from dispatch.api.serializers import ImageSerializer
-
-        image_id = data['image_id']
-
-        image = self.get_image(image_id)
-
-        serializer = ImageSerializer(image)
-        image_data = serializer.data
-
-        return {
-            'image_id': image_id,
-            'image': image_data,
-            'caption' : data['caption'],
-            'credit' : data['credit']
-        }
-
-    @classmethod
     def prepare_data(self, data):
         id = data['image_id']
 
@@ -141,31 +123,12 @@ class GalleryController(AbstractTemplateRenderController):
 
     @classmethod
     def get_gallery(self, id):
-
         from dispatch.models import ImageGallery
 
         try:
             return ImageGallery.objects.get(pk=id)
         except ImageGallery.DoesNotExist:
             raise EmbedException('Image Gallery with id %d does not exist' % id)
-
-    @classmethod
-    def to_json(self, data):
-
-        from dispatch.api.serializers import ImageGallerySerializer
-
-        id = data['id']
-
-        gallery = self.get_gallery(id)
-
-        serializer = ImageGallerySerializer(gallery)
-        gallery_data = serializer.data
-
-        return {
-            'gallery' : gallery_data,
-            'id' : data['id'],
-            'title' : data['title']
-        }
 
     @classmethod
     def prepare_data(self, data):

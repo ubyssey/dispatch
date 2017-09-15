@@ -42,6 +42,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Templates
 TEMPLATES = [
     {
+        'NAME': 'app_dirs',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+    },
+    {
+        'NAME': 'dispatch',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'dispatch/templates'),

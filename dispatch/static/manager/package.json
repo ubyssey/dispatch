@@ -1,6 +1,6 @@
 {
   "name": "dispatch",
-  "version": "0.3.3",
+  "version": "0.3.11",
   "description": "The frontend framework for the Dispatch publishing platform.",
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "http://ubyssey.ca",
@@ -70,6 +70,6 @@
   "scripts": {
     "setup": "yarn install --force",
     "start": "webpack --watch --config webpack.dev.config.js",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack -p --config webpack.config.js"
   }
 }

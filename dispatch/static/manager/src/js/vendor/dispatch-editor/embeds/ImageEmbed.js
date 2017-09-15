@@ -36,7 +36,6 @@ export default {
     image_id: null,
     caption: '',
     credit: '',
-    url: null
   },
   showEdit: true
 }

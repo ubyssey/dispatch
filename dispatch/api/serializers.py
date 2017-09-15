@@ -256,6 +256,56 @@ class TemplateSerializer(serializers.Serializer):
     name = serializers.CharField(read_only=True)
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
 
+class ContentSerializer(serializers.Serializer):
+
+    def __init__(self, *args, **kwargs):
+        self.image_ids = []
+        self.images = {}
+
+        self.galleries = {}
+        self.gallery_ids = []
+
+        super(ContentSerializer, self).__init__(*args, **kwargs)
+
+    def to_representation(self, content):
+        self.queue_data(content)
+        self.fetch_data()
+        return self.insert_data(content)
+
+    def to_internal_value(self, content):
+        result = []
+        for block in content:
+            try:
+                if block['type'] == 'image':
+                    del block['data']['image']
+                if block['type'] == 'gallery':
+                    del block['data']['gallery']
+            except:
+                pass
+            result.append(block)
+        return result
+
+    def queue_data(self, content):
+        for block in content:
+            if block['type'] == 'image':
+                self.image_ids.append(block['data']['image_id'])
+            if block['type'] == 'gallery':
+                self.gallery_ids.append(block['data']['id'])
+
+    def fetch_data(self):
+        self.images = Image.objects.prefetch_related('authors').in_bulk(self.image_ids)
+        self.galleries = ImageGallery.objects.prefetch_related('images__image__authors').in_bulk(self.gallery_ids)
+
+    def insert_data(self, content):
+        result = []
+        for block in content:
+            if block['type'] == 'image':
+                block['data']['image'] = ImageSerializer(self.images[block['data']['image_id']]).data
+            if block['type'] == 'gallery':
+                block['data']['gallery'] = ImageGallerySerializer(self.galleries[block['data']['id']]).data
+            result.append(block)
+        return result
+
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
     Serializes the Article model.
@@ -268,9 +318,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 
-    content = JSONField()
+    content = ContentSerializer()
 
-    authors = PersonSerializer(many=True, read_only=True, source='get_authors')
+    authors = PersonSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
@@ -282,9 +332,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
-    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
-    latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
@@ -371,7 +419,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['_content', 'featured_image', 'topic'], revision=False)
+        instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
 
         return instance
 
@@ -384,13 +432,11 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 
-    content = JSONField()
+    content = ContentSerializer()
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
-    published_version = serializers.IntegerField(read_only=True, source='get_published_version')
     current_version = serializers.IntegerField(read_only=True, source='revision_id')
-    latest_version = serializers.IntegerField(read_only=True, source='get_latest_version')
 
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
@@ -446,7 +492,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_featured_image(featured_image)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['_content', 'featured_image'], revision=False)
+        instance.save(update_fields=['content', 'featured_image'], revision=False)
 
         return instance
 

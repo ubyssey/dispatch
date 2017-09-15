@@ -1,4 +1,4 @@
-from django.db.models import Q, ProtectedError
+from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
 
 from rest_framework import viewsets, mixins, filters, status
@@ -14,7 +14,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery,
-    Page, Person, Section, Tag, Topic, User)
+    Page, Author, Person, Section, Tag, Topic, User)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
@@ -58,7 +58,16 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         # Get base queryset from DispatchPublishableMixin
         queryset = self.get_publishable_queryset()
 
-        queryset = queryset.order_by('-updated_at')
+        # Optimize queries by prefetching related data
+        queryset = queryset \
+            .select_related('featured_image', 'topic', 'section') \
+            .prefetch_related(
+                'tags',
+                'featured_image__image__authors',
+                'authors'
+            )
+
+        queryset = queryset.order_by('-updated_at') \
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
@@ -231,9 +240,6 @@ class TemplateViewSet(viewsets.GenericViewSet):
 
     def list(self, request):
         templates = ThemeManager.Templates.list()
-        for t in templates:
-            print t
-            print t.fields
         serializer = TemplateSerializer(templates, many=True)
         return self.get_paginated_response(serializer.data)
 
