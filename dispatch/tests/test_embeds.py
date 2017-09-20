@@ -213,52 +213,13 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(result, html_str)
 
-    def test_image_controller_to_json(self):
-        """Should output json data"""
-
-        image = DispatchTestHelpers.create_image(self.client)
-
-        data = {
-            'image_id' : image.data['id'],
-            'caption' : 'This is a test caption',
-            'credit' : 'This is a test credit'
-        }
-
-        result = embeds.embedlib.to_json('image', data)
-
-        self.assertEqual(result['caption'], data['caption'])
-        self.assertEqual(result['credit'], data['credit'])
-        self.assertEqual(result['image']['id'], data['image_id'])
-
-    def test_invalid_image_id(self):
-        """Should raise EmbedException"""
-
-        image = DispatchTestHelpers.create_image(self.client)
-
-        data = {
-            'image_id' : -1,
-            'caption' : 'This is a test caption',
-            'credit' : 'This is a test credit'
-        }
-
-        try:
-            result = embeds.embedlib.to_json('image', data)
-            self.fail('Invalid image id should have raised exception')
-        except embeds.EmbedException:
-            pass
-
-    def test_gallery_controller(self):
+    def test_gallery_controller_render(self):
         """Test "render" with gallery controller, uses "get_gallery" and "prepare_data"""
 
         gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(0, self.client)
 
-        result_1 = embeds.embedlib.render('gallery', gallery.data)
+        result = embeds.embedlib.render('gallery', gallery.data)
 
-        output = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
+        html_str = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
 
-        result_2 = embeds.GalleryController.to_json(gallery.data)
-
-        self.assertEqual(result_2['title'], u'Gallery Title 0')
-        self.assertEqual(result_2['id'], 1)
-        self.assertEqual(result_2['gallery']['images'][0]['image']['id'], img_1.data['id'])
-        self.assertEqual(result_2['gallery']['images'][1]['image']['id'], img_2.data['id'])
+        self.assertEqual(result, html_str)

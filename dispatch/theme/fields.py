@@ -8,6 +8,7 @@ from dispatch.models import Article, Image
 from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
 
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
+from dispatch.theme.validators import is_valid_id
 
 class MetaFields(type):
     """Metaclass that adds field support to an object"""
@@ -66,11 +67,11 @@ class ModelField(Field):
 
     def validate(self, data):
         if self.many:
-            if not isinstance(data, list) or not all([isinstance(id, int) for id in data]):
-                raise InvalidField('Data must be list of integers')
+            if not isinstance(data, list) or not all([is_valid_id(id) for id in data]):
+                raise InvalidField('Data must be list of integers or UUIDs')
         else:
-            if not isinstance(data, int):
-                raise InvalidField('Data must be an integer')
+            if not is_valid_id(data):
+                raise InvalidField('Data must be an integer or UUID')
 
     def get_many(self, ids):
         id_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids)])
