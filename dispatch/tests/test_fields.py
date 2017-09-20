@@ -242,7 +242,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
             self.fail('Field data is valid, exception should not have been thrown')
 
     def test_model_field_invalid(self):
-        """Model field should allow invalid ids"""
+        """Model field should not allow invalid ids"""
 
         testfield = ModelField('Title')
 
