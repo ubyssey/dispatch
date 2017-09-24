@@ -4,7 +4,7 @@ from dispatch.models import Article, Image
 from dispatch.theme import register
 from dispatch.theme.fields import (
     CharField, TextField, ArticleField, ImageField,
-    WidgetField, Field, DateTimeField,
+    ModelField, WidgetField, Field, DateTimeField,
     IntegerField, BoolField, SelectField
 )
 from dispatch.theme.widgets import Zone, Widget
@@ -214,8 +214,66 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         except InvalidField:
             pass
 
+    def test_model_field_valid(self):
+        """Model field should allow valid ids"""
+
+        testfield = ModelField('Title')
+
+        try:
+            testfield.validate(45)
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        try:
+            testfield.validate('4ea81b8f-1b7b-4d1f-afd8-bcbd281ee497')
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        testfield = ModelField('Title', many=True)
+
+        try:
+            testfield.validate([35, 45])
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+        try:
+            testfield.validate(['4ea81b8f-1b7b-4d1f-afd8-bcbd281ee497', '4ea81b8f-1b7b-4d1f-afd8-bcbd281ee497'])
+        except InvalidField:
+            self.fail('Field data is valid, exception should not have been thrown')
+
+    def test_model_field_invalid(self):
+        """Model field should not allow invalid ids"""
+
+        testfield = ModelField('Title')
+
+        try:
+            testfield.validate('asdf')
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+        try:
+            testfield.validate('')
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+        testfield = ModelField('Title', many=True)
+
+        try:
+            testfield.validate(['a', 'b', 'c'])
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
+        try:
+            testfield.validate(5)
+            self.fail('Field data is invalid, exception should have been thrown')
+        except InvalidField:
+            pass
+
     def test_article_field(self):
-        """Should be able to create article Field"""
+        """Should be able to create article field"""
 
         testfield = ArticleField('Title', many=True)
 

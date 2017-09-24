@@ -1,13 +1,14 @@
+from uuid import UUID
+
 from django.core.validators import slug_re
 
 from dispatch.theme.exceptions import InvalidZone, InvalidWidget
 
+def is_valid_slug(slug):
+    """Uses Django's slug regex to test if id is valid"""
+    return slug_re.match(slug)
+
 def has_valid_id(o):
-
-    def is_valid_slug(slug):
-        """Uses Django's slug regex to test if id is valid"""
-        return slug_re.match(slug)
-
     return hasattr(o, 'id') and o.id and is_valid_slug(o.id)
 
 def has_valid_name(o):
@@ -39,3 +40,20 @@ def validate_zone(zone):
 
     if not has_valid_name(zone):
         raise InvalidZone("%s must contain a valid 'name' attribute" % zone.__name__)
+
+def is_valid_id(id):
+    """Return True if id is a valid integer or UUID, False otherwise."""
+    return isinstance(id, int) or is_valid_uuid(id)
+
+
+def is_valid_uuid(id):
+    """Return True if id is a valid UUID, False otherwise."""
+    if not isinstance(id, basestring):
+        return False
+
+    try:
+        val = UUID(id, version=4)
+    except ValueError:
+        return False
+
+    return True
