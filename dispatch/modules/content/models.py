@@ -389,7 +389,7 @@ class Image(Model):
         """Returns true if image is a gif."""
         return self.get_extension() in self.GIF_FORMATS
 
-    def filename(self):
+    def get_filename(self):
         """Returns the image filename."""
         return os.path.basename(self.img.name)
 
@@ -473,7 +473,7 @@ class Image(Model):
 
         for n, person_id in enumerate(authors):
             Author.objects.create(image=self, person_id=person_id, order=n)
-            
+
 class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
