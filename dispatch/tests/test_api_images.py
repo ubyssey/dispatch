@@ -16,25 +16,21 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_image_unauthorized(self):
-        """
-        Should not be able to upload an image without authorization.
-        """
+        """Should not be able to upload an image without authorization."""
 
         # Clear client credentials
         self.client.credentials()
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Image.objects.count(), 0)
 
     def test_create_image_empty(self):
-        """
-        Should not be able to upload an empty image.
-        """
+        """Should not be able to upload an empty image."""
 
         url = reverse('api-images-list')
 
@@ -44,68 +40,77 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(Image.objects.count(), 0)
 
     def test_create_image_jpeg(self):
-        """
-        Should be able to upload a JPEG image.
-        """
+        """Should be able to upload a JPEG image."""
 
         url = reverse('api-images-list')
+        files = [
+            'test_image_a.jpg',
+            'test_image_b.JPG',
+            'test_image_a.jpeg',
+            'test_image_b.JPEG',
+        ]
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
-            response = self.client.post(url, { 'img': test_image }, format='multipart')
+        for image_file in files:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(self.fileExists(response.data['url']))
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertTrue(self.fileExists(response.data['url']))
 
-        # Assert that resized versions were created
-        self.assertTrue(self.fileExists(response.data['url_medium']))
-        self.assertTrue(self.fileExists(response.data['url_thumb']))
+            # Assert that resized versions were created
+            self.assertTrue(self.fileExists(response.data['url_medium']))
+            self.assertTrue(self.fileExists(response.data['url_thumb']))
 
     def test_create_image_png(self):
-        """
-        Should be able to upload a PNG image.
-        """
+        """Should be able to upload a PNG image."""
 
         url = reverse('api-images-list')
+        files = [
+            'test_image_a.png',
+            'test_image_b.PNG',
+        ]
 
-        with open(self.get_input_file('test_image.png')) as test_image:
-            response = self.client.post(url, { 'img': test_image }, format='multipart')
+        for image_file in files:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(self.fileExists(response.data['url']))
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertTrue(self.fileExists(response.data['url']))
 
-        # Assert that resized versions were created
-        self.assertTrue(self.fileExists(response.data['url_medium']))
-        self.assertTrue(self.fileExists(response.data['url_thumb']))
+            # Assert that resized versions were created
+            self.assertTrue(self.fileExists(response.data['url_medium']))
+            self.assertTrue(self.fileExists(response.data['url_thumb']))
 
     def test_upload_image_gif(self):
-        """
-        Should be able to upload a GIF.
-        """
+        """Should be able to upload a GIF image."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.gif')) as test_image:
-            response = self.client.post(url, { 'img': test_image }, format='multipart')
+        files = [
+            'test_image_a.gif',
+            'test_image_b.GIF',
+        ]
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(self.fileExists(response.data['url']))
+        for image_file in files:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        # Assert that resized versions were created
-        self.assertTrue(self.fileExists(response.data['url_medium']))
-        self.assertTrue(self.fileExists(response.data['url_thumb']))
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertTrue(self.fileExists(response.data['url']))
+
+            # Assert that resized versions were created
+            self.assertTrue(self.fileExists(response.data['url_medium']))
+            self.assertTrue(self.fileExists(response.data['url_thumb']))
 
     def test_upload_duplicate_filenames(self):
-        """
-        Should be able to upload an image with the same filename as an existing image.
-        """
+        """Should be able to upload an image with the same filename as an existing image."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(image_1.status_code, status.HTTP_201_CREATED)
@@ -118,13 +123,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
 
     def test_create_image_invalid_filename(self):
-        """
-        Should not be able to upload image with non-ASCII characters in filename.
-        """
+        """Should not be able to upload image with non-ASCII characters in filename."""
 
         url = reverse('api-images-list')
 
-        valid_filename = 'test_image.jpg'
+        valid_filename = 'test_image_a.jpg'
         invalid_filename = 'test_image_bad_filename_é.jpg'
 
         with open(self.get_input_file(valid_filename)) as valid_image:
@@ -141,13 +144,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(Image.objects.count(), 0)
 
     def test_update_image_unauthorized(self):
-        """
-        Should not be able to update an image without authorization.
-        """
+        """Should not be able to update an image without authorization."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
@@ -172,13 +173,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(image_instance.authors.count(), 0)
 
     def test_update_image(self):
-        """
-        Should be able to update an image.
-        """
+        """Should be able to update an image."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
@@ -202,13 +201,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(image_instance.authors.all()[0].full_name, 'Test Person')
 
     def test_delete_image_unauthorized(self):
-        """
-        Should not be able to delete an image without authorization.
-        """
+        """Should not be able to delete an image without authorization."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         # Clear client credentials
@@ -227,13 +224,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
             self.fail('Image should not have been deleted')
 
     def test_delete_image(self):
-        """
-        Should be able to delete an image.
-        """
+        """Should be able to delete an image."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -255,13 +250,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
 
     def test_get_image(self):
-        """
-        Should be able to fetch an image by ID.
-        """
+        """Should be able to fetch an image by ID."""
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -272,20 +265,18 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['url'], image.data['url'])
 
     def test_list_images(self):
-        """
-        Should be able to list all images.
-        """
+        """Should be able to list all images."""
 
         url = reverse('api-images-list')
 
         # Upload three images
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             image_3 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         response = self.client.get(url, format='json')
