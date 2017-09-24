@@ -14,7 +14,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_person_creation(self):
         """Test simple person creation, checks the response and database"""
 
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',
@@ -207,7 +207,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test to ensure proper url is returned"""
 
         # Test a good image
-        with open(self.get_input_file('test_image.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',
@@ -218,7 +218,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         imageDirectory = "images"
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image.jpg") )
+        self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image_a.jpg") )
 
     def test_image_validation(self):
         """Test that ensures image validator on serializer is working.

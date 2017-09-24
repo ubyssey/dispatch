@@ -58,7 +58,7 @@ class DispatchTestHelpers(object):
 
         url = reverse('api-images-list')
 
-        with open(obj.get_input_file('test_image.png'), 'rb') as test_image:
+        with open(obj.get_input_file('test_image_a.png'), 'rb') as test_image:
             response = client.post(url, { 'img': test_image }, format='multipart')
 
         return response
