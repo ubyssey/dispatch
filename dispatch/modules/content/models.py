@@ -378,42 +378,32 @@ class Image(Model):
         'square': (250, 250)
     }
 
-    JPG_FORMATS = {
-        'jpg',
-        'JPG',
-        'JPEG',
-        'jpeg'
-    }
+    JPG_FORMATS = ('jpg', 'JPG', 'JPEG', 'jpeg',)
+    GIF_FORMATS = ('gif', 'GIF',)
 
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
-    VALID_IMAGE_FORMATS = '.(jpg|gif|png|PNG|tiff|tif|dng)'
 
     THUMBNAIL_SIZE = 'square'
 
     def is_gif(self):
-        """Returns true if image is a gif"""
-        return self.get_file_extension() in ('gif', 'GIF')
+        """Returns true if image is a gif."""
+        return self.get_extension() in self.GIF_FORMATS
 
     def filename(self):
         """Returns the image filename."""
         return os.path.basename(self.img.name)
 
-    def get_file_name(self):
-        """Returns the image filename."""
-        return self.img.name
-
     def get_name(self):
-        """Returns the filename without extension."""
-        file_name = re.split(self.VALID_IMAGE_FORMATS, self.get_file_name())
-        return file_name[0]
+        """Returns the filename without its extension."""
+        return os.path.splitext(self.img.name)[0]
 
-    def get_file_extension(self):
+    def get_extension(self):
         """Returns the file extension."""
-        file_name = re.split(self.VALID_IMAGE_FORMATS, self.get_file_name())
-        try:
-            return file_name[1]
-        except IndexError:
-            return ''
+        ext = os.path.splitext(self.img.name)[1]
+        if ext:
+            # Remove period from extension
+            return ext[1:]
+        return ext
 
     def get_absolute_url(self):
         """Returns the full size image URL."""
@@ -432,15 +422,10 @@ class Image(Model):
     # Overriding
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
-
         is_new = self.pk is None
 
-        # name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
-        # file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
-
-        # # Standardize jpg extension
-        # if file_type in self.JPG_FORMATS:
-        #     self.img.name = '%s.jpg' % name
+        # Make filenames lowercase
+        self.img.name = self.img.name.lower()
 
         # Call super method
         super(Image, self).save(**kwargs)
@@ -448,15 +433,17 @@ class Image(Model):
         if is_new and self.img:
             image = Img.open(StringIO.StringIO(self.img.read()))
             self.width, self.height = image.size
+
             super(Image, self).save()
-            name = re.split(self.IMAGE_FORMATS, self.img.name)[0]
-            file_type = re.split(self.IMAGE_FORMATS, self.img.name)[1]
+
+            name = self.get_name()
+            ext = self.get_extension()
 
             for size in self.SIZES.keys():
-                self.save_thumbnail(image, self.SIZES[size], name, size, file_type)
+                self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
-
-    def save_thumbnail(self, image, size, name, label, fileType):
+    def save_thumbnail(self, image, size, name, label, file_type):
+        """Processes and saves a resized thumbnail version of the image."""
         width, height = size
         (imw, imh) = image.size
 
@@ -468,12 +455,12 @@ class Image(Model):
         name = "%s-%s.jpg" % (name, label)
 
         # Image.save format takes JPEG not jpg
-        if fileType in self.JPG_FORMATS:
-            fileType = 'JPEG'
+        if file_type in self.JPG_FORMATS:
+            file_type = 'JPEG'
 
         # Write new thumbnail to StringIO object
         image_io = StringIO.StringIO()
-        image.save(image_io, format=fileType, quality=75)
+        image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
         thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
