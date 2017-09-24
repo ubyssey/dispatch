@@ -473,28 +473,7 @@ class Image(Model):
 
         for n, person_id in enumerate(authors):
             Author.objects.create(image=self, person_id=person_id, order=n)
-
-    @receiver(post_delete)
-    def delete_images(sender, instance, **kwargs):
-        if sender == Image:
-            name = instance.img.name.split('.')[0]
-
-            # Delete original
-            path = os.path.join(settings.MEDIA_ROOT, instance.img.name)
-            try:
-                os.remove(path)
-            except OSError:
-                pass
-
-            # Delete other sizes
-            for size in sender.SIZES.keys():
-                filename = name + "-%s.jpg" % size
-                path = os.path.join(settings.MEDIA_ROOT, filename)
-                try:
-                    os.remove(path)
-                except OSError:
-                    pass
-
+            
 class ImageAttachment(Model):
 
     article = ForeignKey(Article, blank=True, null=True, related_name='article')

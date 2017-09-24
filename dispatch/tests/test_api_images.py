@@ -236,11 +236,6 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(self.fileExists(image.data['url']))
-
-        # Assert that resized versions were also deleted
-        self.assertFalse(self.fileExists(image.data['url_medium']))
-        self.assertFalse(self.fileExists(image.data['url_thumb']))
 
         try:
             Image.objects.get(pk=image.data['id'])
