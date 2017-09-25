@@ -98,12 +98,10 @@ class FileSerializer(DispatchModelSerializer):
         )
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializes the Image model.
-    """
+    """Serializes the Image model."""
 
     img = serializers.ImageField(write_only=True, validators=[ValidFilename])
-    filename = serializers.CharField(read_only=True)
+    filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
@@ -136,13 +134,9 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     def create(self, validated_data):
-        return self.update(
-            Image(),
-            validated_data
-        )
+        return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
-
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save relationships

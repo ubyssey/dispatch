@@ -415,9 +415,9 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         image_2 = Image.objects.get(pk=image_2.data['id'])
 
         self.assertEqual(json[0]['id'], 1)
-        self.assertEqual(json[0]['filename'], image_1.filename())
+        self.assertEqual(json[0]['filename'], image_1.get_filename())
         self.assertEqual(json[1]['id'], 2)
-        self.assertEqual(json[1]['filename'], image_2.filename())
+        self.assertEqual(json[1]['filename'], image_2.get_filename())
 
 
     def test_image_single_id(self):
@@ -437,7 +437,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         image = Image.objects.get(pk=image.data['id'])
 
         self.assertEqual(json['id'], 1)
-        self.assertEqual(json['filename'], image.filename())
+        self.assertEqual(json['filename'], image.get_filename())
 
     def test_image_prepare_data(self):
         """Should be able to return prepared data for the template"""
@@ -459,8 +459,8 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = testfield.prepare_data(data)
 
-        self.assertEqual(result[0].filename(), image_1.filename())
-        self.assertEqual(result[1].filename(), image_2.filename())
+        self.assertEqual(result[0].get_filename(), image_1.get_filename())
+        self.assertEqual(result[1].get_filename(), image_2.get_filename())
 
     def test_image_false_many(self):
         """Test the case where many is false where you have more than 1 image"""
