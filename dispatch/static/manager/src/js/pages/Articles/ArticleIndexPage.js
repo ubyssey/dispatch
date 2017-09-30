@@ -52,6 +52,7 @@ function ArticlePageComponent(props) {
       typePlural='articles'
       typeSingular='article'
       displayColumn='headline'
+      filterBy='Sections'
       headers={[ 'Headline', 'Authors', 'Published', 'Revisions']}
       extraColumns={[
         item => item.authors_string,
