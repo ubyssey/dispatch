@@ -23,11 +23,11 @@
   .pt-button {
     // Structure
     margin-right: 0.75rem;
+  }
 
-    &:last-child {
-      // Structure
-      margin-right: 0;
-    }
+  a:last-child .pt-button {
+    // Structure
+    margin-right: 0;
   }
 
   .pt-tag {
