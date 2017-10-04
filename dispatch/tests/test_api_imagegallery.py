@@ -369,7 +369,7 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
 
     def test_imagegallery_query(self):
-        """Be able to search for galleries"""
+        """Should be able to search for galleries by title"""
 
         # Create galleries
         DispatchTestHelpers.create_gallery(1, self.client)
