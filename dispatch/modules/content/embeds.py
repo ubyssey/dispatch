@@ -4,7 +4,6 @@ class EmbedException(Exception):
     pass
 
 class EmbedLibrary(object):
-
     def __init__(self):
         self.library = {}
 
@@ -24,7 +23,7 @@ class EmbedLibrary(object):
     def render(self, type, data):
         return self.get_controller(type).render(data)
 
-embedlib = EmbedLibrary()
+embeds = EmbedLibrary()
 
 def tag(tag, content):
     return u'<{tag}>{content}</{tag}>'.format(tag=tag, content=content)
@@ -34,14 +33,12 @@ def maptag(tagname, contents):
     `contents` in a tag of type `tagname`"""
     return u''.join(tag(tagname, item) for item in contents)
 
-class AbstractController(object):
-
+class AbstractEmbed(object):
     @staticmethod
     def to_json(data):
         return data
 
-class AbstractTemplateRenderController(AbstractController):
-
+class AbstractTemplateEmbed(AbstractEmbed):
     TEMPLATE = None
 
     @classmethod
@@ -53,22 +50,19 @@ class AbstractTemplateRenderController(AbstractController):
     def prepare_data(self, data):
         return data
 
-class ListController(AbstractController):
-
+class ListEmbed(AbstractEmbed):
     @classmethod
     def render(self, data):
         return tag('ul', maptag('li', data))
 
-class HeaderController(AbstractController):
-
+class HeaderEmbed(AbstractEmbed):
     @classmethod
     def render(self, data):
         size = data.get('size').lower()
         return tag(size if size in ['h1', 'h2', 'h3'] else 'h1',
                    data['content'])
 
-class CodeController(AbstractController):
-
+class CodeEmbed(AbstractEmbed):
     @classmethod
     def render(self, data):
         tags = {
@@ -80,20 +74,16 @@ class CodeController(AbstractController):
         except KeyError:
             return data['content']
 
-class VideoController(AbstractTemplateRenderController):
-
+class VideoEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/video.html'
 
-class AdvertisementController(AbstractTemplateRenderController):
-
+class AdvertisementEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/advertisement.html'
 
-class PullQuoteController(AbstractTemplateRenderController):
-
+class PullQuoteEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/quote.html'
 
-class ImageController(AbstractTemplateRenderController):
-
+class ImageEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/image.html'
 
     @classmethod
@@ -117,8 +107,7 @@ class ImageController(AbstractTemplateRenderController):
             'credit': data['credit']
         }
 
-class GalleryController(AbstractTemplateRenderController):
-
+class GalleryEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/gallery.html'
 
     @classmethod
@@ -132,7 +121,6 @@ class GalleryController(AbstractTemplateRenderController):
 
     @classmethod
     def prepare_data(self, data):
-
         id = data['id']
 
         gallery = self.get_gallery(id)
@@ -147,11 +135,11 @@ class GalleryController(AbstractTemplateRenderController):
             'size': len(images)
         }
 
-embedlib.register('quote', PullQuoteController)
-embedlib.register('code', CodeController)
-embedlib.register('advertisement', AdvertisementController)
-embedlib.register('header', HeaderController)
-embedlib.register('list', ListController)
-embedlib.register('video', VideoController)
-embedlib.register('image', ImageController)
-embedlib.register('gallery', GalleryController)
+embeds.register('quote', PullQuoteEmbed)
+embeds.register('code', CodeEmbed)
+embeds.register('advertisement', AdvertisementEmbed)
+embeds.register('header', HeaderEmbed)
+embeds.register('list', ListEmbed)
+embeds.register('video', VideoEmbed)
+embeds.register('image', ImageEmbed)
+embeds.register('gallery', GalleryEmbed)

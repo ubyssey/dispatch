@@ -3,13 +3,12 @@ import datetime
 from django.template import loader
 from django.core.urlresolvers import reverse
 
-from dispatch.modules.content import embeds
+from dispatch.modules.content.embeds import embeds, EmbedException, ListEmbed, HeaderEmbed, CodeEmbed
 from dispatch.models import ImageGallery
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 
 class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
-
     def test_list_controller(self):
         """Should output correct html list formatting"""
 
@@ -21,8 +20,8 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data_2 = []
 
-        result_1 = embeds.ListController.render(data_1)
-        result_2 = embeds.ListController.render(data_2)
+        result_1 = ListEmbed.render(data_1)
+        result_2 = ListEmbed.render(data_2)
 
         self.assertEqual(result_1, '<ul><li>item 1</li><li>item 2</li><li>item 3</li></ul>')
         self.assertEqual(result_2, '<ul></ul>')
@@ -45,9 +44,9 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'content' : ''
         }
 
-        result_1 = embeds.HeaderController.render(data_1)
-        result_2 = embeds.HeaderController.render(data_2)
-        result_3 = embeds.HeaderController.render(data_3)
+        result_1 = HeaderEmbed.render(data_1)
+        result_2 = HeaderEmbed.render(data_2)
+        result_3 = HeaderEmbed.render(data_3)
 
         self.assertEqual(result_1, '<h1>Header text</h1>')
         self.assertEqual(result_2, '<h1>Header text</h1>')
@@ -76,10 +75,10 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'content' : ''
         }
 
-        result_1 = embeds.CodeController.render(data_1)
-        result_2 = embeds.CodeController.render(data_2)
-        result_3 = embeds.CodeController.render(data_3)
-        result_4 = embeds.CodeController.render(data_4)
+        result_1 = CodeEmbed.render(data_1)
+        result_2 = CodeEmbed.render(data_2)
+        result_3 = CodeEmbed.render(data_3)
+        result_4 = CodeEmbed.render(data_4)
 
         self.assertEqual(result_1, '<script>var test = 1;</script>')
         self.assertEqual(result_2, '<style>body { color:red; }</style>')
@@ -99,8 +98,8 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'alignment' : ''
         }
 
-        result_1 = embeds.embedlib.render('advertisement', data_1)
-        result_2 = embeds.embedlib.render('advertisement', data_2)
+        result_1 = embeds.render('advertisement', data_1)
+        result_2 = embeds.render('advertisement', data_2)
 
         self.assertEqual(result_1.strip(), '<div class="ad"><span>ad-1</span><span>right</span></div>')
         self.assertEqual(result_2.strip(), '<div class="ad"><span></span><span></span></div>')
@@ -121,9 +120,9 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'content' : ''
         }
 
-        result_1 = embeds.embedlib.render('quote', data_1)
-        result_2 = embeds.embedlib.render('quote', data_2)
-        result_3 = embeds.embedlib.render('quote', data_3)
+        result_1 = embeds.render('quote', data_1)
+        result_2 = embeds.render('quote', data_2)
+        result_3 = embeds.render('quote', data_3)
 
         self.assertEqual(result_1.strip(), '<p class="quote">This is a quote</p>\n  <p class="source">&mdash; This is the source</p>')
         self.assertEqual(result_2.strip(), '<p class="quote">This is a quote</p>')
@@ -157,11 +156,11 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'title' : ''
         }
 
-        result_1 = embeds.embedlib.render('video', data_1)
-        result_2 = embeds.embedlib.render('video', data_2)
-        result_3 = embeds.embedlib.render('video', data_3)
-        result_4 = embeds.embedlib.render('video', data_4)
-        result_5 = embeds.embedlib.render('video', data_5)
+        result_1 = embeds.render('video', data_1)
+        result_2 = embeds.render('video', data_2)
+        result_3 = embeds.render('video', data_3)
+        result_4 = embeds.render('video', data_4)
+        result_5 = embeds.render('video', data_5)
 
         self.assertEqual(result_1.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>\n<div class="caption">\n    Test caption <span class="credit">Test credit</span>\n</div>')
         self.assertEqual(result_2.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>\n<div class="caption">\n    Test caption <span class="credit"></span>\n</div>')
@@ -177,9 +176,9 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         try:
-            result = embeds.embedlib.render('test', data)
+            result = embeds.render('test', data)
             self.fail('EmbedDoesNotExist exception should have been raised')
-        except embeds.EmbedException:
+        except EmbedException:
             pass
 
     def test_register_existing_type(self):
@@ -190,9 +189,9 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'content' : 'Header text'
         }
 
-        embeds.embedlib.register('quote', embeds.HeaderController)
+        embeds.register('quote', HeaderEmbed)
 
-        result = embeds.embedlib.render('quote', data_1)
+        result = embeds.render('quote', data_1)
 
         self.assertEqual(result, '<h1>Header text</h1>')
 
@@ -209,7 +208,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         html_str = u'<div class="image-embed">\n    <img class="image" src="%s" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n' % image.data['url']
 
-        result = embeds.embedlib.render('image', data)
+        result = embeds.render('image', data)
 
         self.assertEqual(result, html_str)
 
@@ -218,7 +217,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         gallery, img_1, img_2 = DispatchTestHelpers.create_gallery(0, self.client)
 
-        result = embeds.embedlib.render('gallery', gallery.data)
+        result = embeds.render('gallery', gallery.data)
 
         html_str = '<div class="gallery-attachment">\n    <div class="images">\n        \n        <img src="%s" />\n        \n        <img src="%s" />\n        \n    </div>\n</div>\n' % (img_1.data['url'], img_2.data['url'])
 
