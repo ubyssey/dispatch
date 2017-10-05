@@ -326,9 +326,6 @@ class ContentSerializer(serializers.Serializer):
 
         return block
 
-    def sanitize_data(self, data):
-
-
     def queue_data(self, content):
         """Queue data to be loaded for each embed block."""
         for block in content:

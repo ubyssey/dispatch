@@ -3,7 +3,7 @@ from dispatch.modules.content.models import Image, ImageGallery
 class Loader(object):
     """A Loader is used to efficiently fetch data for content embeds.
 
-    A Loader has a corresponding embed type, and facilitates the prefecting
+    Each loader has a corresponding embed type, and facilitates the prefecting
     and serialization of models used in that embed.
     """
     def __init__(self, serializer):
