@@ -10,6 +10,7 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
+from dispatch.api.fetchers import ImageFetcher, ImageGalleryFetcher
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
@@ -251,13 +252,15 @@ class TemplateSerializer(serializers.Serializer):
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
 
 class ContentSerializer(serializers.Serializer):
+    # Connect fetchers with their corresponding embed types
+    fetchers = {
+        'image': ImageFetcher(ImageSerializer),
+        'gallery': ImageGalleryFetcher(ImageGallerySerializer)
+    }
 
     def __init__(self, *args, **kwargs):
-        self.image_ids = []
-        self.images = {}
-
-        self.galleries = {}
-        self.gallery_ids = []
+        self.ids = {}
+        self.instances = {}
 
         super(ContentSerializer, self).__init__(*args, **kwargs)
 
@@ -279,26 +282,59 @@ class ContentSerializer(serializers.Serializer):
             result.append(block)
         return result
 
+    def queue_instance(self, embed_type, data):
+        """Queue an instance to be fetched from the database."""
+        fetcher = self.fetchers.get(embed_type, None)
+
+        if fetcher is None:
+            return
+
+        instance_id = fetcher.get_id(data)
+
+        if embed_type not in self.ids:
+            self.ids[embed_type] = []
+
+        self.ids[embed_type].append(instance_id)
+
+    def fetch_instances(self, embed_type, ids):
+        """Fetch all queued instances of type `embed_type`, save results to `self.instances`"""
+        fetcher = self.fetchers.get(embed_type, None)
+
+        if fetcher is None:
+            return
+
+        self.instances[embed_type] = fetcher.fetch(ids)
+
+    def insert_instance(self, block):
+        """Insert a fetched instance into embed block."""
+        embed_type = block.get('type', None)
+        data = block.get('data', {})
+        fetcher = self.fetchers.get(embed_type, None)
+
+        if fetcher is None:
+            return block
+
+        try:
+            instance_id = fetcher.get_id(data)
+            instance = self.instances[embed_type][instance_id]
+            data[embed_type] = fetcher.serialize(data)
+        except:
+            data[embed_type] = None
+
+        block['data'] = data
+
+        return block
+
     def queue_data(self, content):
         for block in content:
-            if block['type'] == 'image':
-                self.image_ids.append(block['data']['image_id'])
-            if block['type'] == 'gallery':
-                self.gallery_ids.append(block['data']['id'])
+            self.queue_instance(block['type'], block['data'])
 
     def fetch_data(self):
-        self.images = Image.objects.prefetch_related('authors').in_bulk(self.image_ids)
-        self.galleries = ImageGallery.objects.prefetch_related('images__image__authors').in_bulk(self.gallery_ids)
+        for embed_type in self.ids.keys():
+            self.fetch_instances(embed_type, self.ids[embed_type])
 
     def insert_data(self, content):
-        result = []
-        for block in content:
-            if block['type'] == 'image':
-                block['data']['image'] = ImageSerializer(self.images[block['data']['image_id']]).data
-            if block['type'] == 'gallery':
-                block['data']['gallery'] = ImageGallerySerializer(self.galleries[block['data']['id']]).data
-            result.append(block)
-        return result
+        return map(lambda block: self.insert_instance(block), content)
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
