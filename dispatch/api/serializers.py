@@ -10,7 +10,7 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
-from dispatch.api.fetchers import ImageFetcher, ImageGalleryFetcher
+from dispatch.api.loaders import ImageLoader, ImageGalleryLoader
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
@@ -252,10 +252,10 @@ class TemplateSerializer(serializers.Serializer):
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
 
 class ContentSerializer(serializers.Serializer):
-    # Connect fetchers with their corresponding embed types
-    fetchers = {
-        'image': ImageFetcher(ImageSerializer),
-        'gallery': ImageGalleryFetcher(ImageGallerySerializer)
+    # Connect loaders with their corresponding embed types
+    loaders = {
+        'image': ImageLoader(ImageSerializer),
+        'gallery': ImageGalleryLoader(ImageGallerySerializer)
     }
 
     def __init__(self, *args, **kwargs):
@@ -266,10 +266,11 @@ class ContentSerializer(serializers.Serializer):
 
     def to_representation(self, content):
         self.queue_data(content)
-        self.fetch_data()
+        self.load_data()
         return self.insert_data(content)
 
     def to_internal_value(self, content):
+        # TODO: this should be handled by loaders
         result = []
         for block in content:
             try:
@@ -284,40 +285,40 @@ class ContentSerializer(serializers.Serializer):
 
     def queue_instance(self, embed_type, data):
         """Queue an instance to be fetched from the database."""
-        fetcher = self.fetchers.get(embed_type, None)
+        loader = self.loaders.get(embed_type, None)
 
-        if fetcher is None:
+        if loader is None:
             return
 
-        instance_id = fetcher.get_id(data)
+        instance_id = loader.get_id(data)
 
         if embed_type not in self.ids:
             self.ids[embed_type] = []
 
         self.ids[embed_type].append(instance_id)
 
-    def fetch_instances(self, embed_type, ids):
+    def load_instances(self, embed_type, ids):
         """Fetch all queued instances of type `embed_type`, save results to `self.instances`"""
-        fetcher = self.fetchers.get(embed_type, None)
+        loader = self.loaders.get(embed_type, None)
 
-        if fetcher is None:
+        if loader is None:
             return
 
-        self.instances[embed_type] = fetcher.fetch(ids)
+        self.instances[embed_type] = loader.fetch(ids)
 
     def insert_instance(self, block):
         """Insert a fetched instance into embed block."""
         embed_type = block.get('type', None)
         data = block.get('data', {})
-        fetcher = self.fetchers.get(embed_type, None)
+        loader = self.loaders.get(embed_type, None)
 
-        if fetcher is None:
+        if loader is None:
             return block
 
         try:
-            instance_id = fetcher.get_id(data)
+            instance_id = loader.get_id(data)
             instance = self.instances[embed_type][instance_id]
-            data[embed_type] = fetcher.serialize(data)
+            data[embed_type] = loader.serialize(data)
         except:
             data[embed_type] = None
 
@@ -325,15 +326,21 @@ class ContentSerializer(serializers.Serializer):
 
         return block
 
+    def sanitize_data(self, data):
+
+
     def queue_data(self, content):
+        """Queue data to be loaded for each embed block."""
         for block in content:
             self.queue_instance(block['type'], block['data'])
 
-    def fetch_data(self):
+    def load_data(self):
+        """Load data in bulk for each embed block."""
         for embed_type in self.ids.keys():
-            self.fetch_instances(embed_type, self.ids[embed_type])
+            self.load_instances(embed_type, self.ids[embed_type])
 
     def insert_data(self, content):
+        """Insert loaded data into embed data blocks."""
         return map(lambda block: self.insert_instance(block), content)
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
