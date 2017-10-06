@@ -1,10 +1,21 @@
-language: python
-python:
-  - "2.7"
-install:
-  - pip install codecov
-  - python setup.py install
-  - pip install -e .[dev]
-script: dispatch-admin coverage
-after_success:
-  codecov
+jobs:
+  include:
+    - stage: test
+      language: python
+      python: "2.7"
+      install:
+        - pip install codecov
+        - python setup.py install
+        - pip install -e .[dev]
+      script: dispatch-admin coverage
+      after_success: codecov
+    - language: node_js
+      node_js: "6.9.5"
+      install:
+        - cd ubyssey/static
+        - npm install
+      before_script:
+        - npm install -g gulp-cli
+      script: gulp build
+    - stage: deploy
+      script: echo "DEPLOYING"
