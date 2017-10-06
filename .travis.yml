@@ -12,7 +12,7 @@ jobs:
     - language: node_js
       node_js: "6.9.5"
       install:
-        - cd ubyssey/static
+        - cd dispatch/static/manager
         - npm install
       before_script:
         - npm install -g gulp-cli
