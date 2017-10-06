@@ -13,9 +13,7 @@ jobs:
       node_js: "6.9.5"
       install:
         - cd dispatch/static/manager
-        - npm install
-      before_script:
-        - npm install -g gulp-cli
-      script: gulp build
+        - yarn setup
+      script: yarn build
     - stage: deploy
       script: echo "DEPLOYING"
