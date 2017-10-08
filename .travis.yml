@@ -32,3 +32,5 @@ jobs:
       user: ubyssey
       password:
         secure: BQQSSY2KmBG4Yq8BoDIh2vHqiftXjiogU1mH6gq1fuwaAfhMnNzXK+BKnS/fqIc24cNYoFEsnH4UYQVqyDqKr/ammYBJX2+zfQtf2JqrdYaxQWZ0Fxcu7FqiWmX43nukJy7R4Yg746DJkQL15zWuk1yAzbrD+IQPzmNddFXyBF0=
+      on:
+        tags: true
