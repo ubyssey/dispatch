@@ -25,5 +25,5 @@ jobs:
         - cd dispatch/static/manager
         - yarn setup
         - yarn build
-        - cd ../../
+        - cd ../../../
       script: python setup.py sdist
