@@ -78,7 +78,7 @@ class CodeController(AbstractController):
         try:
             return tag(tags[data['mode']], data['content'])
         except KeyError:
-            return '<div class="o-article-embed o-article-embed--video"> <div class="o-article-embed--video__wrapper">' + data['content'] + '</div></div>'
+            return '<div class="o-article-embed o-article-embed--code">' + data['content'] + '</div>'
 
 class VideoController(AbstractTemplateRenderController):
 
