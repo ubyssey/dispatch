@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3579d4f6-feaa-4d93-9769-8a3d24277435" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/embeds/TwitterEmbed.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatch/static/manager/src/js/components/ArticleEditor/ArticleContentEditor.js" afterPath="$PROJECT_DIR$/dispatch/static/manager/src/js/components/ArticleEditor/ArticleContentEditor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/embeds/index.js" afterPath="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/embeds/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/index.js" afterPath="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -101,6 +98,7 @@
         <option value="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/embeds/TwitterEmbed.js" />
         <option value="$PROJECT_DIR$/dispatch/static/manager/src/js/vendor/dispatch-editor/embeds/index.js" />
         <option value="$PROJECT_DIR$/dispatch/static/manager/src/js/components/ArticleEditor/ArticleContentEditor.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -320,13 +318,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dispatch/static/manager/src/styles/admin.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -416,6 +407,14 @@
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="6" lean-forward="true" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+          <folding />
         </state>
       </provider>
     </entry>
