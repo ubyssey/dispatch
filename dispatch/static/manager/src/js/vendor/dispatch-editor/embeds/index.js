@@ -4,6 +4,7 @@ import CodeEmbed from './CodeEmbed'
 import PullQuoteEmbed from './PullQuoteEmbed'
 import GalleryEmbed from './GalleryEmbed'
 import WidgetEmbed from './WidgetEmbed'
+import TwitterEmbed from './TwitterEmbed'
 
 export {
   ImageEmbed,
@@ -12,4 +13,5 @@ export {
   CodeEmbed,
   GalleryEmbed,
   WidgetEmbed,
+  TwitterEmbed
 }

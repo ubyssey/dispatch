@@ -6,7 +6,8 @@ import {
   PullQuoteEmbed,
   VideoEmbed,
   CodeEmbed,
-  WidgetEmbed
+  WidgetEmbed,
+  TwitterEmbed
 } from './embeds'
 
 import {
@@ -28,5 +29,6 @@ export {
   PullQuoteEmbed,
   VideoEmbed,
   CodeEmbed,
-  WidgetEmbed
+  WidgetEmbed,
+  TwitterEmbed
 }
