@@ -21,7 +21,7 @@ const embeds = [
   GalleryEmbed,
   WidgetEmbed,
   TwitterEmbed
-];
+]
 
 export default class ArticleContentEditor extends React.Component {
   render() {

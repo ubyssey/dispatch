@@ -6,17 +6,11 @@ function TwitterEmbedComponent(props) {
   return (
     <div className='o-embed o-embed--quote'>
       <form>
-        <FormInput label='Content'>
+        <FormInput label='Tweet URL'>
           <TextInput
             fill={true}
-            value={props.data.content}
-            onChange={e => props.updateField('content', e.target.value)} />
-        </FormInput>
-        <FormInput label='Source'>
-          <TextInput
-            fill={true}
-            value={props.data.source || ''}
-            onChange={e => props.updateField('source', e.target.value)} />
+            value={props.data.url}
+            onChange={e => props.updateField('url', e.target.value)} />
         </FormInput>
       </form>
     </div>
@@ -26,7 +20,7 @@ function TwitterEmbedComponent(props) {
 export default {
   type: 'tweet',
   component: TwitterEmbedComponent,
-  data: {
-    url: 'https://twitter.com/UbysseyNews/status/918297671374315521'
+  defaultData: {
+    url: ''
   }
 }
