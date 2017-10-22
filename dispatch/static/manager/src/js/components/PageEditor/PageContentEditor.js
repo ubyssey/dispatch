@@ -29,6 +29,7 @@ export default class PageContentEditor extends React.Component {
             <Editor
               content={this.props.page.content}
               onUpdate={content => this.props.onUpdate('content', content)}
+              spellcheck={true}
               embeds={embeds} />
           </div>
         </div>

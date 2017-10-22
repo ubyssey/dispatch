@@ -35,6 +35,7 @@ export default class ArticleContentEditor extends React.Component {
             <Editor
               content={this.props.article.content}
               onUpdate={content => this.props.onUpdate('content', content)}
+              spellcheck={true}
               embeds={embeds} />
           </div>
         </div>
