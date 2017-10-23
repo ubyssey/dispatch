@@ -389,7 +389,7 @@ class ContentEditor extends React.Component {
         <div className='c-dispatch-editor__editor'>
           <Editor
             ref='editor'
-            spellcheck={true}
+            spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}
             handleKeyCommand={c => this.handleKeyCommand(c)}
