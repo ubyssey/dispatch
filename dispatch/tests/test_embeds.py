@@ -84,7 +84,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(result_1, '<script>var test = 1;</script>')
         self.assertEqual(result_2, '<style>body { color:red; }</style>')
         self.assertEqual(result_3, '<div class="o-article-embed o-article-embed--code"><b>test</b></div>')
-        self.assertEqual(result_4, '')
+        self.assertEqual(result_4, '<div class="o-article-embed o-article-embed--code"></div>')
 
     def test_advertisement_controller(self):
         """Should output id of ad and alignment in html"""
