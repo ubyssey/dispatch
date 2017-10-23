@@ -68,8 +68,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data_3 = {
             'mode' : 'html',
-            'content' : '<div class="o-article-embed o-article-embed--code"><b>test</b></div>'
-
+            'content' : '<b>test</b>'
         }
 
         data_4 = {
@@ -84,7 +83,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(result_1, '<script>var test = 1;</script>')
         self.assertEqual(result_2, '<style>body { color:red; }</style>')
-        self.assertEqual(result_3, '<b>test</b>')
+        self.assertEqual(result_3, '<div class="o-article-embed o-article-embed--code"><b>test</b></div>')
         self.assertEqual(result_4, '')
 
     def test_advertisement_controller(self):
