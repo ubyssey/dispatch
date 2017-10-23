@@ -68,7 +68,8 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data_3 = {
             'mode' : 'html',
-            'content' : '<b>test</b>'
+            'content' : '<div class="o-article-embed o-article-embed--code"><b>test</b></div>'
+
         }
 
         data_4 = {
