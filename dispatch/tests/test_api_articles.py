@@ -82,7 +82,7 @@ class ArticlesTests(DispatchAPITestCase):
             'seo_description': NEW_SEO_DESCRIPTION
         }
 
-        article = DispatchTestHelpers.create_article(self.client)
+        response = DispatchTestHelpers.create_article(self.client)
 
         NEW_HEADLINE = 'New Headline 2'
         NEW_SLUG = 'new-slug'
