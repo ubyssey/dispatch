@@ -84,12 +84,12 @@ class ArticlesTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_article(self.client)
 
-        NEW_HEADLINE = 'New Headline 2'
-        NEW_SLUG = 'new-slug'
-        NEW_SNIPPET = 'New snippet 2'
-        NEW_IMPORTANCE = 5
-        NEW_SEO_KEYWORD = 'new keyword'
-        NEW_SEO_DESCRIPTION = 'new seo description'
+        NEW_HEADLINE_2 = 'New Headline 2'
+        NEW_SLUG_2 = 'new-slug'
+        NEW_SNIPPET_2 = 'New snippet 2'
+        NEW_IMPORTANCE_2 = 5
+        NEW_SEO_KEYWORD_2 = 'new keyword'
+        NEW_SEO_DESCRIPTION_2 = 'new seo description'
 
         data = {
             'headline': NEW_HEADLINE,
