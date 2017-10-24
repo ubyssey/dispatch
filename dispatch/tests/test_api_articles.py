@@ -92,12 +92,12 @@ class ArticlesTests(DispatchAPITestCase):
         NEW_SEO_DESCRIPTION_2 = 'new seo description'
 
         data = {
-            'headline': NEW_HEADLINE,
-            'slug': NEW_SLUG,
-            'snippet': NEW_SNIPPET,
-            'importance': NEW_IMPORTANCE,
-            'seo_keyword': NEW_SEO_KEYWORD,
-            'seo_description': NEW_SEO_DESCRIPTION
+            'headline': NEW_HEADLINE_2,
+            'slug': NEW_SLUG_2,
+            'snippet': NEW_SNIPPET_2,
+            'importance': NEW_IMPORTANCE_2,
+            'seo_keyword': NEW_SEO_KEYWORD_2,
+            'seo_description': NEW_SEO_DESCRIPTION_2
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
