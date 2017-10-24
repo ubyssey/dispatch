@@ -61,6 +61,47 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['authors'][0]['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
+    def test_check_slug(self):
+        """Ensure that article doesn't have slug matching existing article"""
+
+        response = DispatchTestHelpers.create_article(self.client)
+
+        NEW_HEADLINE = 'New Headline'
+        NEW_SLUG = 'new-slug'
+        NEW_SNIPPET = 'New snippet'
+        NEW_IMPORTANCE = 5
+        NEW_SEO_KEYWORD = 'new keyword'
+        NEW_SEO_DESCRIPTION = 'new seo description'
+
+        data = {
+            'headline': NEW_HEADLINE,
+            'slug': NEW_SLUG,
+            'snippet': NEW_SNIPPET,
+            'importance': NEW_IMPORTANCE,
+            'seo_keyword': NEW_SEO_KEYWORD,
+            'seo_description': NEW_SEO_DESCRIPTION
+        }
+
+        article = DispatchTestHelpers.create_article(self.client)
+
+        NEW_HEADLINE = 'New Headline 2'
+        NEW_SLUG = 'new-slug'
+        NEW_SNIPPET = 'New snippet 2'
+        NEW_IMPORTANCE = 5
+        NEW_SEO_KEYWORD = 'new keyword'
+        NEW_SEO_DESCRIPTION = 'new seo description'
+
+        data = {
+            'headline': NEW_HEADLINE,
+            'slug': NEW_SLUG,
+            'snippet': NEW_SNIPPET,
+            'importance': NEW_IMPORTANCE,
+            'seo_keyword': NEW_SEO_KEYWORD,
+            'seo_description': NEW_SEO_DESCRIPTION
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_update_article(self):
         """Update the basic fields of an article"""
 
@@ -166,7 +207,7 @@ class ArticlesTests(DispatchAPITestCase):
 
         url = reverse('api-articles-detail', args=[article.data['id']])
         response = self.client.patch(url, data, format='json')
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['topic']['id'], topic_2.data['id'])
 

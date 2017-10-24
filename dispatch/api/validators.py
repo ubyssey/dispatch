@@ -35,3 +35,17 @@ def ValidateImageGallery(data):
             raise InvalidGalleryAttachments('One or more images does not exist')
         except KeyError:
             raise InvalidGalleryAttachments('One or more image ids were not provided')
+
+class SlugValidator(object):
+
+    def set_context(self, serializer_field):
+        self.instance = serializer_field.parent.instance
+        self.model = serializer_field.parent.Meta.model
+
+    def __call__(self, slug):
+        if self.instance is None:
+            if self.model.objects.filter(slug=slug).exists():
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+        else:
+            if self.model.objects.filter(slug=slug).exclude(parent=self.instance.parent).exists():
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
