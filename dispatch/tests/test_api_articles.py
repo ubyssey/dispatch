@@ -100,7 +100,7 @@ class ArticlesTests(DispatchAPITestCase):
             'seo_description': NEW_SEO_DESCRIPTION
         }
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article(self):
         """Update the basic fields of an article"""
