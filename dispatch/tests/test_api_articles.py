@@ -104,7 +104,7 @@ class ArticlesTests(DispatchAPITestCase):
 
         # Now check that slug can't be changed to slug of existing article
 
-        response = DispatchTestHelpers.create_article(self.client)
+        article = DispatchTestHelpers.create_article(self.client)
 
         NEW_HEADLINE_3 = 'New Headline 3'
         NEW_SLUG_3 = 'new-slug-3'
@@ -123,7 +123,7 @@ class ArticlesTests(DispatchAPITestCase):
             'seo_description': NEW_SEO_DESCRIPTION_3
         }
 
-        url = reverse('api-articles-publish', args=[response.data['id']])
+        url = reverse('api-articles-publish', args=[article.data['id']])
         response = self.client.post(url, format='json')
 
         data = {
