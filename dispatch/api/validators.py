@@ -37,7 +37,6 @@ def ValidateImageGallery(data):
             raise InvalidGalleryAttachments('One or more image ids were not provided')
 
 class SlugValidator(object):
-
     def set_context(self, serializer_field):
         self.instance = serializer_field.parent.instance
         self.model = serializer_field.parent.Meta.model

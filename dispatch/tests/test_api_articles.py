@@ -64,70 +64,17 @@ class ArticlesTests(DispatchAPITestCase):
     def test_check_slug(self):
         """Ensure that article doesn't have slug matching existing article"""
 
-        response = DispatchTestHelpers.create_article(self.client)
+        article_a = DispatchTestHelpers.create_article(self.client, slug='slug-a')
+        article_b = DispatchTestHelpers.create_article(self.client, slug='slug-a')
 
-        NEW_HEADLINE = 'New Headline'
-        NEW_SLUG = 'new-slug'
-        NEW_SNIPPET = 'New snippet'
-        NEW_IMPORTANCE = 5
-        NEW_SEO_KEYWORD = 'new keyword'
-        NEW_SEO_DESCRIPTION = 'new seo description'
+        #article_b should return 400 error
+        self.assertEqual(article_b.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {
-            'headline': NEW_HEADLINE,
-            'slug': NEW_SLUG,
-            'snippet': NEW_SNIPPET,
-            'importance': NEW_IMPORTANCE,
-            'seo_keyword': NEW_SEO_KEYWORD,
-            'seo_description': NEW_SEO_DESCRIPTION
-        }
+        article_c = DispatchTestHelpers.create_article(self.client, slug='slug-b')
+        article_c = DispatchTestHelpers.create_article(self.client, slug='slug-a')
 
-        response = DispatchTestHelpers.create_article(self.client)
-
-        NEW_HEADLINE_2 = 'New Headline 2'
-        NEW_SLUG_2 = 'new-slug'
-        NEW_SNIPPET_2 = 'New snippet 2'
-        NEW_IMPORTANCE_2 = 5
-        NEW_SEO_KEYWORD_2 = 'new keyword'
-        NEW_SEO_DESCRIPTION_2 = 'new seo description'
-
-        data = {
-            'headline': NEW_HEADLINE_2,
-            'slug': NEW_SLUG_2,
-            'snippet': NEW_SNIPPET_2,
-            'importance': NEW_IMPORTANCE_2,
-            'seo_keyword': NEW_SEO_KEYWORD_2,
-            'seo_description': NEW_SEO_DESCRIPTION_2
-        }
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        # Now check that slug can't be changed to slug of existing article
-
-        article = DispatchTestHelpers.create_article(self.client)
-
-        NEW_HEADLINE_3 = 'New Headline 3'
-        NEW_SLUG_3 = 'new-slug-3'
-        NEW_SLUG_4 = 'new-slug'
-        NEW_SNIPPET_3 = 'New snippet 3'
-        NEW_IMPORTANCE_3 = 5
-        NEW_SEO_KEYWORD_3 = 'new keyword'
-        NEW_SEO_DESCRIPTION_3 = 'new seo description'
-
-        data = {
-            'headline': NEW_HEADLINE_3,
-            'slug': NEW_SLUG_3,
-            'snippet': NEW_SNIPPET_3,
-            'importance': NEW_IMPORTANCE_3,
-            'seo_keyword': NEW_SEO_KEYWORD_3,
-            'seo_description': NEW_SEO_DESCRIPTION_3
-        }
-
-        data = {
-            'slug' : NEW_SLUG_4
-        }
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        #article_c should return 400 error
+        self.assertEqual(article_c.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article(self):
         """Update the basic fields of an article"""

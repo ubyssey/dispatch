@@ -424,6 +424,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
 
     id = serializers.ReadOnlyField(source='parent_id')
+    slug = serializers.SlugField(validators=[SlugValidator()])
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 
