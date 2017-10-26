@@ -123,8 +123,8 @@ class ArticlesTests(DispatchAPITestCase):
             'seo_description': NEW_SEO_DESCRIPTION_3
         }
 
-        url = reverse('api-articles-publish', args=[article.data['slug']])
-        response = self.client.post(url, format='json')
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
 
         data = {
             'slug' : NEW_SLUG_4
