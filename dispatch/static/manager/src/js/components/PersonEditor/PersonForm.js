@@ -59,7 +59,7 @@ export default class PersonForm extends React.Component {
           padded={false}
           error={this.props.errors.twitter_url}>
           <TextInput
-            placeholder='Twitter url'
+            placeholder='Twitter handle'
             value={this.props.listItem.twitter_url || ''}
             fill={true}
             onChange={ e => this.props.update('twitter_url', e.target.value) } />
