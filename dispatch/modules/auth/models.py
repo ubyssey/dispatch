@@ -15,6 +15,8 @@ class Person(Model):
     slug = SlugField(null=True, unique=True)
     description = TextField(null=True, blank=True)
     title = CharField(max_length=255, null=True, blank=True)
+    facebook_url = CharField(max_length=255, null=True)
+    twitter_url = CharField(max_length=255, null=True)
 
     def get_image_url(self):
         return settings.MEDIA_URL + str(self.image)
