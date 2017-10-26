@@ -65,16 +65,15 @@ class ArticlesTests(DispatchAPITestCase):
         """Ensure that article doesn't have slug matching existing article"""
 
         article_a = DispatchTestHelpers.create_article(self.client, slug='slug-a')
-        article_b = DispatchTestHelpers.create_article(self.client, slug='slug-a')
+        article_b = DispatchTestHelpers.create_article(self.client, slug='slug-b')
 
-        #article_b should return 400 error
-        self.assertEqual(article_b.status_code, status.HTTP_400_BAD_REQUEST)
+        url = reverse('api-articles-detail', args=[article_b.data['id']])
+        data = {'slug': 'slug-a'}
 
-        article_c = DispatchTestHelpers.create_article(self.client, slug='slug-b')
-        article_c = DispatchTestHelpers.create_article(self.client, slug='slug-a')
+        # Update `article_b` with `slug-a`
+        response = self.client.patch(url, data, format='json')
 
-        #article_c should return 400 error
-        self.assertEqual(article_c.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article(self):
         """Update the basic fields of an article"""
