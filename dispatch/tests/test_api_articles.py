@@ -106,6 +106,7 @@ class ArticlesTests(DispatchAPITestCase):
 
         article = DispatchTestHelpers.create_article(self.client)
 
+        NEW_ID = 'test-article'
         NEW_HEADLINE_3 = 'New Headline 3'
         NEW_SLUG_3 = 'new-slug-3'
         NEW_SLUG_4 = 'new-slug'
@@ -115,6 +116,7 @@ class ArticlesTests(DispatchAPITestCase):
         NEW_SEO_DESCRIPTION_3 = 'new seo description'
 
         data = {
+            'id': NEW_ID,
             'headline': NEW_HEADLINE_3,
             'slug': NEW_SLUG_3,
             'snippet': NEW_SNIPPET_3,
