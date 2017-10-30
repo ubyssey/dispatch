@@ -61,7 +61,48 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['authors'][0]['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
-    def test_check_slug(self):
+    def test_create_article_existing_slug(self):
+        """Ensure that article doesn't have slug matching existing article"""
+
+        response = DispatchTestHelpers.create_article(self.client)
+
+        NEW_HEADLINE = 'New Headline'
+        NEW_SLUG = 'new-slug'
+        NEW_SNIPPET = 'New snippet'
+        NEW_IMPORTANCE = 5
+        NEW_SEO_KEYWORD = 'new keyword'
+        NEW_SEO_DESCRIPTION = 'new seo description'
+
+        data = {
+            'headline': NEW_HEADLINE,
+            'slug': NEW_SLUG,
+            'snippet': NEW_SNIPPET,
+            'importance': NEW_IMPORTANCE,
+            'seo_keyword': NEW_SEO_KEYWORD,
+            'seo_description': NEW_SEO_DESCRIPTION
+        }
+
+        response = DispatchTestHelpers.create_article(self.client)
+
+        NEW_HEADLINE_2 = 'New Headline 2'
+        NEW_SLUG_2 = 'new-slug'
+        NEW_SNIPPET_2 = 'New snippet 2'
+        NEW_IMPORTANCE_2 = 5
+        NEW_SEO_KEYWORD_2 = 'new keyword'
+        NEW_SEO_DESCRIPTION_2 = 'new seo description'
+
+        data = {
+            'headline': NEW_HEADLINE_2,
+            'slug': NEW_SLUG_2,
+            'snippet': NEW_SNIPPET_2,
+            'importance': NEW_IMPORTANCE_2,
+            'seo_keyword': NEW_SEO_KEYWORD_2,
+            'seo_description': NEW_SEO_DESCRIPTION_2
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_article_existing_slug(self):
         """Ensure that article doesn't have slug matching existing article"""
 
         article_a = DispatchTestHelpers.create_article(self.client, slug='slug-a')
