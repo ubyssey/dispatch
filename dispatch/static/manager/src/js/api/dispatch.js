@@ -259,7 +259,6 @@ const DispatchAPI = {
       return getRequest('persons', personId, null, token)
     },
     save: (token, personId, data) => {
-      console.log(data.values())
       return patchMultipartRequest('persons', personId, data, token)
     },
     create: (token, data) => {
