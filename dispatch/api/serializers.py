@@ -27,7 +27,9 @@ class PersonSerializer(DispatchModelSerializer):
             'full_name',
             'slug',
             'description',
-            'image'
+            'image',
+            'twitter_url',
+            'facebook_url'
         )
 
 class UserSerializer(DispatchModelSerializer):
