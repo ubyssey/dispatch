@@ -55,7 +55,7 @@ function ArticlePageComponent(props) {
           selected={props.location.query.section}
           inline={false}
           showSortableList={false}
-          update={(section) => props.searchArticles(props.location.query.author, section, '')}
+          update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
           isFilter={true} />
       </button>
       <button className='pt-button c-item-list__header__filters__filter'>
@@ -64,7 +64,7 @@ function ArticlePageComponent(props) {
           selected={props.location.query.author}
           inline={false}
           showSortableList={false}
-          update={(author) => props.searchArticles(author, props.location.query.section, '')}
+          update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
           isFilter={true} />
       </button>
     </div>
