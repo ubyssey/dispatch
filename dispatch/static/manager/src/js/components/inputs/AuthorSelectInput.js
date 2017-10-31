@@ -20,13 +20,16 @@ class AuthorSelectInputComponent extends React.Component {
   render() {
     return (
       <ItemSelectInput
+        many={this.props.many}
         selected={this.props.selected}
+        inline={this.props.inline}
+        showSortableList={this.props.showSortableList}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
+        editMessage={this.props.isFilter ? (this.props.selected ? this.props.entities.persons[this.props.selected].full_name : 'Filter by Author') : (this.props.selected ? 'Edit authors' : 'Add authors') } />
     )
   }
 

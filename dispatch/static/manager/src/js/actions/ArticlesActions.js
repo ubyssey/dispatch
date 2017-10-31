@@ -40,7 +40,7 @@ class ArticlesActions extends PublishableActions {
     return data
   }
 
-  search(section, query) {
+  search(author, section, query) {
     let queryObj = {}
 
     if (query) {
@@ -53,6 +53,21 @@ class ArticlesActions extends PublishableActions {
 
     return (dispatch) => {
       dispatch(push({ pathname: '/articles/', query: queryObj }))
+    }
+  }
+
+  filter(filterBy, query) {
+    let queryObj = {}
+
+    if(filterBy === 'section') {
+      queryObj.section = query
+    }
+    else if(filterBy === 'author') {
+      queryObj.author = query
+    }
+
+    return (dispatch) => {
+      dispatch(push({ pathname: '/articles/', query: queryObj}))
     }
   }
 

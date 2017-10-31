@@ -18,16 +18,19 @@ class SectionSelectInputComponent extends React.Component {
   }
 
   render() {
+    console.log(this.props.entities.sections)
     return (
       <ItemSelectInput
         many={false}
         selected={this.props.selected}
+        inline={this.props.inline}
+        showSortableList={this.props.showSortableList}
         results={this.props.sections.ids}
         entities={this.props.entities.sections}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={this.props.selected ? 'Edit section' : 'Add section'} />
+        editMessage={this.props.isFilter ? (this.props.selected ? this.props.entities.sections[this.props.selected].name : 'Filter by Section') : (this.props.selected ? 'Edit section' : 'Add section') } />
     )
   }
 

@@ -157,23 +157,28 @@ class ItemSelectInput extends React.Component {
       </div>
     )
   }
-
+  renderSortableList() {
+    
+    return (
+      <SortableList
+        items={this.getSelected()}
+        entities={this.props.entities}
+        onChange={selected => this.props.onChange(selected)}
+        renderItem={item => (
+          <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
+        )} />
+    )
+  }
   render() {
 
     return (
       <div
         className='c-input c-input--item-select'>
-        <SortableList
-          items={this.getSelected()}
-          entities={this.props.entities}
-          onChange={selected => this.props.onChange(selected)}
-          renderItem={item => (
-            <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
-          )} />
+        {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
-          inline={true}>
+          inline={this.props.inline}>
           <a onClick={() => this.refs.dropdown.open()}>
             {this.props.editMessage}
           </a>
@@ -187,6 +192,8 @@ ItemSelectInput.defaultProps = {
   many: true,
   results: [],
   entities: {},
+  showSortableList: true,
+  inline: true
 }
 
 export default ItemSelectInput
