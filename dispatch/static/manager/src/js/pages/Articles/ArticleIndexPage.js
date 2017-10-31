@@ -39,11 +39,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItems: (token, articleIds) => {
       dispatch(articlesActions.deleteMany(token, articleIds))
     },
-    searchArticles: (section, query) => {
-      dispatch(articlesActions.search(section, query))
-    },
-    filterArticles: (filterBy, query) => {
-      dispatch(articlesActions.filter(filterBy, query))
+    searchArticles: (author, section, query) => {
+      dispatch(articlesActions.search(author, section, query))
     }
   }
 }
@@ -58,7 +55,7 @@ function ArticlePageComponent(props) {
           selected={props.location.query.section}
           inline={false}
           showSortableList={false}
-          update={(query) => props.filterArticles('section', query)}
+          update={(section) => props.searchArticles(props.location.query.author, section, '')}
           isFilter={true} />
       </button>
       <button className='pt-button c-item-list__header__filters__filter'>
@@ -67,7 +64,7 @@ function ArticlePageComponent(props) {
           selected={props.location.query.author}
           inline={false}
           showSortableList={false}
-          update={(query) => props.filterArticles('author', query)}
+          update={(author) => props.searchArticles(author, props.location.query.section, '')}
           isFilter={true} />
       </button>
     </div>
@@ -98,7 +95,7 @@ function ArticlePageComponent(props) {
         }
         return query
       }}
-      searchListItems={(query) => props.searchArticles(props.location.query.section, query)}
+      searchListItems={(query) => props.searchArticles(props.location.query.author, props.location.query.section, query)}
       {...props} />
   )
 }
