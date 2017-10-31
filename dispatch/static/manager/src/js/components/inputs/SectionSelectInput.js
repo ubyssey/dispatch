@@ -18,7 +18,7 @@ class SectionSelectInputComponent extends React.Component {
   }
 
   render() {
-    console.log(this.props.entities.sections)
+
     return (
       <ItemSelectInput
         many={false}
