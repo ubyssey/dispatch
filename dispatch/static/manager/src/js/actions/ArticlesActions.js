@@ -40,7 +40,7 @@ class ArticlesActions extends PublishableActions {
     return data
   }
 
-  search(author, section, query) {
+  search(section, query) {
     let queryObj = {}
 
     if (query) {
