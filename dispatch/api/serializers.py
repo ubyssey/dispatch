@@ -8,7 +8,7 @@ from dispatch.modules.content.models import (
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
+from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, SlugValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -27,7 +27,9 @@ class PersonSerializer(DispatchModelSerializer):
             'full_name',
             'slug',
             'description',
-            'image'
+            'image',
+            'twitter_url',
+            'facebook_url'
         )
 
 class UserSerializer(DispatchModelSerializer):
@@ -306,6 +308,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
 
     id = serializers.ReadOnlyField(source='parent_id')
+    slug = serializers.SlugField(validators=[SlugValidator()])
 
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
@@ -423,6 +426,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
 
     id = serializers.ReadOnlyField(source='parent_id')
+    slug = serializers.SlugField(validators=[SlugValidator()])
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
 

@@ -68,6 +68,7 @@ export default class FormatPopover extends React.Component {
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
+          onClick={ e => this.toggleBlockType(e, 'header-two') }
           title='Header'>
           <span className='pt-icon-standard pt-icon-header'></span>
         </AnchorButton>

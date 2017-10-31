@@ -367,3 +367,21 @@ class ImageGalleryTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['images'][1]['caption'], 'test caption 2')
         self.assertEqual(response.data['images'][1]['credit'], 'test credit 2')
         self.assertEqual(response.data['images'][1]['image']['id'], img_2.data['id'])
+
+    def test_imagegallery_query(self):
+        """Should be able to search for galleries by title"""
+
+        # Create galleries
+        DispatchTestHelpers.create_gallery(1, self.client)
+        DispatchTestHelpers.create_gallery(2, self.client)
+        DispatchTestHelpers.create_gallery(20, self.client)
+
+        url = '%s?q=%s' % (reverse('api-galleries-list'), 'Title 2')
+
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['title'], 'Gallery Title 2')
+        self.assertEqual(data['results'][1]['title'], 'Gallery Title 20')
+        self.assertEqual(data['count'], 2)

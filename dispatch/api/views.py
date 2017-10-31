@@ -223,7 +223,13 @@ class ImageGalleryViewSet(DispatchModelViewSet):
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
 
-    queryset = ImageGallery.objects.all()
+    def get_queryset(self):
+        queryset = ImageGallery.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `title`
+            queryset = queryset.filter(title__icontains=q)
+        return queryset
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""

@@ -4,7 +4,7 @@ export default function SelectInput(props) {
 
   let placeholder = null
   if (props.placeholder) {
-    placeholder = <option key={0} disabled>{props.placeholder}</option>
+    placeholder = <option key={0} disabled selected hidden>{props.placeholder}</option>
   }
 
   const options = props.options.map((option, i) => (
