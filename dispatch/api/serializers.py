@@ -340,6 +340,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     class Meta:
         model = Article
         fields = (
+            'preview_id',
             'id',
             'slug',
             'url',
@@ -443,6 +444,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     class Meta:
         model = Page
         fields = (
+            'preview_id',
             'id',
             'slug',
             'url',
