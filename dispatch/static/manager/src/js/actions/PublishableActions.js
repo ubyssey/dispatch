@@ -5,7 +5,6 @@ import { ResourceActions, pending, fulfilled, rejected } from '../util/redux'
 const PREVIEW_PREFIX = '_dispatch-preview'
 
 function openPreviewWindow(url, id) {
-  console.log('in openPreviewWindow, url: ' + url)
   window.open(url, `${PREVIEW_PREFIX}-${id}`)
 }
 
@@ -52,7 +51,6 @@ export default class PublishableActions extends ResourceActions {
   }
 
   preview(token, id, data) {
-    console.log('entering preview, this is data: ' + JSON.stringify(data))
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.SAVE) })
