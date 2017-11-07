@@ -66,8 +66,7 @@ export default class PublishableActions extends ResourceActions {
               )
             }
           })
-          openPreviewWindow(json.url + '?version=' + json.current_version +
-                            '&preview_id=' + json.preview_id, json.id)
+          openPreviewWindow(`${json.url}?version=${json.current_version}&preview_id=${json.preview_id}`, json.id)
         })
         .catch(error => {
           dispatch({

@@ -2,7 +2,6 @@ import datetime
 import StringIO
 import os
 import re
-
 import uuid
 
 from jsonfield import JSONField
@@ -11,10 +10,8 @@ from PIL import Image as Img
 from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField,
-    UUIDField,
-    ForeignKey, ManyToManyField,
-    SlugField, SET_NULL)
+    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
+    ManyToManyField, SlugField, SET_NULL)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
