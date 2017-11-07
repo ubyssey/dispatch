@@ -17,6 +17,26 @@ class SectionSelectInputComponent extends React.Component {
     this.props.listSections(this.props.token, queryObj)
   }
 
+  getCurrentFilter(selected) {
+    if (this.props.entities.sections[selected]) {
+      return this.props.entities.sections[selected].name
+    }
+
+    return 'Filter by Section'
+  }
+
+  getEditMessage(isFilter, selected) {
+    if (isFilter) {
+      return this.getCurrentFilter(selected)
+    }
+
+    if (selected) {
+      return 'Edit Section'
+    }
+
+    return 'Add Section'
+  }
+
   render() {
 
     return (
@@ -30,7 +50,7 @@ class SectionSelectInputComponent extends React.Component {
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={this.props.isFilter ? (this.props.selected ? this.props.entities.sections[this.props.selected].name : 'Filter by Section') : (this.props.selected ? 'Edit section' : 'Add section') } />
+        editMessage={this.getEditMessage(this.props.isFilter, this.props.selected)} />
     )
   }
 
