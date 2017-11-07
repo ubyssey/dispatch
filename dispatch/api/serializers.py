@@ -340,7 +340,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     class Meta:
         model = Article
         fields = (
-            'preview_id',
             'id',
             'slug',
             'url',
@@ -362,6 +361,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'published_version',
             'current_version',
             'latest_version',
+            'preview_id',
             'importance',
             'reading_time',
             'template',
@@ -444,7 +444,6 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     class Meta:
         model = Page
         fields = (
-            'preview_id',
             'id',
             'slug',
             'url',
@@ -457,6 +456,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'published_version',
             'current_version',
             'latest_version',
+            'preview_id',
             'template',
             'template_id',
             'template_data',
