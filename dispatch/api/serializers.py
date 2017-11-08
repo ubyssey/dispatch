@@ -373,7 +373,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         )
         authenticated_fields = (
             'template',
-            'integrations'
+            'integrations',
+            'preview_id'
         )
 
     def create(self, validated_data):
@@ -465,6 +466,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         )
         authenticated_fields = (
             'template',
+            'preview_id'
         )
 
     def create(self, validated_data):
