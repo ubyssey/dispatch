@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
+import eventsActions from '../actions/EventsActions'
+
 
 require('../../styles/components/header.scss')
 require('../../styles/components/loading_bar.scss')
 
-export default function Header() {
+export default function Header(props) {
   return (
     <header className='c-header'>
       <nav className="pt-navbar pt-dark">
@@ -18,7 +20,7 @@ export default function Header() {
           <Link to='/galleries/' className="pt-button pt-minimal pt-icon-media">Galleries</Link>
           <Link to='/files/' className="pt-button pt-minimal pt-icon-folder-close">Files</Link>
           <Link to='/persons/' className="pt-button pt-minimal pt-icon-person">People</Link>
-          <Link to='/events/'className="pt-button pt-minimal pt-icon-timeline-events">Events</Link>
+          <Link to='/events/'className="pt-button pt-minimal pt-icon-timeline-events event-badge" data-badge={props.pendingCount}>Events</Link>
         </div>
         <div className="pt-navbar-group pt-align-right">
           <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
