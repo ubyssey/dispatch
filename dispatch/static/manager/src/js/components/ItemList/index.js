@@ -18,7 +18,7 @@ export default function ItemList(props) {
         totalPages={props.totalPages}
         createHandler={props.createHandler}
         toolbarContent={props.toolbarContent}
-        filterBy={props.filterBy}
+        filters={props.filters}
         actions={props.actions || {}} />
       <ItemListTable
         items={props.items}

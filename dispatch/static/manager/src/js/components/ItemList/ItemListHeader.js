@@ -17,7 +17,7 @@ export default function ItemListHeader(props) {
       {props.createHandler ? props.createHandler() : null}
     </div>
   )
-  
+
   const toolbarLeft = (
     <div>
       <div className='c-item-list__header__checkbox'>
@@ -32,7 +32,7 @@ export default function ItemListHeader(props) {
         className='c-item-list__header__delete'
         onConfirm={() => props.actions.deleteItems(props.items.selected)}
         disabled={!props.items.selected.length}>Delete</ConfirmButton>
-      {props.filterBy}
+      {props.filters}
       {props.toolbarContent}
     </div>
   )

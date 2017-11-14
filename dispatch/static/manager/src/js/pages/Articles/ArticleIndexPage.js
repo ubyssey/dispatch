@@ -2,8 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
-import SectionSelectInput  from '../../components/inputs/SectionSelectInput'
-import AuthorSelectInput from '../../components/inputs/AuthorSelectInput'
+import FilterSelectInput  from '../../components/inputs/FilterSelectInput'
 import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -48,24 +47,20 @@ const mapDispatchToProps = (dispatch) => {
 function ArticlePageComponent(props) {
   const section = props.entities.sections[props.location.query.section]
   const title = section ? `${section.name} - Articles` : 'Articles'
+
   const filters = (
     <div className='c-item-list__header__filters'>
       <button className='pt-button c-item-list__header__filters__filter'>
-        <SectionSelectInput
+        <FilterSelectInput
+          filterBy='sections'
           selected={props.location.query.section}
-          inline={false}
-          showSortableList={false}
-          update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
-          isFilter={true} />
+          update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)} />
       </button>
       <button className='pt-button c-item-list__header__filters__filter'>
-        <AuthorSelectInput
-          many={false}
+        <FilterSelectInput
+          filterBy='authors'
           selected={props.location.query.author}
-          inline={false}
-          showSortableList={false}
-          update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
-          isFilter={true} />
+          update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)} />
       </button>
     </div>
   )
@@ -76,7 +71,7 @@ function ArticlePageComponent(props) {
       typePlural='articles'
       typeSingular='article'
       displayColumn='headline'
-      filterBy={filters}
+      filters={filters}
       headers={[ 'Headline', 'Authors', 'Published', 'Revisions']}
       extraColumns={[
         item => item.authors_string,
