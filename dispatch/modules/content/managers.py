@@ -9,4 +9,22 @@ class PublishableManager(Manager):
             kwargs['parent'] = kwargs['pk']
             kwargs['head'] = True
             del kwargs['pk']
-        return super(PublishableManager, self).get(*args, **kwargs)
+
+        """If the url requested includes the querystring parameters 'version' and 'preview_id',
+        get the article with the specified version and preview_id.
+
+        Otherwise, get the published version of the article.
+        """
+        
+        request = args[0]
+
+        version = request.GET.get('version', None)
+        preview_id = request.GET.get('preview_id', None)
+
+        if (version is not None) and (preview_id is not None):
+        	kwargs['revision_id'] = version
+        	kwargs['preview_id'] = preview_id    
+        else:
+        	kwargs['is_published'] = True
+
+        return super(PublishableManager, self).get(**kwargs)
