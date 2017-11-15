@@ -15,16 +15,17 @@ class PublishableManager(Manager):
 
         Otherwise, get the published version of the article.
         """
-        
-        request = args[0]
+        kwargs['is_published'] = True
 
-        version = request.GET.get('version', None)
-        preview_id = request.GET.get('preview_id', None)
+        if len(args) > 0:
+        	request = args[0]
 
-        if (version is not None) and (preview_id is not None):
-        	kwargs['revision_id'] = version
-        	kwargs['preview_id'] = preview_id    
-        else:
-        	kwargs['is_published'] = True
+        	version = request.GET.get('version', None)
+        	preview_id = request.GET.get('preview_id', None)
+
+        	if (version is not None) and (preview_id is not None):
+        		kwargs['revision_id'] = version
+        		kwargs['preview_id'] = preview_id
+        		del kwargs['is_published']
 
         return super(PublishableManager, self).get(**kwargs)
