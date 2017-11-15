@@ -15,7 +15,6 @@ class PublishableManager(Manager):
 
         Otherwise, get the published version of the article.
         """
-        kwargs['is_published'] = True
 
         if len(args) > 0:
         	request = args[0]
