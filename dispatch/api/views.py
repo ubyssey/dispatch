@@ -14,7 +14,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery,
-    Page, Author, Person, Section, Tag, Topic, User)
+    Page, Author, Person, Section, Tag, Topic, User, Video)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
