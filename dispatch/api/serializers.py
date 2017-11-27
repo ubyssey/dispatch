@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery,
+    Article, Author, Image, ImageAttachment, ImageGallery,
     File, Page, Section, Tag, Topic)
 from dispatch.modules.auth.models import Person, User
 
@@ -28,6 +28,21 @@ class PersonSerializer(DispatchModelSerializer):
             'slug',
             'description',
             'image'
+        )
+
+class AuthorSerializer(DispatchModelSerializer):
+    """
+    Serializes the Author model.
+    """
+
+    person = PersonSerializer()
+
+    class Meta:
+        model = Author
+        fields = (
+            'id',
+            'person',
+            'type'
         )
 
 class UserSerializer(DispatchModelSerializer):
@@ -315,7 +330,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = ContentSerializer()
 
-    authors = PersonSerializer(many=True, read_only=True)
+    authors = AuthorSerializer(source='get_authors', many=True, read_only=True)
     author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 

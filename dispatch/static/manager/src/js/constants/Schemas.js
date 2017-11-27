@@ -14,10 +14,15 @@ export const zoneSchema = new Schema('zones')
 export const widgetSchema = new Schema('widgets')
 export const eventSchema = new Schema('events')
 export const userSchema = new Schema('users')
+export const authorSchema = new Schema('authors')
+
+authorSchema.define({
+  person: personSchema
+})
 
 articleSchema.define({
   section: sectionSchema,
-  authors: arrayOf(personSchema),
+  authors: arrayOf(authorSchema),
   tags: arrayOf(tagSchema),
   topic: topicSchema,
   template: templateSchema,

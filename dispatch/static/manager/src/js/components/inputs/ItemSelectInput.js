@@ -7,7 +7,6 @@ import TextInput from './TextInput'
 
 import SortableList from './SortableList'
 
-
 function Item(props) {
   if (props.isSelected) {
     return (
@@ -160,6 +159,10 @@ class ItemSelectInput extends React.Component {
 
   render() {
 
+    const fields = this.props.extraFields.map(field => (
+      <option>{field}</option>
+    ))
+
     return (
       <div
         className='c-input c-input--item-select'>
@@ -167,9 +170,17 @@ class ItemSelectInput extends React.Component {
           items={this.getSelected()}
           entities={this.props.entities}
           onChange={selected => this.props.onChange(selected)}
-          renderItem={item => (
-            <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
-          )} />
+          renderItem={item => {
+            if (this.props.extraFields != '')
+              return (<div className='c-input--item-select__item'>
+              {item[this.props.attribute]}
+              <select>{fields}</select>
+              </div>)
+            else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
+          }}
+
+        />
+
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
@@ -187,6 +198,7 @@ ItemSelectInput.defaultProps = {
   many: true,
   results: [],
   entities: {},
+  extraFields: [],
 }
 
 export default ItemSelectInput
