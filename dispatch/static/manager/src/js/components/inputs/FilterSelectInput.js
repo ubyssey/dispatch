@@ -9,32 +9,21 @@ import personsActions from '../../actions/PersonsActions'
 
 class FilterSelectInputComponent extends React.Component {
 
-  listSections(query) {
+  listItems(query, listAction) {
     let queryObj = {}
 
     if (query) {
       queryObj['q'] = query
     }
-
-    this.props.listSections(this.props.token, queryObj)
-  }
-
-  listAuthors(query) {
-    let queryObj = {}
-
-    if (query) {
-      queryObj['q'] = query
-    }
-
-    this.props.listAuthors(this.props.token, queryObj)
+    listAction(this.props.token, queryObj)
   }
 
   fetchResults(query) {
     if (this.props.filterBy === 'sections') {
-      this.listSections(query)
+      this.listItems(query, this.props.listSections)
     }
     else if (this.props.filterBy === 'authors') {
-      this.listAuthors(query)
+      this.listItems(query, this.props.listAuthors)
     }
   }
 
