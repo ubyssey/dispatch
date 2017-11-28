@@ -55,7 +55,7 @@ function ArticlePageComponent(props) {
           filterBy='sections'
           selected={props.location.query.section}
           update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
-          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute]: 'Filter by Section'}
+          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute]: 'Filter by Section ↓'}
           attribute='name' />
       </button>
       <button className='pt-button c-item-list__header__filters__filter'>
@@ -63,7 +63,7 @@ function ArticlePageComponent(props) {
           filterBy='authors'
           selected={props.location.query.author}
           update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
-          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute] : 'Filter by Author'}
+          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute] : 'Filter by Author ↓'}
           attribute='full_name' />
       </button>
     </div>
