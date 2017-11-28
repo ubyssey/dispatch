@@ -27,33 +27,6 @@ class FilterSelectInputComponent extends React.Component {
     }
   }
 
-  getEditMessage(filterBy, selected) {
-    if (filterBy === 'sections'){
-      if (this.props.entities.sections[selected]) {
-        return this.props.entities.sections[selected].name
-      }
-
-      return 'Filter by Section'
-    }
-    else if (filterBy === 'authors') {
-      if (this.props.entities.authors[selected]) {
-        return this.props.entities.authors[selected].full_name
-      }
-
-      return 'Filter by Author'
-    }
-  }
-
-  getEntityAttribute(filterBy) {
-    if (filterBy === 'authors') {
-      return 'full_name'
-    }
-    else if (filterBy === 'sections') {
-      return 'name'
-    }
-  }
-
-
   render() {
     return (
       <ItemSelectInput
@@ -65,8 +38,8 @@ class FilterSelectInputComponent extends React.Component {
         entities={this.props.entities[this.props.filterBy]}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.fetchResults(query)}
-        attribute={this.getEntityAttribute(this.props.filterBy)}
-        editMessage={this.getEditMessage(this.props.filterBy, this.props.selected)} />
+        attribute={this.props.attribute}
+        editMessage={this.props.editMessage(this.props.entities[this.props.filterBy][this.props.selected], this.props.attribute)} />
     )
   }
 
