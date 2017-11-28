@@ -33,7 +33,7 @@ class Main extends React.Component {
     return (
       <div>
         <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
-        <Header pendingCount={this.props.pending}/>
+        <Header pendingCount={this.props.pending} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>

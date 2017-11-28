@@ -26,11 +26,11 @@
   border: none;
 }
 
-.event-badge{
+.c-banner__badge{
   position: relative;
 }
 
-.event-badge[data-badge]:after{
+.c-banner__badge[data-badge]:after{
   content: attr(data-badge);
   position: absolute;
   top: -5px;
@@ -45,10 +45,10 @@
   border-radius: 50%;
 }
 
-.event-badge[date-badge=""]:after{
+.c-banner__badge[date-badge=""]:after{
   visibility: hidden;
 }
 
-.event-badge[data-badge="0"]:after{
+.c-banner__badge[data-badge="0"]:after{
   visibility: hidden;
 }
