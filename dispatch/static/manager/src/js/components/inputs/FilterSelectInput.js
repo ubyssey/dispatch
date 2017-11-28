@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import sectionsActions from '../../actions/sectionsActions'
+import sectionsActions from '../../actions/SectionsActions'
 import personsActions from '../../actions/PersonsActions'
 
 class FilterSelectInputComponent extends React.Component {
