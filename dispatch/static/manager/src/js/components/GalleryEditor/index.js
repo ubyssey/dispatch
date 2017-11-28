@@ -62,6 +62,7 @@ function TopicEditorComponent(props) {
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={GalleryForm}
+      displayField='title'
       {... props} />
   )
 }
