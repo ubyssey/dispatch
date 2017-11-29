@@ -25,3 +25,30 @@
   box-shadow: none;
   border: none;
 }
+
+.c-banner__badge{
+  position: relative;
+}
+
+.c-banner__badge[data-badge]:after{
+  content: attr(data-badge);
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 0.7em;
+  background: red;
+  color: white;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  border-radius: 50%;
+}
+
+.c-banner__badge[date-badge=""]:after{
+  visibility: hidden;
+}
+
+.c-banner__badge[data-badge="0"]:after{
+  visibility: hidden;
+}
