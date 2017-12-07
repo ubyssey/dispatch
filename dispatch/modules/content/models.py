@@ -311,8 +311,13 @@ class Article(Publishable):
 
         # Create a new author for each person in list
         # Use `n` to save authors in correct order
-        for n, person_id in enumerate(authors):
-            Author.objects.create(article=self, person_id=person_id, order=n)
+        for n, author in enumerate(authors):
+            Author.objects.create(
+                article=self,
+                person_id=author['person'],
+                type=author['type'],
+                order=n
+            )
 
     def get_author_string(self, links=False):
         """

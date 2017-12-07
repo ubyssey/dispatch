@@ -333,7 +333,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     content = ContentSerializer()
 
     authors = AuthorSerializer(source='get_authors', many=True, read_only=True)
-    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+    author_ids = serializers.ListField(write_only=True, child=serializers.JSONField())
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)

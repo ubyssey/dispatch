@@ -183,6 +183,7 @@ class ItemSelectInput extends React.Component {
                 <div className='c-panel__select'>{item[this.props.attribute]}</div>
                   <select
                     className='pt-button c-panel__select__right'
+                    value={this.props.extraFields[item.id]}
                     onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
                 </div>
               )
