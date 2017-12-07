@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import personsActions from '../../actions/PersonsActions'
+import personsActions from '../../../actions/PersonsActions'
 
 class AuthorSelectInputComponent extends React.Component {
 
@@ -15,14 +15,6 @@ class AuthorSelectInputComponent extends React.Component {
     }
 
     this.props.listPersons(this.props.token, queryObj)
-  }
-
-  getCurrentFilter(selected) {
-    if (this.props.entities.persons[selected]) {
-      return this.props.entities.persons[selected].full_name
-    }
-
-    return 'Filter by Author'
   }
 
   render() {

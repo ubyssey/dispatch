@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
-import FilterSelectInput  from '../../components/inputs/FilterSelectInput'
+import SectionFilterInput  from '../../components/inputs/filters/SectionFilterInput'
+import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
 import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -50,22 +51,14 @@ function ArticlePageComponent(props) {
 
   const filters = (
     <div className='c-item-list__header__filters'>
-      <button className='pt-button c-item-list__header__filters__filter'>
-        <FilterSelectInput
-          filterBy='sections'
-          selected={props.location.query.section}
-          update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
-          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute]: 'Filter by Section ↓'}
-          attribute='name' />
-      </button>
-      <button className='pt-button c-item-list__header__filters__filter'>
-        <FilterSelectInput
-          filterBy='authors'
-          selected={props.location.query.author}
-          update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
-          editMessage={(selected, entityAttribute) => selected ? selected[entityAttribute] : 'Filter by Author ↓'}
-          attribute='full_name' />
-      </button>
+      <SectionFilterInput
+        selected={props.location.query.section}
+        update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
+        />
+      <AuthorFilterInput
+        selected={props.location.query.author}
+        update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
+        />
     </div>
   )
 

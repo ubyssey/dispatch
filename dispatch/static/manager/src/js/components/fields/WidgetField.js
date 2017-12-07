@@ -2,7 +2,7 @@ import React from 'react'
 import R from 'ramda'
 
 import Panel from '../Panel'
-import WidgetSelectInput from '../inputs/WidgetSelectInput'
+import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 import WidgetFieldWrapper from '../ZoneEditor/WidgetField'
 
 export default class WidgetFieldComponent extends React.Component {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import sectionsActions from '../../actions/SectionsActions'
+import sectionsActions from '../../../actions/SectionsActions'
 
 class SectionSelectInputComponent extends React.Component {
 
@@ -15,26 +15,6 @@ class SectionSelectInputComponent extends React.Component {
     }
 
     this.props.listSections(this.props.token, queryObj)
-  }
-
-  getCurrentFilter(selected) {
-    if (this.props.entities.sections[selected]) {
-      return this.props.entities.sections[selected].name
-    }
-
-    return 'Filter by Section'
-  }
-
-  getEditMessage(isFilter, selected) {
-    if (isFilter) {
-      return this.getCurrentFilter(selected)
-    }
-
-    if (selected) {
-      return 'Edit Section'
-    }
-
-    return 'Add Section'
   }
 
   render() {

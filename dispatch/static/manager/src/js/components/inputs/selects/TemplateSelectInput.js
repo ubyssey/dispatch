@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import templatesActions from '../../actions/TemplatesActions'
+import templatesActions from '../../../actions/TemplatesActions'
 
 class TemplateSelectInputComponent extends React.Component {
 

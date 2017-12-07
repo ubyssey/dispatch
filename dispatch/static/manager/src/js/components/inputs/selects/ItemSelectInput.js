@@ -1,11 +1,11 @@
 import React from 'react'
 import R from 'ramda'
 
-import Dropdown from '../Dropdown'
+import Dropdown from '../../Dropdown'
 
-import TextInput from './TextInput'
+import TextInput from '../TextInput'
 
-import SortableList from './SortableList'
+import SortableList from '../SortableList'
 
 
 function Item(props) {
@@ -158,7 +158,7 @@ class ItemSelectInput extends React.Component {
     )
   }
   renderSortableList() {
-    
+
     return (
       <SortableList
         items={this.getSelected()}
@@ -170,6 +170,17 @@ class ItemSelectInput extends React.Component {
     )
   }
   render() {
+    const anchor = (
+      <a onClick={() => this.refs.dropdown.open()}>
+        {this.props.editMessage}
+      </a>
+    )
+    const filterButton = (
+      <button className='pt-button c-item-list__header__filters__filter' onClick={() => this.refs.dropdown.open()}>
+        {this.props.editMessage}
+        <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+      </button>
+    )
 
     return (
       <div
@@ -179,9 +190,7 @@ class ItemSelectInput extends React.Component {
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          <a onClick={() => this.refs.dropdown.open()}>
-            {this.props.editMessage}
-          </a>
+          {this.props.filterButton ? filterButton : anchor}
         </Dropdown>
       </div>
     )

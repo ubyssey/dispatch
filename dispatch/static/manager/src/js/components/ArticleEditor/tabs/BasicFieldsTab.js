@@ -2,10 +2,10 @@ import React from 'react'
 
 import { FormInput, TextInput, TextAreaInput } from '../../inputs'
 
-import SectionSelectInput from '../../inputs/SectionSelectInput'
-import AuthorSelectInput from '../../inputs/AuthorSelectInput'
-import TagSelectInput from '../../inputs/TagSelectInput'
-import TopicSelectInput from '../../inputs/TopicSelectInput'
+import SectionSelectInput from '../../inputs/selects/SectionSelectInput'
+import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
+import TagSelectInput from '../../inputs/selects/TagSelectInput'
+import TopicSelectInput from '../../inputs/selects/TopicSelectInput'
 
 export default function BasicFieldsTab(props) {
 

@@ -4,10 +4,10 @@ import TextInput from './TextInput'
 import ImageInput from './ImageInput'
 import InputGroup from './InputGroup'
 import FormInput from './FormInput'
-import ItemSelectInput from './ItemSelectInput'
+import ItemSelectInput from './selects/ItemSelectInput'
 import TextAreaInput from './TextAreaInput'
-import SelectInput from './SelectInput'
-import GallerySelectInput from './GallerySelectInput'
+import SelectInput from './selects/SelectInput'
+import GallerySelectInput from './selects/GallerySelectInput'
 import DateTimeInput from './DateTimeInput'
 
 require('../../../styles/components/inputs.scss')

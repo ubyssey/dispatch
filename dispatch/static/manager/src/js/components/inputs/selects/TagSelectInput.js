@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import tagsActions from '../../actions/TagsActions'
+import tagsActions from '../../../actions/TagsActions'
 
 class TagSelectInputComponent extends React.Component {
 
