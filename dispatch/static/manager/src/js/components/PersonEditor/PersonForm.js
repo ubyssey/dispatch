@@ -53,6 +53,26 @@ export default class PersonForm extends React.Component {
             fill={true}
             onChange={ e => this.props.update('slug', e.target.value) } />
         </FormInput>
+        <FormInput
+          label='Facebook'
+          padded={false}
+          error={this.props.errors.facebook_url}>
+          <TextInput
+            placeholder='Facebook url'
+            value={this.props.listItem.facebook_url || ''}
+            fill={true}
+            onChange={ e => this.props.update('facebook_url', e.target.value) } />
+        </FormInput>
+        <FormInput
+          label='Twitter'
+          padded={false}
+          error={this.props.errors.twitter_url}>
+          <TextInput
+            placeholder='Twitter handle'
+            value={this.props.listItem.twitter_url || ''}
+            fill={true}
+            onChange={ e => this.props.update('twitter_url', e.target.value) } />
+        </FormInput>
 
         <Dropzone
           ref={(node) => { this.dropzone = node }}

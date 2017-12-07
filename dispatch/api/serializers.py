@@ -27,7 +27,9 @@ class PersonSerializer(DispatchModelSerializer):
             'full_name',
             'slug',
             'description',
-            'image'
+            'image',
+            'twitter_url',
+            'facebook_url'
         )
 
 class AuthorSerializer(DispatchModelSerializer):
@@ -374,6 +376,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'published_version',
             'current_version',
             'latest_version',
+            'preview_id',
             'importance',
             'reading_time',
             'template',
@@ -385,7 +388,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         )
         authenticated_fields = (
             'template',
-            'integrations'
+            'integrations',
+            'preview_id'
         )
 
     def create(self, validated_data):
@@ -468,6 +472,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'published_version',
             'current_version',
             'latest_version',
+            'preview_id',
             'template',
             'template_id',
             'template_data',
@@ -476,6 +481,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         )
         authenticated_fields = (
             'template',
+            'preview_id'
         )
 
     def create(self, validated_data):
