@@ -10,7 +10,6 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
-from dispatch.api.loaders import ImageLoader, ImageGalleryLoader
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
@@ -251,11 +250,47 @@ class TemplateSerializer(serializers.Serializer):
     name = serializers.CharField(read_only=True)
     fields = serializers.ListField(read_only=True, child=FieldSerializer())
 
+class ImageEmbedSerializer(serializers.Serializer):
+    def serialize(self, instance):
+        """Return serialized image data."""
+        return ImageSerializer(instance).data
+
+    def get_id(self, data):
+        """Returns the id for an image instance."""
+        return data['image_id']
+
+    def fetch(self, ids):
+        """Returns a dictionary of ids to Image instances with prefetched Authors"""
+        return Image.objects.prefetch_related('authors').in_bulk(ids)
+
+    def to_internal_value(self, data):
+        if 'image' in data:
+            del data['image']
+        return data
+
+class ImageGalleryEmbedSerializer(serializers.Serializer):
+    def serialize(self, instance):
+        """Return serialized image gallery data."""
+        return ImageGallerySerializer(instance).data
+
+    def get_id(self, data):
+        """Returns the id for a gallery instance."""
+        return data['id']
+
+    def fetch(self, ids):
+        """Returns a dictionary of ids to ImageGallery instances with prefetched Authors"""
+        return ImageGallery.objects.prefetch_related('images__image__authors').in_bulk(ids)
+
+    def to_internal_value(self, data):
+        if 'gallery' in data:
+            del data['gallery']
+        return data
+
 class ContentSerializer(serializers.Serializer):
-    # Connect loaders with their corresponding embed types
-    loaders = {
-        'image': ImageLoader(ImageSerializer),
-        'gallery': ImageGalleryLoader(ImageGallerySerializer)
+    # Connect serializers with their corresponding embed types
+    serializers = {
+        'image': ImageEmbedSerializer(),
+        'gallery': ImageGalleryEmbedSerializer()
     }
 
     def __init__(self, *args, **kwargs):
@@ -270,27 +305,32 @@ class ContentSerializer(serializers.Serializer):
         return self.insert_data(content)
 
     def to_internal_value(self, content):
-        # TODO: this should be handled by loaders
-        result = []
-        for block in content:
-            try:
-                if block['type'] == 'image':
-                    del block['data']['image']
-                if block['type'] == 'gallery':
-                    del block['data']['gallery']
-            except:
-                pass
-            result.append(block)
-        return result
+        """Convert each block in `content` to its internal value before saving."""
+        return map(self.sanitize_block(block), content)
+
+    def sanitize_block(self, block):
+        """Santizes the data for the given block.
+        If the block has a matching embed serializer, use the `to_internal_value` method
+        """
+        embed_type = block.get('type', None)
+        data = block.get('data', {})
+        serializer = self.serializers.get(embed_type, None)
+
+        if serializer is None:
+            return block
+
+        block['data'] = serializer.to_internal_value(data)
+
+        return block
 
     def queue_instance(self, embed_type, data):
         """Queue an instance to be fetched from the database."""
-        loader = self.loaders.get(embed_type, None)
+        serializer = self.serializers.get(embed_type, None)
 
-        if loader is None:
+        if serializer is None:
             return
 
-        instance_id = loader.get_id(data)
+        instance_id = serializer.get_id(data)
 
         if embed_type not in self.ids:
             self.ids[embed_type] = []
@@ -299,26 +339,26 @@ class ContentSerializer(serializers.Serializer):
 
     def load_instances(self, embed_type, ids):
         """Fetch all queued instances of type `embed_type`, save results to `self.instances`"""
-        loader = self.loaders.get(embed_type, None)
+        serializer = self.serializers.get(embed_type, None)
 
-        if loader is None:
+        if serializer is None:
             return
 
-        self.instances[embed_type] = loader.fetch(ids)
+        self.instances[embed_type] = serializer.fetch(ids)
 
     def insert_instance(self, block):
         """Insert a fetched instance into embed block."""
         embed_type = block.get('type', None)
         data = block.get('data', {})
-        loader = self.loaders.get(embed_type, None)
+        serializer = self.serializers.get(embed_type, None)
 
-        if loader is None:
+        if serializer is None:
             return block
 
         try:
-            instance_id = loader.get_id(data)
+            instance_id = serializer.get_id(data)
             instance = self.instances[embed_type][instance_id]
-            data[embed_type] = loader.serialize(data)
+            data[embed_type] = serializer.serialize(data)
         except:
             data[embed_type] = None
 
