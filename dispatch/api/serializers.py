@@ -308,7 +308,7 @@ class ContentSerializer(serializers.Serializer):
 
     def to_internal_value(self, content):
         """Convert each block in `content` to its internal value before saving."""
-        return map(self.sanitize_block(block), content)
+        return map(self.sanitize_block, content)
 
     def sanitize_block(self, block):
         """Santizes the data for the given block.
