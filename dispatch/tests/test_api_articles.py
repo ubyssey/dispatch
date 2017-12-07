@@ -58,7 +58,7 @@ class ArticlesTests(DispatchAPITestCase):
         # Check data
         self.assertEqual(response.data['headline'], 'Test headline')
         self.assertEqual(response.data['section']['name'], 'Test Section')
-        self.assertEqual(response.data['authors'][0]['full_name'], 'Test Person')
+        self.assertEqual(response.data['authors'][0]['full_name']['author'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
     def test_create_article_existing_slug(self):
@@ -154,6 +154,17 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertNotEqual(article.data['importance'], NEW_IMPORTANCE)
         self.assertNotEqual(article.data['seo_keyword'], NEW_SEO_KEYWORD)
         self.assertNotEqual(article.data['seo_description'], NEW_SEO_DESCRIPTION)
+
+    def test_author_type(self):
+        """Should not be able to create article with an author and missing author type"""
+
+        response = DispatchTestHelpers.create_article(self.client)
+
+        data = {
+        'authors[type]': ''
+        }
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article_tags(self):
         """Should be able to update and remove article tags"""
