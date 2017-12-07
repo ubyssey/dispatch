@@ -25,18 +25,6 @@ class AuthorSelectInputComponent extends React.Component {
     return 'Filter by Author'
   }
 
-  getEditMessage(isFilter, selected) {
-    if (isFilter) {
-      return this.getCurrentFilter(selected)
-    }
-
-    if (selected) {
-      return 'Edit Authors'
-    }
-
-    return 'Add Authors'
-  }
-
   render() {
     return (
       <ItemSelectInput
@@ -49,7 +37,7 @@ class AuthorSelectInputComponent extends React.Component {
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage={this.getEditMessage(this.props.isFilter, this.props.selected) } />
+        editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
   }
 

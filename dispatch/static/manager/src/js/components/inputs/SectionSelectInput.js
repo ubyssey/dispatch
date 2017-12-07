@@ -50,7 +50,7 @@ class SectionSelectInputComponent extends React.Component {
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={this.getEditMessage(this.props.isFilter, this.props.selected)} />
+        editMessage={this.props.selected ? 'Edit section' : 'Add section'} />
     )
   }
 
