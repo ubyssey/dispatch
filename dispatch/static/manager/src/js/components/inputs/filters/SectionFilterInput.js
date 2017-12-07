@@ -18,20 +18,17 @@ class SectionFilterInputComponent extends React.Component {
   }
 
   render() {
-
     return (
       <FilterSelectInput
         selected={this.props.selected}
-        filterBy='sections'
         results={this.props.sections}
         entities={this.props.entities.sections}
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={this.props.selected ? this.props.entities['sections'][this.props.selected].name : 'Filter by section'} />
+        editMessage={'Filter by section'} />
     )
   }
-
 }
 
 const mapStateToProps = (state) => {

@@ -32,7 +32,9 @@ export default function ItemListHeader(props) {
         className='c-item-list__header__delete'
         onConfirm={() => props.actions.deleteItems(props.items.selected)}
         disabled={!props.items.selected.length}>Delete</ConfirmButton>
-      {props.filters}
+      <div className='c-item-list__header__filters'>
+        {props.filters}
+      </div>
       {props.toolbarContent}
     </div>
   )

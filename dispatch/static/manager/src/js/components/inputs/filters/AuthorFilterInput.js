@@ -21,17 +21,15 @@ class AuthorFilterInputComponent extends React.Component {
     return (
       <FilterSelectInput
         selected={this.props.selected}
-        filterBy='authors'
         results={this.props.persons}
         entities={this.props.entities.persons}
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage={this.props.selected ? this.props.entities['persons'][this.props.selected].full_name : 'Filter by Author'}
+        editMessage={'Filter by Author'}
         />
     )
   }
-
 }
 
 const mapStateToProps = (state) => {

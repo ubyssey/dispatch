@@ -49,18 +49,16 @@ function ArticlePageComponent(props) {
   const section = props.entities.sections[props.location.query.section]
   const title = section ? `${section.name} - Articles` : 'Articles'
 
-  const filters = (
-    <div className='c-item-list__header__filters'>
-      <SectionFilterInput
-        selected={props.location.query.section}
-        update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
-        />
-      <AuthorFilterInput
-        selected={props.location.query.author}
-        update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
-        />
-    </div>
-  )
+  const filters = [
+    <SectionFilterInput
+      selected={props.location.query.section}
+      update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)}
+      />,
+    <AuthorFilterInput
+      selected={props.location.query.author}
+      update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)}
+      />
+  ]
 
   return (
     <ItemIndexPage
