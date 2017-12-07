@@ -160,7 +160,7 @@ class ItemSelectInput extends React.Component {
   render() {
 
     const fields = this.props.extraFields.map(field => (
-      <option>{field}</option>
+      <option key={field}>{field}</option>
     ))
 
     return (
@@ -172,10 +172,12 @@ class ItemSelectInput extends React.Component {
           onChange={selected => this.props.onChange(selected)}
           renderItem={item => {
             if (this.props.extraFields != '')
-              return (<div className='c-input--item-select__item'>
-              {item[this.props.attribute]}
-              <select>{fields}</select>
-              </div>)
+              return (
+                <div className='c-input--item-select__item'>
+                <div className='c-panel__select'>{item[this.props.attribute]}</div>
+                <select className='pt-button c-panel__select__right'>{fields}</select>
+                </div>
+              )
             else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
           }}
 

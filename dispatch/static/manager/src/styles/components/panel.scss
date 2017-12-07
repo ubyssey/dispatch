@@ -29,3 +29,12 @@
   // Text
   font-weight: $font-weight-semi-bold;
 }
+
+.c-panel__select {
+  // Structure
+  flex: 1;
+}
+
+.c-panel__select__right {
+  margin-right: 0;
+}

@@ -29,7 +29,7 @@ class AuthorSelectInputComponent extends React.Component {
         entities={this.props.entities.persons}
         onChange={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
-        extraFields={['author', 'illustrator', 'photographer']}
+        extraFields={['author', 'illustrator', 'photographer', 'videographer']}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
