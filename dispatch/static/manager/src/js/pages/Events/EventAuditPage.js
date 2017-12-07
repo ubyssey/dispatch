@@ -143,9 +143,10 @@ const mapDispatchToProps = (dispatch) => {
     listEvents: (token, query) => {
       dispatch(eventsActions.list(token, query))
     },
-    approveEvent: (token, eventId) => {
+    approveAndPublishEvent: (token, eventId) => {
       const form = new FormData()
       form.append('is_submission', false)
+      form.append('is_published', true)
       dispatch(eventsActions.save(token, eventId, form))
     },
     disapproveEvent: (token, eventId, next) => {

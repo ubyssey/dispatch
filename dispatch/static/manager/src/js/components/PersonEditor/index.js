@@ -27,6 +27,8 @@ function makeFormData(data) {
   formData.append('slug', data.slug || '')
   formData.append('description', data.description || '')
   formData.append('image', data.image, data.image ? data.image.name : null)
+  formData.append('facebook_url', data.facebook_url || '')
+  formData.append('twitter_url', data.twitter_url || '')
 
   return formData
 }

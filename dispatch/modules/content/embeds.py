@@ -72,7 +72,7 @@ class CodeEmbed(AbstractEmbed):
         try:
             return tag(tags[data['mode']], data['content'])
         except KeyError:
-            return data['content']
+            return '<div class="o-article-embed o-article-embed--code">' + data['content'] + '</div>'
 
 class VideoEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/video.html'
