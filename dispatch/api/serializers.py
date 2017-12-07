@@ -380,7 +380,7 @@ class ContentSerializer(serializers.Serializer):
 
     def insert_data(self, content):
         """Insert loaded data into embed data blocks."""
-        return map(lambda block: self.insert_instance(block), content)
+        return map(self.insert_instance, content)
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """
