@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
-import eventsActions from '../actions/EventsActions'
 
 
 require('../../styles/components/header.scss')

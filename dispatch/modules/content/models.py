@@ -364,7 +364,7 @@ class Author(Model):
     image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
-    type = CharField(max_length=100)
+    type = CharField(default= 'author', max_length=100)
 
     class Meta:
         ordering = ['order']
