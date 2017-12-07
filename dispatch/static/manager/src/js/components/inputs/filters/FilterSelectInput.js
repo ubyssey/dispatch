@@ -2,7 +2,7 @@ import React from 'react'
 import ItemSelectInput from '../selects/ItemSelectInput'
 
 class FilterSelectInput extends React.Component {
-
+  
   getEditMessage() {
     if (this.props.entities[this.props.selected]) {
       return this.props.entities[this.props.selected][this.props.attribute]
@@ -26,7 +26,6 @@ class FilterSelectInput extends React.Component {
         filterButton={true} />
     )
   }
-
 }
 
 export default FilterSelectInput

@@ -26,7 +26,7 @@ class AuthorFilterInputComponent extends React.Component {
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage={'Filter by Author'}
+        editMessage='Filter by Author'
         />
     )
   }
@@ -50,9 +50,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const AuthorSelectInput = connect(
+const AuthorFilterInput = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AuthorFilterInputComponent)
 
-export default AuthorSelectInput
+export default AuthorFilterInput

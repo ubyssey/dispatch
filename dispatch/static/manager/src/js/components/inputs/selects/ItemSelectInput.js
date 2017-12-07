@@ -106,7 +106,6 @@ class ItemSelectInput extends React.Component {
   }
 
   renderDropdown() {
-
     const selected = this.getSelected()
       .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
@@ -157,8 +156,8 @@ class ItemSelectInput extends React.Component {
       </div>
     )
   }
-  renderSortableList() {
 
+  renderSortableList() {
     return (
       <SortableList
         items={this.getSelected()}
@@ -169,14 +168,18 @@ class ItemSelectInput extends React.Component {
         )} />
     )
   }
+
   render() {
     const anchor = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
     )
+
     const filterButton = (
-      <button className='pt-button c-item-list__header__filters__filter' onClick={() => this.refs.dropdown.open()}>
+      <button
+        className='pt-button c-item-list__header__filters__filter'
+        onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
         <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
       </button>

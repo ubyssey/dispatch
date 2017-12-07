@@ -26,7 +26,7 @@ class SectionFilterInputComponent extends React.Component {
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={'Filter by section'} />
+        editMessage='Filter by section' />
     )
   }
 }
@@ -49,9 +49,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const SectionSelectInput = connect(
+const SectionFilterInput = connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionFilterInputComponent)
 
-export default SectionSelectInput
+export default SectionFilterInput
