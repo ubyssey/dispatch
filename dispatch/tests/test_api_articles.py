@@ -235,6 +235,82 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['topic'], None)
 
+    def test_update_article_content(self):
+        """Should be able to update the article content with different embeds."""
+
+        article = DispatchTestHelpers.create_article(self.client)
+
+        # Set empty content
+        data = {
+            'content': []
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'], [])
+
+        # Set paragraph content
+        data = {
+            'content': [
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 1.'
+                },
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 2.'
+                }
+            ]
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'][0]['data'], 'This is a test paragraph 1.')
+        self.assertEqual(response.data['content'][1]['data'], 'This is a test paragraph 2.')
+
+        # Set embeds content
+
+        image = DispatchTestHelpers.create_image(self.client)
+        (gallery, image_1, image_2) = DispatchTestHelpers.create_gallery(1, self.client)
+
+        data = {
+            'content': [
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 1.'
+                },
+                {
+                    'type': 'image',
+                    'data': {
+                        'image_id': image.data['id']
+                    }
+                },
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 2.'
+                },
+                {
+                    'type': 'gallery',
+                    'data': {
+                        'id': gallery.data['id']
+                    }
+                }
+            ]
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'][0]['data'], 'This is a test paragraph 1.')
+        self.assertEqual(response.data['content'][1]['data']['image']['id'], image.data['id'])
+        self.assertEqual(response.data['content'][2]['data'], 'This is a test paragraph 2.')
+        self.assertEqual(response.data['content'][3]['data']['gallery']['id'], gallery.data['id'])
+
     def test_delete_article_unauthorized(self):
         """Delete article should fail with unauthenticated request"""
 

@@ -255,6 +255,7 @@ class TemplateSerializer(serializers.Serializer):
 class ImageEmbedSerializer(serializers.Serializer):
     def serialize(self, instance):
         """Return serialized image data."""
+
         return ImageSerializer(instance).data
 
     def get_id(self, data):
@@ -304,7 +305,9 @@ class ContentSerializer(serializers.Serializer):
     def to_representation(self, content):
         self.queue_data(content)
         self.load_data()
-        return self.insert_data(content)
+        data = self.insert_data(content)
+
+        return data
 
     def to_internal_value(self, content):
         """Convert each block in `content` to its internal value before saving."""
@@ -360,7 +363,7 @@ class ContentSerializer(serializers.Serializer):
         try:
             instance_id = serializer.get_id(data)
             instance = self.instances[embed_type][instance_id]
-            data[embed_type] = serializer.serialize(data)
+            data[embed_type] = serializer.serialize(instance)
         except:
             data[embed_type] = None
 
@@ -383,9 +386,7 @@ class ContentSerializer(serializers.Serializer):
         return map(self.insert_instance, content)
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
-    """
-    Serializes the Article model.
-    """
+    """Serializes the Article model."""
 
     id = serializers.ReadOnlyField(source='parent_id')
     slug = serializers.SlugField(validators=[SlugValidator()])
