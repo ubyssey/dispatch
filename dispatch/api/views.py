@@ -345,6 +345,9 @@ class ZoneViewSet(viewsets.GenericViewSet):
 
         serializer = ZoneSerializer(zones, many=True)
 
+        q = request.query_params.get('q', None)
+        if q is not None:
+            print(serializer.data)
         return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):

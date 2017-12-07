@@ -342,8 +342,8 @@ const DispatchAPI = {
     }
   },
   zones: {
-    list: (token) => {
-      return getRequest('zones', null, null, token)
+    list: (token, query) => {
+      return getRequest('zones', null, query, token)
     },
     get: (token, zoneId) => {
       return getRequest('zones', zoneId, null, token)

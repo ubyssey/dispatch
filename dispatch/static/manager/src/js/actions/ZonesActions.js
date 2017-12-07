@@ -1,6 +1,9 @@
 import R from 'ramda'
 import { normalize, arrayOf } from 'normalizr'
 
+import { push } from 'react-router-redux'
+
+
 import DispatchAPI from '../api/dispatch'
 import * as types from '../constants/ActionTypes'
 import {
@@ -84,10 +87,10 @@ function normalizeZones(zones) {
   }
 }
 
-export function list(token) {
+export function list(token, query) {
   return {
     type: types.ZONES.LIST,
-    payload: DispatchAPI.zones.list(token)
+    payload: DispatchAPI.zones.list(token, query)
       .then(json => ({
         count: json.count,
         data: normalizeZones(json.results)
@@ -102,6 +105,18 @@ export function get(token, zoneId) {
       .then(json => ({
         data: normalizeZone(json)
       }))
+  }
+}
+
+export function search(query) {
+  let queryObj = {}
+
+  if (query) {
+    queryObj.q = query
+  }
+
+  return (dispatch) => {
+    dispatch(push({ pathname: '/widgets/', query: queryObj }))
   }
 }
 
