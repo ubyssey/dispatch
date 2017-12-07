@@ -5,7 +5,7 @@ import FilterSelectInput from './FilterSelectInput'
 
 import sectionsActions from '../../../actions/SectionsActions'
 
-class SectionSelectInputComponent extends React.Component {
+class SectionFilterInputComponent extends React.Component {
 
   listSections(query) {
     let queryObj = {}
@@ -55,6 +55,6 @@ const mapDispatchToProps = (dispatch) => {
 const SectionSelectInput = connect(
   mapStateToProps,
   mapDispatchToProps
-)(SectionSelectInputComponent)
+)(SectionFilterInputComponent)
 
 export default SectionSelectInput
