@@ -71,12 +71,16 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
+        author = self.request.query_params.get('author', None)
 
         if q is not None:
             queryset = queryset.filter(headline__icontains=q)
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
+
+        if author is not None:
+            queryset = queryset.filter(authors__id=author)
 
         return queryset
 

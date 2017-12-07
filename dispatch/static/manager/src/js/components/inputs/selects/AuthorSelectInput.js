@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import personsActions from '../../actions/PersonsActions'
+import personsActions from '../../../actions/PersonsActions'
 
 class AuthorSelectInputComponent extends React.Component {
 
@@ -20,7 +20,10 @@ class AuthorSelectInputComponent extends React.Component {
   render() {
     return (
       <ItemSelectInput
+        many={this.props.many}
         selected={this.props.selected}
+        inline={this.props.inline}
+        showSortableList={this.props.showSortableList}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
         onChange={(selected) => this.props.update(selected)}

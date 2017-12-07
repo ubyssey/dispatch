@@ -3,7 +3,7 @@ import React from 'react'
 import { AnchorButton, Intent } from '@blueprintjs/core'
 
 import { FormInput, TextInput } from '../../inputs'
-import AuthorSelectInput from '../../inputs/AuthorSelectInput'
+import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
 
 require('../../../../styles/components/image_panel.scss')
 

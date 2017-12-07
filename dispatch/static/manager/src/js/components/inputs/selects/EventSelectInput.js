@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import eventsActions from '../../actions/EventsActions'
+import eventsActions from '../../../actions/EventsActions'
 
 class EventSelectInputComponent extends React.Component {
 

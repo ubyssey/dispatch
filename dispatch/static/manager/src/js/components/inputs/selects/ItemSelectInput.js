@@ -1,11 +1,11 @@
 import React from 'react'
 import R from 'ramda'
 
-import Dropdown from '../Dropdown'
+import Dropdown from '../../Dropdown'
 
-import TextInput from './TextInput'
+import TextInput from '../TextInput'
 
-import SortableList from './SortableList'
+import SortableList from '../SortableList'
 
 
 function Item(props) {
@@ -106,7 +106,6 @@ class ItemSelectInput extends React.Component {
   }
 
   renderDropdown() {
-
     const selected = this.getSelected()
       .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
@@ -158,25 +157,43 @@ class ItemSelectInput extends React.Component {
     )
   }
 
+  renderSortableList() {
+    return (
+      <SortableList
+        items={this.getSelected()}
+        entities={this.props.entities}
+        onChange={selected => this.props.onChange(selected)}
+        renderItem={item => (
+          <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
+        )} />
+    )
+  }
+
   render() {
+    const anchor = (
+      <a onClick={() => this.refs.dropdown.open()}>
+        {this.props.editMessage}
+      </a>
+    )
+
+    const filterButton = (
+      <button
+        className='pt-button c-item-list__header__filters__filter'
+        onClick={() => this.refs.dropdown.open()}>
+        {this.props.editMessage}
+        <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+      </button>
+    )
 
     return (
       <div
         className='c-input c-input--item-select'>
-        <SortableList
-          items={this.getSelected()}
-          entities={this.props.entities}
-          onChange={selected => this.props.onChange(selected)}
-          renderItem={item => (
-            <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
-          )} />
+        {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
-          inline={true}>
-          <a onClick={() => this.refs.dropdown.open()}>
-            {this.props.editMessage}
-          </a>
+          inline={this.props.inline}>
+          {this.props.filterButton ? filterButton : anchor}
         </Dropdown>
       </div>
     )
@@ -187,6 +204,8 @@ ItemSelectInput.defaultProps = {
   many: true,
   results: [],
   entities: {},
+  showSortableList: true,
+  inline: true
 }
 
 export default ItemSelectInput

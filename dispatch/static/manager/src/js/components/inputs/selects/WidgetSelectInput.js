@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import * as zonesActions from '../../actions/ZonesActions'
+import * as zonesActions from '../../../actions/ZonesActions'
 
 class WidgetSelectInputComponent extends React.Component {
 
