@@ -60,10 +60,11 @@ class ItemSelectInput extends React.Component {
   addValue(id) {
     if (this.props.many) {
       this.props.onChange(
-        R.append(id, this.getSelected())
+        R.append(id, this.getSelected()),
+        this.props.extraFields
       )
     } else {
-      this.props.onChange(id)
+      this.props.onChange(id, this.props.extraFields)
     }
 
     this.closeDropdown()
@@ -78,10 +79,11 @@ class ItemSelectInput extends React.Component {
           R.findIndex(R.equals(id), selected),
           1,
           selected
-        )
+        ),
+        this.props.extraFields
       )
     } else {
-      this.props.onChange(null)
+      this.props.onChange(null, {})
     }
   }
 
@@ -157,9 +159,13 @@ class ItemSelectInput extends React.Component {
     )
   }
 
-  render() {
+  updateExtraField(id, option) {
+    const extraFields = R.assoc(id, option, this.props.extraFields)
+    this.props.onChange(this.getSelected(), extraFields)
+  }
 
-    const fields = this.props.extraFields.map(field => (
+  render() {
+    const extraFields = this.props.extraFieldOptions.map(field => (
       <option key={field}>{field}</option>
     ))
 
@@ -169,13 +175,15 @@ class ItemSelectInput extends React.Component {
         <SortableList
           items={this.getSelected()}
           entities={this.props.entities}
-          onChange={selected => this.props.onChange(selected)}
+          onChange={selected => this.props.onChange(selected, this.props.extraFields)}
           renderItem={item => {
-            if (this.props.extraFields != '')
+            if (this.props.extraFieldOptions != '')
               return (
                 <div className='c-input--item-select__item'>
                 <div className='c-panel__select'>{item[this.props.attribute]}</div>
-                <select className='pt-button c-panel__select__right'>{fields}</select>
+                  <select
+                    className='pt-button c-panel__select__right'
+                    onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
                 </div>
               )
             else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
@@ -200,7 +208,8 @@ ItemSelectInput.defaultProps = {
   many: true,
   results: [],
   entities: {},
-  extraFields: [],
+  extraFields: {},
+  extraFieldOptions: [],
 }
 
 export default ItemSelectInput

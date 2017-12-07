@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import R from 'ramda'
 
 import ItemSelectInput from './ItemSelectInput'
 
@@ -17,19 +18,31 @@ class AuthorSelectInputComponent extends React.Component {
     this.props.listPersons(this.props.token, queryObj)
   }
 
+  update(selected, extraFields) {
+    const authors = selected.map(id => ({
+      person: id,
+      type: extraFields[id]
+    }))
+
+    this.props.update(authors)
+  }
+
   render() {
     const selected = this.props.selected
-      .map(id => this.props.entities.authors[id])
       .map(author => author.person)
+
+    const extraFields = this.props.selected
+      .reduce((fields, author) => R.assoc(author.person, author.type, fields), {})
 
     return (
       <ItemSelectInput
         selected={selected}
+        extraFields={extraFields}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(selected, extraFields) => this.update(selected, extraFields)}
         fetchResults={(query) => this.listPersons(query)}
-        extraFields={['author', 'illustrator', 'photographer', 'videographer']}
+        extraFieldOptions={['author', 'illustrator', 'photographer', 'videographer']}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
@@ -40,7 +53,6 @@ const mapStateToProps = (state) => {
   return {
     persons: state.app.persons.list,
     entities: {
-      authors: state.app.entities.authors,
       persons: state.app.entities.persons
     },
     token: state.app.auth.token
