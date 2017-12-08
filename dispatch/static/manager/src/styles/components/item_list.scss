@@ -72,6 +72,7 @@
 // Component: ItemListHeader
 .c-item-list__header {
   display: flex;
+  align-items: center;
 }
 
 .c-item-list__header__right {
@@ -111,7 +112,6 @@
 .c-item-list__header__filters__filter {
   // Structure
   display: inline-block;
-  margin-left: 1rem;
 }
 
 // Component: ItemListPagination

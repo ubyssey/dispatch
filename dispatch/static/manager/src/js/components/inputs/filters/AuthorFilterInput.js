@@ -26,7 +26,9 @@ class AuthorFilterInputComponent extends React.Component {
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage='Filter by Author'
+        label='Author'
+        icon='person'
+        editMessage='Filter by author'
         />
     )
   }

@@ -19,7 +19,7 @@ export default function ItemListHeader(props) {
   )
 
   const toolbarLeft = (
-    <div>
+    <div className='c-item-list__header'>
       <div className='c-item-list__header__checkbox'>
         <input type='checkbox'
           checked={props.actions.isAllSelected}

@@ -177,12 +177,19 @@ class ItemSelectInput extends React.Component {
     )
 
     const filterButton = (
-      <button
-        className='pt-button c-item-list__header__filters__filter'
-        onClick={() => this.refs.dropdown.open()}>
-        {this.props.editMessage}
-        <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
-      </button>
+      <div>
+        <div className='pt-control-group'>
+          <button className={`pt-button pt-icon-${this.props.filterIcon}`}>
+            {this.props.filterLabel}
+          </button>
+          <button
+            className='pt-button c-item-list__header__filters__filter'
+            onClick={() => this.refs.dropdown.open()}>
+            {this.props.editMessage}
+            <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+          </button>
+        </div>
+      </div>
     )
 
     return (

@@ -26,6 +26,8 @@ class SectionFilterInputComponent extends React.Component {
         update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
+        icon='projects'
+        label='Section'
         editMessage='Filter by section' />
     )
   }
