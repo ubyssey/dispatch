@@ -193,7 +193,7 @@ class DispatchTestHelpers(object):
         """Create a dummy video instance"""
 
         data = {
-            'title': name,
+            'title': title,
             'url': url,
         }
 
