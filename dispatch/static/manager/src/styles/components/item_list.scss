@@ -15,7 +15,7 @@
 .c-item-list__table {
   flex: 1;
   overflow: scroll;
-  
+
   ul {
     display: table;
     width: 100%;
@@ -72,6 +72,7 @@
 // Component: ItemListHeader
 .c-item-list__header {
   display: flex;
+  align-items: center;
 }
 
 .c-item-list__header__right {
@@ -101,6 +102,16 @@
   // Structure
   display: inline-block;
   margin-left: 1rem;
+}
+
+.c-item-list__header__filters {
+  // Structure
+  display: inline-flex;
+}
+
+.c-item-list__header__filters__filter {
+  // Structure
+  display: inline-block;
 }
 
 // Component: ItemListPagination

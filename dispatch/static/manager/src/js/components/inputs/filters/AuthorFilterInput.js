@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import ItemSelectInput from './ItemSelectInput'
+import FilterSelectInput from './FilterSelectInput'
 
-import personsActions from '../../actions/PersonsActions'
+import personsActions from '../../../actions/PersonsActions'
 
-class AuthorSelectInputComponent extends React.Component {
+class AuthorFilterInputComponent extends React.Component {
 
   listPersons(query) {
     let queryObj = {}
@@ -19,17 +19,19 @@ class AuthorSelectInputComponent extends React.Component {
 
   render() {
     return (
-      <ItemSelectInput
+      <FilterSelectInput
         selected={this.props.selected}
-        results={this.props.persons.ids}
+        results={this.props.persons}
         entities={this.props.entities.persons}
-        onChange={(selected) => this.props.update(selected)}
+        update={(selected) => this.props.update(selected)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
-        editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
+        label='Author'
+        icon='person'
+        editMessage='Filter by author'
+        />
     )
   }
-
 }
 
 const mapStateToProps = (state) => {
@@ -50,9 +52,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const AuthorSelectInput = connect(
+const AuthorFilterInput = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AuthorSelectInputComponent)
+)(AuthorFilterInputComponent)
 
-export default AuthorSelectInput
+export default AuthorFilterInput

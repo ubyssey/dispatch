@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ArticleSelectInput from '../inputs/ArticleSelectInput'
+import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
 
 export default function ArticleField(props) {
   return (

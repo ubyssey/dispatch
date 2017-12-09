@@ -1,7 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import WidgetSelectInput from '../../../components/inputs/WidgetSelectInput'
+import WidgetSelectInput from '../../../components/inputs/selects/WidgetSelectInput'
 import { FormInput } from '../../../components/inputs'
 import WidgetFields from '../../../components/WidgetFields'
 import Panel from '../../../components/Panel'

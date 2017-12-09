@@ -78,6 +78,32 @@ class ArticleContentTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(self.article.html, expected % (image_1.data['url'], image_2.data['url']))
 
+    def test_image_deleted(self):
+        """An attachment to a deleted image should not be rendered"""
+
+        self.article.content = [
+            {
+                'type': 'paragraph',
+                'data': 'This is a test paragraph'
+            },
+            {
+                'type': 'image',
+                'data': {
+                    'image_id': 1234,
+                    'caption': 'Test caption',
+                    'credit': 'Test credit'
+                }
+            },
+            {
+                'type': 'paragraph',
+                'data': 'This is a test paragraph'
+            },
+        ]
+
+        expected = '<p>This is a test paragraph</p><p>This is a test paragraph</p>'
+
+        self.assertEqual(self.article.html, expected)
+
     def test_image_gallery(self):
         """Should be able to render image gallery"""
 

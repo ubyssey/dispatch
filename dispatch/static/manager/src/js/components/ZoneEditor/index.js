@@ -7,7 +7,7 @@ import * as zonesActions from '../../actions/ZonesActions'
 
 import ListItemToolbar from '../ItemEditor/ListItemToolbar'
 import Panel from '../Panel'
-import WidgetSelectInput from '../inputs/WidgetSelectInput'
+import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 import { FormInput } from '../inputs'
 
 import WidgetField from './WidgetField'
