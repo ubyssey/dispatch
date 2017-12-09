@@ -189,7 +189,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_video(cls, client, name='testVideo', url='testVideoURL'):
+    def create_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a dummy video instance"""
 
         data = {

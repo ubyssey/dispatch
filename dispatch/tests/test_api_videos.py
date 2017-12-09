@@ -51,7 +51,7 @@ class VideosTests(DispatchAPITestCase):
         response = DispatchTestHelpers.create_video(self.client, 'testVideo')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['name'], 'testVideo')
+        self.assertEqual(response.data['title'], 'testVideo')
 
     def test_delete_video_unauthorized(self):
         """Delete video should fail with unauthenticaed request"""
