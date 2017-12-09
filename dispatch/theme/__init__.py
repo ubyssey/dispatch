@@ -1,3 +1,4 @@
+import re
 from collections import OrderedDict
 
 from dispatch.theme.validators import validate_widget, validate_zone
@@ -64,6 +65,15 @@ class ThemeManager(object):
                 return register.zones[id]()
             except KeyError:
                 raise ZoneNotFound("Zone with id '%s' does not exist" % id)
+
+        @staticmethod
+        def search(q):
+            """Return list of zones matching query"""
+            matches = []
+            for Z in register.zones.values():
+                if re.search(q, Z.name, re.IGNORECASE):
+                    matches.append(Z())
+            return matches
 
     class Widgets:
         @staticmethod

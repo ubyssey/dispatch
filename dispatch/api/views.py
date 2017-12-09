@@ -344,14 +344,14 @@ class ZoneViewSet(viewsets.GenericViewSet):
         })
 
     def list(self, request):
-
-        zones = ThemeManager.Zones.list()
+        q = request.query_params.get('q', None)
+        if q is not None:
+            zones = ThemeManager.Zones.search(q)
+        else:
+            zones = ThemeManager.Zones.list()
 
         serializer = ZoneSerializer(zones, many=True)
 
-        q = request.query_params.get('q', None)
-        if q is not None:
-            print(serializer.data)
         return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
