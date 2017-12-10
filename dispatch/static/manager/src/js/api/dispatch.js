@@ -370,17 +370,9 @@ const DispatchAPI = {
     },
     delete: (token, eventId) => {
       return deleteRequest('events', eventId, null, token)
-    },
-  },
-  'users': {
-    get: (token, userId) => {
-      return getRequest('users', userId, null, token)
-    },
-    save: (token, userId, data) => {
-      return patchRequest('users', userId, data, token)
     }
   },
-  'videos': {
+  videos: {
     list: (token, query) => {
       return getRequest('videos', null, query, token)
     },
@@ -396,6 +388,14 @@ const DispatchAPI = {
     delete: (token, videoId) => {
       return deleteRequest('videos', videoId, null, token)
     },
+  },
+  'users': {
+    get: (token, userId) => {
+      return getRequest('users', userId, null, token)
+    },
+    save: (token, userId, data) => {
+      return patchRequest('users', userId, data, token)
+    }
   }
 }
 
