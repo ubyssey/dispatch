@@ -14,6 +14,7 @@ export const zoneSchema = new Schema('zones')
 export const widgetSchema = new Schema('widgets')
 export const eventSchema = new Schema('events')
 export const userSchema = new Schema('users')
+export const videoSchema = new Schema('videos')
 
 articleSchema.define({
   section: sectionSchema,
