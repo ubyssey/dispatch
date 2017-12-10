@@ -189,3 +189,16 @@ class DispatchTestHelpers(object):
         url = reverse('api-topics-list')
 
         return client.post(url, data, format='json')
+
+    @classmethod
+    def create_video(cls, client, title='testVideo', url='testVideoURL'):
+        """Create a dummy video instance"""
+
+        data = {
+            'title': title,
+            'url': url,
+        }
+
+        url = reverse('api-videos-list')
+
+        return client.post(url, data, format='json')

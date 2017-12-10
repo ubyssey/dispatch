@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
-    File, Page, Section, Tag, Topic)
+    File, Page, Section, Tag, Topic, Video)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -237,6 +237,18 @@ class SectionSerializer(DispatchModelSerializer):
             'id',
             'name',
             'slug',
+        )
+
+class VideoSerializer(DispatchModelSerializer):
+    """
+    Serializes the Video model.
+    """
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
         )
 
 class FieldSerializer(serializers.Serializer):
