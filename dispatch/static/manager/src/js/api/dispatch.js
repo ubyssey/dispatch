@@ -379,6 +379,23 @@ const DispatchAPI = {
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
     }
+  },
+  'videos': {
+    list: (token, query) => {
+      return getRequest('videos', null, query, token)
+    },
+    get: (token, videoId) => {
+      return getRequest('videos', videoId, null, token)
+    },
+    save: (token, videoId, data) => {
+      return patchRequest('videos', videoId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('videos', null, data, token)
+    },
+    delete: (token, videoId) => {
+      return deleteRequest('videos', videoId, null, token)
+    },
   }
 }
 
