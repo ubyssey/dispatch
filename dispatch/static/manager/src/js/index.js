@@ -79,6 +79,12 @@ render((
             <Route path=':eventId' component={Pages.Events.Event} />
           </Route>
 
+          <Route path='videos'>
+            <IndexRoute component={Pages.Videos.Index} />
+            <Route path='new' component={Pages.Videos.NewVideo} />
+            <Route path=':videoId' component={Pages.Videos.Video} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>

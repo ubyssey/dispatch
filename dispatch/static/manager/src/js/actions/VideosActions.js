@@ -7,24 +7,24 @@ import DispatchAPI from '../api/dispatch'
 
 import { ResourceActions } from '../util/redux'
 
-class VideoActions extends ResourceActions {
+class VideosActions extends ResourceActions {
 
-	search(query) {
-		let queryObj = {}
+  search(query) {
+    let queryObj = {}
 
-		if (query) {
-			queryObj.q = query
-		}
+    if (query) {
+      queryObj.q = query
+    }
 
-		return dispatch => {
-			dispatch(push({ pathname: '/videos/', query: queryObj }))
-		}
-	}
+    return dispatch => {
+      dispatch(push({ pathname: '/videos/', query: queryObj }))
+    }
+  }
 
 }
 
 export default new VideosActions(
-	types.VIDEOS,
-	DispatchAPI.videos,
-	videoSchema
+  types.VIDEOS,
+  DispatchAPI.videos,
+  videoSchema
 )
