@@ -6,6 +6,8 @@ import ItemSelectInput from './ItemSelectInput'
 
 import personsActions from '../../../actions/PersonsActions'
 
+const AUTHOR_TYPES = ['author', 'illustrator', 'photographer', 'videographer']
+
 class AuthorSelectInputComponent extends React.Component {
 
   listPersons(query) {
@@ -19,6 +21,7 @@ class AuthorSelectInputComponent extends React.Component {
   }
 
   update(selected, extraFields) {
+    // Merge person IDs with their corresponding author type
     const authors = selected.map(id => ({
       person: id,
       type: extraFields[id]
@@ -36,16 +39,16 @@ class AuthorSelectInputComponent extends React.Component {
 
     return (
       <ItemSelectInput
-        many={this.props.many}
-        selected={this.props.selected}
+        selected={selected}
         extraFields={extraFields}
+        many={this.props.many}
         inline={this.props.inline}
         showSortableList={this.props.showSortableList}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
         onChange={(selected, extraFields) => this.update(selected, extraFields)}
         fetchResults={(query) => this.listPersons(query)}
-        extraFieldOptions={['author', 'illustrator', 'photographer', 'videographer']}
+        extraFieldOptions={AUTHOR_TYPES}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )

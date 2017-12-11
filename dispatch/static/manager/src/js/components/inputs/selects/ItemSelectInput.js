@@ -158,31 +158,39 @@ class ItemSelectInput extends React.Component {
     )
   }
 
-<<<<<<< HEAD:dispatch/static/manager/src/js/components/inputs/ItemSelectInput.js
   updateExtraField(id, option) {
     const extraFields = R.assoc(id, option, this.props.extraFields)
     this.props.onChange(this.getSelected(), extraFields)
   }
 
-  render() {
+  renderSortableList() {
     const extraFields = this.props.extraFieldOptions.map(field => (
       <option key={field}>{field}</option>
     ))
-=======
-  renderSortableList() {
+
     return (
       <SortableList
         items={this.getSelected()}
         entities={this.props.entities}
-        onChange={selected => this.props.onChange(selected)}
-        renderItem={item => (
-          <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
-        )} />
+        onChange={selected => this.props.onChange(selected, this.props.extraFields)}
+        renderItem={item => {
+          if (this.props.extraFieldOptions.length)
+            return (
+              <div className='c-input--item-select__item'>
+              <div className='c-panel__select'>{item[this.props.attribute]}</div>
+                <select
+                  className='pt-button c-panel__select__right'
+                  value={this.props.extraFields[item.id]}
+                  onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
+              </div>
+            )
+          else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
+        }} />
     )
   }
 
   render() {
-    const anchor = (
+    const anchorButton = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
@@ -203,38 +211,16 @@ class ItemSelectInput extends React.Component {
         </div>
       </div>
     )
->>>>>>> develop:dispatch/static/manager/src/js/components/inputs/selects/ItemSelectInput.js
 
     return (
       <div
         className='c-input c-input--item-select'>
-<<<<<<< HEAD:dispatch/static/manager/src/js/components/inputs/ItemSelectInput.js
-        <SortableList
-          items={this.getSelected()}
-          entities={this.props.entities}
-          onChange={selected => this.props.onChange(selected, this.props.extraFields)}
-          renderItem={item => {
-            if (this.props.extraFieldOptions.length)
-              return (
-                <div className='c-input--item-select__item'>
-                <div className='c-panel__select'>{item[this.props.attribute]}</div>
-                  <select
-                    className='pt-button c-panel__select__right'
-                    value={this.props.extraFields[item.id]}
-                    onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
-                </div>
-              )
-            else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
-          }} />
-
-=======
         {this.props.showSortableList ? this.renderSortableList() : null }
->>>>>>> develop:dispatch/static/manager/src/js/components/inputs/selects/ItemSelectInput.js
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          {this.props.filterButton ? filterButton : anchor}
+          {this.props.filterButton ? filterButton : anchorButton}
         </Dropdown>
       </div>
     )
