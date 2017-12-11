@@ -513,7 +513,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
-        authors = validated_data.get('author_ids')
+        authors = validated_data.get('authors')
         if authors:
             instance.save_authors(authors)
 

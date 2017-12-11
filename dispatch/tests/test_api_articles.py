@@ -161,7 +161,7 @@ class ArticlesTests(DispatchAPITestCase):
         response = DispatchTestHelpers.create_article(self.client)
 
         data = {
-        'authors[type]': ''
+        'authors[type]': None
         }
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
