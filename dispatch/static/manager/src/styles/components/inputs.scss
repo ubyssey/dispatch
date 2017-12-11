@@ -216,19 +216,25 @@
 }
 
 .c-input--datetime-button {
+  // Structure
   margin-top: 5px;
 }
 
 .c-input--datetime--textfield {
+  // Structure
   width: 100%;
+
+  // Extra
   cursor: pointer;
 }
 
 .c-input--confirm {
-  display: flex;
+  // Structure
+  display: inline-block;
 }
 
 .c-input--widget-field__select-wrapper {
+  // Structure
   margin-top: 10px;
   margin-bottom: 15px;
 }
