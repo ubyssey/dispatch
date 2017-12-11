@@ -1,11 +1,11 @@
 import React from 'react'
 import R from 'ramda'
 
-import Dropdown from '../Dropdown'
+import Dropdown from '../../Dropdown'
 
-import TextInput from './TextInput'
+import TextInput from '../TextInput'
 
-import SortableList from './SortableList'
+import SortableList from '../SortableList'
 
 function Item(props) {
   if (props.isSelected) {
@@ -107,7 +107,6 @@ class ItemSelectInput extends React.Component {
   }
 
   renderDropdown() {
-
     const selected = this.getSelected()
       .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
@@ -159,6 +158,7 @@ class ItemSelectInput extends React.Component {
     )
   }
 
+<<<<<<< HEAD:dispatch/static/manager/src/js/components/inputs/ItemSelectInput.js
   updateExtraField(id, option) {
     const extraFields = R.assoc(id, option, this.props.extraFields)
     this.props.onChange(this.getSelected(), extraFields)
@@ -168,10 +168,47 @@ class ItemSelectInput extends React.Component {
     const extraFields = this.props.extraFieldOptions.map(field => (
       <option key={field}>{field}</option>
     ))
+=======
+  renderSortableList() {
+    return (
+      <SortableList
+        items={this.getSelected()}
+        entities={this.props.entities}
+        onChange={selected => this.props.onChange(selected)}
+        renderItem={item => (
+          <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
+        )} />
+    )
+  }
+
+  render() {
+    const anchor = (
+      <a onClick={() => this.refs.dropdown.open()}>
+        {this.props.editMessage}
+      </a>
+    )
+
+    const filterButton = (
+      <div>
+        <div className='pt-control-group'>
+          <button className={`pt-button pt-icon-${this.props.filterIcon}`}>
+            {this.props.filterLabel}
+          </button>
+          <button
+            className='pt-button c-item-list__header__filters__filter'
+            onClick={() => this.refs.dropdown.open()}>
+            {this.props.editMessage}
+            <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+          </button>
+        </div>
+      </div>
+    )
+>>>>>>> develop:dispatch/static/manager/src/js/components/inputs/selects/ItemSelectInput.js
 
     return (
       <div
         className='c-input c-input--item-select'>
+<<<<<<< HEAD:dispatch/static/manager/src/js/components/inputs/ItemSelectInput.js
         <SortableList
           items={this.getSelected()}
           entities={this.props.entities}
@@ -190,13 +227,14 @@ class ItemSelectInput extends React.Component {
             else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
           }} />
 
+=======
+        {this.props.showSortableList ? this.renderSortableList() : null }
+>>>>>>> develop:dispatch/static/manager/src/js/components/inputs/selects/ItemSelectInput.js
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
-          inline={true}>
-          <a onClick={() => this.refs.dropdown.open()}>
-            {this.props.editMessage}
-          </a>
+          inline={this.props.inline}>
+          {this.props.filterButton ? filterButton : anchor}
         </Dropdown>
       </div>
     )
@@ -209,6 +247,8 @@ ItemSelectInput.defaultProps = {
   entities: {},
   extraFields: {},
   extraFieldOptions: [],
+  showSortableList: true,
+  inline: true
 }
 
 export default ItemSelectInput

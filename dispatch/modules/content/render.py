@@ -1,6 +1,6 @@
 from django.utils.safestring import mark_safe
 
-from dispatch.modules.content.embeds import embedlib
+from dispatch.modules.content.embeds import embeds, EmbedException
 
 def content_to_html(content):
     """Returns artilce/page content as HTML"""
@@ -11,7 +11,10 @@ def content_to_html(content):
         if node['type'] == 'paragraph':
             return html + '<p>%s</p>' % node['data']
         else:
-            return html + embedlib.render(node['type'], node['data'])
+            try:
+                return html + embeds.render(node['type'], node['data'])
+            except EmbedException:
+                return html
 
     return mark_safe(reduce(render_node, content, ''))
 
@@ -26,7 +29,7 @@ def content_to_json(content):
         else:
             return {
                 'type': node['type'],
-                'data': embedlib.to_json(node['type'], node['data'])
+                'data': embeds.to_json(node['type'], node['data'])
             }
 
     return map(render_node, content)

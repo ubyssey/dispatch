@@ -14,13 +14,13 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery,
-    Page, Author, Person, Section, Tag, Topic, User)
+    Page, Author, Person, Section, Tag, Topic, User, Video)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer)
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
@@ -39,6 +39,21 @@ class SectionViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+class VideoViewSet(DispatchModelViewSet):
+    """
+    Viewset for Video model views.
+    """
+    model = Video
+    serializer_class = VideoSerializer
+
+    def get_queryset(self):
+        queryset = Video.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `title`
+            queryset = queryset.filter(title__icontains=q)
         return queryset
 
 class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
@@ -71,12 +86,16 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
+        author = self.request.query_params.get('author', None)
 
         if q is not None:
             queryset = queryset.filter(headline__icontains=q)
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
+
+        if author is not None:
+            queryset = queryset.filter(authors__id=author)
 
         return queryset
 

@@ -246,6 +246,82 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['topic'], None)
 
+    def test_update_article_content(self):
+        """Should be able to update the article content with different embeds."""
+
+        article = DispatchTestHelpers.create_article(self.client)
+
+        # Set empty content
+        data = {
+            'content': []
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'], [])
+
+        # Set paragraph content
+        data = {
+            'content': [
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 1.'
+                },
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 2.'
+                }
+            ]
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'][0]['data'], 'This is a test paragraph 1.')
+        self.assertEqual(response.data['content'][1]['data'], 'This is a test paragraph 2.')
+
+        # Set embeds content
+
+        image = DispatchTestHelpers.create_image(self.client)
+        (gallery, image_1, image_2) = DispatchTestHelpers.create_gallery(1, self.client)
+
+        data = {
+            'content': [
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 1.'
+                },
+                {
+                    'type': 'image',
+                    'data': {
+                        'image_id': image.data['id']
+                    }
+                },
+                {
+                    'type': 'paragraph',
+                    'data': 'This is a test paragraph 2.'
+                },
+                {
+                    'type': 'gallery',
+                    'data': {
+                        'id': gallery.data['id']
+                    }
+                }
+            ]
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'][0]['data'], 'This is a test paragraph 1.')
+        self.assertEqual(response.data['content'][1]['data']['image']['id'], image.data['id'])
+        self.assertEqual(response.data['content'][2]['data'], 'This is a test paragraph 2.')
+        self.assertEqual(response.data['content'][3]['data']['gallery']['id'], gallery.data['id'])
+
     def test_delete_article_unauthorized(self):
         """Delete article should fail with unauthenticated request"""
 
@@ -487,3 +563,44 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(data['results'][0]['headline'], 'Article 2')
         self.assertEqual(data['results'][1]['headline'], 'Article 1')
         self.assertEqual(data['count'], 2)
+
+    def test_author_name_query(self):
+        """Should be able to search for articles by author name"""
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
+
+        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3', author_names=['Test Person2'])
+
+        author_id = article_1.data['authors'][0]['id']
+
+        url = '%s?author=%s' % (reverse('api-articles-list'), author_id)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['headline'], 'Article 2')
+        self.assertEqual(data['results'][1]['headline'], 'Article 1')
+        self.assertEqual(data['count'], 2)
+
+    def test_author_query_multiple_authors(self):
+        """Should be able to search for articles with multiple authors by one author's name"""
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
+
+        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3', author_names=['Test Person', 'Test Person2'])
+
+        article_4 = DispatchTestHelpers.create_article(self.client, headline='Article 4', slug='article-2', author_names=['Test Person2'])
+
+        author_id = article_1.data['authors'][0]['id']
+
+        url = '%s?author=%s' % (reverse('api-articles-list'), author_id)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['headline'], 'Article 3')
+        self.assertEqual(data['results'][1]['headline'], 'Article 2')
+        self.assertEqual(data['results'][2]['headline'], 'Article 1')
+        self.assertEqual(data['count'], 3)

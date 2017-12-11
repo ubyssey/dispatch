@@ -4,7 +4,7 @@ import R from 'ramda'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import personsActions from '../../actions/PersonsActions'
+import personsActions from '../../../actions/PersonsActions'
 
 class AuthorSelectInputComponent extends React.Component {
 
@@ -36,8 +36,11 @@ class AuthorSelectInputComponent extends React.Component {
 
     return (
       <ItemSelectInput
-        selected={selected}
+        many={this.props.many}
+        selected={this.props.selected}
         extraFields={extraFields}
+        inline={this.props.inline}
+        showSortableList={this.props.showSortableList}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
         onChange={(selected, extraFields) => this.update(selected, extraFields)}

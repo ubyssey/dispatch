@@ -19,6 +19,11 @@
     // Structure
     margin-bottom: 1rem;
   }
+
+  .pt-popover-target {
+    // Structure
+    display: block;
+  }
 }
 
 .c-input--item-select__item {
@@ -221,7 +226,7 @@
 }
 
 .c-input--confirm {
-  display: inline-block;
+  display: flex;
 }
 
 .c-input--widget-field__select-wrapper {

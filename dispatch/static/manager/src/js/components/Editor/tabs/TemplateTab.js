@@ -6,7 +6,7 @@ import templatesActions from '../../../actions/TemplatesActions'
 
 import WidgetField from '../../ZoneEditor/WidgetField'
 import { FormInput } from '../../inputs'
-import TemplateSelectInput from '../../inputs/TemplateSelectInput'
+import TemplateSelectInput from '../../inputs/selects/TemplateSelectInput'
 
 class TemplateTabComponent extends React.Component {
 

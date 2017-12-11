@@ -9,14 +9,20 @@ export default function ArticleToolbar(props) {
 
   const publish = (
     <AnchorButton
+      intent={Intent.PRIMARY}
       onClick={() => props.publishArticle()}
-      disabled={props.isNew}>Publish</AnchorButton>
+      disabled={props.isNew}>
+      <span className='pt-icon-standard pt-icon-arrow-up'></span>Publish
+    </AnchorButton>
   )
 
   const unpublish = (
     <AnchorButton
+      intent={Intent.PRIMARY}
       onClick={() => props.unpublishArticle()}
-      disabled={props.isNew}>Unpublish</AnchorButton>
+      disabled={props.isNew}>
+      <span className='pt-icon-standard pt-icon-arrow-down'></span>Unpublish
+    </AnchorButton>
   )
 
   return (
@@ -25,11 +31,15 @@ export default function ArticleToolbar(props) {
         <div className='c-article-editor__toolbar__article-buttons'>
           <AnchorButton
             intent={Intent.SUCCESS}
-            onClick={() => props.saveArticle()}>Update</AnchorButton>
+            onClick={() => props.saveArticle()}>
+            <span className='pt-icon-standard pt-icon-small-tick'></span>Update
+          </AnchorButton>
           {props.article.is_published ? unpublish : publish}
           <AnchorButton
             disabled={props.isNew}
-            onClick={() => props.previewArticle()}>Preview</AnchorButton>
+            onClick={() => props.previewArticle()}>
+            <span className='pt-icon-standard pt-icon-document-open'></span>Preview
+          </AnchorButton>
           <VersionsDropdown
             current_version={props.article.current_version}
             published_version={props.article.published_version}

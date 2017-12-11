@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import galleriesActions from '../../actions/GalleriesActions'
+import galleriesActions from '../../../actions/GalleriesActions'
 
 class GallerySelectInputComponent extends React.Component {
 

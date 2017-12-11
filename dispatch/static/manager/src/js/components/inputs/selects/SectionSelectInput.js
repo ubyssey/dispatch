@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ItemSelectInput from './ItemSelectInput'
 
-import sectionsActions from '../../actions/SectionsActions'
+import sectionsActions from '../../../actions/SectionsActions'
 
 class SectionSelectInputComponent extends React.Component {
 
@@ -18,10 +18,13 @@ class SectionSelectInputComponent extends React.Component {
   }
 
   render() {
+
     return (
       <ItemSelectInput
         many={false}
         selected={this.props.selected}
+        inline={this.props.inline}
+        showSortableList={this.props.showSortableList}
         results={this.props.sections.ids}
         entities={this.props.entities.sections}
         onChange={(selected) => this.props.update(selected)}

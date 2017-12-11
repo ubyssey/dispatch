@@ -10,12 +10,14 @@ from dispatch.tests.cases import DispatchMediaTestMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug'):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person']):
         """Create a dummy article instance"""
 
         # Create test person
-        person = Person.objects.create(full_name='Test Person')
-
+        authors = []
+        for author in author_names:
+            (person, created) = Person.objects.get_or_create(full_name=author)
+            authors.append(person.id)
         # Create test section
         (section, created) = Section.objects.get_or_create(name=section, slug=slug_section)
 
@@ -24,7 +26,7 @@ class DispatchTestHelpers(object):
         data = {
             'headline': headline,
             'section_id': section.id,
-            'author_ids': [person.id],
+            'author_ids': authors,
             'slug': slug,
             'content': []
         }
@@ -185,5 +187,18 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-topics-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_video(cls, client, title='testVideo', url='testVideoURL'):
+        """Create a dummy video instance"""
+
+        data = {
+            'title': title,
+            'url': url,
+        }
+
+        url = reverse('api-videos-list')
 
         return client.post(url, data, format='json')
