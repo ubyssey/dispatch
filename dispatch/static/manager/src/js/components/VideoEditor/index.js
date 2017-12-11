@@ -46,6 +46,7 @@ function VideoEditorComponent(props) {
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={VideoForm}
+      displayField='title'
       {... props} />
   )
 }
