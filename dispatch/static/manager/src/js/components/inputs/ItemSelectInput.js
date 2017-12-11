@@ -177,7 +177,7 @@ class ItemSelectInput extends React.Component {
           entities={this.props.entities}
           onChange={selected => this.props.onChange(selected, this.props.extraFields)}
           renderItem={item => {
-            if (this.props.extraFieldOptions != '')
+            if (this.props.extraFieldOptions.length)
               return (
                 <div className='c-input--item-select__item'>
                 <div className='c-panel__select'>{item[this.props.attribute]}</div>
@@ -188,9 +188,7 @@ class ItemSelectInput extends React.Component {
                 </div>
               )
             else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
-          }}
-
-        />
+          }} />
 
         <Dropdown
           ref='dropdown'
