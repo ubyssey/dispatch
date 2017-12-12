@@ -314,8 +314,7 @@ class Article(Publishable):
         for n, author in enumerate(authors):
             Author.objects.create(
                 article = self,
-                person_id = author['person["id"]'],
-                person = author['person'],
+                person_id = author['person'],
                 type = author['type'],
                 order = n
             )

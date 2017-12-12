@@ -8,7 +8,7 @@ from dispatch.modules.content.models import (
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, SlugValidator
+from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, SlugValidator, AuthorValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -426,7 +426,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     content = ContentSerializer()
 
     authors = AuthorSerializer(source='get_authors', many=True, read_only=True)
-    author_ids = serializers.ListField(write_only=True, child=serializers.JSONField())
+    author_ids = serializers.ListField(write_only=True, child=serializers.JSONField(), validators=[AuthorValidator])
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)
@@ -513,7 +513,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
-        authors = validated_data.get('authors')
+        authors = validated_data.get('author_ids')
         if authors:
             instance.save_authors(authors)
 

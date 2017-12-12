@@ -49,10 +49,13 @@ class SlugValidator(object):
             if self.model.objects.filter(slug=slug).exclude(parent=self.instance.parent).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
 
-class TypeValidator(object):
-    def set_context(self, serializer_field):
-        self.model = serializer_field.parent.Meta.model
-
-    def __call__(self, type):
-        if self.model.objects.filter(type__isnull=True).exists():
+def AuthorValidator(data):
+    for authors in data:
+        try:
+            data['person']
+        except Person.DoesNotExist:
+            raise ValidationError('Person is not associated with this author.')
+        try:
+            data['type']
+        except Person.DoesNotExist:
             raise ValidationError('A type must be defined for each author.')
