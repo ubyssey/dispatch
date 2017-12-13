@@ -23,11 +23,11 @@ class PasswordValidator(object):
 def all_ascii(s):
     return all(ord(c) < 128 for c in s)
 
-def ValidFilename(value):
+def FilenameValidator(value):
     if not all_ascii(value.name):
         raise InvalidFilename('The filename cannot contain non-ASCII characters')
 
-def ValidateImageGallery(data):
+def ImageGalleryValidator(data):
     for attachment in data:
         try:
             Image.objects.get(pk=attachment['image_id'])

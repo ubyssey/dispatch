@@ -8,7 +8,7 @@ from dispatch.modules.content.models import (
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, SlugValidator, AuthorValidator
+from dispatch.api.validators import FilenameValidator, ImageGalleryValidator, PasswordValidator, SlugValidator, AuthorValidator
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -18,7 +18,7 @@ class PersonSerializer(DispatchModelSerializer):
     Serializes the Person model.
     """
 
-    image = serializers.ImageField(required=False, validators=[ValidFilename])
+    image = serializers.ImageField(required=False, validators=[FilenameValidator])
 
     class Meta:
         model = Person
@@ -100,7 +100,7 @@ class FileSerializer(DispatchModelSerializer):
     Serializes the File model.
     """
 
-    file = serializers.FileField(write_only=True, validators=[ValidFilename])
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
@@ -117,7 +117,7 @@ class FileSerializer(DispatchModelSerializer):
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
-    img = serializers.ImageField(write_only=True, validators=[ValidFilename])
+    img = serializers.ImageField(write_only=True, validators=[FilenameValidator])
     filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
@@ -208,7 +208,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
     """
 
     images = ImageAttachmentSerializer(read_only=True, many=True)
-    attachment_json = JSONField(required=False, write_only=True, validators=[ValidateImageGallery])
+    attachment_json = JSONField(required=False, write_only=True, validators=[ImageGalleryValidator])
 
     class Meta:
         model = ImageGallery
