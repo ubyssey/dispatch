@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.models import Article, Person, Author, Section, Image
+from dispatch.models import Article, Author, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):
@@ -16,11 +16,12 @@ class DispatchTestHelpers(object):
         # Create test person
         authors = []
 
-        for person in author_names:
-            (person, created) = Author.objects.get_or_create(person=(
-            (Person.objects.get_or_create(full_name=person))
-            ),type='author')
-            authors.append(person.id)
+        for author in author_names:
+            (person, created) = Person.objects.get_or_create(full_name=author)
+            authors.append({
+            'person': person.id,
+            'type': 'author'
+            })
 
         # Create test section
         (section, created) = Section.objects.get_or_create(name=section, slug=slug_section)
