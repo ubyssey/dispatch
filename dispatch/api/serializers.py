@@ -267,7 +267,7 @@ class VideoSerializer(DispatchModelSerializer):
         )
 
 class FieldSerializer(serializers.Serializer):
-    type = serializers.CharField()
+    type = serializers.CharField(required=False)
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()

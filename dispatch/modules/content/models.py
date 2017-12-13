@@ -312,12 +312,19 @@ class Article(Publishable):
         # Create a new author for each person in list
         # Use `n` to save authors in correct order
         for n, author in enumerate(authors):
-            Author.objects.create(
-                article = self,
-                person_id = author['person'],
-                type = author['type'],
-                order = n
-            )
+            if 'type' in author:
+                Author.objects.create(
+                    article = self,
+                    person_id = author['person'],
+                    type = author['type'],
+                    order = n
+                    )
+            else:
+                Author.objects.create(
+                    article = self,
+                    person_id = author['person'],
+                    order = n
+                    )
 
     def get_author_string(self, links=False):
         """
@@ -364,7 +371,7 @@ class Author(Model):
     image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
-    type = CharField(default= 'author', max_length=100)
+    type = CharField(default='author', max_length=100)
 
     class Meta:
         ordering = ['order']
