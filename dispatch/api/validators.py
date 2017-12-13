@@ -50,8 +50,13 @@ class SlugValidator(object):
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
 
 def AuthorValidator(data):
+    """Raise a ValidationError if data does not match the author format."""
+    if not isinstance(data, list):
+        # Convert single instance to a list
+        data = [data]
+
     for author in data:
-        if 'person' not in data:
+        if 'person' not in author:
             raise ValidationError('An author must contain a person.')
-        if 'type' not in data:
+        if 'type' not in author:
             raise ValidationError('A type must be defined for each author.')
