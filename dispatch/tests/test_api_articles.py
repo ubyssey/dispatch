@@ -58,7 +58,7 @@ class ArticlesTests(DispatchAPITestCase):
         # Check data
         self.assertEqual(response.data['headline'], 'Test headline')
         self.assertEqual(response.data['section']['name'], 'Test Section')
-        self.assertEqual(response.data['author'][0]['id'], 'Test Person')
+        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
     def test_create_article_existing_slug(self):
@@ -158,18 +158,34 @@ class ArticlesTests(DispatchAPITestCase):
     def test_author_person(self):
         """Should not be able to create article with an author and missing author person"""
 
-        response = DispatchTestHelpers.create_article(self.client)
+        url = reverse('api-articles-list')
 
-        author_id = response.data['authors']['']['author']['id']
+        data = {
+        'headline': 'Test headline',
+        'section': 'Test section',
+        'authors': [{'type': 'author'}],
+        'content': [],
+        'slug': 'new-slug'
+        }
+
+        response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_author_type(self):
         """Should not be able to create article with an author and missing author type"""
 
-        response = DispatchTestHelpers.create_article(self.client)
+        url = reverse('api-articles-list')
 
-        author_id = response.data['authors'][0]['']['id']
+        data = {
+        'headline': 'Test headline',
+        'section': 'Test section',
+        'authors': [{'person': {'id': 1, 'full_name': 'Test Person'}}],
+        'content': [],
+        'slug': 'new-slug'
+        }
+
+        response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -583,6 +599,8 @@ class ArticlesTests(DispatchAPITestCase):
 
         url = '%s?author=%s' % (reverse('api-articles-list'), author_id)
         response = self.client.get(url, format='json')
+
+        data = response.data
 
         self.assertEqual(data['results'][0]['headline'], 'Article 2')
         self.assertEqual(data['results'][1]['headline'], 'Article 1')
