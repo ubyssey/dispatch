@@ -275,8 +275,8 @@ class ImageEmbedSerializer(serializers.Serializer):
 
     def fetch(self, ids):
         """Returns a dictionary of ids to Image instances with prefetched Authors"""
-        return Image.objects
-            .prefetch_related('authors')
+        return Image.objects \
+            .prefetch_related('authors') \
             .in_bulk(ids)
 
     def to_internal_value(self, data):
@@ -295,8 +295,8 @@ class ImageGalleryEmbedSerializer(serializers.Serializer):
 
     def fetch(self, ids):
         """Returns a dictionary of ids to ImageGallery instances with prefetched Authors"""
-        return ImageGallery.objects
-            .prefetch_related('images__image__authors')
+        return ImageGallery.objects \
+            .prefetch_related('images__image__authors') \
             .in_bulk(ids)
 
     def to_internal_value(self, data):
