@@ -6,7 +6,6 @@ from dispatch.api.exceptions import InvalidFilename, InvalidGalleryAttachments
 from dispatch.models import Image, Person
 
 class PasswordValidator(object):
-
     def __init__(self, confirm_field):
         self.confirm_field = confirm_field
 
@@ -23,11 +22,11 @@ class PasswordValidator(object):
 def all_ascii(s):
     return all(ord(c) < 128 for c in s)
 
-def ValidFilename(value):
+def FilenameValidator(value):
     if not all_ascii(value.name):
         raise InvalidFilename('The filename cannot contain non-ASCII characters')
 
-def ValidateImageGallery(data):
+def ImageGalleryValidator(data):
     for attachment in data:
         try:
             Image.objects.get(pk=attachment['image_id'])
@@ -48,3 +47,16 @@ class SlugValidator(object):
         else:
             if self.model.objects.filter(slug=slug).exclude(parent=self.instance.parent).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+
+def AuthorValidator(data):
+    """Raise a ValidationError if data does not match the author format."""
+    if not isinstance(data, list):
+        # Convert single instance to a list
+        data = [data]
+
+    for author in data:
+        if 'person' not in author:
+            raise ValidationError('An author must contain a person.')
+        if 'type' in author and not isinstance(author['type'], basestring):
+            # If type is defined, it should be a string
+            raise ValidationError('The author type must be a string.')

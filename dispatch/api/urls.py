@@ -24,8 +24,8 @@ router.register(r'zones', views.ZoneViewSet, base_name='api-zones')
 router.register(r'token', views.TokenViewSet, base_name='api-token')
 router.register(r'videos', views.VideoViewSet, base_name='api-videos')
 
-dashboard_recent_articles = views.DashboardViewSet.as_view({ 'get': 'list_recent_articles'})
-dashboard_user_actions = views.DashboardViewSet.as_view({ 'get': 'list_actions'})
+dashboard_recent_articles = views.DashboardViewSet.as_view({'get': 'list_recent_articles'})
+dashboard_user_actions = views.DashboardViewSet.as_view({'get': 'list_actions'})
 
 urlpatterns = format_suffix_patterns([
     # Dashboard routes

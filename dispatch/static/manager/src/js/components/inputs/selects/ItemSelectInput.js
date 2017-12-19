@@ -7,7 +7,6 @@ import TextInput from '../TextInput'
 
 import SortableList from '../SortableList'
 
-
 function Item(props) {
   if (props.isSelected) {
     return (
@@ -61,10 +60,11 @@ class ItemSelectInput extends React.Component {
   addValue(id) {
     if (this.props.many) {
       this.props.onChange(
-        R.append(id, this.getSelected())
+        R.append(id, this.getSelected()),
+        this.props.extraFields
       )
     } else {
-      this.props.onChange(id)
+      this.props.onChange(id, this.props.extraFields)
     }
 
     this.closeDropdown()
@@ -79,10 +79,11 @@ class ItemSelectInput extends React.Component {
           R.findIndex(R.equals(id), selected),
           1,
           selected
-        )
+        ),
+        this.props.extraFields
       )
     } else {
-      this.props.onChange(null)
+      this.props.onChange(null, {})
     }
   }
 
@@ -157,20 +158,39 @@ class ItemSelectInput extends React.Component {
     )
   }
 
+  updateExtraField(id, option) {
+    const extraFields = R.assoc(id, option, this.props.extraFields)
+    this.props.onChange(this.getSelected(), extraFields)
+  }
+
   renderSortableList() {
+    const extraFields = this.props.extraFieldOptions.map(field => (
+      <option key={field}>{field}</option>
+    ))
+
     return (
       <SortableList
         items={this.getSelected()}
         entities={this.props.entities}
-        onChange={selected => this.props.onChange(selected)}
-        renderItem={item => (
-          <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
-        )} />
+        onChange={selected => this.props.onChange(selected, this.props.extraFields)}
+        renderItem={item => {
+          if (this.props.extraFieldOptions.length)
+            return (
+              <div className='c-input--item-select__item'>
+              <div className='c-panel__select'>{item[this.props.attribute]}</div>
+                <select
+                  className='pt-button c-panel__select__right'
+                  value={this.props.extraFields[item.id]}
+                  onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
+              </div>
+            )
+          else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
+        }} />
     )
   }
 
   render() {
-    const anchor = (
+    const anchorButton = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
@@ -200,7 +220,7 @@ class ItemSelectInput extends React.Component {
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          {this.props.filterButton ? filterButton : anchor}
+          {this.props.filterButton ? filterButton : anchorButton}
         </Dropdown>
       </div>
     )
@@ -211,6 +231,8 @@ ItemSelectInput.defaultProps = {
   many: true,
   results: [],
   entities: {},
+  extraFields: {},
+  extraFieldOptions: [],
   showSortableList: true,
   inline: true
 }

@@ -18,7 +18,9 @@ export const videoSchema = new Schema('videos')
 
 articleSchema.define({
   section: sectionSchema,
-  authors: arrayOf(personSchema),
+  authors: arrayOf({
+    person: personSchema
+  }),
   tags: arrayOf(tagSchema),
   topic: topicSchema,
   template: templateSchema,

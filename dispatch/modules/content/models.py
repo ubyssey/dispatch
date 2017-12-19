@@ -249,7 +249,7 @@ class Article(Publishable):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    authors = ManyToManyField(Person, through='Author')
+    authors = ManyToManyField(Person, through='Author', related_name='authors_set')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
@@ -302,14 +302,29 @@ class Article(Publishable):
             except Topic.DoesNotExist:
                 pass
 
+    def get_authors(self):
+        return Author.objects.filter(article=self)
+
     def save_authors(self, authors):
         # Clear current authors
         Author.objects.filter(article=self).delete()
 
         # Create a new author for each person in list
         # Use `n` to save authors in correct order
-        for n, person_id in enumerate(authors):
-            Author.objects.create(article=self, person_id=person_id, order=n)
+        for n, author in enumerate(authors):
+            if 'type' in author:
+                Author.objects.create(
+                    article = self,
+                    person_id = author['person'],
+                    type = author['type'],
+                    order = n
+                    )
+            else:
+                Author.objects.create(
+                    article = self,
+                    person_id = author['person'],
+                    order = n
+                    )
 
     def get_author_string(self, links=False):
         """
@@ -356,6 +371,7 @@ class Author(Model):
     image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
+    type = CharField(blank=True, default='author', max_length=100)
 
     class Meta:
         ordering = ['order']
