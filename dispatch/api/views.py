@@ -27,9 +27,7 @@ from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
 
 class SectionViewSet(DispatchModelViewSet):
-    """
-    Viewset for Section model views.
-    """
+    """Viewset for Section model views."""
     model = Section
     serializer_class = SectionSerializer
 
@@ -42,9 +40,7 @@ class SectionViewSet(DispatchModelViewSet):
         return queryset
 
 class VideoViewSet(DispatchModelViewSet):
-    """
-    Viewset for Video model views.
-    """
+    """Viewset for Video model views."""
     model = Video
     serializer_class = VideoSerializer
 
@@ -57,18 +53,14 @@ class VideoViewSet(DispatchModelViewSet):
         return queryset
 
 class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
-    """
-    Viewset for Article model views.
-    """
+    """Viewset for Article model views."""
     model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
 
     def get_queryset(self):
-        """
-        Optionally restricts the returned articles by filtering
-        against a `topic` query parameter in the URL.
-        """
+        """Optionally restricts the returned articles by filtering against a `topic`
+        query parameter in the URL."""
 
         # Get base queryset from DispatchPublishableMixin
         queryset = self.get_publishable_queryset()
@@ -100,17 +92,14 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         return queryset
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
-    """
-    Viewset for Page model views.
-    """
+    """Viewset for Page model views."""
     model = Page
     serializer_class = PageSerializer
     lookup_field = 'parent_id'
 
     def get_queryset(self):
-        """
-        Only display unpublished content to authenticated users, filter by query parameter if present.
-        """
+        """Only display unpublished content to authenticated users, filter by
+        query parameter if present."""
 
         # Get base queryset from DispatchPublishableMixin
         queryset = self.get_publishable_queryset()
@@ -148,7 +137,6 @@ class PersonViewSet(DispatchModelViewSet):
 
 class UserViewSet(DispatchModelViewSet):
     """Viewset for User model views."""
-
     model = User
     serializer_class = UserSerializer
 
@@ -165,9 +153,7 @@ class UserViewSet(DispatchModelViewSet):
         return Response(serializer.data)
 
 class TagViewSet(DispatchModelViewSet):
-    """
-    Viewset for Tag model views.
-    """
+    """Viewset for Tag model views."""
     model = Tag
     serializer_class = TagSerializer
 
@@ -180,9 +166,7 @@ class TagViewSet(DispatchModelViewSet):
         return queryset
 
 class TopicViewSet(DispatchModelViewSet):
-    """
-    Viewset for Topic model views.
-    """
+    """Viewset for Topic model views."""
     model = Topic
     serializer_class = TopicSerializer
 
@@ -195,9 +179,7 @@ class TopicViewSet(DispatchModelViewSet):
         return queryset
 
 class FileViewSet(DispatchModelViewSet):
-    """
-    Viewset for File model views.
-    """
+    """Viewset for File model views."""
     model = File
     serializer_class = FileSerializer
 
@@ -210,9 +192,7 @@ class FileViewSet(DispatchModelViewSet):
         return queryset
 
 class ImageViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for Image model views.
-    """
+    """Viewset for Image model views."""
     model = Image
     serializer_class = ImageSerializer
     filter_backends = (filters.OrderingFilter,)
@@ -227,10 +207,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         return queryset
 
 class ImageGalleryViewSet(DispatchModelViewSet):
-    """
-    Viewset for ImageGallery model views.
-    """
-
+    """Viewset for ImageGallery model views."""
     model = ImageGallery
     serializer_class = ImageGallerySerializer
 
@@ -248,7 +225,6 @@ class ImageGalleryViewSet(DispatchModelViewSet):
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
-
     permission_classes = (IsAuthenticated,)
 
     def get_object_or_404(self, pk=None):
@@ -274,10 +250,7 @@ class TemplateViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 class IntegrationViewSet(viewsets.GenericViewSet):
-    """
-    Viewset for Dispatch integrations.
-    """
-
+    """Viewset for Dispatch integrations."""
     permission_classes = (IsAuthenticated,)
     serializer_class = IntegrationSerializer
 
@@ -294,44 +267,34 @@ class IntegrationViewSet(viewsets.GenericViewSet):
         })
 
     def list(self, request):
-
         integrations = integrationLib.list()
-
         serializer = self.get_serializer(integrations, many=True)
 
         return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
-
         integration = self.get_object_or_404(pk)
-
         serializer = self.get_serializer(integration)
 
         return Response(serializer.data)
 
     def partial_update(self, request, pk=None):
-
         integration = self.get_object_or_404(pk)
-
         serializer = self.get_serializer(integration, data=request.data)
 
         serializer.is_valid(raise_exception=True)
-
         serializer.save()
 
         return Response(serializer.to_representation(integration))
 
     def destroy(self, request, pk=None):
-
         integration = self.get_object_or_404(pk)
-
         integration.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @detail_route(methods=['get'],)
     def callback(self, request, pk=None):
-
         integration = self.get_object_or_404(pk)
 
         try:
@@ -359,27 +322,21 @@ class ZoneViewSet(viewsets.GenericViewSet):
         })
 
     def list(self, request):
-
         zones = ThemeManager.Zones.list()
-
         serializer = ZoneSerializer(zones, many=True)
 
         return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None):
-
         zone = self.get_object_or_404(pk)
-
         serializer = ZoneSerializer(zone)
 
         return Response(serializer.data)
 
     def partial_update(self, request, pk=None):
-
         zone = self.get_object_or_404(pk)
 
         serializer = ZoneSerializer(zone, data=request.data)
-
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
@@ -388,7 +345,6 @@ class ZoneViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get'])
     def widgets(self, request, pk=None):
-
         zone = self.get_object_or_404(pk)
 
         serializer = WidgetSerializer(zone.widgets, many=True)
@@ -401,7 +357,6 @@ class DashboardViewSet(viewsets.GenericViewSet):
     serializer_class = ArticleSerializer
 
     def list_actions(self, request):
-
         actions = list_actions()
 
         data = {
@@ -411,7 +366,6 @@ class DashboardViewSet(viewsets.GenericViewSet):
         return Response(data)
 
     def list_recent_articles(self, request):
-
         recent = recent_articles(request.user)
 
         articles = map(lambda a: self.get_serializer(a).data, recent)
@@ -424,16 +378,13 @@ class DashboardViewSet(viewsets.GenericViewSet):
 
 @permission_classes((AllowAny,))
 class TokenViewSet(viewsets.ViewSet):
-
     def create(self, request):
-
         email = request.data.get('email', None)
         password = request.data.get('password', None)
 
         user = authenticate(username=email, password=password)
 
         if user is not None and user.is_active:
-
             (token, created) = Token.objects.get_or_create(user=user)
 
             data = {

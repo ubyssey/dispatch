@@ -6,7 +6,6 @@ from dispatch.api.exceptions import InvalidFilename, InvalidGalleryAttachments
 from dispatch.models import Image, Person
 
 class PasswordValidator(object):
-
     def __init__(self, confirm_field):
         self.confirm_field = confirm_field
 
@@ -59,4 +58,5 @@ def AuthorValidator(data):
         if 'person' not in author:
             raise ValidationError('An author must contain a person.')
         if 'type' in author and not isinstance(author['type'], basestring):
-            raise ValidationError('The author types must be a string.')
+            # If type is defined, it should be a string
+            raise ValidationError('The author type must be a string.')
