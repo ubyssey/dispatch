@@ -158,12 +158,22 @@ class ArticlesTests(DispatchAPITestCase):
     def test_author_person(self):
         """Should not be able to create article with an author and missing author person"""
 
+        # Elements of the helper are included here to initialize only the specific attributes being tested
+        authors = []
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        authors.append({
+        'type': 'author'
+        })
+
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
         url = reverse('api-articles-list')
 
         data = {
         'headline': 'Test headline',
-        'section': 'Test section',
-        'authors': [{'type': 'author'}],
+        'section_id': section.id,
+        'author_ids': [{'type': 'author'}],
         'content': [],
         'slug': 'new-slug'
         }
@@ -173,20 +183,57 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_author_type(self):
-        """Should not be able to create article with an author and missing author type"""
+        """Should be able to create article with an author and missing author type"""
+        # Elements of the helper are included here to initialize only the specific attributes being tested
+        authors = []
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        authors.append({
+        'person': person.id,
+        })
+
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
 
         url = reverse('api-articles-list')
 
         data = {
         'headline': 'Test headline',
-        'section': 'Test section',
-        'authors': [{'person': {'id': 1, 'full_name': 'Test Person'}}],
+        'section_id': section.id,
+        'author_ids': [{'person': 1}],
         'content': [],
         'slug': 'new-slug'
         }
 
         response = self.client.post(url, data, format='json')
+        print(response)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_author_type_format(self):
+        """Should not be able to create article with an author and non-string author type"""
+
+        # Elements of the helper are included here to initialize only the specific attributes being tested
+        authors = []
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        authors.append({
+        'person': person.id,
+        'type': 0
+        })
+
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        url = reverse('api-articles-list')
+
+        data = {
+        'headline': 'Test headline',
+        'section_id': section.id,
+        'author_ids': [{'person': 1, 'type': 0}],
+        'content': [],
+        'slug': 'new-slug'
+        }
+
+        response = self.client.post(url, data, format='json')
+        print(response)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article_tags(self):
