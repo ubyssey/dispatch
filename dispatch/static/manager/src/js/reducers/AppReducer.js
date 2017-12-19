@@ -19,6 +19,7 @@ import zonesReducer from './ZonesReducer'
 import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
+import videosReducer from './VideosReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -39,5 +40,6 @@ export default combineReducers({
   zones: zonesReducer,
   widgets: widgetsReducer,
   events: eventsReducer,
-  users: userReducer
+  users: userReducer,
+  videos: videosReducer
 })

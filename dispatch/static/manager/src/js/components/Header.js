@@ -17,6 +17,7 @@ export default function Header(props) {
           <Link to='/widgets/' className="pt-button pt-minimal pt-icon-widget">Widgets</Link>
           <Link to='/galleries/' className="pt-button pt-minimal pt-icon-media">Galleries</Link>
           <Link to='/files/' className="pt-button pt-minimal pt-icon-folder-close">Files</Link>
+          <Link to='/videos/' className="pt-button pt-minimal pt-icon-video">Videos</Link>
           <Link to='/persons/' className="pt-button pt-minimal pt-icon-person">People</Link>
           <Link
             to='/events/'
