@@ -19,8 +19,8 @@ class DispatchTestHelpers(object):
         for author in author_names:
             (person, created) = Person.objects.get_or_create(full_name=author)
             authors.append({
-            'person': person.id,
-            'type': 'author'
+                'person': person.id,
+                'type': 'author'
             })
 
         # Create test section
