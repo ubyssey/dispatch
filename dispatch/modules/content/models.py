@@ -249,7 +249,7 @@ class Article(Publishable):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    authors = ManyToManyField(Person, through='Author', related_name='authors_set')
+    authors = ManyToManyField('Author', related_name='authors_set')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
@@ -331,9 +331,9 @@ class Article(Publishable):
         Returns list of authors as a comma-separated string (with 'and' before last author).
         """
         def format_author(author):
-            if links and author.slug:
-                return '<a href="/authors/%s/">%s</a>' % (author.slug, author.full_name)
-            return author.full_name
+            if links and author.person.slug:
+                return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
+            return author.person.full_name
 
         authors = map(format_author, self.authors.all())
 
@@ -345,12 +345,20 @@ class Article(Publishable):
 
         return ", ".join(authors[:-1]) + " and " + authors[-1]
 
+    def get_author_type(self):
+        """
+        Returns list of author types as a comma-separated string (with 'and' before last author type).
+        """
+        def author_type(author):
+            if not authors:
+                return ""
+        return author.type
+
     def get_author_url(self):
         """
         Returns list of authors (including hyperlinks) as a comma-separated string (with 'and' before last author).
         """
         return self.get_author_string(True)
-
 
     def get_absolute_url(self):
         """
@@ -386,7 +394,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Person, through='Author', related_name='authors')
+    authors = ManyToManyField(Author, related_name='authors')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
