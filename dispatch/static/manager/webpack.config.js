@@ -50,5 +50,11 @@ module.exports = {
     }),
     new webpack.optimize.UglifyJsPlugin(),
     new ExtractTextPlugin('manager-' + version + '.css')
-  ]
+  ],
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  }
 };

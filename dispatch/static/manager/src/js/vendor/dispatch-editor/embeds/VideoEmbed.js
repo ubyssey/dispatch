@@ -35,7 +35,6 @@ class VideoEmbedComponent extends React.Component {
         </div>
       </div>
     )
-
   }
 
   renderVideo() {
