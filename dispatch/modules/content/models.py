@@ -249,7 +249,7 @@ class Article(Publishable):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    authors = ManyToManyField('Author', related_name='authors_set')
+    authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
@@ -306,25 +306,21 @@ class Article(Publishable):
         return Author.objects.filter(article=self)
 
     def save_authors(self, authors):
-        # Clear current authors
-        Author.objects.filter(article=self).delete()
-
         # Create a new author for each person in list
         # Use `n` to save authors in correct order
         for n, author in enumerate(authors):
             if 'type' in author:
-                Author.objects.create(
-                    article = self,
-                    person_id = author['person'],
-                    type = author['type'],
-                    order = n
-                    )
+                author_instance = Author.objects.create(
+                    person_id=author['person'],
+                    type=author['type'],
+                    order=n)
             else:
-                Author.objects.create(
-                    article = self,
-                    person_id = author['person'],
-                    order = n
-                    )
+                author_instance = Author.objects.create(
+                    person_id=author['person'],
+                    order=n)
+            self.authors.add(author_instance)
+
+        self.save(revision=False)
 
     def get_author_string(self, links=False):
         """
@@ -335,7 +331,9 @@ class Article(Publishable):
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
             return author.person.full_name
 
-        authors = map(format_author, self.authors.all())
+        print self.authors
+
+        authors = map(format_author, self.authors)
 
         if not authors:
             return ""
@@ -375,8 +373,6 @@ class Page(Publishable):
         return None
 
 class Author(Model):
-    article = ForeignKey(Article, null=True)
-    image = ForeignKey('Image', null=True)
     person = ForeignKey(Person)
     order = PositiveIntegerField()
     type = CharField(blank=True, default='author', max_length=100)
@@ -394,7 +390,7 @@ class Image(Model):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
-    authors = ManyToManyField(Author, related_name='authors')
+    authors = ManyToManyField(Author, related_name='image_authors')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -496,10 +492,10 @@ class Image(Model):
         default_storage.save(name, thumb_file)
 
     def save_authors(self, authors):
-        Author.objects.filter(image=self).delete()
-
         for n, person_id in enumerate(authors):
-            Author.objects.create(image=self, person_id=person_id, order=n)
+            author = Author.objects.create(person_id=person_id, order=n)
+            self.authors.add(author)
+        self.save()
 
 class ImageAttachment(Model):
 
