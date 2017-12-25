@@ -118,10 +118,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
     url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
 
-    authors = PersonSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(
-        write_only=True,
-        child=serializers.IntegerField())
+    authors = AuthorSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
 
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
