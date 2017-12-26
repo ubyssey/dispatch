@@ -7,7 +7,7 @@ import ItemSelectInput from './ItemSelectInput'
 import personsActions from '../../../actions/PersonsActions'
 
 const AUTHOR_TYPES = [
-  ['Author', 'author'], 
+  ['Author', 'author'],
   ['Illustrator', 'illustrator'],
   ['Photographer', 'photographer'],
   ['Videographer', 'videographer'],
@@ -54,6 +54,7 @@ class AuthorSelectInputComponent extends React.Component {
         onChange={(selected, extraFields) => this.update(selected, extraFields)}
         fetchResults={(query) => this.listPersons(query)}
         extraFieldOptions={AUTHOR_TYPES}
+        extraFieldDefault={this.props.defaultAuthorType}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
@@ -82,5 +83,15 @@ const AuthorSelectInput = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AuthorSelectInputComponent)
+
+// Author types
+AuthorSelectInput.AUTHOR = 'author'
+AuthorSelectInput.PHOTOGRAPHER = 'photographer'
+AuthorSelectInput.VIDEOGRAPHER = 'videographer'
+AuthorSelectInput.ILLUSTRATOR = 'illustrator'
+
+AuthorSelectInput.defaultProps = {
+  defaultAuthorType: AuthorSelectInput.AUTHOR
+}
 
 export default AuthorSelectInput
