@@ -342,13 +342,6 @@ class Article(Publishable):
 
         return ", ".join(authors[:-1]) + " and " + authors[-1]
 
-    def get_author_type(self):
-        """
-        Returns list of author types as a comma-separated string (with 'and' before last author type).
-        """
-        def author_type(author):
-            return 'Author'
-
     def get_author_url(self):
         """
         Returns list of authors (including hyperlinks) as a comma-separated string (with 'and' before last author).
