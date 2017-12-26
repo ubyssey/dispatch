@@ -303,7 +303,7 @@ class Article(Publishable):
                 pass
 
     def get_authors(self):
-        return Author.objects.filter(article=self)
+        return Author.objects.filter(article_authors=self)
 
     def save_authors(self, authors):
         # Create a new author for each person in list
@@ -319,6 +319,7 @@ class Article(Publishable):
                     person_id=author['person'],
                     order=n)
             self.authors.add(author_instance)
+            print(author_instance)
 
         self.save(revision=False)
 
@@ -329,11 +330,9 @@ class Article(Publishable):
         def format_author(author):
             if links and author.person.slug:
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
-            return author.person.full_name
+            return " %s, %s" % (author.person.full_name,author.type)
 
-        print self.authors
-
-        authors = map(format_author, self.authors)
+        authors = map(format_author, self.authors.all())
 
         if not authors:
             return ""
@@ -348,9 +347,7 @@ class Article(Publishable):
         Returns list of author types as a comma-separated string (with 'and' before last author type).
         """
         def author_type(author):
-            if not authors:
-                return ""
-        return author.type
+            return 'Author'
 
     def get_author_url(self):
         """
