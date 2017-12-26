@@ -6,7 +6,12 @@ import ItemSelectInput from './ItemSelectInput'
 
 import personsActions from '../../../actions/PersonsActions'
 
-const AUTHOR_TYPES = ['author', 'illustrator', 'photographer', 'videographer']
+const AUTHOR_TYPES = [
+  ['Author', 'author'], 
+  ['Illustrator', 'illustrator'],
+  ['Photographer', 'photographer'],
+  ['Videographer', 'videographer'],
+]
 
 class AuthorSelectInputComponent extends React.Component {
 
