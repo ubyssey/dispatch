@@ -29,7 +29,7 @@ class AuthorSelectInputComponent extends React.Component {
     // Merge person IDs with their corresponding author type
     const authors = selected.map(id => ({
       person: id,
-      type: extraFields[id]
+      type: extraFields[id] || this.props.defaultAuthorType
     }))
 
     this.props.update(authors)
@@ -54,7 +54,6 @@ class AuthorSelectInputComponent extends React.Component {
         onChange={(selected, extraFields) => this.update(selected, extraFields)}
         fetchResults={(query) => this.listPersons(query)}
         extraFieldOptions={AUTHOR_TYPES}
-        extraFieldDefault={this.props.defaultAuthorType}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )

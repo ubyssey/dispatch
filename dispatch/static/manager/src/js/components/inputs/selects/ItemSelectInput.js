@@ -165,7 +165,9 @@ class ItemSelectInput extends React.Component {
 
   renderSortableList() {
     const extraFields = this.props.extraFieldOptions.map(field => (
-      <option key={field[1]}>{field[0]}</option>
+      <option
+        key={field[1]}
+        value={field[1]}>{field[0]}</option>
     ))
 
     const extraFieldsSelect = (item) => (
