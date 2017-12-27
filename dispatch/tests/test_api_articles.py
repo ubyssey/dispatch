@@ -5,6 +5,7 @@ from rest_framework import status
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Article, Author, Person, Section
+from dispatch.mixins import AuthorMixin
 
 class ArticlesTests(DispatchAPITestCase):
 
