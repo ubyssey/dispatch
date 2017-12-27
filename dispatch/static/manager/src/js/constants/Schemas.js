@@ -37,7 +37,9 @@ pageSchema.define({
 })
 
 imageSchema.define({
-  authors: arrayOf(personSchema)
+  authors: arrayOf({
+    person: personSchema
+  }),
 })
 
 zoneSchema.define({
