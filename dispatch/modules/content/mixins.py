@@ -43,19 +43,50 @@ class AuthorMixin(object):
 
     def get_author_type_string(self, links=False):
         def author_type(author):
+            ArticleAuthors = []
+            ArticlePhotographers = []
+            ArticleIllustrators = []
+            ArticleVideographers = []
             if links and author.person.slug:
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
-            return " %s, %s" % (author.person.full_name, author.type)
+            for author in self.authors.all():
+                if author.type == 'author':
+                    ArticleAuthors.append(author.person.full_name)
+                    if self.authors.all().filter(type='author').count() == 1:
+                        ArticleAuthorsStr = "Written by " + ArticleAuthors[0]
+                    elif self.authors.all().filter(type='author').count() > 1:
+                        ArticleAuthorsStr = "Written by " + ArticleAuthors[0] + ", ".join(ArticleAuthors[1:-1]) + " and " + ArticleAuthors[-1]
+                if author.type == 'photographer':
+                    ArticlePhotographers.append(author.person.full_name)
+                    if self.authors.all().filter(type='photographer').count() == 1:
+                        ArticlePhotographersStr = "Photos by " + ArticlePhotographers[0]
+                    elif self.authors.all().filter(type='photographer').count() > 1:
+                        ArticlePhotographersStr = "Photos by " + ArticlePhotographers[0] + ", ".join(ArticlePhotographers[0:-1]) + " and " + ArticlePhotographers[-1]
+                if author.type == 'illustrator':
+                    ArticleIllustrators.append(author.person.full_name)
+                    if self.authors.all().filter(type='illustrator').count() == 1:
+                        ArticleIllustratorsStr = "Illustrated by " + ArticleIllustrators[0]
+                    elif self.authors.all().filter(type='illustrator').count() > 1:
+                        ArticleIllustratorsStr = "Illustrated by "+ ArticleIllustrators[0] + ", ".join(ArticleIllustrators[1:-1]) + " and " + ArticleIllustrators[-1]
+                if author.type ==  'videographer':
+                    ArticleVideographers.append(author.person.full_name)
+                    if self.authors.all().filter(type='videographer').count() == 1:
+                        ArticleVideographersStr = "Videos by " + ArticleVideographers[0]
+                    elif self.authors.all().filter(type='videographer').count() > 1:
+                        ArticleVideographersStr = "Videos by "+ ArticleVideographers[0] + ", ".join(ArticleVideographers[1:-1]) + " and " + ArticleVideographers[-1]
 
-        authors_type = map(author_type, self.authors.all())
+            AuthorTypeString = ""
+            if ArticleAuthors:
+                AuthorTypeString = AuthorTypeString + ArticleAuthorsStr
+            if ArticlePhotographers:
+                AuthorTypeString = AuthorTypeString + ", " + ArticlePhotographersStr
+            if ArticleIllustrators:
+                AuthorTypeString = AuthorTypeString + ", " + ArticleIllustratorsStr
+            if ArticleVideographers:
+                AuthorTypeString = AuthorTypeString + ", " + ArticleVideographersStr
+            return AuthorTypeString
 
-        if not authors_type:
-            return ""
-        elif len(authors_type) == 1:
-            # If this is the only author, just return author name
-            return authors_type[0]
-
-        return ", ".join(authors_type[:-1]) + " and " + authors_type[-1]
+        return author_type(self.authors.all())
 
     def get_author_url(self):
         """Returns list of authors (including hyperlinks) as a
