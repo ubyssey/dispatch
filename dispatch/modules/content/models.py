@@ -22,6 +22,7 @@ from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
+from dispatch.modules.content.mixins import AuthorMixin
 from dispatch.modules.auth.models import Person, User
 
 class Tag(Model):
@@ -38,6 +39,14 @@ class Topic(Model):
 class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
+
+class Author(Model):
+    person = ForeignKey(Person)
+    order = PositiveIntegerField()
+    type = CharField(blank=True, default='author', max_length=100)
+
+    class Meta:
+        ordering = ['order']
 
 class Publishable(Model):
     """
@@ -243,7 +252,7 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
-class Article(Publishable):
+class Article(Publishable, AuthorMixin):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
@@ -265,6 +274,8 @@ class Article(Publishable):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
+
+    AuthorModel = Author
 
     @property
     def title(self):
@@ -302,52 +313,6 @@ class Article(Publishable):
             except Topic.DoesNotExist:
                 pass
 
-    def get_authors(self):
-        return Author.objects.filter(article_authors=self)
-
-    def save_authors(self, authors):
-        # Create a new author for each person in list
-        # Use `n` to save authors in correct order
-        for n, author in enumerate(authors):
-            if 'type' in author:
-                author_instance = Author.objects.create(
-                    person_id=author['person'],
-                    type=author['type'],
-                    order=n)
-            else:
-                author_instance = Author.objects.create(
-                    person_id=author['person'],
-                    order=n)
-            self.authors.add(author_instance)
-            print(author_instance)
-
-        self.save(revision=False)
-
-    def get_author_string(self, links=False):
-        """
-        Returns list of authors as a comma-separated string (with 'and' before last author).
-        """
-        def format_author(author):
-            if links and author.person.slug:
-                return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
-            return " %s, %s" % (author.person.full_name,author.type)
-
-        authors = map(format_author, self.authors.all())
-
-        if not authors:
-            return ""
-        elif len(authors) == 1:
-            # If this is the only author, just return author name
-            return authors[0]
-
-        return ", ".join(authors[:-1]) + " and " + authors[-1]
-
-    def get_author_url(self):
-        """
-        Returns list of authors (including hyperlinks) as a comma-separated string (with 'and' before last author).
-        """
-        return self.get_author_string(True)
-
     def get_absolute_url(self):
         """
         Returns article URL.
@@ -362,19 +327,11 @@ class Page(Publishable):
     def get_author_string(self):
         return None
 
-class Author(Model):
-    person = ForeignKey(Person)
-    order = PositiveIntegerField()
-    type = CharField(blank=True, default='author', max_length=100)
-
-    class Meta:
-        ordering = ['order']
-
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Model):
+class Image(Model, AuthorMixin):
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
     width = PositiveIntegerField(blank=True, null=True)
@@ -397,6 +354,8 @@ class Image(Model):
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
 
     THUMBNAIL_SIZE = 'square'
+
+    AuthorModel = Author
 
     def is_gif(self):
         """Returns true if image is a gif."""
@@ -481,14 +440,7 @@ class Image(Model):
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
-    def save_authors(self, authors):
-        for n, person_id in enumerate(authors):
-            author = Author.objects.create(person_id=person_id, order=n)
-            self.authors.add(author)
-        self.save()
-
 class ImageAttachment(Model):
-
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, blank=True, null=True, related_name='page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)

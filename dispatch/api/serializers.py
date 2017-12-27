@@ -119,7 +119,10 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
 
     authors = AuthorSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator])
 
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
@@ -148,10 +151,10 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
-        # Save relationships
-        author_ids = validated_data.get('author_ids', None)
-        if author_ids is not None:
-            instance.save_authors(author_ids)
+        # Save authors
+        authors = validated_data.get('author_ids')
+        if authors:
+            instance.save_authors(authors)
 
         return instance
 
@@ -412,7 +415,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = ContentSerializer()
 
-    authors = AuthorSerializer(source='get_authors', many=True, read_only=True)
+    authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
@@ -511,7 +514,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         authors = validated_data.get('author_ids')
         if authors:
-            instance.save_authors(authors)
+            instance.save_authors(authors, is_publishable=True)
 
         tag_ids = validated_data.get('tag_ids', False)
         if tag_ids != False:
