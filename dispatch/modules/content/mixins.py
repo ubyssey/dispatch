@@ -29,7 +29,7 @@ class AuthorMixin(object):
         def format_author(author):
             if links and author.person.slug:
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
-            return " %s, %s" % (author.person.full_name,author.type)
+            return author.person.full_name
 
         authors = map(format_author, self.authors.all())
 
@@ -56,7 +56,7 @@ class AuthorMixin(object):
             return authors_type[0]
 
         return ", ".join(authors_type[:-1]) + " and " + authors_type[-1]
-    
+
     def get_author_url(self):
         """Returns list of authors (including hyperlinks) as a
         comma-separated string (with 'and' before last author)."""

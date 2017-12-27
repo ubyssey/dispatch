@@ -184,7 +184,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         new_data = {
             'title': 'Test image',
-            'author_ids': [person.id]
+            'author_ids': [{'person': person.id}]
         }
 
         url = reverse('api-images-detail', args=[image.data['id']])
