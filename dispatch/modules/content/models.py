@@ -330,7 +330,8 @@ class Article(Publishable):
         def format_author(author):
             if links and author.person.slug:
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
-            return " %s, %s" % (author.person.full_name,author.type)
+            #return " %s, %s" % (author.person.full_name,author.type)
+            return author.person.full_name
 
         authors = map(format_author, self.authors.all())
 
@@ -341,6 +342,23 @@ class Article(Publishable):
             return authors[0]
 
         return ", ".join(authors[:-1]) + " and " + authors[-1]
+
+    def get_author_type_string(self, links=False):
+        def author_type(author):
+            if links and author.person.slug:
+                return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
+            return " %s, %s" % (author.person.full_name, author.type)
+
+        authors_type = map(author_type, self.authors.all())
+
+        if not authors_type:
+            return ""
+        elif len(authors_type) == 1:
+            # If this is the only author, just return author name
+            return authors_type[0]
+
+        return ", ".join(authors_type[:-1]) + " and " + authors_type[-1]
+
 
     def get_author_url(self):
         """
