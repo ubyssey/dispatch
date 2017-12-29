@@ -61,6 +61,7 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['section']['name'], 'Test Section')
         self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
+        self.assertEqual(response.data['author_type'], 'Written by Test Person')
 
     def test_create_article_existing_slug(self):
         """Ensure that article doesn't have slug matching existing article"""
