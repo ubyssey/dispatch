@@ -1,18 +1,15 @@
 import React from 'react'
 
+require('isomorphic-fetch')
+import fetchJsonp from 'fetch-jsonp'
+import url from 'url'
+
 import { Button } from '@blueprintjs/core'
 import { FormInput, TextInput } from '../../../components/inputs'
 
 require('../styles/embeds/video.scss')
 
-var Twit = require('twit')
-
-var twit = new Twit({
-  consumer_key: 'kCIpSvGTADIoCzZXKDJ2fH3Gh',
-  consumer_secret: 'VYTFpsfvoxBzVVw4AVGOsiyfRK3oDnr0MMgFSvO0ntitfVrkPU',
-  access_token: '407012934-2TtDw9bwW7giqBPLUn1izvTXt5vFa3bU3jPU4w8o',
-  access_token_secret: 'yXGIcG0rI5TwqnOQzQcEuEIycIiAqU77KSUh0g5JtD7PQ',
-})
+const TWITTER_API_URL = 'https://api.twitter.com/1.1/statuses/oembed.json'
 
 class TwitterEmbedComponent extends React.Component {
 
@@ -23,9 +20,13 @@ class TwitterEmbedComponent extends React.Component {
   }
 
   getTweet() {
-    twit.get('statuses/oembed', {url: this.props.data.url}, function (err, data, response) {
-      this.props.updateField('tweet', data)
-      this.props.stopEditing()
+    fetchJsonp(
+      TWITTER_API_URL + url.format({ query: { url: this.props.data.url } })
+    )
+    .then((response) => response.json())
+    .then(data => {
+      console.log(data)
+      // ADD YOUR CODE HERE
     })
   }
 
