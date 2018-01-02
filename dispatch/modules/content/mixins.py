@@ -25,6 +25,8 @@ class AuthorMixin(object):
             self.save()
 
     def get_author_string(self, links=False):
+        saved_args = locals()
+        saved_args = saved_args['links']
         """Returns list of authors as a comma-separated
         string (with 'and' before last author)."""
 
@@ -33,7 +35,10 @@ class AuthorMixin(object):
                 return '<a href="/authors/%s/">%s</a>' % (author.person.slug, author.person.full_name)
             return author.person.full_name
 
-        authors = map(format_author, self.authors.all())
+        if links == True or links == False:
+            authors = map(format_author, self.authors.all())
+        else:
+            authors = map(format_author, saved_args)
 
         if not authors:
             return ""
@@ -41,24 +46,36 @@ class AuthorMixin(object):
             # If this is the only author, just return author name
             return authors[0]
 
-        return ", ".join(authors[:-1]) + " and " + authors[-1]
+        return ", ".join(authors[0:-1]) + " and " + authors[-1]
 
     def get_author_type_string(self):
-        """Returns list of authors as a comma-separated
-        string (with 'and' before last author)."""
+        """Returns list of authors as a comma-separated string
+        sorted by author type (with 'and' before last author)."""
 
         authorTypeString = ''
+        aStringA = ''
+        aStringB = ''
+        aStringC = ''
+        aStringD = ''
 
         authors = dict((k, list(v)) for k, v in groupby(self.authors.all(), lambda a: a.type))
         for author in authors:
             if author == 'author':
-                authorTypeString += 'Written by ' + self.get_author_string(authors['author'])
+                aStringA += 'Written by ' + self.get_author_string(authors['author'])
             if author == 'photographer':
-                authorTypeString += 'Photos by ' + self.get_author_string(authors['photographer'])
+                aStringB += 'Photos by ' + self.get_author_string(authors['photographer'])
             if author == 'illustrator':
-                authorTypeString += 'Illustrations by ' + self.get_author_string(authors['illustrator'])
+                aStringC += 'Illustrations by ' + self.get_author_string(authors['illustrator'])
             if author == 'videographer':
-                authorTypeString += 'Videos by ' + self.get_author_string(authors['videographer'])
+                aStringD += 'Videos by ' + self.get_author_string(authors['videographer'])
+            if aStringA != '':
+                authorTypeString += aStringA
+            if aStringB != '':
+                authorTypeString += ', ' + aStringB
+            if aStringC != '':
+                authorTypeString += ', ' + aStringC
+            if aStringD != '':
+                authorTypeString += ', ' + aStringD
         return authorTypeString
 
     def get_author_url(self):

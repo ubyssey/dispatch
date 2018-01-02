@@ -61,7 +61,6 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(response.data['section']['name'], 'Test Section')
         self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
-        self.assertEqual(response.data['author_type'], 'Written by Test Person')
 
     def test_create_article_existing_slug(self):
         """Ensure that article doesn't have slug matching existing article"""
@@ -156,6 +155,27 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertNotEqual(article.data['importance'], NEW_IMPORTANCE)
         self.assertNotEqual(article.data['seo_keyword'], NEW_SEO_KEYWORD)
         self.assertNotEqual(article.data['seo_description'], NEW_SEO_DESCRIPTION)
+
+    def test_author_type_string(self):
+
+        url = reverse('api-articles-list')
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        obj = AuthorMixin()
+        with obj.get_author_type_string() as authors_type:
+            data = {
+                'headline': 'Test headline',
+                'section_id': section.id,
+                'author_ids': [{'person': person.id, 'type': 'author'}],
+                'content': [],
+                'slug': 'new-slug',
+                'authors_type': authors_type
+            }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.data['authors_type'], 'Written by Test Person')
 
     def test_author_person(self):
         """Should not be able to create article with an author type and missing author person"""

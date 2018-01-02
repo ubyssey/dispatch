@@ -35,7 +35,6 @@ class DispatchTestHelpers(object):
             'author_ids': authors,
             'slug': slug,
             'content': []
-            'author_type': author_type(authors)
         }
 
         return client.post(url, data, format='json')
