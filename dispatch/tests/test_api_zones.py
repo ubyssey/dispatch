@@ -98,6 +98,21 @@ class ZonesTests(DispatchAPITestCase):
         self.assertEqual(response.data['results'][0]['id'], TEST_ZONE_A_ID)
         self.assertEqual(response.data['results'][1]['id'], TEST_ZONE_B_ID)
 
+    def test_zones_search(self):
+        """Zone search should return list of zones matching search criteria"""
+
+        register.zone(TestZoneA)
+        register.zone(TestZoneB)
+
+        url = '%s?q=%s' % (reverse('api-zones-list'), 'Test+Zone+B')
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+
+        self.assertEqual(response.data['results'][0]['id'], TEST_ZONE_B_ID)
+
     def test_zones_detail_unauthenticated(self):
         """Zone detail should return 401 with unauthenticated request"""
 
