@@ -4,21 +4,21 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
-    File, Page, Section, Tag, Topic)
+    File, Page, Author, Section, Tag, Topic, Video)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
-from dispatch.api.validators import ValidFilename, ValidateImageGallery, PasswordValidator, SlugValidator
+from dispatch.api.validators import (
+    FilenameValidator, ImageGalleryValidator, PasswordValidator,
+    SlugValidator, AuthorValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class PersonSerializer(DispatchModelSerializer):
-    """
-    Serializes the Person model.
-    """
+    """Serializes the Person model."""
 
-    image = serializers.ImageField(required=False, validators=[ValidFilename])
+    image = serializers.ImageField(required=False, validators=[FilenameValidator])
 
     class Meta:
         model = Person
@@ -32,10 +32,21 @@ class PersonSerializer(DispatchModelSerializer):
             'facebook_url'
         )
 
+class AuthorSerializer(DispatchModelSerializer):
+    """Serializes the Author model."""
+
+    person = PersonSerializer()
+
+    class Meta:
+        model = Author
+        fields = (
+            'id',
+            'person',
+            'type'
+        )
+
 class UserSerializer(DispatchModelSerializer):
-    """
-    Serializes the User model.
-    """
+    """Serializes the User model."""
 
     email = serializers.EmailField(
         required=True,
@@ -64,12 +75,10 @@ class UserSerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-
         instance = User()
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
-
         instance.email = validated_data.get('email', instance.email)
         instance.person = validated_data.get('person', instance.person)
 
@@ -81,11 +90,9 @@ class UserSerializer(DispatchModelSerializer):
         return instance
 
 class FileSerializer(DispatchModelSerializer):
-    """
-    Serializes the File model.
-    """
+    """Serializes the File model."""
 
-    file = serializers.FileField(write_only=True, validators=[ValidFilename])
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
@@ -102,7 +109,7 @@ class FileSerializer(DispatchModelSerializer):
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
-    img = serializers.ImageField(write_only=True, validators=[ValidFilename])
+    img = serializers.ImageField(write_only=True, validators=[FilenameValidator])
     filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
@@ -112,7 +119,9 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     url_thumb = serializers.CharField(source='get_thumbnail_url', read_only=True)
 
     authors = PersonSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.IntegerField())
 
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
@@ -149,9 +158,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 class TagSerializer(DispatchModelSerializer):
-    """
-    Serializes the Tag model.
-    """
+    """Serializes the Tag model."""
     class Meta:
         model = Tag
         fields = (
@@ -160,9 +167,7 @@ class TagSerializer(DispatchModelSerializer):
         )
 
 class TopicSerializer(DispatchModelSerializer):
-    """
-    Serializes the Topic model.
-    """
+    """Serializes the Topic model."""
     class Meta:
         model = Topic
         fields = (
@@ -171,9 +176,7 @@ class TopicSerializer(DispatchModelSerializer):
         )
 
 class ImageAttachmentSerializer(DispatchModelSerializer):
-    """
-    Serializes the ImageAttachment model without including full Image instance.
-    """
+    """Serializes the ImageAttachment model without including full Image instance."""
 
     image = ImageSerializer(read_only=True)
     image_id =  serializers.IntegerField(write_only=True, required=False)
@@ -188,12 +191,13 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
         )
 
 class ImageGallerySerializer(DispatchModelSerializer):
-    """
-    Serializes the ImageGallery model without including full Image instance.
-    """
+    """Serializes the ImageGallery model without including full Image instance."""
 
     images = ImageAttachmentSerializer(read_only=True, many=True)
-    attachment_json = JSONField(required=False, write_only=True, validators=[ValidateImageGallery])
+    attachment_json = JSONField(
+        required=False,
+        write_only=True,
+        validators=[ImageGalleryValidator])
 
     class Meta:
         model = ImageGallery
@@ -205,19 +209,18 @@ class ImageGallerySerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-
-        # Create new ImageGallery instance!
+        # Create new ImageGallery instance
         instance = ImageGallery()
 
         # Then save as usual
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
-
         # Update all the basic fields
         instance.title = validated_data.get('title', instance.title)
 
-        # Save instance before processing/saving content in order to save associations to correct ID
+        # Save instance before processing/saving content in order to
+        # save associations to correct ID
         instance.save()
 
         attachment_json = validated_data.get('attachment_json', False)
@@ -228,9 +231,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
         return instance
 
 class SectionSerializer(DispatchModelSerializer):
-    """
-    Serializes the Section model.
-    """
+    """Serializes the Section model."""
     class Meta:
         model = Section
         fields = (
@@ -239,8 +240,18 @@ class SectionSerializer(DispatchModelSerializer):
             'slug',
         )
 
+class VideoSerializer(DispatchModelSerializer):
+    """Serializes the Video model."""
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
+        )
+
 class FieldSerializer(serializers.Serializer):
-    type = serializers.CharField()
+    type = serializers.CharField(required=False)
     name = serializers.CharField()
     label = serializers.CharField()
     many = serializers.BooleanField()
@@ -264,7 +275,9 @@ class ImageEmbedSerializer(serializers.Serializer):
 
     def fetch(self, ids):
         """Returns a dictionary of ids to Image instances with prefetched Authors"""
-        return Image.objects.prefetch_related('authors').in_bulk(ids)
+        return Image.objects \
+            .prefetch_related('authors') \
+            .in_bulk(ids)
 
     def to_internal_value(self, data):
         if 'image' in data:
@@ -282,7 +295,9 @@ class ImageGalleryEmbedSerializer(serializers.Serializer):
 
     def fetch(self, ids):
         """Returns a dictionary of ids to ImageGallery instances with prefetched Authors"""
-        return ImageGallery.objects.prefetch_related('images__image__authors').in_bulk(ids)
+        return ImageGallery.objects \
+            .prefetch_related('images__image__authors') \
+            .in_bulk(ids)
 
     def to_internal_value(self, data):
         if 'gallery' in data:
@@ -315,8 +330,8 @@ class ContentSerializer(serializers.Serializer):
 
     def sanitize_block(self, block):
         """Santizes the data for the given block.
-        If the block has a matching embed serializer, use the `to_internal_value` method
-        """
+        If block has a matching embed serializer, use the `to_internal_value` method"""
+
         embed_type = block.get('type', None)
         data = block.get('data', {})
         serializer = self.serializers.get(embed_type, None)
@@ -343,7 +358,8 @@ class ContentSerializer(serializers.Serializer):
         self.ids[embed_type].append(instance_id)
 
     def load_instances(self, embed_type, ids):
-        """Fetch all queued instances of type `embed_type`, save results to `self.instances`"""
+        """Fetch all queued instances of type `embed_type`, save results
+        to `self.instances`"""
         serializer = self.serializers.get(embed_type, None)
 
         if serializer is None:
@@ -398,15 +414,24 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     content = ContentSerializer()
 
-    authors = PersonSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(write_only=True, child=serializers.IntegerField())
+    authors = AuthorSerializer(source='get_authors', many=True, read_only=True)
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator])
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)
-    tag_ids = serializers.ListField(write_only=True, required=False, child=serializers.IntegerField())
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
 
     topic = TopicSerializer(read_only=True)
-    topic_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
+    topic_id = serializers.IntegerField(
+        write_only=True,
+        allow_null=True,
+        required=False)
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
@@ -499,14 +524,14 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_topic(topic_id)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image', 'topic'], revision=False)
+        instance.save(
+            update_fields=['content', 'featured_image', 'topic'],
+            revision=False)
 
         return instance
 
 class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
-    """
-    Serializes the Page model.
-    """
+    """Serializes the Page model."""
 
     id = serializers.ReadOnlyField(source='parent_id')
     slug = serializers.SlugField(validators=[SlugValidator()])
@@ -517,7 +542,9 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
 
-    current_version = serializers.IntegerField(read_only=True, source='revision_id')
+    current_version = serializers.IntegerField(
+        read_only=True,
+        source='revision_id')
 
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
@@ -575,7 +602,9 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_featured_image(featured_image)
 
         # Perform a final save (without revision), update content and featured image
-        instance.save(update_fields=['content', 'featured_image'], revision=False)
+        instance.save(
+            update_fields=['content', 'featured_image'],
+            revision=False)
 
         return instance
 
@@ -601,7 +630,9 @@ class WidgetSerializer(serializers.Serializer):
 class ZoneSerializer(serializers.Serializer):
     id = serializers.SlugField(read_only=True)
     name = serializers.CharField(read_only=True)
-    widget = PrimaryKeyField(allow_null=True, serializer=WidgetSerializer(allow_null=True))
+    widget = PrimaryKeyField(
+        allow_null=True,
+        serializer=WidgetSerializer(allow_null=True))
     data = JSONField(required=False)
 
     def validate(self, data):

@@ -4,7 +4,7 @@ from rest_framework import status
 
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.models import Article, Person, Section
+from dispatch.models import Article, Author, Person, Section
 
 class ArticlesTests(DispatchAPITestCase):
 
@@ -58,7 +58,7 @@ class ArticlesTests(DispatchAPITestCase):
         # Check data
         self.assertEqual(response.data['headline'], 'Test headline')
         self.assertEqual(response.data['section']['name'], 'Test Section')
-        self.assertEqual(response.data['authors'][0]['full_name'], 'Test Person')
+        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
     def test_create_article_existing_slug(self):
@@ -154,6 +154,63 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertNotEqual(article.data['importance'], NEW_IMPORTANCE)
         self.assertNotEqual(article.data['seo_keyword'], NEW_SEO_KEYWORD)
         self.assertNotEqual(article.data['seo_description'], NEW_SEO_DESCRIPTION)
+
+    def test_author_person(self):
+        """Should not be able to create article with an author type and missing author person"""
+
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        url = reverse('api-articles-list')
+
+        data = {
+            'headline': 'Test headline',
+            'section_id': section.id,
+            'author_ids': [{'type': 'author'}],
+            'content': [],
+            'slug': 'new-slug'
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_author_type(self):
+        """Should be able to create article with an author and missing author type"""
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        data = {
+            'headline': 'Test headline',
+            'section_id': section.id,
+            'author_ids': [{'person': 1}],
+            'content': [],
+            'slug': 'new-slug'
+        }
+
+        url = reverse('api-articles-list')
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_author_type_format(self):
+        """Should not be able to create article with an author and non-string author type"""
+
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        data = {
+            'headline': 'Test headline',
+            'section_id': section.id,
+            'author_ids': [{'person': person.id, 'type': 0}],
+            'content': [],
+            'slug': 'new-slug'
+        }
+
+        url = reverse('api-articles-list')
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_article_tags(self):
         """Should be able to update and remove article tags"""
@@ -561,7 +618,7 @@ class ArticlesTests(DispatchAPITestCase):
 
         article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3', author_names=['Test Person2'])
 
-        author_id = article_1.data['authors'][0]['id']
+        author_id = article_1.data['authors'][0]['person']['id']
 
         url = '%s?author=%s' % (reverse('api-articles-list'), author_id)
         response = self.client.get(url, format='json')
@@ -582,7 +639,7 @@ class ArticlesTests(DispatchAPITestCase):
 
         article_4 = DispatchTestHelpers.create_article(self.client, headline='Article 4', slug='article-2', author_names=['Test Person2'])
 
-        author_id = article_1.data['authors'][0]['id']
+        author_id = article_1.data['authors'][0]['person']['id']
 
         url = '%s?author=%s' % (reverse('api-articles-list'), author_id)
         response = self.client.get(url, format='json')

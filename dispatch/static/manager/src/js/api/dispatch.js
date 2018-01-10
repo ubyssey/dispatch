@@ -370,6 +370,23 @@ const DispatchAPI = {
     },
     delete: (token, eventId) => {
       return deleteRequest('events', eventId, null, token)
+    }
+  },
+  videos: {
+    list: (token, query) => {
+      return getRequest('videos', null, query, token)
+    },
+    get: (token, videoId) => {
+      return getRequest('videos', videoId, null, token)
+    },
+    save: (token, videoId, data) => {
+      return patchRequest('videos', videoId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('videos', null, data, token)
+    },
+    delete: (token, videoId) => {
+      return deleteRequest('videos', videoId, null, token)
     },
   },
   'users': {

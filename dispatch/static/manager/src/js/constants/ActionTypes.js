@@ -13,6 +13,7 @@ export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
 export const USERS = resourceActionTypes('USERS')
+export const VIDEOS = resourceActionTypes('VIDEOS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

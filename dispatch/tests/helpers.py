@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.models import Article, Person, Section, Image
+from dispatch.models import Article, Author, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
 
 class DispatchTestHelpers(object):
@@ -15,9 +15,14 @@ class DispatchTestHelpers(object):
 
         # Create test person
         authors = []
+
         for author in author_names:
             (person, created) = Person.objects.get_or_create(full_name=author)
-            authors.append(person.id)
+            authors.append({
+                'person': person.id,
+                'type': 'author'
+            })
+
         # Create test section
         (section, created) = Section.objects.get_or_create(name=section, slug=slug_section)
 
@@ -187,5 +192,18 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-topics-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_video(cls, client, title='testVideo', url='testVideoURL'):
+        """Create a dummy video instance"""
+
+        data = {
+            'title': title,
+            'url': url,
+        }
+
+        url = reverse('api-videos-list')
 
         return client.post(url, data, format='json')

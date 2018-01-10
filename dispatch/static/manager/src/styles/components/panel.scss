@@ -29,3 +29,16 @@
   // Text
   font-weight: $font-weight-semi-bold;
 }
+
+.c-panel__select {
+  // Structure
+  flex: 2;
+  line-height: 250%;
+}
+
+.pt-button.c-panel__select__right {
+  flex: 1;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  margin-right: 0;
+}

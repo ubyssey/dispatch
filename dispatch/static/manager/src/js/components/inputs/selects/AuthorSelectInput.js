@@ -1,9 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import R from 'ramda'
 
 import ItemSelectInput from './ItemSelectInput'
 
 import personsActions from '../../../actions/PersonsActions'
+
+const AUTHOR_TYPES = ['author', 'illustrator', 'photographer', 'videographer']
 
 class AuthorSelectInputComponent extends React.Component {
 
@@ -17,22 +20,39 @@ class AuthorSelectInputComponent extends React.Component {
     this.props.listPersons(this.props.token, queryObj)
   }
 
+  update(selected, extraFields) {
+    // Merge person IDs with their corresponding author type
+    const authors = selected.map(id => ({
+      person: id,
+      type: extraFields[id]
+    }))
+
+    this.props.update(authors)
+  }
+
   render() {
+    const selected = this.props.selected
+      .map(author => author.person)
+
+    const extraFields = this.props.selected
+      .reduce((fields, author) => R.assoc(author.person, author.type, fields), {})
+
     return (
       <ItemSelectInput
+        selected={selected}
+        extraFields={extraFields}
         many={this.props.many}
-        selected={this.props.selected}
         inline={this.props.inline}
         showSortableList={this.props.showSortableList}
         results={this.props.persons.ids}
         entities={this.props.entities.persons}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(selected, extraFields) => this.update(selected, extraFields)}
         fetchResults={(query) => this.listPersons(query)}
+        extraFieldOptions={AUTHOR_TYPES}
         attribute='full_name'
         editMessage={this.props.selected.length ? 'Edit authors' : 'Add authors'} />
     )
   }
-
 }
 
 const mapStateToProps = (state) => {

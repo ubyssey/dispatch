@@ -7,6 +7,15 @@ import { FormInput, TextInput, TextAreaInput } from '../inputs'
 require('../../../styles/components/person_form.scss')
 
 export default class PersonForm extends React.Component {
+  listPersons(query) {
+    let queryObj = {}
+
+    if (query) {
+      queryObj['q'] = query
+    }
+
+    this.props.listPersons(this.props.token, queryObj)
+  }
 
   constructor(props) {
     super(props)

@@ -191,6 +191,18 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.USERS.SAVE):
     return showToast('User could not be saved', Intent.DANGER)
 
+  // Videos
+  case fulfilled(types.VIDEOS.CREATE):
+  case fulfilled(types.VIDEOS.SAVE):
+    return showToast('Video saved')
+  case rejected(types.VIDEOS.CREATE):
+  case rejected(types.VIDEOS.SAVE):
+    return showToast('Video could not be saved', Intent.DANGER)
+  case fulfilled(types.VIDEOS.DELETE_MANY):
+    return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.VIDEOS.DELETE_MANY):
+    return showToast('Some videos could not be deleted', Intent.DANGER)
+
   default:
     return toaster
 

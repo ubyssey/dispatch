@@ -69,7 +69,7 @@ class EventAuditPage extends React.Component {
 
   approve(id) {
     this.checkPage()
-    this.props.approveEvent(this.props.token, id)
+    this.props.approveAndPublishEvent(this.props.token, id)
   }
 
   disapprove(id) {

@@ -11,12 +11,18 @@ class DispatchModelViewSet(ModelViewSet):
     def perform_create(self, serializer):
         # Override perform_create to send post_create signal
         instance = serializer.save()
-        post_create.send(sender=self.model, instance=instance, user=self.request.user)
+        post_create.send(
+            sender=self.model,
+            instance=instance,
+            user=self.request.user)
 
     def perform_update(self, serializer):
         # Override perform_update to send post_update signal
         instance = serializer.save()
-        post_update.send(sender=self.model, instance=instance, user=self.request.user)
+        post_update.send(
+            sender=self.model,
+            instance=instance,
+            user=self.request.user)
 
 class DispatchPublishableMixin(object):
     """Custom mixin that adds publish, unpublish routes to ModelViewSet"""
@@ -41,12 +47,18 @@ class DispatchPublishableMixin(object):
     def perform_publish(self, serializer):
         # Publish instance and send post_publish signal
         instance = serializer.publish()
-        post_publish.send(sender=self.model, instance=instance, user=self.request.user)
+        post_publish.send(
+            sender=self.model,
+            instance=instance,
+            user=self.request.user)
 
     def perform_unpublish(self, serializer):
         # Unpublish instance and send post_unpublish signal
         instance = serializer.unpublish()
-        post_unpublish.send(sender=self.model, instance=instance, user=self.request.user)
+        post_unpublish.send(
+            sender=self.model,
+            instance=instance,
+            user=self.request.user)
 
     @detail_route(methods=['post'])
     def publish(self, request, parent_id=None):
@@ -71,27 +83,26 @@ class DispatchPublishableMixin(object):
         return Response(serializer.data)
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
-
     def __init__(self, *args, **kwargs):
         # Override default constructor to call hide_authenticated_fields
         super(DispatchModelSerializer, self).__init__(*args, **kwargs)
 
         self.hide_authenticated_fields()
 
+    def is_authenticated(self):
+        return (self.context.get('request') and
+                self.context.get('request').user.is_authenticated())
+
     def hide_authenticated_fields(self):
-        """Hides authenticated_fields if request context is missing or user is not authenticated"""
+        """Hides authenticated_fields if request context is missing or
+        user is not authenticated"""
+        authenticated_fields = getattr(self.Meta, 'authenticated_fields', [])
 
-        authenticated_fields = getattr(self.Meta, 'authenticated_fields', None)
-
-        if not authenticated_fields:
-            return
-
-        if not self.context.get('request') or not self.context.get('request').user.is_authenticated():
+        if not self.is_authenticated():
             for field in authenticated_fields:
                 self.fields.pop(field)
 
 class DispatchPublishableSerializer(object):
-
     def publish(self):
         return self.instance.publish()
 

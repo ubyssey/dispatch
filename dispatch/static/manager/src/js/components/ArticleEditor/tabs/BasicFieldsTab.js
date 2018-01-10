@@ -8,10 +8,8 @@ import TagSelectInput from '../../inputs/selects/TagSelectInput'
 import TopicSelectInput from '../../inputs/selects/TopicSelectInput'
 
 export default function BasicFieldsTab(props) {
-
   return (
     <div>
-
       <FormInput
         label='Slug'
         error={props.errors.slug}>
@@ -66,5 +64,4 @@ export default function BasicFieldsTab(props) {
 
     </div>
   )
-
 }
