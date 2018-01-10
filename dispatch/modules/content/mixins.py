@@ -68,14 +68,14 @@ class AuthorMixin(object):
                 aStringC += 'Illustrations by ' + self.get_author_string(authors['illustrator'])
             if author == 'videographer':
                 aStringD += 'Videos by ' + self.get_author_string(authors['videographer'])
-            if aStringA != '':
-                authorTypeString += aStringA
-            if aStringB != '':
-                authorTypeString += ', ' + aStringB
-            if aStringC != '':
-                authorTypeString += ', ' + aStringC
-            if aStringD != '':
-                authorTypeString += ', ' + aStringD
+        if aStringA != '':
+            authorTypeString += aStringA
+        if aStringB != '':
+            authorTypeString += ', ' + aStringB
+        if aStringC != '':
+            authorTypeString += ', ' + aStringC
+        if aStringD != '':
+            authorTypeString += ', ' + aStringD
         return authorTypeString
 
     def get_author_url(self):
