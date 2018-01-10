@@ -5,6 +5,7 @@ from rest_framework import status
 from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Article, Author, Person, Section
+from dispatch.modules.content.mixins import AuthorMixin
 
 class ArticlesTests(DispatchAPITestCase):
 
@@ -154,6 +155,37 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertNotEqual(article.data['importance'], NEW_IMPORTANCE)
         self.assertNotEqual(article.data['seo_keyword'], NEW_SEO_KEYWORD)
         self.assertNotEqual(article.data['seo_description'], NEW_SEO_DESCRIPTION)
+
+    def test_author_type_string(self):
+
+        url = reverse('api-articles-list')
+
+        (person1, created) = Person.objects.get_or_create(full_name='Test Person')
+        (person2, created) = Person.objects.get_or_create(full_name='Test Person 2')
+        (person3, created) = Person.objects.get_or_create(full_name='Test Person 3')
+        (person4, created) = Person.objects.get_or_create(full_name='Test Person 4')
+        (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
+
+        data = {
+            'headline': 'Test headline',
+            'section_id': section.id,
+            'author_ids': [{'person': person1.id, 'type': 'author'},
+                            {'person': person2.id, 'type': 'photographer'},
+                            {'person': person3.id, 'type': 'illustrator'},
+                            {'person': person4.id, 'type': 'videographer'}],
+            'content': [],
+            'slug': 'new-slug',
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        id = response.data['id']
+
+        article = Article.objects.get(id=id)
+
+        article_string = article.get_author_type_string()
+
+        self.assertEqual(article_string, 'Written by Test Person, Photos by Test Person 2, Illustrations by Test Person 3, Videos by Test Person 4')
 
     def test_author_person(self):
         """Should not be able to create article with an author type and missing author person"""

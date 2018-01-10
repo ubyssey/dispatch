@@ -165,27 +165,33 @@ class ItemSelectInput extends React.Component {
 
   renderSortableList() {
     const extraFields = this.props.extraFieldOptions.map(field => (
-      <option key={field}>{field}</option>
+      <option
+        key={field[1]}
+        value={field[1]}>{field[0]}</option>
     ))
+
+    const extraFieldsSelect = (item) => (
+      <div className='c-input--item-select__item'>
+        <div className='c-panel__select'>{item[this.props.attribute]}</div>
+        <select
+          className='pt-button c-panel__select__right'
+          value={this.props.extraFields[item.id]}
+          onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
+      </div>
+    )
+
+    const standardSelect = (item) => (
+      <div className='c-input--item-select__item'>{item[this.props.attribute]}</div>
+    )
 
     return (
       <SortableList
         items={this.getSelected()}
         entities={this.props.entities}
         onChange={selected => this.props.onChange(selected, this.props.extraFields)}
-        renderItem={item => {
-          if (this.props.extraFieldOptions.length)
-            return (
-              <div className='c-input--item-select__item'>
-              <div className='c-panel__select'>{item[this.props.attribute]}</div>
-                <select
-                  className='pt-button c-panel__select__right'
-                  value={this.props.extraFields[item.id]}
-                  onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
-              </div>
-            )
-          else return (<div className='c-input--item-select__item'>{item[this.props.attribute]}</div>)
-        }} />
+        renderItem={item =>
+          this.props.extraFieldOptions.length ? extraFieldsSelect(item) : standardSelect(item)
+        } />
     )
   }
 

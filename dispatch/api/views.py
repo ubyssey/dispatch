@@ -87,7 +87,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(section_id=section)
 
         if author is not None:
-            queryset = queryset.filter(authors__id=author)
+            queryset = queryset.filter(authors__person_id=author)
 
         return queryset
 

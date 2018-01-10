@@ -6,7 +6,12 @@ import ItemSelectInput from './ItemSelectInput'
 
 import personsActions from '../../../actions/PersonsActions'
 
-const AUTHOR_TYPES = ['author', 'illustrator', 'photographer', 'videographer']
+const AUTHOR_TYPES = [
+  ['Author', 'author'],
+  ['Illustrator', 'illustrator'],
+  ['Photographer', 'photographer'],
+  ['Videographer', 'videographer'],
+]
 
 class AuthorSelectInputComponent extends React.Component {
 
@@ -24,7 +29,7 @@ class AuthorSelectInputComponent extends React.Component {
     // Merge person IDs with their corresponding author type
     const authors = selected.map(id => ({
       person: id,
-      type: extraFields[id]
+      type: extraFields[id] || this.props.defaultAuthorType
     }))
 
     this.props.update(authors)
@@ -77,5 +82,15 @@ const AuthorSelectInput = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AuthorSelectInputComponent)
+
+// Author types
+AuthorSelectInput.AUTHOR = 'author'
+AuthorSelectInput.PHOTOGRAPHER = 'photographer'
+AuthorSelectInput.VIDEOGRAPHER = 'videographer'
+AuthorSelectInput.ILLUSTRATOR = 'illustrator'
+
+AuthorSelectInput.defaultProps = {
+  defaultAuthorType: AuthorSelectInput.AUTHOR
+}
 
 export default AuthorSelectInput

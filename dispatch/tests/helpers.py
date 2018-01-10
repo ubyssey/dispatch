@@ -6,6 +6,7 @@ from rest_framework import status
 
 from dispatch.models import Article, Author, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
+from dispatch.modules.content.mixins import AuthorMixin
 
 class DispatchTestHelpers(object):
 

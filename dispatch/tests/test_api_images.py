@@ -184,7 +184,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         new_data = {
             'title': 'Test image',
-            'author_ids': [person.id]
+            'author_ids': [{'person': person.id}]
         }
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -193,12 +193,12 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test image')
-        self.assertEqual(response.data['authors'][0]['full_name'], 'Test Person')
+        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
 
         image_instance = Image.objects.get(pk=image.data['id'])
 
         self.assertEqual(image_instance.title, 'Test image')
-        self.assertEqual(image_instance.authors.all()[0].full_name, 'Test Person')
+        self.assertEqual(image_instance.authors.all()[0].person.full_name, 'Test Person')
 
     def test_delete_image_unauthorized(self):
         """Should not be able to delete an image without authorization."""
