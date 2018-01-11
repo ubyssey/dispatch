@@ -1,40 +1,39 @@
 import React from 'react'
 
-require('isomorphic-fetch')
 import fetchJsonp from 'fetch-jsonp'
 import url from 'url'
 
 import { Button } from '@blueprintjs/core'
 import { FormInput, TextInput } from '../../../components/inputs'
 
+require('isomorphic-fetch')
 require('../styles/embeds/video.scss')
 
 const TWITTER_API_URL = 'https://api.twitter.com/1.1/statuses/oembed.json'
 
 class TwitterEmbedComponent extends React.Component {
 
-  stripTweetId(url) {
-    var id = url.replace(/^(?:https?:\/\/)?(?:www\.)?twitter\.com\/?(\w+)\/(status)\//g, '')
-    this.props.updateField('id', id)
-    this.props.stopEditing()
+  validateTweetURL(url) {
+    return /^(?:https?:\/\/)?(?:www\.)?twitter\.com\/?(\w+)\/(status)\/(\d+)/g.test(url)
   }
 
   getTweet() {
-    fetchJsonp(
-      TWITTER_API_URL + url.format({ query: { url: this.props.data.url } })
-    )
-    .then((response) => response.json())
-    .then(data => {
-      console.log(data)
-      // ADD YOUR CODE HERE
-    })
+    const that = this
+    if (this.validateTweetURL(this.props.data.url)) {
+      fetchJsonp(TWITTER_API_URL + url.format({query: {url: this.props.data.url}}))
+      .then((response) => response.json())
+      .then(data => {
+        that.props.updateField('tweet', data.html)
+        this.props.stopEditing()
+      })
+    }
   }
 
   renderInput() {
     return (
       <div className='o-embed o-embed--tweet'>
         <form>
-          <FormInput label='Tweet URL'>
+          <FormInput label='URL'>
             <TextInput
               fill={true}
               value={this.props.data.url}
@@ -50,8 +49,8 @@ class TwitterEmbedComponent extends React.Component {
 
   renderTweet() {
     return (
-      <div className='o-embed o-embed--tweet'>
-        {this.props.data.tweet}
+      <div>
+        <div dangerouslySetInnerHTML={{__html: `${this.props.data.tweet}`}} />
       </div>
     )
   }
@@ -74,3 +73,5 @@ export default {
     tweet: ''
   }
 }
+
+//https://twitter.com/Interior/status/507185938620219395
