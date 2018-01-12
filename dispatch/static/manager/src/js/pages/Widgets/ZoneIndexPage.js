@@ -36,10 +36,6 @@ class ZoneIndexPageComponent extends React.Component {
     return prevProps.location.query.q !== props.location.query.q
   }
 
-  handleSearchZones(query) {
-    this.props.searchZones(query)
-  }
-
   render() {
 
     return (
@@ -65,7 +61,8 @@ class ZoneIndexPageComponent extends React.Component {
           emptyMessage={'You haven\'t defined any zones yet.'}
 
           actions={{
-            searchItems: (query) => this.handleSearchZones(query)
+            searchItems: (query) => this.props.searchZones(query)
+
           }}
           />
       </DocumentTitle>
