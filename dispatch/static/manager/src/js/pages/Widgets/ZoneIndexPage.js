@@ -7,10 +7,33 @@ import ItemList from '../../components/ItemList'
 
 import * as zonesActions from '../../actions/ZonesActions'
 
+const DEFAULT_LIMIT = 15
+
 class ZoneIndexPageComponent extends React.Component {
 
   componentWillMount() {
-    this.props.listZones(this.props.token)
+    this.props.listZones(this.props.token, this.getQuery())
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.isNewQuery(prevProps, this.props)) {
+      this.props.listZones(this.props.token, this.getQuery())
+    }
+  }
+
+  getQuery() {
+    var query = {
+      limit: DEFAULT_LIMIT,
+    }
+
+    if (this.props.location.query.q) {
+      query.q = this.props.location.query.q
+    }
+    return query
+  }
+
+  isNewQuery(prevProps, props) {
+    return prevProps.location.query.q !== props.location.query.q
   }
 
   render() {
@@ -37,6 +60,9 @@ class ZoneIndexPageComponent extends React.Component {
 
           emptyMessage={'You haven\'t defined any zones yet.'}
 
+          actions={{
+            searchItems: (query) => this.props.searchZones(query)
+          }}
           />
       </DocumentTitle>
     )
@@ -58,6 +84,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     listZones: (token, query) => {
       dispatch(zonesActions.list(token, query))
+    },
+    searchZones: (query) => {
+      dispatch(zonesActions.search(query))
     }
   }
 }
