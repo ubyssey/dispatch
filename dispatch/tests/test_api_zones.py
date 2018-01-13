@@ -23,6 +23,9 @@ TEST_WIDGET_B_ID = 'test-widget-b'
 TEST_WIDGET_B_NAME = 'Test Widget B'
 TEST_WIDGET_B_TEMPLATE  = 'widgets/test-widget-b.html'
 
+TEST_WIDGET_C_ID = 'test-widget-c'
+TEST_WIDGET_C_NAME = 'Test Widget C'
+
 class TestZoneA(Zone):
     id = TEST_ZONE_A_ID
     name = TEST_ZONE_A_NAME
@@ -48,6 +51,20 @@ class TestWidgetB(Widget):
     zones = [TestZoneA, TestZoneB]
 
     title = CharField('Title')
+
+
+class TestWidgetC(TestWidgetB):
+    id = TEST_WIDGET_C_ID
+    name = TEST_WIDGET_C_NAME
+    template = TEST_WIDGET_B_TEMPLATE
+
+    zones = [TestZoneA, TestZoneB]
+
+    title = CharField('Title')
+
+    def before_save(self, data):
+        data['title'] += ' TEST'
+        return data
 
 class ZonesTests(DispatchAPITestCase):
 
@@ -328,6 +345,26 @@ class ZonesTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['data']['title'], 'Test B')
+
+    def test_zones_update_widget_before_save(self):
+        """Test before_save method on widget"""
+
+        register.zone(TestZoneA)
+        register.widget(TestWidgetC)
+
+        url = reverse('api-zones-detail', args=[TEST_ZONE_A_ID])
+
+        data = {
+            'widget': TEST_WIDGET_C_ID,
+            'data': {
+                'title': 'Test C'
+            }
+        }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['data']['title'], 'Test C TEST')
 
     def test_zones_update_remove_widget(self):
         """Should be able to remove widget from zone"""

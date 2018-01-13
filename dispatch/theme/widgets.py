@@ -51,31 +51,41 @@ class Zone(object):
 
     @property
     def widgets(self):
-        """Return the widgets compatible with this zone"""
+        """Return the widgets compatible with this zone."""
         return [W() for W in self._widgets]
 
     @classmethod
     def register_widget(cls, widget):
-        """Register a widget with this zone"""
+        """Register a widget with this zone."""
         cls._widgets.append(widget)
 
     @classmethod
     def clear_widgets(cls):
-        """Clear all widgets registered with this zone"""
+        """Clear all widgets registered with this zone."""
         cls._widgets = []
 
+    def before_save(self, widget_id, data):
+        try:
+            widget = ThemeManager.Widgets.get(widget_id)
+            return widget.before_save(data)
+        except:
+            return data
+
     def save(self, validated_data):
-        """Save widget data for this zone"""
+        """Save widget data for this zone."""
 
         (zone, created) = ZoneModel.objects.get_or_create(zone_id=self.id)
 
         zone.widget_id = validated_data['widget']
         zone.data = validated_data['data']
 
+        # Call widget before-save hook
+        zone.data = self.before_save(zone.widget_id, zone.data)
+
         return zone.save()
 
     def delete(self):
-        """Delete widget data for this zone"""
+        """Delete widget data for this zone."""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
 class Widget(object):
@@ -91,11 +101,11 @@ class Widget(object):
         self.data = {}
 
     def set_data(self, data):
-        """Sets data for each field"""
+        """Sets data for each field."""
         self.data = data
 
     def get_data(self):
-        """Returns data from each field"""
+        """Returns data from each field."""
         result = {}
 
         for field in self.fields:
@@ -104,8 +114,7 @@ class Widget(object):
         return result
 
     def to_json(self):
-        """Return JSON representation for this widget"""
-
+        """Return JSON representation for this widget."""
         result = {}
 
         for field in self.fields:
@@ -114,8 +123,7 @@ class Widget(object):
         return result
 
     def prepare_data(self):
-        """Prepare widget data for template"""
-
+        """Prepare widget data for template."""
         result = {}
 
         for field in self.fields:
@@ -125,8 +133,7 @@ class Widget(object):
         return result
 
     def render(self, data=None, add_context=None):
-        """Renders the widget as HTML"""
-
+        """Renders the widget as HTML."""
         template = loader.get_template(self.template)
 
         if not data:
@@ -140,6 +147,9 @@ class Widget(object):
         return template.render(data)
 
     def context(self, data):
-        """Optional method to add additional data to the deplate context before rendering"""
+        """Optional method to add additional data to the deplate context before rendering."""
+        return data
 
+    def before_save(self, data):
+        """Optional before-save hook that is called before widgets are saved."""
         return data
