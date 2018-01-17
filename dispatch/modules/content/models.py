@@ -69,6 +69,7 @@ class Publishable(Model):
     views = PositiveIntegerField(default=0)
 
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
+    featured_video = ForeignKey('VideoAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_video', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
     template_data = JSONField(default={})
@@ -440,9 +441,19 @@ class Image(Model, AuthorMixin):
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
+class VideoAttachment(Model):
+    article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='video_page')
+
+    caption = TextField(blank=True, null=True)
+    credit = TextField(blank=True, null=True)
+    video = ForeignKey(Image, related_name='video', on_delete=SET_NULL, null=True)
+
+    order = PositiveIntegerField(null=True)
+
 class ImageAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='page')
+    article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
 
     caption = TextField(blank=True, null=True)

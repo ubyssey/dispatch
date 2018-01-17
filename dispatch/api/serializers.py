@@ -4,7 +4,8 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
-    File, Page, Author, Section, Tag, Topic, Video)
+    File, Page, Author, Section, Tag, Topic, Video,
+    VideoAttachment)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -106,6 +107,17 @@ class FileSerializer(DispatchModelSerializer):
             'updated_at'
         )
 
+
+class VideoSerializer(DispatchModelSerializer):
+    """Serializes the Video model."""
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
+        )
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
@@ -176,6 +188,21 @@ class TopicSerializer(DispatchModelSerializer):
             'name',
         )
 
+class VideoAttachmentSerializer(DispatchModelSerializer):
+    """Serializes the ImageAttachment model without including full Image instance."""
+
+    video = VideoSerializer(read_only=True)
+    video_id =  serializers.IntegerField(write_only=True, required=False)
+
+    class Meta:
+        model = VideoAttachment
+        fields = (
+            'video',
+            'video_id',
+            'caption',
+            'credit'
+        )
+
 class ImageAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
@@ -239,16 +266,6 @@ class SectionSerializer(DispatchModelSerializer):
             'id',
             'name',
             'slug',
-        )
-
-class VideoSerializer(DispatchModelSerializer):
-    """Serializes the Video model."""
-    class Meta:
-        model = Video
-        fields = (
-            'id',
-            'title',
-            'url',
         )
 
 class FieldSerializer(serializers.Serializer):
@@ -412,6 +429,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -452,6 +470,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'headline',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'authors',
@@ -538,6 +557,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     slug = serializers.SlugField(validators=[SlugValidator()])
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -559,6 +579,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'title',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'published_at',
