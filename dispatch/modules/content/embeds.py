@@ -135,6 +135,11 @@ class GalleryEmbed(AbstractTemplateEmbed):
             'size': len(images)
         }
 
+class TwitterEmbed(AbstractEmbed):
+    @classmethod
+    def render(self, data):
+        return data['tweet']
+
 embeds.register('quote', PullQuoteEmbed)
 embeds.register('code', CodeEmbed)
 embeds.register('advertisement', AdvertisementEmbed)
@@ -143,3 +148,4 @@ embeds.register('list', ListEmbed)
 embeds.register('video', VideoEmbed)
 embeds.register('image', ImageEmbed)
 embeds.register('gallery', GalleryEmbed)
+embeds.register('tweet', TwitterEmbed)
