@@ -73,5 +73,3 @@ export default {
     tweet: ''
   }
 }
-
-//https://twitter.com/Interior/status/507185938620219395
