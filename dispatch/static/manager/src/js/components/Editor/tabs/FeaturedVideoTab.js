@@ -14,14 +14,27 @@ export default function FeaturedVideoTab(props) {
     )
   }
 
-  return (
-    <div>
-      <FormInput
-        label='Video'>
-        <VideoSelectInput
-          selected={props.video}
-          update={updateVideo} />
-      </FormInput>
-    </div>
-  )
+  if (props.featured_video) {
+    return (
+      <div>
+        <FormInput
+          label='Video'>
+          <VideoSelectInput
+            selected={props.featured_video.video}
+            update={updateVideo} />
+        </FormInput>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <FormInput
+          label='Video'>
+          <VideoSelectInput
+            update={updateVideo} />
+        </FormInput>
+      </div>
+    )
+  }
+
 }

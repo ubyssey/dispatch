@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('order', models.PositiveIntegerField(null=True)),
                 ('article', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='video_article', to='dispatch.Article')),
                 ('page', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='video_page', to='dispatch.Page')),
-                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='video', to='dispatch.Image')),
+                ('video', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='video', to='dispatch.Video')),
             ],
         ),
         migrations.AlterField(
