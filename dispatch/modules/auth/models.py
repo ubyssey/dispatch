@@ -26,7 +26,7 @@ class Person(Model):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = CharField(max_length=255, unique=True)
-    is_staff = BooleanField(default=False)
+    #is_staff = BooleanField(default=False)
     is_active = BooleanField(default=True)
     person = OneToOneField(Person, null=True, related_name='person', on_delete=PROTECT)
 
@@ -43,8 +43,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.gen_short_name()
 
-    def has_perm(self, perm, obj=None):
-        return self.is_staff
 
-    def has_module_perms(self, app_label):
-        return self.is_staff
+#TODO: Remove
+    # def has_perm(self, perm, obj=None):
+    #     return self.is_staff
+
+    # def has_module_perms(self, app_label):
+    #     return self.is_staff

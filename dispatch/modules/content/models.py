@@ -23,7 +23,7 @@ from django.dispatch import receiver
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.content.mixins import AuthorMixin
-from dispatch.modules.auth.models import Person, User
+from dispatch.modules.auth.models import Person
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
