@@ -241,6 +241,29 @@ class Publishable(Model):
 
         self.featured_image = attachment
 
+    def save_featured_video(self, data):
+        attachment = self.featured_video
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+            return
+
+        if not attachment:
+            attachment = VideoAttachment()
+
+        attachment.video_id = data.get('video_id', attachment.video_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_video = attachment
+
     def get_previous_revision(self):
         if self.parent == self:
             return self
@@ -447,7 +470,7 @@ class VideoAttachment(Model):
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
-    video = ForeignKey(Image, related_name='video', on_delete=SET_NULL, null=True)
+    video = ForeignKey(Video, related_name='video', on_delete=SET_NULL, null=True)
 
     order = PositiveIntegerField(null=True)
 

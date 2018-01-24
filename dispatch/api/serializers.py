@@ -527,6 +527,10 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         instance.content = validated_data.get('content', instance.content)
 
+        featured_video = validated_data.get('featured_video', False)
+        if featured_video != False:
+            instance.save_featured_video(featured_video)
+
         featured_image = validated_data.get('featured_image', False)
         if featured_image != False:
             instance.save_featured_image(featured_image)
@@ -545,7 +549,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image', 'topic'],
+            update_fields=['content', 'featured_image', 'featured_video', 'topic'],
             revision=False)
 
         return instance
@@ -623,9 +627,13 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
+        featured_image = validated_data.get('featured_image', False)
+        if featured_image != False:
+            instance.save_featured_image(featured_image)
+
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image'],
+            update_fields=['content', 'featured_image', 'featured_video'],
             revision=False)
 
         return instance
