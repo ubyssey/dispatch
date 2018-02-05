@@ -28,7 +28,7 @@ export default function FeaturedVideoTab(props) {
     )
   }
 
-  if (props.featured_video) {
+  if (props.featured_video && props.featured_video.video) {
     return (
       <div>
         <FormInput
