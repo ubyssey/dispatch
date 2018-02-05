@@ -192,7 +192,7 @@ class VideoAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
     video = VideoSerializer(read_only=True)
-    video_id =  serializers.IntegerField(write_only=True, required=False)
+    video_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = VideoAttachment
@@ -207,7 +207,7 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
     image = ImageSerializer(read_only=True)
-    image_id =  serializers.IntegerField(write_only=True, required=False)
+    image_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = ImageAttachment
