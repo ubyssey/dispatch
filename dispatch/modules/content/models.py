@@ -226,6 +226,13 @@ class Publishable(Model):
                 attachment.delete()
             return
 
+        if data['image_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_image = None
+            return
+
         if not attachment:
             attachment = ImageAttachment()
 
@@ -247,6 +254,13 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
+            return
+
+        if data['video_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_video = None
             return
 
         if not attachment:
