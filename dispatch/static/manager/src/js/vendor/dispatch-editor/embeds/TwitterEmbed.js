@@ -23,8 +23,8 @@ class TwitterEmbedComponent extends React.Component {
       fetchJsonp(TWITTER_API_URL + url.format({query: {url: this.props.data.url}}))
       .then((response) => response.json())
       .then(data => {
-        that.props.updateField('tweet', data.html)
-        this.props.stopEditing()
+        that.props.updateField('html', data.html)
+        that.props.stopEditing()
       })
     }
   }
@@ -49,16 +49,14 @@ class TwitterEmbedComponent extends React.Component {
 
   renderTweet() {
     return (
-      <div>
-        <div dangerouslySetInnerHTML={{__html: `${this.props.data.tweet}`}} />
-      </div>
+      <div dangerouslySetInnerHTML={{__html: `${this.props.data.html}`}} />
     )
   }
 
   render() {
     return (
       <div className='o-embed o-embed--tweet'>
-        {this.props.data.tweet ? this.renderTweet() : this.renderInput()}
+        {this.props.data.html ? this.renderTweet() : this.renderInput()}
       </div>
     )
   }
@@ -68,8 +66,6 @@ export default {
   type: 'tweet',
   component: TwitterEmbedComponent,
   defaultData: {
-    url: '',
-    id: '',
-    tweet: ''
+    html: ''
   }
 }

@@ -16,5 +16,3 @@ htmlcov/
 dispatch/tests/media
 
 dispatch/apps/**/migrations/
-
-.idea/
