@@ -1,6 +1,6 @@
 from django.db.models import (
     Model, CharField, SlugField, TextField,
-    BooleanField, OneToOneField, ImageField, PROTECT)
+    BooleanField, OneToOneField, ImageField, PROTECT, ManyToManyField)
 from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
@@ -26,27 +26,11 @@ class Person(Model):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = CharField(max_length=255, unique=True)
-    #is_staff = BooleanField(default=False)
     is_active = BooleanField(default=True)
     person = OneToOneField(Person, null=True, related_name='person', on_delete=PROTECT)
+
+    groups = ManyToManyField(Group)
 
     USERNAME_FIELD = 'email'
 
     objects = UserManager(Person)
-
-    def gen_short_name(self):
-        if self.person:
-            return self.person.__str__()
-        else:
-            return self.email
-
-    def get_short_name(self):
-        return self.gen_short_name()
-
-
-#TODO: Remove
-    # def has_perm(self, perm, obj=None):
-    #     return self.is_staff
-
-    # def has_module_perms(self, app_label):
-    #     return self.is_staff
