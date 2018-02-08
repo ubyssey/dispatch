@@ -316,6 +316,9 @@ class WidgetField(Field):
         return self.get_widget_json(data)
 
     def prepare_data(self, data):
+        if data is None:
+            return None
+
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
