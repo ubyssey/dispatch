@@ -32,7 +32,7 @@ export default function ArticleToolbar(props) {
           <AnchorButton
             intent={Intent.SUCCESS}
             onClick={() => props.saveArticle()}>
-            <span className='pt-icon-standard pt-icon-small-tick'></span>YOLO
+            <span className='pt-icon-standard pt-icon-small-tick'></span>Update
           </AnchorButton>
           {props.article.is_published ? unpublish : publish}
           <AnchorButton
