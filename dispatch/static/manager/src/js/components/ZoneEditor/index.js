@@ -59,6 +59,16 @@ class ZoneEditorComponent extends React.Component {
     this.props.saveZone(this.props.token, this.props.zoneId, this.processZone(this.props.zone))
   }
 
+  hasNestedWidgets() {
+    let fields = this.props.widget.fields
+    for (let i = 0; i < fields.length; i++) {
+      if (fields[i].type == 'widget') {
+        return true
+      }
+    }
+    return false
+  }
+
   render() {
     if (!this.props.zone) {
       return (<div>Loading</div>)
@@ -69,7 +79,7 @@ class ZoneEditorComponent extends React.Component {
         error={this.props.errors[field.name]}
         key={`widget-field__${this.props.widget.id}__${field.name}`}
         field={field}
-        data={R.prop(field.name, this.props.zone.data || {}) || {}}
+        data={!this.hasNestedWidgets() ? R.prop(field.name, this.props.zone.data || {}) : (R.prop(field.name, this.props.zone.data || {}) || {})}
         onChange={(data) => this.updateField(field.name, data)} />
     )) : null
 
