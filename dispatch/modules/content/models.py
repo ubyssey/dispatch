@@ -53,7 +53,7 @@ class Publishable(Model):
     Base model for Article and Page models.
     """
 
-    preview_id = UUIDField(default=uuid.uuid4, unique=True)
+    preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
     head = BooleanField(default=False, db_index=True)
 
@@ -162,7 +162,6 @@ class Publishable(Model):
             # If this is a revision, set it to be the head of the list and increment the revision id
             self.head = True
             self.revision_id += 1
-            self.preview_id = uuid.uuid4()
 
             previous_revision = self.get_previous_revision()
 
