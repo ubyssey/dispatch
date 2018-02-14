@@ -19,22 +19,29 @@ class UserManager(BaseUserManager):
 
         person = self.personModel.objects.create()
         user.person = person
-        print('creating user')
 
         user.save()
 
-        if is_staff:
-            print('adding groups')
+        if is_staff == 'true':
             group = Group.objects.get(name='Admin')
-            print(group.permissions)
             user.groups.add(group.id)
-            if( user.has_perm('Can add user') ):
-                print('correct permissions added')
+            print(get_perms(user))
+            if user.groups.filter(name='Admin').exists():
+                print('is in the admin group')
+            else:
+                print('is not in the admin group')
+
+        else:
+            print('is not a staff member')
+
 
         return user
 
-    def create_user(self, email, password=None):
-        return self._create_user(email, password)
+    def create_user(self, data):
+        #return self._create_user(email, password, True, True, False)
+        return self._create_user(email=data['email'], password='ubyssey2018', is_staff=data['is_staff'], is_active=True, is_superuser=False)
+    # def create_user(self, validated_data):
+    #     return
 
     def create_superuser(self, email, password):
         return self._create_user(email, password, True, True, True)

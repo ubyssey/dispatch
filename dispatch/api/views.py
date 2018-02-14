@@ -152,6 +152,19 @@ class UserViewSet(DispatchModelViewSet):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+    def create(self, request):
+        is_staff = request.data.get('is_staff', None)
+
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        instance = serializer.save(is_staff=is_staff)
+
+        print(instance)
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""
     model = Tag
