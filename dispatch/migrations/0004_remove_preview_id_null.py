@@ -9,7 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0004_populate_preview_id_values'),
+        ('dispatch', '0003_add_preview_id'),
     ]
 
     operations = [
