@@ -16,11 +16,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='article',
             name='preview_id',
-            field=models.UUIDField(default=uuid.uuid4, unique=True),
+            field=models.UUIDField(default=uuid.uuid4),
         ),
         migrations.AlterField(
             model_name='page',
             name='preview_id',
-            field=models.UUIDField(default=uuid.uuid4, unique=True),
+            field=models.UUIDField(default=uuid.uuid4),
         ),
     ]
