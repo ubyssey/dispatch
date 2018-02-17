@@ -1,4 +1,3 @@
-import datetime
 import StringIO
 import os
 import re
@@ -33,7 +32,7 @@ class Topic(Model):
     last_used = DateTimeField(null=True)
 
     def update_timestamp(self):
-        self.last_used = datetime.datetime.now()
+        self.last_used = timezone.now()
         self.save()
 
 class Section(Model):
@@ -130,7 +129,7 @@ class Publishable(Model):
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
         self.is_published = True
         if self.published_at is None:
-            self.published_at = datetime.datetime.now()
+            self.published_at = timezone.now()
         self.save(revision=False)
 
         # Set published version for all articles
