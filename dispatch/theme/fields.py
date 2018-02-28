@@ -252,10 +252,11 @@ class WidgetField(Field):
             self.widgets[widget.id] = WidgetSerializer(widget).data
 
     def validate(self, data):
-        if not data or not data['id']:
-            if self.required:
-                raise InvalidField('Widget must be selected')
-            return
+        if not data['id']:
+            raise InvalidField("Must specify a widget id")
+
+        if not data and self.required:
+            raise InvalidField('Widget must be selected')
 
         try:
             if data['id'] and data['data'] is not None:
@@ -294,10 +295,7 @@ class WidgetField(Field):
         if id is None:
             return None
 
-        try:
-            return ThemeManager.Widgets.get(id)
-        except WidgetNotFound:
-            raise WidgetNotFound('Widget with id %s does not exist' % id)
+        return ThemeManager.Widgets.get(id)
 
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])

@@ -1,16 +1,25 @@
 import React from 'react'
 import R from 'ramda'
 
-import Panel from '../Panel'
 import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
-import WidgetFieldWrapper from '../ZoneEditor/WidgetField'
+
+import FieldGroup from './FieldGroup'
 
 export default class WidgetFieldComponent extends React.Component {
   handleWidgetChange(widgetId) {
-    this.props.onChange({
-      id: widgetId,
-      data: {}
-    })
+    if (!widgetId) {
+      // Set data to null when removing widget
+      this.props.onChange(null)
+    } else {
+      console.log('changing', {
+        id: widgetId,
+        data: {}
+      })
+      this.props.onChange({
+        id: widgetId,
+        data: {}
+      })
+    }
   }
 
   updateField(name, data) {
@@ -23,7 +32,7 @@ export default class WidgetFieldComponent extends React.Component {
   }
 
   getWidgetId() {
-    return this.props.data.id
+    return this.props.data.id || null
   }
 
   getWidget() {
@@ -39,22 +48,17 @@ export default class WidgetFieldComponent extends React.Component {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
 
-    let fields = widget ? widget.fields.map((field) => (
-      <WidgetFieldWrapper
-        error={R.prop(field.name, this.props.errors || {})}
-        key={`widget-field__${widget.id}__${field.name}`}
-        field={field}
-        data={widgetData[field.name]}
-        onChange={(data) => this.updateField(field.name, data)} />
-    )) : null
+    const fields = widget ? (
+      <FieldGroup
+        title={`Edit ${this.props.field.label}`}
+        name={`widget-field__${this.props.field.name}__${widget.id}`}
+        fields={widget.fields || []}
+        data={widgetData}
+        errors={this.props.errors || {}}
+        onChange={(name, data) => this.updateField(name, data)} />
+    ) : null
 
-    if (fields) {
-      fields = (
-        <Panel title={`Edit ${this.props.field.label}`}>
-          {fields}
-        </Panel>
-      )
-    }
+    console.log('ID', this.getWidgetId())
 
     return (
       <div>

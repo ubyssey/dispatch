@@ -15,7 +15,6 @@ class MetaZone(type):
         super(MetaZone, cls).__init__(name, bases, nmspc)
 
 class Zone(object):
-
     __metaclass__ = MetaZone
 
     def __init__(self):
@@ -88,7 +87,7 @@ class Zone(object):
 
         # Call widget before-save hook
         zone.data = self.before_save(zone.widget_id, zone.data)
-
+        
         return zone.save()
 
     def delete(self):
