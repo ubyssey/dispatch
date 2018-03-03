@@ -107,7 +107,6 @@ class ItemSelectInput extends React.Component {
   }
 
   renderDropdown() {
-    console.log('selected', this.getSelected())
     const selected = this.getSelected()
       .filter(id => this.props.entities[id])
       .map(id => this.props.entities[id])
@@ -197,7 +196,6 @@ class ItemSelectInput extends React.Component {
   }
 
   render() {
-    console.log('rending', this.props)
     const anchorButton = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
