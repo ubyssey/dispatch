@@ -39,9 +39,6 @@ class Zone(object):
         if not self._is_loaded:
             self._load_zone()
 
-        print self._zone
-        print self._widget
-
         if not self._zone or not self._widget:
             return {}
 
@@ -86,7 +83,6 @@ class Zone(object):
 
         # Call widget before-save hook on nested widgets
         for i in range(len(list(zone.data.keys()))):
-            print(zone.data.keys()[i])
             current_key = zone.data.keys()[i]
             if isinstance(zone.data[current_key], dict) and ('id' in zone.data[current_key].keys()) and ('data' in zone.data[current_key].keys()):
                 zone.data[current_key]['data'] = self.before_save(zone.data[current_key]['id'], zone.data[current_key]['data'])
