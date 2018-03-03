@@ -304,7 +304,7 @@ class WidgetField(Field):
         widget = self.get_widget(data['id'])
 
         if widget is None:
-            return {}
+            return None
 
         widget.set_data(data['data'])
 
