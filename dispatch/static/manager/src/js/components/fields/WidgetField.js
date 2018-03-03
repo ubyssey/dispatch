@@ -11,10 +11,6 @@ export default class WidgetFieldComponent extends React.Component {
       // Set data to null when removing widget
       this.props.onChange(null)
     } else {
-      console.log('changing', {
-        id: widgetId,
-        data: {}
-      })
       this.props.onChange({
         id: widgetId,
         data: {}
@@ -57,8 +53,6 @@ export default class WidgetFieldComponent extends React.Component {
         errors={this.props.errors || {}}
         onChange={(name, data) => this.updateField(name, data)} />
     ) : null
-
-    console.log('ID', this.getWidgetId())
 
     return (
       <div>
