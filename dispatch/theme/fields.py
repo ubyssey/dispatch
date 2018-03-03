@@ -295,10 +295,17 @@ class WidgetField(Field):
         if id is None:
             return None
 
-        return ThemeManager.Widgets.get(id)
+        try:
+            return ThemeManager.Widgets.get(id)
+        except WidgetNotFound:
+            return None
 
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
+
+        if widget is None:
+            return {}
+
         widget.set_data(data['data'])
 
         return {

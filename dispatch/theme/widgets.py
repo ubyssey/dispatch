@@ -4,7 +4,7 @@ from django.template import loader
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import MetaFields, Field
-from dispatch.theme.exceptions import InvalidField
+from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.models import Zone as ZoneModel
 
 class MetaZone(type):
@@ -25,8 +25,11 @@ class Zone(object):
     def _load_zone(self):
         try:
             self._zone = ZoneModel.objects.get(zone_id=self.id)
-            self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
-            self._widget.set_data(self._zone.data)
+            try:
+                self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
+                self._widget.set_data(self._zone.data)
+            except WidgetNotFound:
+                self._widget = None
             self._is_loaded = True
         except ZoneModel.DoesNotExist:
             pass
@@ -35,6 +38,9 @@ class Zone(object):
     def data(self):
         if not self._is_loaded:
             self._load_zone()
+
+        print self._zone
+        print self._widget
 
         if not self._zone or not self._widget:
             return {}
@@ -87,7 +93,7 @@ class Zone(object):
 
         # Call widget before-save hook
         zone.data = self.before_save(zone.widget_id, zone.data)
-        
+
         return zone.save()
 
     def delete(self):
