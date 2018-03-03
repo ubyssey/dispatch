@@ -15,7 +15,7 @@ export default function FieldGroup(props) {
       key={`${props.name}__${field.name}`}
       field={field}
       error={props.errors[field.name]}
-      data={R.prop(field.name, props.data || {}) || {}}
+      data={R.prop(field.name, props.data || {}) || null}
       onChange={(data) => props.onChange(field.name, data)} />
   ))
 
