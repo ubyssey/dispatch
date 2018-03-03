@@ -28,23 +28,23 @@ export default class WidgetFieldComponent extends React.Component {
   }
 
   getWidgetId() {
-    return this.props.data.id || null
+    return R.path(['data', 'id'], this.props) || null
   }
 
   getWidget() {
     const id = this.getWidgetId()
-    return R.path(['widgets', id], this.props.field)
+    return R.path(['field', 'widgets', id], this.props) || null
   }
 
   getWidgetData() {
-    return this.props.data.data || {}
+    return R.path(['data', 'data'], this.props) || {}
   }
 
   render() {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
 
-    const fields = widget ? (
+    const fields = widget && widget.fields.length ? (
       <FieldGroup
         title={`Edit ${this.props.field.label}`}
         name={`widget-field__${this.props.field.name}__${widget.id}`}
