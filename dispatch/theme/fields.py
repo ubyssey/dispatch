@@ -298,7 +298,7 @@ class WidgetField(Field):
         try:
             return ThemeManager.Widgets.get(id)
         except WidgetNotFound:
-            return None
+            raise WidgetNotFound('Widget with id %s does not exist' % id)
 
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
