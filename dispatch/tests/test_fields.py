@@ -756,7 +756,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
             testfield.validate(value_sz)
 
-            self.assertEqual(value, testfield.prepare_data(value_sz))
+            self.assertEqual(testfield.prepare_data(value_sz), value)
 
         value_test(-7418529)
         value_test(0)
@@ -794,10 +794,10 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         testfield = BoolField('Test')
 
         testfield.validate(True)
-        self.assertEqual(True, testfield.prepare_data(True))
+        self.assertEqual(testfield.prepare_data(True), True)
 
         testfield.validate(False)
-        self.assertEqual(False, testfield.prepare_data(False))
+        self.assertEqual(testfield.prepare_data(False), False)
 
     def test_boolfield_invalid_data(self):
         """Ensure that BoolField correctly rejects invalid data"""
@@ -817,11 +817,11 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = CharField('Test', required=True)
         testfield.validate('test')
-        self.assertEqual('test', testfield.prepare_data('test'))
+        self.assertEqual(testfield.prepare_data('test'), 'test')
 
         testfield = TextField('Test', required=True)
         testfield.validate('test')
-        self.assertEqual('test', testfield.prepare_data('test'))
+        self.assertEqual(testfield.prepare_data('test'), 'test')
 
         testfield = DateTimeField('Test', required=True)
         date = datetime.today()
@@ -831,26 +831,26 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = IntegerField('Test', required=True)
         testfield.validate('5')
-        self.assertEqual(5, testfield.prepare_data('5'))
+        self.assertEqual(testfield.prepare_data('5'), 5)
 
     def test_fields_notrequired_empty(self):
         """Not required fields should accept empty values"""
 
         testfield = CharField('Test')
         testfield.validate('')
-        self.assertEqual('', testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), '')
 
         testfield = TextField('Test')
         testfield.validate('')
-        self.assertEqual('', testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), '')
 
         testfield = DateTimeField('Test')
         testfield.validate('')
-        self.assertEqual(None, testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), None)
 
         testfield = IntegerField('Test')
         testfield.validate('')
-        self.assertEqual(None, testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), None)
 
 
     def test_fields_required_empty(self):
