@@ -614,17 +614,37 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(widget, None)
 
-    def test_widget_field_invalid_data(self):
-        """Trying to validate invalid data should result in InvalidField error"""
+    def test_validate_widget_field_no_id(self):
+        """Trying to validate invalid data (no id) should result in InvalidField error"""
 
         testfield = WidgetField('Title', [TestWidgetSub])
 
         # The data to be validated - valid data are basestrings
-        widget_id = 1
+        field_data = {
+            'id': '',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+            }
+        }
 
         try:
-            testfield.validate(widget_id)
+            testfield.validate(field_data)
             self.fail('Widget ID was invalid - validate method should have raised Invalid Field')
+        except InvalidField:
+            pass
+
+    def test_validate_widget_field_required_no_data(self):
+        """Trying to validate invalid data (no data) should result in InvalidField error"""
+
+        testfield = WidgetField('Title', [TestWidgetSub], required=True)
+
+        # The data to be validated - valid data are basestrings
+        field_data = ''
+
+        try:
+            testfield.validate(field_data)
+            self.fail('Widget data was invalid - validate method should have raised Invalid Field')
         except InvalidField:
             pass
 

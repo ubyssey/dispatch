@@ -252,11 +252,11 @@ class WidgetField(Field):
             self.widgets[widget.id] = WidgetSerializer(widget).data
 
     def validate(self, data):
-        if not data['id']:
-            raise InvalidField("Must specify a widget id")
-
         if not data and self.required:
             raise InvalidField('Widget must be selected')
+
+        if not data['id']:
+            raise InvalidField("Must specify a widget id")
 
         try:
             if data['id'] and data['data'] is not None:
