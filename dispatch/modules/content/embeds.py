@@ -83,6 +83,9 @@ class AdvertisementEmbed(AbstractTemplateEmbed):
 class PullQuoteEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/quote.html'
 
+class PollEmbed(AbstractTemplateEmbed):
+    TEMPLATE = 'embeds/poll.html'
+
 class ImageEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/image.html'
 
@@ -135,6 +138,7 @@ class GalleryEmbed(AbstractTemplateEmbed):
             'size': len(images)
         }
 
+embeds.register('poll', PollEmbed)
 embeds.register('quote', PullQuoteEmbed)
 embeds.register('code', CodeEmbed)
 embeds.register('advertisement', AdvertisementEmbed)

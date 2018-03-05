@@ -10,6 +10,7 @@ import {
   GalleryEmbed,
   CodeEmbed,
   WidgetEmbed,
+  PollEmbed
 } from '../../vendor/dispatch-editor'
 
 const embeds = [
@@ -19,6 +20,7 @@ const embeds = [
   PullQuoteEmbed,
   GalleryEmbed,
   WidgetEmbed,
+  PollEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {
