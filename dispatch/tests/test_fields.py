@@ -581,6 +581,39 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(type(widget), type(testwidget))
 
+    def test_get_widget_from_widget_field_no_id(self):
+        """Test the case where None id is passed to 'get_widget' """
+
+        register.widget(TestWidget)
+        
+        testwidget = TestWidget()
+
+        testfield = WidgetField('Title', [TestWidgetSub])
+
+        field_data = {
+            'id': None
+        }
+
+        widget = testfield.get_widget(field_data['id'])
+
+        self.assertEqual(widget, None)
+
+    def test_get_widget_json_no_widget(self):
+        """Test the case where None widget is passed to 'get_widget_json' """
+        register.widget(TestWidget)
+        
+        testwidget = TestWidget()
+
+        testfield = WidgetField('Title', [TestWidgetSub])
+
+        field_data = {
+            'id': None
+        }
+
+        widget = testfield.get_widget_json(field_data)
+
+        self.assertEqual(widget, None)
+
     def test_widget_field_invalid_data(self):
         """Trying to validate invalid data should result in InvalidField error"""
 
@@ -645,6 +678,15 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         prepared_data = testfield.prepare_data(field_data)
 
         self.assertEqual(type(prepared_data), type(widget))
+
+    def test_widget_field_prepare_data_no_data(self):
+        """Test the case where None data is passed to 'prepare_data' """
+
+        widget = WidgetField('Title', [TestWidgetSub])
+
+        data = None
+
+        self.assertEqual(widget.prepare_data(data), None)
 
     def test_get_all_widgets(self):
         """Get all the widgets associated with a field"""
