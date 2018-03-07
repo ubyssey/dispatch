@@ -4,7 +4,7 @@ from django.template import loader
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.fields import MetaFields, Field
-from dispatch.theme.exceptions import InvalidField
+from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.models import Zone as ZoneModel
 
 class MetaZone(type):
@@ -15,7 +15,6 @@ class MetaZone(type):
         super(MetaZone, cls).__init__(name, bases, nmspc)
 
 class Zone(object):
-
     __metaclass__ = MetaZone
 
     def __init__(self):
@@ -26,8 +25,11 @@ class Zone(object):
     def _load_zone(self):
         try:
             self._zone = ZoneModel.objects.get(zone_id=self.id)
-            self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
-            self._widget.set_data(self._zone.data)
+            try:
+                self._widget = ThemeManager.Widgets.get(self._zone.widget_id)
+                self._widget.set_data(self._zone.data)
+            except WidgetNotFound:
+                self._widget = None
             self._is_loaded = True
         except ZoneModel.DoesNotExist:
             pass
@@ -81,7 +83,6 @@ class Zone(object):
 
         # Call widget before-save hook on nested widgets
         for i in range(len(list(zone.data.keys()))):
-            print(zone.data.keys()[i])
             current_key = zone.data.keys()[i]
             if isinstance(zone.data[current_key], dict) and ('id' in zone.data[current_key].keys()) and ('data' in zone.data[current_key].keys()):
                 zone.data[current_key]['data'] = self.before_save(zone.data[current_key]['id'], zone.data[current_key]['data'])
