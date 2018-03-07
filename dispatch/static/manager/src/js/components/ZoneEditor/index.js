@@ -74,18 +74,7 @@ class ZoneEditorComponent extends React.Component {
       return (<div>Loading</div>)
     }
 
-    // const fields = this.props.widget ? this.props.widget.fields.map((field) => (
-    //   <ZoneField
-    //     error={this.props.errors[field.name]}
-    //     key={`widget-field__${this.props.widget.id}__${field.name}`}
-    //     field={field}
-    //     data={!this.hasNestedWidgets() ? R.prop(field.name, this.props.zone.data || {}) : (R.prop(field.name, this.props.zone.data || {}) || {})}
-    //     onChange={(data) => this.updateField(field.name, data)} />
-    // )) : null
-
     const widget = this.props.widget || {}
-
-    console.log('zone data', this.props.zone.data)
 
     const fields = (
       <FieldGroup
