@@ -153,17 +153,20 @@ class UserViewSet(DispatchModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        is_staff = request.data.get('is_staff', None)
+        print(request.user)
+        if request.user.has_perm('dispatch.add_user'):
+            print('user had permission')
+            is_staff = request.data.get('is_staff', None)
+            serializer = self.get_serializer(data=request.data)
+            if not serializer.is_valid():
+                return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            instance = serializer.save(is_staff=is_staff)
 
-        instance = serializer.save(is_staff=is_staff)
-
-        print(instance)
-
-        return Response(status=status.HTTP_202_ACCEPTED)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print('unauthorized')
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""

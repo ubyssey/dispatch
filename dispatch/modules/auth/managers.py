@@ -1,4 +1,5 @@
 from django.contrib.auth.models import BaseUserManager, Group
+from django.contrib.auth.models import Permission
 
 class UserManager(BaseUserManager):
 
@@ -22,19 +23,16 @@ class UserManager(BaseUserManager):
 
         user.save()
 
-        if is_staff == 'true':
+        if is_staff:
             group = Group.objects.get(name='Admin')
-            user.groups.add(group.id)
+            user.groups.add(group)
+
 
 
         return user
 
-    def create_user(self, data):
-        #return self._create_user(email, password, True, True, False)
-        print('in manager!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        return self._create_user(email=data['email'], password='ubyssey2018', is_staff=data['is_staff'], is_active=True, is_superuser=False)
-    # def create_user(self, validated_data):
-    #     return
+    def create_user(self, email, password=None, is_staff=False):
+        return self._create_user(email, password, is_staff, True, False)
 
     def create_superuser(self, email, password):
         return self._create_user(email, password, True, True, True)

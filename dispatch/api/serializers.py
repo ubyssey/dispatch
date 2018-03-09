@@ -76,7 +76,8 @@ class UserSerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-        instance = User.objects.create_user(validated_data)
+        print(validated_data['is_staff'])
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['is_staff'])
         #instance = User()
         return self.update(instance, validated_data)
 

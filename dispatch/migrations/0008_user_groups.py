@@ -8,9 +8,11 @@ def add_groups(apps, schema_editor):
 
     group, created = Group.objects.get_or_create(name='Admin')
     if not created:
-        content_type = ContentType.objects.get(app_label='dispatch', model='user')
-        permission, created = Permission.objects.get_or_create(codename='can_add_user' ,name='Can add user', content_type=content_type)
+        permission = Permission.objects.get(codename='add_user' ,name='Can add user')
+        print(permission)
+        print('group is: ', group)
         group.permissions.add(permission)
+        print('group permissions: ', group.permissions.all())
 
 def remove_groups(apps, schema_editor):
     return
