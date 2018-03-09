@@ -25,20 +25,13 @@ class UserManager(BaseUserManager):
         if is_staff == 'true':
             group = Group.objects.get(name='Admin')
             user.groups.add(group.id)
-            print(get_perms(user))
-            if user.groups.filter(name='Admin').exists():
-                print('is in the admin group')
-            else:
-                print('is not in the admin group')
-
-        else:
-            print('is not a staff member')
 
 
         return user
 
     def create_user(self, data):
         #return self._create_user(email, password, True, True, False)
+        print('in manager!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         return self._create_user(email=data['email'], password='ubyssey2018', is_staff=data['is_staff'], is_active=True, is_superuser=False)
     # def create_user(self, validated_data):
     #     return

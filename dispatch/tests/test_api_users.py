@@ -29,6 +29,26 @@ class UserTests(DispatchAPITestCase):
         self.assertEqual(response.data['email'], TEST_USER_EMAIL)
         self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
 
+    # def test_admin_creation(self):
+    #     """Test creating an admin user"""
+    #
+    #     url = reverse('api-users-list')
+    #
+    #     person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+    #
+    #     data = {
+    #         'person' : person_id,
+    #         'email' : TEST_USER_EMAIL,
+    #         'is_staff' : True
+    #     }
+    #
+    #     response = self.client.post(url, data, format='json')
+    #
+    #     print(response.data)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #
+    #     self.assertEqual(response.data['email'], TEST_USER_EMAIL)
+    #     self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
     def test_user_invalid_person(self):
         """Test to ensure user creation fails if wrong person ID is given"""
 
