@@ -82,10 +82,9 @@ class Zone(object):
         zone.data = validated_data['data']
 
         # Call widget before-save hook on nested widgets
-        for i in range(len(list(zone.data.keys()))):
-            current_key = zone.data.keys()[i]
-            if isinstance(zone.data[current_key], dict) and ('id' in zone.data[current_key].keys()) and ('data' in zone.data[current_key].keys()):
-                zone.data[current_key]['data'] = self.before_save(zone.data[current_key]['id'], zone.data[current_key]['data'])
+        for key in list(zone.data.keys()):
+            if isinstance(zone.data[key], dict) and ('id' in zone.data[key].keys()) and ('data' in zone.data[key].keys()):
+                zone.data[key]['data'] = self.before_save(zone.data[key]['id'], zone.data[key]['data'])
 
         # Call widget before-save hook
         zone.data = self.before_save(zone.widget_id, zone.data)
