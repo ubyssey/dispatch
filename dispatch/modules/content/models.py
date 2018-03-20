@@ -439,9 +439,12 @@ class Image(Model, AuthorMixin):
             #if the image contains XMP data, parse the relevant info
             if xmp_start != -1:
                 xmp_str = d[xmp_start:xmp_end]
-                print xmp_str
-                self.title = self.find_xmp("title", xmp_str)
-                self.caption = self.find_xmp("description", xmp_str)
+                title_string = self.find_xmp("title", xmp_str)
+                if (title_string!=""):
+                    self.title = title_string
+                caption_string = self.find_xmp("description", xmp_str)
+                if (title_string!=""):
+                    self.caption = caption_string
                 name = self.find_xmp("creator", xmp_str)
                 if name != "":
                     person, created = Person.objects.get_or_create(full_name=name)
@@ -460,21 +463,7 @@ class Image(Model, AuthorMixin):
 
             name = self.get_name()
             ext = self.get_extension()
-
-
-            #testing that it works: dont know how to print the name of an author but
-            #the picture definitely has at least one author
-            print "title"
-            print self.title
-            print "caption"
-            print self.caption
-            print "tags"
-            for t in self.tags.all():
-                print t.name
-            print "author"
-            for a in self.authors.all():
-                print a
-
+            
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
