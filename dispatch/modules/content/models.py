@@ -463,6 +463,7 @@ class Image(Model, AuthorMixin):
             name = self.get_name()
             ext = self.get_extension()
 
+
             #testing that it works: dont know how to print the name of an author but
             #the picture definitely has at least one author
             print "title"
