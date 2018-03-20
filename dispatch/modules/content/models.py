@@ -335,7 +335,11 @@ class Image(Model, AuthorMixin):
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
+    caption = CharField(max_length=255, blank=True, null=True)
+
     authors = ManyToManyField(Author, related_name='image_authors')
+
+    tags = ManyToManyField(Tag)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -350,6 +354,8 @@ class Image(Model, AuthorMixin):
     GIF_FORMATS = ('gif', 'GIF',)
 
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
+
+    EXIF_FORMATS = '.(jpg|JPEG|jpeg|JPG|tiff|tif)'
 
     THUMBNAIL_SIZE = 'square'
 
@@ -389,6 +395,32 @@ class Image(Model, AuthorMixin):
         """Returns the thumbnail URL."""
         return '%s%s-%s.jpg' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
+    def find_xmp(self, str, xmp):
+        """finds relevant string from xmp string"""
+
+        str_to_find = "<dc:" + str
+        str_start = xmp.find(str_to_find)
+        if str_start == -1:
+            return ""
+        str_start = xmp.find(">", xmp.find("rdf:li", str_start))
+        str_end = xmp.find('</rdf:li>', str_start)
+        return_string = xmp[str_start+1 : str_end]
+        return return_string
+
+    def find_xmp_list(self, str, xmp):
+        """finds relevant strings from xmp string"""
+        str_to_find = "<dc:" + str
+        str_start = xmp.find(str_to_find)
+        returnlist = list()
+        if str_start == -1:
+            return returnlist
+        str_end = xmp.find("</dc:subject>", str_start)
+        next_in_list = xmp.find('<rdf:li>', str_start, str_end)
+        while (next_in_list != -1):
+            returnlist.append(xmp[next_in_list+8:xmp.find('</rdf:li>', next_in_list, str_end)])
+            next_in_list = xmp.find('<rdf:li>', next_in_list+1, str_end)
+        return returnlist
+
     # Overriding
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
@@ -401,13 +433,48 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+
+            d = self.img.read()
+
+            xmp_start = d.find('<x:xmpmeta')
+            xmp_end = d.find('</x:xmpmeta')
+            #if the image contains XMP data, parse the relevant info
+            if xmp_start != -1:
+                xmp_str = d[xmp_start:xmp_end]
+                print xmp_str
+                self.title = self.find_xmp("title", xmp_str)
+                self.caption = self.find_xmp("description", xmp_str)
+                name = self.find_xmp("creator", xmp_str)
+                if name != "":
+                    person, created = Person.objects.get_or_create(full_name=name)
+                    author = Author.objects.create(person=person, order = 0, type="photographer")
+                    self.authors.add(author)
+                tag_list = self.find_xmp_list("subject", xmp_str)
+                for t in tag_list:
+                    tag, created = Tag.objects.get_or_create(name=t)
+                    self.tags.add(tag)
+
+
+            image = Img.open(StringIO.StringIO(d))
             self.width, self.height = image.size
 
             super(Image, self).save()
 
             name = self.get_name()
             ext = self.get_extension()
+
+            #testing that it works: dont know how to print the name of an author but
+            #the picture definitely has at least one author
+            print "title"
+            print self.title
+            print "caption"
+            print self.caption
+            print "tags"
+            for t in self.tags.all():
+                print t.name
+            print "author"
+            for a in self.authors.all():
+                print a
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
