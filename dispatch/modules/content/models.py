@@ -355,8 +355,6 @@ class Image(Model, AuthorMixin):
 
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
 
-    EXIF_FORMATS = '.(jpg|JPEG|jpeg|JPG|tiff|tif)'
-
     THUMBNAIL_SIZE = 'square'
 
     AuthorModel = Author
