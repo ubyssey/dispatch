@@ -61,6 +61,29 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
             self.assertTrue(self.fileExists(response.data['url_medium']))
             self.assertTrue(self.fileExists(response.data['url_thumb']))
 
+    def test_create_image_jpeg_with_meta(self):
+        """Should be able to upload a JPEG image."""
+
+        url = reverse('api-images-list')
+        file = 'test_image_c.jpg'
+
+        with open(self.get_input_file(file)) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+        # Assert that resized versions were created
+        self.assertTrue(self.fileExists(response.data['url_medium']))
+        self.assertTrue(self.fileExists(response.data['url_thumb']))
+        self.assertEqual(test_image.data['title'], 'Skiing in Vancouver')
+        self.assertEqual(test_image.data['caption'], 'this is a caption')
+        self.assertEqual(test_image.data['tags'].size(), 2)
+        person, created = Person.objects.get_or_create(full_name='Devin Arndt')
+        author = Author.objects.create(person=person, order = 0, type="photographer")
+        self.assertEqual(test_image.data['authors'].size(), 1)
+        for test_image_author in test_image.data['authors']:
+            self.assertEqual(test_image_author, author)
+
     def test_create_image_png(self):
         """Should be able to upload a PNG image."""
 
