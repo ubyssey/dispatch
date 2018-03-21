@@ -75,14 +75,14 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Assert that resized versions were created
         self.assertTrue(self.fileExists(response.data['url_medium']))
         self.assertTrue(self.fileExists(response.data['url_thumb']))
-        self.assertEqual(test_image.data['title'], 'Skiing in Vancouver')
-        self.assertEqual(test_image.data['caption'], 'this is a caption')
-        # self.assertEqual(test_image.data['tags']., 2)
-        # person, created = Person.objects.get_or_create(full_name='Devin Arndt')
-        # author = Author.objects.create(person=person, order = 0, type="photographer")
-        # self.assertEqual(test_image.data['authors'].size(), 1)
-        # for test_image_author in test_image.data['authors']:
-        #     self.assertEqual(test_image_author, author)
+        self.assertEqual(response.data['title'], 'Skiing in Vancouver')
+        self.assertEqual(response.data['caption'], 'this is a caption')
+        # self.assertEqual(response.data['tags']., 2)
+        person, created = Person.objects.get_or_create(full_name='Devin Arndt')
+        author = Author.objects.create(person=person, order = 0, type="photographer")
+
+        for test_image_author in response.data['authors'].all():
+            self.assertEqual(test_image_author, author)
 
     def test_create_image_png(self):
         """Should be able to upload a PNG image."""
