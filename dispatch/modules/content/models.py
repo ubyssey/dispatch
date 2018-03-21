@@ -436,25 +436,29 @@ class Image(Model, AuthorMixin):
 
             xmp_start = d.find('<x:xmpmeta')
             xmp_end = d.find('</x:xmpmeta')
-            #if the image contains XMP data, parse the relevant info
+
+            # If the image contains XMP data, parse the relevant info
             if xmp_start != -1:
                 xmp_str = d[xmp_start:xmp_end]
                 title_string = self.find_xmp("title", xmp_str)
+
                 if (title_string!=""):
                     self.title = title_string
                 caption_string = self.find_xmp("description", xmp_str)
+
                 if (title_string!=""):
                     self.caption = caption_string
+
                 name = self.find_xmp("creator", xmp_str)
                 if name != "":
                     person, created = Person.objects.get_or_create(full_name=name)
                     author = Author.objects.create(person=person, order = 0, type="photographer")
                     self.authors.add(author)
+
                 tag_list = self.find_xmp_list("subject", xmp_str)
                 for t in tag_list:
                     tag, created = Tag.objects.get_or_create(name=t)
                     self.tags.add(tag)
-
 
             image = Img.open(StringIO.StringIO(d))
             self.width, self.height = image.size
@@ -463,7 +467,7 @@ class Image(Model, AuthorMixin):
 
             name = self.get_name()
             ext = self.get_extension()
-            
+
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 

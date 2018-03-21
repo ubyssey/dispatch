@@ -72,17 +72,25 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
+
         # Assert that resized versions were created
         self.assertTrue(self.fileExists(response.data['url_medium']))
         self.assertTrue(self.fileExists(response.data['url_thumb']))
         self.assertEqual(response.data['title'], 'Skiing in vancouver')
         self.assertEqual(response.data['caption'], 'this is a caption')
-        # self.assertEqual(response.data['tags']., 2)
-        person, created = Person.objects.get_or_create(full_name='Devin Arndt')
-        author = Author.objects.create(person=person, order = 0, type="photographer")
 
-        for test_image_author in response.data['authors'].all():
-            self.assertEqual(test_image_author, author)
+        self.assertEqual(response.data['tags'][0]['name'], 'skiing')
+        self.assertEqual(response.data['tags'][1]['name'], 'vancouver')
+
+        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Devin Arndt')
+
+        # for test_image_tag in response.data['tags'].all():
+        #     self.assertTrue(test_image_tag == 'skiing' or test_image_tag = 'vancouver')
+        # person, created = Person.objects.get_or_create(full_name='Devin Arndt')
+        # author = Author.objects.create(person=person, order = 0, type="photographer")
+        #
+        # for test_image_author in response.data['authors'].all():
+        #     self.assertEqual(test_image_author, author)
 
     def test_create_image_png(self):
         """Should be able to upload a PNG image."""
