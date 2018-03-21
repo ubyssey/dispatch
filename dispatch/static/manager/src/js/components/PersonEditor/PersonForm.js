@@ -1,7 +1,7 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { AnchorButton } from '@blueprintjs/core'
-
+import bool from '../fields'
 import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
 require('../../../styles/components/person_form.scss')
@@ -21,13 +21,52 @@ export default class PersonForm extends React.Component {
     super(props)
 
     this.state = {
-      displayImg: null
+      displayImg: null,
+      createUser: false
     }
   }
 
   onDrop(files) {
     this.props.update('image', files[0])
     this.setState({ displayImg: files[0].preview })
+  }
+
+  handleChange() {
+    this.setState({createUser: true})
+  }
+
+  renderCreateUserButton() {
+    return (
+      <AnchorButton
+        onClick={() => this.handleChange()}>Create User</AnchorButton>
+    )
+  }
+
+  renderUserForm() {
+    return (
+      <div>
+        <FormInput
+          label='email'
+          padded={false}
+          error={this.props.errors.email}>
+          <TextInput
+            placeholder='Enter e-mail address'
+            value={this.props.listItem.email}
+            fill={true}
+            onChange={ e => this.props.update('email', e.target.value) } />
+        </FormInput>
+        <FormInput
+          label='Create admin user?'
+          padded={false}>
+          <input
+            name='admin'
+            type='checkbox'
+            onChange={e => this.props.update('is_staff', e.target.value)}
+            />
+        </FormInput>
+      </div>
+
+    )
   }
 
   render() {
@@ -73,7 +112,9 @@ export default class PersonForm extends React.Component {
             fill={true}
             onChange={ e => this.props.update('twitter_url', e.target.value) } />
         </FormInput>
-
+        <div>
+          {this.state.createUser ? this.renderUserForm() : this.renderCreateUserButton()}
+        </div>
         <Dropzone
           ref={(node) => { this.dropzone = node }}
           className='c-person-form__image__dropzone'
