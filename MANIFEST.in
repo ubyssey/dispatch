@@ -8,4 +8,3 @@ recursive-include dispatch/theme *
 recursive-include dispatch/templatetags *
 recursive-include dispatch/static/manager/dist *
 recursive-exclude dispatch/static/manager/node_modules *
-recursive-exclude dispatch/migrations *
