@@ -20,6 +20,7 @@ import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
+import settingsReducer from './SettingsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -41,5 +42,6 @@ export default combineReducers({
   widgets: widgetsReducer,
   events: eventsReducer,
   users: userReducer,
-  videos: videosReducer
+  videos: videosReducer,
+  settings: settingsReducer
 })

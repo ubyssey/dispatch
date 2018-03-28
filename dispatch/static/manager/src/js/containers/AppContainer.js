@@ -20,7 +20,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.app.auth.token
+    token: state.app.auth.token,
+    settings: state.app.settings
   }
 }
 

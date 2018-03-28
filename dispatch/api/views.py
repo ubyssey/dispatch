@@ -16,6 +16,8 @@ from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery,
     Page, Author, Person, Section, Tag, Topic, User, Video)
 
+from dispatch.api.helpers import get_settings
+
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
@@ -404,9 +406,10 @@ class TokenViewSet(viewsets.ViewSet):
 
         if user is not None and user.is_active:
             (token, created) = Token.objects.get_or_create(user=user)
-
+            settings = get_settings(token)
             data = {
-                'token': unicode(token)
+                'token': unicode(token),
+                'settings': settings
             }
 
             return Response(data, status=status.HTTP_202_ACCEPTED)
@@ -419,7 +422,8 @@ class TokenViewSet(viewsets.ViewSet):
         except Token.DoesNotExist:
             return Response({'token_valid': False}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({'token_valid': True})
+        settings = get_settings(token)
+        return Response({'token_valid': True, 'settings': settings})
 
     def delete(self, request):
         token = get_object_or_404(Token, user=request.user)

@@ -26,7 +26,8 @@ export function authenticateUser(email, password, nextPath = '/') {
         dispatch({
           type: fulfilled(types.AUTH.CREATE_TOKEN),
           token: response.token,
-          email: email
+          email: email,
+          settings: response.settings
         })
 
         dispatch(replace(nextPath))
@@ -48,6 +49,7 @@ export function verifyToken(token) {
       .then((response) => {
         dispatch({
           type: fulfilled(types.AUTH.VERIFY_TOKEN),
+          settings: response.settings,
           response
         })
       })
