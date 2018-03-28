@@ -427,3 +427,19 @@ class TokenViewSet(viewsets.ViewSet):
         token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SettingsViewSet(viewsets.GenericViewSet):
+
+    permission_classes = (IsAuthenticated,)
+
+    def list_settings(self, request):
+        is_admin = False
+
+        if request.user.has_perm('dispatch.add_user'):
+            is_admin = True
+
+        data = {
+            'is_admin' : is_admin
+        }
+
+        return Response(data)
