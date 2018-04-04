@@ -22,7 +22,7 @@ export default class PersonForm extends React.Component {
 
     this.state = {
       displayImg: null,
-      createUser: false
+      creatingUser: false
     }
   }
 
@@ -32,7 +32,7 @@ export default class PersonForm extends React.Component {
   }
 
   handleChange() {
-    this.setState({createUser: true})
+    this.setState({creatingUser: !this.state.creatingUser})
   }
 
   renderCreateUserButton() {
@@ -56,6 +56,26 @@ export default class PersonForm extends React.Component {
             onChange={ e => this.props.update('email', e.target.value) } />
         </FormInput>
         <FormInput
+          label='Password'
+          padded={false}
+          error={this.props.errors.email}>
+          <TextInput
+            placeholder='Enter password'
+            value={this.props.listItem.password}
+            fill={true}
+            onChange={ e => this.props.update('passwordA', e.target.value) } />
+        </FormInput>
+        <FormInput
+          label='Confirm password'
+          padded={false}
+          error={this.props.errors.email}>
+          <TextInput
+            placeholder='Confirm password'
+            value={this.props.listItem.password}
+            fill={true}
+            onChange={ e => this.props.update('passwordB', e.target.value) } />
+        </FormInput>
+        <FormInput
           label='Create admin user?'
           padded={false}>
           <input
@@ -64,6 +84,8 @@ export default class PersonForm extends React.Component {
             onChange={e => this.props.update('is_staff', e.target.value)}
             />
         </FormInput>
+        <AnchorButton
+          onClick={() => this.handleChange()}>Cancel</AnchorButton>
       </div>
 
     )
@@ -113,7 +135,8 @@ export default class PersonForm extends React.Component {
             onChange={ e => this.props.update('twitter_url', e.target.value) } />
         </FormInput>
         <div>
-          {this.state.createUser ? this.renderUserForm() : this.renderCreateUserButton()}
+          {this.props.settings.is_admin && !this.state.creatingUser ? this.renderCreateUserButton() : ''}
+          {this.state.creatingUser ? this.renderUserForm() : ''}
         </div>
         <Dropzone
           ref={(node) => { this.dropzone = node }}
