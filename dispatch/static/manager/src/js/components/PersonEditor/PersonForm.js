@@ -1,7 +1,7 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { AnchorButton } from '@blueprintjs/core'
-import bool from '../fields'
+
 import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
 require('../../../styles/components/person_form.scss')
