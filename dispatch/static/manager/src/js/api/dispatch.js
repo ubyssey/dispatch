@@ -98,28 +98,24 @@ function postRequest(route, id=null, payload={}, token=null) {
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
-  const formData = prepareMultipartPayload(payload)
-
   return fetch(
     buildRoute(route, id),
     {
       method: 'POST',
       headers: buildHeaders(token, false),
-      body: formData
+      body: prepareMultipartPayload(payload)
     }
   )
   .then(parseJSON)
 }
 
 function patchMultipartRequest(route, id=null, payload={}, token=null) {
-  const formData = prepareMultipartPayload(payload)
-
   return fetch(
     buildRoute(route, id),
     {
       method: 'PATCH',
       headers: buildHeaders(token, false),
-      body: formData
+      body: prepareMultipartPayload(payload)
     }
   )
   .then(parseJSON)
