@@ -104,4 +104,8 @@ class ItemEditor extends React.Component {
 
 }
 
+ItemEditor.defaultProps = {
+  multipart: false
+}
+
 export default withRouter(ItemEditor)

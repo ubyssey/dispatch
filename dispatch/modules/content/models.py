@@ -451,7 +451,7 @@ class ImageAttachment(Model):
 
 class ImageGallery(Model):
     title = CharField(max_length=255)
-    images = ManyToManyField(ImageAttachment, related_name="images")
+    images = ManyToManyField(ImageAttachment, related_name='images')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -465,7 +465,6 @@ class ImageGallery(Model):
             self.images.add(attachment_obj)
 
 class File(Model):
-
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
 
@@ -477,3 +476,11 @@ class File(Model):
         Returns the absolute file URL.
         """
         return settings.MEDIA_URL + str(self.file)
+
+class Issue(Model):
+    title = CharField(max_length=255)
+    file = FileField(upload_to='issues/%Y/%m')
+    img = ImageField(upload_to='images/%Y/%m')
+    volume = PositiveIntegerField(null=True)
+    issue = PositiveIntegerField(null=True)
+    date = DateTimeField()
