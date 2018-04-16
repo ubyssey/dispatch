@@ -49,6 +49,12 @@ render((
             <Route path=':tagId' component={Pages.Tags.Tag} />
           </Route>
 
+          <Route path='issues'>
+            <IndexRoute component={Pages.Issues.Index} />
+            <Route path='new' component={Pages.Issues.NewIssue} />
+            <Route path=':issueId' component={Pages.Issues.Issue} />
+          </Route>
+
           <Route path='topics'>
             <IndexRoute component={Pages.Topics.Index} />
             <Route path='new' component={Pages.Topics.NewTopic} />

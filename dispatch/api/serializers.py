@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery,
+    Article, Image, ImageAttachment, ImageGallery, Issue,
     File, Page, Author, Section, Tag, Topic, Video)
 from dispatch.modules.auth.models import Person, User
 
@@ -104,6 +104,32 @@ class FileSerializer(DispatchModelSerializer):
             'url',
             'created_at',
             'updated_at'
+        )
+
+class IssueSerializer(DispatchModelSerializer):
+    """Serializes the Issue model."""
+
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
+    file_str = serializers.FileField(source='file', read_only=True, use_url=False)
+
+    img = serializers.ImageField(write_only=True, validators=[FilenameValidator])
+    img_str = serializers.ImageField(source='img', read_only=True, use_url=False)
+
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
+    class Meta:
+        model = Issue
+        fields = (
+            'id',
+            'title',
+            'file',
+            'file_str',
+            'img',
+            'img_str',
+            'volume',
+            'issue',
+            'url',
+            'date',
         )
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):

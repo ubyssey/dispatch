@@ -9,6 +9,7 @@ import TextAreaInput from './TextAreaInput'
 import SelectInput from './selects/SelectInput'
 import GallerySelectInput from './selects/GallerySelectInput'
 import DateTimeInput from './DateTimeInput'
+import FileInput from './FileInput'
 
 require('../../../styles/components/inputs.scss')
 
@@ -23,5 +24,6 @@ export {
   TextAreaInput as TextAreaInput,
   SelectInput as SelectInput,
   GallerySelectInput as GallerySelectInput,
-  DateTimeInput as DateTimeInput
+  DateTimeInput as DateTimeInput,
+  FileInput as FileInput
 }
