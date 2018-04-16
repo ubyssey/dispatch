@@ -11,7 +11,8 @@ import {
   getDefaultKeyBinding,
   KeyBindingUtil,
   CompositeDecorator,
-  ContentState
+  ContentState,
+  RichUtils
 } from 'draft-js'
 
 const {hasCommandModifier} = KeyBindingUtil
@@ -261,6 +262,13 @@ class ContentEditor extends React.Component {
     }, 1)
   }
 
+  handleReturn(e) {
+    if (e.shiftKey && e.keyCode === 13) {
+      this.onChange(RichUtils.insertSoftNewline(this.state.editorState))
+      return 'handled'
+    }
+  }
+
   handleKeyCommand(command) {
     if (command === 'insert-link') {
       this.setState({isLinkInputActive: true})
@@ -392,6 +400,7 @@ class ContentEditor extends React.Component {
             spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}
+            handleReturn={e => this.handleReturn(e)}
             handleKeyCommand={c => this.handleKeyCommand(c)}
             keyBindingFn={keyBindingFn}
             blockRendererFn={cb => this.blockRenderer(cb)}

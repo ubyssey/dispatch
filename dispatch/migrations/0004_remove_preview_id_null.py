@@ -9,18 +9,18 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0004_populate_preview_id_values'),
+        ('dispatch', '0003_add_preview_id'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='article',
             name='preview_id',
-            field=models.UUIDField(default=uuid.uuid4, unique=True),
+            field=models.UUIDField(default=uuid.uuid4),
         ),
         migrations.AlterField(
             model_name='page',
             name='preview_id',
-            field=models.UUIDField(default=uuid.uuid4, unique=True),
+            field=models.UUIDField(default=uuid.uuid4),
         ),
     ]

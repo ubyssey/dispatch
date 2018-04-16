@@ -1,4 +1,3 @@
-import datetime
 import StringIO
 import os
 import re
@@ -33,7 +32,7 @@ class Topic(Model):
     last_used = DateTimeField(null=True)
 
     def update_timestamp(self):
-        self.last_used = datetime.datetime.now()
+        self.last_used = timezone.now()
         self.save()
 
 class Section(Model):
@@ -53,7 +52,7 @@ class Publishable(Model):
     Base model for Article and Page models.
     """
 
-    preview_id = UUIDField(default=uuid.uuid4, unique=True)
+    preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
     head = BooleanField(default=False, db_index=True)
 
@@ -131,7 +130,7 @@ class Publishable(Model):
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
         self.is_published = True
         if self.published_at is None:
-            self.published_at = datetime.datetime.now()
+            self.published_at = timezone.now()
         self.save(revision=False)
 
         # Set published version for all articles
@@ -163,7 +162,6 @@ class Publishable(Model):
             # If this is a revision, set it to be the head of the list and increment the revision id
             self.head = True
             self.revision_id += 1
-            self.preview_id = uuid.uuid4()
 
             previous_revision = self.get_previous_revision()
 
@@ -501,7 +499,7 @@ class ImageAttachment(Model):
 
 class ImageGallery(Model):
     title = CharField(max_length=255)
-    images = ManyToManyField(ImageAttachment, related_name="images")
+    images = ManyToManyField(ImageAttachment, related_name='images')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -515,7 +513,6 @@ class ImageGallery(Model):
             self.images.add(attachment_obj)
 
 class File(Model):
-
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
 
@@ -527,3 +524,11 @@ class File(Model):
         Returns the absolute file URL.
         """
         return settings.MEDIA_URL + str(self.file)
+
+class Issue(Model):
+    title = CharField(max_length=255)
+    file = FileField(upload_to='issues/%Y/%m')
+    img = ImageField(upload_to='images/%Y/%m')
+    volume = PositiveIntegerField(null=True)
+    issue = PositiveIntegerField(null=True)
+    date = DateTimeField()

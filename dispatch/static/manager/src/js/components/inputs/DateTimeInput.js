@@ -1,6 +1,6 @@
 import React from 'react'
 import { Popover, Position } from '@blueprintjs/core'
-import { DateTimePicker } from '@blueprintjs/datetime'
+import { DatePicker, DateTimePicker } from '@blueprintjs/datetime'
 
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -24,11 +24,15 @@ function ensureDate(date) {
 export default function DateTimeInput(props) {
   const date = ensureDate(props.value)
 
-  const textString = date ?
-    humanizeDatetime(date)
-    : 'Select a date and time...'
+  const selectString = props.showTimePicker ?
+    'Select a date and time...' :
+    'Select a date...'
 
-  const picker = (
+  const textString = date ?
+    humanizeDatetime(date, props.showTimePicker) :
+    selectString
+
+  const picker = props.showTimePicker ? (
     <DateTimePicker
       value={date || new Date()}
       onChange={props.onChange}
@@ -37,6 +41,15 @@ export default function DateTimeInput(props) {
         selectAllOnFocus: true,
         showArrowButtons: true
       }}
+      datePickerProps={{
+        minDate: MIN_DATE,
+        maxDate: MAX_DATE,
+        showActionsBar: true
+      }} />
+  ) : (
+    <DatePicker
+      value={date || new Date()}
+      onChange={props.onChange}
       datePickerProps={{
         minDate: MIN_DATE,
         maxDate: MAX_DATE,
@@ -61,4 +74,8 @@ export default function DateTimeInput(props) {
       </Popover>
     </div>
   )
+}
+
+DateTimeInput.defaultProps = {
+  showTimePicker: true
 }

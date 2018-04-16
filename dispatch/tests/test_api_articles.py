@@ -1,3 +1,4 @@
+import datetime
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -6,6 +7,7 @@ from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Article, Author, Person, Section
 from dispatch.modules.content.mixins import AuthorMixin
+from django.utils import timezone
 
 class ArticlesTests(DispatchAPITestCase):
 
@@ -443,6 +445,15 @@ class ArticlesTests(DispatchAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_published'], True)
+
+        # Get published_at in datetime format
+        date_format = "%Y-%m-%dT%H:%M:%S.%f"
+        article_published_at = datetime.datetime.strptime(response.data['published_at'], date_format)
+        ten_min_ago = timezone.now() - datetime.timedelta(minutes=10)
+        # Check it was published in correct timezone
+        # aka within the last 10 min
+        self.assertTrue(ten_min_ago < article_published_at)
+        self.assertTrue(article_published_at < timezone.now())
 
     def test_unpublish_article(self):
         """Ensure that an existing article can be unpublished"""

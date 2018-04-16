@@ -6,6 +6,7 @@ import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
 import pagesReducer from './PagesReducer'
 import filesReducer from './FilesReducer'
+import issuesReducer from './IssuesReducer'
 import imagesReducer from './ImagesReducer'
 import templatesReducer from './TemplatesReducer'
 import personsReducer from './PersonsReducer'
@@ -33,6 +34,7 @@ export default combineReducers({
   persons: personsReducer,
   topics: topicsReducer,
   tags: tagsReducer,
+  issues: issuesReducer,
   toaster: toasterReducer,
   integrations: integrationsReducer,
   dashboard: dashboardReducer,
