@@ -7,6 +7,20 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 }
 
+function prepareMultipartPayload(payload) {
+  let formData = new FormData()
+
+  for (var key in payload) {
+    if (payload[key] && payload[key].constructor === File) {
+      formData.append(key, payload[key])
+    } else {
+      formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+    }
+  }
+
+  return formData
+}
+
 function buildRoute(route, id) {
   let pieces = route.split('.')
 
@@ -84,14 +98,7 @@ function postRequest(route, id=null, payload={}, token=null) {
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
-  let formData = new FormData()
-  for (var key in payload) {
-    if (payload[key] && payload[key].constructor === File) {
-      formData.append(key, payload[key])
-    } else {
-      formData.append(key, JSON.parse(JSON.stringify(payload[key])))
-    }
-  }
+  const formData = prepareMultipartPayload(payload)
 
   return fetch(
     buildRoute(route, id),
@@ -105,14 +112,7 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
 }
 
 function patchMultipartRequest(route, id=null, payload={}, token=null) {
-  let formData = new FormData()
-  for (var key in payload) {
-    if (payload[key] && payload[key].constructor === File) {
-      formData.append(key, payload[key])
-    } else {
-      formData.append(key, JSON.parse(JSON.stringify(payload[key])))
-    }
-  }
+  const formData = prepareMultipartPayload(payload)
 
   return fetch(
     buildRoute(route, id),
