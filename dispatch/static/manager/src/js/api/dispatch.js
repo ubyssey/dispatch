@@ -393,6 +393,9 @@ const DispatchAPI = {
     get: (token, userId) => {
       return getRequest('users', userId, null, token)
     },
+    list: (token, query) => {
+      return getRequest('users', null, query, token)
+    },
     create: (token, data) => {
       return postRequest('users', null, data, token)
     },
