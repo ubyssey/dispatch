@@ -14,7 +14,7 @@ class PersonPageComponent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.props.listUsers(this.props.token, {q : this.props.params.personId})
+    this.props.getUser(this.props.token, {q : this.props.params.personId})
 
     this.state = {
       user : {
@@ -39,14 +39,13 @@ class PersonPageComponent extends React.Component {
     this.setState({user : R.assoc(field, value, this.state.user)})
   }
 
-  saveOrCreateUser() {
-    if(this.state.user.isNew == true) {
-      this.props.createUser(this.props.token, this.state.user)
-    }
-    else{
-      this.props.saveUser(this.props.token, this.state.user.id, this.state.user)
-    }
+  saveUser() {
+    this.props.saveUser(this.props.token, this.state.user.id, this.state.user)
     this.clearPasswordFields()
+  }
+
+  createUser() {
+    this.props.createUser(this.props.token, this.state.user)
   }
 
   clearPasswordFields() {
@@ -54,7 +53,7 @@ class PersonPageComponent extends React.Component {
   }
 
   renderUserForm() {
-    const userForm = (
+    return (
       <div className='u-container u-container--padded c-user-form'>
         <div className='c-user-form__heading'>Account Details</div>
         <form onSubmit={e => e.preventDefault()}>
@@ -90,12 +89,11 @@ class PersonPageComponent extends React.Component {
         </form>
         <Button
           intent={Intent.SUCCESS}
-          onClick={() => this.saveOrCreateUser()}>
+          onClick={() => this.saveUser()}>
           Save
         </Button>
       </div>
     )
-    return userForm
   }
 
   initializeUser() {
@@ -110,23 +108,49 @@ class PersonPageComponent extends React.Component {
     const user = this.getUser() ? this.getUser() : emptyUser
     this.setState({user : R.merge(this.state.user, user)})
   }
+  
   renderEditUserButton() {
     return (
       <div className='u-container u-container--padded c-user-form'>
         <Button
           intent={Intent.SUCCESS}
           onClick={() => this.initializeUser()}>
-          Edit User
+          Create/Edit User
+        </Button>
+      </div>
+    )
+  }
+
+  renderCreateUserForm() {
+    return (
+      <div className='u-container u-container--padded c-user-form'>
+        <div className='c-user-form__heading'>Account Details</div>
+        <form onSubmit={e => e.preventDefault()}>
+          <FormInput
+            label='Email'
+            padded={false}>
+            <TextInput
+              placeholder='name@domain.tld'
+              value={this.state.user ? this.state.user.email : ''}
+              fill={true}
+              onChange={ e => this.handleUpdate('email', e.target.value) } />
+          </FormInput>
+        </form>
+        <Button
+          intent={Intent.SUCCESS}
+          onClick={() => this.CreateUser()}>
+          Invite
         </Button>
       </div>
     )
   }
 
   renderUserEditSection() {
-    const userEditSection = this.state.user.id || this.state.user.isNew ? this.renderUserForm() : this.renderEditUserButton()
+    const userEditSection = this.state.user.id ? this.renderUserForm() : (this.state.user.isNew ? this.renderCreateUserForm(): this.renderEditUserButton())
 
     return userEditSection
   }
+
   render() {
     const personEditor = (
       <PersonEditor
@@ -142,8 +166,6 @@ class PersonPageComponent extends React.Component {
       </div>
     )
   }
-
-
 }
 
 const mapStateToProps = (state) => {
@@ -159,14 +181,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    listUsers: (token, query) => {
-      dispatch(userActions.list(token,query))
-    },
     getUser: (token, query) => {
-      dispatch(userActions.get(token, null, query))
-    },
-    setUser: (data) => {
-      dispatch(userActions.set(data))
+      dispatch(userActions.list(token,query))
     },
     saveUser: (token, userId, data) => {
       dispatch(userActions.save(token, userId, data))
