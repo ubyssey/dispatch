@@ -146,6 +146,14 @@ class UserViewSet(DispatchModelViewSet):
 
     permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        queryset = User.objects.all()
+        q = self.request.query_params.get('q', None)
+
+        if q is not None:
+            queryset = queryset.filter(person__id = q)
+        return queryset
+
     def retrieve(self, request, pk=None):
         queryset = User.objects.all()
         if pk == 'me':
@@ -158,8 +166,8 @@ class UserViewSet(DispatchModelViewSet):
         if request.user.has_perm('dispatch.add_user'):
             is_staff = request.data.get('is_staff', None)
             serializer = self.get_serializer(data=request.data)
-            if not serializer.is_valid():
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            
+            serializer.is_valid(raise_exception=True)
 
             instance = serializer.save(is_staff=is_staff)
 

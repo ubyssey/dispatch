@@ -22,73 +22,12 @@ export default class PersonForm extends React.Component {
 
     this.state = {
       displayImg: null,
-      creatingUser: false
     }
   }
 
   onDrop(files) {
     this.props.update('image', files[0])
     this.setState({ displayImg: files[0].preview })
-  }
-
-  handleChange() {
-    this.setState({creatingUser: !this.state.creatingUser})
-  }
-
-  renderCreateUserButton() {
-    return (
-      <AnchorButton
-        onClick={() => this.handleChange()}>Create User</AnchorButton>
-    )
-  }
-
-  renderUserForm() {
-    return (
-      <div>
-        <FormInput
-          label='email'
-          padded={false}
-          error={this.props.errors.email}>
-          <TextInput
-            placeholder='Enter e-mail address'
-            value={this.props.listItem.email}
-            fill={true}
-            onChange={ e => this.props.update('email', e.target.value) } />
-        </FormInput>
-        <FormInput
-          label='Password'
-          padded={false}
-          error={this.props.errors.email}>
-          <TextInput
-            placeholder='Enter password'
-            value={this.props.listItem.password}
-            fill={true}
-            onChange={ e => this.props.update('passwordA', e.target.value) } />
-        </FormInput>
-        <FormInput
-          label='Confirm password'
-          padded={false}
-          error={this.props.errors.email}>
-          <TextInput
-            placeholder='Confirm password'
-            value={this.props.listItem.password}
-            fill={true}
-            onChange={ e => this.props.update('passwordB', e.target.value) } />
-        </FormInput>
-        <FormInput
-          label='Create admin user?'
-          padded={false}>
-          <input
-            name='admin'
-            type='checkbox'
-            onChange={e => this.props.update('is_staff', e.target.value)}
-            />
-        </FormInput>
-        <AnchorButton
-          onClick={() => this.handleChange()}>Cancel</AnchorButton>
-      </div>
-
-    )
   }
 
   render() {
@@ -134,10 +73,6 @@ export default class PersonForm extends React.Component {
             fill={true}
             onChange={ e => this.props.update('twitter_url', e.target.value) } />
         </FormInput>
-        <div>
-          {this.props.settings.is_admin && !this.state.creatingUser ? this.renderCreateUserButton() : ''}
-          {this.state.creatingUser ? this.renderUserForm() : ''}
-        </div>
         <Dropzone
           ref={(node) => { this.dropzone = node }}
           className='c-person-form__image__dropzone'
