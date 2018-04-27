@@ -27,9 +27,9 @@ class PersonPageComponent extends React.Component {
   }
 
   getUser() {
-    for(var id in this.props.entities.remote) {
-      if(this.props.entities.remote[id].person == this.props.params.personId) {
-        return this.props.entities.remote[id]
+    for(var id in this.props.user) {
+      if(this.props.user[id].person == this.props.params.personId) {
+        return this.props.user[id]
       }
     }
     return null
@@ -108,7 +108,7 @@ class PersonPageComponent extends React.Component {
     const user = this.getUser() ? this.getUser() : emptyUser
     this.setState({user : R.merge(this.state.user, user)})
   }
-  
+
   renderEditUserButton() {
     return (
       <div className='u-container u-container--padded c-user-form'>
@@ -170,10 +170,7 @@ class PersonPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.app.users.single,
-    entities: {
-      remote: state.app.entities.users
-    },
+    user: state.app.entities.users,
     token: state.app.auth.token,
     settings: state.app.settings
   }
