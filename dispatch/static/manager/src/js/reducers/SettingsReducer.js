@@ -18,7 +18,7 @@ reducer.handle(fulfilled(types.AUTH.VERIFY_TOKEN), (state, action) => {
 
 reducer.handle(fulfilled(types.AUTH.CREATE_TOKEN), (state, action) => {
   return R.merge(state, {
-    settings: action.settings
+    is_admin: action.settings.is_admin
   })
 })
 
