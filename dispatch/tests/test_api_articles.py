@@ -339,8 +339,9 @@ class ArticlesTests(DispatchAPITestCase):
         url = reverse('api-articles-detail', args=[article.data['id']])
         response = self.client.patch(url, data, format='json')
 
+        response_data_content = list(response.data['content'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['content'], [])
+        self.assertEqual(response_data_content, [])
 
         # Set paragraph content
         data = {
@@ -360,8 +361,8 @@ class ArticlesTests(DispatchAPITestCase):
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['content'][0]['data'], 'This is a test paragraph 1.')
-        self.assertEqual(response.data['content'][1]['data'], 'This is a test paragraph 2.')
+        self.assertEqual(response_data_content[0]['data'], 'This is a test paragraph 1.')
+        self.assertEqual(response_data_content[1]['data'], 'This is a test paragraph 2.')
 
         # Set embeds content
 

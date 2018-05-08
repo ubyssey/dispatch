@@ -287,7 +287,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json(data)
+        json = list(testfield.to_json(data))
 
         # Test some example entries
         self.assertEqual(json[0]['id'], 1)
@@ -409,7 +409,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         except InvalidField:
             self.fail('Field data is valid, exception should not have been thrown')
 
-        json = testfield.to_json(data)
+        json = list(testfield.to_json(data))
 
         image_1 = Image.objects.get(pk=image_1.data['id'])
         image_2 = Image.objects.get(pk=image_2.data['id'])

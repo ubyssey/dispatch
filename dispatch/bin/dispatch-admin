@@ -78,7 +78,7 @@ if __name__ == "__main__":
     try:
         func = commands[command_name]
     except KeyError:
-        print "%s isn't a valid command" % command_name
+        print ("%s isn't a valid command" % command_name)
         exit()
 
     # Execute the function

@@ -312,7 +312,7 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         try:
             data = integration.callback(request.user, request.GET)
-        except IntegrationCallbackError, e:
+        except (IntegrationCallbackError, e):
             return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
@@ -406,7 +406,7 @@ class TokenViewSet(viewsets.ViewSet):
             (token, created) = Token.objects.get_or_create(user=user)
 
             data = {
-                'token': unicode(token)
+                'token': str(token)
             }
 
             return Response(data, status=status.HTTP_202_ACCEPTED)

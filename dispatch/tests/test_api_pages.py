@@ -59,7 +59,8 @@ class PagesTest(DispatchAPITestCase):
             page = Page.objects.get(pk=response.data['id'])
         except Page.DoesNotExist:
             self.fail('The page should exist in the database')
-
+        
+        print(response.data['content'])
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
         self.assertEqual(response.data['slug'], 'test-page')
@@ -132,7 +133,7 @@ class PagesTest(DispatchAPITestCase):
 
         response = self.client.patch(url, data, format='json')
 
-        self.assertEqual(response.data['content'][0]['data'], 'This is some brand new paragraph text')
+        self.assertEqual(list(response.data['content'])[0]['data'], 'This is some brand new paragraph text')
 
         page = Page.objects.get(parent_id=page.data['id'], head=True)
 

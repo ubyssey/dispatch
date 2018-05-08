@@ -140,8 +140,16 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = template.render()
 
-        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
+        print()
+        print('result', result)
+        print()
 
+
+        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
+       
+        print('html', html)
+        print()
+        
         self.assertEqual(result, html)
 
     def test_original_context_method(self):

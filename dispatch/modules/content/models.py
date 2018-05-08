@@ -1,7 +1,8 @@
-import StringIO
+
 import os
 import re
 import uuid
+import io
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -401,7 +402,7 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+            image = Img.open(io.BytesIO(self.img.read()))
             self.width, self.height = image.size
 
             super(Image, self).save()
@@ -428,13 +429,16 @@ class Image(Model, AuthorMixin):
         if file_type in self.JPG_FORMATS:
             file_type = 'JPEG'
 
-        # Write new thumbnail to StringIO object
-        image_io = StringIO.StringIO()
+        # Write new thumbnail to io.StringIO object
+        image_io = io.BytesIO()
+        # image_io = io.StringIO()
+        
         image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', len(str(image_io)), None)
 
+        # thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.getbuffer().nbytes, None)
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 

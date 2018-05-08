@@ -14,11 +14,10 @@ class MetaZone(type):
 
         super(MetaZone, cls).__init__(name, bases, nmspc)
 
-class Zone(object):
-
-    __metaclass__ = MetaZone
+class Zone(object, metaclass = MetaZone):
 
     def __init__(self):
+        # print('initialize')
         self._is_loaded = False
         self._zone = None
         self._widget = None
@@ -57,6 +56,7 @@ class Zone(object):
     @classmethod
     def register_widget(cls, widget):
         """Register a widget with this zone."""
+        # print(cls._widgets)
         cls._widgets.append(widget)
 
     @classmethod
@@ -88,9 +88,7 @@ class Zone(object):
         """Delete widget data for this zone."""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
-class Widget(object):
-
-    __metaclass__ = MetaFields
+class Widget(object, metaclass = MetaFields):
 
     accepted_keywords = ()
     """Accepted extra keyword arguments when rendered via template tag.

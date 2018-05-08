@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from importlib import reload
 reload(sys)
-sys.setdefaultencoding('utf8')
+# py3
+# sys.setdefaultencoding('utf8')
 
 from rest_framework import status
 

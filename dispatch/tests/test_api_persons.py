@@ -14,7 +14,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_person_creation(self):
         """Test simple person creation, checks the response and database"""
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'),  'rb') as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',
@@ -207,7 +207,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test to ensure proper url is returned"""
 
         # Test a good image
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'),  'rb') as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',

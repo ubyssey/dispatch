@@ -2,6 +2,8 @@ from django.utils.safestring import mark_safe
 
 from dispatch.modules.content.embeds import embeds, EmbedException
 
+from functools import reduce
+
 def content_to_html(content):
     """Returns artilce/page content as HTML"""
 
