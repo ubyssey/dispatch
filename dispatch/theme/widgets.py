@@ -17,7 +17,6 @@ class MetaZone(type):
 class Zone(object, metaclass = MetaZone):
 
     def __init__(self):
-        # print('initialize')
         self._is_loaded = False
         self._zone = None
         self._widget = None
@@ -56,7 +55,6 @@ class Zone(object, metaclass = MetaZone):
     @classmethod
     def register_widget(cls, widget):
         """Register a widget with this zone."""
-        # print(cls._widgets)
         cls._widgets.append(widget)
 
     @classmethod
@@ -78,6 +76,7 @@ class Zone(object, metaclass = MetaZone):
 
         zone.widget_id = validated_data['widget']
         zone.data = validated_data['data']
+
 
         # Call widget before-save hook
         zone.data = self.before_save(zone.widget_id, zone.data)
@@ -132,13 +131,16 @@ class Widget(object, metaclass = MetaFields):
 
     def render(self, data=None, add_context=None):
         """Renders the widget as HTML."""
+        # check if add_context is empty
+        if not bool(add_context):
+            add_context = None
+        
         template = loader.get_template(self.template)
-
         if not data:
             data = self.context(self.prepare_data())
-
+        
         if add_context is not None:
-            for key, value in add_context.iteritems():
+            for key, value in add_context.items():
                 if key in self.accepted_keywords:
                     data[key] = value
 

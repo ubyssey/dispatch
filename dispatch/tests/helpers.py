@@ -123,7 +123,7 @@ class DispatchTestHelpers(object):
             }
           ]
         }
-
+        
         return client.post(url, data, format='json')
 
     @classmethod

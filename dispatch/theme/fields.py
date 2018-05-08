@@ -96,7 +96,7 @@ class ModelField(Field):
 
         try:
             if self.many:
-                return map(self.get_model_json, data)
+                return list(map(self.get_model_json, data))
             else:
                 return self.get_model_json(data)
         except:
