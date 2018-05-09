@@ -1,8 +1,6 @@
 from dispatch.theme.fields import MetaFields
 
-class Template:
-
-    __metaclass__ = MetaFields
+class Template(object, metaclass=MetaFields):
 
     def __init__(self):
         self.data = {}
@@ -23,7 +21,6 @@ class Template:
     def prepare_data(self):
         """Prepare data for Django template"""
         result = {}
-
         for field in self.fields:
             result[field.name] = field.prepare_data(self.data.get(field.name))
 

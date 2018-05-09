@@ -10,7 +10,7 @@ from PIL import Image as Img
 from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
+    ImageField, FileField, BooleanField, UUIDField, ForeignKey, CASCADE,
     ManyToManyField, SlugField, SET_NULL)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
@@ -41,7 +41,7 @@ class Section(Model):
     slug = SlugField(unique=True)
 
 class Author(Model):
-    person = ForeignKey(Person)
+    person = ForeignKey(Person, on_delete=CASCADE)
     order = PositiveIntegerField()
     type = CharField(blank=True, default='author', max_length=100)
 
@@ -253,12 +253,12 @@ class Publishable(Model):
 
 class Article(Publishable, AuthorMixin):
 
-    parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
+    parent = ForeignKey('Article', on_delete=CASCADE, related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
-    section = ForeignKey('Section')
+    section = ForeignKey('Section', on_delete=CASCADE)
     authors = ManyToManyField('Author', related_name='article_authors')
-    topic = ForeignKey('Topic', null=True)
+    topic = ForeignKey('Topic', on_delete=CASCADE, null=True)
     tags = ManyToManyField('Tag')
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
@@ -319,8 +319,8 @@ class Article(Publishable, AuthorMixin):
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
 class Page(Publishable):
-    parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
-    parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
+    parent = ForeignKey('Page', on_delete=CASCADE, related_name='page_parent', blank=True, null=True)
+    parent_page = ForeignKey('Page', on_delete=CASCADE, related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
     def get_author_string(self):
@@ -443,9 +443,9 @@ class Image(Model, AuthorMixin):
         default_storage.save(name, thumb_file)
 
 class ImageAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='page')
-    gallery = ForeignKey('ImageGallery', blank=True, null=True)
+    article = ForeignKey(Article, on_delete=CASCADE, blank=True, null=True, related_name='article')
+    page = ForeignKey(Page, on_delete=CASCADE, blank=True, null=True, related_name='page')
+    gallery = ForeignKey('ImageGallery', on_delete=CASCADE, blank=True, null=True)
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)

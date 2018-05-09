@@ -30,7 +30,7 @@ class DispatchPublishableMixin(object):
     def get_publishable_queryset(self):
 
         # Only show unpublished articles to authenticated users
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             queryset = self.model.objects.all()
 
             version = self.request.query_params.get('version', None)
@@ -91,7 +91,7 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
 
     def is_authenticated(self):
         return (self.context.get('request') and
-                self.context.get('request').user.is_authenticated())
+                self.context.get('request').user.is_authenticated)
 
     def hide_authenticated_fields(self):
         """Hides authenticated_fields if request context is missing or
