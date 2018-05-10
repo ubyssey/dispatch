@@ -4184,8 +4184,8 @@ source-map-support@^0.4.2:
     source-map "^0.5.6"
 
 source-map@^0.4.2:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.5.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
   dependencies:
     amdefine ">=0.0.4"
 
