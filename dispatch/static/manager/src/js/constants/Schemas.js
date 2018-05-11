@@ -15,6 +15,7 @@ export const widgetSchema = new Schema('widgets')
 export const eventSchema = new Schema('events')
 export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
+export const inviteSchema = new Schema('invites')
 
 articleSchema.define({
   section: sectionSchema,
@@ -47,5 +48,9 @@ zoneSchema.define({
 })
 
 userSchema.define({
+  person: personSchema
+})
+
+inviteSchema.define({
   person: personSchema
 })

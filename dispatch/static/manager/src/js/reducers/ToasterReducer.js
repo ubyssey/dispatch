@@ -191,6 +191,11 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.USERS.SAVE):
     return showToast('User could not be saved', Intent.DANGER)
 
+  // Invites
+  case fulfilled(types.INVITES.SAVE):
+    return showToast('Invite saved')
+  case fulfilled(types.INVITES.CREATE):
+    return showToast('Invite sent')
   // Videos
   case fulfilled(types.VIDEOS.CREATE):
   case fulfilled(types.VIDEOS.SAVE):

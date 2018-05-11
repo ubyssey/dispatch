@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
+from dispatch.api.helpers import send_invitation
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
     File, Page, Author, Section, Tag, Topic, Video)
-from dispatch.modules.auth.models import Person, User
+from dispatch.modules.auth.models import Person, User, Invite
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
@@ -59,10 +60,11 @@ class UserSerializer(DispatchModelSerializer):
     )
     password_a = serializers.CharField(
         required=False,
+        allow_blank=True,
         write_only=True,
         validators=[PasswordValidator(confirm_field='password_b')]
     )
-    password_b = serializers.CharField(required=False, write_only=True)
+    password_b = serializers.CharField(required=False, allow_blank=True, write_only=True)
 
     class Meta:
         model = User
@@ -72,13 +74,10 @@ class UserSerializer(DispatchModelSerializer):
             'person',
             'password_a',
             'password_b',
-
         )
 
     def create(self, validated_data):
-        print(validated_data['is_staff'])
-        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['is_staff'])
-        #instance = User()
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permissions'])
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -91,6 +90,44 @@ class UserSerializer(DispatchModelSerializer):
         instance.save()
 
         return instance
+
+class InviteSerializer(DispatchModelSerializer):
+    """Serializes the Invite model."""
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    permissions = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        write_only=True
+    )
+
+    class Meta:
+        model = Invite
+        fields = (
+            'id',
+            'email',
+            'person',
+            'permissions',
+            'expiration_date'
+        )
+
+    def create(self, validated_data):
+        instance = Invite()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        send_invitation(validated_data['email'], instance.url)
+        return super(InviteSerializer, self).update(instance, validated_data)
 
 class FileSerializer(DispatchModelSerializer):
     """Serializes the File model."""

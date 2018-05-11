@@ -401,6 +401,26 @@ const DispatchAPI = {
     },
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
+    },
+    delete: (token, userId) => {
+      return deleteRequest('users', userId, null, token)
+    }
+  },
+  'invites': {
+    get: (token, id) => {
+      return getRequest('invites', id, null, token)
+    },
+    create: (token, data) => {
+      return postRequest('invites', null, data, token)
+    },
+    list: (token, query) => {
+      return getRequest('invites', null, query, token)
+    },
+    save: (token, inviteId, data)  => {
+      return patchRequest('invites', inviteId, data, token)
+    },
+    delete: (token, inviteId) => {
+      return deleteRequest('invites', inviteId, null, token)
     }
   }
 }

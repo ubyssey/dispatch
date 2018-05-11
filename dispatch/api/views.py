@@ -1,5 +1,6 @@
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
+from django.conf import settings
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
@@ -14,15 +15,16 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery,
-    Page, Author, Person, Section, Tag, Topic, User, Video)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Invite)
 
-from dispatch.api.helpers import get_settings
+from dispatch.api.helpers import get_settings, modify_permissions, reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
+    InviteSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
@@ -137,6 +139,26 @@ class PersonViewSet(DispatchModelViewSet):
         except ProtectedError:
             raise ProtectedResourceError('Deletion failed because person belongs to a user')
 
+class InviteViewSet(DispatchModelViewSet):
+    """Viewset for the Invite model views."""
+    model = Invite
+    serializer_class = InviteSerializer
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Invite.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = queryset.filter(person__id = q)
+        return queryset
+
+    def create(self, request):
+        if request.user.has_perm('dispatch.add_user'):
+            return super(InviteViewSet, self).create(request)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 class UserViewSet(DispatchModelViewSet):
     """Viewset for User model views."""
     model = User
@@ -164,16 +186,37 @@ class UserViewSet(DispatchModelViewSet):
 
     def create(self, request):
         if request.user.has_perm('dispatch.add_user'):
-            is_staff = request.data.get('is_staff', None)
+            permissions = request.data.get('permissions', None)
             serializer = self.get_serializer(data=request.data)
-            
+
             serializer.is_valid(raise_exception=True)
 
-            instance = serializer.save(is_staff=is_staff)
+            instance = serializer.save(permissions=permissions)
 
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def delete(self, request):
+        if request.user.has_perm('dispatch.remove_user'):
+            return super(UserViewSet, self).delete(request)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def partial_update(self, request, pk=None):
+        user = User.objects.get(pk=pk)
+
+        if user != request.user and not request.user.has_perm('dispatch.change_user'):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        reset = request.data.get('reset', None)
+        if reset == True:
+            reset_password(user.email, request)
+        else:
+            permissions = request.data.get('permissions', None)
+            modify_permissions(user, permissions)
+
+        return super(UserViewSet, self).partial_update(request)
 
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""

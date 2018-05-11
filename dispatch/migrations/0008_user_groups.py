@@ -7,14 +7,16 @@ from django.db import migrations, models
 def add_groups(apps, schema_editor):
 
     group, created = Group.objects.get_or_create(name='Admin')
-    if not created:
-        permission = Permission.objects.get(codename='add_user' ,name='Can add user')
-        print(permission)
-        print('group is: ', group)
-        group.permissions.add(permission)
-        print('group permissions: ', group.permissions.all())
+    permission = Permission.objects.get(codename='add_user' ,name='Can add user')
+    group.permissions.add(permission)
+    permission = Permission.objects.get(codename='change_user', name='Can change user')
+    group.permissions.add(permission)
+    permission = Permission.objects.get(codename='delete_user', name='Can delete user')
+    group.permissions.add(permission)
 
 def remove_groups(apps, schema_editor):
+    group = Group.objects.get(name='Admin')
+    group.delete()
     return
 
 class Migration(migrations.Migration):

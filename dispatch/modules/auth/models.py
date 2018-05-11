@@ -1,12 +1,14 @@
+import uuid
+
 from django.db.models import (
     Model, CharField, SlugField, TextField,
-    BooleanField, OneToOneField, ImageField, PROTECT, ManyToManyField)
+    BooleanField, OneToOneField, ImageField, PROTECT, ManyToManyField, DateTimeField, UUIDField)
 from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
 
 from dispatch.modules.auth.managers import UserManager
-
+from dispatch.modules.auth.helpers import get_expiration_date
 class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
     is_admin = BooleanField(default=True)
@@ -34,3 +36,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     objects = UserManager(Person)
+
+class Invite(Model):
+    email = CharField(max_length=255, unique=True)
+
+    person = OneToOneField(Person, null=False, related_name='invited_person', on_delete=PROTECT)
+
+    permissions = CharField(max_length=255, default='')
+
+    expiration_date = DateTimeField(default=get_expiration_date)
+
+    url = UUIDField(default=uuid.uuid4)
