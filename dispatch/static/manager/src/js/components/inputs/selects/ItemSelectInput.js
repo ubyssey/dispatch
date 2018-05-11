@@ -221,7 +221,7 @@ class ItemSelectInput extends React.Component {
     return (
       <div
         className='c-input c-input--item-select'>
-        {this.props.showSortableList ? this.renderSortableList() : null }
+        {this.props.showSortableList && this.getSelected().length ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
