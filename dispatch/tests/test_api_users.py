@@ -35,26 +35,25 @@ class UserTests(DispatchAPITestCase):
         url = reverse('api-users-list')
 
         person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
-
         data = {
-            'person' : person_id,
             'email' : TEST_USER_EMAIL,
+            'person' : person_id,
             'password_a': 'TheBestPassword',
             'password_b': 'TheBestPassword',
-            'is_staff' : True
+            'permissions': 'admin'
         }
 
         response = self.client.post(url, data, format='json')
 
         user = User.objects.get(person=person_id)
 
-        print(user)
-        print(user.groups)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(response.data['email'], TEST_USER_EMAIL)
         self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
+        self.assertTrue(user.has_perm('dispatch.add_user'))
+
     def test_user_invalid_person(self):
         """Test to ensure user creation fails if wrong person ID is given"""
 
