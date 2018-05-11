@@ -45,6 +45,15 @@ class AuthorSerializer(DispatchModelSerializer):
             'type'
         )
 
+class TagSerializer(DispatchModelSerializer):
+    """Serializes the Tag model."""
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+        
 class UserSerializer(DispatchModelSerializer):
     """Serializes the User model."""
 
@@ -139,6 +148,9 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    caption = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
+    tags = TagSerializer(many=True, read_only=True)
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
@@ -160,6 +172,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'img',
             'filename',
             'title',
+            'caption',
+            'tags',
             'authors',
             'author_ids',
             'url',
@@ -183,15 +197,6 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_authors(authors)
 
         return instance
-
-class TagSerializer(DispatchModelSerializer):
-    """Serializes the Tag model."""
-    class Meta:
-        model = Tag
-        fields = (
-            'id',
-            'name',
-        )
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""
