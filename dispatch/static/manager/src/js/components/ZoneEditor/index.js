@@ -75,7 +75,7 @@ class ZoneEditorComponent extends React.Component {
 
     return (
       <DocumentTitle title={`Widgets - ${this.props.zone.name}`}>
-        <div>
+        <div className='u-flex--fill'>
           <div className='u-container-main'>
             <ListItemToolbar
               name={this.props.zone.name}

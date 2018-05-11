@@ -5,7 +5,7 @@ from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from dispatch.models import Article, Image
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
+from dispatch.api.serializers import ArticleSerializer, ImageSerializer, TopicSerializer, WidgetSerializer
 
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.validators import is_valid_id
@@ -232,6 +232,14 @@ class ArticleField(ModelField):
 
     model = Article
     serializer = ArticleSerializer
+
+class TopicField(ModelField):
+    type = 'topic'
+
+    from dispatch.models import Topic
+
+    model = Topic
+    serializer = TopicSerializer
 
 class ImageField(ModelField):
     type = 'image'

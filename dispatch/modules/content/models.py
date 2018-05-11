@@ -412,6 +412,8 @@ class Image(Model, AuthorMixin):
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
+            image.close()
+
     def save_thumbnail(self, image, size, name, label, file_type):
         """Processes and saves a resized thumbnail version of the image."""
         width, height = size

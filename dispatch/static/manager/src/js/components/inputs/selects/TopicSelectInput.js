@@ -18,9 +18,10 @@ class TopicSelectInputComponent extends React.Component {
   }
 
   render() {
+    console.log(this.props.selected)
     return (
       <ItemSelectInput
-        many={false}
+        many={this.props.many}
         selected={this.props.selected}
         results={this.props.topics.ids}
         entities={this.props.entities.topics}
