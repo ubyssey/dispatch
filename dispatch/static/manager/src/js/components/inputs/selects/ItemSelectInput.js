@@ -96,6 +96,10 @@ class ItemSelectInput extends React.Component {
     return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
   }
 
+  hasSelected() {
+    return this.getSelected().length !== 0
+  }
+
   isNotSelected(id) {
     return !R.contains(id, this.getSelected())
   }
@@ -221,7 +225,7 @@ class ItemSelectInput extends React.Component {
     return (
       <div
         className='c-input c-input--item-select'>
-        {this.props.showSortableList && this.getSelected().length ? this.renderSortableList() : null }
+        {this.props.showSortableList && this.hasSelected() ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
