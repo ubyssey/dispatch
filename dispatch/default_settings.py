@@ -72,7 +72,7 @@ REST_FRAMEWORK = {
     'DATETIME_INPUT_FORMATS': ['iso-8601']
 }
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

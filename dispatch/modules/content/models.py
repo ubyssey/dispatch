@@ -326,6 +326,11 @@ class Page(Publishable):
     def get_author_string(self):
         return None
 
+    def get_absolute_url(self):
+        """
+        Returns page URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
