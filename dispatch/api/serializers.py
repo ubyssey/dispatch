@@ -66,6 +66,8 @@ class UserSerializer(DispatchModelSerializer):
     )
     password_b = serializers.CharField(required=False, allow_blank=True, write_only=True)
 
+    permissions = serializers.CharField(source='get_permissions', read_only=True)
+
     class Meta:
         model = User
         fields = (
@@ -74,6 +76,7 @@ class UserSerializer(DispatchModelSerializer):
             'person',
             'password_a',
             'password_b',
+            'permissions'
         )
 
     def create(self, validated_data):

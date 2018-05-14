@@ -37,6 +37,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager(Person)
 
+    def get_permissions(self):
+        """
+        Returns the user's permissions
+        """
+        permissions = ''
+        if self.has_perm('dispatch.add_user'):
+            permissions = 'admin'
+        return permissions
+
 class Invite(Model):
     email = CharField(max_length=255, unique=True)
 
