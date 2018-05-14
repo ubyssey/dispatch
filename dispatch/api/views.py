@@ -14,7 +14,7 @@ from dispatch.modules.integrations.integrations import integrationLib, Integrati
 from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
-    Article, File, Image, ImageAttachment, ImageGallery, Issue
+    Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video, Invite)
 
 from dispatch.api.helpers import get_settings, modify_permissions, reset_password
