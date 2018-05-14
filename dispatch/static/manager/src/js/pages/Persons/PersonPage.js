@@ -112,7 +112,7 @@ class PersonPageComponent extends React.Component {
         <Button
           intent={Intent.SUCCESS}
           onClick={() => this.initializeUser()}>
-          Create/Edit User
+          Manage Account
         </Button>
       </div>
     )
