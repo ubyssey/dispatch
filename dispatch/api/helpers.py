@@ -20,7 +20,7 @@ def send_invitation(email, uuid):
     url = build_url(uuid)
     send_mail(
         'You\'ve been invited to the Ubyssey',
-        'Welcome to the Ubyssey! You can set your password and login at the link below\n' + url,
+        'Welcome to the Ubyssey! You can set your password and login at the link below\n\(This link will expire in 24 hours\)\n' + url,
         settings.EMAIL_HOST_USER,
         [email],
         fail_silently=False
