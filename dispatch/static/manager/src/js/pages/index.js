@@ -9,6 +9,7 @@ import * as Articles from './Articles'
 import * as Pages from './Pages'
 import * as Integrations from './Integrations'
 import * as Tags from './Tags'
+import * as Issues from './Issues'
 import * as Topics from './Topics'
 import * as Galleries from './Galleries'
 import * as Widgets from './Widgets'
@@ -27,6 +28,7 @@ export {
   Pages as Pages,
   Integrations as Integrations,
   Tags as Tags,
+  Issues as Issues,
   Topics as Topics,
   Galleries as Galleries,
   Widgets as Widgets,

@@ -119,6 +119,18 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.TAGS.DELETE_MANY):
     return showToast('Some tags could not be deleted', Intent.DANGER)
 
+  // Issues
+  case fulfilled(types.ISSUES.CREATE):
+  case fulfilled(types.ISSUES.SAVE):
+    return showToast('Issue saved')
+  case rejected(types.ISSUES.CREATE):
+  case rejected(types.ISSUES.SAVE):
+    return showToast('Issue could not be saved', Intent.DANGER)
+  case fulfilled(types.ISSUES.DELETE_MANY):
+    return showToast(`${action.payload.length} issue${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.ISSUES.DELETE_MANY):
+    return showToast('Some issues could not be deleted', Intent.DANGER)
+
   // Topics
   case fulfilled(types.TOPICS.CREATE):
   case fulfilled(types.TOPICS.SAVE):

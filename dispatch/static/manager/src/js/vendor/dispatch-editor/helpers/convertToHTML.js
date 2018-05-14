@@ -131,7 +131,8 @@ export default function convertToHTML(contentBlock) {
 }
 
 function escapeHTML(str) {
-  str = str.replace('&', '&amp;')
+  str = str.replace(/\n/g, '<br />')
+  str = str.replace(/&/g, '&amp;')
   str = str.replace(/<(?![ab]|em|u|h[1-6]|li|ul|\/[ab]|\/em|\/u|\/h[1-6]|\/li|\/ul)/g, '&lt;')
   return str
 }

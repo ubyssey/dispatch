@@ -14,14 +14,14 @@ from dispatch.modules.integrations.integrations import integrationLib, Integrati
 from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
-    Article, File, Image, ImageAttachment, ImageGallery,
+    Article, File, Image, ImageAttachment, ImageGallery, Issue
     Page, Author, Person, Section, Tag, Topic, User, Video, Invite)
 
 from dispatch.api.helpers import get_settings, modify_permissions, reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
-    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
     InviteSerializer )
@@ -255,6 +255,19 @@ class FileViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
+        return queryset
+
+class IssueViewSet(DispatchModelViewSet):
+    """Viewset for Issue model views."""
+    model = Issue
+    serializer_class = IssueSerializer
+
+    def get_queryset(self):
+        queryset = Issue.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(title__icontains=q)
         return queryset
 
 class ImageViewSet(viewsets.ModelViewSet):
