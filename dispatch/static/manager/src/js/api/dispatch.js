@@ -14,7 +14,10 @@ function prepareMultipartPayload(payload) {
     if (payload[key] && payload[key].constructor === File) {
       formData.append(key, payload[key])
     } else {
-      formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+      //fixes upload error, ask peter why he did this ?
+      // formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+      // formData.append(key, payload[key])
+      return payload
     }
   }
 

@@ -79,8 +79,8 @@ class ImagesPageComponent extends React.Component {
   onDrop(images) {
     images.forEach(image => {
       let formData = new FormData()
-      formData.append('image', image, image.name)
-      formData.append('name', image.name)
+      formData.append('img', image, image.name)
+      // formData.append('name', image.name)
       this.props.createImage(this.props.token, formData)
     })
   }
@@ -157,8 +157,6 @@ const mapStateToProps = (state) => {
     // image: state.app.images.single,
     entities: {
       images: state.app.entities.images
-    //   remote: state.app.entities.images,
-    //   local: state.app.entities.local.images
     }
   }
 }
