@@ -2,6 +2,7 @@ import LoginPage from './LoginPage'
 import LogoutPage from './LogoutPage'
 import DashboardPage from './DashboardPage'
 import FilesPage from './FilesPage'
+import ImagesPage from './ImagesPage'
 import ProfilePage from './ProfilePage'
 
 import * as Sections from './Sections'
@@ -22,6 +23,7 @@ export {
   LogoutPage as Logout,
   DashboardPage as Dashboard,
   FilesPage as Files,
+  ImagesPage as Images,
   ProfilePage as Profile,
   Sections as Sections,
   Articles as Articles,

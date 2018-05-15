@@ -37,6 +37,7 @@ render((
           </Route>
 
           <Route path='files' component={Pages.Files} />
+          <Route path='images' component={Pages.Images} />
           <Route path='profile' component={Pages.Profile} />
 
           <Route path='integrations' component={Pages.Integrations.Index}>
