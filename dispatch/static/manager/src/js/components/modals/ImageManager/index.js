@@ -91,14 +91,12 @@ class ImageManagerComponent extends React.Component {
   }
 
   onSearch(q) {
-    this.setState({ q: q}, this.searchImages)
+    this.setState({ q: q }, this.searchImages)
   }
 
   onDrop(files) {
     files.forEach(file => {
-      let formData = new FormData()
-      formData.append('img', file, file.name)
-      this.props.createImage(this.props.token, formData)
+      this.props.createImage(this.props.token, { img: file })
     })
   }
 
