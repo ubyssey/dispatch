@@ -103,7 +103,6 @@ export class ResourceActions {
         .then(json => ({
           count: json.count,
           next: json.next,
-          // previous: json.prevtoRemote,
           previous: json.previous,
           append: true,
           data: normalize(
