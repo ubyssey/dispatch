@@ -100,9 +100,7 @@ class ImageManagerComponent extends React.Component {
 
   onDrop(files) {
     files.forEach(file => {
-      let formData = new FormData()
-      formData.append('img', file, file.name)
-      this.props.createImage(this.props.token, formData)
+      this.props.createImage(this.props.token, {'img': file})
     })
   }
 

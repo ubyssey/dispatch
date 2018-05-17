@@ -8,7 +8,6 @@ import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
 require('../../../../styles/components/image_panel.scss')
 
 export default function ImagePanel(props) {
-
   return (
     <div className='c-image-panel'>
       <div className='c-image-panel__header'>

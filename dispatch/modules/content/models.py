@@ -400,8 +400,9 @@ class Image(Model, AuthorMixin):
         """Custom save method to process thumbnails and save image dimensions."""
         is_new = self.pk is None
 
-        # Make filenames lowercase
-        self.img.name = self.img.name.lower()
+        if is_new:
+            # Make filenames lowercase
+            self.img.name = self.img.name.lower()
 
         # Call super method
         super(Image, self).save(**kwargs)

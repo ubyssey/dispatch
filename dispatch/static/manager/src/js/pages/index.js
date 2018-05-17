@@ -2,7 +2,7 @@ import LoginPage from './LoginPage'
 import LogoutPage from './LogoutPage'
 import DashboardPage from './DashboardPage'
 import FilesPage from './FilesPage'
-import ImagesPage from './ImagesPage'
+
 import ProfilePage from './ProfilePage'
 
 import * as Sections from './Sections'
@@ -15,6 +15,7 @@ import * as Topics from './Topics'
 import * as Galleries from './Galleries'
 import * as Widgets from './Widgets'
 import * as Persons from './Persons'
+import * as Images from './Images'
 import * as Events from './Events'
 import * as Videos from './Videos'
 
@@ -23,7 +24,7 @@ export {
   LogoutPage as Logout,
   DashboardPage as Dashboard,
   FilesPage as Files,
-  ImagesPage as Images,
+  Images as Images,
   ProfilePage as Profile,
   Sections as Sections,
   Articles as Articles,

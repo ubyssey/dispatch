@@ -4,13 +4,16 @@ import DocumentTitle from 'react-document-title'
 import Dropzone from 'react-dropzone'
 import { Button } from '@blueprintjs/core'
 
-import imageActions from '../actions/ImagesActions'
-import ItemList from '../components/ItemList'
-import { humanizeDatetime } from  '../util/helpers'
+import R from 'ramda'
+import { Link } from 'react-router'
+
+import imageActions from '../../actions/ImagesActions'
+import ItemList from '../../components/ItemList'
+import { humanizeDatetime } from  '../../util/helpers'
 // import ImageThumb from '../components/modals/ImageManager/ImageThumb.js'
 
-require('../../styles/components/files.scss')
-require('../../styles/components/images.scss')
+require('../../../styles/components/files.scss')
+require('../../../styles/components/images.scss')
 
 const DEFAULT_LIMIT = 15
 
@@ -78,10 +81,7 @@ class ImagesPageComponent extends React.Component {
 
   onDrop(images) {
     images.forEach(image => {
-      let formData = new FormData()
-      formData.append('img', image, image.name)
-      // formData.append('name', image.name)
-      this.props.createImage(this.props.token, formData)
+      this.props.createImage(this.props.token, {'img': image})
     })
   }
 
@@ -98,16 +98,35 @@ class ImagesPageComponent extends React.Component {
   }
 
   render() {
+
+    // The first column will always be a link, as defined here,
+    // containing the item property associated with displayColumn
+    const columns = R.insert(0, item => (
+      <strong>
+        <Link
+          to={`/images/${item.id}`}
+          dangerouslySetInnerHTML={{__html: item[this.props.displayColumn] || item.filename}} />
+      </strong>
+    // extraColumns are after the main link column
+    ),[
+      item => (item.title),
+      item => (this.renderThumb(item.url_thumb)),
+      item => (item.authors.length ? this.props.entities.persons[item.authors[0].person]['full_name']: ''),
+      item => (String(item.width) + 'x' + String(item.height)),
+      item => humanizeDatetime(item.created_at, true),
+      item => humanizeDatetime(item.updated_at, true)
+    ])
+
     return (
       <DocumentTitle title='Images'>
         <Dropzone
           ref={(node) => { this.dropzone = node }}
-          className='c-images-dropzone'
+          className='c-files-dropzone'
           onDrop={(images) => this.onDrop(images)}
           disableClick={true}
-          activeClassName='c-images-dropzone--active'>
+          activeClassName='c-files-dropzone--active'>
 
-          <div className='c-images-dropzone__list'>
+          <div className='c-files-dropzone__list'>
             <ItemList
               location={this.props.location}
 
@@ -120,15 +139,8 @@ class ImagesPageComponent extends React.Component {
               items={this.props.images}
               entities={this.props.entities.images}
 
-              headers={['Imagename', 'Preview', 'Title', 'Size', 'Created', 'Updated']}
-              columns={[
-                item => (<a href={item.url} target='_blank'>{item.filename}</a>),
-                item => (this.renderThumb(item.url_thumb)),
-                item => (item.title),
-                item => (String(item.width) + 'x' + String(item.height)),
-                item => humanizeDatetime(item.created_at),
-                item => humanizeDatetime(item.updated_at),
-              ]}
+              headers={['Image filename', 'Title', 'Preview', 'Author', 'Size', 'Created', 'Updated']}
+              columns={columns}
 
               emptyMessage={'You haven\'t uploaded any images yet.'}
               createHandler={() => (<Button onClick={() => this.onDropzoneClick()}>Upload</Button>)}
@@ -141,7 +153,7 @@ class ImagesPageComponent extends React.Component {
               }}
             />
           </div>
-          <div className='c-images-dropzone__text' onClick={() => this.onDropzoneClick()}>
+          <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>
           </div>
         </Dropzone>
@@ -154,9 +166,9 @@ const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
     images: state.app.images.list,
-    // image: state.app.images.single,
     entities: {
-      images: state.app.entities.images
+      images: state.app.entities.images,
+      persons: state.app.entities.persons,
     }
   }
 }
