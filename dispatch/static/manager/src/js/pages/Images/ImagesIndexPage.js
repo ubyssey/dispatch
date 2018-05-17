@@ -10,7 +10,6 @@ import { Link } from 'react-router'
 import imageActions from '../../actions/ImagesActions'
 import ItemList from '../../components/ItemList'
 import { humanizeDatetime } from  '../../util/helpers'
-// import ImageThumb from '../components/modals/ImageManager/ImageThumb.js'
 
 require('../../../styles/components/files.scss')
 require('../../../styles/components/images.scss')
