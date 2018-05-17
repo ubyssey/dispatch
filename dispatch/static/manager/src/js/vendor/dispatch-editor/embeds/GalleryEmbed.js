@@ -14,6 +14,7 @@ class GalleryEmbedComponent extends React.Component {
         <form>
           <FormInput label='Title'>
             <TextInput
+              fill={true}
               value={this.props.data.title}
               placeholder='Title'
               onChange={e => this.props.updateField('title', e.target.value)} />
