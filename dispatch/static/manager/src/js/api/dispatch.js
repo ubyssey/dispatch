@@ -11,13 +11,12 @@ function prepareMultipartPayload(payload) {
   let formData = new FormData()
 
   for (var key in payload) {
-    if (payload[key] && payload[key].constructor === File) {
-      formData.append(key, payload[key])
-    } else {
-      //fixes upload error, ask peter why he did this ?
-      // formData.append(key, JSON.parse(JSON.stringify(payload[key])))
-      // formData.append(key, payload[key])
-      return payload
+    if (payload.hasOwnProperty(key)) {
+      if (payload[key] && payload[key].constructor === File) {
+        formData.append(key, payload[key])
+      } else if (typeof payload[key] !== 'undefined') {
+        formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+      }
     }
   }
 
