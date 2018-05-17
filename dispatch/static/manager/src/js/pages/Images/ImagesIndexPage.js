@@ -10,7 +10,8 @@ import { Link } from 'react-router'
 import imageActions from '../../actions/ImagesActions'
 import ItemList from '../../components/ItemList'
 import { humanizeDatetime } from  '../../util/helpers'
-// import ImageThumb from '../components/modals/ImageManager/ImageThumb.js'
+import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
+import TagsFilterInput from '../../components/inputs/filters/TagsFilterInput'
 
 require('../../../styles/components/files.scss')
 require('../../../styles/components/images.scss')
@@ -47,6 +48,12 @@ class ImagesPageComponent extends React.Component {
     if (this.props.location.query.q) {
       query.q = this.props.location.query.q
     }
+    if (this.props.location.query.author) {
+      query.author = this.props.location.query.author
+    }
+    if (this.props.location.query.tags) {
+      query.tags = this.props.location.query.tags
+    }
 
     return query
   }
@@ -62,7 +69,8 @@ class ImagesPageComponent extends React.Component {
   }
 
   isNewQuery(prevProps, props) {
-    return prevProps.location.query.q !== props.location.query.q
+    console.log(props.location.query)
+    return prevProps.location.query !== props.location.query
   }
 
   isNewPage(prevProps, props) {
@@ -75,8 +83,8 @@ class ImagesPageComponent extends React.Component {
     this.props.clearSelectedImages()
   }
 
-  handleSearchImages(query) {
-    this.props.searchImages(this.props.token, query)
+  handleSearchImages(author, tags, query) {
+    this.props.searchImages(author, tags, query)
   }
 
   onDrop(images) {
@@ -117,6 +125,17 @@ class ImagesPageComponent extends React.Component {
       item => humanizeDatetime(item.updated_at, true)
     ])
 
+    const filters = [
+      <AuthorFilterInput
+        selected={this.props.location.query.author}
+        update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)}
+        />,
+      <TagsFilterInput
+        selected={this.props.location.query.tags}
+        update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)}
+        />
+    ]
+
     return (
       <DocumentTitle title='Images'>
         <Dropzone
@@ -141,6 +160,8 @@ class ImagesPageComponent extends React.Component {
 
               headers={['Image filename', 'Title', 'Preview', 'Author', 'Size', 'Created', 'Updated']}
               columns={columns}
+
+              filters={filters}
 
               emptyMessage={'You haven\'t uploaded any images yet.'}
               createHandler={() => (<Button onClick={() => this.onDropzoneClick()}>Upload</Button>)}
@@ -197,8 +218,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteImages: (token, imageIds) => {
       dispatch(imageActions.deleteMany(token, imageIds))
     },
-    searchImages: (token, query) => {
-      dispatch(imageActions.search(query))
+    searchImages: (author, tags, query) => {
+      dispatch(imageActions.search(author, tags, query))
     }
   }
 }

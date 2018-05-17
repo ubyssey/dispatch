@@ -342,6 +342,7 @@ class Image(Model, AuthorMixin):
     height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Author, related_name='image_authors')
+    tags = ManyToManyField('Tag')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -444,6 +445,16 @@ class Image(Model, AuthorMixin):
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
+
+
+    def save_tags(self, tag_ids):
+        self.tags.clear()
+        for tag_id in tag_ids:
+            try:
+                tag = Tag.objects.get(id=int(tag_id))
+                self.tags.add(tag)
+            except Tag.DoesNotExist:
+                pass
 
 class ImageAttachment(Model):
     article = ForeignKey(Article, blank=True, null=True, related_name='article')

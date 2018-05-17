@@ -44,9 +44,6 @@ class ImageManagerComponent extends React.Component {
   }
 
   loadMore() {
-    //peter's code, aspiring for true pagination?
-    // this.props.listImagesPage(this.props.token, this.props.images.next)
-
     if(this.props.images.count > this.state.limit){
       this.setState(prevState => ({
         limit: prevState.limit + 10

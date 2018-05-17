@@ -67,6 +67,7 @@ class ItemEditor extends React.Component {
   }
 
   handleUpdate(field, value) {
+    console.log('update field values in itemeditor')
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
   }
 
