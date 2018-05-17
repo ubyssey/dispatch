@@ -148,6 +148,7 @@ class ContentEditor extends React.Component {
 
   stopEditingEntity() {
     this.setState({ readOnly: false })
+    this.focusEditor()
   }
 
   handleMouseUp() {

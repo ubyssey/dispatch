@@ -6,12 +6,9 @@ class GalleryEmbedComponent extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { show: false }
-    setTimeout(() => { this.setState({ show: true }) }, 1)
   }
 
   render() {
-    if (!this.state.show) { return null }
     return (
       <div className='o-embed o-embed--gallery'>
         <form>
@@ -26,7 +23,10 @@ class GalleryEmbedComponent extends React.Component {
             <GallerySelectInput
               fill={true}
               selected={this.props.data.id}
-              update={id => this.props.updateField('id', id)} />
+              update={id => {
+                this.props.updateField('id', id)
+                this.props.stopEditing()
+              }} />
           </FormInput>
         </form>
       </div>
