@@ -190,7 +190,6 @@ export class ResourceActions {
   }
 
   deleteMany(token, ids) {
-    // debugger
     return (dispatch) => {
       dispatch({ type: pending(this.types.DELETE_MANY) })
 
