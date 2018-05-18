@@ -8,18 +8,6 @@ import TextInput from '../TextInput'
 import SortableList from '../SortableList'
 
 function Item(props) {
-  // if (props.isSelected && props.multiSelect){
-  //   console.log('multiselect')
-  //   return (
-  //     <li
-  //       className='o-dropdown-list__item o-dropdown-list__item--selected'
-  //       onClick={props.onClick}>
-  //       <span className='o-dropdown-list__tag-text'>{props.text}</span>
-  //       <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross'></span>
-  //     </li>
-  //   )
-  // }
-  // else 
   if (props.isSelected) {
     return (
       <li
@@ -70,7 +58,7 @@ class ItemSelectInput extends React.Component {
   }
 
   addValue(id) {
-    if (this.props.many) {
+    if (this.props.many && (typeof this.props.selected === 'undefined' ? true: !this.props.selected.includes(id))) {
       this.props.onChange(
         R.append(id, this.getSelected()),
         this.props.extraFields
@@ -84,11 +72,10 @@ class ItemSelectInput extends React.Component {
 
   removeValue(id) {
     const selected = this.getSelected()
-
-    if (this.props.many) {
+    if (this.props.many && this.props.selected.length > 1) {
       this.props.onChange(
         R.remove(
-          R.findIndex(R.equals(id), selected),
+          R.findIndex(R.equals(String(id)), selected),
           1,
           selected
         ),
@@ -105,12 +92,19 @@ class ItemSelectInput extends React.Component {
   }
 
   getSelected() {
-    console.log(this.props.selected)
-    return this.props.many ? ([this.props.selected] || []) : (this.props.selected ? [this.props.selected] : [])
+    if(this.props.many){
+      if(this.props.selected){
+        return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
+      } else {
+        return []
+      }
+    } else {
+      return this.props.selected ? [this.props.selected] : []
+    }
   }
 
   isNotSelected(id) {
-    return !R.contains(id, this.getSelected())
+    return !R.contains(String(id), this.getSelected())
   }
 
   renderNoResults() {
