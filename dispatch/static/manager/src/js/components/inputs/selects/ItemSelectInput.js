@@ -58,7 +58,7 @@ class ItemSelectInput extends React.Component {
   }
 
   addValue(id) {
-    if (this.props.many && (typeof this.props.selected === 'undefined' ? true: !this.props.selected.includes(id))) {
+    if (this.props.many) {
       this.props.onChange(
         R.append(id, this.getSelected()),
         this.props.extraFields
@@ -72,10 +72,10 @@ class ItemSelectInput extends React.Component {
 
   removeValue(id) {
     const selected = this.getSelected()
-    if (this.props.many && this.props.selected.length > 1) {
+    if (this.props.many) {
       this.props.onChange(
         R.remove(
-          R.findIndex(R.equals(String(id)), selected),
+          R.findIndex(R.equals(id), selected),
           1,
           selected
         ),
@@ -104,7 +104,7 @@ class ItemSelectInput extends React.Component {
   }
 
   isNotSelected(id) {
-    return !R.contains(String(id), this.getSelected())
+    return !R.contains(id, this.getSelected())
   }
 
   renderNoResults() {
