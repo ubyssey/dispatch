@@ -21,6 +21,7 @@ class AuthorFilterInputComponent extends React.Component {
     return (
       <FilterSelectInput
         selected={this.props.selected}
+        many={false}
         results={this.props.persons}
         entities={this.props.entities.persons}
         update={(selected) => this.props.update(selected)}
