@@ -131,7 +131,6 @@ class ContentEditor extends React.Component {
   removeEmbed(blockKey) {
     this.onChange(actions.removeEmbed(this.state.editorState, blockKey), true)
     this.stopEditingEntity()
-    this.focusEditor()
   }
 
   insertLink(selection, url) {
