@@ -2,7 +2,6 @@ import LoginPage from './LoginPage'
 import LogoutPage from './LogoutPage'
 import DashboardPage from './DashboardPage'
 import FilesPage from './FilesPage'
-
 import ProfilePage from './ProfilePage'
 
 import * as Sections from './Sections'
