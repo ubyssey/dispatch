@@ -76,10 +76,7 @@ class FilesPageComponent extends React.Component {
 
   onDrop(files) {
     files.forEach(file => {
-      let formData = new FormData()
-      formData.append('file', file, file.name)
-      formData.append('name', file.name)
-      this.props.createFile(this.props.token, formData)
+      this.props.createFile(this.props.token, {file: file, name: file.name})
     })
   }
 

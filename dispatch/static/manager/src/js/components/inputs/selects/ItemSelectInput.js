@@ -118,7 +118,7 @@ class ItemSelectInput extends React.Component {
           text={item[this.props.attribute]}
           onClick={() => this.removeValue(item.id)} />
         ))
-
+    
     const results = this.props.results
       .filter(id => this.isNotSelected(id))
       .map(id => this.props.entities[id])
@@ -129,7 +129,6 @@ class ItemSelectInput extends React.Component {
           text={item[this.props.attribute]}
           onClick={() => this.addValue(item.id)} />
       ))
-
     const createButton = this.props.create ? (
       <button
         className='pt-button c-input--item-select__search__button'
