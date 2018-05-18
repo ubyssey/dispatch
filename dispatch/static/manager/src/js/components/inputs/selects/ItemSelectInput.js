@@ -129,7 +129,6 @@ class ItemSelectInput extends React.Component {
           text={item[this.props.attribute]}
           onClick={() => this.addValue(item.id)} />
       ))
-    console.log(results)
     const createButton = this.props.create ? (
       <button
         className='pt-button c-input--item-select__search__button'

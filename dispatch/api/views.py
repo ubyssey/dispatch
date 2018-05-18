@@ -163,7 +163,6 @@ class TagViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
-        print(queryset)
         
         return queryset
 

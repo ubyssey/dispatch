@@ -69,7 +69,6 @@ class ImagesPageComponent extends React.Component {
   }
 
   isNewQuery(prevProps, props) {
-    console.log(props.location.query)
     return prevProps.location.query !== props.location.query
   }
 
