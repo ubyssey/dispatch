@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0011_invite'),
+        ('dispatch', '0013_invite'),
     ]
 
     operations = [
