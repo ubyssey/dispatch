@@ -84,7 +84,9 @@ class ImagesPageComponent extends React.Component {
   }
 
   handleSearchImages(query) {
-    this.props.searchImages(null, null, query)
+    let author = this.props.location.query.author
+    let tags = this.props.location.query.tags
+    this.props.searchImages(author, tags, query)
   }
 
   onDrop(images) {
