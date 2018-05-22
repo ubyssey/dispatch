@@ -96,3 +96,23 @@ class FileTests(DispatchAPITestCase, DispatchMediaTestMixin):
             File.objects.get(pk=file.data['id'])
         except File.DoesNotExist:
             self.fail('File should not have been deleted')
+    
+    def test_name_query(self):
+        """Should be able to search files by name"""
+        
+        fileA  = DispatchTestHelpers.upload_file(self.client, 'test_file_a')
+        fileB  = DispatchTestHelpers.upload_file(self.client, 'test_file_b')
+
+        url = '%s?q=%s' % (reverse('api-files-list'), fileA.data['name'])
+        response = self.client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(data['results'][0]['name'], 'test_file_a')
+        self.assertEqual(data['count'], 1)
+
+        url = '%s?q=%s' % (reverse('api-files-list'), fileB.data['name'])
+        response = self.client.get(url, format='json')
+        data = response.data
+        
+        self.assertEqual(data['results'][0]['name'], 'test_file_b')
+        self.assertEqual(data['count'], 1)
