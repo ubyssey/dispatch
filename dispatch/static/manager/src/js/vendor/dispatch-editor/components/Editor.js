@@ -130,7 +130,7 @@ class ContentEditor extends React.Component {
 
   removeEmbed(blockKey) {
     this.onChange(actions.removeEmbed(this.state.editorState, blockKey), true)
-    this.focusEditor()
+    this.stopEditingEntity()
   }
 
   insertLink(selection, url) {
@@ -147,6 +147,7 @@ class ContentEditor extends React.Component {
 
   stopEditingEntity() {
     this.setState({ readOnly: false })
+    this.focusEditor()
   }
 
   handleMouseUp() {
@@ -166,7 +167,7 @@ class ContentEditor extends React.Component {
 
     function getLinkEntity(selection) {
       const contentBlock = contentState.getBlockForKey(selection.getStartKey())
-      const entityKey = contentBlock.getEntityAt(selection.getStartOffset())
+      const entityKey = contentBlock ? contentBlock.getEntityAt(selection.getStartOffset()) : null
 
       const isLinkEntity =
         entityKey !== null &&

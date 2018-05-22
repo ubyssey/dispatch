@@ -29,7 +29,9 @@ export default function PageToolbar(props) {
           {props.page.is_published ? unpublish : publish}
           <AnchorButton
             disabled={props.isNew}
-            onClick={() => props.previewPage()}>Preview</AnchorButton>
+            onClick={() => props.previewPage()}>
+            <span className='pt-icon-standard pt-icon-document-open'></span>Preview
+          </AnchorButton>
           <VersionsDropdown
             current_version={props.page.current_version}
             published_version={props.page.published_version}

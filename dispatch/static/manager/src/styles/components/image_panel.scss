@@ -23,7 +23,10 @@
   // Border
   border-bottom: thin solid $color-border-gray;
 }
-
+.c-image-panel-image-page {
+  display: flex;
+  justify-content: left;
+}
 .c-image-panel__image__img {
   // Structure
   width: 100%;

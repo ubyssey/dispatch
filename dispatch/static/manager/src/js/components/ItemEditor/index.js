@@ -84,7 +84,7 @@ class ItemEditor extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ListItemToolbar
-            name={listItem[this.props.displayField] || listItem.name}
+            name={listItem[this.props.displayField] || listItem.name || listItem.title ||listItem.filename}
             type={this.props.type}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}
