@@ -50,7 +50,7 @@ export default class Embed extends React.Component {
     const embedProps = {
       data: this.getData(),
       updateField: (field, value) => this.updateField(field, value),
-      stopEditing: this.stopEditing
+      stopEditing: () => this.stopEditing()
     }
 
     return (

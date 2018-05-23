@@ -29,9 +29,12 @@
   &:last-child {
     border-bottom: none;
   }
-
-  &:hover, &--selected {
-    background: $input-color-highlight;
+  &--selected {
+    background-color: $color-dark-gray;
+    color: $color-text-gray-light;
+  }
+  &:hover {
+    color: $color-text-gray;
   }
 }
 

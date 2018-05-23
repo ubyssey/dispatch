@@ -14,7 +14,7 @@ require('../../styles/components/toaster.scss')
 class Main extends React.Component {
 
   componentWillMount() {
-    this.props.countPending(this.props.token, { pending: 1, limit: 0 })
+    //this.props.countPending(this.props.token, { pending: 1, limit: 0 })
   }
 
   componentDidMount() {

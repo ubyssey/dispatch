@@ -90,7 +90,11 @@ class ImageInputComponent extends React.Component {
               onClick={() => this.removeImage(image.id)} />
           )} />
         <AnchorButton
-          onClick={() => this.chooseImage() }>{this.props.many ? 'Add image' : (this.props.selected ? 'Change image' : 'Select image')}</AnchorButton>
+          onClick={() => this.chooseImage() }>{this.props.many ? 'Add image' : (this.props.selected ? 'Change image' : 'Select image')}
+          </AnchorButton>
+        {(this.props.selected && this.props.removable) && <AnchorButton
+          onClick={() => this.removeImage() }>{'Remove image'}
+          </AnchorButton>}
       </div>
     )
   }

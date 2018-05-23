@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery,
+    Article, Image, ImageAttachment, ImageGallery, Issue,
     File, Page, Author, Section, Tag, Topic, Video)
 from dispatch.modules.auth.models import Person, User
 
@@ -106,6 +106,41 @@ class FileSerializer(DispatchModelSerializer):
             'updated_at'
         )
 
+class IssueSerializer(DispatchModelSerializer):
+    """Serializes the Issue model."""
+
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
+    file_str = serializers.FileField(source='file', read_only=True, use_url=False)
+
+    img = serializers.ImageField(write_only=True, validators=[FilenameValidator])
+    img_str = serializers.ImageField(source='img', read_only=True, use_url=False)
+
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
+    class Meta:
+        model = Issue
+        fields = (
+            'id',
+            'title',
+            'file',
+            'file_str',
+            'img',
+            'img_str',
+            'volume',
+            'issue',
+            'url',
+            'date',
+        )
+
+class TagSerializer(DispatchModelSerializer):
+    """Serializes the Tag model."""
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
@@ -124,6 +159,12 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         child=serializers.JSONField(),
         validators=[AuthorValidator])
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
+
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
 
@@ -136,6 +177,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'title',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'url',
             'url_medium',
             'url_thumb',
@@ -156,16 +199,11 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         if authors:
             instance.save_authors(authors)
 
-        return instance
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
+            instance.save_tags(tag_ids)
 
-class TagSerializer(DispatchModelSerializer):
-    """Serializes the Tag model."""
-    class Meta:
-        model = Tag
-        fields = (
-            'id',
-            'name',
-        )
+        return instance
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""

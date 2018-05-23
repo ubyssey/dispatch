@@ -1,6 +1,6 @@
 {
   "name": "dispatch",
-  "version": "0.4.2",
+  "version": "0.4.6",
   "description": "The frontend framework for the Dispatch publishing platform.",
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "https://www.ubyssey.ca",
@@ -8,7 +8,7 @@
     "Ben Cook <b@bencook.ca>"
   ],
   "dependencies": {
-    "@blueprintjs/core": "^1.9.0",
+    "@blueprintjs/core": "1.35.7",
     "@blueprintjs/datetime": "^1.16.0",
     "babel": "^6.23.0",
     "babel-core": "^6.21.0",

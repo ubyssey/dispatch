@@ -9,6 +9,7 @@ export const articleSchema = new Schema('articles')
 export const pageSchema = new Schema('pages')
 export const templateSchema = new Schema('templates')
 export const fileSchema = new Schema('files')
+export const issueSchema = new Schema('issues')
 export const gallerySchema = new Schema('galleries')
 export const zoneSchema = new Schema('zones')
 export const widgetSchema = new Schema('widgets')
@@ -40,6 +41,7 @@ imageSchema.define({
   authors: arrayOf({
     person: personSchema
   }),
+  tags: arrayOf(tagSchema),
 })
 
 zoneSchema.define({
