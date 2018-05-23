@@ -21,19 +21,6 @@ const mapStateToProps = (state) => {
   }
 }
 
-function makeFormData(data) {
-  let formData = new FormData()
-
-  formData.append('full_name', data.full_name || '')
-  formData.append('slug', data.slug || '')
-  formData.append('description', data.description || '')
-  formData.append('image', data.image, data.image ? data.image.name : null)
-  formData.append('facebook_url', data.facebook_url || '')
-  formData.append('twitter_url', data.twitter_url || '')
-
-  return formData
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
     getListItem: (token, personId) => {
@@ -43,10 +30,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(personsActions.set(person))
     },
     saveListItem: (token, personId, data) => {
-      dispatch(personsActions.save(token, personId, makeFormData(data)))
+      dispatch(personsActions.save(token, personId, data))
     },
     createListItem: (token, data) => {
-      dispatch(personsActions.create(token, makeFormData(data), AFTER_DELETE))
+      dispatch(personsActions.create(token, data, AFTER_DELETE))
     },
     deleteListItem: (token, personId, next) => {
       dispatch(personsActions.delete(token, personId, next))
