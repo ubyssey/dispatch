@@ -72,7 +72,6 @@ class ItemSelectInput extends React.Component {
 
   removeValue(id) {
     const selected = this.getSelected()
-
     if (this.props.many) {
       this.props.onChange(
         R.remove(
@@ -93,7 +92,15 @@ class ItemSelectInput extends React.Component {
   }
 
   getSelected() {
-    return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
+    if(this.props.many){
+      if(this.props.selected){
+        return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
+      } else {
+        return []
+      }
+    } else {
+      return this.props.selected ? [this.props.selected] : []
+    }
   }
 
   isNotSelected(id) {
@@ -118,7 +125,7 @@ class ItemSelectInput extends React.Component {
           text={item[this.props.attribute]}
           onClick={() => this.removeValue(item.id)} />
         ))
-
+    
     const results = this.props.results
       .filter(id => this.isNotSelected(id))
       .map(id => this.props.entities[id])
@@ -129,7 +136,6 @@ class ItemSelectInput extends React.Component {
           text={item[this.props.attribute]}
           onClick={() => this.addValue(item.id)} />
       ))
-
     const createButton = this.props.create ? (
       <button
         className='pt-button c-input--item-select__search__button'

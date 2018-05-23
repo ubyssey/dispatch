@@ -106,8 +106,8 @@ class ImageEmbed(AbstractTemplateEmbed):
 
         return {
             'image': image,
-            'caption': data['caption'],
-            'credit': data['credit']
+            'caption': data.get('caption', None),
+            'credit': data.get('credit', None)
         }
 
 class GalleryEmbed(AbstractTemplateEmbed):

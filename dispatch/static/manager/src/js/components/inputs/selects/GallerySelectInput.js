@@ -17,21 +17,7 @@ class GallerySelectInputComponent extends React.Component {
     this.props.listGalleries(this.props.token, queryObj)
   }
 
-  componentWillMount() {
-    if (!this.hasEntities()) {
-      this.props.listGalleries(this.props.token, { q: '' })
-    }
-  }
-
-  hasEntities() {
-    return (Object.keys(this.props.entities.galleries).length > 0)
-  }
-
   render() {
-    if (!this.hasEntities()) {
-      return <p>Loading...</p>
-    }
-
     return (
       <ItemSelectInput
         many={false}

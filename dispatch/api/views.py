@@ -13,12 +13,12 @@ from dispatch.modules.integrations.integrations import integrationLib, Integrati
 from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
-    Article, File, Image, ImageAttachment, ImageGallery,
+    Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
-    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer,
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer)
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
@@ -163,6 +163,7 @@ class TagViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
+        
         return queryset
 
 class TopicViewSet(DispatchModelViewSet):
@@ -191,19 +192,43 @@ class FileViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
+class IssueViewSet(DispatchModelViewSet):
+    """Viewset for Issue model views."""
+    model = Issue
+    serializer_class = IssueSerializer
+
+    def get_queryset(self):
+        queryset = Issue.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(title__icontains=q)
+        return queryset
+
 class ImageViewSet(viewsets.ModelViewSet):
     """Viewset for Image model views."""
     model = Image
     serializer_class = ImageSerializer
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('created_at',)
-    update_fields = ('title', 'authors')
+    update_fields = ('title', 'authors', 'tags')
 
     def get_queryset(self):
         queryset = Image.objects.all()
+
+        author = self.request.query_params.get('author', None)
+        tags = self.request.query_params.getlist('tags', None)
         q = self.request.query_params.get('q', None)
+
+        if author is not None:
+            queryset = queryset.filter(authors__person_id=author)
+        if tags is not None:
+            for tag in tags:
+                queryset = queryset.filter(tags__id=tag)
+
         if q is not None:
             queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
+
         return queryset
 
 class ImageGalleryViewSet(DispatchModelViewSet):

@@ -325,6 +325,12 @@ class Page(Publishable):
     def get_author_string(self):
         return None
 
+    def get_absolute_url(self):
+        """
+        Returns page URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
+
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
@@ -336,6 +342,7 @@ class Image(Model, AuthorMixin):
     height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Author, related_name='image_authors')
+    tags = ManyToManyField('Tag')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -394,8 +401,9 @@ class Image(Model, AuthorMixin):
         """Custom save method to process thumbnails and save image dimensions."""
         is_new = self.pk is None
 
-        # Make filenames lowercase
-        self.img.name = self.img.name.lower()
+        if is_new:
+            # Make filenames lowercase
+            self.img.name = self.img.name.lower()
 
         # Call super method
         super(Image, self).save(**kwargs)
@@ -438,6 +446,16 @@ class Image(Model, AuthorMixin):
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
+
+    def save_tags(self, tag_ids):
+        self.tags.clear()
+        for tag_id in tag_ids:
+            try:
+                tag = Tag.objects.get(id=int(tag_id))
+                self.tags.add(tag)
+            except Tag.DoesNotExist:
+                pass
+
 class ImageAttachment(Model):
     article = ForeignKey(Article, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, blank=True, null=True, related_name='page')
@@ -451,7 +469,7 @@ class ImageAttachment(Model):
 
 class ImageGallery(Model):
     title = CharField(max_length=255)
-    images = ManyToManyField(ImageAttachment, related_name="images")
+    images = ManyToManyField(ImageAttachment, related_name='images')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -465,7 +483,6 @@ class ImageGallery(Model):
             self.images.add(attachment_obj)
 
 class File(Model):
-
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
 
@@ -477,3 +494,11 @@ class File(Model):
         Returns the absolute file URL.
         """
         return settings.MEDIA_URL + str(self.file)
+
+class Issue(Model):
+    title = CharField(max_length=255)
+    file = FileField(upload_to='issues/%Y/%m')
+    img = ImageField(upload_to='images/%Y/%m')
+    volume = PositiveIntegerField(null=True)
+    issue = PositiveIntegerField(null=True)
+    date = DateTimeField()

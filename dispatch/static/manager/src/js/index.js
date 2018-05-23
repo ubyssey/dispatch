@@ -37,6 +37,13 @@ render((
           </Route>
 
           <Route path='files' component={Pages.Files} />
+
+          <Route path='images'>
+            <IndexRoute component={Pages.Images.Index} />
+            <Route path='new' component={Pages.Images.NewPerson} />
+            <Route path=':imageId' component={Pages.Images.EditImage} />
+          </Route>
+
           <Route path='profile' component={Pages.Profile} />
 
           <Route path='integrations' component={Pages.Integrations.Index}>
@@ -47,6 +54,12 @@ render((
             <IndexRoute component={Pages.Tags.Index} />
             <Route path='new' component={Pages.Tags.NewTag} />
             <Route path=':tagId' component={Pages.Tags.Tag} />
+          </Route>
+
+          <Route path='issues'>
+            <IndexRoute component={Pages.Issues.Index} />
+            <Route path='new' component={Pages.Issues.NewIssue} />
+            <Route path=':issueId' component={Pages.Issues.Issue} />
           </Route>
 
           <Route path='topics'>

@@ -7,6 +7,22 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 }
 
+function prepareMultipartPayload(payload) {
+  let formData = new FormData()
+
+  for (var key in payload) {
+    if (payload.hasOwnProperty(key)) {
+      if (payload[key] && payload[key].constructor === File) {
+        formData.append(key, payload[key])
+      } else if (typeof payload[key] !== 'undefined') {
+        formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+      }
+    }
+  }
+
+  return formData
+}
+
 function buildRoute(route, id) {
   let pieces = route.split('.')
 
@@ -89,7 +105,19 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
     {
       method: 'POST',
       headers: buildHeaders(token, false),
-      body: payload
+      body: prepareMultipartPayload(payload)
+    }
+  )
+  .then(parseJSON)
+}
+
+function patchMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token, false),
+      body: prepareMultipartPayload(payload)
     }
   )
   .then(parseJSON)
@@ -114,18 +142,6 @@ function patchRequest(route, id=null, payload={}, token=null) {
       method: 'PATCH',
       headers: buildHeaders(token),
       body: JSON.stringify(payload)
-    }
-  )
-  .then(parseJSON)
-}
-
-function patchMultipartRequest(route, id=null, payload={}, token=null) {
-  return fetch(
-    buildRoute(route, id),
-    {
-      method: 'PATCH',
-      headers: buildHeaders(token, false),
-      body: payload
     }
   )
   .then(parseJSON)
@@ -300,6 +316,23 @@ const DispatchAPI = {
     },
     delete: (token, tagId) => {
       return deleteRequest('tags', tagId, null, token)
+    },
+  },
+  issues: {
+    list: (token, query) => {
+      return getRequest('issues', null, query, token)
+    },
+    get: (token, issueId) => {
+      return getRequest('issues', issueId, null, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('issues', null, data, token)
+    },
+    save: (token, issueId, data) => {
+      return patchMultipartRequest('issues', issueId, data, token)
+    },
+    delete: (token, issueId) => {
+      return deleteRequest('issues', issueId, null, token)
     },
   },
   integrations: {
