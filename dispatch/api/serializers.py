@@ -218,7 +218,7 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
     image = ImageSerializer(read_only=True)
-    image_id =  serializers.IntegerField(write_only=True, required=False)
+    image_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = ImageAttachment
