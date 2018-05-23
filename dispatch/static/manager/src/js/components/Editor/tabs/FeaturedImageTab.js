@@ -6,7 +6,6 @@ import { FormInput, TextAreaInput, ImageInput } from '../../inputs'
 export default function FeaturedImageTab(props) {
 
   function updateImage(imageId) {
-    console.log(imageId)
     if(imageId){
       return props.update(
         'featured_image',
