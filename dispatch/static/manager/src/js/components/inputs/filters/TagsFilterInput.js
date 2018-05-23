@@ -20,6 +20,7 @@ class TagsFilterInputComponent extends React.Component {
   render() {
     return (
       <FilterSelectInput
+        many={true}
         selected={this.props.selected}
         results={this.props.tags}
         entities={this.props.entities.tags}

@@ -72,7 +72,6 @@ class ItemSelectInput extends React.Component {
 
   removeValue(id) {
     const selected = this.getSelected()
-
     if (this.props.many) {
       this.props.onChange(
         R.remove(
@@ -93,7 +92,15 @@ class ItemSelectInput extends React.Component {
   }
 
   getSelected() {
-    return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
+    if(this.props.many){
+      if(this.props.selected){
+        return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
+      } else {
+        return []
+      }
+    } else {
+      return this.props.selected ? [this.props.selected] : []
+    }
   }
 
   isNotSelected(id) {
