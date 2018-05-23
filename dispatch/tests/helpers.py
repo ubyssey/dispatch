@@ -40,7 +40,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def upload_file(cls, client):
+    def upload_file(cls, client, filename='TestFile'):
         """Upload a test file to server"""
 
         obj = DispatchMediaTestMixin()
@@ -50,7 +50,7 @@ class DispatchTestHelpers(object):
         with open(obj.get_input_file('test_file.txt')) as test_file:
 
             data = {
-                'name': 'TestFile',
+                'name': filename,
                 'file': test_file
             }
 
