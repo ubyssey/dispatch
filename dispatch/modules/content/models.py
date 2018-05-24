@@ -254,6 +254,8 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
+
+            self.featured_video = None
             return
 
         if data['video_id'] is None:
