@@ -222,7 +222,8 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
-                self.featured_image = None
+            
+            self.featured_image = None
             return
 
         if data['image_id'] is None:
