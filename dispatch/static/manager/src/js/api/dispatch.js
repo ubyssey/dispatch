@@ -13,8 +13,10 @@ function prepareMultipartPayload(payload) {
   for (var key in payload) {
     if (payload.hasOwnProperty(key)) {
       if (payload[key] && payload[key].constructor === File) {
+        console.log('file', payload[key])
         formData.append(key, payload[key])
       } else if (typeof payload[key] !== 'undefined') {
+        console.log('not a file', payload[key])
         formData.append(key, JSON.parse(JSON.stringify(payload[key])))
       }
     }
@@ -429,6 +431,24 @@ const DispatchAPI = {
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
     }
+  },
+  'polls': {
+    list: (token, query) => {
+      return getRequest('polls', null, query, token)
+    },
+    get: (token, pollId) => {
+      return getRequest('polls', pollId, null, token)
+    },
+    save: (token, pollId, data) => {
+      return patchRequest('polls', pollId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('polls', null, data, token)
+    },
+    delete: (token, pollId) => {
+      return deleteRequest('polls', pollId, null, token)
+    },
+
   }
 }
 

@@ -14,6 +14,7 @@ export default function Header(props) {
           <span className="pt-navbar-divider"></span>
           <Link to='/articles/' className="pt-button pt-minimal pt-icon-document">Articles</Link>
           <Link to='/pages/' className="pt-button pt-minimal pt-icon-book">Pages</Link>
+          <Link to='/polls/' className="pt-button pt-minimal pt-icon-vertical-bar-chart-desc">Polls</Link>
           <Link to='/widgets/' className="pt-button pt-minimal pt-icon-widget">Widgets</Link>
           <Link to='/galleries/' className="pt-button pt-minimal pt-icon-media">Galleries</Link>
           <Link to='/files/' className="pt-button pt-minimal pt-icon-folder-close">Files</Link>

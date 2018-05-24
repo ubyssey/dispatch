@@ -98,6 +98,12 @@ render((
             <Route path=':videoId' component={Pages.Videos.Video} />
           </Route>
 
+          <Route path='polls'>
+            <IndexRoute component={Pages.Polls.Index} />
+            <Route path='new' component={Pages.Polls.NewPoll} />
+            <Route path=':pollId' component={Pages.Polls.Poll} />
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>
