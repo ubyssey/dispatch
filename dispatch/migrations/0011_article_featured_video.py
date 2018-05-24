@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0008_issue'),
+        ('dispatch', '0010_image_tags'),
     ]
 
     operations = [
