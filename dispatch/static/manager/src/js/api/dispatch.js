@@ -15,7 +15,9 @@ function prepareMultipartPayload(payload) {
       if (payload[key] && payload[key].constructor === File) {
         formData.append(key, payload[key])
       } else if (typeof payload[key] !== 'undefined') {
-        formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+        if(key !== 'image'){
+          formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+        }
       }
     }
   }
