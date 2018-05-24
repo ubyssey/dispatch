@@ -753,7 +753,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         article = DispatchTestHelpers.create_article(self.client)
         
-        url = reverse('api-videos-list')video
+        url = reverse('api-videos-list')
 
         video = DispatchTestHelpers.create_video(self.client, 'testVideo')
 
