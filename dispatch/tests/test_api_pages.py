@@ -6,7 +6,7 @@ from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Page
 
-class PagesTest(DispatchAPITestCase):
+class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_page_unauthorized(self):
         """Create page while unauthorized should fail with unauthenticated request"""
@@ -300,7 +300,7 @@ class PagesTest(DispatchAPITestCase):
     def test_remove_featured_video(self):
         """Ensure that a featured video can be removed"""
 
-        article = DispatchTestHelpers.create_page(self.client)
+        page = DispatchTestHelpers.create_page(self.client)
         
         url = reverse('api-videos-list')
         
