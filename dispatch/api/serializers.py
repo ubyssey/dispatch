@@ -144,6 +144,15 @@ class IssueSerializer(DispatchModelSerializer):
             'date',
         )
 
+class TagSerializer(DispatchModelSerializer):
+    """Serializes the Tag model."""
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
@@ -162,6 +171,12 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         child=serializers.JSONField(),
         validators=[AuthorValidator])
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
+
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
 
@@ -174,6 +189,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'title',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'url',
             'url_medium',
             'url_thumb',
@@ -194,16 +211,11 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         if authors:
             instance.save_authors(authors)
 
-        return instance
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
+            instance.save_tags(tag_ids)
 
-class TagSerializer(DispatchModelSerializer):
-    """Serializes the Tag model."""
-    class Meta:
-        model = Tag
-        fields = (
-            'id',
-            'name',
-        )
+        return instance
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""

@@ -1,0 +1,14 @@
+.c-image-page-thumb {
+  // Structure
+  height: 36px;
+  width: 36px;
+
+  //center adjust
+  position: relative;
+  margin-top: -20px;
+  top: 20px;
+
+  //image type
+  background-repeat: no-repeat;
+  background-size: contain;
+}

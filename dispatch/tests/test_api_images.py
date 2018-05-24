@@ -9,9 +9,10 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.models import Image, Person
+from dispatch.models import Image, Person, Tag
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
+from dispatch.tests.helpers import DispatchTestHelpers
 
 class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
@@ -281,3 +282,114 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['results'][0]['filename'], image_1.data['filename'])
         self.assertEqual(response.data['results'][1]['filename'], image_2.data['filename'])
         self.assertEqual(response.data['results'][2]['filename'], image_3.data['filename'])
+
+    def test_tag_query(self):
+        """Should be able to search images by tags"""
+
+        tag = Tag.objects.create(name='Test Tag')
+
+        url = reverse('api-images-list')
+
+        filesa = [
+            'test_image_a.jpg',
+            'test_image_a.jpeg',
+        ]
+        filesb = [
+            'test_image_b.JPG',
+            'test_image_b.JPEG',
+        ]
+
+        new_data = {
+            'tag_ids': [tag.id]
+        }
+
+        for image_file in filesa:
+            with open(self.get_input_file(image_file)) as test_image:
+                image = self.client.post(url, { 'img': test_image }, format='multipart')
+                imageurl = reverse('api-images-detail', args=[image.data['id']])
+                response = self.client.patch(imageurl, new_data, format='json')
+
+        for image_file in filesb:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        url = reverse('api-images-detail', args=[image.data['id']])
+
+        response = self.client.patch(url, new_data, format='json')
+
+        url = '%s?tags=%s' % (reverse('api-images-list'), tag.id)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpeg')
+
+    def test_author_query(self):
+        """Should be able to search images by authors"""
+
+        person = Person.objects.create(full_name='Test Person')
+
+        url = reverse('api-images-list')
+
+        filesa = [
+            'test_image_a.jpg',
+            'test_image_a.jpeg',
+        ]
+        filesb = [
+            'test_image_b.JPG',
+            'test_image_b.JPEG',
+        ]
+
+        new_data = {
+            'author_ids': [{'person': person.id}]
+        }
+
+        for image_file in filesa:
+            with open(self.get_input_file(image_file)) as test_image:
+                image = self.client.post(url, { 'img': test_image }, format='multipart')
+                imageurl = reverse('api-images-detail', args=[image.data['id']])
+                response = self.client.patch(imageurl, new_data, format='json')
+
+        for image_file in filesb:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        url = reverse('api-images-detail', args=[image.data['id']])
+
+        response = self.client.patch(url, new_data, format='json')
+
+        url = '%s?author=%s' % (reverse('api-images-list'), person.id)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpeg')
+
+    def test_name_query(self):
+        """Should be able to search images by name"""
+
+        url = reverse('api-images-list')
+        files = [
+            'test_image_a.jpg',
+            'test_image_b.JPG',
+            'test_image_a.jpeg',
+            'test_image_b.JPEG',
+        ]
+        filename = 'test_image_b'
+
+        for image_file in files:
+            with open(self.get_input_file(image_file)) as test_image:
+                response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        url = '%s?q=%s' % (reverse('api-images-list'), filename)
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(data['results'][0]['filename'], 'test_image_b.jpg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_b.jpeg')
+        self.assertEqual(data['count'], 2)
