@@ -2,7 +2,7 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Page
 
