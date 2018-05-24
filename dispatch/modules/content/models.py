@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL)
+    ManyToManyField, SlugField, SET_NULL, CASCADE)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -502,3 +502,26 @@ class Issue(Model):
     volume = PositiveIntegerField(null=True)
     issue = PositiveIntegerField(null=True)
     date = DateTimeField()
+
+class Poll(Model):
+    question = CharField(max_length=255, unique=True)
+
+    def save_answers(self, answers):
+        PollAnswer.objects.filter(poll=self).delete()
+        for answer in answers:
+            answer_obj = PollAnswer(poll=self, name=answer['name'])
+            answer_obj.save()
+
+    def get_total_votes(self):
+        return PollVote.objects.all().filter(answer__poll=self).count()
+
+class PollAnswer(Model):
+    poll = ForeignKey(Poll, related_name='answers', on_delete=CASCADE)
+    name = CharField(max_length=255)
+
+    def get_votes(self):
+        """Return the number of votes for this answer"""
+        return PollVote.objects.all().filter(answer=self).count()
+
+class PollVote(Model):
+    answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)

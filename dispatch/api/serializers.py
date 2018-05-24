@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video)
+    File, Page, Author, Section, Tag, Topic, Video, Poll, PollAnswer, PollVote)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -713,5 +713,96 @@ class ZoneSerializer(serializers.Serializer):
             instance.delete()
         else:
             instance.save(validated_data)
+
+        return instance
+
+class PollVoteSerializer(DispatchModelSerializer):
+    """Serializes the PollVote model"""
+    answer_id =  serializers.IntegerField(write_only=True)
+    class Meta:
+        model = PollVote
+        fields = (
+            'id',
+            'answer_id',
+        )
+
+    def create(self, validated_data):
+        # Create new ImageGallery instance
+        instance = PollVote()
+
+        # Then save as usual
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        # Get the proper Poll Answer
+        answer_id = validated_data.get('answer_id', False)
+        try:
+            answer = PollAnswer.objects.get(id=answer_id)
+        except PollAnswer.DoesNotExist:
+            answer = None
+        # Set the vote's answer
+        if answer is not None:
+            instance.answer = answer
+            instance.save()
+
+        return instance
+
+class PollAnswerSerializer(DispatchModelSerializer):
+    """Serializes the PollAnswer model"""
+    votes = PollVoteSerializer(many=True, required=False, read_only=True)
+    poll_id =  serializers.IntegerField(write_only=True)
+    vote_count = serializers.IntegerField(source='get_votes', read_only=True)
+
+    class Meta:
+        model = PollAnswer
+        fields = (
+            'id',
+            'name',
+            'votes',
+            'vote_count',
+            'poll_id'
+        )
+
+    def get_vote_count(self, obj):
+        return obj.votes.count()
+
+class PollSerializer(DispatchModelSerializer):
+    """Serializes the Poll model."""
+    answers = PollAnswerSerializer(many=True, read_only=True, required=False)
+    answers_json = JSONField(
+        required=False,
+        write_only=True
+    )
+    total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
+
+    class Meta:
+        model = Poll
+        fields = (
+            'id',
+            'question',
+            'answers',
+            'answers_json',
+            'total_votes'
+        )
+
+    def create(self, validated_data):
+        # Create new ImageGallery instance
+        instance = Poll()
+
+        # Then save as usual
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        # Update all the basic fields
+        instance.question = validated_data.get('question', instance.question)
+
+        # Save instance before processing/saving content in order to
+        # save associations to correct ID
+        instance.save()
+
+        answers = validated_data.get('answers_json', False)
+
+        if isinstance(answers, list):
+            instance.save_answers(answers)
 
         return instance

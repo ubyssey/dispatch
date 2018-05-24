@@ -14,13 +14,14 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollVote)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer)
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
+    PollVoteSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
@@ -163,7 +164,7 @@ class TagViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
-        
+
         return queryset
 
 class TopicViewSet(DispatchModelViewSet):
@@ -247,6 +248,18 @@ class ImageGalleryViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `title`
             queryset = queryset.filter(title__icontains=q)
         return queryset
+
+class PollViewSet(DispatchModelViewSet):
+    """Viewset for the Poll model views."""
+    model = Poll
+    serializer_class = PollSerializer
+    queryset = Poll.objects.all()
+
+class PollVoteViewSet(DispatchModelViewSet):
+    """Viewset for the PollVote Model"""
+    model = PollVote
+    serializer_class = PollVoteSerializer
+    queryset = PollVote.objects.all()
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
