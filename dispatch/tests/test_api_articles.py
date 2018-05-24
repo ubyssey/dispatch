@@ -768,3 +768,30 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.data['featured_video']['video']['id'], video.data['id'])
+
+    def test_remove_featured_video(self):
+        """Ensure that a featured video can be removed"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-videos-list')
+        
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': video.data['id']
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_video': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_video'], None)
