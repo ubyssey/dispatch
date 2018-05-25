@@ -742,6 +742,12 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         response = self.client.patch(url, data, format='json')
 
+        data = {
+            'featured_image': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
         self.assertEqual(response.data['featured_image'], None)
 
     def test_remove_featured_image(self):
@@ -816,6 +822,12 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         response = self.client.patch(url, data, format='json')
 
+        data = {
+            'featured_video': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
         self.assertEqual(response.data['featured_video'], None)
 
     def test_remove_featured_video(self):
