@@ -732,6 +732,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = {
             'featured_image':   {
+                'image_id': None,
                 'credit': 'test credit',
                 'caption': 'test caption'
             }
@@ -805,6 +806,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = {
             'featured_video':   {
+                'video_id': None,
                 'credit': 'test credit',
                 'caption': 'test caption'
             }
