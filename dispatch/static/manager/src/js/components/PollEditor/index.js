@@ -51,7 +51,7 @@ function PollEditorComponent(props) {
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={PollForm}
-      displayField='question'
+      displayField='name'
       {... props} />
   )
 }

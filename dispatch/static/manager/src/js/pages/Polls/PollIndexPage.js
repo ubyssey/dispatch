@@ -54,10 +54,11 @@ function PollsPageComponent(props) {
     <ItemIndexPage
       typeSingular='poll'
       typePlural='polls'
-      displayColumn='question'
+      displayColumn='name'
       pageTitle='Polls'
-      headers={[ 'Question', 'Votes' ]}
+      headers={[ 'Name','Question', 'Votes' ]}
       extraColumns={[
+        item => item.question,
         item => item.total_votes
       ]}
       {... props} />

@@ -81,6 +81,16 @@ export default class PollForm extends React.Component {
     return (
       <form onSubmit={e => e.preventDefault()}>
         <FormInput
+          label='Name'
+          padded={false}
+          error={this.props.errors.name}>
+          <TextInput
+            placeholder='Name'
+            value={this.props.listItem.name || ''}
+            fill={true}
+            onChange={ e => this.props.update('name', e.target.value) } />
+        </FormInput>
+        <FormInput
           label='Question'
           padded={false}
           error={this.props.errors.question}>

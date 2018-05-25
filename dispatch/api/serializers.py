@@ -802,6 +802,7 @@ class PollSerializer(DispatchModelSerializer):
     def update(self, instance, validated_data):
         # Update all the basic fields
         instance.question = validated_data.get('question', instance.question)
+        instance.name = validated_data.get('name', instance.name)
 
         # Save instance before processing/saving content in order to
         # save associations to correct ID
