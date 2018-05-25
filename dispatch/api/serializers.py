@@ -18,7 +18,8 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
 
-    image = serializers.ImageField(required=False, validators=[FilenameValidator])
+    image = serializers.ImageField(required=False, validators=[FilenameValidator], write_only=True)
+    image_url = serializers.CharField(source='get_absolute_image_url', read_only=True)
 
     class Meta:
         model = Person
@@ -28,6 +29,7 @@ class PersonSerializer(DispatchModelSerializer):
             'slug',
             'description',
             'image',
+            'image_url',
             'twitter_url',
             'facebook_url'
         )
