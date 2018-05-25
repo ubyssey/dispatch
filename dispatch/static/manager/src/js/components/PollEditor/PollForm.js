@@ -17,7 +17,7 @@ export default class PollForm extends React.Component {
 
   addAnswer() {
     let answers = this.props.listItem.answers || []
-    let id = answers.length
+    let id = answers[answers.length - 1].id + 1
     let answer = {
       'id': id,
       'name': '',
@@ -26,6 +26,12 @@ export default class PollForm extends React.Component {
     }
     answers.push(answer)
     this.props.update('answers', answers)
+  }
+
+  removeAnswer(id) {
+    var answers = this.props.listItem.answers
+    answers.splice(id, 1)
+    this.props.update('answer', answers)
   }
 
   handleUpdateAnswer(id, e) {
@@ -44,18 +50,23 @@ export default class PollForm extends React.Component {
       (answer, index) => {
         let name = answer.name
         let votes = answer.vote_count
-        let id = index + 1
-
+        let key = index + 1
+        let id = index
         return (
           <FormInput
-            key={id}
-            label={'Answer '+id+' Votes: '+votes}
+            key={key}
+            label={'Answer '+key+' Votes: '+votes}
             padded={false}>
             <TextInput
               placeholder='Answer'
               value={name || ''}
               fill={true}
               onChange={ e => this.handleUpdateAnswer(answer.id, e) } />
+            <Button
+              intent={Intent.DANGER}
+              onClick={() => this.removeAnswer(id)}>
+              Remove answer
+            </Button>
           </FormInput>
         )
       }
