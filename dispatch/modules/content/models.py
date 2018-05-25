@@ -504,7 +504,9 @@ class Issue(Model):
     date = DateTimeField()
 
 class Poll(Model):
-    question = CharField(max_length=255, unique=True)
+    name = CharField(max_length=255)
+    question = CharField(max_length=255)
+    is_open = BooleanField(default=True)
 
     def save_answers(self, answers):
         PollAnswer.objects.filter(poll=self).delete()

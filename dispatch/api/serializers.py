@@ -738,12 +738,15 @@ class PollVoteSerializer(DispatchModelSerializer):
         answer_id = validated_data.get('answer_id', False)
         try:
             answer = PollAnswer.objects.get(id=answer_id)
+            poll_id = answer.poll.id
+            poll = Poll.objects.get(id=poll_id)
         except PollAnswer.DoesNotExist:
             answer = None
         # Set the vote's answer
-        if answer is not None:
-            instance.answer = answer
-            instance.save()
+        if poll['is_open']:
+            if answer is not None:
+                instance.answer = answer
+                instance.save()
 
         return instance
 
@@ -774,11 +777,15 @@ class PollSerializer(DispatchModelSerializer):
         write_only=True
     )
     total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
+    question = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
 
     class Meta:
         model = Poll
         fields = (
             'id',
+            'is_open',
+            'name',
             'question',
             'answers',
             'answers_json',

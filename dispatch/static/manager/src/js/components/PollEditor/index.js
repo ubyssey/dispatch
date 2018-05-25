@@ -20,8 +20,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-function prepareData(data) {
-
+function prepareJSONData(data) {
+  data.answers_json = data.answers
+  return data
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -33,10 +34,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(pollsActions.set(poll))
     },
     saveListItem: (token, pollId, data) => {
-      dispatch(pollsActions.save(token, pollId, prepareData(data)))
+      dispatch(pollsActions.save(token, pollId, prepareJSONData(data)))
     },
     createListItem: (token, data) => {
-      dispatch(pollsActions.create(token, prepareData(data), AFTER_DELETE))
+      dispatch(pollsActions.create(token, prepareJSONData(data), AFTER_DELETE))
     },
     deleteListItem: (token, pollId, next) => {
       dispatch(pollsActions.delete(token, pollId, next))

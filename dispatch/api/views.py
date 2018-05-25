@@ -253,7 +253,13 @@ class PollViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""
     model = Poll
     serializer_class = PollSerializer
-    queryset = Poll.objects.all()
+
+    def get_queryset(self):
+        queryset = Poll.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = queryset.filter(question__icontains=q)
+        return queryset
 
 class PollVoteViewSet(DispatchModelViewSet):
     """Viewset for the PollVote Model"""
