@@ -14,8 +14,13 @@ function prepareMultipartPayload(payload) {
     if (payload.hasOwnProperty(key)) {
       if (payload[key] && payload[key].constructor === File) {
         formData.append(key, payload[key])
-      } else if (typeof payload[key] !== 'undefined' && payload[key] !== null) {
-        formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+      } else if (typeof payload[key] !== 'undefined') {
+        if(payload[key] === null) {
+          formData.append(key, '')
+        }
+        else {
+          formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+        }
       }
     }
   }
