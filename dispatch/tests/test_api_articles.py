@@ -719,7 +719,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['featured_image']['image']['id'], image.data['id'])
 
     def test_set_featured_image_no_id(self):
-        """Ensures that there must have an image_id in order to set a featured image"""
+        """Ensure that there must have an image_id in order to set a featured image"""
 
         article = DispatchTestHelpers.create_article(self.client)
         
@@ -795,7 +795,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['featured_video']['video']['id'], video.data['id'])
 
     def test_set_featured_video_no_id(self):
-        """Ensures that there must have a video_id in order to set a featured video"""
+        """Ensure that there must have a video_id in order to set a featured video"""
 
         article = DispatchTestHelpers.create_article(self.client)
         
