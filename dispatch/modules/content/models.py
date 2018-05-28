@@ -68,6 +68,7 @@ class Publishable(Model):
     views = PositiveIntegerField(default=0)
 
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
+    featured_video = ForeignKey('VideoAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_video', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
     template_data = JSONField(default={})
@@ -221,7 +222,15 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
-                self.featured_image = None
+            
+            self.featured_image = None
+            return
+
+        if data['image_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_image = None
             return
 
         if not attachment:
@@ -238,6 +247,38 @@ class Publishable(Model):
         attachment.save()
 
         self.featured_image = attachment
+
+    def save_featured_video(self, data):
+        attachment = self.featured_video
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_video = None
+            return
+
+        if data['video_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_video = None
+            return
+
+        if not attachment:
+            attachment = VideoAttachment()
+
+        attachment.video_id = data.get('video_id', attachment.video_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_video = attachment
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -447,7 +488,6 @@ class Image(Model, AuthorMixin):
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
-
     def save_tags(self, tag_ids):
         self.tags.clear()
         for tag_id in tag_ids:
@@ -457,9 +497,19 @@ class Image(Model, AuthorMixin):
             except Tag.DoesNotExist:
                 pass
 
+class VideoAttachment(Model):
+    article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='video_page')
+
+    caption = TextField(blank=True, null=True)
+    credit = TextField(blank=True, null=True)
+    video = ForeignKey(Video, related_name='video', on_delete=SET_NULL, null=True)
+
+    order = PositiveIntegerField(null=True)
+
 class ImageAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='page')
+    article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
 
     caption = TextField(blank=True, null=True)

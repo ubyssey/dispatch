@@ -34,7 +34,7 @@ export default function FeaturedImageTab(props) {
     )
   }
 
-  if (props.featured_image) {
+  if (props.featured_image && props.featured_image.image) {
 
     return (
       <div>

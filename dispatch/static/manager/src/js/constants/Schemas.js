@@ -27,6 +27,9 @@ articleSchema.define({
   template: templateSchema,
   featured_image: {
     image: imageSchema,
+  },
+  featured_video: {
+    video: videoSchema,
   }
 })
 
@@ -34,6 +37,9 @@ pageSchema.define({
   template: templateSchema,
   featured_image: {
     image: imageSchema,
+  },
+  featured_video: {
+    video: videoSchema,
   }
 })
 

@@ -2,11 +2,11 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Page
 
-class PagesTest(DispatchAPITestCase):
+class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_page_unauthorized(self):
         """Create page while unauthorized should fail with unauthenticated request"""
@@ -221,3 +221,105 @@ class PagesTest(DispatchAPITestCase):
         self.assertEqual(data['results'][0]['title'], 'page 1 and 2')
         self.assertEqual(data['results'][1]['title'], 'page 1')
         self.assertEqual(data['count'], 2)
+
+    def test_set_featured_image(self):
+        """Ensure that a featured image can be set"""
+
+        page = DispatchTestHelpers.create_page(self.client)
+        
+        url = reverse('api-images-list')
+        
+        image_file = 'test_image_a.jpg'
+
+        with open(self.get_input_file(image_file)) as test_image:
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        data = {
+            'featured_image':   {
+                'image_id': image.data['id']
+            }
+        }
+
+        url = reverse('api-pages-detail', args=[page.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.data['featured_image']['image']['id'], image.data['id'])
+
+    def test_remove_featured_image(self):
+        """Ensure that a featured image can be removed"""
+
+        page = DispatchTestHelpers.create_page(self.client)
+        
+        url = reverse('api-images-list')
+        
+        image_file = 'test_image_a.jpg'
+
+        with open(self.get_input_file(image_file)) as test_image:
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        data = {
+            'featured_image':   {
+                'image_id': image.data['id']
+            }
+        }
+
+        url = reverse('api-pages-detail', args=[page.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_image': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_image'], None)
+
+    def test_set_featured_video(self):
+        """Ensure that a featured video can be set"""
+
+        page = DispatchTestHelpers.create_page(self.client)
+        
+        url = reverse('api-videos-list')
+
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': video.data['id']
+            }
+        }
+
+        url = reverse('api-pages-detail', args=[page.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.data['featured_video']['video']['id'], video.data['id'])
+
+    def test_remove_featured_video(self):
+        """Ensure that a featured video can be removed"""
+
+        page = DispatchTestHelpers.create_page(self.client)
+        
+        url = reverse('api-videos-list')
+        
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': video.data['id']
+            }
+        }
+
+        url = reverse('api-pages-detail', args=[page.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_video': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_video'], None)
