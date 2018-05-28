@@ -581,17 +581,70 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(type(widget), type(testwidget))
 
-    def test_widget_field_invalid_data(self):
-        """Trying to validate invalid data should result in InvalidField error"""
+    def test_get_widget_from_widget_field_no_id(self):
+        """Test the case where None id is passed to 'get_widget' """
+
+        register.widget(TestWidget)
+        
+        testwidget = TestWidget()
+
+        testfield = WidgetField('Title', [TestWidgetSub])
+
+        field_data = {
+            'id': None
+        }
+
+        widget = testfield.get_widget(field_data['id'])
+
+        self.assertEqual(widget, None)
+
+    def test_get_widget_json_no_widget(self):
+        """Test the case where None widget is passed to 'get_widget_json' """
+        register.widget(TestWidget)
+        
+        testwidget = TestWidget()
+
+        testfield = WidgetField('Title', [TestWidgetSub])
+
+        field_data = {
+            'id': None
+        }
+
+        widget = testfield.get_widget_json(field_data)
+
+        self.assertEqual(widget, None)
+
+    def test_validate_widget_field_no_id(self):
+        """Trying to validate invalid data (no id) should result in InvalidField error"""
 
         testfield = WidgetField('Title', [TestWidgetSub])
 
         # The data to be validated - valid data are basestrings
-        widget_id = 1
+        field_data = {
+            'id': '',
+            'data': {
+                'title': 'test title',
+                'description': 'test description',
+            }
+        }
 
         try:
-            testfield.validate(widget_id)
+            testfield.validate(field_data)
             self.fail('Widget ID was invalid - validate method should have raised Invalid Field')
+        except InvalidField:
+            pass
+
+    def test_validate_widget_field_required_no_data(self):
+        """Trying to validate invalid data (no data) should result in InvalidField error"""
+
+        testfield = WidgetField('Title', [TestWidgetSub], required=True)
+
+        # The data to be validated - valid data are basestrings
+        field_data = ''
+
+        try:
+            testfield.validate(field_data)
+            self.fail('Widget data was invalid - validate method should have raised Invalid Field')
         except InvalidField:
             pass
 
@@ -645,6 +698,15 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         prepared_data = testfield.prepare_data(field_data)
 
         self.assertEqual(type(prepared_data), type(widget))
+
+    def test_widget_field_prepare_data_no_data(self):
+        """Test the case where None data is passed to 'prepare_data' """
+
+        widget = WidgetField('Title', [TestWidgetSub])
+
+        data = None
+
+        self.assertEqual(widget.prepare_data(data), None)
 
     def test_get_all_widgets(self):
         """Get all the widgets associated with a field"""
@@ -756,7 +818,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
             testfield.validate(value_sz)
 
-            self.assertEqual(value, testfield.prepare_data(value_sz))
+            self.assertEqual(testfield.prepare_data(value_sz), value)
 
         value_test(-7418529)
         value_test(0)
@@ -794,10 +856,10 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         testfield = BoolField('Test')
 
         testfield.validate(True)
-        self.assertEqual(True, testfield.prepare_data(True))
+        self.assertEqual(testfield.prepare_data(True), True)
 
         testfield.validate(False)
-        self.assertEqual(False, testfield.prepare_data(False))
+        self.assertEqual(testfield.prepare_data(False), False)
 
     def test_boolfield_invalid_data(self):
         """Ensure that BoolField correctly rejects invalid data"""
@@ -817,11 +879,11 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = CharField('Test', required=True)
         testfield.validate('test')
-        self.assertEqual('test', testfield.prepare_data('test'))
+        self.assertEqual(testfield.prepare_data('test'), 'test')
 
         testfield = TextField('Test', required=True)
         testfield.validate('test')
-        self.assertEqual('test', testfield.prepare_data('test'))
+        self.assertEqual(testfield.prepare_data('test'), 'test')
 
         testfield = DateTimeField('Test', required=True)
         date = datetime.today()
@@ -831,26 +893,26 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         testfield = IntegerField('Test', required=True)
         testfield.validate('5')
-        self.assertEqual(5, testfield.prepare_data('5'))
+        self.assertEqual(testfield.prepare_data('5'), 5)
 
     def test_fields_notrequired_empty(self):
         """Not required fields should accept empty values"""
 
         testfield = CharField('Test')
         testfield.validate('')
-        self.assertEqual('', testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), '')
 
         testfield = TextField('Test')
         testfield.validate('')
-        self.assertEqual('', testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), '')
 
         testfield = DateTimeField('Test')
         testfield.validate('')
-        self.assertEqual(None, testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), None)
 
         testfield = IntegerField('Test')
         testfield.validate('')
-        self.assertEqual(None, testfield.prepare_data(''))
+        self.assertEqual(testfield.prepare_data(''), None)
 
 
     def test_fields_required_empty(self):

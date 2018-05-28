@@ -252,10 +252,11 @@ class WidgetField(Field):
             self.widgets[widget.id] = WidgetSerializer(widget).data
 
     def validate(self, data):
-        if not data or not data['id']:
-            if self.required:
-                raise InvalidField('Widget must be selected')
-            return
+        if not data and self.required:
+            raise InvalidField('Widget must be selected')
+
+        if not data['id']:
+            raise InvalidField("Must specify a widget id")
 
         try:
             if data['id'] and data['data'] is not None:
@@ -301,6 +302,10 @@ class WidgetField(Field):
 
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
+
+        if widget is None:
+            return None
+
         widget.set_data(data['data'])
 
         return {
@@ -318,7 +323,7 @@ class WidgetField(Field):
     def prepare_data(self, data):
         if data is None:
             return None
-            
+
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
