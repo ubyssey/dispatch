@@ -258,7 +258,7 @@ class PollViewSet(DispatchModelViewSet):
         queryset = Poll.objects.all()
         q = self.request.query_params.get('q', None)
         if q is not None:
-            queryset = queryset.filter(question__icontains=q)
+            queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
         return queryset
 
 class PollVoteViewSet(DispatchModelViewSet):
