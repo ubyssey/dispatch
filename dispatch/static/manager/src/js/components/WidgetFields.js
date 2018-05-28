@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import WidgetField from './ZoneEditor/WidgetField'
 
 class WidgetFieldsComponent extends React.Component {
-
   render() {
     const widget = this.props.entities.widgets[this.props.widgetId]
     const fields = widget ? widget.fields.map((field) => (
@@ -14,7 +13,7 @@ class WidgetFieldsComponent extends React.Component {
         data={this.props.data[field.name] || null}
         onChange={(data) => this.props.updateField(field.name, data)} />
     )) : null
-    
+
     return (
       <div>
       {fields}

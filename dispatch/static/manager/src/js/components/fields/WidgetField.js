@@ -38,7 +38,6 @@ export default class WidgetFieldComponent extends React.Component {
   render() {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
-
     let fields = widget ? widget.fields.map((field) => (
       <WidgetFieldWrapper
         error={R.prop(field.name, this.props.errors || {})}

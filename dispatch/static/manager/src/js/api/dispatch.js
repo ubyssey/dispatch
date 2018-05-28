@@ -13,10 +13,8 @@ function prepareMultipartPayload(payload) {
   for (var key in payload) {
     if (payload.hasOwnProperty(key)) {
       if (payload[key] && payload[key].constructor === File) {
-        console.log('file', payload[key])
         formData.append(key, payload[key])
       } else if (typeof payload[key] !== 'undefined') {
-        console.log('not a file', payload[key])
         formData.append(key, JSON.parse(JSON.stringify(payload[key])))
       }
     }

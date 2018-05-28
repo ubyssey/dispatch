@@ -779,6 +779,7 @@ class PollSerializer(DispatchModelSerializer):
     total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
+    # id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Poll
