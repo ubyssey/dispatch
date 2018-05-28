@@ -261,8 +261,10 @@ class PollViewSet(DispatchModelViewSet):
             queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
         return queryset
 
-class PollVoteViewSet(DispatchModelViewSet):
+class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """Viewset for the PollVote Model"""
+    permission_classes = (AllowAny,)
+
     model = PollVote
     serializer_class = PollVoteSerializer
     queryset = PollVote.objects.all()
