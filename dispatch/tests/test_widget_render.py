@@ -172,6 +172,34 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(data, widget.prepare_data())
         self.assertEqual(result, html)
 
+    def test_original_before_save_method(self):
+        """When not redefining before_save, it should just return the data unaffected"""
+
+        register.zone(TestZone)
+        register.widget(TestWidget)
+
+        zone = TestZone()
+        widget = TestWidget()
+
+        validated_data = {
+            'widget': 'test-widget',
+            'data': {
+              'title': 'test title 1',
+              'description': 'test description'
+            }
+        }
+
+        zone.save(validated_data)
+        widget.set_data(validated_data['data'])
+
+        html = u'<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
+
+        data = widget.before_save(widget.prepare_data())
+        result = widget.render(data)
+
+        self.assertEqual(data, widget.prepare_data())
+        self.assertEqual(result, html)
+
     def test_empty_zone_render(self):
         """Zone without widget attached should render empty"""
 
@@ -203,7 +231,6 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         html = u'\n\n<div class="zone">\n\n</div>\n'
 
         self.assertEqual(result, html)
-
 
     def test_zone_render_kwargs(self):
         """The test zone should be properly rendered when provided valid kwargs"""
