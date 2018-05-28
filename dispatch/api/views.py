@@ -249,6 +249,26 @@ class ImageGalleryViewSet(DispatchModelViewSet):
             queryset = queryset.filter(title__icontains=q)
         return queryset
 
+class PollViewSet(DispatchModelViewSet):
+    """Viewset for the Poll model views."""
+    model = Poll
+    serializer_class = PollSerializer
+
+    def get_queryset(self):
+        queryset = Poll.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
+        return queryset
+
+class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """Viewset for the PollVote Model"""
+    permission_classes = (AllowAny,)
+
+    model = PollVote
+    serializer_class = PollVoteSerializer
+    queryset = PollVote.objects.all()
+
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
     permission_classes = (IsAuthenticated,)
@@ -381,37 +401,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
         serializer = WidgetSerializer(zone.widgets, many=True)
 
         return self.get_paginated_response(serializer.data)
-
-class PollViewSet(DispatchModelViewSet):
-    """Viewset for the Poll model views."""
-    model = Poll
-    serializer_class = PollSerializer
-
-    def get_queryset(self):
-        queryset = Poll.objects.all()
-        q = self.request.query_params.get('q', None)
-        if q is not None:
-            queryset = queryset.filter(question__icontains=q)
-        return queryset
-    
-    # def list(self, request):
-    #     q = request.query_params.get('q', None)
-    #     if q is not None:
-    #         zones = ThemeManager.Zones.search(q)
-    #     else:
-    #         zones = ThemeManager.Zones.list()
-
-    #     serializer = ZoneSerializer(zones, many=True)
-
-    #     return self.get_paginated_response(serializer.data)
         
-
-class PollVoteViewSet(DispatchModelViewSet):
-    """Viewset for the PollVote Model"""
-    model = PollVote
-    serializer_class = PollVoteSerializer
-    queryset = PollVote.objects.all()
-
 class DashboardViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)

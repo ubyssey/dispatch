@@ -79,7 +79,7 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Poll saved')
   case rejected(types.POLLS.CREATE):
   case rejected(types.POLLS.SAVE):
-    return showToast('Poll could not be savedd', Intent.DANGER)
+    return showToast('Poll could not be saved', Intent.DANGER)
   case fulfilled(types.POLLS.DELETE_MANY):
     return showToast(`${action.payload.length} poll${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.POLLS.DELETE_MANY):
