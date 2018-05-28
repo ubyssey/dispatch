@@ -15,6 +15,33 @@ export default class PollForm extends React.Component {
     this.props.listPolls(this.props.token, queryObj)
   }
 
+  constructor(props){
+    super(props)
+    if(props.listItem.id === 'new') {
+      this.state = {
+        answers : [
+          {
+            'id': 0,
+            'name': '',
+            'votes': [],
+            'vote_count': 0
+          },
+          {
+            'id': 1,
+            'name': '',
+            'votes': [],
+            'vote_count': 0
+          }
+        ]
+      }
+    }
+    else {
+      this.state = {
+        answers: props.listItem.answers
+      }
+    }
+  }
+
   addAnswer() {
     let answers = this.props.listItem.answers || []
     let id = answers[answers.length - 1] ? answers[answers.length - 1].id + 1 : 1
@@ -35,7 +62,7 @@ export default class PollForm extends React.Component {
   }
 
   handleUpdateAnswer(id, e) {
-    var answers = this.props.listItem.answers
+    var answers = this.state.answers
     for(var i = 0; i < answers.length; i++) {
       if(answers[i].id === id){
         answers[i].name = e.target.value
@@ -44,9 +71,16 @@ export default class PollForm extends React.Component {
     this.props.update('answers', answers)
   }
 
+  openPoll() {
+    this.props.update('is_open', true)
+  }
+
+  closePoll() {
+    this.props.update('is_open', false)
+  }
 
   renderAnswers() {
-    let answers = this.props.listItem.answers.map(
+    let answers = this.state.answers.map(
       (answer, index) => {
         let name = answer.name
         let votes = answer.vote_count
@@ -88,6 +122,26 @@ export default class PollForm extends React.Component {
     )
   }
 
+  renderPollToggle() {
+    if (this.props.listItem.is_open) {
+      return (
+        <Button
+          intent={Intent.DANGER}
+          onClick={() => this.closePoll()}>
+          Close Poll
+        </Button>
+      )
+    }
+    else
+      return (
+        <Button
+          intent={Intent.SUCCESS}
+          onClick={() => this.openPoll()}>
+          Open Poll
+        </Button>
+      )
+  }
+
   render() {
     return (
       <form onSubmit={e => e.preventDefault()}>
@@ -111,8 +165,11 @@ export default class PollForm extends React.Component {
             fill={true}
             onChange={ e => this.props.update('question', e.target.value) } />
         </FormInput>
-        {this.props.listItem.answers ? this.renderAnswers() : null}
-        {this.renderAddAnswerButton()}
+        <div>
+          {this.renderAnswers()}
+          {this.renderAddAnswerButton()}
+        </div>
+        {(this.props.listItem.id === 'new') ? null : this.renderPollToggle()}
       </form>
     )
   }
