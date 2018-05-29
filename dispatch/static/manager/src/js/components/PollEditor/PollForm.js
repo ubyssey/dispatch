@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { FormInput, TextInput } from '../inputs'
+import Poll from './Poll'
 import SelectInput from '../inputs/selects/SelectInput'
 
 require('../../../styles/components/poll_form.scss')
@@ -90,11 +91,11 @@ export default class PollForm extends React.Component {
               value={name || ''}
               fill={true}
               onChange={ e => this.handleUpdateAnswer(answer.id, e) } />
-            <Button
-              intent={Intent.DANGER}
+            <span
+              className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(id)}>
-              Remove answer
-            </Button>
+              <span className={'pt-icon-standard-text'}>Remove answer</span>
+            </span>
           </FormInput>
         )
       }
@@ -136,10 +137,11 @@ export default class PollForm extends React.Component {
     )
   }
 
+
   renderOptions() {
     const OPTIONS = [
-      [true, 'Show Results'],
-      [false, 'Hide Results'],
+      [true, 'Show results'],
+      [false, 'Hide results']
     ]
 
     return (
@@ -161,32 +163,45 @@ export default class PollForm extends React.Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={e => e.preventDefault()}>
-          <FormInput
-            label='Name'
-            padded={false}
-            error={this.props.errors.name}>
-            <TextInput
-              placeholder='Name'
-              value={this.props.listItem.name || ''}
-              fill={true}
-              onChange={ e => this.props.update('name', e.target.value) } />
-          </FormInput>
-          <FormInput
-            label='Question'
-            padded={false}
-            error={this.props.errors.question}>
-            <TextInput
-              placeholder='Question'
-              value={this.props.listItem.question || ''}
-              fill={true}
-              onChange={ e => this.props.update('question', e.target.value) } />
-          </FormInput>
-          {this.renderAnswers()}
-          {this.renderAddAnswerButton()}
-          {this.renderOptions()}
-        </form>
+      <div className={'c-poll-form-container'}>
+        <div className={'c-equal-width'}>
+          <form onSubmit={e => e.preventDefault()}>
+            <FormInput
+              label='Name'
+              padded={false}
+              error={this.props.errors.name}>
+              <TextInput
+                placeholder='Name'
+                value={this.props.listItem.name || ''}
+                fill={true}
+                onChange={ e => this.props.update('name', e.target.value) } />
+            </FormInput>
+            <FormInput
+              label='Question'
+              padded={false}
+              error={this.props.errors.question}>
+              <TextInput
+                placeholder='Question'
+                value={this.props.listItem.question || ''}
+                fill={true}
+                onChange={ e => this.props.update('question', e.target.value) } />
+            </FormInput>
+            {this.renderAnswers()}
+            {this.renderAddAnswerButton()}
+            {this.renderOptions()}
+          </form>
+        </div>
+        <div className={'c-equal-width'}>
+          <Poll
+            many={false}
+            id={this.props.listItem.id}
+            answers={this.props.listItem.answers}
+            question={this.props.listItem.question}
+            />
+        </div>
+
+        <div>
+        </div>
       </div>
     )
   }
