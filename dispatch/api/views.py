@@ -268,6 +268,15 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     model = PollVote
     serializer_class = PollVoteSerializer
 
+    def create(self, request):
+        vote_id = request.COOKIES.get('vote_id', None)
+        print('cookie', vote_id)
+        if vote_id is not None:
+            vote = PollVote.objects.get(id=vote_id)
+            vote.delete()
+        return super(PollVoteViewSet, self).create(request)
+
+
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
     permission_classes = (IsAuthenticated,)
