@@ -742,8 +742,9 @@ class PollVoteSerializer(DispatchModelSerializer):
             poll = Poll.objects.get(id=poll_id)
         except PollAnswer.DoesNotExist:
             answer = None
+            poll = None
         # Set the vote's answer
-        if poll.is_open:
+        if poll is not None and poll.is_open:
             if answer is not None:
                 instance.answer = answer
                 instance.save()
