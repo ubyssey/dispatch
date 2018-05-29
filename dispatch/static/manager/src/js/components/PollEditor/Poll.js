@@ -11,31 +11,69 @@ class Poll extends Component {
     this.state = {
       answers: [],
       votes: [],
-      voting: false,
-      pollQuestion: this.props.question,
+      showResults: true,
+      pollQuestion: '',
       loading: true,
+      noVotes: false,
     }
   }
 
   componentDidMount() {
+    this.update()
+    this.forceUpdate()
+  }
+
+  componentDidUpdate() {
+    this.update()
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.state.showResults !== nextState.showResults){
+      return true
+    }
+    if(this.props.answers.length === nextProps.answers.length){
+      setTimeout(()=> {
+        this.forceUpdate()
+      }, 250)
+      return false
+    }
+    return true
+  }
+
+  update() {
     let answers = []
     let votes = []
     for(let answer of this.props.answers){
       answers.push(answer['name'])
       votes.push(answer['vote_count'])
     }
+    let temp = votes.filter((item) => {return item === 0})
+    let noVotes = false
+    if(temp.length === votes.length){
+      //no votes yet, populate with dummy data for better pole visualization
+      votes[0] = 2
+      votes[1] = 1
+      noVotes = true
+    }
     this.setState({
       answers: answers,
       votes: votes,
       loading: false,
+      pollQuestion: this.props.question,
+      noVotes: noVotes,
     })
-    this.forceUpdate()
   }
 
   getPollResult(index) {
-    if(!this.state.voting){
+
+    if(this.state.showResults){
+      let width = 0
       let total = this.state.votes.reduce((acc, val) => { return acc + val })
-      let width = String((100*this.state.votes[index]/total).toFixed(0)) + '%'
+
+      if(total !== 0){
+        width = String((100*this.state.votes[index]/total).toFixed(0)) + '%'
+      }
+      
       return width
     }
     return 0
@@ -43,17 +81,23 @@ class Poll extends Component {
 
   toggleResults() {
     this.setState(prevstate => ({
-      voting: !prevstate.voting
+      showResults: !prevstate.showResults
     }))
   }
 
+  componentWillReceiveProps(nextProps){
+    if(this.props !== nextProps){
+      this.forceUpdate()
+    }
+  }
+
   render() {
-    const showResult = this.state.voting ?  0 : COLOR_OPACITY
-    const notShowResult = this.state.voting ? COLOR_OPACITY : 0
+    const notShowResult= this.state.showResults ?  0 : COLOR_OPACITY
+    const showResult = this.state.showResults ? COLOR_OPACITY : 0
     return (
       <div>
         {!this.state.loading &&
-          <div>
+          <div className={'poll-preview'}>
             <div className={['poll-container', 'poll-results'].join(' ')}>
               <h1>{this.state.pollQuestion}</h1>
               <form className={'poll-answer-form'}>
@@ -86,12 +130,14 @@ class Poll extends Component {
                 }
               </form>
             </div>
+            {this.state.noVotes && <i>No votes yet, poll data above is for visualization purposes only!</i>}
+            <br/>
             <Button 
-              className={'poll-edit-button'} 
+              className={'poll-results-button'}
               intent={Intent.SUCCESS}
               onClick={() => this.toggleResults()}>
               Toggle Results View
-            </Button>  
+            </Button> 
           </div>
         }
         {this.state.loading && 'Loading Poll...'}

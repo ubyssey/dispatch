@@ -100,11 +100,11 @@ export default class PollForm extends React.Component {
               value={name || ''}
               fill={true}
               onChange={ e => this.handleUpdateAnswer(answer.id, e) } />
-            <Button
-              intent={Intent.DANGER}
+            <span
+              className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(id)}>
-              Remove answer
-            </Button>
+              <span className={'pt-icon-standard-text'}>Remove answer</span>
+            </span>
           </FormInput>
         )
       }
