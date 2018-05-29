@@ -126,29 +126,28 @@ export default class PollForm extends React.Component {
   }
 
   renderPollToggle() {
-    if (this.props.listItem.is_open) {
-      return (
-        <Button
-          intent={Intent.DANGER}
-          onClick={() => this.closePoll()}>
-          Close Poll
-        </Button>
-      )
-    }
-    else
-      return (
-        <Button
-          intent={Intent.SUCCESS}
-          onClick={() => this.openPoll()}>
-          Open Poll
-        </Button>
-      )
+    const OPTIONS = [
+      [true, 'Poll Open'],
+      [false, 'Poll Closed']
+    ]
+    return (
+      <FormInput
+        label='Poll Options'
+        padded={false}>
+        <div className='c-poll-form__results-select'>
+          <SelectInput
+            options={OPTIONS}
+            selected={this.props.listItem.is_open}
+            onChange={e => this.props.update('is_open', e.target.value)}/>
+        </div>
+      </FormInput>
+    )
   }
 
   renderOptions() {
     const OPTIONS = [
-      [true, 'Show results'],
-      [false, 'Hide results'],
+      [true, 'Show Results'],
+      [false, 'Hide Results'],
     ]
 
     return (
