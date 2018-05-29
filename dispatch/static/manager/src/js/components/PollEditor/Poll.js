@@ -6,38 +6,9 @@ require('../../../styles/components/poll.scss')
 const COLOR_OPACITY = .8
 
 class Poll extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      answers: [],
-      votes: [],
-      showResults: true,
-      pollQuestion: '',
-      loading: true,
-      noVotes: false,
-    }
-  }
 
   componentDidMount() {
     this.update()
-    this.forceUpdate()
-  }
-
-  componentDidUpdate() {
-    this.update()
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    if(this.state.showResults !== nextState.showResults){
-      return true
-    }
-    if(this.props.answers.length === nextProps.answers.length){
-      setTimeout(()=> {
-        this.forceUpdate()
-      }, 250)
-      return false
-    }
-    return true
   }
 
   update() {
@@ -50,28 +21,28 @@ class Poll extends Component {
     let temp = votes.filter((item) => {return item === 0})
     let noVotes = false
     if(temp.length === votes.length){
-      //no votes yet, populate with dummy data for better pole visualization
+      //no votes yet, populate with dummy data for better poll visualization
       votes[0] = 2
       votes[1] = 1
       noVotes = true
     }
-    this.setState({
+
+    return {
       answers: answers,
       votes: votes,
       loading: false,
       pollQuestion: this.props.question,
       noVotes: noVotes,
-    })
+    }
   }
 
-  getPollResult(index) {
-
-    if(this.state.showResults){
+  getPollResult(index, votes) {
+    if(this.props.showResults){
       let width = 0
-      let total = this.state.votes.reduce((acc, val) => { return acc + val })
+      let total = votes.reduce((acc, val) => { return acc + val })
 
       if(total !== 0){
-        width = String((100*this.state.votes[index]/total).toFixed(0)) + '%'
+        width = String((100*votes[index]/total).toFixed(0)) + '%'
       }
       
       return width
@@ -85,23 +56,19 @@ class Poll extends Component {
     }))
   }
 
-  componentWillReceiveProps(nextProps){
-    if(this.props !== nextProps){
-      this.forceUpdate()
-    }
-  }
-
   render() {
+    const { answers, votes, loading, pollQuestion, noVotes } = this.update()
+
     const notShowResult= this.state.showResults ?  0 : COLOR_OPACITY
     const showResult = this.state.showResults ? COLOR_OPACITY : 0
     return (
       <div>
-        {!this.state.loading &&
+        {!loading &&
           <div className={'poll-preview'}>
             <div className={['poll-container', 'poll-results'].join(' ')}>
-              <h1>{this.state.pollQuestion}</h1>
+              <h1>{pollQuestion}</h1>
               <form className={'poll-answer-form'}>
-                {this.state.answers.map((answer, index) => {
+                {answers.map((answer, index) => {
                   return(
                     <label key={index} className={['poll-button-label', 'poll-button-voted'].join(' ')}>
                       <input className={'poll-input'} 
@@ -109,7 +76,6 @@ class Poll extends Component {
                         type={'radio'} 
                         value={answer} />
                         <span className={'poll-answer-text'}>{answer}</span>
-                      {/* </input> */}
 
                       <span className={'poll-button'}
                         style={{opacity: notShowResult}}>
@@ -118,11 +84,11 @@ class Poll extends Component {
 
                       <span className={'poll-percentage'}
                         style={{opacity: showResult}}>
-                        {this.getPollResult(index)}
+                        {this.getPollResult(index, votes)}
                       </span>
 
                       <div className={'poll-result-bar'} 
-                        style={{width: this.getPollResult(index), opacity: showResult}}>
+                        style={{width: this.getPollResult(index, votes), opacity: showResult}}>
                       </div>
 
                     </label>
@@ -130,7 +96,7 @@ class Poll extends Component {
                 }
               </form>
             </div>
-            {this.state.noVotes && <i>No votes yet, poll data above is for visualization purposes only!</i>}
+            {noVotes && <i>No votes yet, poll data above is for visualization purposes only!</i>}
             <br/>
             <Button 
               className={'poll-results-button'}
@@ -140,7 +106,7 @@ class Poll extends Component {
             </Button> 
           </div>
         }
-        {this.state.loading && 'Loading Poll...'}
+        {loading && 'Loading Poll...'}
       </div>
     )
   }
