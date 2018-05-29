@@ -779,13 +779,13 @@ class PollSerializer(DispatchModelSerializer):
     total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
-    # id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Poll
         fields = (
             'id',
             'is_open',
+            'show_results',
             'name',
             'question',
             'answers',
@@ -805,7 +805,7 @@ class PollSerializer(DispatchModelSerializer):
         instance.question = validated_data.get('question', instance.question)
         instance.name = validated_data.get('name', instance.name)
         instance.is_open = validated_data.get('is_open', instance.is_open)
-
+        instance.show_results = validated_data.get('show_results', instance.show_results)
         # Save instance before processing/saving content in order to
         # save associations to correct ID
         instance.save()

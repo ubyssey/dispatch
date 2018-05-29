@@ -3,6 +3,7 @@ import { Button, Intent } from '@blueprintjs/core'
 
 import { FormInput, TextInput } from '../inputs'
 import Poll from './Poll'
+import SelectInput from '../inputs/selects/SelectInput'
 
 require('../../../styles/components/poll_form.scss')
 
@@ -126,23 +127,10 @@ export default class PollForm extends React.Component {
   }
 
   renderPollToggle() {
-    if (this.props.listItem.is_open) {
-      return (
-        <Button
-          intent={Intent.DANGER}
-          onClick={() => this.closePoll()}>
-          Close Poll
-        </Button>
-      )
-    }
-    else
-      return (
-        <Button
-          intent={Intent.SUCCESS}
-          onClick={() => this.openPoll()}>
-          Open Poll
-        </Button>
-      )
+    const OPTIONS = [
+      [true, 'Poll Open'],
+      [false, 'Poll Closed']
+    ]
   }
 
   render() {
@@ -170,11 +158,9 @@ export default class PollForm extends React.Component {
                 fill={true}
                 onChange={ e => this.props.update('question', e.target.value) } />
             </FormInput>
-            <div>
-              {this.renderAnswers()}
-              {this.renderAddAnswerButton()}
-            </div>
-            {(this.props.listItem.id === 'new') ? null : this.renderPollToggle()}
+            {this.renderAnswers()}
+            {this.renderAddAnswerButton()}
+            {this.renderOptions()}
           </form>
         </div>
         <div className={'c-equal-width'}>
@@ -184,6 +170,9 @@ export default class PollForm extends React.Component {
             answers={this.props.listItem.answers}
             question={this.props.listItem.question}
             />
+        </div>
+
+        <div>
         </div>
       </div>
     )
