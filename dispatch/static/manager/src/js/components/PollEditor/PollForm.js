@@ -44,6 +44,7 @@ export default class PollForm extends React.Component {
 
   addAnswer() {
     let answers = this.props.listItem.answers || []
+
     let id = answers[answers.length - 1] ? answers[answers.length - 1].id + 1 : 1
     let answer = {
       'id': id,

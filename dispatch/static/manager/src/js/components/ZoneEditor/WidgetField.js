@@ -6,7 +6,6 @@ import { FormInput } from '../inputs'
 
 export default function WidgetField(props) {
   const Field = fields[props.field.type]
-
   let fieldError = ''
   let childErrors = null
   if (props.field.type == 'widget' && props.error) {

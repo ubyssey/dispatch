@@ -86,6 +86,31 @@ class PullQuoteEmbed(AbstractTemplateEmbed):
 class PollEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/poll.html'
 
+class WidgetEmbed(AbstractEmbed):
+    @classmethod
+    def render(self, data):
+
+        from dispatch.theme import ThemeManager
+        from dispatch.theme.exceptions import ZoneNotFound, WidgetNotFound
+
+        try:
+            widget_id = data['widget_id']
+            widget = ThemeManager.Widgets.get(widget_id)
+        except:
+            return ''
+
+        return widget.render(data=data['data'])
+   
+        # except ZoneNotFound:
+        #     return ''
+
+        # try:
+        #     return zone.widget.render(add_context=kwargs)
+        # except (WidgetNotFound, AttributeError):
+        #     pass
+
+        # return ''
+
 class ImageEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/image.html'
 
@@ -139,6 +164,7 @@ class GalleryEmbed(AbstractTemplateEmbed):
         }
 
 embeds.register('poll', PollEmbed)
+embeds.register('widget', WidgetEmbed)
 embeds.register('quote', PullQuoteEmbed)
 embeds.register('code', CodeEmbed)
 embeds.register('advertisement', AdvertisementEmbed)
