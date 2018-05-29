@@ -7,17 +7,8 @@ import SelectInput from '../inputs/selects/SelectInput'
 require('../../../styles/components/poll_form.scss')
 
 export default class PollForm extends React.Component {
-  listPolls(query) {
-    let queryObj = {}
 
-    if (query) {
-      queryObj['q'] = query
-    }
-
-    this.props.listPolls(this.props.token, queryObj)
-  }
-
-  constructor(props){
+  constructor(props) {
     super(props)
     if(props.listItem.id === 'new') {
       this.state = {
@@ -45,7 +36,7 @@ export default class PollForm extends React.Component {
   }
 
   addAnswer() {
-    let answers = this.props.listItem.answers || []
+    let answers = this.state.answers
 
     let id = answers[answers.length - 1] ? answers[answers.length - 1].id + 1 : 1
     let answer = {
@@ -59,9 +50,9 @@ export default class PollForm extends React.Component {
   }
 
   removeAnswer(id) {
-    var answers = this.props.listItem.answers
+    let answers = this.state.answers
     answers.splice(id, 1)
-    this.props.update('answer', answers)
+    this.props.update('answers', answers)
   }
 
   handleUpdateAnswer(id, e) {
@@ -125,11 +116,12 @@ export default class PollForm extends React.Component {
     )
   }
 
-  renderPollToggle() {
+  renderPollOpenSelect() {
     const OPTIONS = [
       [true, 'Poll Open'],
       [false, 'Poll Closed']
     ]
+
     return (
       <FormInput
         label='Poll Options'
@@ -162,7 +154,7 @@ export default class PollForm extends React.Component {
               onChange={e => this.props.update('show_results', e.target.value)}/>
           </div>
         </FormInput>
-        {(this.props.listItem.id === 'new') ? null : this.renderPollToggle()}
+        {(this.props.listItem.id === 'new') ? null : this.renderPollOpenSelect()}
       </div>
     )
   }
@@ -195,8 +187,6 @@ export default class PollForm extends React.Component {
           {this.renderAddAnswerButton()}
           {this.renderOptions()}
         </form>
-        <div>
-        </div>
       </div>
     )
   }

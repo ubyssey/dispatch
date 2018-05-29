@@ -743,10 +743,10 @@ class PollVoteSerializer(DispatchModelSerializer):
         except PollAnswer.DoesNotExist:
             answer = None
         # Set the vote's answer
-        #if poll['is_open']:
-        if answer is not None:
-            instance.answer = answer
-            instance.save()
+        if poll.is_open:
+            if answer is not None:
+                instance.answer = answer
+                instance.save()
 
         return instance
 
@@ -798,9 +798,9 @@ class PollSerializer(DispatchModelSerializer):
         instance = Poll()
 
         # Then save as usual
-        return self.update(instance, validated_data)
+        return self.update(instance, validated_data, True)
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data, is_new=False):
         # Update all the basic fields
         instance.question = validated_data.get('question', instance.question)
         instance.name = validated_data.get('name', instance.name)
@@ -813,6 +813,6 @@ class PollSerializer(DispatchModelSerializer):
         answers = validated_data.get('answers_json', False)
 
         if isinstance(answers, list):
-            instance.save_answers(answers)
+            instance.save_answers(answers, is_new)
 
         return instance

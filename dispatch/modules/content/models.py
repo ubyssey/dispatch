@@ -509,11 +509,22 @@ class Poll(Model):
     is_open = BooleanField(default=True)
     show_results = BooleanField(default=True)
 
-    def save_answers(self, answers):
-        PollAnswer.objects.filter(poll=self).delete()
+    def save_answers(self, answers, is_new):
+        if is_new is False:
+            self.delete_old_answers(answers)
         for answer in answers:
-            answer_obj = PollAnswer(poll=self, name=answer['name'])
+            try:
+                answer_obj = PollAnswer.objects.get(poll=self, id=answer['id'])
+            except PollAnswer.DoesNotExist:
+                answer_obj = PollAnswer(poll=self, name=answer['name'])
             answer_obj.save()
+
+    def delete_old_answers(self, answers):
+        old_answers = PollAnswer.objects.filter(poll=self)
+        for answer in answers:
+            old_answers = old_answers.exclude(id=answer['id'])
+        old_answers.delete()
+
 
     def get_total_votes(self):
         return PollVote.objects.all().filter(answer__poll=self).count()
