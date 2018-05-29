@@ -267,7 +267,6 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     model = PollVote
     serializer_class = PollVoteSerializer
-    queryset = PollVote.objects.all()
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
@@ -401,7 +400,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
         serializer = WidgetSerializer(zone.widgets, many=True)
 
         return self.get_paginated_response(serializer.data)
-        
+
 class DashboardViewSet(viewsets.GenericViewSet):
 
     permission_classes = (IsAuthenticated,)

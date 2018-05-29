@@ -504,10 +504,10 @@ class Issue(Model):
     date = DateTimeField()
 
 class Poll(Model):
-    # id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = CharField(max_length=255)
     question = CharField(max_length=255)
     is_open = BooleanField(default=True)
+    show_results = BooleanField(default=True)
 
     def save_answers(self, answers):
         PollAnswer.objects.filter(poll=self).delete()

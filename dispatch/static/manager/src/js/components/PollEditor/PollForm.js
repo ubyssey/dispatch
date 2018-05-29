@@ -2,7 +2,9 @@ import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { FormInput, TextInput } from '../inputs'
+import SelectInput from '../inputs/selects/SelectInput'
 
+require('../../../styles/components/poll_form.scss')
 
 export default class PollForm extends React.Component {
   listPolls(query) {
@@ -143,6 +145,29 @@ export default class PollForm extends React.Component {
       )
   }
 
+  renderOptions() {
+    const OPTIONS = [
+      [true, 'Show results'],
+      [false, 'Hide results'],
+    ]
+
+    return (
+      <div>
+        <FormInput
+          label='Results Options'
+          padded={false}>
+          <div className='c-poll-form__results-select'>
+            <SelectInput
+              options={OPTIONS}
+              selected={this.props.listItem.show_results}
+              onChange={e => this.props.update('show_results', e.target.value)}/>
+          </div>
+        </FormInput>
+        {(this.props.listItem.id === 'new') ? null : this.renderPollToggle()}
+      </div>
+    )
+  }
+
   render() {
     return (
       <div>
@@ -169,8 +194,10 @@ export default class PollForm extends React.Component {
           </FormInput>
           {this.renderAnswers()}
           {this.renderAddAnswerButton()}
+          {this.renderOptions()}
         </form>
-        {(this.props.listItem.id === 'new') ? null : this.renderPollToggle()}
+        <div>
+        </div>
       </div>
     )
   }
