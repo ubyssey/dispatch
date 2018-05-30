@@ -270,10 +270,12 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def create(self, request):
         vote_id = request.COOKIES.get('vote_id', None)
-        print('cookie', vote_id)
         if vote_id is not None:
-            vote = PollVote.objects.get(id=vote_id)
-            vote.delete()
+            try:
+                vote = PollVote.objects.get(id=vote_id)
+                vote.delete()
+            except PollVote.DoesNotExist:
+                pass
         return super(PollVoteViewSet, self).create(request)
 
 
