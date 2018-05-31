@@ -2,9 +2,13 @@ import StringIO
 import os
 import re
 import uuid
+import io
+from libxmp import XMPFiles
+from tempfile import NamedTemporaryFile
 
 from jsonfield import JSONField
 from PIL import Image as Img
+from bs4 import BeautifulSoup
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -222,7 +226,7 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
-            
+
             self.featured_image = None
             return
 
@@ -380,11 +384,12 @@ class Video(Model):
 class Image(Model, AuthorMixin):
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Author, related_name='image_authors')
-    tags = ManyToManyField('Tag')
+    tags = ManyToManyField(Tag)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -451,14 +456,77 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+            s = self.img.read()
+            image = Img.open(StringIO.StringIO(s))
             self.width, self.height = image.size
 
+            b = bytearray(s)
+            #b.extend(s.encode('hex'))
+
+
+            #
+            # imgByteArr = io.BytesIO()
+            # image.save(imgByteArr, format= 'JPEG' )
+            # imgByteArr = imgByteArr.getvalue()
+            with NamedTemporaryFile() as f:
+                f.write(b)
+                xmpfile = XMPFiles(file_path=f.name)
+                xmp = xmpfile.get_xmp()
+                # print xmp
+
+                self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
+                self.caption = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
+                #titlestring = title.encode('ascii','ignore')
+                #print type(title)
+                #print type(titlestring)
+                #print titlestring
+                # print 'tags'
+                counter = 1
+                tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
+                while tag_name != '':
+                    tag, created = Tag.objects.get_or_create(name=tag_name)
+                    self.tags.add(tag)
+                    counter += 1
+                    # print tag_name
+                    tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
+                # print 'author'
+                author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', counter)
+                if author_name != '':
+                    person, created = Person.objects.get_or_create(full_name=author_name)
+                    author = Author.objects.create(person=person, order = 0, type="photographer")
+                    self.authors.add(author)
+                #     print author_name
+                # print 'title'
+                # print title
+                # print 'caption'
+                # print caption
+
+                # print bytearray(xmp.get_property(xmp.get_namespace_for_prefix('dc'), 'title'), 'UTF-8')
+                # print xmp.get_property(xmp.get_namespace_for_prefix('rdf'), 'li')
+                # print(xmp.get_property(xmp.get_namespace_for_prefix('xmp'), 'CreatorTool'))
+                # print type(xmp.get_property(xmp.get_namespace_for_prefix('xmp'), 'CreatorTool'))
+                #
+                # print(xmp.get_property('http://purl.org/dc/elements/1.1/', 'description'))
+                # print(xmp.get_property('http://purl.org/dc/elements/1.1/', 'subject'))
+
+            # print 'making soup'
+            # soup = BeautifulSoup(StringIO.StringIO(self.img.read()), "xml")
+            # print 'soup made'
+            # print soup
+            # print soup.title
+            # print soup.description
+            # print soup.creator
+
+
             super(Image, self).save()
-
-            name = self.get_name()
             ext = self.get_extension()
-
+            name = self.get_name()
+            # print self.tag_ids
+            # print self.title
+            # print self.caption
+            # print self.authors.all()
+            # for t in self.tags.all():
+            #     print t.name
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
