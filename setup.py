@@ -15,7 +15,8 @@ setup(name='dispatch',
         'djangorestframework == 3.6.2',
         'pillow',
         'requests == 2.6.0',
-        'jsonfield',
+        'jsonfield'
+        'libxmp',
     ],
     extras_require={
         'dev': [
