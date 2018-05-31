@@ -767,8 +767,6 @@ class PollAnswerSerializer(DispatchModelSerializer):
             'poll_id'
         )
 
-    def get_vote_count(self, obj):
-        return obj.votes.count()
 
 class PollSerializer(DispatchModelSerializer):
     """Serializes the Poll model."""
