@@ -37,22 +37,11 @@
     margin-right: 7px;
   }
 
-
   .pt-navbar-group {
-    // Structure
-
- 
     .nav-dropdown-button {
       // Text
       color: $color-dispatch-gray;
     }
-
-    // .nav-align-right{
-    //   float: right;
-    //   .pt-button[class*="pt-icon-"]:before{
-    //     color: $color-dispatch-gray;
-    //   }
-    // }
 
     &.pt-align-left{
       .nav-dropdown-container {
@@ -84,17 +73,10 @@
         // Text
         color: $color-text-dispatch-gray-light;
 
-        // // Background
-        // background-color: white;
-        // border: 2px solid $color-dispatch-gray;
-        // border-top: 4px;
-        
-        // Text
-        // color: $color-dispatch-gray;
         .pt-button.pt-minimal{
-          &:hover{
-            // background-color: $color-dispatch-gray-light;
-          }
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
         }
       }
 
@@ -113,51 +95,17 @@
       .nav-align-right{
         .pt-button[class*="pt-icon-"]:before{
           color: inherit;
+          padding: 0;
         }
       }
     }
-
-    // @media screen and (min-width: 120px){
-    //   .nav-dropdown-button {
-    //     color: $color-text-dispatch-gray-light;
-    //   }
-    //   .nav-navbar-divider{
-    //     border-left-color: inherit;
-    //   }
-    //   .nav-align-right{
-    //     .pt-button[class*="pt-icon-"]:before{
-    //       color: inherit;
-    //     }
-    //   }
-
-    //   .nav-dropdown-container {
-    //     color: $color-text-dispatch-gray-light;
-    //     .nav-dropdown-content {
-    //       // Structure
-    //       display: none;
-    //       .pt-button.pt-minimal{
-    //         display: flex;
-    //         align-items: center;
-    //         &:hover{
-    //           // background-color: rgba(138, 155, 168, 0.15);
-              
-    //         }
-    //       }
-    //       &:hover {
-    //           // Background
-    //           background-color: $color-dispatch-gray;
-              
-    //           // Text
-    //           color: $color-text-dispatch-gray-light;
-    //       }
-    //     }
-
-    //   }
-    // }
   }
 }
 
-
+.nav-logo {
+  width: 100px;
+  padding: 0;
+}
 
 .c-banner__badge{
   position: relative;

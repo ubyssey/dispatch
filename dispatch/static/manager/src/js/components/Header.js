@@ -12,7 +12,7 @@ export default function Header(props) {
         <div className={'row'}>
           <div className={'col-sm-9'}>
             <div className="pt-navbar-group pt-align-left">
-              <Link to='/' className='pt-button pt-minimal pt-icon-selection'>dispatch</Link>
+              <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
               <span className="pt-navbar-divider"></span>
               <div className={['row', 'nav-align-left', 'no-gutters'].join(' ')}>
                     <div className='nav-dropdown-container'>
@@ -32,7 +32,7 @@ export default function Header(props) {
                       </div>
                       <div className='nav-dropdown-content'>
                         <Link to='/polls/' className="pt-button pt-minimal pt-icon-vertical-bar-chart-desc">Polls</Link>
-                        <Link to='/widgets/' className="pt-button pt-minimal pt-icon-widget">Widgets</Link>
+                        <Link to='/widgets/' className="pt-button pt-minimal pt-icon-widget">Zones</Link>
                         <Link
                           to='/events/'
                           className="pt-button pt-minimal pt-icon-timeline-events c-banner__badge"
