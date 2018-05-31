@@ -727,7 +727,7 @@ class PollVoteSerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-        # Create new ImageGallery instance
+        # Create new PollVote instance
         instance = PollVote()
 
         # Then save as usual
@@ -736,6 +736,7 @@ class PollVoteSerializer(DispatchModelSerializer):
     def update(self, instance, validated_data):
         # Get the proper Poll Answer
         answer_id = validated_data.get('answer_id', False)
+        print('answer_id: ', answer_id)
         try:
             answer = PollAnswer.objects.get(id=answer_id)
             poll_id = answer.poll.id

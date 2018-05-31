@@ -6,6 +6,12 @@ require('../../../styles/components/poll.scss')
 const COLOR_OPACITY = .8
 
 class Poll extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      showResults: true,
+    }
+  }
 
   componentDidMount() {
     this.update()
@@ -14,10 +20,17 @@ class Poll extends Component {
   update() {
     let answers = []
     let votes = []
-    for(let answer of this.props.answers){
-      answers.push(answer['name'])
-      votes.push(answer['vote_count'])
+    let pollQuestion = this.props.question ? this.props.question : 'Poll Question'
+    if(this.props.answers){
+      for(let answer of this.props.answers){
+        answers.push(answer['name'])
+        votes.push(answer['vote_count'])
+      }
+    } else {
+      answers.push('First answer')
+      answers.push('Second answer')
     }
+
     let temp = votes.filter((item) => {return item === 0})
     let noVotes = false
     if(temp.length === votes.length){
@@ -26,21 +39,21 @@ class Poll extends Component {
       votes[1] = 1
       noVotes = true
     }
-
+    console.log(answers, votes, noVotes)
     return {
       answers: answers,
       votes: votes,
       loading: false,
-      pollQuestion: this.props.question,
+      pollQuestion: pollQuestion,
       noVotes: noVotes,
     }
   }
 
   getPollResult(index, votes) {
-    if(this.props.showResults){
+    if(this.state.showResults){
       let width = 0
       let total = votes.reduce((acc, val) => { return acc + val })
-
+      console.log(total)
       if(total !== 0){
         width = String((100*votes[index]/total).toFixed(0)) + '%'
       }
