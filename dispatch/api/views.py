@@ -27,6 +27,9 @@ from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
 
+import json
+import pdb
+
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
     model = Section
@@ -295,14 +298,20 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = PollVoteSerializer
 
     def create(self, request):
-        vote_id = request.COOKIES.get('vote_id', None)
-        if vote_id is not None:
-            try:
+        print(request.data)
+        print(request.data.keys())
+        if 'vote_id' in request.data.keys():
+            vote_id = request.data['vote_id']
+            if vote_id is not None: 
                 vote = PollVote.objects.get(id=vote_id)
                 vote.delete()
-            except PollVote.DoesNotExist:
-                pass
-        return super(PollVoteViewSet, self).create(request)
+            else:
+                print('vote with id: ' + str(vote_id) + ' does not exist')
+                
+            return super(PollVoteViewSet, self).create(request)
+        else:
+            print('vote_id not found')
+            return super(PollVoteViewSet, self).create(request)
 
 
 class TemplateViewSet(viewsets.GenericViewSet):

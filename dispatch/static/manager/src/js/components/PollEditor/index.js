@@ -36,6 +36,7 @@ const mapDispatchToProps = (dispatch) => {
     saveListItem: (token, pollId, data) => {
       dispatch(pollsActions.save(token, pollId, prepareJSONData(data)))
     },
+    // grapefruit
     createListItem: (token, data) => {
       dispatch(pollsActions.create(token, prepareJSONData(data), AFTER_DELETE))
     },
