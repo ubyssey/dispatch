@@ -736,7 +736,6 @@ class PollVoteSerializer(DispatchModelSerializer):
     def update(self, instance, validated_data):
         # Get the proper Poll Answer
         answer_id = validated_data.get('answer_id', False)
-        print('answer_id: ', answer_id)
         try:
             answer = PollAnswer.objects.get(id=answer_id)
             poll_id = answer.poll.id
@@ -754,7 +753,6 @@ class PollVoteSerializer(DispatchModelSerializer):
 
 class PollAnswerSerializer(DispatchModelSerializer):
     """Serializes the PollAnswer model"""
-    votes = PollVoteSerializer(many=True, required=False, read_only=True)
     poll_id =  serializers.IntegerField(write_only=True)
     vote_count = serializers.IntegerField(source='get_votes', read_only=True)
 
@@ -763,7 +761,6 @@ class PollAnswerSerializer(DispatchModelSerializer):
         fields = (
             'id',
             'name',
-            'votes',
             'vote_count',
             'poll_id'
         )

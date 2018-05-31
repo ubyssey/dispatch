@@ -298,16 +298,14 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = PollVoteSerializer
 
     def create(self, request):
-        print(request.data)
-        print(request.data.keys())
         if 'vote_id' in request.data.keys():
             vote_id = request.data['vote_id']
-            if vote_id is not None: 
+            try:
                 vote = PollVote.objects.get(id=vote_id)
                 vote.delete()
-            else:
-                print('vote with id: ' + str(vote_id) + ' does not exist')
-                
+            except PollVote.DoesNotExist:
+                pass
+
             return super(PollVoteViewSet, self).create(request)
         else:
             print('vote_id not found')

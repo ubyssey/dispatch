@@ -538,4 +538,5 @@ class PollAnswer(Model):
         return PollVote.objects.all().filter(answer=self).count()
 
 class PollVote(Model):
+    id = UUIDField(default=uuid.uuid4, primary_key=True)
     answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
