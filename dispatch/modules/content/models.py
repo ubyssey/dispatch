@@ -8,7 +8,6 @@ from tempfile import NamedTemporaryFile
 
 from jsonfield import JSONField
 from PIL import Image as Img
-from bs4 import BeautifulSoup
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -490,12 +489,19 @@ class Image(Model, AuthorMixin):
                     # print tag_name
                     tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
                 # print 'author'
+                counter = 1
                 author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', counter)
-                if author_name != '':
+                while author_name != '':
                     person, created = Person.objects.get_or_create(full_name=author_name)
                     author = Author.objects.create(person=person, order = 0, type="photographer")
                     self.authors.add(author)
-                #     print author_name
+                    counter += 1
+                    print author_name
+                    author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', counter)
+
+
+
+                
                 # print 'title'
                 # print title
                 # print 'caption'
@@ -524,7 +530,8 @@ class Image(Model, AuthorMixin):
             # print self.tag_ids
             # print self.title
             # print self.caption
-            # print self.authors.all()
+            # for a in self.authors.all():
+            #     print a.full_name
             # for t in self.tags.all():
             #     print t.name
             for size in self.SIZES.keys():
