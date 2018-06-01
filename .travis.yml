@@ -5,7 +5,7 @@ jobs:
     python: '2.7'
     before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq libexempi3
+    - sudo apt-get install -qq libexempi
     install:
     - pip install codecov
     - python setup.py install
@@ -23,7 +23,7 @@ jobs:
     python: '2.7'
     before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq libexempi3
+    - sudo apt-get install -qq libexempi
     - nvm install 6.9.5
     - nvm use 6.9.5
     install:
