@@ -515,6 +515,7 @@ class Poll(Model):
         for answer in answers:
             try:
                 answer_obj = PollAnswer.objects.get(poll=self, id=answer['id'])
+                answer_obj.name = answer['name']
             except PollAnswer.DoesNotExist:
                 answer_obj = PollAnswer(poll=self, name=answer['name'])
             answer_obj.save()
