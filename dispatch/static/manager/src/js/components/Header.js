@@ -10,15 +10,17 @@ export default function Header(props) {
     <header className='c-header'>
       <nav className="pt-navbar pt-dark">
         <div className={'row'}>
-          <div className={'col-sm-9'}>
+          <div className={'col-sm-10'}>
             <div className="pt-navbar-group pt-align-left">
-              <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
+              <div className='nav-dropdown-container'>
+                <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
+              </div>
               <span className="pt-navbar-divider"></span>
               <div className={['row', 'nav-align-left', 'no-gutters'].join(' ')}>
                     <div className='nav-dropdown-container'>
                       <div className='nav-dropdown-button pt-minimal'>
                         <span className="pt-icon-standard pt-icon-edit" />
-                        Publishables
+                        Content
                       </div>
                       <div className='nav-dropdown-content'>
                         <Link to='/articles/' className="pt-button pt-minimal pt-icon-document">Articles</Link>
@@ -64,7 +66,7 @@ export default function Header(props) {
                 </div>
             </div>
           </div>
-          <div className={'col-sm-3'}>
+          <div className={'col-sm-2'}>
             <div className="pt-navbar-group pt-align-right">
               <div className='nav-dropdown-container'>
                 <div className='nav-dropdown-button pt-minimal'>
