@@ -162,7 +162,6 @@ export default class PollForm extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className={'c-poll-form-container'}>
         <div className={'c-equal-width'}>

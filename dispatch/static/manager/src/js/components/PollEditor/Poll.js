@@ -39,7 +39,7 @@ class Poll extends Component {
       votes[1] = 1
       noVotes = true
     }
-    console.log(answers, votes, noVotes)
+
     return {
       answers: answers,
       votes: votes,
@@ -53,7 +53,7 @@ class Poll extends Component {
     if(this.state.showResults){
       let width = 0
       let total = votes.reduce((acc, val) => { return acc + val })
-      console.log(total)
+      
       if(total !== 0){
         width = String((100*votes[index]/total).toFixed(0)) + '%'
       }
