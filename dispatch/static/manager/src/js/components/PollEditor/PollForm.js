@@ -66,14 +66,6 @@ export default class PollForm extends React.Component {
     this.props.update('answers', answers)
   }
 
-  openPoll() {
-    this.props.update('is_open', true)
-  }
-
-  closePoll() {
-    this.props.update('is_open', false)
-  }
-
   renderAnswers() {
     let answers = this.state.answers.map(
       (answer, index) => {
@@ -136,7 +128,6 @@ export default class PollForm extends React.Component {
       </FormInput>
     )
   }
-
 
   renderOptions() {
     const OPTIONS = [

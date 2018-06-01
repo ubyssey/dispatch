@@ -262,33 +262,7 @@ class PollViewSet(DispatchModelViewSet):
         q = self.request.query_params.get('q', None)
         if q is not None:
             queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
-
-        if not self.request.user.is_authenticated():
-            queryset = queryset.filter(show_results=True)
-
         return queryset
-
-    def retrieve(self, request, pk=None):
-        queryset = Poll.objects.all()
-
-        poll = get_object_or_404(queryset, pk=pk)
-        serializer = PollSerializer(poll)
-
-        serialized_data = serializer.data
-        if not request.user.is_authenticated():
-            if serializer.data['show_results'] is False:
-                serialized_data = self.hide_results(serializer.data)
-
-        return Response(serialized_data)
-
-    def hide_results(self, serialized_data):
-        serialized_data['total_votes'] = 0
-        answers = []
-        for answer in serialized_data['answers']:
-            answers.append({'id': answer['id'], 'name': answer['name']})
-        serialized_data['answers'] = answers
-        return serialized_data
-
 
 class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """Viewset for the PollVote Model"""
@@ -308,7 +282,6 @@ class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
             return super(PollVoteViewSet, self).create(request)
         else:
-            print('vote_id not found')
             return super(PollVoteViewSet, self).create(request)
 
 

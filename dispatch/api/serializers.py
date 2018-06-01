@@ -754,7 +754,7 @@ class PollVoteSerializer(DispatchModelSerializer):
 class PollAnswerSerializer(DispatchModelSerializer):
     """Serializes the PollAnswer model"""
     poll_id =  serializers.IntegerField(write_only=True)
-    vote_count = serializers.IntegerField(source='get_votes', read_only=True)
+    vote_count = serializers.SerializerMethodField()
 
     class Meta:
         model = PollAnswer
@@ -765,15 +765,23 @@ class PollAnswerSerializer(DispatchModelSerializer):
             'poll_id'
         )
 
+    def get_vote_count(self, obj):
+        vote_count = 0
+        poll = Poll.objects.get(id=obj.poll_id)
+        if self.is_authenticated():
+            vote_count = obj.get_votes()
+        if poll.show_results is True:
+            vote_count = obj.get_votes()
+        return vote_count
 
 class PollSerializer(DispatchModelSerializer):
     """Serializes the Poll model."""
-    answers = PollAnswerSerializer(many=True, read_only=True, required=False)
+    answers = serializers.SerializerMethodField()
     answers_json = JSONField(
         required=False,
         write_only=True
     )
-    total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
+    total_votes = serializers.SerializerMethodField()
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
 
@@ -789,6 +797,19 @@ class PollSerializer(DispatchModelSerializer):
             'answers_json',
             'total_votes'
         )
+
+    def get_total_votes(self,obj):
+        total_votes = 0
+        if self.is_authenticated():
+            total_votes = obj.get_total_votes()
+        if obj.show_results is True:
+            total_votes = obj.get_total_votes()
+        return total_votes
+
+    def get_answers(self, obj):
+        answers = PollAnswer.objects.all().filter(poll_id=obj.id)
+        serializer = PollAnswerSerializer(answers, many=True, context=self.context)
+        return serializer.data
 
     def create(self, validated_data):
         # Create new ImageGallery instance
