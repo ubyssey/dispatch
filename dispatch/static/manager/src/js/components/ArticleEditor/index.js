@@ -83,7 +83,7 @@ class ArticleEditorComponent extends React.Component {
       article = this.props.entities.local[NEW_ARTICLE_ID]
     } else {
       article = this.props.entities.local[this.props.articleId] ||
-        this.props.entities.remote[this.props.articleId] || false
+        R.path(['entities','remote',this.props.articleId], this.props) || false
     }
 
     if (!article) {

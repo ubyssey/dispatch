@@ -40,7 +40,6 @@ render((
 
           <Route path='images'>
             <IndexRoute component={Pages.Images.Index} />
-            <Route path='new' component={Pages.Images.NewPerson} />
             <Route path=':imageId' component={Pages.Images.EditImage} />
           </Route>
 
