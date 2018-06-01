@@ -29,11 +29,23 @@ class Tag(Model):
 
 class Topic(Model):
     name = CharField(max_length=255)
+    slug = SlugField(unique=True)
     last_used = DateTimeField(null=True)
 
     def update_timestamp(self):
         self.last_used = timezone.now()
         self.save()
+
+    def _generate_slug(self):
+        if self.name:
+            return self.name.lower().replace(' ', '-')
+
+        return None
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_slug()
+        super(Topic, self).save(*args, **kwargs)
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)

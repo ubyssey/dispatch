@@ -8,6 +8,7 @@ import TagSelectInput from '../../inputs/selects/TagSelectInput'
 import TopicSelectInput from '../../inputs/selects/TopicSelectInput'
 
 export default function BasicFieldsTab(props) {
+  console.log(props)
   return (
     <div>
       <FormInput
@@ -48,6 +49,7 @@ export default function BasicFieldsTab(props) {
         label='Topic'
         error={props.errors.topic_ids}>
         <TopicSelectInput
+          many={false}
           selected={props.topic}
           update={topic => props.update('topic', topic) } />
       </FormInput>

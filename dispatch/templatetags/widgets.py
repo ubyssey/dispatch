@@ -8,7 +8,7 @@ register = template.Library()
 @register.simple_tag
 def zone(zone_id, **kwargs):
     """Renders the contents of the zone with given zone_id."""
-
+    
     try:
         zone = ThemeManager.Zones.get(zone_id)
     except ZoneNotFound:
