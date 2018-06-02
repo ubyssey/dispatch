@@ -470,7 +470,9 @@ class Image(Model, AuthorMixin):
             with NamedTemporaryFile() as f:
                 f.write(b)
                 xmpfile = XMPFiles(file_path=f.name)
+                print xmpfile
                 xmp = xmpfile.get_xmp()
+                print xmp
                 # print xmp
 
                 self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
@@ -501,7 +503,7 @@ class Image(Model, AuthorMixin):
 
 
 
-                
+
                 # print 'title'
                 # print title
                 # print 'caption'
