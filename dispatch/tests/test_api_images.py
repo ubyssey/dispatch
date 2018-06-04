@@ -6,7 +6,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from rest_framework import status
-
+from libxmp import XMPError
 from django.core.urlresolvers import reverse
 
 from dispatch.models import Image, Person, Tag
@@ -173,7 +173,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         author = Author.objects.create(person=person, order = 0, type="photographer")
         self.assertEqual(test_image.data['authors'].size(), 1)
         for test_image_author in test_image.data['authors']:
-            self.assertEqual(test_image_author, author)    
+            self.assertEqual(test_image_author, author)
 
 
 
