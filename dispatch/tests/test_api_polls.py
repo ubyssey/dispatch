@@ -238,7 +238,7 @@ class PollsTests(DispatchAPITestCase):
 
         # Check that the vote change was successful
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], vote_id)
+        self.assertNotEqual(response.data['id'], vote_id)
 
         # Get the poll
         url = reverse('api-polls-detail', args=[poll_id])
