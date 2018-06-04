@@ -13,16 +13,12 @@ class Poll extends Component {
     }
   }
 
-  componentDidMount() {
-    this.update()
-  }
-
   update() {
     let answers = []
     let votes = []
     let pollQuestion = this.props.question ? this.props.question : 'Poll Question'
-    if(this.props.answers){
-      for(let answer of this.props.answers){
+    if(this.props.answers) {
+      for(let answer of this.props.answers) {
         answers.push(answer['name'])
         votes.push(answer['vote_count'])
       }
@@ -33,7 +29,7 @@ class Poll extends Component {
 
     let temp = votes.filter((item) => {return item === 0})
     let noVotes = false
-    if(temp.length === votes.length){
+    if(temp.length === votes.length) {
       //no votes yet, populate with dummy data for better poll visualization
       votes[0] = 2
       votes[1] = 1
@@ -50,11 +46,11 @@ class Poll extends Component {
   }
 
   getPollResult(index, votes) {
-    if(this.state.showResults){
+    if(this.state.showResults) {
       let width = 0
       let total = votes.reduce((acc, val) => { return acc + val })
       
-      if(total !== 0){
+      if(total !== 0) {
         width = String((100*votes[index]/total).toFixed(0)) + '%'
       }
       
