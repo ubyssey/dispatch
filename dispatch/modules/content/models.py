@@ -577,7 +577,6 @@ class Poll(Model):
             old_answers = old_answers.exclude(id=answer['id'])
         old_answers.delete()
 
-
     def get_total_votes(self):
         return PollVote.objects.all().filter(answer__poll=self).count()
 

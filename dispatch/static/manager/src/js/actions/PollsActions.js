@@ -23,7 +23,7 @@ class PollsActions extends ResourceActions {
 
 }
 
-export default new PollsActions(
+export default new PollsActions (
   types.POLLS,
   DispatchAPI.polls,
   pollSchema

@@ -747,7 +747,9 @@ class ZoneSerializer(serializers.Serializer):
 
 class PollVoteSerializer(DispatchModelSerializer):
     """Serializes the PollVote model"""
+
     answer_id =  serializers.IntegerField(write_only=True)
+
     class Meta:
         model = PollVote
         fields = (
@@ -755,33 +757,9 @@ class PollVoteSerializer(DispatchModelSerializer):
             'answer_id',
         )
 
-    def create(self, validated_data):
-        # Create new PollVote instance
-        instance = PollVote()
-
-        # Then save as usual
-        return self.update(instance, validated_data)
-
-    def update(self, instance, validated_data):
-        # Get the proper Poll Answer
-        answer_id = validated_data.get('answer_id', False)
-        try:
-            answer = PollAnswer.objects.get(id=answer_id)
-            poll_id = answer.poll.id
-            poll = Poll.objects.get(id=poll_id)
-        except PollAnswer.DoesNotExist:
-            answer = None
-            poll = None
-        # Set the vote's answer
-        if poll is not None and poll.is_open:
-            if answer is not None:
-                instance.answer = answer
-                instance.save()
-
-        return instance
-
 class PollAnswerSerializer(DispatchModelSerializer):
     """Serializes the PollAnswer model"""
+
     poll_id =  serializers.IntegerField(write_only=True)
     vote_count = serializers.SerializerMethodField()
 
@@ -794,6 +772,7 @@ class PollAnswerSerializer(DispatchModelSerializer):
             'poll_id'
         )
 
+#TODO: verify vote count is working
     def get_vote_count(self, obj):
         vote_count = 0
         poll = Poll.objects.get(id=obj.poll_id)
@@ -805,6 +784,7 @@ class PollAnswerSerializer(DispatchModelSerializer):
 
 class PollSerializer(DispatchModelSerializer):
     """Serializes the Poll model."""
+
     answers = serializers.SerializerMethodField()
     answers_json = JSONField(
         required=False,
@@ -814,6 +794,7 @@ class PollSerializer(DispatchModelSerializer):
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
 
+#TODO: Look at removing answers_json
     class Meta:
         model = Poll
         fields = (
@@ -857,7 +838,7 @@ class PollSerializer(DispatchModelSerializer):
         # save associations to correct ID
         instance.save()
 
-        answers = validated_data.get('answers_json', False)
+        answers = validated_data.get('answers_json')
 
         if isinstance(answers, list):
             instance.save_answers(answers, is_new)

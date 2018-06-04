@@ -1,5 +1,6 @@
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
@@ -14,7 +15,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollVote)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
@@ -26,9 +27,6 @@ from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
-
-import json
-import pdb
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -264,26 +262,28 @@ class PollViewSet(DispatchModelViewSet):
             queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
         return queryset
 
-class PollVoteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    """Viewset for the PollVote Model"""
-    permission_classes = (AllowAny,)
+    @detail_route(permission_classes=[AllowAny], methods=['post'],)
+    def vote(self, request, pk=None):
+        poll = get_object_or_404(Poll.objects.all(), pk=pk)
 
-    model = PollVote
-    serializer_class = PollVoteSerializer
+        if not poll.is_open:
+            return Response({ 'Detail': 'this poll is closed'}, status.HTTP_400_BAD_REQUEST)
 
-    def create(self, request):
-        if 'vote_id' in request.data.keys():
+        answer = get_object_or_404(PollAnswer.objects.all(), pk=request.data['answer_id'])
+
+        if answer.poll != poll:
+            return Response({ 'Detail': 'invalid answer for this poll'})
+
+        serializer = PollVoteSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        if 'vote_id' in request.data:
             vote_id = request.data['vote_id']
-            try:
-                vote = PollVote.objects.get(id=vote_id)
-                vote.delete()
-            except PollVote.DoesNotExist:
-                pass
+            vote = PollVote.objects.filter(id=vote_id).delete()
 
-            return super(PollVoteViewSet, self).create(request)
-        else:
-            return super(PollVoteViewSet, self).create(request)
-
+        return Response(serializer.data)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""

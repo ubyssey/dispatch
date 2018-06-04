@@ -57,7 +57,7 @@ export default class PollForm extends React.Component {
     this.props.update('answers', answers)
   }
 
-  handleUpdateAnswer(id, e) {
+  handleUpdateAnswer(e, id) {
     var answers = this.state.answers
     for(var i = 0; i < answers.length; i++) {
       if(answers[i].id === id){
@@ -83,7 +83,7 @@ export default class PollForm extends React.Component {
               placeholder='Answer'
               value={name || ''}
               fill={true}
-              onChange={ e => this.handleUpdateAnswer(answer.id, e) } />
+              onChange={ e => this.handleUpdateAnswer(e, answer.id) } />
             <span
               className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(id)}>
