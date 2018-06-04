@@ -2,6 +2,8 @@
 @import '../utilities/fonts';
 @import '../utilities/colors';
 
+$border-bottom-height: 2px;
+
 // Component: Header
 .c-header {
   // Border
@@ -15,13 +17,28 @@
   z-index: $z-index-2;
 }
 
-.pt-align-left,
-.nav-align-left {
+.nav-navbar {
+  width: 100%;
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: none;
+  border: none;
+  position: relative;
+  z-index: 10;
+  height: 50px;
+  padding: 0 15px;
+  color: $color-text-dispatch-gray-light;
+  background-color: $color-dispatch-gray;
+}
+
+.nav-align-left,// old pt
+.nav-button-group {
   // Structure
   width: 100%;
   height: 100%;
 }
-.c-header .pt-navbar {
+.c-header .nav-navbar {
   // Structure
   width: 100%;
   height: 100%;
@@ -32,15 +49,54 @@
   box-shadow: none;
   border: none;
 
-  .pt-icon-standard{
-    // Structure
-    margin-right: 7px;
+  .pt-navbar-divider{
+    background-color: $color-text-dispatch-gray-light;
+    &:hover {
+      background-color: $color-dispatch-header-hover;
+    }
   }
 
-  .pt-navbar-group {
-    .nav-dropdown-button {
-      // Text
-      color: $color-dispatch-gray;
+  .pt-button.pt-minimal,
+  .pt-button[class*="pt-icon-"]::before {
+    color: $color-text-dispatch-gray-light !important;
+  }
+  
+  .navbar-group {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: flex-end;
+
+    &.nav-align-right { // old pt
+      .nav-dropdown-button {
+        // Struture
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 !important;
+      }
+    }
+
+    &.nav-align-left { // old pt
+      .nav-dropdown-button {
+        // Structure
+        display: flex;
+        justify-content: flex-start;
+
+        .pt-icon-standard {
+          margin-right: 7px;
+        }
+      }
+    }
+
+    .nav-button-group {
+      .nav-dropdown-container {
+        // Border
+        border-bottom: $border-bottom-height solid transparent;
+        &:hover {
+          // Border
+          border-bottom: $border-bottom-height solid $color-text-dispatch-gray-light;
+        }
+      }
     }
 
     .nav-dropdown-container {
@@ -49,7 +105,9 @@
       position: relative;
       display: flex;
       align-items: center;
-      padding: 0 15px;
+      justify-content: flex-end;
+      padding: 10px;
+
       .nav-dropdown-content {
         // Structure
         display: none;
@@ -58,7 +116,7 @@
         flex-direction: column;
         position: absolute;
         padding: inherit;
-        padding-bottom: 15px;
+        top: $border-bottom-height;
         left: 0;
         right: 0;
 
@@ -80,38 +138,26 @@
         color: $color-text-dispatch-gray-light;
 
         // Structure
+        position: relative;
+        top: $border-bottom-height;
         padding: 7px 10px;
         border-radius: 3px;
-        width: inherit;
-        //Extra
-        transition: width .25s;
+        width: 100px;
       }
 
       &:hover {
-        .nav-dropdown-button {
-          // Text
-          width: 100px;
-          background: $color-dispatch-header-hover;
-        }
-
         .nav-dropdown-content {
           // Structure
           display: flex;
+
+          // Extra 
+          opacity: 1;
         }
       }
 
       .nav-navbar-divider{
         // Border
         border-left-color: inherit;
-      }
-      .nav-align-right{
-        .pt-button[class*="pt-icon-"]:before{
-          // Structure
-          padding: 0;
-
-          // Text
-          color: inherit;
-        }
       }
     }
   }
