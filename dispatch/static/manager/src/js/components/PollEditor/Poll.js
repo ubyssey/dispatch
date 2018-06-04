@@ -19,12 +19,16 @@ class Poll extends Component {
     let pollQuestion = this.props.question ? this.props.question : 'Poll Question'
     if(this.props.answers) {
       for(let answer of this.props.answers) {
-        answers.push(answer['name'])
+        if(answer['name'] !== '') {
+          answers.push(answer['name'])
+        } else {
+          answers.push('Answer')
+        }
         votes.push(answer['vote_count'])
       }
     } else {
-      answers.push('First answer')
-      answers.push('Second answer')
+      answers.push('Answer')
+      answers.push('Answer')
     }
 
     let temp = votes.filter((item) => {return item === 0})
