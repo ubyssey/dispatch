@@ -575,10 +575,9 @@ class Poll(Model):
             answer_obj.save()
 
     def delete_old_answers(self, answers):
-        old_answers = PollAnswer.objects.filter(poll=self)
-        for answer in answers:
-            old_answers = old_answers.exclude(id=answer['id'])
-        old_answers.delete()
+        PollAnswer.objects.filter(poll=self) \
+            .exclude(id__in=[answer['id'] for answer in answers]) \
+            .delete()
 
     def get_total_votes(self):
         return PollVote.objects.filter(answer__poll=self).count()

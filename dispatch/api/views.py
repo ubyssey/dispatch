@@ -274,14 +274,22 @@ class PollViewSet(DispatchModelViewSet):
         if answer.poll != poll:
             return Response({ 'Detail': 'invalid answer for this poll'})
 
-        serializer = PollVoteSerializer(data=request.data)
+        if 'vote_id' in request.data:
+            vote_id = request.data['vote_id']
+            try:
+                vote = PollVote.objects.filter(answer__poll=poll).get(id=vote_id)
+                serializer = PollVoteSerializer(vote, request.data)
+            except PollVote.DoesNotExist:
+                return Response({ 'Detail': 'vote id provided is not for this poll'}, status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer = PollVoteSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        if 'vote_id' in request.data:
-            vote_id = request.data['vote_id']
-            vote = PollVote.objects.filter(id=vote_id).delete()
+        # if 'vote_id' in request.data:
+        #     vote_id = request.data['vote_id']
+        #     vote = PollVote.objects.filter(id=vote_id).delete()
 
         return Response(serializer.data)
 
