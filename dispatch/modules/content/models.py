@@ -4,6 +4,7 @@ import re
 import uuid
 import io
 from libxmp import XMPFiles
+from libxmp import XMPError
 from tempfile import NamedTemporaryFile
 import exifread
 

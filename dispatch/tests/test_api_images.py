@@ -6,7 +6,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from rest_framework import status
-from libxmp import XMPError
+
 from django.core.urlresolvers import reverse
 
 from dispatch.models import Image, Person, Tag
