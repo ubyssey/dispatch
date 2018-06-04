@@ -751,6 +751,7 @@ class PollVoteSerializer(DispatchModelSerializer):
     answer_id =  serializers.IntegerField(write_only=True)
 
     class Meta:
+        
         model = PollVote
         fields = (
             'id',
