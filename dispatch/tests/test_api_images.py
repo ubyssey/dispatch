@@ -156,6 +156,25 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         for v in test_dict.values():
             assertTrue(v)
 
+    def test_create_image_jpeg_with_meta(self):
+        """Should preferentially use XMP data over EXIF."""
+
+        url = reverse('api-images-list')
+        file = 'test_different_exif_xmp.jpg'
+
+        with open(self.get_input_file(file)) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+        # Assert that image XMP metadata was stored instead of EXIF
+        self.assertEqual(test_image.data['caption'], 'corey in JTree')
+        person, created = Person.objects.get_or_create(full_name='William Matous')
+        author = Author.objects.create(person=person, order = 0, type="photographer")
+        self.assertEqual(test_image.data['authors'].size(), 1)
+        for test_image_author in test_image.data['authors']:
+            self.assertEqual(test_image_author, author)    
+
 
 
     def test_create_image_invalid_filename(self):

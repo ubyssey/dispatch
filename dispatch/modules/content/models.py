@@ -485,105 +485,50 @@ class Image(Model, AuthorMixin):
                         print auth.person.full_name
 
             b = bytearray(s)
-            #b.extend(s.encode('hex'))
 
-
-            #
-            # imgByteArr = io.BytesIO()
-            # image.save(imgByteArr, format= 'JPEG' )
-            # imgByteArr = imgByteArr.getvalue()
             with NamedTemporaryFile() as f:
                 f.write(b)
 
-                # exif_tags = exifread.process_file(f)
+                try:
+                    xmpfile = XMPFiles(file_path=f.name)
 
-                xmpfile = XMPFiles(file_path=f.name)
-                # print xmpfile
+                    xmp = xmpfile.get_xmp()
 
-                xmp = xmpfile.get_xmp()
+                    if xmp is not None:
+                        #  xmp data returns an empty string if no entry is found
+                        #  exif data is read first. caption and author are parsed, if additional data is found in xmp,
+                        #  xmp caption will replace exif caption, but both authors will be saved
+                        self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
+                        print self.title
 
-                # print xmp
-                if xmp is not None:
-                    #  xmp data returns an empty string if no entry is found
-                    #  exif data is read first. caption and author are parsed, if additional data is found in xmp,
-                    #  xmp caption will replace exif caption, but both authors will be saved
-                    self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
-                    print self.title
+                        xmpdesc = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
+                        if xmpdesc != '':
+                            self.caption = xmpdesc
+                        print xmpdesc
 
-
-                    xmpdesc = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
-                    if xmpdesc != '':
-                        self.caption = xmpdesc
-                    print xmpdesc
-                    # # print self.title
-                    # print xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
-                    # self.caption = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
-                    # print self.caption
-
-                    #titlestring = title.encode('ascii','ignore')
-                    #print type(title)
-                    #print type(titlestring)
-                    #print titlestring
-                    # print 'tags'
-                    counter = 1
-                    tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
-                    while tag_name != '':
-                        tag, created = Tag.objects.get_or_create(name=tag_name)
-                        self.tags.add(tag)
-                        counter += 1
-                        print tag_name
+                        counter = 1
                         tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
-                    # print 'author'
+                        while tag_name != '':
+                            tag, created = Tag.objects.get_or_create(name=tag_name)
+                            self.tags.add(tag)
+                            counter += 1
+                            print tag_name
+                            tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
 
-                    # for tag in self.tags:
-                    #     print tag
-                    author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', 1)
-                    if author_name != '':
-                        person, created = Person.objects.get_or_create(full_name=author_name)
-                        author = Author.objects.create(person=person, order = 0, type="photographer")
-                        self.authors.add(author)
-                        print author_name
+                        author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', 1)
+                        if author_name != '':
+                            person, created = Person.objects.get_or_create(full_name=author_name)
+                            author = Author.objects.create(person=person, order = 0, type="photographer")
+                            self.authors.add(author)
+                            print author_name
+                except XMPError:
 
 
-
-
-
-
-
-                # print 'title'
-                # print title
-                # print 'caption'
-                # print caption
-
-                # print bytearray(xmp.get_property(xmp.get_namespace_for_prefix('dc'), 'title'), 'UTF-8')
-                # print xmp.get_property(xmp.get_namespace_for_prefix('rdf'), 'li')
-                # print(xmp.get_property(xmp.get_namespace_for_prefix('xmp'), 'CreatorTool'))
-                # print type(xmp.get_property(xmp.get_namespace_for_prefix('xmp'), 'CreatorTool'))
-                #
-                # print(xmp.get_property('http://purl.org/dc/elements/1.1/', 'description'))
-                # print(xmp.get_property('http://purl.org/dc/elements/1.1/', 'subject'))
-
-            # print 'making soup'
-            # soup = BeautifulSoup(StringIO.StringIO(self.img.read()), "xml")
-            # print 'soup made'
-            # print soup
-            # print soup.title
-            # print soup.description
-            # print soup.creator
-            for tag in self.tags.all():
-                print tag
-                print tag.name
 
             super(Image, self).save()
             ext = self.get_extension()
             name = self.get_name()
-            # print self.tag_ids
-            # print self.title
-            # print self.caption
-            # for a in self.authors.all():
-            #     print a.full_name
-            # for t in self.tags.all():
-            #     print t.name
+    
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
