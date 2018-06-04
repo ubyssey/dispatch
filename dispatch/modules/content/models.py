@@ -522,13 +522,14 @@ class Image(Model, AuthorMixin):
                             self.authors.add(author)
                             print author_name
                 except XMPError:
+                    None
 
 
 
             super(Image, self).save()
             ext = self.get_extension()
             name = self.get_name()
-    
+
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
