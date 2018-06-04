@@ -123,7 +123,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check that filenames are different
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
 
-        def test_create_image_jpeg_with_meta(self):
+    def test_create_image_jpeg_with_meta(self):
         """Should be able to read XMP and EXIF data from a JPEG image."""
 
         url = reverse('api-images-list')
