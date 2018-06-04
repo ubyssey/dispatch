@@ -123,6 +123,41 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check that filenames are different
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
 
+        def test_create_image_jpeg_with_meta(self):
+        """Should be able to read XMP and EXIF data from a JPEG image."""
+
+        url = reverse('api-images-list')
+        file = 'test_exif_xmp_full.jpg'
+
+        with open(self.get_input_file(file)) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+        # Assert that image metadata was read
+        self.assertEqual(test_image.data['title'], 'corey')
+        self.assertEqual(test_image.data['caption'], 'corey in joshua tree')
+        person, created = Person.objects.get_or_create(full_name='William A. H. Matous')
+        author = Author.objects.create(person=person, order = 0, type="photographer")
+        self.assertEqual(test_image.data['authors'].size(), 1)
+        for test_image_author in test_image.data['authors']:
+            self.assertEqual(test_image_author, author)
+        #tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
+        #while tag_name != '':
+        self.assertEqual(test_image.data['tags'].size(), 5)
+        corey, created = Tag.objects.get_or_create(name='corey')
+        climb, created = Tag.objects.get_or_create(name='climb')
+        joshua, created = Tag.objects.get_or_create(name='joshua')
+        tree, created = Tag.objects.get_or_create(name='tree')
+        park, created = Tag.objects.get_or_create(name='park')
+        tag_dict = {corey:False, climb:False, joshua:False, tree:False, park:False}
+        for test_tag in test_image.data['tags']:
+            tag_dict[test_tag] = True
+        for v in test_dict.values():
+            assertTrue(v)
+
+
+
     def test_create_image_invalid_filename(self):
         """Should not be able to upload image with non-ASCII characters in filename."""
 
