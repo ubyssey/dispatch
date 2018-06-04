@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video, Poll, PollAnswer, PollVote)
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -18,7 +18,8 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
 
-    image = serializers.ImageField(required=False, validators=[FilenameValidator])
+    image = serializers.ImageField(required=False, validators=[FilenameValidator], write_only=True)
+    image_url = serializers.CharField(source='get_absolute_image_url', read_only=True)
 
     class Meta:
         model = Person
@@ -28,6 +29,7 @@ class PersonSerializer(DispatchModelSerializer):
             'slug',
             'description',
             'image',
+            'image_url',
             'twitter_url',
             'facebook_url'
         )
@@ -104,6 +106,16 @@ class FileSerializer(DispatchModelSerializer):
             'url',
             'created_at',
             'updated_at'
+        )
+
+class VideoSerializer(DispatchModelSerializer):
+    """Serializes the Video model."""
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
         )
 
 class IssueSerializer(DispatchModelSerializer):
@@ -214,6 +226,21 @@ class TopicSerializer(DispatchModelSerializer):
             'name',
         )
 
+class VideoAttachmentSerializer(DispatchModelSerializer):
+    """Serializes the ImageAttachment model without including full Image instance."""
+
+    video = VideoSerializer(read_only=True)
+    video_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
+
+    class Meta:
+        model = VideoAttachment
+        fields = (
+            'video',
+            'video_id',
+            'caption',
+            'credit'
+        )
+
 class ImageAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
@@ -277,16 +304,6 @@ class SectionSerializer(DispatchModelSerializer):
             'id',
             'name',
             'slug',
-        )
-
-class VideoSerializer(DispatchModelSerializer):
-    """Serializes the Video model."""
-    class Meta:
-        model = Video
-        fields = (
-            'id',
-            'title',
-            'url',
         )
 
 class FieldSerializer(serializers.Serializer):
@@ -450,6 +467,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -490,6 +508,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'headline',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'authors',
@@ -550,6 +569,10 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
+        featured_video = validated_data.get('featured_video', False)
+        if featured_video != False:
+            instance.save_featured_video(featured_video)
+
         authors = validated_data.get('author_ids')
         if authors:
             instance.save_authors(authors, is_publishable=True)
@@ -564,7 +587,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image', 'topic'],
+            update_fields=['content', 'featured_image', 'featured_video', 'topic'],
             revision=False)
 
         return instance
@@ -576,6 +599,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     slug = serializers.SlugField(validators=[SlugValidator()])
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -597,6 +621,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'title',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'published_at',
@@ -640,9 +665,13 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
+        featured_video = validated_data.get('featured_video', False)
+        if featured_video != False:
+            instance.save_featured_video(featured_video)
+
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image'],
+            update_fields=['content', 'featured_image', 'featured_video'],
             revision=False)
 
         return instance
@@ -719,7 +748,9 @@ class ZoneSerializer(serializers.Serializer):
 class PollVoteSerializer(DispatchModelSerializer):
     """Serializes the PollVote model"""
     answer_id =  serializers.IntegerField(write_only=True)
+
     class Meta:
+        
         model = PollVote
         fields = (
             'id',
@@ -736,7 +767,6 @@ class PollVoteSerializer(DispatchModelSerializer):
     def update(self, instance, validated_data):
         # Get the proper Poll Answer
         answer_id = validated_data.get('answer_id', False)
-        print('answer_id: ', answer_id)
         try:
             answer = PollAnswer.objects.get(id=answer_id)
             poll_id = answer.poll.id
@@ -754,31 +784,35 @@ class PollVoteSerializer(DispatchModelSerializer):
 
 class PollAnswerSerializer(DispatchModelSerializer):
     """Serializes the PollAnswer model"""
-    votes = PollVoteSerializer(many=True, required=False, read_only=True)
     poll_id =  serializers.IntegerField(write_only=True)
-    vote_count = serializers.IntegerField(source='get_votes', read_only=True)
+    vote_count = serializers.SerializerMethodField()
 
     class Meta:
         model = PollAnswer
         fields = (
             'id',
             'name',
-            'votes',
             'vote_count',
             'poll_id'
         )
 
     def get_vote_count(self, obj):
-        return obj.votes.count()
+        vote_count = 0
+        poll = Poll.objects.get(id=obj.poll_id)
+        if self.is_authenticated():
+            vote_count = obj.get_votes()
+        if poll.show_results is True:
+            vote_count = obj.get_votes()
+        return vote_count
 
 class PollSerializer(DispatchModelSerializer):
     """Serializes the Poll model."""
-    answers = PollAnswerSerializer(many=True, read_only=True, required=False)
+    answers = serializers.SerializerMethodField()
     answers_json = JSONField(
         required=False,
         write_only=True
     )
-    total_votes = serializers.IntegerField(source='get_total_votes', read_only=True)
+    total_votes = serializers.SerializerMethodField()
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
 
@@ -794,6 +828,19 @@ class PollSerializer(DispatchModelSerializer):
             'answers_json',
             'total_votes'
         )
+
+    def get_total_votes(self,obj):
+        total_votes = 0
+        if self.is_authenticated():
+            total_votes = obj.get_total_votes()
+        if obj.show_results is True:
+            total_votes = obj.get_total_votes()
+        return total_votes
+
+    def get_answers(self, obj):
+        answers = PollAnswer.objects.all().filter(poll_id=obj.id)
+        serializer = PollAnswerSerializer(answers, many=True, context=self.context)
+        return serializer.data
 
     def create(self, validated_data):
         # Create new ImageGallery instance

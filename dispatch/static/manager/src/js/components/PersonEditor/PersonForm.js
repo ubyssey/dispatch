@@ -83,13 +83,13 @@ export default class PersonForm extends React.Component {
           multiple={false}>
           <div
             className='c-person-form__images__container'>
-            {this.state.displayImg || this.props.listItem.image ? null :
+            {this.state.displayImg || this.props.listItem.image_url ? null :
               <div className='c-person-form__image__dropzone__text'>
                 Drop Image Here
               </div>}
             <img
               className='c-person-form__images'
-              src={this.state.displayImg || this.props.listItem.image}/>
+              src={this.state.displayImg || this.props.listItem.image_url}/>
           </div>
         </Dropzone>
 

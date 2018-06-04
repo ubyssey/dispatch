@@ -50,7 +50,7 @@ class ItemEditor extends React.Component {
       return this.props.entities.local[NEW_LISTITEM_ID]
     } else {
       return this.props.entities.local[this.props.itemId] ||
-        this.props.entities.remote[this.props.itemId] || false
+        R.path(['entities','remote',this.props.itemId], this.props) || false
     }
   }
 

@@ -11,17 +11,18 @@ export default class PollForm extends React.Component {
 
   constructor(props) {
     super(props)
+    //Ids are set to be negative to avoid clashing with the database ids
     if(props.listItem.id === 'new') {
       this.state = {
         answers : [
           {
-            'id': 0,
+            'id': -1,
             'name': '',
             'votes': [],
             'vote_count': 0
           },
           {
-            'id': 1,
+            'id': -2,
             'name': '',
             'votes': [],
             'vote_count': 0
@@ -64,14 +65,6 @@ export default class PollForm extends React.Component {
       }
     }
     this.props.update('answers', answers)
-  }
-
-  openPoll() {
-    this.props.update('is_open', true)
-  }
-
-  closePoll() {
-    this.props.update('is_open', false)
   }
 
   renderAnswers() {
@@ -137,7 +130,6 @@ export default class PollForm extends React.Component {
     )
   }
 
-
   renderOptions() {
     const OPTIONS = [
       [true, 'Show results'],
@@ -162,7 +154,6 @@ export default class PollForm extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className={'c-poll-form-container'}>
         <div className={'c-equal-width'}>
