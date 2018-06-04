@@ -156,7 +156,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         for v in test_dict.values():
             assertTrue(v)
 
-    def test_create_image_jpeg_with_meta(self):
+    def test_create_image_jpeg_with_differing_meta(self):
         """Should preferentially use XMP data over EXIF."""
 
         url = reverse('api-images-list')
@@ -166,6 +166,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            
         self.assertTrue(self.fileExists(response.data['url']))
         # Assert that image XMP metadata was stored instead of EXIF
         self.assertEqual(test_image.data['caption'], 'corey in JTree')
