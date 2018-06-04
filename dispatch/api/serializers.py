@@ -794,7 +794,6 @@ class PollSerializer(DispatchModelSerializer):
     question = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
 
-#TODO: Look at removing answers_json
     class Meta:
         model = Poll
         fields = (

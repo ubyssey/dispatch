@@ -7,28 +7,28 @@ import SelectInput from '../inputs/selects/SelectInput'
 
 require('../../../styles/components/poll_form.scss')
 
+const DEFAULT_ANSWERS = {
+  answers : [
+    {
+      'name': '',
+      'votes': [],
+      'vote_count': 0
+    },
+    {
+      'name': '',
+      'votes': [],
+      'vote_count': 0
+    }
+  ]
+}
+
 export default class PollForm extends React.Component {
 
   constructor(props) {
     super(props)
-    //Ids are set to be negative to avoid clashing with the database ids
+
     if(props.listItem.id === 'new') {
-      this.state = {
-        answers : [
-          {
-            'id': -1,
-            'name': '',
-            'votes': [],
-            'vote_count': 0
-          },
-          {
-            'id': -2,
-            'name': '',
-            'votes': [],
-            'vote_count': 0
-          }
-        ]
-      }
+      this.state = DEFAULT_ANSWERS
     }
     else {
       this.state = {
@@ -40,13 +40,12 @@ export default class PollForm extends React.Component {
   addAnswer() {
     let answers = this.state.answers
 
-    let id = answers[answers.length - 1] ? answers[answers.length - 1].id + 1 : 1
     let answer = {
-      'id': id,
       'name': '',
       'votes': [],
       'vote_count': 0
     }
+
     answers.push(answer)
     this.props.update('answers', answers)
   }
@@ -59,11 +58,8 @@ export default class PollForm extends React.Component {
 
   handleUpdateAnswer(e, id) {
     var answers = this.state.answers
-    for(var i = 0; i < answers.length; i++) {
-      if(answers[i].id === id){
-        answers[i].name = e.target.value
-      }
-    }
+    answers[id].name = e.target.value
+
     this.props.update('answers', answers)
   }
 
@@ -83,7 +79,7 @@ export default class PollForm extends React.Component {
               placeholder='Answer'
               value={name || ''}
               fill={true}
-              onChange={ e => this.handleUpdateAnswer(e, answer.id) } />
+              onChange={ e => this.handleUpdateAnswer(e, id) } />
             <span
               className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(id)}>
@@ -190,9 +186,6 @@ export default class PollForm extends React.Component {
             answers={this.props.listItem.answers}
             question={this.props.listItem.question}
             />
-        </div>
-
-        <div>
         </div>
       </div>
     )

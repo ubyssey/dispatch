@@ -568,7 +568,8 @@ class Poll(Model):
             self.delete_old_answers(answers)
         for answer in answers:
             try:
-                answer_obj = PollAnswer.objects.get(poll=self, id=answer['id'])
+                answer_id = answer.get('id')
+                answer_obj = PollAnswer.objects.get(poll=self, id=answer_id)
                 answer_obj.name = answer['name']
             except PollAnswer.DoesNotExist:
                 answer_obj = PollAnswer(poll=self, name=answer['name'])
