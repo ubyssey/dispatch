@@ -40,12 +40,12 @@ class PollsTests(DispatchAPITestCase):
 
         # Update this poll
         url = reverse('api-polls-detail', args=[response.data['id']])
-        updated_answers = [{'id':1,'name':'updated answer'},{'id':2,'name':'answer2'}]
+        updated_answers = [{'id':1,'name':'updated answer'}]
         data = {
             'name': 'updated name',
             'answers_json': updated_answers
         }
-        answers = [ OrderedDict([('id',1), ('name','updated answer'), ('vote_count',0)]), OrderedDict([('id',2), ('name','answer2'), ('vote_count',0)]) ]
+        answers = [ OrderedDict([('id',1), ('name','updated answer'), ('vote_count',0)]) ]
         response = self.client.patch(url, data, format='json')
 
         # Check data
