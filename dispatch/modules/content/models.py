@@ -7,6 +7,8 @@ from jsonfield import JSONField
 from PIL import Image as Img
 
 from django.db import IntegrityError
+from django.db import transaction
+
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
@@ -560,8 +562,9 @@ class Poll(Model):
     is_open = BooleanField(default=True)
     show_results = BooleanField(default=True)
 
+    @transaction.atomic
     def save_answers(self, answers, is_new):
-        if is_new is False:
+        if not is_new:
             self.delete_old_answers(answers)
         for answer in answers:
             try:
@@ -578,16 +581,17 @@ class Poll(Model):
         old_answers.delete()
 
     def get_total_votes(self):
-        return PollVote.objects.all().filter(answer__poll=self).count()
+        return PollVote.objects.filter(answer__poll=self).count()
 
 class PollAnswer(Model):
     poll = ForeignKey(Poll, related_name='answers', on_delete=CASCADE)
     name = CharField(max_length=255)
 
-    def get_votes(self):
+    def get_vote_count(self):
         """Return the number of votes for this answer"""
-        return PollVote.objects.all().filter(answer=self).count()
+        return PollVote.objects.filter(answer=self).count()
 
 class PollVote(Model):
     id = UUIDField(default=uuid.uuid4, primary_key=True)
     answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
+    timestamp = DateTimeField(auto_now_add=True)

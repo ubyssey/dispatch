@@ -776,10 +776,10 @@ class PollAnswerSerializer(DispatchModelSerializer):
     def get_vote_count(self, obj):
         vote_count = 0
         poll = Poll.objects.get(id=obj.poll_id)
-        if self.is_authenticated():
-            vote_count = obj.get_votes()
-        if poll.show_results is True:
-            vote_count = obj.get_votes()
+
+        if self.is_authenticated() or poll.show_results:
+            vote_count = obj.get_vote_count()
+
         return vote_count
 
 class PollSerializer(DispatchModelSerializer):
@@ -810,14 +810,14 @@ class PollSerializer(DispatchModelSerializer):
 
     def get_total_votes(self,obj):
         total_votes = 0
-        if self.is_authenticated():
+
+        if self.is_authenticated() or obj.show_results:
             total_votes = obj.get_total_votes()
-        if obj.show_results is True:
-            total_votes = obj.get_total_votes()
+
         return total_votes
 
     def get_answers(self, obj):
-        answers = PollAnswer.objects.all().filter(poll_id=obj.id)
+        answers = PollAnswer.objects.filter(poll_id=obj.id)
         serializer = PollAnswerSerializer(answers, many=True, context=self.context)
         return serializer.data
 
