@@ -158,7 +158,6 @@ class PollsTests(DispatchAPITestCase):
 
         url = reverse('api-polls-detail', args=[poll.id])
 
-#TODO if serializer is changed to return none this will have to change
         response = self.client.get(url, format='json')
         self.assertEqual(response.data['total_votes'], 0)
         self.assertEqual(response.data['answers'][0]['vote_count'], 0)

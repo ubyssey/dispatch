@@ -772,7 +772,6 @@ class PollAnswerSerializer(DispatchModelSerializer):
             'poll_id'
         )
 
-#TODO: verify vote count is working
     def get_vote_count(self, obj):
         vote_count = 0
         poll = Poll.objects.get(id=obj.poll_id)
