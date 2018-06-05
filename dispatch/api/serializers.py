@@ -8,7 +8,7 @@ from dispatch.modules.content.models import (
     Issue, File, Page, Author, Section, Tag, Topic,
     Video, VideoAttachment)
 
-from dispatch.modules.auth.models import Person, User
+from dispatch.modules.auth.models import Person, User, Invite
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (

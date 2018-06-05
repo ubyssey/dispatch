@@ -24,7 +24,7 @@ def remove_groups(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('dispatch', '0010_image_tags'),
+        ('dispatch', '0011_article_featured_video'),
     ]
 
     operations = [
