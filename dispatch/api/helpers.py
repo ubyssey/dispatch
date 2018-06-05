@@ -6,9 +6,11 @@ from django.contrib.auth.models import Group
 
 def get_settings(token):
     user = User.objects.get(auth_token=token)
+
     is_admin = False
-    if user.has_perm('dispatch.add_user'):
+    if user.groups.filter(name='Admin').exists() or user.is_superuser:
         is_admin = True
+
     return {
         'is_admin': is_admin
     }

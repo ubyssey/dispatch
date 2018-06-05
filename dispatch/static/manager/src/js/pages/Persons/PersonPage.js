@@ -37,8 +37,6 @@ class PersonPageComponent extends React.Component {
     return null
   }
 
-
-
   initializeUser() {
     const user = this.getUser() ? this.getUser() : this.initializeInvite()
     this.setState({user : R.merge(this.state.user, user)})
@@ -102,8 +100,7 @@ class PersonPageComponent extends React.Component {
   }
 
   resetPassword() {
-    const user = R.merge(this.state.user, {reset:true})
-    this.props.saveUser(this.props.token, this.state.user.id, user)
+    this.props.resetPassword(this.props.token, this.state.user.id)
   }
 
   renderEditUserButton() {
@@ -237,6 +234,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteInvite: (token, inviteId) => {
       dispatch(invitesActions.delete(token, inviteId))
+    },
+    resetPassword: (token, id) => {
+      dispatch(userActions.reset_password(token, id))
     }
   }
 }

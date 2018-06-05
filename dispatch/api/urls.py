@@ -27,11 +27,9 @@ router.register(r'videos', views.VideoViewSet, base_name='api-videos')
 router.register(r'invites', views.InviteViewSet, base_name='api-invites')
 dashboard_recent_articles = views.DashboardViewSet.as_view({'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({'get': 'list_actions'})
-settings = views.SettingsViewSet.as_view({'get': 'list_settings'})
 
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
-    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
-    url(r'^settings', settings, name='settings')
+    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions')
 ]) + router.urls

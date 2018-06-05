@@ -4,7 +4,7 @@ from django.conf import settings
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissions
 from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
@@ -144,7 +144,7 @@ class InviteViewSet(DispatchModelViewSet):
     model = Invite
     serializer_class = InviteSerializer
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (DjangoModelPermissions,)
 
     def get_queryset(self):
         queryset = Invite.objects.all()
@@ -153,12 +153,6 @@ class InviteViewSet(DispatchModelViewSet):
             queryset = queryset.filter(person__id = q)
         return queryset
 
-    def create(self, request):
-        if request.user.has_perm('dispatch.add_user'):
-            return super(InviteViewSet, self).create(request)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 class UserViewSet(DispatchModelViewSet):
     """Viewset for User model views."""
     model = User
@@ -166,7 +160,12 @@ class UserViewSet(DispatchModelViewSet):
 
     queryset = User.objects.all()
 
-    permission_classes = (IsAuthenticated,)
+    def get_permissions(self):
+        if self.request.method == 'PATCH':
+            self.permission_classes = [IsAuthenticated, ]
+        else:
+            self.permission_classes = [DjangoModelPermissions, ]
+        return super(UserViewSet, self).get_permissions()
 
     def get_queryset(self):
         queryset = User.objects.all()
@@ -178,45 +177,36 @@ class UserViewSet(DispatchModelViewSet):
 
     def retrieve(self, request, pk=None):
         queryset = User.objects.all()
+
         if pk == 'me':
             pk = request.user.id
+
         user = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(user)
+
         return Response(serializer.data)
-
-    def create(self, request):
-        if request.user.has_perm('dispatch.add_user'):
-            permissions = request.data.get('permissions', None)
-            serializer = self.get_serializer(data=request.data)
-
-            serializer.is_valid(raise_exception=True)
-
-            instance = serializer.save(permissions=permissions)
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    def delete(self, request):
-        if request.user.has_perm('dispatch.remove_user'):
-            return super(UserViewSet, self).delete(request)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def partial_update(self, request, pk=None):
         user = User.objects.get(pk=pk)
 
         if user != request.user and not request.user.has_perm('dispatch.change_user'):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        reset = request.data.get('reset', None)
-        if reset == True:
-            reset_password(user.email, request)
-        else:
-            permissions = request.data.get('permissions', None)
-            modify_permissions(user, permissions)
+        permissions = request.data.get('permissions', None)
+        modify_permissions(user, permissions)
 
         return super(UserViewSet, self).partial_update(request)
+
+    @detail_route(methods=['post'])
+    def reset_password(self, request, pk=None):
+        user = get_object_or_404(User.objects.all(), pk=pk)
+
+        if request.user.has_perm('dispatch.change_user'):
+            reset_password(user.email, request)
+            return Response(status.HTTP_202_ACCEPTED)
+        else:
+            return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""
@@ -229,7 +219,7 @@ class TagViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
-        
+
         return queryset
 
 class TopicViewSet(DispatchModelViewSet):
@@ -507,19 +497,3 @@ class TokenViewSet(viewsets.ViewSet):
         token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class SettingsViewSet(viewsets.GenericViewSet):
-
-    permission_classes = (IsAuthenticated,)
-
-    def list_settings(self, request):
-        is_admin = False
-
-        if request.user.has_perm('dispatch.add_user'):
-            is_admin = True
-
-        data = {
-            'is_admin' : is_admin
-        }
-
-        return Response(data)

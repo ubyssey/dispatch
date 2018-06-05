@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns the user's permissions
         """
         permissions = ''
-        if self.has_perm('dispatch.add_user'):
+        if self.groups.filter(name='Admin').exists() or self.is_superuser:
             permissions = 'admin'
         return permissions
 

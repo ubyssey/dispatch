@@ -202,6 +202,10 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('User saved')
   case rejected(types.USERS.SAVE):
     return showToast('User could not be saved', Intent.DANGER)
+  case fulfilled(types.USERS.RESET_PASSWORD):
+    return showToast('Password reset sent')
+  case rejected(types.USERS.RESET_PASSWORD):
+    return showToast('Could sent reset email')
 
   // Invites
   case fulfilled(types.INVITES.SAVE):

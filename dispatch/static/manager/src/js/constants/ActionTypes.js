@@ -13,7 +13,7 @@ export const ISSUES = resourceActionTypes('ISSUES')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
-export const USERS = resourceActionTypes('USERS')
+export const USERS = resourceActionTypes('USERS', ['RESET_PASSWORD'])
 export const VIDEOS = resourceActionTypes('VIDEOS')
 export const INVITES = resourceActionTypes('INVITES')
 
