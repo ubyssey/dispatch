@@ -45,14 +45,15 @@ class ImagesPageComponent extends React.Component {
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
 
-    if (this.props.location.query.q) {
-      query.q = this.props.location.query.q
-    }
+ 
     if (this.props.location.query.author) {
       query.author = this.props.location.query.author
     }
     if (this.props.location.query.tags) {
       query.tags = this.props.location.query.tags
+    }
+    if (this.props.location.query.q) {
+      query.q = this.props.location.query.q
     }
 
     return query
@@ -82,7 +83,9 @@ class ImagesPageComponent extends React.Component {
     this.props.clearSelectedImages()
   }
 
-  handleSearchImages(author, tags, query) {
+  handleSearchImages(query) {
+    let author = this.props.location.query.author
+    let tags = this.props.location.query.tags
     this.props.searchImages(author, tags, query)
   }
 
@@ -104,6 +107,11 @@ class ImagesPageComponent extends React.Component {
     )
   }
 
+  //converts tags from string to number
+  convertTags(tags) {
+    return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
+  }
+
   render() {
 
     // The first column will always be a link, as defined here,
@@ -123,14 +131,16 @@ class ImagesPageComponent extends React.Component {
       item => humanizeDatetime(item.created_at, true),
       item => humanizeDatetime(item.updated_at, true)
     ])
-
+ 
     const filters = [
       <AuthorFilterInput
+        key={'authorFilter'}
         selected={this.props.location.query.author}
         update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)}
         />,
       <TagsFilterInput
-        selected={this.props.location.query.tags}
+        key={'tagsFilter'}
+        selected={this.convertTags(this.props.location.query.tags)}
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)}
         />
     ]

@@ -3,13 +3,13 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from dispatch.tests.cases import DispatchAPITestCase
+from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Article, Author, Person, Section
 from dispatch.modules.content.mixins import AuthorMixin
 from django.utils import timezone
 
-class ArticlesTests(DispatchAPITestCase):
+class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_article_unauthorized(self):
         """Create article should fail with unauthenticated request"""
@@ -693,3 +693,166 @@ class ArticlesTests(DispatchAPITestCase):
         self.assertEqual(data['results'][1]['headline'], 'Article 2')
         self.assertEqual(data['results'][2]['headline'], 'Article 1')
         self.assertEqual(data['count'], 3)
+    
+    def test_set_featured_image(self):
+        """Ensure that a featured image can be set"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-images-list')
+        
+        image_file = 'test_image_a.jpg'
+
+        with open(self.get_input_file(image_file)) as test_image:
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        data = {
+            'featured_image':   {
+                'image_id': image.data['id']
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.data['featured_image']['image']['id'], image.data['id'])
+
+    def test_set_featured_image_no_id(self):
+        """Ensure that there must have an image_id in order to set a featured image"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-images-list')
+        
+        image_file = 'test_image_a.jpg'
+
+        with open(self.get_input_file(image_file)) as test_image:
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        data = {
+            'featured_image':   {
+                'image_id': None,
+                'credit': 'test credit',
+                'caption': 'test caption'
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_image': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_image'], None)
+
+    def test_remove_featured_image(self):
+        """Ensure that a featured image can be removed"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-images-list')
+        
+        image_file = 'test_image_a.jpg'
+
+        with open(self.get_input_file(image_file)) as test_image:
+            image = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        data = {
+            'featured_image':   {
+                'image_id': image.data['id']
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_image': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_image'], None)
+
+    def test_set_featured_video(self):
+        """Ensure that a featured video can be set"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-videos-list')
+
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': video.data['id']
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.data['featured_video']['video']['id'], video.data['id'])
+
+    def test_set_featured_video_no_id(self):
+        """Ensure that there must have a video_id in order to set a featured video"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-videos-list')
+
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': None,
+                'credit': 'test credit',
+                'caption': 'test caption'
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_video': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_video'], None)
+
+    def test_remove_featured_video(self):
+        """Ensure that a featured video can be removed"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+        
+        url = reverse('api-videos-list')
+        
+        video = DispatchTestHelpers.create_video(self.client, 'testVideo')
+
+        data = {
+            'featured_video':   {
+                'video_id': video.data['id']
+            }
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+
+        response = self.client.patch(url, data, format='json')
+
+        data = {
+            'featured_video': None
+        }
+
+        response = self.client.patch(url, data, format='json')
+        
+        self.assertEqual(response.data['featured_video'], None)

@@ -23,6 +23,13 @@ class Person(Model):
     def get_image_url(self):
         return settings.MEDIA_URL + str(self.image)
 
+    def get_absolute_image_url(self):
+        """
+        Returns image URL.
+        """
+        if self.image:
+            return "%s%s%s/" % (settings.BASE_URL.strip("/"), settings.MEDIA_URL, str(self.image))
+
     def __str__(self):
         return self.full_name or ''
 

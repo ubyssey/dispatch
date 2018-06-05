@@ -83,7 +83,7 @@ class PageEditorComponent extends React.Component {
       page = this.props.entities.local[NEW_PAGE_ID]
     } else {
       page = this.props.entities.local[this.props.pageId] ||
-        this.props.entities.remote[this.props.pageId] || false
+        R.path(['entities','remote',this.props.pageId], this.props) || false
     }
 
     return page
