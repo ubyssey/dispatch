@@ -13,53 +13,13 @@ class Poll extends Component {
     }
   }
 
-  update() {
-    let answers = []
-    let votes = []
-    let pollQuestion = this.props.question ? this.props.question : 'Poll Question'
-    if(this.props.answers) {
-      for(let answer of this.props.answers) {
-        if(answer['name'] !== '') {
-          answers.push(answer['name'])
-        } else {
-          answers.push('Answer')
-        }
-        votes.push(answer['vote_count'])
-      }
-    } else {
-      answers.push('Answer')
-      answers.push('Answer')
+  getPollResult(voteCount) {
+    const total = this.props.answers.reduce((acc, answer) => acc + answer.vote_count, 0)
+
+    if(this.state.showResults && total) {
+      return String((100*voteCount/total).toFixed(0)) + '%'
     }
 
-    let temp = votes.filter((item) => {return item === 0})
-    let noVotes = false
-    if(temp.length === votes.length) {
-      //no votes yet, populate with dummy data for better poll visualization
-      votes[0] = 2
-      votes[1] = 1
-      noVotes = true
-    }
-
-    return {
-      answers: answers,
-      votes: votes,
-      loading: false,
-      pollQuestion: pollQuestion,
-      noVotes: noVotes,
-    }
-  }
-
-  getPollResult(index, votes) {
-    if(this.state.showResults) {
-      let width = 0
-      let total = votes.reduce((acc, val) => { return acc + val })
-      
-      if(total !== 0) {
-        width = String((100*votes[index]/total).toFixed(0)) + '%'
-      }
-      
-      return width
-    }
     return 0
   }
 
@@ -70,59 +30,69 @@ class Poll extends Component {
   }
 
   render() {
-    const { answers, votes, loading, pollQuestion, noVotes } = this.update()
-
+    const { answers, question } = this.props
     const notShowResult= this.state.showResults ?  0 : COLOR_OPACITY
     const showResult = this.state.showResults ? COLOR_OPACITY : 0
     return (
       <div>
-        {!loading &&
-          <div className={'poll-preview'}>
-            <div className={['poll-container', 'poll-results'].join(' ')}>
-              <h1>{pollQuestion}</h1>
-              <form className={'poll-answer-form'}>
-                {answers.map((answer, index) => {
-                  return(
-                    <label key={index} className={['poll-button-label', 'poll-button-voted'].join(' ')}>
-                      <input className={'poll-input'} 
-                        name={'answer'} 
-                        type={'radio'} 
-                        value={answer} />
-                        <span className={'poll-answer-text'}>{answer}</span>
+        <div className='poll-preview'>
+          <div className='poll-container poll-results'>
+            <h1>{question}</h1>
+            <form className='poll-answer-form'>
+              {answers.map(answer => {
+                return(
+                  <label key={answer.id} className='poll-button-label poll-button-voted'>
+                    <input className='poll-input' 
+                      name='answer' 
+                      type='radio' 
+                      value={answer.name} />
+                      <span className='poll-answer-text'>{answer.name}</span>
 
-                      <span className={'poll-button'}
-                        style={{opacity: notShowResult}}>
-                        <span className={'poll-button-inner'}></span>
-                      </span>
+                    <span className='poll-button'
+                      style={{opacity: notShowResult}}>
+                      <span className='poll-button-inner'></span>
+                    </span>
 
-                      <span className={'poll-percentage'}
-                        style={{opacity: showResult}}>
-                        {this.getPollResult(index, votes)}
-                      </span>
+                    <span className='poll-percentage'
+                      style={{opacity: showResult}}>
+                      {this.getPollResult(answer.vote_count)}
+                    </span>
 
-                      <div className={'poll-result-bar'} 
-                        style={{width: this.getPollResult(index, votes), opacity: showResult}}>
-                      </div>
+                    <div className='poll-result-bar' 
+                      style={{width: this.getPollResult(answer.vote_count), opacity: showResult}}>
+                    </div>
 
-                    </label>
-                  )})
-                }
-              </form>
-            </div>
-            {noVotes && <i>No votes yet, poll data above is for visualization purposes only!</i>}
-            <br/>
-            <Button 
-              className={'poll-results-button'}
-              intent={Intent.SUCCESS}
-              onClick={() => this.toggleResults()}>
-              Toggle Results View
-            </Button> 
+                  </label>
+                )})
+              }
+            </form>
           </div>
-        }
-        {loading && 'Loading Poll...'}
+          <Button 
+            className='poll-results-button'
+            intent={Intent.SUCCESS}
+            onClick={() => this.toggleResults()}>
+            Toggle Results View
+          </Button> 
+        </div>
       </div>
     )
   }
+}
+
+Poll.defaultProps = {
+  question: 'Default question',
+  answers: [
+    {
+      name: 'Answer 1',
+      vote_count: 2,
+      votes: []
+    },
+    {
+      name: 'Answer 2',
+      vote_count: 1,
+      votes: []
+    },
+  ]
 }
 
 export default Poll

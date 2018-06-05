@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
+import R from 'ramda'
 
 import { FormInput, TextInput } from '../inputs'
 import Poll from './Poll'
@@ -7,82 +8,58 @@ import SelectInput from '../inputs/selects/SelectInput'
 
 require('../../../styles/components/poll_form.scss')
 
-const DEFAULT_ANSWERS = {
-  answers : [
-    {
-      'name': '',
-      'votes': [],
-      'vote_count': 0
-    },
-    {
-      'name': '',
-      'votes': [],
-      'vote_count': 0
-    }
-  ]
-}
+const DEFAULT_ANSWERS = [
+  {
+    'name': '',
+    'votes': [],
+    'vote_count': 0
+  },
+  {
+    'name': '',
+    'votes': [],
+    'vote_count': 0
+  }
+]
 
 export default class PollForm extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    if(props.listItem.id === 'new') {
-      this.state = DEFAULT_ANSWERS
-    }
-    else {
-      this.state = {
-        answers: props.listItem.answers
-      }
-    }
-  }
-
   addAnswer() {
-    let answers = this.state.answers
-
-    let answer = {
-      'name': '',
-      'votes': [],
-      'vote_count': 0
-    }
-
-    answers.push(answer)
-    this.props.update('answers', answers)
+    this.props.update('answers', this.getAnswers() + DEFAULT_ANSWERS[0])
   }
 
-  removeAnswer(id) {
-    let answers = this.state.answers
-    answers.splice(id, 1)
-    this.props.update('answers', answers)
+  removeAnswer(index) {
+    this.props.update('answers', R.remove(index, 1, this.getAnswers()))
   }
 
-  handleUpdateAnswer(e, id) {
-    var answers = this.state.answers
-    answers[id].name = e.target.value
+  handleUpdateAnswer(e, index) {
+    this.props.update('answers',
+      R.adjust(R.assoc('name', e.target.value), index, this.getAnswers())
+    )
+  }
 
-    this.props.update('answers', answers)
+  getAnswers() {
+    return this.props.listItem.answers || DEFAULT_ANSWERS
   }
 
   renderAnswers() {
-    let answers = this.state.answers.map(
+    const answers = this.getAnswers().map(
       (answer, index) => {
-        let name = answer.name
-        let votes = answer.vote_count
-        let key = index + 1
-        let id = index
+        const name = answer.name
+        const votes = answer.vote_count
+        const key = index + 1
         return (
           <FormInput
             key={key}
-            label={'Answer '+key+' Votes: '+votes}
+            label={'Answer ' + key + ' Votes: ' + votes}
             padded={false}>
             <TextInput
               placeholder='Answer'
               value={name || ''}
               fill={true}
-              onChange={ e => this.handleUpdateAnswer(e, id) } />
+              onChange={ e => this.handleUpdateAnswer(e, index) } />
             <span
               className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
-              onClick={() => this.removeAnswer(id)}>
+              onClick={() => this.removeAnswer(index)}>
               <span className={'pt-icon-standard-text'}>Remove answer</span>
             </span>
           </FormInput>
