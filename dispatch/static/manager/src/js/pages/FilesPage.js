@@ -14,7 +14,7 @@ const DEFAULT_LIMIT = 15
 
 class FilesPageComponent extends React.Component {
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.props.clearAllFiles()
     this.props.clearSelectedFiles()
     this.props.listFiles(this.props.token, this.getQuery())
@@ -125,7 +125,7 @@ class FilesPageComponent extends React.Component {
                 toggleAllItems: this.props.toggleAllFiles,
                 deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
                 searchItems: (query) => this.handleSearchFiles(query)
-              }}/>
+              }} />
           </div>
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag files into window or click here to upload</p>

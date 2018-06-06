@@ -31,7 +31,7 @@ export default class EmbedToolbar extends React.Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (!this.props.showToolbar && nextProps.showToolbar) {
       this.setState({ showButtons: false })
     }

@@ -170,7 +170,6 @@ class GalleryFormComponent extends React.Component {
   }
 
   render() {
-
     let i = 1
     const inGalleryImages = this.props.listItem.images ?
       this.props.listItem.images.map((img, idx) => {
@@ -204,7 +203,6 @@ class GalleryFormComponent extends React.Component {
               content={form}
               isModal={true}
               onClose={() => { this.props.selectImage(0) }}
-              // put the rightmost thumbs' popover on the left
               position={(i % this.getNumPerRow() == 0)
                 ? Position.LEFT : Position.RIGHT}>
               <div
@@ -246,20 +244,24 @@ class GalleryFormComponent extends React.Component {
         <h2 className='c-gallery-editor-heading'>Gallery</h2>
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
-          <DnDZone
-            onDrop={this.moveWithinGallery}
-            zoneId='in'
-            hover={this.galleryDragHover}
-            endDrag={this.endDrag}>
-            {inGalleryImages}
-            <span
-              className='c-gallery-editor-movement-indicator'
-              style={{
-                display: this.state.showMoveIcon ? 'block' : 'none',
-                top: this.state.offset.y,
-                left: this.state.offset.x,
-              }}>↵</span>
-          </DnDZone>
+          {({ measureRef }) =>
+            <div ref={measureRef}>
+              <DnDZone
+                onDrop={this.moveWithinGallery}
+                zoneId='in'
+                hover={this.galleryDragHover}
+                endDrag={this.endDrag}>
+                {inGalleryImages}
+                <span
+                  className='c-gallery-editor-movement-indicator'
+                  style={{
+                    display: this.state.showMoveIcon ? 'block' : 'none',
+                    top: this.state.offset.y,
+                    left: this.state.offset.x,
+                  }}>↵</span>
+              </DnDZone>
+            </div>
+          }
         </Measure>
 
         <AnchorButton onClick={this.openImageSelector}>

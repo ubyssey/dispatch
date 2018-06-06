@@ -45,7 +45,7 @@ export default class ListItemsPageComponent extends React.Component {
     )
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     // Fetch listItems
     this.props.clearListItems()
     this.props.clearSelectedListItems()

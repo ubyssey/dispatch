@@ -14,7 +14,7 @@ require('../../styles/components/dashboard.scss')
 
 class DashboardPageComponent extends React.Component {
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.props.fetchActions(this.props.token)
     this.props.fetchRecent(this.props.token)
   }
@@ -29,7 +29,7 @@ class DashboardPageComponent extends React.Component {
           <div className='c-dashboard__activity__item__text'>
             <span className='c-dashboard__activity__item__text__person'>{elem.meta.author}</span>
             {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
-            <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}}/>
+            <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}} />
             <span className='c-dashboard__leftlistspan'>{` ${moment(elem.timestamp).from(moment())}`}</span>
           </div>
         </li>

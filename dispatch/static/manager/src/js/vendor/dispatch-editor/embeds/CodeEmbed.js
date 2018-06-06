@@ -29,13 +29,13 @@ function CodeEmbedComponent(props) {
         value={props.data.content}
         showPrintMargin={false}
         onChange={(content) => props.updateField('content', content)}
-        editorProps={{$blockScrolling: true}}/>
+        editorProps={{$blockScrolling: true}} />
       <div className='o-embed--code__footer'>
         <div className='o-embed--code__mode'>
           <SelectInput
             options={MODES}
             selected={props.data.mode}
-            onChange={(e) => props.updateField('mode', e.target.value)}/>
+            onChange={(e) => props.updateField('mode', e.target.value)} />
         </div>
       </div>
     </div>

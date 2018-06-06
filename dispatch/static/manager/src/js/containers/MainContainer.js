@@ -13,18 +13,12 @@ require('../../styles/components/toaster.scss')
 
 class Main extends React.Component {
 
-  // UNSAFE_componentWillMount() {
+  // componentWillMount() {
   //   this.props.countPending(this.props.token, { pending: 1, limit: 0 })
   // }
 
-  constructor(props) {
-    super(props)
-
-    this.toaster = React.createRef()
-  }
-
   componentDidMount() {
-    this.props.setupToaster(this.toaster.current)
+    this.props.setupToaster(this.refs.toaster)
   }
 
   renderModal() {
@@ -38,7 +32,10 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Toaster className='c-toaster' position={Position.TOP} ref={this.toaster} />
+        <Toaster
+          className='c-toaster'
+          position={Position.TOP}
+          ref='toaster' />
         <Header pendingCount={this.props.pending} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}

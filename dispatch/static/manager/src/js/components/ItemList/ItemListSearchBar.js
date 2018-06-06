@@ -13,7 +13,7 @@ export default class ItemListSearchBar extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setState({ query: nextProps.query || '' })
   }
 

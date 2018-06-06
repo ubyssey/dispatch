@@ -10,8 +10,6 @@ export default class VersionsDropdown extends React.Component {
 
   constructor(props) {
     super(props)
-
-    this.dropdown = React.createRef()
   }
 
   getVersions() {
@@ -26,7 +24,7 @@ export default class VersionsDropdown extends React.Component {
 
   selectVersion(version) {
     this.props.getVersion(version)
-    this.dropdown.current.close()
+    this.refs.dropdown.close()
   }
 
   renderDropdown() {
@@ -61,9 +59,9 @@ export default class VersionsDropdown extends React.Component {
     if (this.props.latest_version) {
       return (
         <Dropdown
-          ref={this.dropdown}
+          ref='dropdown'
           content={this.renderDropdown()}>
-          <AnchorButton onClick={() => this.dropdown.current.open()}>
+          <AnchorButton onClick={() => this.refs.dropdown.open()}>
             {`Version ${this.props.current_version}`}
             <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
           </AnchorButton>

@@ -89,7 +89,7 @@ export default class PersonForm extends React.Component {
               </div>}
             <img
               className='c-person-form__images'
-              src={this.state.displayImg || this.props.listItem.image_url}/>
+              src={this.state.displayImg || this.props.listItem.image_url} />
           </div>
         </Dropzone>
 

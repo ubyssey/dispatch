@@ -36,8 +36,6 @@ class ItemSelectInput extends React.Component {
   constructor(props) {
     super(props)
 
-    this.dropdown = React.createRef()
-
     this.state = {
       query: ''
     }
@@ -89,7 +87,7 @@ class ItemSelectInput extends React.Component {
   }
 
   closeDropdown() {
-    this.dropdown.current.close()
+    this.refs.dropdown.close()
     this.setState({ query: '' })
   }
 
@@ -205,7 +203,7 @@ class ItemSelectInput extends React.Component {
 
   render() {
     const anchorButton = (
-      <a onClick={() => this.dropdown.current.open()}>
+      <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
     )
@@ -218,7 +216,7 @@ class ItemSelectInput extends React.Component {
           </button>
           <button
             className='pt-button c-item-list__header__filters__filter'
-            onClick={() => this.dropdown.current.open()}>
+            onClick={() => this.refs.dropdown.open()}>
             {this.props.editMessage}
             <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
           </button>
@@ -231,7 +229,7 @@ class ItemSelectInput extends React.Component {
         className='c-input c-input--item-select'>
         {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
-          ref={this.dropdown}
+          ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
           {this.props.filterButton ? filterButton : anchorButton}

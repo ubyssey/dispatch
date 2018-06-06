@@ -120,7 +120,7 @@ export default class PollForm extends React.Component {
           <SelectInput
             options={OPTIONS}
             selected={this.props.listItem.is_open}
-            onChange={e => this.props.update('is_open', e.target.value)}/>
+            onChange={e => this.props.update('is_open', e.target.value)} />
         </div>
       </FormInput>
     )
@@ -141,7 +141,7 @@ export default class PollForm extends React.Component {
             <SelectInput
               options={OPTIONS}
               selected={this.props.listItem.show_results}
-              onChange={e => this.props.update('show_results', e.target.value)}/>
+              onChange={e => this.props.update('show_results', e.target.value)} />
           </div>
         </FormInput>
         {(this.props.listItem.id === 'new') ? null : this.renderPollOpenSelect()}
@@ -184,7 +184,7 @@ export default class PollForm extends React.Component {
             many={false}
             id={this.props.listItem.id}
             answers={this.props.listItem.answers}
-            question={this.props.listItem.question}/>
+            question={this.props.listItem.question} />
         </div>
       </div>
     )

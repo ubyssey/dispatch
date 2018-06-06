@@ -11,23 +11,21 @@ export default class ContentEditorLinkEditor extends React.Component {
 
     this.handleKeyPress = this.handleKeyPress.bind(this)
 
-    this.textInput = React.createRef()
-
     this.state = {
       urlValue: props.url || ''
     }
   }
 
   componentDidMount() {
-    this.textInput.current.focus()
+    this.refs.textInput.focus()
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.url !== this.props.url) {
       this.setState({
         urlValue: nextProps.url || ''
       })
-      this.textInput.current.focus()
+      this.refs.textInput.focus()
     }
   }
 
@@ -63,7 +61,7 @@ export default class ContentEditorLinkEditor extends React.Component {
         {this.props.back ? this.renderBackButton() : null}
         <TextInput
           className='c-dispatch-editor__link-popover__input'
-          ref={this.textInput}
+          ref='textInput'
           value={this.state.urlValue}
           onKeyPress={this.handleKeyPress}
           onChange={e => this.updateLink(e.target.value)}

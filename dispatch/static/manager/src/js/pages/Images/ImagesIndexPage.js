@@ -20,7 +20,7 @@ const DEFAULT_LIMIT = 15
 
 class ImagesPageComponent extends React.Component {
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.props.clearAllImages()
     this.props.clearSelectedImages()
     this.props.listImages(this.props.token, this.getQuery())
@@ -134,11 +134,11 @@ class ImagesPageComponent extends React.Component {
       <AuthorFilterInput
         key={'authorFilter'}
         selected={this.props.location.query.author}
-        update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)}/>,
+        update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)} />,
       <TagsFilterInput
         key={'tagsFilter'}
         selected={this.convertTags(this.props.location.query.tags)}
-        update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)}/>
+        update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 
     return (
@@ -176,7 +176,7 @@ class ImagesPageComponent extends React.Component {
                 toggleAllItems: this.props.toggleAllImages,
                 deleteItems: (imageIds) => this.handleDeleteImages(imageIds),
                 searchItems: (query) => this.handleSearchImages(query)
-              }}/>
+              }} />
           </div>
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>

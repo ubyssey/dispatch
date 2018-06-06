@@ -113,7 +113,7 @@ class Poll extends Component {
               </form>
             </div>
             {noVotes && <i>No votes yet, poll data above is for visualization purposes only!</i>}
-            <br/>
+            <br />
             <Button 
               className={'poll-results-button'}
               intent={Intent.SUCCESS}

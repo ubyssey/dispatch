@@ -43,7 +43,7 @@ class EventAuditPage extends React.Component {
     }
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.props.listEvents(this.props.token, this.getQuery())
   }
 

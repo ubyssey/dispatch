@@ -80,7 +80,7 @@ export default class EventForm extends React.Component {
               </div>}
             <img
               className='c-person-form__images'
-              src={this.state.displayImg || this.props.listItem.image}/>
+              src={this.state.displayImg || this.props.listItem.image} />
           </div>
         </Dropzone>
 

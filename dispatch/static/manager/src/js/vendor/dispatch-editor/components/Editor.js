@@ -90,14 +90,10 @@ class ContentEditor extends React.Component {
     super(props)
     this.embedMap = buildEmbedMap(this.props.embeds)
 
-    this.container = React.createRef()
-    this.editor = React.createRef()
-
     this.state = this.initialState()
-
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // Push content to editor state
     if (nextProps.content instanceof ContentState) {
       this.setState({
@@ -108,7 +104,7 @@ class ContentEditor extends React.Component {
     }
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     // Push content to editor state
     if (this.props.content instanceof ContentState) {
       this.onChange(EditorState.push(this.state.editorState, this.props.content))
@@ -222,7 +218,7 @@ class ContentEditor extends React.Component {
       if ( !isCollapsed || showLinkPopover ) {
 
         var selected = getSelected().getRangeAt(0).getBoundingClientRect()
-        var container = this.container.current.getBoundingClientRect()
+        var container = this.refs.container.getBoundingClientRect()
 
         var position,
           left = selected.left - container.left,
@@ -251,7 +247,7 @@ class ContentEditor extends React.Component {
             renderContent: showLinkPopover ? this.renderLinkPopover.bind(this) : this.renderPopover.bind(this),
             linkEntity: linkEntity
           }
-        }, this.editor.current.focus)
+        }, this.refs.editor.focus)
 
       } else {
         this.setState(
@@ -259,7 +255,7 @@ class ContentEditor extends React.Component {
             showPopover: false,
             isLinkInputActive: false
           },
-          this.editor.current.focus
+          this.refs.editor.focus
         )
       }
 
@@ -353,7 +349,7 @@ class ContentEditor extends React.Component {
   }
 
   focusEditor() {
-    this.editor.current.focus()
+    this.refs.editor.focus()
   }
 
   closePopover() {
@@ -395,12 +391,12 @@ class ContentEditor extends React.Component {
 
     return (
       <div
-        ref={this.container}
+        ref='container'
         className='c-dispatch-editor'
         onMouseUp={e => this.handleMouseUp(e)}>
         <div className='c-dispatch-editor__editor'>
           <Editor
-            ref={this.editor}
+            ref='editor'
             spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}

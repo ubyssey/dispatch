@@ -25,7 +25,7 @@ function collect(connect, monitor) {
 }
 
 class DnDZone extends React.Component {
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.isOver && !nextProps.isOver) {
       this.props.endDrag()
     }

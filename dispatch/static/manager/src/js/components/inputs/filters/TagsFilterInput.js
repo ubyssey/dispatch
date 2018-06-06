@@ -29,7 +29,7 @@ class TagsFilterInputComponent extends React.Component {
         attribute='name'
         label='Tag'
         icon='tag'
-        editMessage='Filter by tag'/>
+        editMessage='Filter by tag' />
     )
   }
 }

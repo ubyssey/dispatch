@@ -11,7 +11,7 @@ const DEFAULT_LIMIT = 15
 
 class ZoneIndexPageComponent extends React.Component {
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.props.listZones(this.props.token, this.getQuery())
   }
 
@@ -62,7 +62,7 @@ class ZoneIndexPageComponent extends React.Component {
 
           actions={{
             searchItems: (query) => this.props.searchZones(query)
-          }}/>
+          }} />
       </DocumentTitle>
     )
   }
