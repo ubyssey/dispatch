@@ -5,7 +5,19 @@
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "https://www.ubyssey.ca",
   "contributors": [
-    "Ben Cook <b@bencook.ca>"
+    "Rowan Baker-French",
+    "Jonathan Chapple",
+    "Ben Cook <b@bencook.ca>",
+    "Brandon Forys",
+    "Ben Holmes",
+    "Axel Jacobsen",
+    "Jamie Lee",
+    "Pippin Lee",
+    "Benny Lo",
+    "Arash Outadi",
+    "Jordan Schalm",
+    "Atsushi Yamamoto"
+    "Ron Yong",
   ],
   "dependencies": {
     "@blueprintjs/core": "1.35.7",
