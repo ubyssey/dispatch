@@ -14,10 +14,10 @@ export default function PageSidebar(props) {
     <div className='c-article-sidebar'>
       <Tabs>
         <TabList className='c-article-sidebar__tablist'>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application'></span>Basic fields</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media'></span>Featured image</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget'></span>Template</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media'></span>SEO</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media' />Featured image</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media' />SEO</Tab>
         </TabList>
 
         <TabPanel className='c-article-sidebar__panel'>

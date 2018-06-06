@@ -196,18 +196,18 @@ export class ResourceActions {
       Promise.all(
         ids.map(id => this.api.delete(token, id))
       )
-      .then(() => {
-        dispatch({
-          type: fulfilled(this.types.DELETE_MANY),
-          payload: ids
+        .then(() => {
+          dispatch({
+            type: fulfilled(this.types.DELETE_MANY),
+            payload: ids
+          })
         })
-      })
-      .catch(error => {
-        dispatch({
-          type: rejected(this.types.DELETE_MANY),
-          payload: error
+        .catch(error => {
+          dispatch({
+            type: rejected(this.types.DELETE_MANY),
+            payload: error
+          })
         })
-      })
     }
   }
 

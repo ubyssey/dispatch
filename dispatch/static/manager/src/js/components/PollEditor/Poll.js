@@ -16,7 +16,7 @@ class Poll extends Component {
   getPollResult(voteCount) {
     const total = this.props.answers.reduce((acc, answer) => acc + answer.vote_count, 0)
 
-    if(this.state.showResults && total) {
+    if (this.state.showResults && total) {
       return String((100*voteCount/total).toFixed(0)) + '%'
     }
 
@@ -40,27 +40,30 @@ class Poll extends Component {
             <h1>{question}</h1>
             <form className='poll-answer-form'>
               {answers.map(answer => {
-                return(
+                return (
                   <label key={answer.id} className='poll-button-label poll-button-voted'>
-                    <input className='poll-input' 
+                    <input 
+                      className='poll-input' 
                       name='answer' 
                       type='radio' 
                       value={answer.name} />
                       <span className='poll-answer-text'>{answer.name}</span>
 
-                    <span className='poll-button'
+                    <span 
+                      className='poll-button'
                       style={{opacity: notShowResult}}>
-                      <span className='poll-button-inner'></span>
+                      <span className='poll-button-inner' />
                     </span>
 
-                    <span className='poll-percentage'
+                    <span 
+                      className='poll-percentage'
                       style={{opacity: showResult}}>
                       {this.getPollResult(answer.vote_count)}
                     </span>
 
-                    <div className='poll-result-bar' 
-                      style={{width: this.getPollResult(answer.vote_count), opacity: showResult}}>
-                    </div>
+                    <div 
+                      className='poll-result-bar' 
+                      style={{width: this.getPollResult(answer.vote_count), opacity: showResult}} />
 
                   </label>
                 )})

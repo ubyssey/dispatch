@@ -43,24 +43,6 @@ export default class WidgetFieldComponent extends React.Component {
   render() {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
-// <<<<<<< HEAD
-//     let fields = widget ? widget.fields.map((field) => (
-//       <WidgetFieldWrapper
-//         error={R.prop(field.name, this.props.errors || {})}
-//         key={`widget-field__${widget.id}__${field.name}`}
-//         field={field}
-//         data={widgetData[field.name]}
-//         onChange={(data) => this.updateField(field.name, data)} />
-//     )) : null
-//
-//     if (fields) {
-//       fields = (
-//         <Panel title={`Edit ${this.props.field.label}`}>
-//           {fields}
-//         </Panel>
-//       )
-//     }
-// =======
 
     const fields = widget && widget.fields.length ? (
       <FieldGroup
@@ -71,7 +53,6 @@ export default class WidgetFieldComponent extends React.Component {
         errors={this.props.errors || {}}
         onChange={(name, data) => this.updateField(name, data)} />
     ) : null
-// >>>>>>> develop
 
     return (
       <div>
@@ -81,7 +62,7 @@ export default class WidgetFieldComponent extends React.Component {
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
-      {fields}
+        {fields}
       </div>
     )
   }

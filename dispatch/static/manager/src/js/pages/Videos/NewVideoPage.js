@@ -6,7 +6,7 @@ export default function NewVideoPage(props) {
   return (
     <VideoEditor
       isNew={true}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

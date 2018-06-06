@@ -104,7 +104,7 @@ class PollsTests(DispatchAPITestCase):
         self.assertFalse(Poll.objects.filter(id=poll_id).exists())
         self.assertFalse(PollAnswer.objects.filter(poll_id=poll_id).exists())
 
-        # Can't delete an poll that has already been deleted
+        # Can't delete a poll that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
