@@ -38,7 +38,7 @@
     "react-ace": "^6.1.1",
     "react-addons-css-transition-group": "^15.4.1",
     "react-day-picker": "^7.1.9",
-    "react-dnd": "2.5.0",
+    "react-dnd": "^2.5.1",
     "react-dnd-html5-backend": "^2.5.1",
     "react-document-title": "^2.0.2",
     "react-dom": "^15.3.2",
