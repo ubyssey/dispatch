@@ -16,3 +16,11 @@ class InvalidGalleryAttachments(APIException):
 class BadCredentials(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Invalid user credentials'
+
+class PollClosed(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Poll closed'
+
+class InvalidPoll(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'Invalid poll'
