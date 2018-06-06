@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
-import HeaderButtonsLeft from './HeaderButtonsLeft'
+import HeaderButtons from './HeaderButtons'
 
 require('../../../styles/components/header.scss')
 require('../../../styles/utilities/_pseudo_bootstrap.scss')
@@ -21,7 +21,7 @@ export default function Header(props) {
           </div>
           <span className="pt-navbar-divider hidden-lg"></span>
           <div className='col-lg-8 hidden-lg'>
-            <HeaderButtonsLeft props={props} />
+            <HeaderButtons isDesktop={props.isDesktop} props={props} />
           </div>
           <div className={'col-lg-2 col-6 float-right'}>
             <div className="navbar-group nav-align-right">
@@ -31,7 +31,7 @@ export default function Header(props) {
                     <span className="pt-icon-standard pt-icon-double-chevron-down" />
                   </div>
                   <div className='nav-dropdown-content'>
-                    {(windowWidth < DesktopSize) && <HeaderButtonsLeft props={props} />}
+                    {(windowWidth < DesktopSize) && <HeaderButtons isDesktop={props.isDesktop} props={props} />}
                     <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
                     <Link to='/topics/' className="pt-button pt-minimal">Topics</Link>
                     <Link to='/sections/' className="pt-button pt-minimal">Sections</Link>
