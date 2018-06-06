@@ -40,7 +40,6 @@ class PersonPageComponent extends React.Component {
   initializeUser() {
     const user = this.getUser() ? this.getUser() : this.initializeInvite()
     this.setState({user : R.merge(this.state.user, user)})
-
   }
 
   resetUser() {
