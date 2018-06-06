@@ -33,8 +33,7 @@ class AuthorFilterInputComponent extends React.Component {
         attribute='full_name'
         label='Author'
         icon='person'
-        editMessage='Filter by author'
-        />
+        editMessage='Filter by author'/>
     )
   }
 }

@@ -17,9 +17,9 @@ class Poll extends Component {
     let answers = []
     let votes = []
     let pollQuestion = this.props.question ? this.props.question : 'Poll Question'
-    if(this.props.answers) {
-      for(let answer of this.props.answers) {
-        if(answer['name'] !== '') {
+    if (this.props.answers) {
+      for (let answer of this.props.answers) {
+        if (answer['name'] !== '') {
           answers.push(answer['name'])
         } else {
           answers.push('Answer')
@@ -33,7 +33,7 @@ class Poll extends Component {
 
     let temp = votes.filter((item) => {return item === 0})
     let noVotes = false
-    if(temp.length === votes.length) {
+    if (temp.length === votes.length) {
       //no votes yet, populate with dummy data for better poll visualization
       votes[0] = 2
       votes[1] = 1
@@ -50,11 +50,11 @@ class Poll extends Component {
   }
 
   getPollResult(index, votes) {
-    if(this.state.showResults) {
+    if (this.state.showResults) {
       let width = 0
       let total = votes.reduce((acc, val) => { return acc + val })
       
-      if(total !== 0) {
+      if (total !== 0) {
         width = String((100*votes[index]/total).toFixed(0)) + '%'
       }
       
@@ -82,27 +82,30 @@ class Poll extends Component {
               <h1>{pollQuestion}</h1>
               <form className={'poll-answer-form'}>
                 {answers.map((answer, index) => {
-                  return(
+                  return (
                     <label key={index} className={['poll-button-label', 'poll-button-voted'].join(' ')}>
-                      <input className={'poll-input'} 
+                      <input
+                        className={'poll-input'} 
                         name={'answer'} 
                         type={'radio'} 
                         value={answer} />
-                        <span className={'poll-answer-text'}>{answer}</span>
+                      <span className={'poll-answer-text'}>{answer}</span>
 
-                      <span className={'poll-button'}
+                      <span
+                        className={'poll-button'}
                         style={{opacity: notShowResult}}>
-                        <span className={'poll-button-inner'}></span>
+                        <span className={'poll-button-inner'} />
                       </span>
 
-                      <span className={'poll-percentage'}
+                      <span
+                        className={'poll-percentage'}
                         style={{opacity: showResult}}>
                         {this.getPollResult(index, votes)}
                       </span>
 
-                      <div className={'poll-result-bar'} 
-                        style={{width: this.getPollResult(index, votes), opacity: showResult}}>
-                      </div>
+                      <div
+                        className={'poll-result-bar'} 
+                        style={{width: this.getPollResult(index, votes), opacity: showResult}} />
 
                     </label>
                   )})

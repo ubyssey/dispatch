@@ -74,7 +74,7 @@ function blockToJSON(jsonBlocks, block) {
   const type = block.getType()
   const lastType = jsonBlocks.last() ? jsonBlocks.last().type : null
 
-  switch(type) {
+  switch (type) {
   case DRAFT_TYPES.EMBED:
     return embedToJSON(jsonBlocks, block, lastType)
   case DRAFT_TYPES.PARAGRAPH:

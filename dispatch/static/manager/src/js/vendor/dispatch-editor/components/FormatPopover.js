@@ -50,39 +50,39 @@ export default class FormatPopover extends React.Component {
       <div>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleInlineStyle(e, 'BOLD') }
+          onClick={e => this.toggleInlineStyle(e, 'BOLD')}
           title='Bold'>
-          <span className='pt-icon-standard pt-icon-bold'></span>
+          <span className='pt-icon-standard pt-icon-bold' />
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleInlineStyle(e, 'ITALIC') }
+          onClick={e => this.toggleInlineStyle(e, 'ITALIC')}
           title='Italic'>
-          <span className='pt-icon-standard pt-icon-italic'></span>
+          <span className='pt-icon-standard pt-icon-italic' />
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleInlineStyle(e, 'UNDERLINE') }
+          onClick={e => this.toggleInlineStyle(e, 'UNDERLINE')}
           title='Underline'>
-          <span className='pt-icon-standard pt-icon-underline'></span>
+          <span className='pt-icon-standard pt-icon-underline' />
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleBlockType(e, 'header-two') }
+          onClick={e => this.toggleBlockType(e, 'header-two')}
           title='Header'>
-          <span className='pt-icon-standard pt-icon-header'></span>
+          <span className='pt-icon-standard pt-icon-header' />
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
-          onClick={ e => this.toggleBlockType(e, 'unordered-list-item') }
+          onClick={e => this.toggleBlockType(e, 'unordered-list-item')}
           title='List'>
-          <span className='pt-icon-standard pt-icon-properties'></span>
+          <span className='pt-icon-standard pt-icon-properties' />
         </AnchorButton>
         <AnchorButton
           className='c-dispatch-editor__popover__button'
           onClick={() => this.showLinkInput()}
           title='Link'>
-          <span className='pt-icon-standard pt-icon-link'></span>
+          <span className='pt-icon-standard pt-icon-link' />
         </AnchorButton>
       </div>
     )
@@ -96,7 +96,7 @@ export default class FormatPopover extends React.Component {
         onMouseUp={e => e.stopPropagation()}
         style={style}>
         { this.state.showLinkInput || this.props.isLinkInputActive ? this.renderLinkInput() : this.renderButtons() }
-    </div>
+      </div>
     )
   }
 }

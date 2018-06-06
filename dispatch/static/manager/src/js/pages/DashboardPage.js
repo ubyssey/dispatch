@@ -14,7 +14,7 @@ require('../../styles/components/dashboard.scss')
 
 class DashboardPageComponent extends React.Component {
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchActions(this.props.token)
     this.props.fetchRecent(this.props.token)
   }
@@ -44,7 +44,7 @@ class DashboardPageComponent extends React.Component {
           <Link to={`/articles/${article.id}`} dangerouslySetInnerHTML={{__html: article.headline}} />
         </li>
       )
-    )
+      )
   }
 
   render() {
@@ -61,12 +61,12 @@ class DashboardPageComponent extends React.Component {
             <ul className='c-dashboard_quick-actions'>
               <li className='c-dashboard_quick-actions__item'>
                 <LinkButton to='/articles/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add'></span>New Article
+                  <span className='pt-icon-standard pt-icon-add' />New Article
                 </LinkButton>
               </li>
               <li className='c-dashboard_quick-actions__item'>
                 <LinkButton to='/pages/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add'></span>New Page
+                  <span className='pt-icon-standard pt-icon-add' />New Page
                 </LinkButton>
               </li>
             </ul>

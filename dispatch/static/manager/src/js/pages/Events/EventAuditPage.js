@@ -43,15 +43,15 @@ class EventAuditPage extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.listEvents(this.props.token, this.getQuery())
   }
 
   getDisplayedCount(props) {
     props = props || this.props
     return props.events.ids
-       .map(id => props.entities.events[id])
-       .filter(event => event && event.is_submission).length
+      .map(id => props.entities.events[id])
+      .filter(event => event && event.is_submission).length
   }
 
   checkPage() {
@@ -108,18 +108,18 @@ class EventAuditPage extends React.Component {
           <Toolbar>
             <ToolbarLeft>
               <AnchorButton
-                onClick={() => this.props.history.goBack()}>
-                <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
+                onClick={() => this.props.router.goBack()}>
+                <span className='pt-icon-standard pt-icon-arrow-left' />Back
               </AnchorButton>
               {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
-            {this.props.events.count ? pagination : null}
+              {this.props.events.count ? pagination : null}
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>
             <div className='c-event-audit-cards'>
-            {events}
+              {events}
             </div>
           </div>
         </div>

@@ -30,7 +30,7 @@ export default function PageToolbar(props) {
           <AnchorButton
             disabled={props.isNew}
             onClick={() => props.previewPage()}>
-            <span className='pt-icon-standard pt-icon-document-open'></span>Preview
+            <span className='pt-icon-standard pt-icon-document-open' />Preview
           </AnchorButton>
           <VersionsDropdown
             current_version={props.page.current_version}

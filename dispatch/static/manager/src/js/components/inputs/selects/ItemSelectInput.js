@@ -13,9 +13,9 @@ function Item(props) {
       <li
         className='o-dropdown-list__item o-dropdown-list__item--selected'
         onClick={props.onClick}>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick'></span>
+        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick' />
         <span className='o-dropdown-list__item__text'>{props.text}</span>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross'></span>
+        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross' />
       </li>
     )
   } else {
@@ -23,9 +23,9 @@ function Item(props) {
       <li
         className='o-dropdown-list__item'
         onClick={props.onClick}>
-        <span className='o-dropdown-list__item__icon'></span>
+        <span className='o-dropdown-list__item__icon' />
         <span className='o-dropdown-list__item__text'>{props.text}</span>
-        <span className='o-dropdown-list__item__icon'></span>
+        <span className='o-dropdown-list__item__icon' />
       </li>
     )
   }
@@ -35,6 +35,8 @@ class ItemSelectInput extends React.Component {
 
   constructor(props) {
     super(props)
+
+    this.dropdown = React.createRef()
 
     this.state = {
       query: ''
@@ -87,13 +89,13 @@ class ItemSelectInput extends React.Component {
   }
 
   closeDropdown() {
-    this.refs.dropdown.close()
+    this.dropdown.current.close()
     this.setState({ query: '' })
   }
 
   getSelected() {
-    if(this.props.many){
-      if(this.props.selected){
+    if (this.props.many){
+      if (this.props.selected){
         return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
       } else {
         return []
@@ -124,8 +126,8 @@ class ItemSelectInput extends React.Component {
           isSelected={true}
           text={item[this.props.attribute]}
           onClick={() => this.removeValue(item.id)} />
-        ))
-    
+      ))
+
     const results = this.props.results
       .filter(id => this.isNotSelected(id))
       .map(id => this.props.entities[id])
@@ -153,7 +155,7 @@ class ItemSelectInput extends React.Component {
               value={this.state.query}
               fill={true}
               placeholder='Search' />
-              {createButton}
+            {createButton}
           </div>
         </div>
         <ul className='o-dropdown-list'>
@@ -203,7 +205,7 @@ class ItemSelectInput extends React.Component {
 
   render() {
     const anchorButton = (
-      <a onClick={() => this.refs.dropdown.open()}>
+      <a onClick={() => this.dropdown.current.open()}>
         {this.props.editMessage}
       </a>
     )
@@ -216,9 +218,9 @@ class ItemSelectInput extends React.Component {
           </button>
           <button
             className='pt-button c-item-list__header__filters__filter'
-            onClick={() => this.refs.dropdown.open()}>
+            onClick={() => this.dropdown.current.open()}>
             {this.props.editMessage}
-            <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+            <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
           </button>
         </div>
       </div>
@@ -229,7 +231,7 @@ class ItemSelectInput extends React.Component {
         className='c-input c-input--item-select'>
         {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
-          ref='dropdown'
+          ref={this.dropdown}
           content={this.renderDropdown()}
           inline={this.props.inline}>
           {this.props.filterButton ? filterButton : anchorButton}

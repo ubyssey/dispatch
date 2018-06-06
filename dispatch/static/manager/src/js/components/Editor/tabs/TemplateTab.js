@@ -11,7 +11,7 @@ import FieldGroup from '../../fields/FieldGroup'
 
 class TemplateTabComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getTemplate(this.props.token, this.props.template)
   }
 
@@ -39,7 +39,7 @@ class TemplateTabComponent extends React.Component {
         <FormInput label='Template'>
           <TemplateSelectInput
             selected={this.props.template}
-            update={template => this.props.update('template', template) } />
+            update={template => this.props.update('template', template)} />
         </FormInput>
         <div>{fields}</div>
       </div>

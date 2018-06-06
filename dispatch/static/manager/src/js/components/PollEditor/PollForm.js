@@ -27,7 +27,7 @@ export default class PollForm extends React.Component {
   constructor(props) {
     super(props)
 
-    if(props.listItem.id === 'new') {
+    if (props.listItem.id === 'new') {
       this.state = DEFAULT_ANSWERS
     }
     else {
@@ -79,7 +79,7 @@ export default class PollForm extends React.Component {
               placeholder='Answer'
               value={name || ''}
               fill={true}
-              onChange={ e => this.handleUpdateAnswer(e, id) } />
+              onChange={e => this.handleUpdateAnswer(e, id)} />
             <span
               className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(id)}>
@@ -162,7 +162,7 @@ export default class PollForm extends React.Component {
                 placeholder='Name'
                 value={this.props.listItem.name || ''}
                 fill={true}
-                onChange={ e => this.props.update('name', e.target.value) } />
+                onChange={e => this.props.update('name', e.target.value)} />
             </FormInput>
             <FormInput
               label='Question'
@@ -172,7 +172,7 @@ export default class PollForm extends React.Component {
                 placeholder='Question'
                 value={this.props.listItem.question || ''}
                 fill={true}
-                onChange={ e => this.props.update('question', e.target.value) } />
+                onChange={e => this.props.update('question', e.target.value)} />
             </FormInput>
             {this.renderAnswers()}
             {this.renderAddAnswerButton()}
@@ -184,8 +184,7 @@ export default class PollForm extends React.Component {
             many={false}
             id={this.props.listItem.id}
             answers={this.props.listItem.answers}
-            question={this.props.listItem.question}
-            />
+            question={this.props.listItem.question}/>
         </div>
       </div>
     )

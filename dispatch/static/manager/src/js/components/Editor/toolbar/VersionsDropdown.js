@@ -8,6 +8,12 @@ require('../../../../styles/components/versions_dropdown.scss')
 
 export default class VersionsDropdown extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.dropdown = React.createRef()
+  }
+
   getVersions() {
     let versions = []
 
@@ -20,11 +26,10 @@ export default class VersionsDropdown extends React.Component {
 
   selectVersion(version) {
     this.props.getVersion(version)
-    this.refs.dropdown.close()
+    this.dropdown.current.close()
   }
-  
-  renderDropdown() {
 
+  renderDropdown() {
     let versions = this.getVersions().map(
       (version) => {
 
@@ -37,7 +42,7 @@ export default class VersionsDropdown extends React.Component {
             className={`o-dropdown-list__item${selectedClassName}`}
             key={version}
             onClick={() => this.selectVersion(version)}>
-            <span className={`o-dropdown-list__item__icon${selectedIcon}`}></span>
+            <span className={`o-dropdown-list__item__icon${selectedIcon}`} />
             <span className='o-dropdown-list__item__text'>{`Version ${version}${published}`}</span>
           </li>
         )
@@ -56,11 +61,11 @@ export default class VersionsDropdown extends React.Component {
     if (this.props.latest_version) {
       return (
         <Dropdown
-          ref='dropdown'
+          ref={this.dropdown}
           content={this.renderDropdown()}>
-          <AnchorButton onClick={() => this.refs.dropdown.open()}>
+          <AnchorButton onClick={() => this.dropdown.current.open()}>
             {`Version ${this.props.current_version}`}
-            <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+            <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
           </AnchorButton>
         </Dropdown>
       )

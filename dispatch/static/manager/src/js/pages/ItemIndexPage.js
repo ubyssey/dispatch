@@ -45,7 +45,7 @@ export default class ListItemsPageComponent extends React.Component {
     )
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // Fetch listItems
     this.props.clearListItems()
     this.props.clearSelectedListItems()
@@ -121,7 +121,7 @@ export default class ListItemsPageComponent extends React.Component {
           emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
             <LinkButton intent={Intent.SUCCESS} to={`${this.props.typePlural}/new`}>
-              <span className='pt-icon-standard pt-icon-add'></span>Create {this.typeString}
+              <span className='pt-icon-standard pt-icon-add' />Create {this.typeString}
             </LinkButton>)
           }
 

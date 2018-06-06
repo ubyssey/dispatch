@@ -32,7 +32,7 @@ require('../styles/editor.scss')
 function buildEmbedMap(embeds) {
   let embedMap = {}
 
-  for(var i = 0; i < embeds.length; i++) {
+  for (var i = 0; i < embeds.length; i++) {
     embedMap[embeds[i].type] = embeds[i]
   }
 
@@ -43,7 +43,7 @@ function blockStyleFn(contentBlock) {
   const type = contentBlock.getType()
   const baseStyle = 'c-dispatch-editor__editor__block c-dispatch-editor__editor__block'
 
-  switch(type) {
+  switch (type) {
   case 'unstyled':
     return baseStyle + '--unstyled'
   case 'atomic':
@@ -90,11 +90,14 @@ class ContentEditor extends React.Component {
     super(props)
     this.embedMap = buildEmbedMap(this.props.embeds)
 
+    this.container = React.createRef()
+    this.editor = React.createRef()
+
     this.state = this.initialState()
 
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // Push content to editor state
     if (nextProps.content instanceof ContentState) {
       this.setState({
@@ -105,7 +108,7 @@ class ContentEditor extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // Push content to editor state
     if (this.props.content instanceof ContentState) {
       this.onChange(EditorState.push(this.state.editorState, this.props.content))
@@ -219,7 +222,7 @@ class ContentEditor extends React.Component {
       if ( !isCollapsed || showLinkPopover ) {
 
         var selected = getSelected().getRangeAt(0).getBoundingClientRect()
-        var container = this.refs.container.getBoundingClientRect()
+        var container = this.container.current.getBoundingClientRect()
 
         var position,
           left = selected.left - container.left,
@@ -248,7 +251,7 @@ class ContentEditor extends React.Component {
             renderContent: showLinkPopover ? this.renderLinkPopover.bind(this) : this.renderPopover.bind(this),
             linkEntity: linkEntity
           }
-        }, this.refs.editor.focus)
+        }, this.editor.current.focus)
 
       } else {
         this.setState(
@@ -256,7 +259,7 @@ class ContentEditor extends React.Component {
             showPopover: false,
             isLinkInputActive: false
           },
-          this.refs.editor.focus
+          this.editor.current.focus
         )
       }
 
@@ -350,7 +353,7 @@ class ContentEditor extends React.Component {
   }
 
   focusEditor() {
-    this.refs.editor.focus()
+    this.editor.current.focus()
   }
 
   closePopover() {
@@ -366,7 +369,7 @@ class ContentEditor extends React.Component {
         closeLinkInput={() => this.setState({isLinkInputActive : false})}
         toggleInlineStyle={style => this.toggleInlineStyle(style)}
         toggleBlockType={blockType => this.toggleBlockType(blockType)}
-        focusEditor={() => null }
+        focusEditor={() => null}
         close={() => this.closePopover} />
     )
   }
@@ -392,12 +395,12 @@ class ContentEditor extends React.Component {
 
     return (
       <div
-        ref='container'
+        ref={this.container}
         className='c-dispatch-editor'
         onMouseUp={e => this.handleMouseUp(e)}>
         <div className='c-dispatch-editor__editor'>
           <Editor
-            ref='editor'
+            ref={this.editor}
             spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}
@@ -416,7 +419,7 @@ class ContentEditor extends React.Component {
             position={this.state.popover.position}
             useSmartArrowPositioning={false}
             enforceFocus={false}>
-            <div></div>
+            <div />
           </Popover>
         </div>
         <EmbedToolbar

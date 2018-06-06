@@ -20,15 +20,13 @@ const NEW_PAGE_ID = 'new'
 
 class PageEditorComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       this.props.setPage({ id: NEW_PAGE_ID })
     } else {
       this.loadPage()
     }
-  }
-
-  componentDidMount() {
+    
     confirmNavigation(
       this.props.router,
       this.props.route,

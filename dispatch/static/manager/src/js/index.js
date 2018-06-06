@@ -45,10 +45,6 @@ render((
 
           <Route path='profile' component={Pages.Profile} />
 
-          <Route path='integrations' component={Pages.Integrations.Index}>
-            <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
-          </Route>
-
           <Route path='tags'>
             <IndexRoute component={Pages.Tags.Index} />
             <Route path='new' component={Pages.Tags.NewTag} />

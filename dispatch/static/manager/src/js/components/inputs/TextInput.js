@@ -7,6 +7,8 @@ export default class TextInput extends React.Component {
 
     this.handleOnChange = this.handleOnChange.bind(this)
 
+    this.input = React.createRef()
+
     this.saveTimeout = null
     this.saveNextUpdate = false
   }
@@ -30,13 +32,13 @@ export default class TextInput extends React.Component {
   }
 
   focus() {
-    this.refs.input.focus()
+    this.input.current.focus()
   }
 
   render() {
     return (
       <input
-        ref='input'
+        ref={this.input}
         className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
         type={this.props.type || 'text'}
         value={this.props.value || ''}

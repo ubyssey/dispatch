@@ -14,7 +14,7 @@ import FieldGroup from '../fields/FieldGroup'
 
 class ZoneEditorComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getZone(this.props.token, this.props.zoneId)
   }
 
