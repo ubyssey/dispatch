@@ -16,8 +16,8 @@
     "Benny Lo",
     "Arash Outadi",
     "Jordan Schalm",
-    "Atsushi Yamamoto"
-    "Ron Yong",
+    "Atsushi Yamamoto",
+    "Ron Yong"
   ],
   "dependencies": {
     "@blueprintjs/core": "1.35.7",
