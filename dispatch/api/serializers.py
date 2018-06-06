@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
-from dispatch.api.helpers import send_invitation
+from dispatch.api.helpers import send_invitation, modify_permissions
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery,
@@ -72,6 +72,8 @@ class UserSerializer(DispatchModelSerializer):
 
     permissions = serializers.CharField(source='get_permissions', read_only=True)
 
+    permission_level = serializers.CharField(required=False, allow_null=True, write_only=True)
+
     class Meta:
         model = User
         fields = (
@@ -80,11 +82,12 @@ class UserSerializer(DispatchModelSerializer):
             'person',
             'password_a',
             'password_b',
-            'permissions'
+            'permissions',
+            'permission_level'
         )
 
     def create(self, validated_data):
-        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permissions'])
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permission_level'])
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -95,6 +98,9 @@ class UserSerializer(DispatchModelSerializer):
             instance.set_password(validated_data['password_a'])
 
         instance.save()
+
+        permissions = validated_data.get('permission_level')
+        modify_permissions(instance, permissions)
 
         return instance
 

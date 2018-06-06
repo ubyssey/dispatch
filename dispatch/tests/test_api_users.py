@@ -40,7 +40,7 @@ class UserTests(DispatchAPITestCase):
             'person' : person_id,
             'password_a': 'TheBestPassword',
             'password_b': 'TheBestPassword',
-            'permissions': 'admin'
+            'permission_level': 'admin'
         }
 
         response = self.client.post(url, data, format='json')
@@ -256,7 +256,6 @@ class UserTests(DispatchAPITestCase):
             email=TEST_USER_EMAIL,
             full_name=TEST_USER_FULL_NAME
         )
-
         user_id = response.data['id']
         person_id = response.data['person']['id']
 

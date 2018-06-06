@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
         if permissions == 'admin':
             group = Group.objects.get(name='Admin')
             user.groups.add(group)
-            
+
         return user
 
     def create_user(self, email, password=None, permissions=None):
