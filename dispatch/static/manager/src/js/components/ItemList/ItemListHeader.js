@@ -21,7 +21,8 @@ export default function ItemListHeader(props) {
   const toolbarLeft = (
     <div className='c-item-list__header'>
       <div className='c-item-list__header__checkbox'>
-        <input type='checkbox'
+        <input
+          type='checkbox'
           checked={props.actions.isAllSelected}
           onChange={() => props.actions.toggleAllItems(props.items.ids)} />
       </div>

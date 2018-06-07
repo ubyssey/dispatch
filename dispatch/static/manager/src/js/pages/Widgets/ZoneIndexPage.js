@@ -62,8 +62,7 @@ class ZoneIndexPageComponent extends React.Component {
 
           actions={{
             searchItems: (query) => this.props.searchZones(query)
-          }}
-          />
+          }} />
       </DocumentTitle>
     )
   }

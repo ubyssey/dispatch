@@ -1,5 +1,6 @@
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
@@ -14,14 +15,15 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer)
-from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
+    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
+    PollVoteSerializer )
+from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
@@ -163,7 +165,7 @@ class TagViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
-        
+
         return queryset
 
 class TopicViewSet(DispatchModelViewSet):
@@ -247,6 +249,43 @@ class ImageGalleryViewSet(DispatchModelViewSet):
             # If a search term (q) is present, filter queryset by term against `title`
             queryset = queryset.filter(title__icontains=q)
         return queryset
+
+class PollViewSet(DispatchModelViewSet):
+    """Viewset for the Poll model views."""
+    model = Poll
+    serializer_class = PollSerializer
+
+    def get_queryset(self):
+        queryset = Poll.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
+        return queryset
+
+    @detail_route(permission_classes=[AllowAny], methods=['post'],)
+    def vote(self, request, pk=None):
+        poll = get_object_or_404(Poll.objects.all(), pk=pk)
+
+        if not poll.is_open:
+            raise PollClosed()
+
+        answer = get_object_or_404(PollAnswer.objects.all(), pk=request.data['answer_id'])
+
+        if answer.poll != poll:
+            raise InvalidPoll()
+            
+        # Change vote
+        if 'vote_id' in request.data:
+            vote_id = request.data['vote_id']
+            vote = PollVote.objects.filter(answer__poll=poll, id=vote_id).update(answer=answer)
+            return Response({'id': vote_id})
+
+        serializer = PollVoteSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""

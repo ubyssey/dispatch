@@ -65,8 +65,8 @@ function VideosPageComponent(props) {
 }
 
 const VideosIndexPage = connect(
-	mapStateToProps,
-	mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(VideosPageComponent)
 
 export default VideosIndexPage

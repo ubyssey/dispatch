@@ -15,22 +15,22 @@ function WidgetEmbedComponent(props) {
   return (
     <div className='o-embed o-embed--widget'>
       <form>
-          <FormInput label='Widget'>
-            <WidgetSelectInput
-              zoneId='embed'
-              selected={props.data.widget_id}
-              update={widgetId => {
-                props.updateField('widget_id', widgetId)
-                props.stopEditing()
-              }} />
-          </FormInput>
+        <FormInput label='Widget'>
+          <WidgetSelectInput
+            zoneId='embed'
+            selected={props.data.widget_id}
+            update={widgetId => {
+              props.updateField('widget_id', widgetId)
+              props.stopEditing()
+            }} />
+        </FormInput>
 
-          <FormInput label='Fields'>
-            <WidgetFields
-              updateField={updateWidgetField}
-              widgetId={props.data.widget_id}
-              data={props.data.data} />
-          </FormInput>
+        <FormInput label='Fields'>
+          <WidgetFields
+            updateField={updateWidgetField}
+            widgetId={props.data.widget_id}
+            data={props.data.data} />
+        </FormInput>
       </form>
     </div>
   )

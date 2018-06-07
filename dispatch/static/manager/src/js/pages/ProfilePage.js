@@ -50,7 +50,7 @@ class ProfilePageComponent extends React.Component {
     const personEditor = personId ? (
       <PersonEditor
         itemId={personId}
-        goBack={this.props.history.goBack}
+        goBack={this.props.router.goBack}
         route={this.props.route} />
     ) : null
 
@@ -66,7 +66,7 @@ class ProfilePageComponent extends React.Component {
               placeholder='name@domain.tld'
               value={user.email || ''}
               fill={true}
-              onChange={ e => this.handleUpdate('email', e.target.value) } />
+              onChange={e => this.handleUpdate('email', e.target.value)} />
           </FormInput>
           <FormInput
             label='Password'
@@ -77,7 +77,7 @@ class ProfilePageComponent extends React.Component {
               value={user.password_a || ''}
               fill={true}
               type='password'
-              onChange={ e => this.handleUpdate('password_a', e.target.value) } />
+              onChange={e => this.handleUpdate('password_a', e.target.value)} />
           </FormInput>
           <FormInput
             label='Password Again'
@@ -88,7 +88,7 @@ class ProfilePageComponent extends React.Component {
               value={user.password_b || ''}
               fill={true}
               type='password'
-              onChange={ e => this.handleUpdate('password_b', e.target.value) } />
+              onChange={e => this.handleUpdate('password_b', e.target.value)} />
           </FormInput>
         </form>
         <Button

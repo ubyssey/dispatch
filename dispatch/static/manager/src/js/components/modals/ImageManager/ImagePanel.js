@@ -39,7 +39,7 @@ export default function ImagePanel(props) {
         <FormInput label='Tags'>
           <TagSelectInput
             selected={props.image.tags}
-            update={tags => props.update('tags', tags) } />
+            update={tags => props.update('tags', tags)} />
         </FormInput>
       </form>
     </div>

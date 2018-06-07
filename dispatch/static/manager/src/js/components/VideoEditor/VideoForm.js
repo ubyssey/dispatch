@@ -15,7 +15,7 @@ export default function VideoForm(props) {
           placeholder='Title'
           value={props.listItem.title || ''}
           fill={true}
-          onChange={ e => props.update('title', e.target.value) } />
+          onChange={e => props.update('title', e.target.value)} />
       </FormInput>
 
       <FormInput
@@ -26,7 +26,7 @@ export default function VideoForm(props) {
           placeholder='URL'
           value={props.listItem.url || ''}
           fill={true}
-          onChange={ e => props.update('url', e.target.value) } />
+          onChange={e => props.update('url', e.target.value)} />
       </FormInput>
 
     </form>

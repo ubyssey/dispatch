@@ -62,7 +62,7 @@ export default class WidgetFieldComponent extends React.Component {
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
-      {fields}
+        {fields}
       </div>
     )
   }

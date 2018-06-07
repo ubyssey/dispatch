@@ -20,7 +20,7 @@ export default function ListItemToolbar(props) {
       intent={Intent.DANGER}
       disabled={props.isNew}
       onConfirm={() => props.deleteListItem()}>
-      <span className='pt-icon-standard pt-icon-trash'></span>Delete
+      <span className='pt-icon-standard pt-icon-trash' />Delete
     </ConfirmButtom>
   )
 
@@ -29,7 +29,7 @@ export default function ListItemToolbar(props) {
       <ToolbarLeft>
         <AnchorButton
           onClick={() => props.goBack()}>
-          <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
+          <span className='pt-icon-standard pt-icon-arrow-left' />Back
         </AnchorButton>
         {props.isNew ? newTitle : editTitle}
       </ToolbarLeft>
@@ -37,7 +37,7 @@ export default function ListItemToolbar(props) {
         <AnchorButton
           intent={Intent.SUCCESS}
           onClick={() => props.saveListItem()}>
-          <span className='pt-icon-standard pt-icon-tick'></span>{props.isNew ? 'Save' : 'Update'}
+          <span className='pt-icon-standard pt-icon-tick' />{props.isNew ? 'Save' : 'Update'}
         </AnchorButton>
         {props.extraButton}
         {props.deleteListItem ? deleteButton : null}

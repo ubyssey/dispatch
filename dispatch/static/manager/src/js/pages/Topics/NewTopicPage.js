@@ -6,7 +6,7 @@ export default function NewTopicPage(props) {
   return (
     <TopicEditor
       isNew={true}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

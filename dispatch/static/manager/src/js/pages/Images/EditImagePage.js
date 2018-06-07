@@ -7,7 +7,7 @@ export default function EditImagePage(props) {
   return (
     <ImageEditor
       itemId={props.params.imageId}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }
