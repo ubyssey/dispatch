@@ -31,7 +31,6 @@ class Poll extends Component {
 
   render() {
     const { answers, question } = this.props
-    console.log(answers)
     const notShowResult= this.state.showResults ?  0 : COLOR_OPACITY
     const showResult = this.state.showResults ? COLOR_OPACITY : 0
     return (

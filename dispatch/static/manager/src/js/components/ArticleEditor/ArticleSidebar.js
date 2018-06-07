@@ -4,7 +4,7 @@ import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
 import FeaturedImageTab from '../Editor/tabs/FeaturedImageTab'
-import FeaturedVideoTab from '../Editor/tabs/FeaturedVideoTab'
+// import FeaturedVideoTab from '../Editor/tabs/FeaturedVideoTab'
 import DeliveryTab from '../Editor/tabs/DeliveryTab'
 import TemplateTab from '../Editor/tabs/TemplateTab'
 import SEOTab from '../Editor/tabs/SEOTab'
@@ -18,7 +18,7 @@ export default function ArticleSidebar(props) {
         <TabList className='c-article-sidebar__tablist'>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media' />Featured image</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-video' />Featured video</Tab>
+          {/* <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-video' />Featured video</Tab> */}
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope' />Delivery</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media' />SEO</Tab>
@@ -43,12 +43,13 @@ export default function ArticleSidebar(props) {
             entities={props.entities} />
         </TabPanel>
 
-        <TabPanel className='c-article-sidebar__panel'>
+        {/* uncomment when featured videos are ready */}
+        {/* <TabPanel className='c-article-sidebar__panel'>
           <FeaturedVideoTab
             update={props.update}
             featured_video={props.article.featured_video}
             entities={props.entities} />
-        </TabPanel>
+        </TabPanel> */}
 
         <TabPanel className='c-article-sidebar__panel'>
           <DeliveryTab
