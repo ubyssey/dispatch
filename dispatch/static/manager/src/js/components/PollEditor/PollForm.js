@@ -24,7 +24,7 @@ const DEFAULT_ANSWERS = [
 export default class PollForm extends React.Component {
 
   addAnswer() {
-    this.props.update('answers', this.getAnswers() + DEFAULT_ANSWERS[0])
+    this.props.update('answers', this.getAnswers().concat( DEFAULT_ANSWERS[0]))
   }
 
   removeAnswer(index) {
