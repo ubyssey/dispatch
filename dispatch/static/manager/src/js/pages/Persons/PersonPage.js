@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Button, Intent } from '@blueprintjs/core'
 
 import userActions from '../../actions/UserActions'
+import personsActions from '../../actions/PersonsActions'
 import invitesActions from '../../actions/InvitesActions'
 import PersonEditor from '../../components/PersonEditor'
 import { FormInput, TextInput } from '../../components/inputs'
@@ -13,93 +14,73 @@ import SelectInput from '../../components/inputs/selects/SelectInput'
 
 require('../../../styles/components/user_form.scss')
 
+const DEFAULT = {
+  'id': '',
+  'email': '',
+  'permission': '',
+}
 class PersonPageComponent extends React.Component {
 
   constructor(props) {
     super(props)
-    this.props.getUser(this.props.token, {q : this.props.params.personId})
-    this.props.listInvites(this.props.token, {q : this.props.params.personId})
     this.state = {
-      user : {
-        id : '',
-        email : '',
-        permissions : ''
-      }
+      'editingUser':false
     }
   }
 
-  getUser() {
-    for(var id in this.props.user) {
-      if(this.props.user[id].person == this.props.params.personId) {
-        return this.props.user[id]
-      }
-    }
-    return null
+  componentDidMount() {
+    this.props.getUser(this.props.token,  this.props.params.personId)
+    this.props.getInvite(this.props.token, this.props.params.personId)
   }
 
-  initializeUser() {
-    const user = this.getUser() ? this.getUser() : this.initializeInvite()
-    this.setState({user : R.merge(this.state.user, user)})
+  startEditingUser() {
+    this.setState({'editingUser':true})
   }
 
-  resetUser() {
-    const emptyUser = {
-      id : '',
-      email : '',
-      person : this.props.params.personId,
-      isNew : true
-    }
-    this.setState({user : R.merge(this.state.user, emptyUser)})
-  }
-
-  getInvite() {
-    for(var id in this.props.invite) {
-      if(this.props.invite[id].person == this.props.params.personId) {
-        return this.props.invite[id]
-      }
-    }
-    return null
-  }
-
-  initializeInvite() {
-    const newInvite = {
-      id : '',
-      email : '',
-      person : this.props.params.personId,
-      isNew : true
-    }
-    const invite = this.getInvite() ? this.getInvite() : newInvite
-    return invite
+  resetProps() {
+    this.props.setUser(DEFAULT)
+    this.props.setInvite(DEFAULT)
   }
 
   handleDelete() {
-    if(this.state.user.expiration_date) {
-      this.props.deleteInvite(this.props.token, this.state.user.id)
+    if(this.props.invite.id) {
+      this.props.deleteInvite(this.props.token, this.props.invite.id)
     }
     else {
-      this.props.deleteUser(this.props.token, this.state.user.id)
+      this.props.deleteUser(this.props.token, this.props.user.id)
     }
-    this.resetUser()
+    this.resetProps()
   }
 
   handleSave() {
-    if(this.state.user.isNew) {
-      this.props.inviteUser(this.props.token, this.state.user)
+    if(!this.props.user.id) {
+      this.inviteUser(this.props.token, this.props.invite)
     }
-    else if(this.state.user.expiration_date) {
-      this.props.saveInvite(this.props.token, this.state.user.id, this.state.user)
+    else if(this.props.invite) {
+      this.props.saveInvite(this.props.token, this.props.invite.id, this.props.invite)
     }
     else {
-      this.props.saveUser(this.props.token, this.state.user.id, this.state.user)
+      this.props.saveUser(this.props.token, this.props.user.id, this.props.user)
     }
+  }
+
+  inviteUser(token, user) {
+    user.person = this.props.params.personId
+    this.props.inviteUser(token, user)
   }
 
   handleUpdate(field, value) {
-    this.setState({user : R.assoc(field, value, this.state.user)})
+    if(this.props.user.id) {
+      this.props.setUser(R.assoc(field, value, this.props.user))
+    }
+    else{
+      this.props.setInvite(R.assoc(field, value, this.props.invite))
+
+    }
   }
 
   resetPassword() {
-    this.props.resetPassword(this.props.token, this.state.user.id)
+    this.props.resetPassword(this.props.token, this.props.user.id)
   }
 
   renderEditUserButton() {
@@ -107,7 +88,7 @@ class PersonPageComponent extends React.Component {
       <div className='u-container u-container--padded c-user-form'>
         <Button
           intent={Intent.SUCCESS}
-          onClick={() => this.initializeUser()}>
+          onClick={() => this.startEditingUser()}>
           Manage Account
         </Button>
       </div>
@@ -124,9 +105,8 @@ class PersonPageComponent extends React.Component {
     const deleteButton = (
       <ConfirmButton
         intent={Intent.DANGER}
-        disabled={this.state.user.isNew}
         onConfirm={() => this.handleDelete()}>
-        <span className='pt-icon-standard pt-icon-trash'></span>{this.state.user.expiration_date ? 'Cancel invitation' : 'Deactivate User'}
+        <span className='pt-icon-standard pt-icon-trash'></span>{this.props.invite.id ? 'Cancel invitation' : 'Deactivate User'}
       </ConfirmButton>
     )
 
@@ -137,9 +117,10 @@ class PersonPageComponent extends React.Component {
         Reset Password
       </Button>
     )
+
     return (
       <div className='u-container u-container--padded c-user-form'>
-        <div className='c-user-form__heading'>{this.state.user.expiration_date ? 'Pending Invite' :
+        <div className='c-user-form__heading'>{this.props.invite.id ? 'Pending Invite' :
         'Account Details'}</div>
         <form onSubmit={e => e.preventDefault()}>
           <FormInput
@@ -147,7 +128,7 @@ class PersonPageComponent extends React.Component {
             padded={false}>
             <TextInput
               placeholder='name@domain.tld'
-              value={this.state.user ? this.state.user.email : ''}
+              value={this.props.user.email || this.props.invite.email || ''}
               fill={true}
               onChange={ e => this.handleUpdate('email', e.target.value) } />
           </FormInput>
@@ -157,7 +138,7 @@ class PersonPageComponent extends React.Component {
             <div className='c-user-form__permission-select'>
               <SelectInput
                 options={PERMISSIONS}
-                selected={this.state.user.permissions}
+                selected={this.props.user.permissions || this.props.invite.permissions}
                 onChange={(e) => this.handleUpdate('permissions', e.target.value)}/>
             </div>
           </FormInput>
@@ -166,23 +147,21 @@ class PersonPageComponent extends React.Component {
           <Button
             intent={Intent.SUCCESS}
             onClick={() => this.handleSave()}>
-            {this.state.user.isNew ? 'Invite' : 'Save'}
+            {(this.props.invite.id || this.props.user.id) ? 'Save' : 'Invite'}
           </Button>
         </span>
         <span className='c-user-form__buttons'>
-          {this.getUser() ? resetPasswordButton : null}
+          {this.props.user.id ? resetPasswordButton : null}
         </span>
         <span className='c-user-form__buttons'>
-            {this.state.user.isNew ? null : deleteButton}
+            { (!this.props.user.id && !this.props.invite.id) ? null : deleteButton}
         </span>
       </div>
     )
   }
 
   renderUserEditSection() {
-    const userEditSection = this.state.user.id || this.state.user.isNew ? this.renderUserForm() :  this.renderEditUserButton()
-
-    return userEditSection
+    return this.state.editingUser ? this.renderUserForm() :  this.renderEditUserButton()
   }
 
   render() {
@@ -204,8 +183,9 @@ class PersonPageComponent extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.app.entities.users,
-    invite: state.app.entities.invites,
+    user: state.app.persons.user,
+    invite: state.app.persons.invite,
+    person: state.app.persons.single,
     token: state.app.auth.token,
     settings: state.app.settings
   }
@@ -213,8 +193,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUser: (token, query) => {
-      dispatch(userActions.list(token,query))
+    getUser: (token, personId) => {
+      dispatch(personsActions.getUser(token, personId))
+    },
+    setUser: (user) => {
+      dispatch(personsActions.setUser(user))
     },
     saveUser: (token, userId, data) => {
       dispatch(userActions.save(token, userId, data))
@@ -225,8 +208,11 @@ const mapDispatchToProps = (dispatch) => {
     deleteUser: (token, userId) => {
       dispatch(userActions.delete(token, userId))
     },
-    listInvites: (token, query) => {
-      dispatch(invitesActions.list(token, query))
+    getInvite: (token, query) => {
+      dispatch(personsActions.getInvite(token, query))
+    },
+    setInvite: (invite) => {
+      dispatch(personsActions.setInvite(invite))
     },
     saveInvite: (token, inviteId, data) => {
       dispatch(invitesActions.save(token, inviteId, data))

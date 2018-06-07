@@ -2,7 +2,7 @@ import uuid
 
 from django.db.models import (
     Model, CharField, SlugField, TextField,
-    BooleanField, OneToOneField, ImageField, PROTECT, ManyToManyField, DateTimeField, UUIDField)
+    BooleanField, OneToOneField, ImageField, PROTECT, CASCADE, ManyToManyField, DateTimeField, UUIDField)
 from django.conf import settings
 
 from django.contrib.auth.models import AbstractBaseUser, Group, Permission, PermissionsMixin
@@ -56,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Invite(Model):
     email = CharField(max_length=255, unique=True)
 
-    person = OneToOneField(Person, null=False, related_name='invited_person', on_delete=PROTECT)
+    person = OneToOneField(Person, null=False, related_name='invited_person', on_delete=CASCADE)
 
     permissions = CharField(max_length=255, default='')
 

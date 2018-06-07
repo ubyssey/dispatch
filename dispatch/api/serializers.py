@@ -74,6 +74,7 @@ class UserSerializer(DispatchModelSerializer):
 
     permission_level = serializers.CharField(required=False, allow_null=True, write_only=True)
 
+    user_id = serializers.IntegerField(source='get_user_id', read_only=True)
     class Meta:
         model = User
         fields = (
@@ -83,7 +84,8 @@ class UserSerializer(DispatchModelSerializer):
             'password_a',
             'password_b',
             'permissions',
-            'permission_level'
+            'permission_level',
+            'user_id'
         )
 
     def create(self, validated_data):
@@ -120,8 +122,7 @@ class InviteSerializer(DispatchModelSerializer):
 
     permissions = serializers.CharField(
         required=False,
-        allow_blank=True,
-        write_only=True
+        allow_blank=True
     )
 
     class Meta:

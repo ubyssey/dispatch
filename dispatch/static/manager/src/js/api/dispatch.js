@@ -279,6 +279,12 @@ const DispatchAPI = {
     get: (token, personId) => {
       return getRequest('persons', personId, null, token)
     },
+    getUser: (token, personId) => {
+      return getRequest('persons.user', personId, null, token)
+    },
+    getInvite: (token, personId) => {
+      return getRequest('persons.invite', personId, null, token)
+    },
     save: (token, personId, data) => {
       return patchMultipartRequest('persons', personId, data, token)
     },
@@ -448,8 +454,8 @@ const DispatchAPI = {
     }
   },
   'invites': {
-    get: (token, id) => {
-      return getRequest('invites', id, null, token)
+    get: (token, query) => {
+      return getRequest('invites', null, query, token)
     },
     create: (token, data) => {
       return postRequest('invites', null, data, token)

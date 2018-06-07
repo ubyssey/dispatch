@@ -139,6 +139,35 @@ class PersonViewSet(DispatchModelViewSet):
         except ProtectedError:
             raise ProtectedResourceError('Deletion failed because person belongs to a user')
 
+    @detail_route(methods=['get'])
+    def user(self, request, pk=None):
+        queryset = Person.objects.all()
+
+        person = get_object_or_404(queryset, pk=pk)
+
+        try:
+            user = User.objects.get(person=person)
+            serializer = UserSerializer(user)
+        except User.DoesNotExist:
+            return Response({'detail':'person has no user'})
+
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def invite(self, request, pk=None):
+        queryset = Person.objects.all()
+
+        person = get_object_or_404(queryset, pk=pk)
+
+        try:
+            invite = Invite.objects.get(person=person)
+            serializer = InviteSerializer(invite)
+        except Invite.DoesNotExist:
+            return Response({'detail':'person has no invite'})
+
+        return Response(serializer.data)
+
+
 class InviteViewSet(DispatchModelViewSet):
     """Viewset for the Invite model views."""
     model = Invite
