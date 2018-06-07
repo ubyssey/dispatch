@@ -238,7 +238,7 @@ class PollsTests(DispatchAPITestCase):
 
         # Check that the vote change was successful
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(response.data['id'], vote_id)
+        self.assertEqual(response.data['id'], vote_id)
 
         # Get the poll
         url = reverse('api-polls-detail', args=[poll_id])
@@ -249,6 +249,33 @@ class PollsTests(DispatchAPITestCase):
         self.assertEqual(response.data['total_votes'], 1)
         self.assertEqual(response.data['answers'][0]['vote_count'], 0)
         self.assertEqual(response.data['answers'][1]['vote_count'], 1)
+
+    def test_poll_vote_invalid_answer(self):
+        """A user should not be able to vote for an answer that is not
+        valid for the poll"""
+
+        # Create polls to vote in
+        response = DispatchTestHelpers.create_poll(self.client, is_open=True)
+
+        poll_1_id = response.data['id']
+        poll_1 = Poll.objects.get(id=poll_1_id)
+        answer_poll_1 = PollAnswer.objects.filter(poll_id=poll_1_id).first()
+
+        response = DispatchTestHelpers.create_poll(self.client, is_open=True)
+
+        poll_2_id = response.data['id']
+        poll_2 = Poll.objects.get(id=poll_2_id)
+        answer_poll_2 = PollAnswer.objects.filter(poll_id=poll_2_id).first()
+
+        url = reverse('api-polls-vote', args=[poll_1_id])
+
+        data = {
+            'answer_id': answer_poll_2.id
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_poll_vote_closed(self):
         """A user should not be able to vote in a closed poll"""

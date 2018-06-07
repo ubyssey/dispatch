@@ -11,12 +11,10 @@ require('../../../styles/components/poll_form.scss')
 const DEFAULT_ANSWERS = [
   {
     'name': '',
-    'votes': [],
     'vote_count': 0
   },
   {
     'name': '',
-    'votes': [],
     'vote_count': 0
   }
 ]
@@ -24,7 +22,7 @@ const DEFAULT_ANSWERS = [
 export default class PollForm extends React.Component {
 
   addAnswer() {
-    this.props.update('answers', this.getAnswers().concat( DEFAULT_ANSWERS[0]))
+    this.props.update('answers', this.getAnswers().concat(DEFAULT_ANSWERS[0]))
   }
 
   removeAnswer(index) {
@@ -44,17 +42,14 @@ export default class PollForm extends React.Component {
   renderAnswers() {
     const answers = this.getAnswers().map(
       (answer, index) => {
-        const name = answer.name
-        const votes = answer.vote_count
-        const key = index + 1
         return (
           <FormInput
-            key={key}
-            label={'Answer ' + key + ' Votes: ' + votes}
+            key={index + 1}
+            label={`Answer ${index + 1} Votes: ${answer.vote_count}`}
             padded={false}>
             <TextInput
               placeholder='Answer'
-              value={name || ''}
+              value={answer.name || ''}
               fill={true}
               onChange={e => this.handleUpdateAnswer(e, index)} />
             <span

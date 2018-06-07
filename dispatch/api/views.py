@@ -23,7 +23,7 @@ from dispatch.api.serializers import (
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
     PollVoteSerializer )
-from dispatch.api.exceptions import ProtectedResourceError, BadCredentials
+from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
@@ -267,21 +267,23 @@ class PollViewSet(DispatchModelViewSet):
         poll = get_object_or_404(Poll.objects.all(), pk=pk)
 
         if not poll.is_open:
-            return Response({ 'Detail': 'this poll is closed'}, status.HTTP_400_BAD_REQUEST)
+            raise PollClosed()
 
         answer = get_object_or_404(PollAnswer.objects.all(), pk=request.data['answer_id'])
 
         if answer.poll != poll:
-            return Response({ 'Detail': 'invalid answer for this poll'})
+            raise InvalidPoll()
             
+        # Change vote
+        if 'vote_id' in request.data:
+            vote_id = request.data['vote_id']
+            vote = PollVote.objects.filter(answer__poll=poll, id=vote_id).update(answer=answer)
+            return Response({'id': vote_id})
+
         serializer = PollVoteSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
-        if 'vote_id' in request.data:
-            vote_id = request.data['vote_id']
-            vote = PollVote.objects.filter(answer__poll=poll, id=vote_id).delete()
 
         return Response(serializer.data)
 

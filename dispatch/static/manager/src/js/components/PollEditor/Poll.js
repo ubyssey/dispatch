@@ -31,6 +31,7 @@ class Poll extends Component {
 
   render() {
     const { answers, question } = this.props
+    console.log(answers)
     const notShowResult= this.state.showResults ?  0 : COLOR_OPACITY
     const showResult = this.state.showResults ? COLOR_OPACITY : 0
     return (
@@ -39,30 +40,30 @@ class Poll extends Component {
           <div className='poll-container poll-results'>
             <h1>{question}</h1>
             <form className='poll-answer-form'>
-              {answers.map(answer => {
+              {answers.map((answer, index) => {
                 return (
-                  <label key={answer.id} className='poll-button-label poll-button-voted'>
-                    <input 
-                      className='poll-input' 
-                      name='answer' 
-                      type='radio' 
+                  <label key={index} className='poll-button-label poll-button-voted'>
+                    <input
+                      className='poll-input'
+                      name='answer'
+                      type='radio'
                       value={answer.name} />
                       <span className='poll-answer-text'>{answer.name}</span>
 
-                    <span 
+                    <span
                       className='poll-button'
                       style={{opacity: notShowResult}}>
                       <span className='poll-button-inner' />
                     </span>
 
-                    <span 
+                    <span
                       className='poll-percentage'
                       style={{opacity: showResult}}>
                       {this.getPollResult(answer.vote_count)}
                     </span>
 
-                    <div 
-                      className='poll-result-bar' 
+                    <div
+                      className='poll-result-bar'
                       style={{width: this.getPollResult(answer.vote_count), opacity: showResult}} />
 
                   </label>
@@ -70,12 +71,12 @@ class Poll extends Component {
               }
             </form>
           </div>
-          <Button 
+          <Button
             className='poll-results-button'
             intent={Intent.SUCCESS}
             onClick={() => this.toggleResults()}>
             Toggle Results View
-          </Button> 
+          </Button>
         </div>
       </div>
     )
