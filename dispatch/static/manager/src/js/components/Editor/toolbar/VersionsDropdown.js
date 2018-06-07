@@ -8,10 +8,6 @@ require('../../../../styles/components/versions_dropdown.scss')
 
 export default class VersionsDropdown extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   getVersions() {
     let versions = []
 
