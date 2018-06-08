@@ -6,6 +6,7 @@ import * as types from '../constants/ActionTypes'
 import {
   Reducer,
   fulfilled,
+  rejected,
   buildManyResourceReducer,
   buildSingleResourceReducer
 } from '../util/redux'
@@ -25,6 +26,10 @@ userReducer.handle(fulfilled(types.PERSONS.GET_USER), (state, action) => {
 
 userReducer.handle(types.PERSONS.SET_USER, (state, action) => {
   return R.merge(state, action.user)
+})
+
+userReducer.handle(rejected(types.PERSONS.GET_USER), () => {
+  return initialUser
 })
 
 
@@ -48,6 +53,10 @@ inviteReducer.handle(fulfilled(types.INVITES.CREATE), (state, action) => {
 inviteReducer.handle(types.PERSONS.SET_INVITE, (state, action) => {
   return R.merge(state, action.invite)
 })
+
+inviteReducer.handle(types.PERSONS.GET_INVITE), () => {
+  return initialInvite
+}
 
 export default combineReducers({
   list: buildManyResourceReducer(types.PERSONS).getReducer(),

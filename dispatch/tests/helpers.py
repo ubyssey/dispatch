@@ -209,3 +209,37 @@ class DispatchTestHelpers(object):
         url = reverse('api-videos-list')
 
         return client.post(url, data, format='json')
+
+    @classmethod
+    def create_invite(cls, client, email, permissions=''):
+        """Create dummy invite instance"""
+
+        person = cls.create_person(client, full_name='Invited person')
+
+        url = reverse('api-invites-list')
+
+        data = {
+            'email': email,
+            'permissions': permissions,
+            'person': person.data['id']
+        }
+
+        return client.post(url, data, format='json')
+
+        #
+        #
+        # def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword', permissions=None):
+        #     """
+        #     A helper method that creates a simple user object with the given attributes
+        #     and returns the response
+        #     """
+        #
+        #     person = person or cls.create_person(client, full_name).data['id']
+        #     url = reverse('api-users-list')
+        #     data = {
+        #         'email' : email,
+        #         'person' : person,
+        #         'password_a': password,
+        #         'password_b': password,
+        #         'permission_level': permissions
+        #     }

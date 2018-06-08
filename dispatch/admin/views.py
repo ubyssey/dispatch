@@ -19,7 +19,7 @@ def signup(request):
 
     if invite.expiration_date < timezone.now():
         invite.delete()
-        return Http404("This page does not exist")
+        return Http404('This page does not exist')
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)

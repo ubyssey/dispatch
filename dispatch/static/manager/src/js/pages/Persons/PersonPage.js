@@ -193,7 +193,6 @@ const mapStateToProps = (state) => {
     person: state.app.persons.single,
     token: state.app.auth.token,
     settings: state.app.settings,
-    state: state.app
   }
 }
 
