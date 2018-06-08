@@ -75,6 +75,7 @@ class UserSerializer(DispatchModelSerializer):
     permission_level = serializers.CharField(required=False, allow_null=True, write_only=True)
 
     user_id = serializers.IntegerField(source='get_user_id', read_only=True)
+    
     class Meta:
         model = User
         fields = (

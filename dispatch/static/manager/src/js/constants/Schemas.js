@@ -54,3 +54,7 @@ imageSchema.define({
 zoneSchema.define({
   widget: widgetSchema
 })
+
+userSchema.define({
+  person: personSchema
+})

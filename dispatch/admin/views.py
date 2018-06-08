@@ -39,7 +39,7 @@ def signup(request):
 
             return redirect('dispatch-admin')
         else:
-            return render(request, 'registration/signup.html', {'form' : form, 'email': email})
+            return render(request, 'registration/signup.html', {'form' : form, 'email': invite.email})
 
     else:
         form = SignUpForm()

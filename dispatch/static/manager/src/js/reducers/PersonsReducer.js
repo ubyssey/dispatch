@@ -17,13 +17,6 @@ const initialUser = {
   'isNew': true
 }
 
-const initialInvite = {
-  'id': '',
-  'email': '',
-  'permissions': '',
-  'isNew': true
-}
-
 let userReducer = new Reducer(initialUser)
 
 userReducer.handle(fulfilled(types.PERSONS.GET_USER), (state, action) => {
@@ -33,6 +26,14 @@ userReducer.handle(fulfilled(types.PERSONS.GET_USER), (state, action) => {
 userReducer.handle(types.PERSONS.SET_USER, (state, action) => {
   return R.merge(state, action.user)
 })
+
+
+const initialInvite = {
+  'id': '',
+  'email': '',
+  'permissions': '',
+  'isNew': true
+}
 
 let inviteReducer = new Reducer(initialInvite)
 
@@ -48,11 +49,9 @@ inviteReducer.handle(types.PERSONS.SET_INVITE, (state, action) => {
   return R.merge(state, action.invite)
 })
 
-
-
 export default combineReducers({
   list: buildManyResourceReducer(types.PERSONS).getReducer(),
   single: buildSingleResourceReducer(types.PERSONS).getReducer(),
-//  user: userReducer.getReducer(),
-//  invite: inviteReducer.getReducer()
+  user: userReducer.getReducer(),
+  invite: inviteReducer.getReducer()
 })

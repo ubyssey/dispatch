@@ -221,7 +221,6 @@ class UserViewSet(DispatchModelViewSet):
         if user != request.user and not request.user.has_perm('dispatch.change_user'):
             return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
 
-#TODO: remove this and change front end to sent 'permission_level'
         permissions = request.data.get('permissions', None)
         modify_permissions(user, permissions)
 
