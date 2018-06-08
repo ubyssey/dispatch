@@ -11,14 +11,14 @@ import {
   buildSingleResourceReducer
 } from '../util/redux'
 
-const initialUser = {
+const INITIAL_STATE = {
   'id': '',
   'email': '',
   'permissions': '',
   'isNew': true
 }
 
-let userReducer = new Reducer(initialUser)
+let userReducer = new Reducer(INITIAL_STATE)
 
 userReducer.handle(fulfilled(types.PERSONS.GET_USER), (state, action) => {
   return action.payload
@@ -29,18 +29,10 @@ userReducer.handle(types.PERSONS.SET_USER, (state, action) => {
 })
 
 userReducer.handle(rejected(types.PERSONS.GET_USER), () => {
-  return initialUser
+  return INITIAL_STATE
 })
 
-
-const initialInvite = {
-  'id': '',
-  'email': '',
-  'permissions': '',
-  'isNew': true
-}
-
-let inviteReducer = new Reducer(initialInvite)
+let inviteReducer = new Reducer(INITIAL_STATE)
 
 inviteReducer.handle(fulfilled(types.PERSONS.GET_INVITE), (state, action) => {
   return action.payload
@@ -54,9 +46,9 @@ inviteReducer.handle(types.PERSONS.SET_INVITE, (state, action) => {
   return R.merge(state, action.invite)
 })
 
-inviteReducer.handle(types.PERSONS.GET_INVITE), () => {
-  return initialInvite
-}
+userReducer.handle(rejected(types.PERSONS.GET_INVITE), () => {
+  return INITIAL_STATE
+})
 
 export default combineReducers({
   list: buildManyResourceReducer(types.PERSONS).getReducer(),
