@@ -1,0 +1,40 @@
+.c-poll-form-container{
+  // Structure
+  display: flex;
+  flex-direction: row;
+}
+.c-poll-container {
+  // Structure
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.c-equal-width{
+  // Structure
+  flex: 1;
+  padding: 0 1.5rem;
+}
+.c-poll-form__results-select {
+  // Structure
+  width: 9em;
+}
+.poll-form.pt-icon-standard {
+  // Structure
+  margin-right: 0.25rem;
+  position: absolute;
+  top: 0;
+  left: 140px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    opacity: .8;
+  }
+}
+.poll-form .pt-icon-standard-text{
+  // Structure
+  position: relative;
+  top: 2px;
+  margin-left: .25rem;
+}

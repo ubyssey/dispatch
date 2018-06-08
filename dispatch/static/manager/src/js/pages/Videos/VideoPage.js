@@ -6,7 +6,7 @@ export default function VideoPage(props) {
   return (
     <VideoEditor
       itemId={props.params.videoId}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

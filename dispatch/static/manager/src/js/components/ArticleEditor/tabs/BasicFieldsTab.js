@@ -17,7 +17,7 @@ export default function BasicFieldsTab(props) {
           placeholder='Slug'
           value={props.slug || ''}
           fill={true}
-          onChange={e => props.update('slug', e.target.value) } />
+          onChange={e => props.update('slug', e.target.value)} />
       </FormInput>
 
       <FormInput
@@ -25,7 +25,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.section_id}>
         <SectionSelectInput
           selected={props.section}
-          update={section => props.update('section', section) } />
+          update={section => props.update('section', section)} />
       </FormInput>
 
       <FormInput
@@ -33,7 +33,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.author_ids}>
         <AuthorSelectInput
           selected={props.authors}
-          update={authors => props.update('authors', authors) } />
+          update={authors => props.update('authors', authors)} />
       </FormInput>
 
       <FormInput
@@ -41,7 +41,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.tag_ids}>
         <TagSelectInput
           selected={props.tags}
-          update={tags => props.update('tags', tags) } />
+          update={tags => props.update('tags', tags)} />
       </FormInput>
 
       <FormInput
@@ -49,7 +49,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.topic_ids}>
         <TopicSelectInput
           selected={props.topic}
-          update={topic => props.update('topic', topic) } />
+          update={topic => props.update('topic', topic)} />
       </FormInput>
 
       <FormInput
@@ -59,7 +59,7 @@ export default function BasicFieldsTab(props) {
           placeholder='Snippet'
           value={props.snippet || ''}
           rows='5'
-          onChange={e => props.update('snippet', e.target.value) } />
+          onChange={e => props.update('snippet', e.target.value)} />
       </FormInput>
 
     </div>

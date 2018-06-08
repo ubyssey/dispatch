@@ -12,7 +12,7 @@ export default function ArticleToolbar(props) {
       intent={Intent.PRIMARY}
       onClick={() => props.publishArticle()}
       disabled={props.isNew}>
-      <span className='pt-icon-standard pt-icon-arrow-up'></span>Publish
+      <span className='pt-icon-standard pt-icon-arrow-up' />Publish
     </AnchorButton>
   )
 
@@ -21,7 +21,7 @@ export default function ArticleToolbar(props) {
       intent={Intent.PRIMARY}
       onClick={() => props.unpublishArticle()}
       disabled={props.isNew}>
-      <span className='pt-icon-standard pt-icon-arrow-down'></span>Unpublish
+      <span className='pt-icon-standard pt-icon-arrow-down' />Unpublish
     </AnchorButton>
   )
 
@@ -32,13 +32,13 @@ export default function ArticleToolbar(props) {
           <AnchorButton
             intent={Intent.SUCCESS}
             onClick={() => props.saveArticle()}>
-            <span className='pt-icon-standard pt-icon-small-tick'></span>Update
+            <span className='pt-icon-standard pt-icon-small-tick' />Update
           </AnchorButton>
           {props.article.is_published ? unpublish : publish}
           <AnchorButton
             disabled={props.isNew}
             onClick={() => props.previewArticle()}>
-            <span className='pt-icon-standard pt-icon-document-open'></span>Preview
+            <span className='pt-icon-standard pt-icon-document-open' />Preview
           </AnchorButton>
           <VersionsDropdown
             current_version={props.article.current_version}

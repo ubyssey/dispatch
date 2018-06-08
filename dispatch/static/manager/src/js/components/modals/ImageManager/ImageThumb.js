@@ -14,12 +14,11 @@ export default function ImageThumb(props) {
   return (
     <div
       className={componentClass}
-      style={props.width ? { width: props.width} : {}}
-      >
+      style={props.width ? { width: props.width} : {}}>
       <div
         className='c-image-thumb__inner'
         onClick={() => props.selectImage(props.image.id)}
-        style={style}></div>
+        style={style} />
     </div>
   )
 }

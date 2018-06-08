@@ -22,9 +22,8 @@ export default class VersionsDropdown extends React.Component {
     this.props.getVersion(version)
     this.refs.dropdown.close()
   }
-  
-  renderDropdown() {
 
+  renderDropdown() {
     let versions = this.getVersions().map(
       (version) => {
 
@@ -37,7 +36,7 @@ export default class VersionsDropdown extends React.Component {
             className={`o-dropdown-list__item${selectedClassName}`}
             key={version}
             onClick={() => this.selectVersion(version)}>
-            <span className={`o-dropdown-list__item__icon${selectedIcon}`}></span>
+            <span className={`o-dropdown-list__item__icon${selectedIcon}`} />
             <span className='o-dropdown-list__item__text'>{`Version ${version}${published}`}</span>
           </li>
         )
@@ -60,7 +59,7 @@ export default class VersionsDropdown extends React.Component {
           content={this.renderDropdown()}>
           <AnchorButton onClick={() => this.refs.dropdown.open()}>
             {`Version ${this.props.current_version}`}
-            <span className='pt-icon-standard pt-icon-caret-down pt-align-right'></span>
+            <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
           </AnchorButton>
         </Dropdown>
       )
