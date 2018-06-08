@@ -125,6 +125,8 @@ class InviteSerializer(DispatchModelSerializer):
         allow_blank=True
     )
 
+    expiration_date = serializers.DateTimeField(read_only=True)
+
     class Meta:
         model = Invite
         fields = (

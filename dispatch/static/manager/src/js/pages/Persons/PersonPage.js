@@ -53,14 +53,19 @@ class PersonPageComponent extends React.Component {
   }
 
   handleSave() {
-    if(!this.props.user.id) {
-      this.inviteUser(this.props.token, this.props.invite)
-    }
-    else if(this.props.invite) {
+    if(this.props.invite.id) {
+      let invite = this.props.invite
+      invite.person = this.props.invite.person.id
       this.props.saveInvite(this.props.token, this.props.invite.id, this.props.invite)
     }
+    else if(!this.props.user.id) {
+      this.inviteUser(this.props.token, this.props.invite)
+    }
     else {
-      this.props.saveUser(this.props.token, this.props.user.id, this.props.user)
+      let user = this.props.user
+      user.person = this.props.user.person.id
+      user.permission_level = this.props.user.permissions
+      this.props.saveUser(this.props.token, this.props.user.id, user)
     }
   }
 
@@ -154,7 +159,7 @@ class PersonPageComponent extends React.Component {
           {this.props.user.id ? resetPasswordButton : null}
         </span>
         <span className='c-user-form__buttons'>
-            { (!this.props.user.id && !this.props.invite.id) ? null : deleteButton}
+            { (this.props.user.id || this.props.invite.id) ? deleteButton : null}
         </span>
       </div>
     )
@@ -187,7 +192,8 @@ const mapStateToProps = (state) => {
     invite: state.app.persons.invite,
     person: state.app.persons.single,
     token: state.app.auth.token,
-    settings: state.app.settings
+    settings: state.app.settings,
+    state: state.app
   }
 }
 

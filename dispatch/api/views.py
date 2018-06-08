@@ -149,7 +149,7 @@ class PersonViewSet(DispatchModelViewSet):
             user = User.objects.get(person=person)
             serializer = UserSerializer(user)
         except User.DoesNotExist:
-            return Response({'detail':'person has no user'})
+            return Response()
 
         return Response(serializer.data)
 

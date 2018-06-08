@@ -41,7 +41,7 @@ inviteReducer.handle(fulfilled(types.PERSONS.GET_INVITE), (state, action) => {
 })
 
 inviteReducer.handle(fulfilled(types.INVITES.CREATE), (state, action) => {
-  return action.payload.data.entities.invites
+  return action.payload.data.entities.invites[action.payload.data.result]
 })
 
 inviteReducer.handle(types.PERSONS.SET_INVITE, (state, action) => {
@@ -53,6 +53,6 @@ inviteReducer.handle(types.PERSONS.SET_INVITE, (state, action) => {
 export default combineReducers({
   list: buildManyResourceReducer(types.PERSONS).getReducer(),
   single: buildSingleResourceReducer(types.PERSONS).getReducer(),
-  user: userReducer.getReducer(),
-  invite: inviteReducer.getReducer()
+//  user: userReducer.getReducer(),
+//  invite: inviteReducer.getReducer()
 })
