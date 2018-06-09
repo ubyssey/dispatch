@@ -463,6 +463,8 @@ class Image(Model, AuthorMixin):
             image = Img.open(StringIO.StringIO(s))
             self.width, self.height = image.size
 
+            author_names = set()
+
             # Exif data is only read from files with TIFF or JPEG format, otherwise an error will occur
             if self.get_extension() in Image.EXIF_FORMATS:
                 exiftags = image._getexif()
@@ -477,12 +479,8 @@ class Image(Model, AuthorMixin):
                     # author will only be assigned if a string is given by the exif data
                     author_name = exiftags.get(315)
                     if author_name is not None:
-                        person, created = Person.objects.get_or_create(full_name=author_name)
-                        author = Author.objects.create(person=person, order = 0, type="photographer")
-                        self.authors.add(author)
-                    # for auth in self.authors.all():
-                    #     print auth
-                    #     print auth.person.full_name
+                        author_names.add(author_name)
+
 
             b = bytearray(s)
 
@@ -499,12 +497,11 @@ class Image(Model, AuthorMixin):
                         #  exif data is read first. caption and author are parsed, if additional data is found in xmp,
                         #  xmp caption will replace exif caption, but both authors will be saved
                         self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
-                        # print self.title
+
 
                         xmpdesc = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
                         if xmpdesc != '':
                             self.caption = xmpdesc
-                        # print xmpdesc
 
                         counter = 1
                         tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
@@ -512,19 +509,18 @@ class Image(Model, AuthorMixin):
                             tag, created = Tag.objects.get_or_create(name=tag_name)
                             self.tags.add(tag)
                             counter += 1
-                            # print tag_name
                             tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
 
                         author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', 1)
                         if author_name != '':
-                            person, created = Person.objects.get_or_create(full_name=author_name)
-                            author = Author.objects.create(person=person, order = 0, type="photographer")
-                            self.authors.add(author)
-                            # print author_name
+                            author_names.add(author_name)
                 except XMPError:
                     None
 
-
+            for an in author_names:
+                person, created = Person.objects.get_or_create(full_name=author_name)
+                author = Author.objects.create(person=person, order = 0, type="photographer")
+                self.authors.add(author)
 
             super(Image, self).save()
             ext = self.get_extension()

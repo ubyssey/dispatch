@@ -189,6 +189,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'img',
             'filename',
             'title',
+            'caption',
             'authors',
             'author_ids',
             'tags',
