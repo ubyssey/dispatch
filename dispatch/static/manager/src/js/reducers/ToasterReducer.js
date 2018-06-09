@@ -205,7 +205,7 @@ export default function toasterReducer(toaster = {}, action) {
   case fulfilled(types.USERS.RESET_PASSWORD):
     return showToast('Password reset sent')
   case rejected(types.USERS.RESET_PASSWORD):
-    return showToast('Could sent reset email')
+    return showToast('Could not sentd reset email', Intent.DANGER)
   case fulfilled(types.USERS.DELETE):
     return showToast('User account deactivated')
 
@@ -216,7 +216,7 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('Invite sent')
   case fulfilled(types.INVITES.DELETE):
     return showToast('Invitation cancelled')
-    
+
   // Videos
   case fulfilled(types.VIDEOS.CREATE):
   case fulfilled(types.VIDEOS.SAVE):

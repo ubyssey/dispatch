@@ -225,21 +225,3 @@ class DispatchTestHelpers(object):
         }
 
         return client.post(url, data, format='json')
-
-        #
-        #
-        # def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword', permissions=None):
-        #     """
-        #     A helper method that creates a simple user object with the given attributes
-        #     and returns the response
-        #     """
-        #
-        #     person = person or cls.create_person(client, full_name).data['id']
-        #     url = reverse('api-users-list')
-        #     data = {
-        #         'email' : email,
-        #         'person' : person,
-        #         'password_a': password,
-        #         'password_b': password,
-        #         'permission_level': permissions
-        #     }
