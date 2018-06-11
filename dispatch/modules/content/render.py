@@ -12,6 +12,10 @@ def content_to_html(content):
             return html + '<p>%s</p>' % node['data']
         else:
             try:
+                if node['type'] == 'poll':
+                    node['type'] = 'widget'
+                    node['data']['data'] = node['data']
+
                 return html + embeds.render(node['type'], node['data'])
             except EmbedException:
                 return html
