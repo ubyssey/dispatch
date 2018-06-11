@@ -6,6 +6,6 @@ export default function ZonePage(props) {
   return (
     <ZoneEditor
       zoneId={props.params.zoneId}
-      goBack={props.history.goBack} />
+      goBack={props.router.goBack} />
   )
 }

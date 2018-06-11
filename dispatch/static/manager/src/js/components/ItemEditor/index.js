@@ -11,7 +11,7 @@ const NEW_LISTITEM_ID = 'new'
 
 class ItemEditor extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       // Create empty listItem
       this.props.setListItem({ id: NEW_LISTITEM_ID })
@@ -19,9 +19,7 @@ class ItemEditor extends React.Component {
       // Fetch listItem
       this.props.getListItem(this.props.token, this.props.itemId)
     }
-  }
 
-  componentDidMount() {
     if (this.props.route) {
       confirmNavigation(
         this.props.router,

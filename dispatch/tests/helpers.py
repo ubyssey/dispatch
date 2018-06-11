@@ -226,3 +226,18 @@ class DispatchTestHelpers(object):
         }
 
         return client.post(url, data, format='json')
+
+    def create_poll(cls, client, name='test name', question='test question', answers=[{'id':1,'name':'answer1'},{'id':2,'name':'answer2'}], is_open=True, show_results=True):
+        """Create a dummy poll instance"""
+
+        data = {
+            'name': name,
+            'question': question,
+            'answers_json': answers,
+            'is_open': is_open,
+            'show_results': show_results
+        }
+
+        url = reverse('api-polls-list')
+
+        return client.post(url, data, format='json')

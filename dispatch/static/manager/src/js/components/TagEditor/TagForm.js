@@ -14,7 +14,7 @@ export default function TagForm(props) {
           placeholder='Name'
           value={props.listItem.name || ''}
           fill={true}
-          onChange={ e => props.update('name', e.target.value) } />
+          onChange={e => props.update('name', e.target.value)} />
       </FormInput>
     </form>
   )

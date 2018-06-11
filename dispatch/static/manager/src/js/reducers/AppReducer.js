@@ -23,6 +23,7 @@ import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
 import settingsReducer from './SettingsReducer'
 import invitesReducer from './InvitesReducer'
+import pollsReducer from './PollsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -45,7 +46,12 @@ export default combineReducers({
   widgets: widgetsReducer,
   events: eventsReducer,
   users: userReducer,
+<<<<<<< HEAD
   invites: invitesReducer,
   videos: videosReducer,
   settings: settingsReducer
+=======
+  videos: videosReducer,
+  polls: pollsReducer
+>>>>>>> develop
 })

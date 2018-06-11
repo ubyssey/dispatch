@@ -15,7 +15,7 @@ function prepareMultipartPayload(payload) {
       if (payload[key] && payload[key].constructor === File) {
         formData.append(key, payload[key])
       } else if (typeof payload[key] !== 'undefined') {
-        if(payload[key] === null) {
+        if (payload[key] === null) {
           formData.append(key, '')
         }
         else {
@@ -78,7 +78,7 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function getPageRequest(uri, token=null) {
@@ -89,7 +89,7 @@ function getPageRequest(uri, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postRequest(route, id=null, payload={}, token=null) {
@@ -101,7 +101,7 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
@@ -113,7 +113,7 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function patchMultipartRequest(route, id=null, payload={}, token=null) {
@@ -125,7 +125,7 @@ function patchMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function deleteRequest(route, id=null, payload={}, token=null) {
@@ -137,7 +137,7 @@ function deleteRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
+    .then(handleError)
 }
 
 function patchRequest(route, id=null, payload={}, token=null) {
@@ -149,7 +149,7 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 const DispatchAPI = {
@@ -469,6 +469,24 @@ const DispatchAPI = {
     delete: (token, inviteId) => {
       return deleteRequest('invites', inviteId, null, token)
     }
+  },
+  'polls': {
+    list: (token, query) => {
+      return getRequest('polls', null, query, token)
+    },
+    get: (token, pollId) => {
+      return getRequest('polls', pollId, null, token)
+    },
+    save: (token, pollId, data) => {
+      return patchRequest('polls', pollId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('polls', null, data, token)
+    },
+    delete: (token, pollId) => {
+      return deleteRequest('polls', pollId, null, token)
+    },
+
   }
 }
 

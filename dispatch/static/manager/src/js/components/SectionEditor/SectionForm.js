@@ -15,7 +15,7 @@ export default function SectionForm(props) {
           placeholder='Name'
           value={props.listItem.name || ''}
           fill={true}
-          onChange={ e => props.update('name', e.target.value) } />
+          onChange={e => props.update('name', e.target.value)} />
       </FormInput>
 
       <FormInput
@@ -26,7 +26,7 @@ export default function SectionForm(props) {
           placeholder='Slug'
           value={props.listItem.slug || ''}
           fill={true}
-          onChange={ e => props.update('slug', e.target.value) } />
+          onChange={e => props.update('slug', e.target.value)} />
       </FormInput>
 
     </form>

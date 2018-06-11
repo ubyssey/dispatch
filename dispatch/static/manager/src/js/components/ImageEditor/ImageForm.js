@@ -37,7 +37,7 @@ export default class ImageForm extends React.Component {
             placeholder='Image title'
             value={this.props.listItem.title || ''}
             fill={true}
-            onChange={ e => this.props.update('title', e.target.value) } />
+            onChange={e => this.props.update('title', e.target.value)} />
         </FormInput>
         <FormInput 
           label='Photographers'
@@ -53,8 +53,8 @@ export default class ImageForm extends React.Component {
           padded={false}>
           <TagSelectInput
             selected={this.props.listItem.tags}
-            update={tags => this.props.update('tags', tags) } />
-      </FormInput>
+            update={tags => this.props.update('tags', tags)} />
+        </FormInput>
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
             <img className='c-image-panel__image__img' src={this.props.listItem.url_medium} />

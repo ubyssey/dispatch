@@ -14,7 +14,7 @@ export default function BasicFieldsTab(props) {
           placeholder='Slug'
           value={props.slug || ''}
           fill={true}
-          onChange={e => props.update('slug', e.target.value) } />
+          onChange={e => props.update('slug', e.target.value)} />
       </FormInput>
 
       <FormInput
@@ -24,7 +24,7 @@ export default function BasicFieldsTab(props) {
           placeholder='Snippet'
           value={props.snippet || ''}
           rows='5'
-          onChange={e => props.update('snippet', e.target.value) } />
+          onChange={e => props.update('snippet', e.target.value)} />
       </FormInput>
 
     </div>

@@ -43,7 +43,7 @@ class PersonPageComponent extends React.Component {
   }
 
   handleDelete() {
-    if(this.props.invite.id) {
+    if (this.props.invite.id) {
       this.props.deleteInvite(this.props.token, this.props.invite.id)
     }
     else {
@@ -53,12 +53,12 @@ class PersonPageComponent extends React.Component {
   }
 
   handleSave() {
-    if(this.props.invite.id) {
+    if (this.props.invite.id) {
       let invite = this.props.invite
       invite.person = this.props.invite.person.id
       this.props.saveInvite(this.props.token, this.props.invite.id, this.props.invite)
     }
-    else if(!this.props.user.id) {
+    else if (!this.props.user.id) {
       this.inviteUser(this.props.token, this.props.invite)
     }
     else {
@@ -75,10 +75,10 @@ class PersonPageComponent extends React.Component {
   }
 
   handleUpdate(field, value) {
-    if(this.props.user.id) {
+    if (this.props.user.id) {
       this.props.setUser(R.assoc(field, value, this.props.user))
     }
-    else{
+    else {
       this.props.setInvite(R.assoc(field, value, this.props.invite))
 
     }
@@ -111,7 +111,7 @@ class PersonPageComponent extends React.Component {
       <ConfirmButton
         intent={Intent.DANGER}
         onConfirm={() => this.handleDelete()}>
-        <span className='pt-icon-standard pt-icon-trash'></span>{this.props.invite.id ? 'Cancel invitation' : 'Deactivate User'}
+        <span className='pt-icon-standard pt-icon-trash' />{this.props.invite.id ? 'Cancel invitation' : 'Deactivate User'}
       </ConfirmButton>
     )
 
@@ -135,7 +135,7 @@ class PersonPageComponent extends React.Component {
               placeholder='name@domain.tld'
               value={this.props.user.email || this.props.invite.email || ''}
               fill={true}
-              onChange={ e => this.handleUpdate('email', e.target.value) } />
+              onChange={e => this.handleUpdate('email', e.target.value)} />
           </FormInput>
           <FormInput
             label='Set Permissions'
@@ -144,7 +144,7 @@ class PersonPageComponent extends React.Component {
               <SelectInput
                 options={PERMISSIONS}
                 selected={this.props.user.permissions || this.props.invite.permissions}
-                onChange={(e) => this.handleUpdate('permissions', e.target.value)}/>
+                onChange={(e) => this.handleUpdate('permissions', e.target.value)} />
             </div>
           </FormInput>
         </form>

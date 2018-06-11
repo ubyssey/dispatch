@@ -18,7 +18,7 @@ const embeds = [
 export default class PageContentEditor extends React.Component {
   render() {
     return (
-      <div ref='container' className='c-article-editor'>
+      <div className='c-article-editor'>
         <div className='c-article-editor__inner'>
           <Headline
             onUpdate={this.props.onUpdate}

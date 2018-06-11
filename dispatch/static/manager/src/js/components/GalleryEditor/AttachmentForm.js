@@ -14,7 +14,7 @@ export default function AttachmentForm(props) {
           placeholder='Caption'
           value={props.caption || ''}
           fill={true}
-          onChange={ e => props.update('caption', e.target.value) } />
+          onChange={e => props.update('caption', e.target.value)} />
       </FormInput>
 
       <FormInput
@@ -24,7 +24,7 @@ export default function AttachmentForm(props) {
           placeholder='Credit'
           value={props.credit || ''}
           fill={true}
-          onChange={ e => props.update('credit', e.target.value) } />
+          onChange={e => props.update('credit', e.target.value)} />
       </FormInput>
 
     </form>
