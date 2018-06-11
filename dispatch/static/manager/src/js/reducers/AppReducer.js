@@ -46,12 +46,8 @@ export default combineReducers({
   widgets: widgetsReducer,
   events: eventsReducer,
   users: userReducer,
-<<<<<<< HEAD
   invites: invitesReducer,
   videos: videosReducer,
-  settings: settingsReducer
-=======
-  videos: videosReducer,
+  settings: settingsReducer,
   polls: pollsReducer
->>>>>>> develop
 })

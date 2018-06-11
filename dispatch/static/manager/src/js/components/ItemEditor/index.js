@@ -94,7 +94,7 @@ class ItemEditor extends React.Component {
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}
               update={(field, value) => this.handleUpdate(field, value)}
-              settings={this.props.settings ? this.props.settings : {}}/>
+              settings={this.props.settings ? this.props.settings : {}} />
           </div>
         </div>
       </DocumentTitle>
