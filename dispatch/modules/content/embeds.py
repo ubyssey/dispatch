@@ -97,16 +97,6 @@ class WidgetEmbed(AbstractEmbed):
             return ''
 
         return widget.render(data=data['data'])
-   
-        # except ZoneNotFound:
-        #     return ''
-
-        # try:
-        #     return zone.widget.render(add_context=kwargs)
-        # except (WidgetNotFound, AttributeError):
-        #     pass
-
-        # return ''
 
 class ImageEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/image.html'
