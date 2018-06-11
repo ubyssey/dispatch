@@ -211,10 +211,11 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_invite(cls, client, email, permissions=''):
+    def create_invite(cls, client, email, person=None, permissions=''):
         """Create dummy invite instance"""
 
-        person = cls.create_person(client, full_name='Invited person')
+        if person is None:
+            person = cls.create_person(client, full_name='Invited person')
 
         url = reverse('api-invites-list')
 

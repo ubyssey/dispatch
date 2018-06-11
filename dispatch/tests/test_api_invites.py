@@ -7,6 +7,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 
 from dispatch.models import Person, User, Invite
+from rest_framework.authtoken.models import Token
+
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.test_api_persons import PersonsTests
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -19,8 +21,52 @@ TEST_USER_FULL_NAME = 'John Doe'
 class InviteTests(DispatchAPITestCase):
     """A class to test the invite API methods"""
 
+    def test_invite_create_unauthorized(self):
+        """Test that unauthorized users cannot send invites"""
+
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+
+        self.client.credentials()
+
+        url = reverse('api-invites-list')
+
+        data = {
+            'email': TEST_USER_EMAIL,
+            'permissions': 'admin',
+            'person': person_id
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertFalse(Invite.objects.filter(email=TEST_USER_EMAIL).exists())
+
+    def test_invite_creation_unpermitted(self):
+        """Test that users without the proper permissions cannot create invites"""
+
+        user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
+
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+
+        token, created = Token.objects.get_or_create(user_id=user.data['id'])
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token %s' % token.key)
+
+        url = reverse('api-invites-list')
+
+        data = {
+            'email': TEST_USER_EMAIL,
+            'permissions': 'admin',
+            'person': person_id
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(Invite.objects.filter(email=TEST_USER_EMAIL).exists())
+
     def test_invite_creation(self):
-        """Test simple person creation, checks the response and database"""
+        """Test simple invite creation, checks the response and database"""
 
         response = DispatchTestHelpers.create_invite(
             self.client,
