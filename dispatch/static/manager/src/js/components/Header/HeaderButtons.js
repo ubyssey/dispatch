@@ -12,9 +12,6 @@ const links = {
 }
 
 const renderLinks = (type, key, items) => {
-  console.log(key)
-  console.log(items)
-  console.log('render links')
   return(
     <div className='nav-dropdown-container nav-padded'>
       <div className='nav-dropdown-button pt-minimal'>
