@@ -383,6 +383,7 @@ class Video(Model):
     url = CharField(max_length=500)
 
 class Image(Model, AuthorMixin):
+
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
     caption = CharField(max_length=255, blank=True, null=True)
@@ -518,7 +519,7 @@ class Image(Model, AuthorMixin):
                     None
 
             for an in author_names:
-                person, created = Person.objects.get_or_create(full_name=author_name)
+                person, created = Person.objects.get_or_create(full_name=an)
                 author = Author.objects.create(person=person, order = 0, type="photographer")
                 self.authors.add(author)
 
@@ -556,7 +557,9 @@ class Image(Model, AuthorMixin):
         default_storage.save(name, thumb_file)
 
     def save_tags(self, tag_ids):
-        self.tags.clear()
+
+        # self.tags.clear()
+
         for tag_id in tag_ids:
             try:
                 tag = Tag.objects.get(id=int(tag_id))

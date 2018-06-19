@@ -162,6 +162,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    caption = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
@@ -176,7 +177,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(
         write_only=True,
-        required=False,
+        required=True,
         child=serializers.IntegerField())
 
     width = serializers.IntegerField(read_only=True)
@@ -215,6 +216,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             instance.save_authors(authors)
 
         tag_ids = validated_data.get('tag_ids', False)
+
         if tag_ids != False:
             instance.save_tags(tag_ids)
 
