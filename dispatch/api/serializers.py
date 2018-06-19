@@ -625,6 +625,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'snippet',
             'content',
             'published_at',
+            'updated_at',
             'is_published',
             'published_version',
             'current_version',
@@ -751,7 +752,7 @@ class PollVoteSerializer(DispatchModelSerializer):
     answer_id =  serializers.IntegerField(write_only=True)
 
     class Meta:
-        
+
         model = PollVote
         fields = (
             'id',
