@@ -612,6 +612,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
     template_data = JSONField(required=False)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Page
