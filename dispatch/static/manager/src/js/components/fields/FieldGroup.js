@@ -9,7 +9,7 @@ export default function FieldGroup(props) {
   if (!props.fields) {
     return null
   }
-
+  
   const fields = props.fields.map((field) => (
     <FieldWrapper
       key={`${props.name}__${field.name}`}
@@ -21,9 +21,26 @@ export default function FieldGroup(props) {
 
   if (props.title) {
     return (
-      <Panel title={props.title}>{fields}</Panel>
+      <Panel title={props.title}>
+        {      
+          <div>
+            {
+              fields.map(field => {
+                return field
+              })
+            }
+          </div>
+        }
+      </Panel>
     )
   }
 
-  return fields
+  return <div>
+      {
+        fields.map(field => {
+          return field
+        })
+      }
+    </div>
+
 }
