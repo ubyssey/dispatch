@@ -466,7 +466,13 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+            data = self.img.read()
+
+            if not data:
+                return
+
+            image = Img.open(StringIO.StringIO(data))
+
             self.width, self.height = image.size
 
             super(Image, self).save()
