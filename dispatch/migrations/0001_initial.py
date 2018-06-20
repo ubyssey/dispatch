@@ -182,7 +182,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, unique=True)),
-                ('slug', models.SlugField(unique=True)),
             ],
         ),
         migrations.CreateModel(
@@ -198,6 +197,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
                 ('last_used', models.DateTimeField(null=True)),
+                ('slug', models.SlugField(unique=True)),
             ],
         ),
         migrations.CreateModel(
