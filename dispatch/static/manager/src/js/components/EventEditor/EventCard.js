@@ -24,8 +24,7 @@ export default function EventCard(props) {
   const image = (
     <div
       className='c-event-card__image'
-      style={{backgroundImage: `url('${props.event.image}')`}}>
-    </div>
+      style={{backgroundImage: `url('${props.event.image}')`}} />
   )
 
   return (

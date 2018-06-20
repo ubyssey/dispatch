@@ -40,7 +40,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def upload_file(cls, client):
+    def upload_file(cls, client, filename='TestFile'):
         """Upload a test file to server"""
 
         obj = DispatchMediaTestMixin()
@@ -50,7 +50,7 @@ class DispatchTestHelpers(object):
         with open(obj.get_input_file('test_file.txt')) as test_file:
 
             data = {
-                'name': 'TestFile',
+                'name': filename,
                 'file': test_file
             }
 
@@ -206,5 +206,21 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-videos-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_poll(cls, client, name='test name', question='test question', answers=[{'id':1,'name':'answer1'},{'id':2,'name':'answer2'}], is_open=True, show_results=True):
+        """Create a dummy poll instance"""
+
+        data = {
+            'name': name,
+            'question': question,
+            'answers_json': answers,
+            'is_open': is_open,
+            'show_results': show_results
+        }
+
+        url = reverse('api-polls-list')
 
         return client.post(url, data, format='json')

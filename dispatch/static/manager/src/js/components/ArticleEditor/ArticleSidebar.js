@@ -4,6 +4,7 @@ import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
 import FeaturedImageTab from '../Editor/tabs/FeaturedImageTab'
+// import FeaturedVideoTab from '../Editor/tabs/FeaturedVideoTab'
 import DeliveryTab from '../Editor/tabs/DeliveryTab'
 import TemplateTab from '../Editor/tabs/TemplateTab'
 import SEOTab from '../Editor/tabs/SEOTab'
@@ -15,11 +16,12 @@ export default function ArticleSidebar(props) {
     <div className='c-article-sidebar'>
       <Tabs>
         <TabList className='c-article-sidebar__tablist'>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application'></span>Basic fields</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media'></span>Featured image</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope'></span>Delivery</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget'></span>Template</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media'></span>SEO</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media' />Featured image</Tab>
+          {/* <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-video' />Featured video</Tab> */}
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope' />Delivery</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
+          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media' />SEO</Tab>
         </TabList>
 
         <TabPanel className='c-article-sidebar__panel'>
@@ -40,6 +42,14 @@ export default function ArticleSidebar(props) {
             featured_image={props.article.featured_image}
             entities={props.entities} />
         </TabPanel>
+
+        {/* uncomment when featured videos are ready */}
+        {/* <TabPanel className='c-article-sidebar__panel'>
+          <FeaturedVideoTab
+            update={props.update}
+            featured_video={props.article.featured_video}
+            entities={props.entities} />
+        </TabPanel> */}
 
         <TabPanel className='c-article-sidebar__panel'>
           <DeliveryTab

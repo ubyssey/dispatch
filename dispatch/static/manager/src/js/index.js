@@ -37,11 +37,13 @@ render((
           </Route>
 
           <Route path='files' component={Pages.Files} />
-          <Route path='profile' component={Pages.Profile} />
 
-          <Route path='integrations' component={Pages.Integrations.Index}>
-            <Route path='fb-instant-articles' component={Pages.Integrations.FBInstantArticles} />
+          <Route path='images'>
+            <IndexRoute component={Pages.Images.Index} />
+            <Route path=':imageId' component={Pages.Images.EditImage} />
           </Route>
+
+          <Route path='profile' component={Pages.Profile} />
 
           <Route path='tags'>
             <IndexRoute component={Pages.Tags.Index} />
@@ -89,6 +91,12 @@ render((
             <IndexRoute component={Pages.Videos.Index} />
             <Route path='new' component={Pages.Videos.NewVideo} />
             <Route path=':videoId' component={Pages.Videos.Video} />
+          </Route>
+
+          <Route path='polls'>
+            <IndexRoute component={Pages.Polls.Index} />
+            <Route path='new' component={Pages.Polls.NewPoll} />
+            <Route path=':pollId' component={Pages.Polls.Poll} />
           </Route>
 
         </Route>

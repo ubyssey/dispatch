@@ -6,6 +6,6 @@ export default function EventPage(props) {
   return (
     <EventEditor
       itemId={props.params.eventId}
-      goBack={props.history.goBack} />
+      goBack={props.router.goBack} />
   )
 }

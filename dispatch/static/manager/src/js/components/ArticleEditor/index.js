@@ -21,7 +21,7 @@ const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
@@ -29,9 +29,7 @@ class ArticleEditorComponent extends React.Component {
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
-  }
 
-  componentDidMount() {
     confirmNavigation(
       this.props.router,
       this.props.route,
@@ -83,7 +81,7 @@ class ArticleEditorComponent extends React.Component {
       article = this.props.entities.local[NEW_ARTICLE_ID]
     } else {
       article = this.props.entities.local[this.props.articleId] ||
-        this.props.entities.remote[this.props.articleId] || false
+        R.path(['entities','remote',this.props.articleId], this.props) || false
     }
 
     if (!article) {

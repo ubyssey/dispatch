@@ -1,16 +1,21 @@
 import React from 'react'
 import R from 'ramda'
 
-import Panel from '../Panel'
 import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
-import WidgetFieldWrapper from '../ZoneEditor/WidgetField'
+
+import FieldGroup from './FieldGroup'
 
 export default class WidgetFieldComponent extends React.Component {
   handleWidgetChange(widgetId) {
-    this.props.onChange({
-      id: widgetId,
-      data: {}
-    })
+    if (!widgetId) {
+      // Set data to null when removing widget
+      this.props.onChange(null)
+    } else {
+      this.props.onChange({
+        id: widgetId,
+        data: {}
+      })
+    }
   }
 
   updateField(name, data) {
@@ -23,38 +28,31 @@ export default class WidgetFieldComponent extends React.Component {
   }
 
   getWidgetId() {
-    return this.props.data.id
+    return R.path(['data', 'id'], this.props) || null
   }
 
   getWidget() {
     const id = this.getWidgetId()
-    return R.path(['widgets', id], this.props.field)
+    return R.path(['field', 'widgets', id], this.props) || null
   }
 
   getWidgetData() {
-    return this.props.data.data || {}
+    return R.path(['data', 'data'], this.props) || {}
   }
 
   render() {
     const widget = this.getWidget()
     const widgetData = this.getWidgetData()
 
-    let fields = widget ? widget.fields.map((field) => (
-      <WidgetFieldWrapper
-        error={R.prop(field.name, this.props.errors || {})}
-        key={`widget-field__${widget.id}__${field.name}`}
-        field={field}
-        data={widgetData[field.name]}
-        onChange={(data) => this.updateField(field.name, data)} />
-    )) : null
-
-    if (fields) {
-      fields = (
-        <Panel title={`Edit ${this.props.field.label}`}>
-          {fields}
-        </Panel>
-      )
-    }
+    const fields = widget && widget.fields.length ? (
+      <FieldGroup
+        title={`Edit ${this.props.field.label}`}
+        name={`widget-field__${this.props.field.name}__${widget.id}`}
+        fields={widget.fields || []}
+        data={widgetData}
+        errors={this.props.errors || {}}
+        onChange={(name, data) => this.updateField(name, data)} />
+    ) : null
 
     return (
       <div>
@@ -64,7 +62,7 @@ export default class WidgetFieldComponent extends React.Component {
             selected={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
-      {fields}
+        {fields}
       </div>
     )
   }

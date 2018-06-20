@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video)
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -18,7 +18,8 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
 
-    image = serializers.ImageField(required=False, validators=[FilenameValidator])
+    image = serializers.ImageField(required=False, validators=[FilenameValidator], write_only=True)
+    image_url = serializers.CharField(source='get_absolute_image_url', read_only=True)
 
     class Meta:
         model = Person
@@ -28,6 +29,7 @@ class PersonSerializer(DispatchModelSerializer):
             'slug',
             'description',
             'image',
+            'image_url',
             'twitter_url',
             'facebook_url'
         )
@@ -106,6 +108,16 @@ class FileSerializer(DispatchModelSerializer):
             'updated_at'
         )
 
+class VideoSerializer(DispatchModelSerializer):
+    """Serializes the Video model."""
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
+        )
+
 class IssueSerializer(DispatchModelSerializer):
     """Serializes the Issue model."""
 
@@ -132,6 +144,15 @@ class IssueSerializer(DispatchModelSerializer):
             'date',
         )
 
+class TagSerializer(DispatchModelSerializer):
+    """Serializes the Tag model."""
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'name',
+        )
+
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
 
@@ -150,6 +171,12 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         child=serializers.JSONField(),
         validators=[AuthorValidator])
 
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
+
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
 
@@ -162,6 +189,8 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'title',
             'authors',
             'author_ids',
+            'tags',
+            'tag_ids',
             'url',
             'url_medium',
             'url_thumb',
@@ -182,16 +211,11 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         if authors:
             instance.save_authors(authors)
 
-        return instance
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
+            instance.save_tags(tag_ids)
 
-class TagSerializer(DispatchModelSerializer):
-    """Serializes the Tag model."""
-    class Meta:
-        model = Tag
-        fields = (
-            'id',
-            'name',
-        )
+        return instance
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""
@@ -202,11 +226,26 @@ class TopicSerializer(DispatchModelSerializer):
             'name',
         )
 
+class VideoAttachmentSerializer(DispatchModelSerializer):
+    """Serializes the ImageAttachment model without including full Image instance."""
+
+    video = VideoSerializer(read_only=True)
+    video_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
+
+    class Meta:
+        model = VideoAttachment
+        fields = (
+            'video',
+            'video_id',
+            'caption',
+            'credit'
+        )
+
 class ImageAttachmentSerializer(DispatchModelSerializer):
     """Serializes the ImageAttachment model without including full Image instance."""
 
     image = ImageSerializer(read_only=True)
-    image_id =  serializers.IntegerField(write_only=True, required=False)
+    image_id =  serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = ImageAttachment
@@ -265,16 +304,6 @@ class SectionSerializer(DispatchModelSerializer):
             'id',
             'name',
             'slug',
-        )
-
-class VideoSerializer(DispatchModelSerializer):
-    """Serializes the Video model."""
-    class Meta:
-        model = Video
-        fields = (
-            'id',
-            'title',
-            'url',
         )
 
 class FieldSerializer(serializers.Serializer):
@@ -438,6 +467,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -478,6 +508,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'headline',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'authors',
@@ -538,6 +569,10 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
+        featured_video = validated_data.get('featured_video', False)
+        if featured_video != False:
+            instance.save_featured_video(featured_video)
+
         authors = validated_data.get('author_ids')
         if authors:
             instance.save_authors(authors, is_publishable=True)
@@ -552,7 +587,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image', 'topic'],
+            update_fields=['content', 'featured_image', 'featured_video', 'topic'],
             revision=False)
 
         return instance
@@ -564,6 +599,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     slug = serializers.SlugField(validators=[SlugValidator()])
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
 
     content = ContentSerializer()
 
@@ -585,6 +621,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'url',
             'title',
             'featured_image',
+            'featured_video',
             'snippet',
             'content',
             'published_at',
@@ -628,9 +665,13 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_image != False:
             instance.save_featured_image(featured_image)
 
+        featured_video = validated_data.get('featured_video', False)
+        if featured_video != False:
+            instance.save_featured_video(featured_video)
+
         # Perform a final save (without revision), update content and featured image
         instance.save(
-            update_fields=['content', 'featured_image'],
+            update_fields=['content', 'featured_image', 'featured_video'],
             revision=False)
 
         return instance
@@ -701,5 +742,104 @@ class ZoneSerializer(serializers.Serializer):
             instance.delete()
         else:
             instance.save(validated_data)
+
+        return instance
+
+class PollVoteSerializer(DispatchModelSerializer):
+    """Serializes the PollVote model"""
+
+    answer_id =  serializers.IntegerField(write_only=True)
+
+    class Meta:
+        
+        model = PollVote
+        fields = (
+            'id',
+            'answer_id',
+        )
+
+class PollAnswerSerializer(DispatchModelSerializer):
+    """Serializes the PollAnswer model"""
+
+    poll_id =  serializers.IntegerField(write_only=True)
+    vote_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PollAnswer
+        fields = (
+            'id',
+            'name',
+            'vote_count',
+            'poll_id'
+        )
+
+    def get_vote_count(self, obj):
+        vote_count = 0
+        poll = Poll.objects.get(id=obj.poll_id)
+
+        if self.is_authenticated() or poll.show_results:
+            vote_count = obj.get_vote_count()
+
+        return vote_count
+
+class PollSerializer(DispatchModelSerializer):
+    """Serializes the Poll model."""
+
+    answers = serializers.SerializerMethodField()
+    answers_json = JSONField(
+        required=False,
+        write_only=True
+    )
+    total_votes = serializers.SerializerMethodField()
+    question = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = Poll
+        fields = (
+            'id',
+            'is_open',
+            'show_results',
+            'name',
+            'question',
+            'answers',
+            'answers_json',
+            'total_votes'
+        )
+
+    def get_total_votes(self,obj):
+        total_votes = 0
+
+        if self.is_authenticated() or obj.show_results:
+            total_votes = obj.get_total_votes()
+
+        return total_votes
+
+    def get_answers(self, obj):
+        answers = PollAnswer.objects.filter(poll_id=obj.id)
+        serializer = PollAnswerSerializer(answers, many=True, context=self.context)
+        return serializer.data
+
+    def create(self, validated_data):
+        # Create new ImageGallery instance
+        instance = Poll()
+
+        # Then save as usual
+        return self.update(instance, validated_data, True)
+
+    def update(self, instance, validated_data, is_new=False):
+        # Update all the basic fields
+        instance.question = validated_data.get('question', instance.question)
+        instance.name = validated_data.get('name', instance.name)
+        instance.is_open = validated_data.get('is_open', instance.is_open)
+        instance.show_results = validated_data.get('show_results', instance.show_results)
+        # Save instance before processing/saving content in order to
+        # save associations to correct ID
+        instance.save()
+
+        answers = validated_data.get('answers_json')
+
+        if isinstance(answers, list):
+            instance.save_answers(answers, is_new)
 
         return instance

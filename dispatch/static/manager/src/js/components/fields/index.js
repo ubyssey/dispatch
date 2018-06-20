@@ -8,6 +8,7 @@ import IntegerField from './IntegerField'
 import BoolField from './BoolField'
 import SelectField from './SelectField'
 import WidgetField from './WidgetField'
+import PollField from './PollField'
 import TopicField from './TopicField'
 
 export {
@@ -21,5 +22,6 @@ export {
   BoolField as bool,
   SelectField as select,
   WidgetField as widget,
+  PollField as poll,
   TopicField as topic,
 }

@@ -20,15 +20,13 @@ const NEW_PAGE_ID = 'new'
 
 class PageEditorComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       this.props.setPage({ id: NEW_PAGE_ID })
     } else {
       this.loadPage()
     }
-  }
-
-  componentDidMount() {
+    
     confirmNavigation(
       this.props.router,
       this.props.route,
@@ -83,7 +81,7 @@ class PageEditorComponent extends React.Component {
       page = this.props.entities.local[NEW_PAGE_ID]
     } else {
       page = this.props.entities.local[this.props.pageId] ||
-        this.props.entities.remote[this.props.pageId] || false
+        R.path(['entities','remote',this.props.pageId], this.props) || false
     }
 
     return page

@@ -11,5 +11,5 @@ export {
   PullQuoteEmbed,
   CodeEmbed,
   GalleryEmbed,
-  WidgetEmbed,
+  WidgetEmbed
 }

@@ -11,7 +11,7 @@ const NEW_LISTITEM_ID = 'new'
 
 class ItemEditor extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       // Create empty listItem
       this.props.setListItem({ id: NEW_LISTITEM_ID })
@@ -19,9 +19,7 @@ class ItemEditor extends React.Component {
       // Fetch listItem
       this.props.getListItem(this.props.token, this.props.itemId)
     }
-  }
 
-  componentDidMount() {
     if (this.props.route) {
       confirmNavigation(
         this.props.router,
@@ -50,7 +48,7 @@ class ItemEditor extends React.Component {
       return this.props.entities.local[NEW_LISTITEM_ID]
     } else {
       return this.props.entities.local[this.props.itemId] ||
-        this.props.entities.remote[this.props.itemId] || false
+        R.path(['entities','remote',this.props.itemId], this.props) || false
     }
   }
 
@@ -84,7 +82,7 @@ class ItemEditor extends React.Component {
       <DocumentTitle title={title}>
         <div className='u-container-main'>
           <ListItemToolbar
-            name={listItem[this.props.displayField] || listItem.name}
+            name={listItem[this.props.displayField] || listItem.name || listItem.title ||listItem.filename}
             type={this.props.type}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}

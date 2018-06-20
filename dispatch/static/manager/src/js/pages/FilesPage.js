@@ -76,10 +76,7 @@ class FilesPageComponent extends React.Component {
 
   onDrop(files) {
     files.forEach(file => {
-      let formData = new FormData()
-      formData.append('file', file, file.name)
-      formData.append('name', file.name)
-      this.props.createFile(this.props.token, formData)
+      this.props.createFile(this.props.token, {file: file, name: file.name})
     })
   }
 
@@ -112,7 +109,10 @@ class FilesPageComponent extends React.Component {
 
               headers={['Filename', 'Created', 'Updated']}
               columns={[
-                item => (<a href={item.url} target='_blank'>{item.name}</a>),
+                item => (<a
+                  href={item.url}
+                  target='_blank'
+                  rel='noopener noreferrer'>{item.name}</a>),
                 item => humanizeDatetime(item.created_at),
                 item => humanizeDatetime(item.updated_at),
               ]}
@@ -125,8 +125,7 @@ class FilesPageComponent extends React.Component {
                 toggleAllItems: this.props.toggleAllFiles,
                 deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
                 searchItems: (query) => this.handleSearchFiles(query)
-              }}
-            />
+              }} />
           </div>
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag files into window or click here to upload</p>

@@ -79,19 +79,21 @@ const mapDispatchToProps = (dispatch) => {
 function EventEditorComponent(props) {
 
   const publishButton = (
-    <AnchorButton onClick={() => props.publishEvent(props.token, props.listItem.id)}
+    <AnchorButton
+      onClick={() => props.publishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th'></span>
+      <span className='pt-icon-standard pt-icon-th' />
       Publish
     </AnchorButton>
   )
 
   const unpublishButton = (
-    <AnchorButton onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
+    <AnchorButton
+      onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th'></span>
+      <span className='pt-icon-standard pt-icon-th' />
       Unpublish
     </AnchorButton>
   )
@@ -109,7 +111,7 @@ function EventEditorComponent(props) {
 
 const isPublished = (obj) => {
   return obj.entities.local && obj.listItem.id
-  ? obj.entities.local[obj.listItem.id].is_published : false
+    ? obj.entities.local[obj.listItem.id].is_published : false
 }
 
 const EventEditor = connect(

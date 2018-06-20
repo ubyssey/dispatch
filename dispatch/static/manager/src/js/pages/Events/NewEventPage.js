@@ -6,6 +6,6 @@ export default function NewEventPage(props) {
   return (
     <EventEditor
       isNew={true}
-      goBack={props.history.goBack} />
+      goBack={props.router.goBack} />
   )
 }

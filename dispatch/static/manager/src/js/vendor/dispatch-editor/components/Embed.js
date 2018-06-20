@@ -50,7 +50,7 @@ export default class Embed extends React.Component {
     const embedProps = {
       data: this.getData(),
       updateField: (field, value) => this.updateField(field, value),
-      stopEditing: this.stopEditing
+      stopEditing: () => this.stopEditing()
     }
 
     return (
@@ -63,7 +63,7 @@ export default class Embed extends React.Component {
           <ul className='o-embed-container__header__options'>
             <li>
               <a onClick={() => this.removeEmbed()}>
-                <span className='pt-icon-standard pt-icon-trash'></span>
+                <span className='pt-icon-standard pt-icon-trash' />
                 <span>Remove</span>
               </a>
             </li>

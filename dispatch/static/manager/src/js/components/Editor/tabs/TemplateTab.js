@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 
 import templatesActions from '../../../actions/TemplatesActions'
 
-import WidgetField from '../../ZoneEditor/WidgetField'
 import { FormInput } from '../../inputs'
 import TemplateSelectInput from '../../inputs/selects/TemplateSelectInput'
 
+import FieldGroup from '../../fields/FieldGroup'
+
 class TemplateTabComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getTemplate(this.props.token, this.props.template)
   }
 
@@ -24,20 +25,21 @@ class TemplateTabComponent extends React.Component {
   render() {
     const template = this.props.entities.templates[this.props.template] || null
 
-    const fields = template ? template.fields.map((field) => (
-      <WidgetField
-        key={`template-field__${template.id}__${field.name}`}
-        field={field}
-        data={this.props.data[field.name] || null}
-        onChange={(data) => this.updateField(field.name, data)} />
-    )) : null
+    const fields = (
+      <FieldGroup
+        name={`template-field__${template.id}`}
+        fields={template ? template.fields : []}
+        data={this.props.zone.data}
+        errors={this.props.data}
+        onChange={(name, data) => this.updateField(name, data)} />
+    )
 
     return (
       <div>
         <FormInput label='Template'>
           <TemplateSelectInput
             selected={this.props.template}
-            update={template => this.props.update('template', template) } />
+            update={template => this.props.update('template', template)} />
         </FormInput>
         <div>{fields}</div>
       </div>

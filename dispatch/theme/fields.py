@@ -4,8 +4,10 @@ from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.models import Article, Image
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, TopicSerializer, WidgetSerializer
+from dispatch.models import Article, Image, Poll
+from dispatch.api.serializers import (
+    ArticleSerializer, ImageSerializer, TopicSerializer,
+     WidgetSerializer, PollSerializer)
 
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.validators import is_valid_id
@@ -249,6 +251,12 @@ class ImageField(ModelField):
     model = Image
     serializer = ImageSerializer
 
+class PollField(ModelField):
+    type = 'poll'
+
+    model = Poll
+    serializer = PollSerializer
+
 class WidgetField(Field):
     type = 'widget'
 
@@ -260,10 +268,11 @@ class WidgetField(Field):
             self.widgets[widget.id] = WidgetSerializer(widget).data
 
     def validate(self, data):
-        if not data or not data['id']:
-            if self.required:
-                raise InvalidField('Widget must be selected')
-            return
+        if not data and self.required:
+            raise InvalidField('Widget must be selected')
+
+        if not data['id']:
+            raise InvalidField("Must specify a widget id")
 
         try:
             if data['id'] and data['data'] is not None:
@@ -309,6 +318,10 @@ class WidgetField(Field):
 
     def get_widget_json(self, data):
         widget = self.get_widget(data['id'])
+
+        if widget is None:
+            return None
+
         widget.set_data(data['data'])
 
         return {
@@ -324,6 +337,9 @@ class WidgetField(Field):
         return self.get_widget_json(data)
 
     def prepare_data(self, data):
+        if data is None:
+            return None
+
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
