@@ -15,22 +15,20 @@ class TemplateTabComponent extends React.Component {
     this.props.getTemplate(this.props.token, this.props.template)
   }
 
-  updateField(fieldName, value) {
+  updateField(name, value) {
     this.props.update(
       'template_data',
-      R.assoc(fieldName, value, this.props.data)
+      R.assoc(name, value, this.props.data)
     )
   }
 
   render() {
-    const data = this.props.zone ? this.props.zone.data : null
     const template = this.props.entities.templates[this.props.template] || null
-
     const fields = (
       <FieldGroup
         name={`template-field__${template.id}`}
-        fields={(data ? (template ? template.fields : []) : null)}
-        data={data}
+        fields={(this.props.data ? (template ? template.fields : []) : null)}
+        data={this.props.data}
         errors={this.props.data}
         onChange={(name, data) => this.updateField(name, data)} />
     )
