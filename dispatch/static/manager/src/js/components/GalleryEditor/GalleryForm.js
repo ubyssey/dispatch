@@ -125,9 +125,9 @@ class GalleryFormComponent extends React.Component {
     let newImages
     if (images && images.length) {
       newImages = R.filter(id => R.findIndex(R.either(
-          R.propSatisfies(image => image && image.id == id, 'image'),
-          R.propEq('image_id', id)
-        ), images) === -1, ids)
+        R.propSatisfies(image => image && image.id == id, 'image'),
+        R.propEq('image_id', id)
+      ), images) === -1, ids)
         .map(makeNewImage)
     } else {
       newImages = R.map(makeNewImage, ids)
@@ -170,7 +170,6 @@ class GalleryFormComponent extends React.Component {
   }
 
   render() {
-
     let i = 1
     const inGalleryImages = this.props.listItem.images ?
       this.props.listItem.images.map((img, idx) => {
@@ -204,20 +203,18 @@ class GalleryFormComponent extends React.Component {
               content={form}
               isModal={true}
               onClose={() => { this.props.selectImage(0) }}
-              // put the rightmost thumbs' popover on the left
               position={(i % this.getNumPerRow() == 0)
-                ? Position.LEFT : Position.RIGHT}
-              >
-                <div
-                  className='c-gallery-thumb-overlay'
-                  style={{
-                    width: THUMB_WIDTH,
-                    height: THUMB_HEIGHT
-                  }}>
-                  <div className='c-gallery-thumb-overlay-text'>
-                    {i++}
-                  </div>
+                ? Position.LEFT : Position.RIGHT}>
+              <div
+                className='c-gallery-thumb-overlay'
+                style={{
+                  width: THUMB_WIDTH,
+                  height: THUMB_HEIGHT
+                }}>
+                <div className='c-gallery-thumb-overlay-text'>
+                  {i++}
                 </div>
+              </div>
             </Popover>
             <DnDThumb
               throwOut={this.moveOutOfGallery}
@@ -242,27 +239,29 @@ class GalleryFormComponent extends React.Component {
             placeholder='Name'
             value={this.props.listItem.title || ''}
             fill={true}
-            onChange={ e => this.props.update('title', e.target.value) } />
+            onChange={e => this.props.update('title', e.target.value)} />
         </FormInput>
         <h2 className='c-gallery-editor-heading'>Gallery</h2>
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
-          <DnDZone
-            onDrop={this.moveWithinGallery}
-            zoneId='in'
-            hover={this.galleryDragHover}
-            endDrag={this.endDrag}
-            >
-            {inGalleryImages}
-            <span
-              className='c-gallery-editor-movement-indicator'
-              style={{
-                display: this.state.showMoveIcon ? 'block' : 'none',
-                top: this.state.offset.y,
-                left: this.state.offset.x,
-              }}
-            >↵</span>
-          </DnDZone>
+          {({ measureRef }) =>
+            <div ref={measureRef}>
+              <DnDZone
+                onDrop={this.moveWithinGallery}
+                zoneId='in'
+                hover={this.galleryDragHover}
+                endDrag={this.endDrag}>
+                {inGalleryImages}
+                <span
+                  className='c-gallery-editor-movement-indicator'
+                  style={{
+                    display: this.state.showMoveIcon ? 'block' : 'none',
+                    top: this.state.offset.y,
+                    left: this.state.offset.x,
+                  }}>↵</span>
+              </DnDZone>
+            </div>
+          }
         </Measure>
 
         <AnchorButton onClick={this.openImageSelector}>

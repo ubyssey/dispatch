@@ -16,7 +16,7 @@ class WidgetFieldsComponent extends React.Component {
 
     return (
       <div>
-      {fields}
+        {fields}
       </div>
     )
   }

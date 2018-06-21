@@ -21,7 +21,7 @@ const NEW_ARTICLE_ID = 'new'
 
 class ArticleEditorComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.isNew) {
       this.props.setArticle({ id: NEW_ARTICLE_ID })
     } else {
@@ -29,9 +29,7 @@ class ArticleEditorComponent extends React.Component {
     }
 
     this.props.fetchIntegration(this.props.token, 'fb-instant-articles')
-  }
 
-  componentDidMount() {
     confirmNavigation(
       this.props.router,
       this.props.route,
@@ -153,7 +151,7 @@ class ArticleEditorComponent extends React.Component {
     }
 
     const title = this.props.isNew ? 'New article' : `Edit - ${article.headline}`
-
+    
     return (
       <DocumentTitle title={title}>
         <div className='u-container-main'>

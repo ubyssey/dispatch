@@ -8,7 +8,7 @@ require('../../../styles/components/event_audit.scss')
 
 class EventPendingTagComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.countPending(this.props.token, { pending: 1, limit: 0 })
   }
 

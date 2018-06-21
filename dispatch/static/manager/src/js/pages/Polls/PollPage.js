@@ -6,7 +6,7 @@ export default function PollPage(props) {
   return (
     <PollEditor
       itemId={props.params.pollId}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

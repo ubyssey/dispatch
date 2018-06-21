@@ -12,7 +12,7 @@ function ensureDate(date) {
   let ret = date
   if (!(date instanceof Date)) {
     const time_ms = Date.parse(date)
-    if(isNaN(time_ms)) {
+    if (isNaN(time_ms)) {
       ret = null
     } else {
       ret = new Date(time_ms)

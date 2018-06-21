@@ -40,12 +40,12 @@ class PollsTests(DispatchAPITestCase):
 
         # Update this poll
         url = reverse('api-polls-detail', args=[response.data['id']])
-        updated_answers = [{'id':1,'name':'updated answer'},{'id':2,'name':'answer2'}]
+        updated_answers = [{'id':1,'name':'updated answer'}]
         data = {
             'name': 'updated name',
             'answers_json': updated_answers
         }
-        answers = [ OrderedDict([('id',1), ('name','updated answer'), ('vote_count',0)]), OrderedDict([('id',2), ('name','answer2'), ('vote_count',0)]) ]
+        answers = [ OrderedDict([('id',1), ('name','updated answer'), ('vote_count',0)]) ]
         response = self.client.patch(url, data, format='json')
 
         # Check data
@@ -104,7 +104,7 @@ class PollsTests(DispatchAPITestCase):
         self.assertFalse(Poll.objects.filter(id=poll_id).exists())
         self.assertFalse(PollAnswer.objects.filter(poll_id=poll_id).exists())
 
-        # Can't delete an person that has already been deleted
+        # Can't delete a poll that has already been deleted
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -135,7 +135,8 @@ class PollsTests(DispatchAPITestCase):
         answer2 = PollAnswer.objects.filter(poll_id=poll.id).last()
         # Clear credentials
         self.client.credentials()
-        url = reverse('api-votes-list')
+
+        url = reverse('api-polls-vote', args=[poll.id])
 
         data = {
             'answer_id': answer1.id
@@ -144,7 +145,7 @@ class PollsTests(DispatchAPITestCase):
         # Vote in the poll
         response = self.client.post(url, data, format='json')
         # Confirm the vote was successful
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = {
             'answer_id': answer2.id
@@ -153,7 +154,7 @@ class PollsTests(DispatchAPITestCase):
         # Vote in the poll
         response = self.client.post(url, data, format='json')
         # Confirm the vote was successful
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         url = reverse('api-polls-detail', args=[poll.id])
 
@@ -187,7 +188,7 @@ class PollsTests(DispatchAPITestCase):
         answer = PollAnswer.objects.filter(poll_id=poll_id).first()
 
         # Clear credentials
-        url = reverse('api-votes-list')
+        url = reverse('api-polls-vote', args=[poll_id])
 
         data = {
             'answer_id': answer.id
@@ -196,7 +197,7 @@ class PollsTests(DispatchAPITestCase):
         response = self.client.post(url, data, format='json')
 
         # Check that the vote was successful
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         url = reverse('api-polls-detail', args=[poll_id])
 
@@ -216,7 +217,7 @@ class PollsTests(DispatchAPITestCase):
         answer_1 = PollAnswer.objects.filter(poll_id=poll_id).first()
         answer_2 = PollAnswer.objects.filter(poll_id=poll_id).last()
 
-        url = reverse('api-votes-list')
+        url = reverse('api-polls-vote', args=[poll_id])
 
         data = {
             'answer_id': answer_1.id
@@ -226,7 +227,7 @@ class PollsTests(DispatchAPITestCase):
         vote_id = response.data['id']
 
         # Check that the vote was successful
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = {
             'answer_id': answer_2.id,
@@ -236,8 +237,8 @@ class PollsTests(DispatchAPITestCase):
         response = self.client.post(url, data, format='json')
 
         # Check that the vote change was successful
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertNotEqual(response.data['id'], vote_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], vote_id)
 
         # Get the poll
         url = reverse('api-polls-detail', args=[poll_id])
@@ -249,7 +250,34 @@ class PollsTests(DispatchAPITestCase):
         self.assertEqual(response.data['answers'][0]['vote_count'], 0)
         self.assertEqual(response.data['answers'][1]['vote_count'], 1)
 
-    def test_poll_closed_vote(self):
+    def test_poll_vote_invalid_answer(self):
+        """A user should not be able to vote for an answer that is not
+        valid for the poll"""
+
+        # Create polls to vote in
+        response = DispatchTestHelpers.create_poll(self.client, is_open=True)
+
+        poll_1_id = response.data['id']
+        poll_1 = Poll.objects.get(id=poll_1_id)
+        answer_poll_1 = PollAnswer.objects.filter(poll_id=poll_1_id).first()
+
+        response = DispatchTestHelpers.create_poll(self.client, is_open=True)
+
+        poll_2_id = response.data['id']
+        poll_2 = Poll.objects.get(id=poll_2_id)
+        answer_poll_2 = PollAnswer.objects.filter(poll_id=poll_2_id).first()
+
+        url = reverse('api-polls-vote', args=[poll_1_id])
+
+        data = {
+            'answer_id': answer_poll_2.id
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_poll_vote_closed(self):
         """A user should not be able to vote in a closed poll"""
 
         # Create a poll to vote in
@@ -258,15 +286,14 @@ class PollsTests(DispatchAPITestCase):
         poll_id = response.data['id']
         answer = PollAnswer.objects.filter(poll_id=poll_id).first()
 
-        url = reverse('api-votes-list')
+        url = reverse('api-polls-vote', args=[poll_id])
 
         data = {
             'answer_id': answer.id
         }
         response = self.client.post(url, data, format='json')
-        vote_id = response.data['id']
 
-        self.assertFalse(PollVote.objects.filter(id=vote_id).exists())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # Get the poll
         url = reverse('api-polls-detail', args=[poll_id])

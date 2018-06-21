@@ -19,9 +19,9 @@ export default function Header(props) {
           <div className='nav-padded'>
             <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
           </div>
-          <span className="pt-navbar-divider hidden-lg"></span>
-          <div className='col-lg-8 hidden-lg'>
-            <HeaderButtons isDesktop={props.isDesktop} props={props} />
+          <span className="pt-navbar-divider hidden-lg" />
+          <div className='col-lg-8 col-6'>
+            <HeaderButtons isDesktop={windowWidth >= DesktopSize} />
           </div>
           <div className={'col-lg-2 col-6 float-right'}>
             <div className="navbar-group nav-align-right">
@@ -39,12 +39,12 @@ export default function Header(props) {
                   </div>
                 </div>
               </div>
-              <span className="pt-navbar-divider"></span>
+              <span className="pt-navbar-divider" />
               <div className={'nav-padded'} >
-                <Link to='/profile/' className="pt-button pt-minimal pt-icon-standard pt-icon-user"></Link>
+                <Link to='/profile/' className="pt-button pt-minimal pt-icon-standard pt-icon-user" />
               </div>
               <div className={'nav-padded'} >
-                <Link to='/logout/' className="pt-button pt-minimal pt-icon-standard pt-icon-log-out"></Link>
+                <Link to='/logout/' className="pt-button pt-minimal pt-icon-standard pt-icon-log-out" />
               </div>
             </div>
           </div>

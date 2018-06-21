@@ -22,7 +22,7 @@ class PollSelectInputComponent extends React.Component {
 
     return (
       <ItemSelectInput
-        many={this.props.many}
+        many={false}
         selected={this.props.selected}
         results={this.props.polls.ids}
         entities={this.props.entities.polls}

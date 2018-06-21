@@ -11,8 +11,6 @@ import ModalContainer from '../components/ModalContainer'
 
 require('../../styles/components/toaster.scss')
 
-const DesktopSize = 992
-
 class Main extends React.Component {
   constructor(props) {
     super(props)
@@ -20,11 +18,6 @@ class Main extends React.Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   
-
-  componentWillMount() {
-    //this.props.countPending(this.props.token, { pending: 1, limit: 0 })
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions)
   }
@@ -50,8 +43,11 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
-        <Header pendingCount={this.props.pending} isDesktop={(this.state.width > DesktopSize)}/>
+        <Toaster
+          className='c-toaster'
+          position={Position.TOP}
+          ref='toaster' />
+        <Header pendingCount={this.props.pending} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>

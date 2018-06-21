@@ -13,7 +13,7 @@ export default class IntegerField extends React.Component {
   }
 
   onChange(val) {
-    let { selectionStart, selectionEnd } = this.refs.input.refs.input
+    let { selectionStart, selectionEnd } = this.refs.textInput.refs.input
     const initialLength = val.length
 
     val = val.replace(/[^\d-]+/g, '')
@@ -36,7 +36,7 @@ export default class IntegerField extends React.Component {
 
   componentDidUpdate() {
     //put the caret back in the correct place
-    this.refs.input.refs.input.setSelectionRange(
+    this.refs.textInput.refs.input.setSelectionRange(
       this.state.selectionStart,
       this.state.selectionEnd)
   }
@@ -44,7 +44,7 @@ export default class IntegerField extends React.Component {
   render() {
     return (
       <TextInput
-        ref='input'
+        ref='textInput'
         placeholder={this.props.field.label}
         value={this.props.data || ''}
         fill={true}

@@ -83,9 +83,6 @@ class AdvertisementEmbed(AbstractTemplateEmbed):
 class PullQuoteEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/quote.html'
 
-class PollEmbed(AbstractTemplateEmbed):
-    TEMPLATE = 'embeds/poll.html'
-
 class WidgetEmbed(AbstractEmbed):
     @classmethod
     def render(self, data):
@@ -100,16 +97,6 @@ class WidgetEmbed(AbstractEmbed):
             return ''
 
         return widget.render(data=data['data'])
-   
-        # except ZoneNotFound:
-        #     return ''
-
-        # try:
-        #     return zone.widget.render(add_context=kwargs)
-        # except (WidgetNotFound, AttributeError):
-        #     pass
-
-        # return ''
 
 class ImageEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/image.html'
@@ -163,7 +150,6 @@ class GalleryEmbed(AbstractTemplateEmbed):
             'size': len(images)
         }
 
-embeds.register('poll', PollEmbed)
 embeds.register('widget', WidgetEmbed)
 embeds.register('quote', PullQuoteEmbed)
 embeds.register('code', CodeEmbed)

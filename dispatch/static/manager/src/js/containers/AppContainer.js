@@ -5,7 +5,7 @@ import * as userActions from '../actions/UserActions'
 
 class App extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.checkAuthenticated()
   }
 

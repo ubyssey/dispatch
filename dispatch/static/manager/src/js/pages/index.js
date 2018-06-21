@@ -7,7 +7,6 @@ import ProfilePage from './ProfilePage'
 import * as Sections from './Sections'
 import * as Articles from './Articles'
 import * as Pages from './Pages'
-import * as Integrations from './Integrations'
 import * as Tags from './Tags'
 import * as Issues from './Issues'
 import * as Topics from './Topics'
@@ -28,7 +27,6 @@ export {
   Sections as Sections,
   Articles as Articles,
   Pages as Pages,
-  Integrations as Integrations,
   Tags as Tags,
   Issues as Issues,
   Topics as Topics,

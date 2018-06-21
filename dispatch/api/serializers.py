@@ -747,6 +747,7 @@ class ZoneSerializer(serializers.Serializer):
 
 class PollVoteSerializer(DispatchModelSerializer):
     """Serializes the PollVote model"""
+
     answer_id =  serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -757,33 +758,9 @@ class PollVoteSerializer(DispatchModelSerializer):
             'answer_id',
         )
 
-    def create(self, validated_data):
-        # Create new PollVote instance
-        instance = PollVote()
-
-        # Then save as usual
-        return self.update(instance, validated_data)
-
-    def update(self, instance, validated_data):
-        # Get the proper Poll Answer
-        answer_id = validated_data.get('answer_id', False)
-        try:
-            answer = PollAnswer.objects.get(id=answer_id)
-            poll_id = answer.poll.id
-            poll = Poll.objects.get(id=poll_id)
-        except PollAnswer.DoesNotExist:
-            answer = None
-            poll = None
-        # Set the vote's answer
-        if poll is not None and poll.is_open:
-            if answer is not None:
-                instance.answer = answer
-                instance.save()
-
-        return instance
-
 class PollAnswerSerializer(DispatchModelSerializer):
     """Serializes the PollAnswer model"""
+
     poll_id =  serializers.IntegerField(write_only=True)
     vote_count = serializers.SerializerMethodField()
 
@@ -799,14 +776,15 @@ class PollAnswerSerializer(DispatchModelSerializer):
     def get_vote_count(self, obj):
         vote_count = 0
         poll = Poll.objects.get(id=obj.poll_id)
-        if self.is_authenticated():
-            vote_count = obj.get_votes()
-        if poll.show_results is True:
-            vote_count = obj.get_votes()
+
+        if self.is_authenticated() or poll.show_results:
+            vote_count = obj.get_vote_count()
+
         return vote_count
 
 class PollSerializer(DispatchModelSerializer):
     """Serializes the Poll model."""
+
     answers = serializers.SerializerMethodField()
     answers_json = JSONField(
         required=False,
@@ -831,14 +809,14 @@ class PollSerializer(DispatchModelSerializer):
 
     def get_total_votes(self,obj):
         total_votes = 0
-        if self.is_authenticated():
+
+        if self.is_authenticated() or obj.show_results:
             total_votes = obj.get_total_votes()
-        if obj.show_results is True:
-            total_votes = obj.get_total_votes()
+
         return total_votes
 
     def get_answers(self, obj):
-        answers = PollAnswer.objects.all().filter(poll_id=obj.id)
+        answers = PollAnswer.objects.filter(poll_id=obj.id)
         serializer = PollAnswerSerializer(answers, many=True, context=self.context)
         return serializer.data
 
@@ -859,7 +837,7 @@ class PollSerializer(DispatchModelSerializer):
         # save associations to correct ID
         instance.save()
 
-        answers = validated_data.get('answers_json', False)
+        answers = validated_data.get('answers_json')
 
         if isinstance(answers, list):
             instance.save_answers(answers, is_new)
