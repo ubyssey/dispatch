@@ -122,7 +122,7 @@ class Publishable(Model):
     @property
     def html(self):
         """Return HTML representation of content"""
-        return content_to_html(self.content)
+        return content_to_html(self.content, self.id)
 
     def is_parent(self):
         return self.parent is None
