@@ -15,7 +15,8 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
+    ArticleRelation)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
@@ -92,6 +93,26 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(authors__person_id=author)
 
         return queryset
+
+    @detail_route(permission_classes=[AllowAny], methods=['post'],)
+    def suggested(self, request, parent_id=None):
+        article = get_object_or_404(Article.objects.all(), pk=parent_id)
+
+        # Update count
+        if 'article_id' in request.data:
+            article_id = request.data['article_id']
+            related_article = get_object_or_404(Article.objects.all(), pk=article_id)
+
+            relation, created = ArticleRelation.objects.get_or_create(parent=article, article=related_article)
+
+            if not created:
+                relation.count += 1
+                relation.save()
+        else:
+            return Response('')
+
+        print('relation count', relation.count)
+        return Response('')
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """Viewset for Page model views."""
@@ -273,7 +294,7 @@ class PollViewSet(DispatchModelViewSet):
 
         if answer.poll != poll:
             raise InvalidPoll()
-            
+
         # Change vote
         if 'vote_id' in request.data:
             vote_id = request.data['vote_id']
