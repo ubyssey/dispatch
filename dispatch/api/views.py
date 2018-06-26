@@ -15,14 +15,14 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote)
+    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote, Column)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer )
+    PollVoteSerializer, ColumnSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
@@ -92,6 +92,12 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(authors__person_id=author)
 
         return queryset
+
+class ColumnViewSet(DispatchModelViewSet):
+    """Viewset for the Column model views."""
+    model = Column
+    serializer_class = ColumnSerializer
+    queryset = Column.objects.all()
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """Viewset for Page model views."""
@@ -273,7 +279,7 @@ class PollViewSet(DispatchModelViewSet):
 
         if answer.poll != poll:
             raise InvalidPoll()
-            
+
         # Change vote
         if 'vote_id' in request.data:
             vote_id = request.data['vote_id']

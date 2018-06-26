@@ -575,6 +575,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_featured_video(featured_video)
 
         authors = validated_data.get('author_ids')
+        print('AUTHORS', authors)
         if authors:
             instance.save_authors(authors, is_publishable=True)
 
@@ -851,6 +852,7 @@ class ColumnArticleSerializer(DispatchModelSerializer):
 
 
     id = serializers.ReadOnlyField(source='parent_id')
+    authors = AuthorSerializer(many=True, read_only=True)
 
     class Meta:
         model = Article
@@ -858,14 +860,11 @@ class ColumnArticleSerializer(DispatchModelSerializer):
             'id',
             'headline',
             'authors',
-            'author_ids',
-            'authors_string',
             'published_version'
         )
 
 class ColumnSerializer(DispatchModelSerializer):
     """Serializes the Column model"""
-
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
@@ -888,9 +887,37 @@ class ColumnSerializer(DispatchModelSerializer):
             'description',
             'featured_image',
             'authors',
-            'authors_ids',
+            'author_ids',
             'authors_string',
             'articles',
             'article_ids'
 
         )
+
+    def create(self, validated_data):
+        instance = Column()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        # Update basic fields
+        instance.name = validated_data.get('name', instance.name)
+        instance.slug = validated_data.get('slug', instance.slug)
+        instance.description = validated_data.get('description', instance.description)
+
+        # Save instance before processing/saving content in order to save associations to correct ID
+        instance.save()
+
+        featured_image = validated_data.get('featured_image', False)
+        if featured_image != False:
+            instance.save_featured_image(featured_image)
+
+        authors = validated_data.get('author_ids')
+        if authors:
+            instance.save_authors(authors, is_publishable=True)
+
+        article_ids = validated_data.get('article_ids')
+        if article_ids:
+            instance.save_articles(article_ids)
+
+
+        return instance
