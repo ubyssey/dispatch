@@ -41,6 +41,15 @@ class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
 
+class Column(Model):
+    name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True)
+    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
+    authors = ManyToManyField('Author', related_name='column_authors')
+
+    def get_articles(self):
+        pass
 class Author(Model):
     person = ForeignKey(Person)
     order = PositiveIntegerField()
@@ -300,6 +309,7 @@ class Article(Publishable, AuthorMixin):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
+    column = ManyToManyField('Column', related_name='article_column')
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')

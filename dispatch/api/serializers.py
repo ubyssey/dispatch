@@ -4,7 +4,8 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote,
+    Column)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -845,3 +846,51 @@ class PollSerializer(DispatchModelSerializer):
             instance.save_answers(answers, is_new)
 
         return instance
+
+class ColumnArticleSerializer(DispatchModelSerializer):
+
+
+    id = serializers.ReadOnlyField(source='parent_id')
+
+    class Meta:
+        model = Article
+        fields = (
+            'id',
+            'headline',
+            'authors',
+            'author_ids',
+            'authors_string',
+            'published_version'
+        )
+
+class ColumnSerializer(DispatchModelSerializer):
+    """Serializes the Column model"""
+
+    authors = AuthorSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator])
+    authors_string = serializers.CharField(source='get_author_string', read_only=True)
+    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    articles = ColumnArticleSerializer(many=True, read_only=True)
+    article_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField()
+    )
+
+    class Meta:
+        model = Column
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'description',
+            'featured_image',
+            'authors',
+            'authors_ids',
+            'authors_string',
+            'articles',
+            'article_ids'
+
+        )
