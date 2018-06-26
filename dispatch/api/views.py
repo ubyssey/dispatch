@@ -111,7 +111,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         else:
             return Response('')
 
-        print('relation count', relation.count)
         return Response('')
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
