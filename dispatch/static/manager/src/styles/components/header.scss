@@ -157,6 +157,7 @@ $border-bottom-height: 2px;
 
           // Extra 
           opacity: 1;
+
         }
       }
 
@@ -166,6 +167,13 @@ $border-bottom-height: 2px;
       }
     }
   }
+}
+
+.nav-spacer {
+  width: 90%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid white;
 }
 
 .nav-logo {

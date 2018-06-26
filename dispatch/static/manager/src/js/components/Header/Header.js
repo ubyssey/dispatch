@@ -20,9 +20,9 @@ export default function Header(props) {
             <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
           </div>
           <span className="pt-navbar-divider hidden-lg" />
-          <div className='col-lg-8 col-6'>
+          {windowWidth >= DesktopSize && <div className='col-lg-8 col-6'>
             <HeaderButtons isDesktop={windowWidth >= DesktopSize} />
-          </div>
+          </div>}
           <div className={'col-lg-2 col-6 float-right'}>
             <div className="navbar-group nav-align-right">
               <div className='nav-button-group'>
@@ -31,7 +31,12 @@ export default function Header(props) {
                     <span className="pt-icon-standard pt-icon-double-chevron-down" />
                   </div>
                   <div className='nav-dropdown-content'>
-                    {(windowWidth < DesktopSize) && <HeaderButtons isDesktop={props.isDesktop} props={props} />}
+                    {(windowWidth < DesktopSize) && 
+                      <div>
+                        <HeaderButtons isDesktop={props.isDesktop} props={props} />
+                        <div className='nav-spacer'/>
+                      </div>  
+                      }
                     <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
                     <Link to='/topics/' className="pt-button pt-minimal">Topics</Link>
                     <Link to='/sections/' className="pt-button pt-minimal">Sections</Link>

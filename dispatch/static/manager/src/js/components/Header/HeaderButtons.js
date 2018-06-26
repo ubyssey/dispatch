@@ -39,40 +39,33 @@ const renderLinks = (isDesktop) => {
         )
       })
     )
-
   } else {
     return (
-      <div className='nav-dropdown-container nav-padded'>
+      <div>
       {      
         Object.keys(links).map( key => {
           const item = links[key]
           return (
-            // <div 
-            //   key={key}
-            //   className='nav-dropdown-container nav-padded'>
-            //   Dropdown
-              <div className={'nav-dropdown-content nav-padded'}>
-                {
-                  Object.keys(item['link']).map( (subkey, index) => {
-                    const link = item['link'][index]['link']
-                    const icon = item['link'][index]['icon']
-                    return (
-                      <Link 
-                        to={'/' + link.toLowerCase() + '/'} 
-                        key={index}
-                        className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
-                        {link}
-                      </Link>
-                    )
-                  })
-                }
-              </div>
-            // </div>
+            <div key={key}>
+              {
+                Object.keys(item['link']).map( (subkey, index) => {
+                  const link = item['link'][index]['link']
+                  const icon = item['link'][index]['icon']
+                  return (
+                    <Link 
+                      to={'/' + link.toLowerCase() + '/'} 
+                      key={index}
+                      className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
+                      {link}
+                    </Link>
+                  )
+                })
+              }
+            </div>
           )
         })
       }
       </div>
-
     )
   }
 }
@@ -80,10 +73,18 @@ const renderLinks = (isDesktop) => {
 const HeaderButtons = (props) => {
   console.log(props)
   return (
-    <div className="navbar-group nav-align-left">
-      <div className="row no-gutters nav-button-group">
-          {renderLinks(props.isDesktop)}
+    <div>
+    { props.isDesktop && <div className="navbar-group nav-align-left">
+        <div className="row no-gutters nav-button-group">
+            {renderLinks(props.isDesktop)}
+        </div>
       </div>
+    }
+    { !props.isDesktop && 
+      <div>
+        {renderLinks(props.isDesktop)}
+      </div>
+    }
     </div>
   )
 }
