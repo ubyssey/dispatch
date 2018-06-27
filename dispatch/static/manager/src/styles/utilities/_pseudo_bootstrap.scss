@@ -1,0 +1,10 @@
+.hidden-lg{
+  @media(max-width: 992px){
+    display: none;
+  }
+}
+
+.float-right {
+  position: absolute !important;
+  right: 0;
+}
