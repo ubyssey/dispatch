@@ -548,7 +548,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section_id = serializers.IntegerField(write_only=True)
 
     column = ColumnSerializer(read_only=True)
-    column_id = serializers.IntegerField(write_only=True)
+    column_id = serializers.IntegerField(write_only=True, required=False)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
@@ -632,7 +632,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
-
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
