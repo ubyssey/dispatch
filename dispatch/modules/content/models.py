@@ -300,7 +300,7 @@ class Article(Publishable, AuthorMixin):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
-    column = ManyToManyField('Column', related_name='article_column')
+    column = ForeignKey('Column', related_name='article_column', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
@@ -368,7 +368,7 @@ class Column(Model, AuthorMixin):
     description = TextField(null=True)
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='column_authors')
-    articles = ManyToManyField('Article', related_name='column_articles',)
+    section = ForeignKey('Section')
 
     AuthorModel = Author
 
@@ -418,11 +418,12 @@ class Column(Model, AuthorMixin):
         self.featured_image = attachment
 
     def save_articles(self, article_ids):
+        Article.objects.filter(column=self).update(column=None)
         for id in article_ids:
             article = Article.objects.get(pk=id)
-            self.articles.add(article)
+            article.column = self
+            article.save()
 
-        self.save()
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)

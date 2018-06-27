@@ -456,7 +456,86 @@ class ContentSerializer(serializers.Serializer):
 
     def insert_data(self, content):
         """Insert loaded data into embed data blocks."""
+
         return map(self.insert_instance, content)
+class ColumnArticleSerializer(DispatchModelSerializer):
+    """Serializes articles for the Column model"""
+    id = serializers.ReadOnlyField(source='parent_id')
+    authors = AuthorSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Article
+        fields = (
+            'id',
+            'headline',
+            'authors',
+            'published_version'
+        )
+
+class ColumnSerializer(DispatchModelSerializer):
+    """Serializes the Column model"""
+    authors = AuthorSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator]
+    )
+    authors_string = serializers.CharField(source='get_author_string', read_only=True)
+    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
+    articles = ColumnArticleSerializer(many=True, read_only=True)
+    article_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField()
+    )
+    section = SectionSerializer(read_only=True)
+    section_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Column
+        fields = (
+            'id',
+            'name',
+            'section',
+            'section_id',
+            'slug',
+            'description',
+            'featured_image',
+            'authors',
+            'author_ids',
+            'authors_string',
+            'articles',
+            'article_ids'
+
+        )
+
+    def create(self, validated_data):
+        instance = Column()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        # Update basic fields
+        instance.name = validated_data.get('name', instance.name)
+        instance.slug = validated_data.get('slug', instance.slug)
+        instance.section_id = validated_data.get('section_id', instance.section_id)
+        instance.description = validated_data.get('description', instance.description)
+
+        # Save instance before processing/saving content in order to save associations to correct ID
+        instance.save()
+
+        featured_image = validated_data.get('featured_image', False)
+        if featured_image != False:
+            instance.save_featured_image(featured_image)
+
+        authors = validated_data.get('author_ids')
+        if authors:
+            instance.save_authors(authors, is_publishable=False)
+
+        article_ids = validated_data.get('article_ids')
+        if article_ids:
+            instance.save_articles(article_ids)
+
+
+        return instance
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """Serializes the Article model."""
@@ -466,6 +545,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
+
+    column = ColumnSerializer(read_only=True)
+    column_id = serializers.IntegerField(write_only=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
@@ -521,6 +603,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'authors_string',
             'section',
             'section_id',
+            'column',
+            'column_id',
             'published_at',
             'is_published',
             'published_version',
@@ -551,6 +635,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
+        instance.column_id = validated_data.get('column_id', instance.column_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
@@ -845,80 +930,5 @@ class PollSerializer(DispatchModelSerializer):
 
         if isinstance(answers, list):
             instance.save_answers(answers, is_new)
-
-        return instance
-
-class ColumnArticleSerializer(DispatchModelSerializer):
-
-
-    id = serializers.ReadOnlyField(source='parent_id')
-    authors = AuthorSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Article
-        fields = (
-            'id',
-            'headline',
-            'authors',
-            'published_version'
-        )
-
-class ColumnSerializer(DispatchModelSerializer):
-    """Serializes the Column model"""
-    authors = AuthorSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(
-        write_only=True,
-        child=serializers.JSONField(),
-        validators=[AuthorValidator]
-    )
-    authors_string = serializers.CharField(source='get_author_string', read_only=True)
-    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
-    articles = ColumnArticleSerializer(many=True, read_only=True)
-    article_ids = serializers.ListField(
-        write_only=True,
-        child=serializers.JSONField()
-    )
-
-    class Meta:
-        model = Column
-        fields = (
-            'id',
-            'name',
-            'slug',
-            'description',
-            'featured_image',
-            'authors',
-            'author_ids',
-            'authors_string',
-            'articles',
-            'article_ids'
-
-        )
-
-    def create(self, validated_data):
-        instance = Column()
-        return self.update(instance, validated_data)
-
-    def update(self, instance, validated_data):
-        # Update basic fields
-        instance.name = validated_data.get('name', instance.name)
-        instance.slug = validated_data.get('slug', instance.slug)
-        instance.description = validated_data.get('description', instance.description)
-
-        # Save instance before processing/saving content in order to save associations to correct ID
-        instance.save()
-
-        featured_image = validated_data.get('featured_image', False)
-        if featured_image != False:
-            instance.save_featured_image(featured_image)
-
-        authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors, is_publishable=False)
-
-        article_ids = validated_data.get('article_ids')
-        if article_ids:
-            instance.save_articles(article_ids)
-
 
         return instance
