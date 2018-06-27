@@ -41,66 +41,6 @@ class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
 
-class Column(Model, AuthorMixin):
-    name = CharField(max_length=100, unique=True)
-    slug = SlugField(unique=True)
-    description = TextField(null=True)
-    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
-    authors = ManyToManyField('Author', related_name='column_authors')
-    articles = ManyToManyField('Article', related_name='column_articles',)
-
-    def save_featured_image(self, data):
-        """
-        Handles saving the featured image.
-
-        If data is None, the featured image will be removed.
-
-        `data` should be dictionary with the following format:
-          {
-            'image_id': int,
-            'caption': str,
-            'credit': str
-          }
-        """
-
-        attachment = self.featured_image
-
-        if data is None:
-            if attachment:
-                attachment.delete()
-
-            self.featured_image = None
-            return
-
-        if data['image_id'] is None:
-            if attachment:
-                attachment.delete()
-
-            self.featured_image = None
-            return
-
-        if not attachment:
-            attachment = ImageAttachment()
-
-        attachment.image_id = data.get('image_id', attachment.image_id)
-        attachment.caption = data.get('caption', None)
-        attachment.credit = data.get('credit', None)
-
-        instance_type = str(type(self)).lower()
-
-        setattr(attachment, instance_type, self)
-
-        attachment.save()
-
-        self.featured_image = attachment
-
-    def save_articles(self, article_ids):
-        for id in article_ids:
-            article = Article.objects.get(pk=id)
-            self.articles.add(article)
-
-        self.save()
-
 class Author(Model):
     person = ForeignKey(Person)
     order = PositiveIntegerField()
@@ -421,6 +361,68 @@ class Article(Publishable, AuthorMixin):
         Returns article URL.
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
+
+class Column(Model, AuthorMixin):
+    name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True)
+    featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
+    authors = ManyToManyField('Author', related_name='column_authors')
+    articles = ManyToManyField('Article', related_name='column_articles',)
+
+    AuthorModel = Author
+
+    def save_featured_image(self, data):
+        """
+        Handles saving the featured image.
+
+        If data is None, the featured image will be removed.
+
+        `data` should be dictionary with the following format:
+          {
+            'image_id': int,
+            'caption': str,
+            'credit': str
+          }
+        """
+
+        attachment = self.featured_image
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_image = None
+            return
+
+        if data['image_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_image = None
+            return
+
+        if not attachment:
+            attachment = ImageAttachment()
+
+        attachment.image_id = data.get('image_id', attachment.image_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_image = attachment
+
+    def save_articles(self, article_ids):
+        for id in article_ids:
+            article = Article.objects.get(pk=id)
+            self.articles.add(article)
+
+        self.save()
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)

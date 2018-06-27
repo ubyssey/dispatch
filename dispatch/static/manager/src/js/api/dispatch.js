@@ -198,7 +198,6 @@ const DispatchAPI = {
       return getRequest('articles', articleId, params, token)
     },
     save: (token, articleId, data) => {
-      console.log('data', JSON.stringify(data.author_ids))
       return patchRequest('articles', articleId, data, token)
     },
     create: (token, data) => {

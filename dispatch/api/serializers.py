@@ -575,7 +575,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_featured_video(featured_video)
 
         authors = validated_data.get('author_ids')
-        print('AUTHORS', authors)
+
         if authors:
             instance.save_authors(authors, is_publishable=True)
 
@@ -869,7 +869,8 @@ class ColumnSerializer(DispatchModelSerializer):
     author_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
-        validators=[AuthorValidator])
+        validators=[AuthorValidator]
+    )
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     articles = ColumnArticleSerializer(many=True, read_only=True)
@@ -913,7 +914,7 @@ class ColumnSerializer(DispatchModelSerializer):
 
         authors = validated_data.get('author_ids')
         if authors:
-            instance.save_authors(authors, is_publishable=True)
+            instance.save_authors(authors, is_publishable=False)
 
         article_ids = validated_data.get('article_ids')
         if article_ids:
