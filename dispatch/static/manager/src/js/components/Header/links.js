@@ -9,6 +9,10 @@ export default {
       {
         link: 'Pages',
         icon: 'pt-icon-page'
+      },
+      {
+        link: 'Columns',
+        icon: 'pt-icon-column-layout'
       }
     ]
   },
@@ -25,13 +29,13 @@ export default {
       },
       {
         link: 'Events',
-        icon: 'pt-icon-pulse'   
+        icon: 'pt-icon-pulse'
       }
     ]
   },
   Media: {
     icon: 'pt-icon-media',
-    link: [ 
+    link: [
       {
         link: 'Galleries',
         icon: 'pt-icon-image-rotate-right'
@@ -47,7 +51,7 @@ export default {
       {
         link: 'Videos',
         icon: 'pt-icon-video'
-      } 
+      }
     ]
   },
   Misc: {
@@ -58,9 +62,9 @@ export default {
         icon: 'pt-icon-issue',
       },
       {
-        link: 'People',
+        link: 'Persons',
         icon: 'pt-icon-person'
-      }  
+      }
     ]
   }
 }

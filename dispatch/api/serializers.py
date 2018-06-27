@@ -458,6 +458,7 @@ class ContentSerializer(serializers.Serializer):
         """Insert loaded data into embed data blocks."""
 
         return map(self.insert_instance, content)
+
 class ColumnArticleSerializer(DispatchModelSerializer):
     """Serializes articles for the Column model"""
     id = serializers.ReadOnlyField(source='parent_id')
@@ -482,7 +483,7 @@ class ColumnSerializer(DispatchModelSerializer):
     )
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
-    articles = ColumnArticleSerializer(many=True, read_only=True)
+    articles = ColumnArticleSerializer(many=True, read_only=True, source='get_articles')
     article_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField()

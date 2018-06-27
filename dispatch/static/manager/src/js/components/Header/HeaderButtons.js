@@ -6,13 +6,13 @@ require('../../../styles/components/header.scss')
 require('../../../styles/utilities/_pseudo_bootstrap.scss')
 
 const renderLinks = (isDesktop) => {
-  console.log('isdesktop', isDesktop)
+
   if (isDesktop) {
     return (
       Object.keys(links).map( key => {
         const item = links[key]
         return (
-          <div 
+          <div
             key={key}
             className='nav-dropdown-container nav-padded'>
             <div className='nav-dropdown-button pt-minimal'>
@@ -25,8 +25,8 @@ const renderLinks = (isDesktop) => {
                   const link = item['link'][index]['link']
                   const icon = item['link'][index]['icon']
                   return (
-                    <Link 
-                      to={'/' + link.toLowerCase() + '/'} 
+                    <Link
+                      to={'/' + link.toLowerCase() + '/'}
                       key={index}
                       className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
                       {link}
@@ -42,7 +42,7 @@ const renderLinks = (isDesktop) => {
   } else {
     return (
       <div>
-      {      
+      {
         Object.keys(links).map( key => {
           const item = links[key]
           return (
@@ -52,8 +52,8 @@ const renderLinks = (isDesktop) => {
                   const link = item['link'][index]['link']
                   const icon = item['link'][index]['icon']
                   return (
-                    <Link 
-                      to={'/' + link.toLowerCase() + '/'} 
+                    <Link
+                      to={'/' + link.toLowerCase() + '/'}
                       key={index}
                       className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
                       {link}
@@ -71,7 +71,6 @@ const renderLinks = (isDesktop) => {
 }
 
 const HeaderButtons = (props) => {
-  console.log(props)
   return (
     <div>
     { props.isDesktop && <div className="navbar-group nav-align-left">
@@ -80,7 +79,7 @@ const HeaderButtons = (props) => {
         </div>
       </div>
     }
-    { !props.isDesktop && 
+    { !props.isDesktop &&
       <div>
         {renderLinks(props.isDesktop)}
       </div>

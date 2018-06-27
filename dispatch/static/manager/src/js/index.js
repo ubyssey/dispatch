@@ -36,6 +36,12 @@ render((
             <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
+          <Route path='columns'>
+            <IndexRoute component={Pages.Columns.Index} />
+            <Route path='new' component={Pages.Columns.NewColumn} />
+            <Route path=':columnId' component={Pages.Columns.Column} />
+          </Route>
+
           <Route path='files' component={Pages.Files} />
 
           <Route path='images'>

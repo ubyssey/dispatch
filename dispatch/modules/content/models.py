@@ -424,6 +424,9 @@ class Column(Model, AuthorMixin):
             article.column = self
             article.save()
 
+    def get_articles(self):
+        return Article.objects.filter(column=self)
+
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)

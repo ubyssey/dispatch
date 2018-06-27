@@ -6,6 +6,7 @@ import ProfilePage from './ProfilePage'
 
 import * as Sections from './Sections'
 import * as Articles from './Articles'
+import * as Columns from './Columns'
 import * as Pages from './Pages'
 import * as Tags from './Tags'
 import * as Issues from './Issues'
@@ -26,6 +27,7 @@ export {
   ProfilePage as Profile,
   Sections as Sections,
   Articles as Articles,
+  Columns as Columns,
   Pages as Pages,
   Tags as Tags,
   Issues as Issues,

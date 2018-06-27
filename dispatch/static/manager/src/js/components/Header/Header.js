@@ -11,7 +11,7 @@ const DesktopSize = 992
 
 export default function Header(props) {
   let windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-  console.log(windowWidth)
+
   return (
     <header className='c-header'>
       <nav className="nav-navbar nav-dark">
@@ -31,11 +31,11 @@ export default function Header(props) {
                     <span className="pt-icon-standard pt-icon-double-chevron-down" />
                   </div>
                   <div className='nav-dropdown-content'>
-                    {(windowWidth < DesktopSize) && 
+                    {(windowWidth < DesktopSize) &&
                       <div>
                         <HeaderButtons isDesktop={props.isDesktop} props={props} />
-                        <div className='nav-spacer'/>
-                      </div>  
+                        <div className='nav-spacer' />
+                      </div>
                       }
                     <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
                     <Link to='/topics/' className="pt-button pt-minimal">Topics</Link>

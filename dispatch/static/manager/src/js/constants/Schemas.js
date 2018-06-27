@@ -17,6 +17,7 @@ export const eventSchema = new Schema('events')
 export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
 export const pollSchema = new Schema('polls')
+export const columnSchema = new Schema('column')
 
 articleSchema.define({
   section: sectionSchema,
