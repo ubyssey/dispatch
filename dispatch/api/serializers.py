@@ -487,7 +487,8 @@ class ColumnSerializer(DispatchModelSerializer):
     articles = ColumnArticleSerializer(many=True, read_only=True, source='get_articles')
     article_ids = serializers.ListField(
         write_only=True,
-        child=serializers.JSONField()
+        child=serializers.JSONField(),
+        required=False
     )
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)

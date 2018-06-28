@@ -1,8 +1,22 @@
+import R from 'ramda'
 import React from 'react'
 
 import { FormInput, TextInput } from '../inputs'
 
+import SectionSelectInput from '../inputs/selects/SectionSelectInput'
+import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
+import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
 export default function ColumnForm(props) {
+
+  const articles = !props.listItem.articles ? [] : props.listItem.articles
+    .map(article => article.id)
+
+  function updateArticles(article_ids) {
+    const articles = article_ids.map(id => ({
+      id: id
+    }))
+    props.update('articles', articles)
+  }
 
   return (
     <form>
@@ -27,6 +41,34 @@ export default function ColumnForm(props) {
           value={props.listItem.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
+      </FormInput>
+
+      <FormInput
+        label='Section'
+        padded={false}
+        error={props.errors.section_id}>
+        <SectionSelectInput
+          selected={props.listItem.section ? props.listItem.section.id : []}
+          update={section => props.update('section', section)} />
+      </FormInput>
+
+      <FormInput
+        label='Authors'
+        padded={false}
+        error={props.errors.author_ids}>
+        <AuthorSelectInput
+          selected={props.listItem.authors || []}
+          update={authors => props.update('authors', authors)} />
+      </FormInput>
+
+      <FormInput
+        label='Articles'
+        padded={false}
+        error={props.errors.article_ids}>
+        <ArticleSelectInput
+          selected={articles}
+          many={true}
+          onChange={(articles) => updateArticles(articles)} />
       </FormInput>
 
     </form>

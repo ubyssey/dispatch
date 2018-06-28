@@ -61,7 +61,7 @@ function ColumnPageComponent(props) {
       headers={[ 'Name', 'Section', 'Articles']}
       extraColumns={[
         item => item.section.name,
-        item => item.articles ? item.articles.length : 'No articles yet'
+        item => item.articles.length
       ]}
       shouldReload={(prevProps, props) => {
         return (prevProps.location.query.section !== props.location.query.section)

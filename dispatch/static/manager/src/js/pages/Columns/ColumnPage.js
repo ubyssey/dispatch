@@ -5,8 +5,9 @@ import ColumnEditor from '../../components/ColumnEditor'
 export default function ColumnPage(props) {
   return (
     <ColumnEditor
-      columId={props.params.columnId}
+      itemId={props.params.columnId}
       location={props.location}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

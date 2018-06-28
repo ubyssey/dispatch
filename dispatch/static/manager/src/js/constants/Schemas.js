@@ -35,6 +35,12 @@ articleSchema.define({
   }
 })
 
+columnSchema.define({
+  authors: arrayOf({
+    person: personSchema
+  })
+})
+
 pageSchema.define({
   template: templateSchema,
   featured_image: {

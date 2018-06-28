@@ -46,6 +46,7 @@ function ColumnEditorComponent(props) {
       type={TYPE}
       afterDelete={AFTER_DELETE}
       form={ColumnForm}
+      displayField='name'
       {... props} />
   )
 }

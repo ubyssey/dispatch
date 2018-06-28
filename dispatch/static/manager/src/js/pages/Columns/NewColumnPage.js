@@ -6,6 +6,7 @@ export default function NewColumnPage(props) {
   return (
     <ColumnEditor
       isNew={true}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }
