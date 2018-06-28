@@ -475,6 +475,7 @@ class ColumnArticleSerializer(DispatchModelSerializer):
 
 class ColumnSerializer(DispatchModelSerializer):
     """Serializes the Column model"""
+
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,

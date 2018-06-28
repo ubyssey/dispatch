@@ -97,7 +97,14 @@ class ColumnViewSet(DispatchModelViewSet):
     """Viewset for the Column model views."""
     model = Column
     serializer_class = ColumnSerializer
-    queryset = Column.objects.all()
+
+    def get_queryset(self):
+        queryset = Column.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+        return queryset
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """Viewset for Page model views."""
