@@ -93,11 +93,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         return queryset
 
-    def destroy(self, request, parent_id=None):
-        instance = get_object_or_404(Article.objects.all(), pk=parent_id)
-        self.perform_destroy(instance)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
@@ -122,13 +118,6 @@ class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
             queryset = queryset.filter(title__icontains=q)
 
         return queryset
-
-    def destroy(self, request, parent_id=None):
-        instance = get_object_or_404(Page.objects.all(), pk=parent_id)
-        self.perform_destroy(instance)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class PersonViewSet(DispatchModelViewSet):
     """Viewset for Person model views."""
