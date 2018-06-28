@@ -93,9 +93,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         return queryset
 
-
-
-
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """Viewset for Page model views."""
     model = Page
