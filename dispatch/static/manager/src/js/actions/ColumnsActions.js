@@ -29,11 +29,15 @@ class ColumnsActions extends ResourceActions {
     return data
   }
 
-  search(query) {
+  search(section, query) {
     let queryObj = {}
 
     if (query) {
       queryObj.q = query
+    }
+
+    if (section) {
+      queryObj.section = section
     }
 
     return dispatch => {

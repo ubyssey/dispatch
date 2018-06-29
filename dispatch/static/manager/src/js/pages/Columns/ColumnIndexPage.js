@@ -36,8 +36,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItems: (token, columnIds) => {
       dispatch(columnsActions.deleteMany(token, columnIds))
     },
-    searchColumns: (author, section, query) => {
-      dispatch(columnsActions.search(author, section, query))
+    searchColumns: (section, query) => {
+      dispatch(columnsActions.search(section, query))
     }
   }
 }
@@ -48,7 +48,7 @@ function ColumnPageComponent(props) {
     <SectionFilterInput
       key={'SectionFilter'}
       selected={props.location.query.section}
-      update={(section) => props.searchColumns(props.location.query.author, section, props.location.query.q)} />
+      update={(section) => props.searchColumns(section, props.location.query.q)} />
   ]
 
   return (

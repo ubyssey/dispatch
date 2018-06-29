@@ -101,9 +101,14 @@ class ColumnViewSet(DispatchModelViewSet):
     def get_queryset(self):
         queryset = Column.objects.all()
         q = self.request.query_params.get('q', None)
+        section = self.request.query_params.get('section', None)
+
         if q is not None:
-            # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(name__icontains=q)
+
+        if section is not None:
+            queryset = queryset.filter(section_id=section)
+
         return queryset
 
 class PageViewSet(DispatchModelViewSet, DispatchPublishableMixin):
