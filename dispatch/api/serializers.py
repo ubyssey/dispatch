@@ -612,6 +612,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
     template_data = JSONField(required=False)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Page
@@ -625,6 +626,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'snippet',
             'content',
             'published_at',
+            'updated_at',
             'is_published',
             'published_version',
             'current_version',
@@ -751,7 +753,7 @@ class PollVoteSerializer(DispatchModelSerializer):
     answer_id =  serializers.IntegerField(write_only=True)
 
     class Meta:
-        
+
         model = PollVote
         fields = (
             'id',
