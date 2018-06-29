@@ -323,8 +323,11 @@ class Article(Publishable, AuthorMixin):
     def title(self):
         return self.headline
 
-    def get_related(self):
-        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
+    def get_related(self, n=5):
+        """
+        Returns n related articles.
+        """
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:n]
 
     def get_reading_list(self, ref=None, dur=None):
         articles = self.get_related()
@@ -600,3 +603,14 @@ class PollVote(Model):
     id = UUIDField(default=uuid.uuid4, primary_key=True)
     answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
     timestamp = DateTimeField(auto_now_add=True)
+
+class Subscription(Model):
+    id = UUIDField(default=uuid.uuid4, primary_key=True)
+    endpoint = CharField(max_length=255, unique=True)
+    auth = CharField(max_length=255, unique=True)
+    p256dh = CharField(max_length=255, unique=True)
+
+    created_at = DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('created_at',)

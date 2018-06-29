@@ -14,20 +14,22 @@ from dispatch.modules.integrations.integrations import integrationLib, Integrati
 from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
-    Article, File, Image, ImageAttachment, ImageGallery, Issue,
+    Article, File, Image, ImageAttachment, ImageGallery, Issue, Subscription,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
     ArticleRelation)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
-    ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
+    ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
     PollVoteSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
+
+import json
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -101,6 +103,9 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         # Update count
         if 'article_id' in request.data:
             article_id = request.data['article_id']
+            if article_id == parent_id:
+                return Response('')
+
             related_article = get_object_or_404(Article.objects.all(), pk=article_id)
 
             relation, created = ArticleRelation.objects.get_or_create(parent=article, article=related_article)
@@ -306,6 +311,48 @@ class PollViewSet(DispatchModelViewSet):
         serializer.save()
 
         return Response(serializer.data)
+
+class NotificationsViewSet(DispatchModelViewSet):
+    """Viewset for the Poll model views."""
+    model = Subscription
+    serializer_class = SubscriptionSerializer
+
+    # @action(methods=['post'], detail=False)
+    @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
+    def subscribe(self, request, pk=None):
+        data = {
+            'endpoint': request.data['endpoint'],
+            'auth':request.data['keys']['auth'],
+            'p256dh':request.data['keys']['p256dh'],
+        }
+        try:
+            serializer = SubscriptionSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        except:
+            print('User already subscribed')
+
+        return Response(serializer.data)
+    
+    # # @detail_route(permission_classes=[AllowAny], methods=['patch'],)
+    # def update(self, request, pk=None):
+    #     print(request.data)
+
+    #     data = {
+    #         'endpoint': request.data['endpoint'],
+    #         'auth':request.data['keys']['auth'],
+    #         'p256dh':request.data['keys']['p256dh'],
+    #     }
+    #     try:
+    #         serializer = SubscriptionSerializer(data=data)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #     except:
+    #         print('Could not update subscription')
+
+    #     print(serializer.data)
+    #     return Response(serializer.data)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""

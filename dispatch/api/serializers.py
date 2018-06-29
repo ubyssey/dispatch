@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery, Issue,
+    Article, Image, ImageAttachment, ImageGallery, Issue, Subscription,
     File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
 from dispatch.modules.auth.models import Person, User
 
@@ -843,5 +843,33 @@ class PollSerializer(DispatchModelSerializer):
 
         if isinstance(answers, list):
             instance.save_answers(answers, is_new)
+
+        return instance
+
+class SubscriptionSerializer(DispatchModelSerializer):
+    """Serializes the Subscription model."""
+
+    endpoint = serializers.CharField(required=True, write_only=True)
+    auth = serializers.CharField(required=True, write_only=True)
+    p256dh = serializers.CharField(required=True, write_only=True)
+
+    class Meta:
+        model = Subscription
+        fields = (
+            'id',
+            'endpoint',
+            'auth',
+            'p256dh'
+        )
+
+    def create(self, validated_data):
+        # Create new Subscription instance
+        instance = Subscription()
+
+        instance.endpoint = validated_data.get('endpoint', instance.endpoint)
+        instance.auth = validated_data.get('auth', instance.auth)
+        instance.p256dh = validated_data.get('p256dh', instance.p256dh)
+        
+        instance.save()
 
         return instance

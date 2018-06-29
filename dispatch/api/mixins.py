@@ -4,6 +4,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
+from dispatch.models import Subscription
+
+from pywebpush import webpush, WebPushException
+
+import json
 
 class DispatchModelViewSet(ModelViewSet):
     """Custom viewset to add Dispatch signals to default ModelViewSet"""
@@ -69,6 +74,9 @@ class DispatchPublishableMixin(object):
 
         self.perform_publish(serializer)
 
+        # check for if article is breaking
+        self.pushNotification(instance)
+        
         return Response(serializer.data)
 
     @detail_route(methods=['post'])
@@ -81,6 +89,38 @@ class DispatchPublishableMixin(object):
         self.perform_unpublish(serializer)
 
         return Response(serializer.data)
+
+    def pushNotification(self, article, pk=None):
+        # grab each endpoint from list in database and make a push
+
+        data={
+            'headline': article.headline,
+            'url': article.get_absolute_url(),
+            'snippet': article.snippet,
+            'image': article.featured_image.image.get_thumbnail_url()
+            }
+        subscriptions = Subscription.objects.all()
+        for sub in subscriptions:
+            print(sub.created_at)
+            try:
+                webpush(
+                    subscription_info={
+                        "endpoint": sub.endpoint,
+                        "keys": {
+                            "p256dh": sub.p256dh,
+                            "auth": sub.auth
+                        }},
+                    data=json.dumps(data),
+                    vapid_private_key="Mp2OSApC5ZQ11iHtKfTfAWycrr-YYl9yphpkeqKIy9E",
+                    vapid_claims={
+                            "sub": "mailto:YourNameHere@example.org===",
+                        }
+                )
+                print('SUCCESS', sub.created_at)
+            except WebPushException as ex:
+                print("FAILURE: {}", repr(ex), sub.created_at)
+                sub.delete()
+
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
     def __init__(self, *args, **kwargs):
