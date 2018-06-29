@@ -530,12 +530,10 @@ class ColumnSerializer(DispatchModelSerializer):
             instance.save_featured_image(featured_image)
 
         authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors, is_publishable=False)
+        instance.save_authors(authors, is_publishable=False)
 
         article_ids = validated_data.get('article_ids')
-        if article_ids:
-            instance.save_articles(article_ids)
+        instance.save_articles(article_ids)
 
 
         return instance
