@@ -40,6 +40,40 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
+    def create_column(cls, client, name='Test column', slug='test-column', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], article_headlines = ['Test headline']):
+        """Create a dummy column instance"""
+        # Create test person
+        authors = []
+
+        for author in author_names:
+            (person, created) = Person.objects.get_or_create(full_name=author)
+            authors.append({
+                'person': person.id,
+                'type': 'author'
+            })
+
+        articles = []
+        # Create test section
+        (section, created) = Section.objects.get_or_create(name=section, slug=slug_section)
+
+        for headline in article_headlines:
+            (article, created) = Article.objects.get_or_create(headline=headline, section=section, slug=headline)
+            articles.append(article.id)
+
+
+        url = reverse('api-columns-list')
+
+        data = {
+            'name': name,
+            'slug': slug,
+            'section_id': section.id,
+            'author_ids': authors,
+            'article_ids': articles
+        }
+
+        return client.post(url, data, format='json')
+
+    @classmethod
     def upload_file(cls, client, filename='TestFile'):
         """Upload a test file to server"""
 
