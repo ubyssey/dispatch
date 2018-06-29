@@ -17,6 +17,13 @@ export default function ColumnForm(props) {
     props.update('articles', articles)
   }
 
+  function updateSection(section_id) {
+    const section = {
+      id: section_id
+    }
+    props.update('section', section)
+  }
+
   return (
     <form>
 
@@ -47,8 +54,8 @@ export default function ColumnForm(props) {
         padded={false}
         error={props.errors.section_id}>
         <SectionSelectInput
-          selected={props.listItem.section ? props.listItem.section.id : []}
-          update={section => props.update('section', section)} />
+          selected={props.listItem.section ? props.listItem.section.id : null}
+          update={section => updateSection(section)} />
       </FormInput>
 
       <FormInput
