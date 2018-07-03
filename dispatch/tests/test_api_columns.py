@@ -78,21 +78,45 @@ class ColumnsTests(DispatchAPITestCase):
     def test_update_column_exisiting_slug(self):
         """Ensure that the column doens't have a slug matching an existing column"""
 
-        # column_a = DispatchTestHelpers.create_column(self.client, name='column-a', slug='slug-a')
-        # column_b = DispatchTestHelpers.create_column(self.client, name='column-b', slug='slug-b', article_headlines=['Test-article-1','Test-article-2'])
-        # print('column_b', column_b.data)
-        # url = reverse('api-columns-detail', args=[column_b.data['id']])
-        # data = {'slug': 'slub-a'}
-        #
-        # response = self.client.patch(url, data, format='json')
-        #
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        column_a = DispatchTestHelpers.create_column(self.client, name='column-a', slug='slug-a')
+        column_b = DispatchTestHelpers.create_column(self.client, name='column-b', slug='slug-b', article_headlines=['Test-article-1','Test-article-2'])
 
-        pass
+        url = reverse('api-columns-detail', args=[column_b.data['id']])
+
+        data = {
+            'slug': 'slug-a',
+            'author_ids': [],
+            'article_ids': []
+            }
+
+        response = self.client.patch(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_column(self):
         """Ensure that column's basic fields can be updated"""
-        pass
+
+        column = DispatchTestHelpers.create_column(self.client)
+
+        NEW_NAME = 'New Name'
+        NEW_SLUG = 'New Slug'
+
+        data = {
+            'name': NEW_NAME,
+            'slug': NEW_SLUG,
+            'section_id': column.data['section']['id'],
+            'author_ids': [],
+            'article_ids': []
+        }
+        print('data', data)
+        url = reverse('api-columns-detail', args=[column.data['id']])
+        print('url', url)
+        response = self.client.patch(url, data, format='json')
+
+        print('response', response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], NEW_NAME)
+        self.assertEqual(response.data['slug'], NEW_SLUG)
 
     def test_update_column_unauthorized(self):
         """Update column should fail with unauthenticated request"""

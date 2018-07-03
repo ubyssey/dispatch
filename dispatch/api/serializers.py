@@ -516,11 +516,14 @@ class ColumnSerializer(DispatchModelSerializer):
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
+        print('updatingngggggg')
         # Update basic fields
         instance.name = validated_data.get('name', instance.name)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.description = validated_data.get('description', instance.description)
+        print('validated_data name', validated_data.get('name'))
+    #    print('validated_data slug', validated_data.get('slug'))
 
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
