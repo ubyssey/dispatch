@@ -98,7 +98,7 @@ class DispatchPublishableMixin(object):
             'url': article.get_absolute_url(),
             'snippet': article.snippet,
             'image': article.featured_image.image.get_thumbnail_url()
-            }
+        }
         subscriptions = Subscription.objects.all()
         for sub in subscriptions:
             print(sub.created_at)
@@ -116,7 +116,7 @@ class DispatchPublishableMixin(object):
                             "sub": "mailto:YourNameHere@example.org===",
                         }
                 )
-                print('SUCCESS', sub.created_at)
+                print('SUCCESS', sub.endpoint)
             except WebPushException as ex:
                 print("FAILURE: {}", repr(ex), sub.created_at)
                 sub.delete()
