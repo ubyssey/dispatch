@@ -614,3 +614,7 @@ class Subscription(Model):
 
     class Meta:
         ordering = ('created_at',)
+
+class Notification(Model):
+    created_at = DateTimeField(auto_now_add=True)
+    article = ForeignKey(Article, related_name='notification_artilce', on_delete=CASCADE)

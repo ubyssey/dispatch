@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue, Subscription,
-    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote, Notification)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -869,7 +869,20 @@ class SubscriptionSerializer(DispatchModelSerializer):
         instance.endpoint = validated_data.get('endpoint', instance.endpoint)
         instance.auth = validated_data.get('auth', instance.auth)
         instance.p256dh = validated_data.get('p256dh', instance.p256dh)
-        
+
         instance.save()
 
         return instance
+
+class NotificationSerializer(DispatchModelSerializer):
+    """Serializes the Notification model."""
+
+    article_id = serializers.IntegerField()
+    created_at = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = (
+            'created_at',
+            'article_id'
+        )

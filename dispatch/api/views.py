@@ -1,3 +1,6 @@
+import json
+from pywebpush import webpush, WebPushException
+
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
@@ -5,7 +8,7 @@ from django.db import IntegrityError
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
+from rest_framework.decorators import list_route, detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
@@ -16,20 +19,19 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue, Subscription,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
-    ArticleRelation)
+    ArticleRelation, Notification)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer )
+    PollVoteSerializer, NotificationSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
 
-import json
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -314,10 +316,14 @@ class PollViewSet(DispatchModelViewSet):
 
 class NotificationsViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""
-    model = Subscription
-    serializer_class = SubscriptionSerializer
 
-    # @action(methods=['post'], detail=False)
+    model = Notification
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        queryset = Notification.objects.all().order_by('created_at')
+        return queryset
+
     @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
     def subscribe(self, request, pk=None):
         data = {
@@ -334,25 +340,45 @@ class NotificationsViewSet(DispatchModelViewSet):
             print('User already subscribed')
 
         return Response(serializer.data)
-    
-    # # @detail_route(permission_classes=[AllowAny], methods=['patch'],)
-    # def update(self, request, pk=None):
-    #     print(request.data)
 
-    #     data = {
-    #         'endpoint': request.data['endpoint'],
-    #         'auth':request.data['keys']['auth'],
-    #         'p256dh':request.data['keys']['p256dh'],
-    #     }
-    #     try:
-    #         serializer = SubscriptionSerializer(data=data)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #     except:
-    #         print('Could not update subscription')
+    def push_notifications(self, article):
+        # grab each endpoint from list in database and make a push
+        data={
+            'headline': article.headline,
+            'url': article.get_absolute_url(),
+            'snippet': article.snippet,
+            'image': article.featured_image.image.get_thumbnail_url()
+            }
+        subscriptions = Subscription.objects.all()
+        for sub in subscriptions:
+            try:
+                webpush(
+                    subscription_info={
+                        "endpoint": sub.endpoint,
+                        "keys": {
+                            "p256dh": sub.p256dh,
+                            "auth": sub.auth
+                        }},
+                    data=json.dumps(data),
+                    vapid_private_key="Mp2OSApC5ZQ11iHtKfTfAWycrr-YYl9yphpkeqKIy9E",
+                    vapid_claims={
+                            "sub": "mailto:YourNameHere@example.org===",
+                        }
+                )
+            except WebPushException as ex:
+                sub.delete()
 
-    #     print(serializer.data)
-    #     return Response(serializer.data)
+    @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
+    def push(self, request, pk=None):
+        notification = Notification.objects.all().order_by('created_at').first()
+
+        if notification is not None:
+            self.push_notifications(notification.article)
+            notification.delete()
+        return Response({'detail': 'success'})
+
+
+
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
