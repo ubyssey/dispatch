@@ -25,6 +25,7 @@ articleSchema.define({
     person: personSchema
   }),
   tags: arrayOf(tagSchema),
+  column: columnSchema,
   topic: topicSchema,
   template: templateSchema,
   featured_image: {
