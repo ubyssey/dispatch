@@ -1,14 +1,13 @@
+import json
+from pywebpush import webpush, WebPushException
+
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
-from dispatch.models import Subscription
-
-from pywebpush import webpush, WebPushException
-
-import json
+from dispatch.models import Subscription, Notification
 
 class DispatchModelViewSet(ModelViewSet):
     """Custom viewset to add Dispatch signals to default ModelViewSet"""
@@ -74,9 +73,12 @@ class DispatchPublishableMixin(object):
 
         self.perform_publish(serializer)
 
+        #TODO: add in breaking news notification logic
         # check for if article is breaking
-        self.pushNotification(instance)
-        
+        # self.pushNotification(instance)
+
+        Notification.objects.create(article=instance)
+
         return Response(serializer.data)
 
     @detail_route(methods=['post'])
@@ -90,18 +92,17 @@ class DispatchPublishableMixin(object):
 
         return Response(serializer.data)
 
-    def pushNotification(self, article, pk=None):
+    def pushNotification(self, article):
         # grab each endpoint from list in database and make a push
-
         data={
             'headline': article.headline,
             'url': article.get_absolute_url(),
             'snippet': article.snippet,
-            'image': article.featured_image.image.get_thumbnail_url()
+            'image': article.featured_image.image.get_thumbnail_url(),
+            'tag': 'ubyssey-standard-notification'
         }
         subscriptions = Subscription.objects.all()
         for sub in subscriptions:
-            print(sub.created_at)
             try:
                 webpush(
                     subscription_info={
@@ -116,9 +117,7 @@ class DispatchPublishableMixin(object):
                             "sub": "mailto:YourNameHere@example.org===",
                         }
                 )
-                print('SUCCESS', sub.endpoint)
             except WebPushException as ex:
-                print("FAILURE: {}", repr(ex), sub.created_at)
                 sub.delete()
 
 

@@ -1,3 +1,4 @@
+import json
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
@@ -5,7 +6,7 @@ from django.db import IntegrityError
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
+from rest_framework.decorators import list_route, detail_route, api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
@@ -16,20 +17,19 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue, Subscription,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
-    ArticleRelation)
+    ArticleRelation, Notification)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer )
+    PollVoteSerializer, NotificationSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
 
-import json
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -314,10 +314,14 @@ class PollViewSet(DispatchModelViewSet):
 
 class NotificationsViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""
-    model = Subscription
-    serializer_class = SubscriptionSerializer
 
-    # @action(methods=['post'], detail=False)
+    model = Notification
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        queryset = Notification.objects.all().order_by('created_at')
+        return queryset
+
     @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
     def subscribe(self, request, pk=None):
         data = {
@@ -331,28 +335,8 @@ class NotificationsViewSet(DispatchModelViewSet):
             serializer.save()
             return Response(serializer.data)
         except:
-            print('User already subscribed')
-
+            pass
         return Response(serializer.data)
-    
-    # # @detail_route(permission_classes=[AllowAny], methods=['patch'],)
-    # def update(self, request, pk=None):
-    #     print(request.data)
-
-    #     data = {
-    #         'endpoint': request.data['endpoint'],
-    #         'auth':request.data['keys']['auth'],
-    #         'p256dh':request.data['keys']['p256dh'],
-    #     }
-    #     try:
-    #         serializer = SubscriptionSerializer(data=data)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #     except:
-    #         print('Could not update subscription')
-
-    #     print(serializer.data)
-    #     return Response(serializer.data)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""
