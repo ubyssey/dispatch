@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
-from dispatch.models import Subscription, Notification
+from dispatch.models import Subscription, Notification, Article
 
 class DispatchModelViewSet(ModelViewSet):
     """Custom viewset to add Dispatch signals to default ModelViewSet"""
@@ -77,7 +77,8 @@ class DispatchPublishableMixin(object):
         # check for if article is breaking
         # self.pushNotification(instance)
 
-        Notification.objects.create(article=instance)
+        if isinstance(instance, Article):
+            Notification.objects.create(article=instance)
 
         return Response(serializer.data)
 
