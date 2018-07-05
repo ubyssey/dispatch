@@ -24,6 +24,13 @@ const mapStateToProps = (state) => {
   }
 }
 
+function prepareData(formData){
+  let data = formData
+  data.start_time = formData.start_time ? dateObjToAPIString(formData.start_time) : ''
+  data.end_time = formData.end_time ? dateObjToAPIString(formData.end_time) : ''
+  return data
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     getListItem: (token, eventId) => {
@@ -33,10 +40,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(eventsActions.set(event))
     },
     saveListItem: (token, eventId, data) => {
-      dispatch(eventsActions.save(token, eventId, data))
+      dispatch(eventsActions.save(token, eventId, prepareData(data)))
     },
     createListItem: (token, data) => {
-      dispatch(eventsActions.create(token, data, AFTER_DELETE))
+      dispatch(eventsActions.create(token, prepareData(data), AFTER_DELETE))
     },
     deleteListItem: (token, eventId, next) => {
       dispatch(eventsActions.delete(token, eventId, next))
