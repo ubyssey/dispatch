@@ -144,10 +144,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(eventsActions.list(token, query))
     },
     approveAndPublishEvent: (token, eventId) => {
-      const form = new FormData()
-      form.append('is_submission', false)
-      form.append('is_published', true)
-      dispatch(eventsActions.save(token, eventId, form))
+      const data = {
+        'is_submission': false,
+        'is_published': true
+      }
+      dispatch(eventsActions.save(token, eventId, data))
     },
     disapproveEvent: (token, eventId, next) => {
       dispatch(eventsActions.deleteMany(token, [eventId], next))
