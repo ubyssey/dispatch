@@ -317,6 +317,8 @@ class NotificationsViewSet(DispatchModelViewSet):
 
     model = Notification
     serializer_class = NotificationSerializer
+    permission_classes = (IsAuthenticated,)
+
 
     def get_queryset(self):
         queryset = Notification.objects.all().order_by('created_at')
