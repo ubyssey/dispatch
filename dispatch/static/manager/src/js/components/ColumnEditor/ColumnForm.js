@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
+import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
 import SectionSelectInput from '../inputs/selects/SectionSelectInput'
 import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
@@ -75,6 +75,17 @@ export default function ColumnForm(props) {
           selected={articles}
           many={true}
           onChange={(articles) => updateArticles(articles)} />
+      </FormInput>
+
+      <FormInput
+        label='Description'
+        error={props.errors.snippet}
+        padded={false}>
+        <TextAreaInput
+          placeholder='Description'
+          value={props.listItem.description || ''}
+          rows='5'
+          onChange={e => props.update('description', e.target.value)} />
       </FormInput>
 
     </form>

@@ -6,6 +6,7 @@ import SectionSelectInput from '../../inputs/selects/SectionSelectInput'
 import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
 import TagSelectInput from '../../inputs/selects/TagSelectInput'
 import TopicSelectInput from '../../inputs/selects/TopicSelectInput'
+import ColumnSelectInput from '../../inputs/selects/ColumnSelectInput'
 
 export default function BasicFieldsTab(props) {
   return (
@@ -50,6 +51,15 @@ export default function BasicFieldsTab(props) {
         <TopicSelectInput
           selected={props.topic}
           update={topic => props.update('topic', topic)} />
+      </FormInput>
+
+      <FormInput
+        label='Column'
+        error={props.errors.column}>
+        <ColumnSelectInput
+          many={false}
+          selected={props.column}
+          update={column => props.update('column', column)} />
       </FormInput>
 
       <FormInput
