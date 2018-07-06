@@ -547,8 +547,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    column = ColumnSerializer(read_only=True)
-    column_id = serializers.IntegerField(write_only=True, required=False)
+    column = ColumnSerializer(source='get_column', read_only=True)
+    column_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
@@ -635,7 +635,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
-        instance.column_id = validated_data.get('column_id', instance.column_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
@@ -671,6 +670,10 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         topic_id = validated_data.get('topic_id', False)
         if topic_id != False:
             instance.save_topic(topic_id)
+
+        column_id = validated_data.get('column_id', None)
+        if column_id is not None:
+            instance.save_column(column_id)
 
         # Perform a final save (without revision), update content and featured image
         instance.save(

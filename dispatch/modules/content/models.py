@@ -362,6 +362,18 @@ class Article(Publishable, AuthorMixin):
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
+    def get_column(self):
+        """
+        Returns the column set in the parent article
+        """
+        return self.parent.column
+
+    def save_column(self, column_id):
+        """
+        Save the column to the parent article
+        """
+        Article.objects.filter(id=self.parent.id).update(column_id=column_id)
+
 class Column(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
@@ -419,10 +431,7 @@ class Column(Model, AuthorMixin):
 
     def save_articles(self, article_ids):
         Article.objects.filter(column=self).update(column=None)
-        for id in article_ids:
-            article = Article.objects.get(pk=id)
-            article.column = self
-            article.save()
+        Article.objects.filter(id__in=article_ids).update(column=self)
 
     def get_articles(self):
         return Article.objects.filter(column=self)
