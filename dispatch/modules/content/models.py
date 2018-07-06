@@ -12,7 +12,7 @@ from django.db import transaction
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE)
+    ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -372,7 +372,7 @@ class Article(Publishable, AuthorMixin):
         """
         Save the column to the parent article
         """
-        Article.objects.filter(id=self.parent.id).update(column_id=column_id)
+        Article.objects.filter(parent_id=self.parent.id).update(column_id=column_id)
 
 class Column(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
@@ -431,10 +431,13 @@ class Column(Model, AuthorMixin):
 
     def save_articles(self, article_ids):
         Article.objects.filter(column=self).update(column=None)
-        Article.objects.filter(id__in=article_ids).update(column=self)
+        Article.objects.filter(parent_id__in=article_ids).update(column=self)
 
     def get_articles(self):
-        return Article.objects.filter(column=self)
+        return Article.objects.filter(column=self, id=F('parent_id'))
+
+    def get_published_articles(self):
+        return Article.objects.filter(column=self, is_published=True)
 
 
 class Page(Publishable):
