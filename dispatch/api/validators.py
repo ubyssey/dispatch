@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 
 from dispatch.api.exceptions import InvalidFilename, InvalidGalleryAttachments
-from dispatch.models import Image, Person
+from dispatch.models import Image, Person, Section, Page
 
 class PasswordValidator(object):
     def __init__(self, confirm_field):
@@ -60,3 +60,10 @@ def AuthorValidator(data):
         if 'type' in author and not isinstance(author['type'], basestring):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
+
+def ColumnSlugValidator(slug):
+    """Raise a ValidationError if the slug matches a page or section slug"""
+    if Section.objects.filter(slug=slug).exists():
+        raise ValidationError('A section with that slug already exists.')
+    if Page.objects.filter(slug=slug).exists():
+        raise ValidationError('A page with that slug already exists')

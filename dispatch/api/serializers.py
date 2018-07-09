@@ -11,7 +11,7 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator)
+    SlugValidator, AuthorValidator, ColumnSlugValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -492,6 +492,8 @@ class ColumnSerializer(DispatchModelSerializer):
     )
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
+
+    slug = serializers.SlugField(validators=[ColumnSlugValidator])
 
     class Meta:
         model = Column
