@@ -439,6 +439,11 @@ class Column(Model, AuthorMixin):
     def get_published_articles(self):
         return Article.objects.filter(column=self, is_published=True)
 
+    def get_absolute_url(self):
+        """
+        Returns the column URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
