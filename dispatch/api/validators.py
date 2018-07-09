@@ -61,9 +61,19 @@ def AuthorValidator(data):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
 
-def ColumnSlugValidator(slug):
-    """Raise a ValidationError if the slug matches a page or section slug"""
-    if Section.objects.filter(slug=slug).exists():
-        raise ValidationError('A section with that slug already exists.')
-    if Page.objects.filter(slug=slug).exists():
-        raise ValidationError('A page with that slug already exists')
+class ColumnSlugValidator(object):
+    def set_context(self, serializer_field):
+        self.instance = serializer_field.parent.instance
+        self.model = serializer_field.parent.Meta.model
+
+    def __call__(self, slug):
+        if Section.objects.filter(slug=slug).exists():
+            raise ValidationError('A section with that slug already exists.')
+        if Page.objects.filter(slug=slug).exists():
+            raise ValidationError('A page with that slug already exists')
+        if self.instance is None:
+            if self.model.objects.filter(slug=slug).exists():
+                raise ValidationError('A column with that slug already exists')
+        else:
+            if self.model.objects.filter(slug=slug).exclude(id=self.instance.id).exists():
+                raise ValidationError('A column with that slug already exists')

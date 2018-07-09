@@ -493,7 +493,7 @@ class ColumnSerializer(DispatchModelSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    slug = serializers.SlugField(validators=[ColumnSlugValidator])
+    slug = serializers.SlugField(validators=[ColumnSlugValidator()])
 
     class Meta:
         model = Column
@@ -532,11 +532,12 @@ class ColumnSerializer(DispatchModelSerializer):
         #     instance.save_featured_image(featured_image)
 
         authors = validated_data.get('author_ids')
+
         instance.save_authors(authors, is_publishable=False)
 
         article_ids = validated_data.get('article_ids')
-        instance.save_articles(article_ids)
 
+        instance.save_articles(article_ids)
 
         return instance
 
