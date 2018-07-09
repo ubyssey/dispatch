@@ -11,7 +11,7 @@ from dispatch.modules.content.mixins import AuthorMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person']):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], column_id=None):
         """Create a dummy article instance"""
 
         # Create test person

@@ -259,3 +259,13 @@ class ColumnsTests(DispatchAPITestCase):
         self.assertEqual(response.data['results'][0]['name'], 'column 1')
         self.assertEqual(response.data['results'][1]['name'], 'column 2')
         self.assertEqual(response.data['count'], 2)
+
+    def test_add_article_to_column(self):
+        """Should be able to add an article to a column"""
+        column = DispatchTestHelpers.create_column(self.client)
+        article = DispatchTestHelpers.create_article(self.client, column_id=column.data['id'])
+
+        url = reverse('api-columns-detail', args=[column.data['id']])
+        response = self.client.get(url, None, format='json')
+
+        self.assertEqual(len(response.data['articles']), 1)
