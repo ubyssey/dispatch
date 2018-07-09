@@ -22,11 +22,13 @@ import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
 import pollsReducer from './PollsReducer'
+import columnsReducer from './ColumnsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
   auth: authReducer,
   sections: sectionsReducer,
+  columns: columnsReducer,
   articles: articlesReducer,
   pages: pagesReducer,
   files: filesReducer,

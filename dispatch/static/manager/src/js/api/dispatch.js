@@ -190,6 +190,23 @@ const DispatchAPI = {
       return deleteRequest('sections', sectionId, null, token)
     },
   },
+  columns: {
+    list: (token, query) => {
+      return getRequest('columns', null, query, token)
+    },
+    get: (token, columnId) => {
+      return getRequest('columns', columnId, null, token)
+    },
+    save: (token, columnId, data) => {
+      return patchRequest('columns', columnId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('columns', null, data, token)
+    },
+    delete: (token, columnId) => {
+      return deleteRequest('columns', columnId, null, token)
+    }
+  },
   articles: {
     list: (token, query) => {
       return getRequest('articles', null, query, token)

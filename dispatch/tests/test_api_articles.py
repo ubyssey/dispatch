@@ -693,14 +693,14 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(data['results'][1]['headline'], 'Article 2')
         self.assertEqual(data['results'][2]['headline'], 'Article 1')
         self.assertEqual(data['count'], 3)
-    
+
     def test_set_featured_image(self):
         """Ensure that a featured image can be set"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-images-list')
-        
+
         image_file = 'test_image_a.jpg'
 
         with open(self.get_input_file(image_file)) as test_image:
@@ -722,9 +722,9 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that there must have an image_id in order to set a featured image"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-images-list')
-        
+
         image_file = 'test_image_a.jpg'
 
         with open(self.get_input_file(image_file)) as test_image:
@@ -747,16 +747,16 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         response = self.client.patch(url, data, format='json')
-        
+
         self.assertEqual(response.data['featured_image'], None)
 
     def test_remove_featured_image(self):
         """Ensure that a featured image can be removed"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-images-list')
-        
+
         image_file = 'test_image_a.jpg'
 
         with open(self.get_input_file(image_file)) as test_image:
@@ -777,14 +777,14 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         response = self.client.patch(url, data, format='json')
-        
+
         self.assertEqual(response.data['featured_image'], None)
 
     def test_set_featured_video(self):
         """Ensure that a featured video can be set"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-videos-list')
 
         video = DispatchTestHelpers.create_video(self.client, 'testVideo')
@@ -805,7 +805,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that there must have a video_id in order to set a featured video"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-videos-list')
 
         video = DispatchTestHelpers.create_video(self.client, 'testVideo')
@@ -827,16 +827,16 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         response = self.client.patch(url, data, format='json')
-        
+
         self.assertEqual(response.data['featured_video'], None)
 
     def test_remove_featured_video(self):
         """Ensure that a featured video can be removed"""
 
         article = DispatchTestHelpers.create_article(self.client)
-        
+
         url = reverse('api-videos-list')
-        
+
         video = DispatchTestHelpers.create_video(self.client, 'testVideo')
 
         data = {
@@ -854,5 +854,5 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         response = self.client.patch(url, data, format='json')
-        
+
         self.assertEqual(response.data['featured_video'], None)

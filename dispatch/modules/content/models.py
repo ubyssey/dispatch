@@ -12,7 +12,7 @@ from django.db import transaction
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE)
+    ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -300,6 +300,7 @@ class Article(Publishable, AuthorMixin):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
+    column = ForeignKey('Column', related_name='article_column', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
@@ -360,6 +361,43 @@ class Article(Publishable, AuthorMixin):
         Returns article URL.
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
+
+    def get_column(self):
+        """
+        Returns the column set in the parent article
+        """
+        return self.parent.column
+
+    def save_column(self, column_id):
+        """
+        Save the column to the parent article
+        """
+        Article.objects.filter(parent_id=self.parent.id).update(column_id=column_id)
+
+class Column(Model, AuthorMixin):
+    name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True)
+    authors = ManyToManyField('Author', related_name='column_authors')
+    section = ForeignKey('Section')
+
+    AuthorModel = Author
+
+    def save_articles(self, article_ids):
+        Article.objects.filter(column=self).update(column=None)
+        Article.objects.filter(parent_id__in=article_ids).update(column=self)
+
+    def get_articles(self):
+        return Article.objects.filter(column=self, id=F('parent_id'))
+
+    def get_published_articles(self):
+        return Article.objects.filter(column=self, is_published=True)
+
+    def get_absolute_url(self):
+        """
+        Returns the column URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)

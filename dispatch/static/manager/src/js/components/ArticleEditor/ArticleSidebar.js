@@ -12,6 +12,7 @@ import SEOTab from '../Editor/tabs/SEOTab'
 require('../../../styles/components/article_sidebar.scss')
 
 export default function ArticleSidebar(props) {
+  console.log('props', props)
   return (
     <div className='c-article-sidebar'>
       <Tabs>
@@ -30,6 +31,7 @@ export default function ArticleSidebar(props) {
             section={props.article.section}
             authors={props.article.authors || []}
             tags={props.article.tags || []}
+            column={props.article.column}
             topic={props.article.topic}
             slug={props.article.slug}
             snippet={props.article.snippet}

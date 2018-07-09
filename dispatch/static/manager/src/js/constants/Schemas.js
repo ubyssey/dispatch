@@ -17,6 +17,7 @@ export const eventSchema = new Schema('events')
 export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
 export const pollSchema = new Schema('polls')
+export const columnSchema = new Schema('columns')
 
 articleSchema.define({
   section: sectionSchema,
@@ -24,6 +25,7 @@ articleSchema.define({
     person: personSchema
   }),
   tags: arrayOf(tagSchema),
+  column: columnSchema,
   topic: topicSchema,
   template: templateSchema,
   featured_image: {
@@ -32,6 +34,12 @@ articleSchema.define({
   featured_video: {
     video: videoSchema,
   }
+})
+
+columnSchema.define({
+  authors: arrayOf({
+    person: personSchema
+  })
 })
 
 pageSchema.define({

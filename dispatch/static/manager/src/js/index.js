@@ -36,6 +36,12 @@ render((
             <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
+          <Route path='columns'>
+            <IndexRoute component={Pages.Columns.Index} />
+            <Route path='new' component={Pages.Columns.NewColumn} />
+            <Route path=':columnId' component={Pages.Columns.Column} />
+          </Route>
+
           <Route path='files' component={Pages.Files} />
 
           <Route path='images'>
@@ -69,7 +75,7 @@ render((
             <Route path=':galleryId' component={Pages.Galleries.Gallery} />
           </Route>
 
-          <Route path='widgets'>
+          <Route path='zones'>
             <IndexRoute component={Pages.Widgets.Index} />
             <Route path=':zoneId' component={Pages.Widgets.Zone} />
           </Route>

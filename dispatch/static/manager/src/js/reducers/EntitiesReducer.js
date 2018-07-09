@@ -17,6 +17,7 @@ function mergeEntities(state, entities) {
 const initialState = {
   articles: {},
   sections: {},
+  columns: {},
   files: {},
   images: {},
   templates: {},
@@ -29,6 +30,7 @@ const initialState = {
   events: {},
   local: {
     articles: {},
+    columns: {},
     images: {},
     sections: {},
     galleries: {},
