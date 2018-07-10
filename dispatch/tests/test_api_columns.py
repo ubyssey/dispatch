@@ -47,7 +47,6 @@ class ColumnsTests(DispatchAPITestCase):
         self.assertTrue('slug' in response.data)
         self.assertTrue('author_ids' in response.data)
 
-
     def test_create_column(self):
         """Ensure that columns can be created"""
 
@@ -61,7 +60,6 @@ class ColumnsTests(DispatchAPITestCase):
         self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-column')
 
-
     def test_create_column_exisiting_slug(self):
         """Ensure that the column doesn't have a slug matching an existing column"""
 
@@ -74,7 +72,6 @@ class ColumnsTests(DispatchAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.assertTrue('slug' in response.data)
-
 
     def test_update_column(self):
         """Ensure that column's basic fields can be updated"""

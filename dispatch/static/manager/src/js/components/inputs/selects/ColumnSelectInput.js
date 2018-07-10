@@ -31,7 +31,6 @@ class ColumnSelectInputComponent extends React.Component {
         editMessage={this.props.selected ? 'Edit column' : 'Add column'} />
     )
   }
-
 }
 
 const mapStateToProps = (state) => {

@@ -10,7 +10,6 @@ import { ResourceActions } from '../util/redux'
 
 class ColumnsActions extends ResourceActions {
 
-
   toRemote(data) {
     data = R.clone(data)
 
@@ -44,7 +43,6 @@ class ColumnsActions extends ResourceActions {
       dispatch(push({ pathname: '/columns/', query: queryObj }))
     }
   }
-
 }
 
 export default new ColumnsActions(

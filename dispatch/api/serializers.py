@@ -510,7 +510,6 @@ class ColumnSerializer(DispatchModelSerializer):
             'authors_string',
             'articles',
             'article_ids'
-
         )
 
     def create(self, validated_data):
