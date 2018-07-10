@@ -14,6 +14,10 @@ class ArticleSelectInputComponent extends React.Component {
       queryObj['q'] = query
     }
 
+    if (this.props.section) {
+      queryObj['section'] = this.props.section
+    }
+
     this.props.listArticles(this.props.token, queryObj)
   }
 
