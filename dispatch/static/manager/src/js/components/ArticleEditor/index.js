@@ -130,6 +130,10 @@ class ArticleEditorComponent extends React.Component {
     this.props.setArticle(R.assoc(field, value, this.getArticle()))
   }
 
+  toggleBreakingNews() {
+    this.handleUpdate('is_breaking', !this.getArticle().is_breaking)
+  }
+
   setVersion(version) {
     this.props.push({
       pathname: this.props.location.pathname,
@@ -160,6 +164,7 @@ class ArticleEditorComponent extends React.Component {
             publishArticle={() => this.publishArticle()}
             unpublishArticle={() => this.unpublishArticle()}
             previewArticle={() => this.previewArticle()}
+            toggleBreakingNews={() => this.toggleBreakingNews()}
             getVersion={(version) => this.setVersion(version)}
             article={article}
             isNew={this.props.isNew} />

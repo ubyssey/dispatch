@@ -60,6 +60,10 @@ function ArticlePageComponent(props) {
       update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)} />
   ]
 
+  const breakingNews = (
+    <div className='c-article-editor__breaking'>Breaking</div>
+  )
+
   return (
     <ItemIndexPage
       pageTitle={title}
@@ -67,8 +71,9 @@ function ArticlePageComponent(props) {
       typeSingular='article'
       displayColumn='headline'
       filters={filters}
-      headers={[ 'Headline', 'Authors', 'Published', 'Revisions']}
+      headers={[ 'Headline', '', 'Authors', 'Published', 'Revisions']}
       extraColumns={[
+        item => item.is_breaking ? breakingNews : '',
         item => item.authors_string,
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
         item => item.latest_version + ' revisions'

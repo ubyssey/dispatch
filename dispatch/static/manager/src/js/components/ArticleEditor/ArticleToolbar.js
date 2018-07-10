@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { AnchorButton, Intent, Checkbox } from '@blueprintjs/core'
 
 import { Toolbar } from '../Toolbar'
 import VersionsDropdown from '../Editor/toolbar/VersionsDropdown'
@@ -45,7 +45,16 @@ export default function ArticleToolbar(props) {
             published_version={props.article.published_version}
             latest_version={props.article.latest_version}
             getVersion={props.getVersion} />
+          <AnchorButton
+            intent={Intent.DANGER}
+            onClick={() => props.toggleBreakingNews()}>
+            <span className='pt-icon-standard pt-icon-flag' />Breaking News
+            <Checkbox
+              className='pt-control pt-checkbox'
+              checked={props.article.is_breaking} />
+          </AnchorButton>
         </div>
+        SUUUUUP
       </div>
     </Toolbar>
   )
