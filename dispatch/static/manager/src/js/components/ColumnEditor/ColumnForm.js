@@ -73,7 +73,6 @@ export default function ColumnForm(props) {
         error={props.errors.article_ids}>
         <ArticleSelectInput
           selected={articles}
-          section={props.listItem.section ? props.listItem.section.id : null}
           many={true}
           onChange={(articles) => updateArticles(articles)} />
       </FormInput>
