@@ -500,6 +500,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
+    currently_breaking = serializers.BooleanField(source='is_currently_breaking')
+
     class Meta:
         model = Article
         fields = (
@@ -523,6 +525,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'published_at',
             'is_published',
             'is_breaking',
+            'currently_breaking',
             'published_version',
             'current_version',
             'latest_version',

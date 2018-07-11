@@ -2,6 +2,7 @@ import StringIO
 import os
 import re
 import uuid
+import datetime
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -336,6 +337,11 @@ class Article(Publishable, AuthorMixin):
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
+
+    def is_currently_breaking(self):
+        if self.published_at is not None:
+            return self.is_breaking and self.published_at > (timezone.now() - datetime.timedelta(hours=2))
+        return False
 
     def save_tags(self, tag_ids):
         self.tags.clear()
