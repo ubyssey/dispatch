@@ -304,6 +304,8 @@ class Article(Publishable, AuthorMixin):
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
+    scheduled_notification = DateTimeField(null=True)
+
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)

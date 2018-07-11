@@ -1,7 +1,8 @@
 import React from 'react'
 import R from 'ramda'
+import { dateObjToAPIString } from '../../../util/helpers'
 
-import { FormInput, SelectInput, LinkButton } from '../../inputs'
+import { FormInput, SelectInput, LinkButton, DateTimeInput } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
@@ -34,6 +35,10 @@ function updateInstantArticle(update, integrations, enabled) {
 
   return update('integrations', integrations)
 
+}
+
+function updateScheduledNotification(update, dt) {
+  return update('scheduled_notification', dateObjToAPIString(dt))
 }
 
 export default function DeliveryTab(props) {
@@ -74,6 +79,12 @@ export default function DeliveryTab(props) {
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
           onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
         {warningMessage}
+      </FormInput>
+
+      <FormInput label='Schedule Notification'>
+        <DateTimeInput
+          value={props.scheduled_notification}
+          onChange={dt => updateScheduledNotification(props.update, dt)} />
       </FormInput>
 
     </div>

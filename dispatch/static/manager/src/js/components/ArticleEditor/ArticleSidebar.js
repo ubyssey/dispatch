@@ -55,6 +55,7 @@ export default function ArticleSidebar(props) {
           <DeliveryTab
             update={props.update}
             importance={props.article.importance}
+            scheduled_notification={props.article.scheduled_notification}
             reading_time={props.article.reading_time}
             integrations={props.article.integrations}
             availableIntegrations={props.integrations} />

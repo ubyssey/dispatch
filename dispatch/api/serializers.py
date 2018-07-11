@@ -500,6 +500,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
+    scheduled_notification = serializers.DateTimeField(required=False)
+
     class Meta:
         model = Article
         fields = (
@@ -513,6 +515,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'content',
             'authors',
             'author_ids',
+            'scheduled_notification',
             'tags',
             'tag_ids',
             'topic',
@@ -549,6 +552,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
+        instance.scheduled_notification = validated_data.get('scheduled_notification', instance.scheduled_notification)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
