@@ -131,6 +131,7 @@ class ArticleEditorComponent extends React.Component {
   }
 
   toggleBreakingNews() {
+    console.log('toggle breaking news')
     this.handleUpdate('is_breaking', !this.getArticle().is_breaking)
   }
 
@@ -155,7 +156,7 @@ class ArticleEditorComponent extends React.Component {
     }
 
     const title = this.props.isNew ? 'New article' : `Edit - ${article.headline}`
-    
+
     return (
       <DocumentTitle title={title}>
         <div className='u-container-main'>

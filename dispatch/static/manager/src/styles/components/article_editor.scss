@@ -38,6 +38,24 @@
   }
 }
 
+.c-article-editor__toolbar__breaking {
+  display: flex;
+  align-items: center;
+
+  .c-article-editor__toolbar__breaking__checkbox {
+    float: right;
+    position:relative;
+    margin-bottom: 0;
+    padding-left: 0;
+    height:100%;
+  }
+
+  span {
+    float: left;
+    padding-right: 0.5rem;
+  }
+}
+
 // 1.0 - Main content editor
 
 .c-article-editor {
