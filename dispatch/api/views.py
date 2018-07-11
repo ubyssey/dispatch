@@ -373,12 +373,11 @@ class NotificationsViewSet(DispatchModelViewSet):
 
     @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
     def push(self, request, pk=None):
-        notification = Notification.objects.all().order_by('scheduled_push_time').first()
+        notification = Notification.objects.filter(scheduled_push_time__lte=timezone.now()).order_by('scheduled_push_time').first()
 
         if notification is not None:
-            if notification.scheduled_push_time < timezone.now():
-                self.push_notifications(notification.article)
-                notification.delete()
+            self.push_notifications(notification.article)
+            notification.delete()
         return Response({'detail': 'success'})
 
 
