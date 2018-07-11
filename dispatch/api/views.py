@@ -4,6 +4,7 @@ from pywebpush import webpush, WebPushException
 from django.db.models import Q, ProtectedError, Prefetch
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
+from django.utils import timezone
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
@@ -372,11 +373,12 @@ class NotificationsViewSet(DispatchModelViewSet):
 
     @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
     def push(self, request, pk=None):
-        notification = Notification.objects.all().order_by('created_at').first()
+        notification = Notification.objects.all().order_by('scheduled_push_time').first()
 
         if notification is not None:
-            self.push_notifications(notification.article)
-            notification.delete()
+            if notification.scheduled_push_time < timezone.now():
+                self.push_notifications(notification.article)
+                notification.delete()
         return Response({'detail': 'success'})
 
 

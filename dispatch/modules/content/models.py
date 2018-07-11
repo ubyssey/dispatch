@@ -620,3 +620,4 @@ class Subscription(Model):
 class Notification(Model):
     created_at = DateTimeField(auto_now_add=True)
     article = ForeignKey(Article, related_name='notification_artilce', on_delete=CASCADE)
+    scheduled_push_time = DateTimeField(null=True)

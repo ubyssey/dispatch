@@ -78,7 +78,8 @@ class DispatchPublishableMixin(object):
         # self.pushNotification(instance)
 
         if isinstance(instance, Article):
-            Notification.objects.create(article=instance)
+            if instance.scheduled_notification is not None:
+                Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
         return Response(serializer.data)
 

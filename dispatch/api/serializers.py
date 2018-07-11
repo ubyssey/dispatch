@@ -500,7 +500,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
-    scheduled_notification = serializers.DateTimeField(required=False)
+    scheduled_notification = serializers.DateTimeField(required=False, allow_null=True)
 
     class Meta:
         model = Article
@@ -883,10 +883,12 @@ class NotificationSerializer(DispatchModelSerializer):
 
     article_id = serializers.IntegerField()
     created_at = serializers.DateTimeField(read_only=True)
+    scheduled_push_time = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Notification
         fields = (
             'created_at',
-            'article_id'
+            'article_id',
+            'scheduled_push_time'
         )
