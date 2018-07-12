@@ -131,7 +131,6 @@ class ArticleEditorComponent extends React.Component {
   }
 
   toggleBreakingNews() {
-    console.log('toggle breaking news')
     this.handleUpdate('is_breaking', !this.getArticle().is_breaking)
   }
 
