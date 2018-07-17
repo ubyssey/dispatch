@@ -92,7 +92,7 @@ export default function DeliveryTab(props) {
           className='pt-large'
           checked={props.is_breaking}
           onChange={e => props.update('is_breaking', e.target.checked)} />
-          {timeoutPicker }
+          {timeoutPicker}
       </FormInput>
 
     </div>
