@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent, Checkbox } from '@blueprintjs/core'
-import ConfirmButton from '../inputs/ConfirmButton'
+import { AnchorButton, Intent } from '@blueprintjs/core'
 import { Toolbar } from '../Toolbar'
 import VersionsDropdown from '../Editor/toolbar/VersionsDropdown'
 
@@ -25,6 +24,10 @@ export default function ArticleToolbar(props) {
     </AnchorButton>
   )
 
+  const breakingNews = (
+    <span className='c-article-toolbar__breaking'>Breaking</span>
+  )
+
   return (
     <Toolbar>
       <div className='c-article-editor__toolbar'>
@@ -45,20 +48,7 @@ export default function ArticleToolbar(props) {
             published_version={props.article.published_version}
             latest_version={props.article.latest_version}
             getVersion={props.getVersion} />
-          <ConfirmButton
-            className='c-article-editor__toolbar__breaking'
-            intent={Intent.DANGER}
-            confirmButtonText='Confirm'
-            message='Are you sure you want to mark this article as breaking news?'
-            onConfirm={() => props.toggleBreakingNews()}>
-            <div className='c-article-editor__toolbar__breaking'>
-              <span>Breaking News</span>
-              <Checkbox
-                className='c-article-editor__toolbar__breaking__checkbox'
-                checked={props.article.is_breaking}
-                onChange={() => 0} />
-            </div>
-          </ConfirmButton>
+          {props.article.currently_breaking ? breakingNews : null}
         </div>
       </div>
     </Toolbar>

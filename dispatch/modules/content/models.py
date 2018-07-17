@@ -306,6 +306,7 @@ class Article(Publishable, AuthorMixin):
     tags = ManyToManyField('Tag')
 
     is_breaking = BooleanField(default=False)
+    breaking_timeout = DateTimeField(blank=True, null=True)
 
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
@@ -340,7 +341,8 @@ class Article(Publishable, AuthorMixin):
 
     def is_currently_breaking(self):
         if self.published_at is not None:
-            return self.is_breaking and self.published_at > (timezone.now() - datetime.timedelta(hours=2))
+            if self.breaking_timeout:
+                return timezone.now() < self.breaking_timeout
         return False
 
     def save_tags(self, tag_ids):
