@@ -340,7 +340,7 @@ class Article(Publishable, AuthorMixin):
         }
 
     def is_currently_breaking(self):
-        if self.published_at is not None:
+        if self.is_published and self.is_breaking:
             if self.breaking_timeout:
                 return timezone.now() < self.breaking_timeout
         return False
