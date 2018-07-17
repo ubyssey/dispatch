@@ -16,6 +16,10 @@ class TemplateTabComponent extends React.Component {
   }
 
   updateField(name, value) {
+    console.log(value)
+    if (value instanceof Date) {
+      value = String(value)
+    }
     this.props.update(
       'template_data',
       R.assoc(name, value, this.props.data)

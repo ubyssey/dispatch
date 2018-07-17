@@ -11,6 +11,10 @@ const MAX_DATE = new Date(TODAY.getFullYear()+1, 12, 31)
 function ensureDate(date) {
   let ret = date
   if (!(date instanceof Date)) {
+    // // console.log(Date.parse(date.slice(0, -1)))
+    // let index = date.indexOf('T')
+    // date = date.slice(0, index)
+    // console.log(Date.parse(date))
     const time_ms = Date.parse(date)
     if (isNaN(time_ms)) {
       ret = null
