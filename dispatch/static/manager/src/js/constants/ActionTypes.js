@@ -9,11 +9,13 @@ export const IMAGES = resourceActionTypes('IMAGES')
 export const PERSONS = resourceActionTypes('PERSONS')
 export const TOPICS = resourceActionTypes('TOPICS')
 export const TAGS = resourceActionTypes('TAGS')
+export const ISSUES = resourceActionTypes('ISSUES')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
 export const USERS = resourceActionTypes('USERS')
 export const VIDEOS = resourceActionTypes('VIDEOS')
+export const POLLS = resourceActionTypes('POLLS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

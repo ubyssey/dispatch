@@ -57,14 +57,14 @@ export default function DeliveryTab(props) {
         <SelectInput
           options={IMPORTANCE_OPTIONS}
           selected={props.importance}
-          onChange={ e => props.update('importance', e.target.value) } />
+          onChange={e => props.update('importance', e.target.value)} />
       </FormInput>
 
       <FormInput label='Reading Time'>
         <SelectInput
           options={READING_TIME_OPTIONS}
           selected={props.reading_time}
-          onChange={ e => props.update('reading_time', e.target.value) } />
+          onChange={e => props.update('reading_time', e.target.value)} />
       </FormInput>
 
       <FormInput label='Enable as Facebook Instant Article'>
@@ -72,7 +72,7 @@ export default function DeliveryTab(props) {
           className='pt-large'
           disabled={!isInstantArticlesEnabled}
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
-          onChange={ e => updateInstantArticle(props.update, props.integrations, e.target.checked) } />
+          onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
         {warningMessage}
       </FormInput>
 

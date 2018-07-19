@@ -6,10 +6,18 @@ import { FormInput, TextAreaInput, ImageInput } from '../../inputs'
 export default function FeaturedImageTab(props) {
 
   function updateImage(imageId) {
-    return props.update(
-      'featured_image',
-      R.merge(props.featured_image, { image: imageId })
-    )
+    if (imageId){
+      return props.update(
+        'featured_image',
+        R.merge(props.featured_image, { image: imageId })
+      )
+    } else {
+      return props.update(
+        'featured_image',
+        null
+      )
+    }
+
   }
 
   function updateCaption(caption) {
@@ -26,13 +34,14 @@ export default function FeaturedImageTab(props) {
     )
   }
 
-  if (props.featured_image) {
+  if (props.featured_image && props.featured_image.image) {
 
     return (
       <div>
         <FormInput label='Image'>
           <ImageInput
             fill={true}
+            removable={true}
             selected={props.featured_image.image}
             onChange={updateImage} />
         </FormInput>

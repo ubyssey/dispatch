@@ -30,4 +30,16 @@
   // Text
   text-align: center;
   color: $color-text-gray;
+
+  //Animation
+  transition: .25s;
+
+  &:hover {
+    //Cursor
+    cursor: pointer;
+
+    //text
+    letter-spacing: .025rem;
+  }
+
 }

@@ -32,7 +32,7 @@ require('../styles/editor.scss')
 function buildEmbedMap(embeds) {
   let embedMap = {}
 
-  for(var i = 0; i < embeds.length; i++) {
+  for (var i = 0; i < embeds.length; i++) {
     embedMap[embeds[i].type] = embeds[i]
   }
 
@@ -43,7 +43,7 @@ function blockStyleFn(contentBlock) {
   const type = contentBlock.getType()
   const baseStyle = 'c-dispatch-editor__editor__block c-dispatch-editor__editor__block'
 
-  switch(type) {
+  switch (type) {
   case 'unstyled':
     return baseStyle + '--unstyled'
   case 'atomic':
@@ -91,7 +91,6 @@ class ContentEditor extends React.Component {
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -130,7 +129,7 @@ class ContentEditor extends React.Component {
 
   removeEmbed(blockKey) {
     this.onChange(actions.removeEmbed(this.state.editorState, blockKey), true)
-    this.focusEditor()
+    this.stopEditingEntity()
   }
 
   insertLink(selection, url) {
@@ -147,6 +146,7 @@ class ContentEditor extends React.Component {
 
   stopEditingEntity() {
     this.setState({ readOnly: false })
+    this.focusEditor()
   }
 
   handleMouseUp() {
@@ -166,7 +166,7 @@ class ContentEditor extends React.Component {
 
     function getLinkEntity(selection) {
       const contentBlock = contentState.getBlockForKey(selection.getStartKey())
-      const entityKey = contentBlock.getEntityAt(selection.getStartOffset())
+      const entityKey = contentBlock ? contentBlock.getEntityAt(selection.getStartOffset()) : null
 
       const isLinkEntity =
         entityKey !== null &&
@@ -365,7 +365,7 @@ class ContentEditor extends React.Component {
         closeLinkInput={() => this.setState({isLinkInputActive : false})}
         toggleInlineStyle={style => this.toggleInlineStyle(style)}
         toggleBlockType={blockType => this.toggleBlockType(blockType)}
-        focusEditor={() => null }
+        focusEditor={() => null}
         close={() => this.closePopover} />
     )
   }
@@ -415,7 +415,7 @@ class ContentEditor extends React.Component {
             position={this.state.popover.position}
             useSmartArrowPositioning={false}
             enforceFocus={false}>
-            <div></div>
+            <div />
           </Popover>
         </div>
         <EmbedToolbar

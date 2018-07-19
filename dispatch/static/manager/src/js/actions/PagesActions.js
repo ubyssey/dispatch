@@ -18,6 +18,10 @@ class PagesActions extends PublishableActions {
 
     data.template_id = data.template
     delete data.template
+    
+    if (data.featured_video) {
+      data.featured_video.video_id = data.featured_video.video
+    }
 
     if (data.featured_image) {
       data.featured_image.image_id = data.featured_image.image

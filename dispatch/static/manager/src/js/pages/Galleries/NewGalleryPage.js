@@ -6,7 +6,7 @@ export default function NewTagPage(props) {
   return (
     <GalleryEditor
       isNew={true}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

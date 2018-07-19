@@ -24,26 +24,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-const processData = (data) => {
-  let formData = new FormData()
-
-  formData.append('title', data.title || '')
-  formData.append('description', data.description || '')
-  formData.append('host', data.host || '')
-  if (data.image instanceof File) {
-    formData.append('image', data.image, data.image.name)
-  }
-  formData.append('start_time', data.start_time ? dateObjToAPIString(data.start_time) : '')
-  formData.append('end_time', data.end_time ? dateObjToAPIString(data.end_time) : '')
-  formData.append('location', data.location || '')
-  formData.append('address', data.address || '')
-  formData.append('category', data.category || '')
-  formData.append('event_url', data.event_url || '')
-  formData.append('ticket_url', data.ticket_url || '')
-  formData.append('submitter_email', data.submitter_email || '')
-  formData.append('submitter_phone', data.submitter_phone || '')
-
-  return formData
+function prepareData(formData){
+  let data = formData
+  data.start_time = formData.start_time ? dateObjToAPIString(formData.start_time) : ''
+  data.end_time = formData.end_time ? dateObjToAPIString(formData.end_time) : ''
+  return data
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -55,23 +40,25 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(eventsActions.set(event))
     },
     saveListItem: (token, eventId, data) => {
-      dispatch(eventsActions.save(token, eventId, processData(data)))
+      dispatch(eventsActions.save(token, eventId, prepareData(data)))
     },
     createListItem: (token, data) => {
-      dispatch(eventsActions.create(token, processData(data), AFTER_DELETE))
+      dispatch(eventsActions.create(token, prepareData(data), AFTER_DELETE))
     },
     deleteListItem: (token, eventId, next) => {
       dispatch(eventsActions.delete(token, eventId, next))
     },
     publishEvent(token, id) {
-      const form = new FormData()
-      form.append('is_published', true)
-      dispatch(eventsActions.save(token, id, form))
+      const data = {
+        'is_published': true
+      }
+      dispatch(eventsActions.save(token, id, data))
     },
     unpublishEvent(token, id) {
-      const form = new FormData()
-      form.append('is_published', false)
-      dispatch(eventsActions.save(token, id, form))
+      const data = {
+        'is_published': false
+      }
+      dispatch(eventsActions.save(token, id, data))
     }
   }
 }
@@ -79,19 +66,21 @@ const mapDispatchToProps = (dispatch) => {
 function EventEditorComponent(props) {
 
   const publishButton = (
-    <AnchorButton onClick={() => props.publishEvent(props.token, props.listItem.id)}
+    <AnchorButton
+      onClick={() => props.publishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th'></span>
+      <span className='pt-icon-standard pt-icon-th' />
       Publish
     </AnchorButton>
   )
 
   const unpublishButton = (
-    <AnchorButton onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
+    <AnchorButton
+      onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th'></span>
+      <span className='pt-icon-standard pt-icon-th' />
       Unpublish
     </AnchorButton>
   )
@@ -109,7 +98,7 @@ function EventEditorComponent(props) {
 
 const isPublished = (obj) => {
   return obj.entities.local && obj.listItem.id
-  ? obj.entities.local[obj.listItem.id].is_published : false
+    ? obj.entities.local[obj.listItem.id].is_published : false
 }
 
 const EventEditor = connect(

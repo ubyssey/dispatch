@@ -6,6 +6,7 @@ import sectionsReducer from './SectionsReducer'
 import articlesReducer from './ArticlesReducer'
 import pagesReducer from './PagesReducer'
 import filesReducer from './FilesReducer'
+import issuesReducer from './IssuesReducer'
 import imagesReducer from './ImagesReducer'
 import templatesReducer from './TemplatesReducer'
 import personsReducer from './PersonsReducer'
@@ -20,6 +21,7 @@ import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
+import pollsReducer from './PollsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -33,6 +35,7 @@ export default combineReducers({
   persons: personsReducer,
   topics: topicsReducer,
   tags: tagsReducer,
+  issues: issuesReducer,
   toaster: toasterReducer,
   integrations: integrationsReducer,
   dashboard: dashboardReducer,
@@ -41,5 +44,6 @@ export default combineReducers({
   widgets: widgetsReducer,
   events: eventsReducer,
   users: userReducer,
-  videos: videosReducer
+  videos: videosReducer,
+  polls: pollsReducer
 })

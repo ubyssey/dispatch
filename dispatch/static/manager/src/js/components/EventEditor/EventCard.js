@@ -24,8 +24,7 @@ export default function EventCard(props) {
   const image = (
     <div
       className='c-event-card__image'
-      style={{backgroundImage: `url('${props.event.image}')`}}>
-    </div>
+      style={{backgroundImage: `url('${props.event.image_url}')`}} />
   )
 
   return (
@@ -33,7 +32,7 @@ export default function EventCard(props) {
       <Panel
         title={props.event.title}>
 
-        {props.event.image ? image : null}
+        {props.event.image_url ? image : null}
 
         <div className='c-event-card__fields'>
 

@@ -13,9 +13,9 @@ require('../../styles/components/toaster.scss')
 
 class Main extends React.Component {
 
-  componentWillMount() {
-    this.props.countPending(this.props.token, { pending: 1, limit: 0 })
-  }
+  // componentWillMount() {
+  //   this.props.countPending(this.props.token, { pending: 1, limit: 0 })
+  // }
 
   componentDidMount() {
     this.props.setupToaster(this.refs.toaster)
@@ -32,7 +32,10 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Toaster className='c-toaster' position={Position.TOP} ref='toaster' />
+        <Toaster
+          className='c-toaster'
+          position={Position.TOP}
+          ref='toaster' />
         <Header pendingCount={this.props.pending} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}

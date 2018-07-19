@@ -7,6 +7,27 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
 }
 
+function prepareMultipartPayload(payload) {
+  let formData = new FormData()
+
+  for (var key in payload) {
+    if (payload.hasOwnProperty(key)) {
+      if (payload[key] && payload[key].constructor === File) {
+        formData.append(key, payload[key])
+      } else if (typeof payload[key] !== 'undefined') {
+        if (payload[key] === null) {
+          formData.append(key, '')
+        }
+        else {
+          formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+        }
+      }
+    }
+  }
+
+  return formData
+}
+
 function buildRoute(route, id) {
   let pieces = route.split('.')
 
@@ -57,7 +78,7 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function getPageRequest(uri, token=null) {
@@ -68,7 +89,7 @@ function getPageRequest(uri, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postRequest(route, id=null, payload={}, token=null) {
@@ -80,7 +101,7 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
@@ -89,10 +110,22 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
     {
       method: 'POST',
       headers: buildHeaders(token, false),
-      body: payload
+      body: prepareMultipartPayload(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
+}
+
+function patchMultipartRequest(route, id=null, payload={}, token=null) {
+  return fetch(
+    buildRoute(route, id),
+    {
+      method: 'PATCH',
+      headers: buildHeaders(token, false),
+      body: prepareMultipartPayload(payload)
+    }
+  )
+    .then(parseJSON)
 }
 
 function deleteRequest(route, id=null, payload={}, token=null) {
@@ -104,7 +137,7 @@ function deleteRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
+    .then(handleError)
 }
 
 function patchRequest(route, id=null, payload={}, token=null) {
@@ -116,19 +149,7 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
-}
-
-function patchMultipartRequest(route, id=null, payload={}, token=null) {
-  return fetch(
-    buildRoute(route, id),
-    {
-      method: 'PATCH',
-      headers: buildHeaders(token, false),
-      body: payload
-    }
-  )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 const DispatchAPI = {
@@ -302,6 +323,23 @@ const DispatchAPI = {
       return deleteRequest('tags', tagId, null, token)
     },
   },
+  issues: {
+    list: (token, query) => {
+      return getRequest('issues', null, query, token)
+    },
+    get: (token, issueId) => {
+      return getRequest('issues', issueId, null, token)
+    },
+    create: (token, data) => {
+      return postMultipartRequest('issues', null, data, token)
+    },
+    save: (token, issueId, data) => {
+      return patchMultipartRequest('issues', issueId, data, token)
+    },
+    delete: (token, issueId) => {
+      return deleteRequest('issues', issueId, null, token)
+    },
+  },
   integrations: {
     get: (token, integrationId) => {
       return getRequest('integrations', integrationId, null, token)
@@ -396,6 +434,24 @@ const DispatchAPI = {
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
     }
+  },
+  'polls': {
+    list: (token, query) => {
+      return getRequest('polls', null, query, token)
+    },
+    get: (token, pollId) => {
+      return getRequest('polls', pollId, null, token)
+    },
+    save: (token, pollId, data) => {
+      return patchRequest('polls', pollId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('polls', null, data, token)
+    },
+    delete: (token, pollId) => {
+      return deleteRequest('polls', pollId, null, token)
+    },
+
   }
 }
 

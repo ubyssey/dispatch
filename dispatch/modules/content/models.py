@@ -7,10 +7,12 @@ from jsonfield import JSONField
 from PIL import Image as Img
 
 from django.db import IntegrityError
+from django.db import transaction
+
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL)
+    ManyToManyField, SlugField, SET_NULL, CASCADE)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -68,6 +70,7 @@ class Publishable(Model):
     views = PositiveIntegerField(default=0)
 
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
+    featured_video = ForeignKey('VideoAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_video', blank=True, null=True)
 
     template = CharField(max_length=255, default='default')
     template_data = JSONField(default={})
@@ -119,7 +122,7 @@ class Publishable(Model):
     @property
     def html(self):
         """Return HTML representation of content"""
-        return content_to_html(self.content)
+        return content_to_html(self.content, self.id)
 
     def is_parent(self):
         return self.parent is None
@@ -221,6 +224,15 @@ class Publishable(Model):
         if data is None:
             if attachment:
                 attachment.delete()
+
+            self.featured_image = None
+            return
+
+        if data['image_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_image = None
             return
 
         if not attachment:
@@ -237,6 +249,38 @@ class Publishable(Model):
         attachment.save()
 
         self.featured_image = attachment
+
+    def save_featured_video(self, data):
+        attachment = self.featured_video
+
+        if data is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_video = None
+            return
+
+        if data['video_id'] is None:
+            if attachment:
+                attachment.delete()
+
+            self.featured_video = None
+            return
+
+        if not attachment:
+            attachment = VideoAttachment()
+
+        attachment.video_id = data.get('video_id', attachment.video_id)
+        attachment.caption = data.get('caption', None)
+        attachment.credit = data.get('credit', None)
+
+        instance_type = str(type(self)).lower()
+
+        setattr(attachment, instance_type, self)
+
+        attachment.save()
+
+        self.featured_video = attachment
 
     def get_previous_revision(self):
         if self.parent == self:
@@ -325,6 +369,12 @@ class Page(Publishable):
     def get_author_string(self):
         return None
 
+    def get_absolute_url(self):
+        """
+        Returns page URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
+
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
@@ -336,6 +386,7 @@ class Image(Model, AuthorMixin):
     height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Author, related_name='image_authors')
+    tags = ManyToManyField('Tag')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -394,8 +445,9 @@ class Image(Model, AuthorMixin):
         """Custom save method to process thumbnails and save image dimensions."""
         is_new = self.pk is None
 
-        # Make filenames lowercase
-        self.img.name = self.img.name.lower()
+        if is_new:
+            # Make filenames lowercase
+            self.img.name = self.img.name.lower()
 
         # Call super method
         super(Image, self).save(**kwargs)
@@ -438,9 +490,28 @@ class Image(Model, AuthorMixin):
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
+    def save_tags(self, tag_ids):
+        self.tags.clear()
+        for tag_id in tag_ids:
+            try:
+                tag = Tag.objects.get(id=int(tag_id))
+                self.tags.add(tag)
+            except Tag.DoesNotExist:
+                pass
+
+class VideoAttachment(Model):
+    article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='video_page')
+
+    caption = TextField(blank=True, null=True)
+    credit = TextField(blank=True, null=True)
+    video = ForeignKey(Video, related_name='video', on_delete=SET_NULL, null=True)
+
+    order = PositiveIntegerField(null=True)
+
 class ImageAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='page')
+    article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
+    page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
 
     caption = TextField(blank=True, null=True)
@@ -451,7 +522,7 @@ class ImageAttachment(Model):
 
 class ImageGallery(Model):
     title = CharField(max_length=255)
-    images = ManyToManyField(ImageAttachment, related_name="images")
+    images = ManyToManyField(ImageAttachment, related_name='images')
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -465,7 +536,6 @@ class ImageGallery(Model):
             self.images.add(attachment_obj)
 
 class File(Model):
-
     name = CharField(max_length=255)
     file = FileField(upload_to='files/%Y/%m')
 
@@ -477,3 +547,51 @@ class File(Model):
         Returns the absolute file URL.
         """
         return settings.MEDIA_URL + str(self.file)
+
+class Issue(Model):
+    title = CharField(max_length=255)
+    file = FileField(upload_to='issues/%Y/%m')
+    img = ImageField(upload_to='images/%Y/%m')
+    volume = PositiveIntegerField(null=True)
+    issue = PositiveIntegerField(null=True)
+    date = DateTimeField()
+
+class Poll(Model):
+    name = CharField(max_length=255)
+    question = CharField(max_length=255)
+    is_open = BooleanField(default=True)
+    show_results = BooleanField(default=True)
+
+    @transaction.atomic
+    def save_answers(self, answers, is_new):
+        if not is_new:
+            self.delete_old_answers(answers)
+        for answer in answers:
+            try:
+                answer_id = answer.get('id')
+                answer_obj = PollAnswer.objects.get(poll=self, id=answer_id)
+                answer_obj.name = answer['name']
+            except PollAnswer.DoesNotExist:
+                answer_obj = PollAnswer(poll=self, name=answer['name'])
+            answer_obj.save()
+
+    def delete_old_answers(self, answers):
+        PollAnswer.objects.filter(poll=self) \
+            .exclude(id__in=[answer.get('id', 0) for answer in answers]) \
+            .delete()
+
+    def get_total_votes(self):
+        return PollVote.objects.filter(answer__poll=self).count()
+
+class PollAnswer(Model):
+    poll = ForeignKey(Poll, related_name='answers', on_delete=CASCADE)
+    name = CharField(max_length=255)
+
+    def get_vote_count(self):
+        """Return the number of votes for this answer"""
+        return PollVote.objects.filter(answer=self).count()
+
+class PollVote(Model):
+    id = UUIDField(default=uuid.uuid4, primary_key=True)
+    answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
+    timestamp = DateTimeField(auto_now_add=True)

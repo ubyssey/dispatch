@@ -11,13 +11,16 @@ export default function Header(props) {
       <nav className="pt-navbar pt-dark">
         <div className="pt-navbar-group pt-align-left">
           <Link to='/' className='pt-button pt-minimal pt-icon-selection'>dispatch</Link>
-          <span className="pt-navbar-divider"></span>
+          <span className="pt-navbar-divider" />
           <Link to='/articles/' className="pt-button pt-minimal pt-icon-document">Articles</Link>
           <Link to='/pages/' className="pt-button pt-minimal pt-icon-book">Pages</Link>
+          <Link to='/polls/' className="pt-button pt-minimal pt-icon-vertical-bar-chart-desc">Polls</Link>
           <Link to='/widgets/' className="pt-button pt-minimal pt-icon-widget">Widgets</Link>
           <Link to='/galleries/' className="pt-button pt-minimal pt-icon-media">Galleries</Link>
           <Link to='/files/' className="pt-button pt-minimal pt-icon-folder-close">Files</Link>
+          <Link to='/images/' className="pt-button pt-minimal pt-icon-camera">Images</Link>
           <Link to='/videos/' className="pt-button pt-minimal pt-icon-video">Videos</Link>
+          <Link to='/issues' className="pt-button pt-minimal pt-icon-book">Issues</Link>
           <Link to='/persons/' className="pt-button pt-minimal pt-icon-person">People</Link>
           <Link
             to='/events/'
@@ -28,10 +31,9 @@ export default function Header(props) {
           <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
           <Link to='/topics/' className="pt-button pt-minimal">Topics</Link>
           <Link to='/sections/' className="pt-button pt-minimal">Sections</Link>
-          <Link to='/integrations/' className="pt-button pt-minimal">Integrations</Link>
-          <span className="pt-navbar-divider"></span>
-          <Link to='/profile/' className="pt-button pt-minimal pt-icon-user"></Link>
-          <Link to='/logout/' className="pt-button pt-minimal pt-icon-log-out"></Link>
+          <span className="pt-navbar-divider" />
+          <Link to='/profile/' className="pt-button pt-minimal pt-icon-user" />
+          <Link to='/logout/' className="pt-button pt-minimal pt-icon-log-out" />
         </div>
       </nav>
       <LoadingBar className='c-loading-bar' />

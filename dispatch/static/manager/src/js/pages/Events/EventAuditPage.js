@@ -50,8 +50,8 @@ class EventAuditPage extends React.Component {
   getDisplayedCount(props) {
     props = props || this.props
     return props.events.ids
-       .map(id => props.entities.events[id])
-       .filter(event => event && event.is_submission).length
+      .map(id => props.entities.events[id])
+      .filter(event => event && event.is_submission).length
   }
 
   checkPage() {
@@ -108,18 +108,18 @@ class EventAuditPage extends React.Component {
           <Toolbar>
             <ToolbarLeft>
               <AnchorButton
-                onClick={() => this.props.history.goBack()}>
-                <span className='pt-icon-standard pt-icon-arrow-left'></span>Back
+                onClick={() => this.props.router.goBack()}>
+                <span className='pt-icon-standard pt-icon-arrow-left' />Back
               </AnchorButton>
               {this.props.events.count} event{this.props.events.count == 1 ? '' : 's'} pending approval
             </ToolbarLeft>
             <ToolbarRight>
-            {this.props.events.count ? pagination : null}
+              {this.props.events.count ? pagination : null}
             </ToolbarRight>
           </Toolbar>
           <div className='u-container'>
             <div className='c-event-audit-cards'>
-            {events}
+              {events}
             </div>
           </div>
         </div>
@@ -144,10 +144,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(eventsActions.list(token, query))
     },
     approveAndPublishEvent: (token, eventId) => {
-      const form = new FormData()
-      form.append('is_submission', false)
-      form.append('is_published', true)
-      dispatch(eventsActions.save(token, eventId, form))
+      const data = {
+        'is_submission': false,
+        'is_published': true
+      }
+      dispatch(eventsActions.save(token, eventId, data))
     },
     disapproveEvent: (token, eventId, next) => {
       dispatch(eventsActions.deleteMany(token, [eventId], next))

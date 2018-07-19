@@ -13,7 +13,7 @@ import ImagePanel from './ImagePanel'
 
 require('../../../../styles/components/image_manager.scss')
 
-const SCROLL_THRESHOLD = 20
+const SCROLL_THRESHOLD = 100
 
 const DEFAULT_QUERY = {
   limit: 30,
@@ -28,7 +28,8 @@ class ImageManagerComponent extends React.Component {
     this.scrollListener = this.scrollListener.bind(this)
 
     this.state = {
-      q: ''
+      q: '',
+      limit: DEFAULT_QUERY.limit,
     }
   }
 
@@ -43,7 +44,11 @@ class ImageManagerComponent extends React.Component {
   }
 
   loadMore() {
-    this.props.listImagesPage(this.props.token, this.props.images.next)
+    if (this.props.images.count > this.state.limit){
+      this.setState(prevState => ({
+        limit: prevState.limit + 10
+      }), this.props.listImages(this.props.token, {limit: this.state.limit, ordering: '-created_at'}))
+    }
   }
 
   searchImages() {
@@ -53,13 +58,9 @@ class ImageManagerComponent extends React.Component {
   scrollListener() {
     const containerHeight = this.images.clientHeight
     const scrollOffset = this.images.parentElement.scrollTop + this.images.parentElement.clientHeight
-
-    if (!this.props.images.isLoading &&
-      this.props.images.next &&
-      scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
+    if (!this.props.images.isLoading && scrollOffset >= containerHeight - SCROLL_THRESHOLD) {
       this.loadMore()
     }
-
   }
 
   getImage() {
@@ -91,14 +92,12 @@ class ImageManagerComponent extends React.Component {
   }
 
   onSearch(q) {
-    this.setState({ q: q}, this.searchImages)
+    this.setState({ q: q }, this.searchImages)
   }
 
   onDrop(files) {
     files.forEach(file => {
-      let formData = new FormData()
-      formData.append('img', file, file.name)
-      this.props.createImage(this.props.token, formData)
+      this.props.createImage(this.props.token, {img: file})
     })
   }
 
@@ -124,7 +123,6 @@ class ImageManagerComponent extends React.Component {
         save={() => this.handleSave()}
         delete={() => this.handleDelete()} />
     )
-
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
@@ -152,12 +150,13 @@ class ImageManagerComponent extends React.Component {
               ref={(node) => { this.images = node }}>{images}</div>
           </Dropzone>
           {!this.props.many ?
-          <div className='c-image-manager__active'>
-            {image ? imagePanel : null}
-          </div> : null}
+            <div className='c-image-manager__active'>
+              {image ? imagePanel : null}
+            </div> : null}
+          
         </div>
         <div className='c-image-manager__footer'>
-          <div className='c-image-manger__footer__selected'></div>
+          <div className='c-image-manger__footer__selected' />
           <AnchorButton
             disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
             onClick={() => this.insertImage()}>Insert</AnchorButton>
