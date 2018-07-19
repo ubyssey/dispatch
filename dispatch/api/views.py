@@ -273,7 +273,7 @@ class PollViewSet(DispatchModelViewSet):
 
         if answer.poll != poll:
             raise InvalidPoll()
-            
+
         # Change vote
         if 'vote_id' in request.data:
             vote_id = request.data['vote_id']
