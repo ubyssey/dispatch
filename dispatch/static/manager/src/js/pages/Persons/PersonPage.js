@@ -173,7 +173,7 @@ class PersonPageComponent extends React.Component {
     const personEditor = (
       <PersonEditor
         itemId={this.props.params.personId}
-        goBack={this.props.history.goBack}
+        goBack={this.props.router.goBack}
         route={this.props.route} />
     )
 

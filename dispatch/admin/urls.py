@@ -13,7 +13,7 @@ def admin(request):
         'app_css_bundle': 'manager-%s.css' % dispatch.__version__
     }
     return render_to_response('manager/index.html', context)
-#TODO: this url structure will affect the ubyssey.ca admin urls. please change ^admin to ^admin/
+
 urlpatterns = [
     url(r'signup/?.*/', views.signup, name='dispatch-signup'),
     url(r'reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})',
