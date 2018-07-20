@@ -11,15 +11,12 @@ from dispatch.admin.forms import SignUpForm
 
 from django.http import Http404
 
-def signup(request):
-    url = request.get_full_path()
-    uuid = url.rsplit('/',1)[1]
-
-    invite = get_object_or_404(Invite.objects.all(), url=uuid)
+def signup(request, uuid=None):
+    invite = get_object_or_404(Invite.objects.all(), id=uuid)
 
     if invite.expiration_date < timezone.now():
         invite.delete()
-        raise Http404('This page does not exist')
+        raise Http404('This page does not exist.')
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -39,9 +36,9 @@ def signup(request):
 
             return redirect('dispatch-admin')
         else:
-            return render(request, 'registration/signup.html', {'form' : form, 'email': invite.email})
+            return render(request, 'registration/signup.html', {'form': form, 'email': invite.email})
 
     else:
         form = SignUpForm()
 
-    return render(request, 'registration/signup.html', {'form' : form, 'email': invite.email})
+    return render(request, 'registration/signup.html', {'form': form, 'email': invite.email})

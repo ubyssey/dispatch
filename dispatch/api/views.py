@@ -18,7 +18,8 @@ from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote, Invite)
 
-from dispatch.api.helpers import get_settings, modify_permissions, reset_password
+from dispatch.core.settings import get_settings
+from dispatch.admin.registration import reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
@@ -235,8 +236,10 @@ class UserViewSet(DispatchModelViewSet):
             reset_password(user.email, request)
             return Response(status.HTTP_202_ACCEPTED)
         else:
-            return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
-
+            return Response(
+                {'detail', 'You do not have permission to perform this action'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""
@@ -539,7 +542,9 @@ class TokenViewSet(viewsets.ViewSet):
 
         if user is not None and user.is_active:
             (token, created) = Token.objects.get_or_create(user=user)
+
             settings = get_settings(token)
+
             data = {
                 'token': unicode(token),
                 'settings': settings
@@ -556,7 +561,11 @@ class TokenViewSet(viewsets.ViewSet):
             return Response({'token_valid': False}, status=status.HTTP_404_NOT_FOUND)
 
         settings = get_settings(token)
-        return Response({'token_valid': True, 'settings': settings})
+
+        return Response({
+            'token_valid': True,
+            'settings': settings
+        })
 
     def delete(self, request):
         token = get_object_or_404(Token, user=request.user)

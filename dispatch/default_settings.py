@@ -4,6 +4,8 @@ Default Dispatch settings
 
 import os
 
+ORGANIZATION_NAME = 'Dispatch'
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Application definition

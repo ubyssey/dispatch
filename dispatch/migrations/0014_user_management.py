@@ -18,12 +18,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Invite',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
                 ('email', models.CharField(max_length=255, unique=True)),
                 ('permissions', models.CharField(default=b'', max_length=255)),
                 ('expiration_date', models.DateTimeField(default=dispatch.modules.auth.helpers.get_expiration_date)),
-                ('url', models.UUIDField(default=uuid.uuid4)),
-                ('person', models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='invited_person', to='dispatch.Person')),
+                ('person', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='invited_person', to='dispatch.Person')),
             ],
         ),
         migrations.RemoveField(

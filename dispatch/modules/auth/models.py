@@ -9,6 +9,7 @@ from django.contrib.auth.models import AbstractBaseUser, Group, Permission, Perm
 
 from dispatch.modules.auth.managers import UserManager
 from dispatch.modules.auth.helpers import get_expiration_date
+
 class Person(Model):
     full_name = CharField(max_length=255, blank=True, null=True)
     is_admin = BooleanField(default=True)
@@ -45,21 +46,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager(Person)
 
     def get_permissions(self):
-        """
-        Returns the user's permissions
-        """
+        """Returns the user's permissions."""
+
         permissions = ''
         if self.groups.filter(name='Admin').exists() or self.is_superuser:
             permissions = 'admin'
+
         return permissions
 
+    def modify_permissions(self, permissions):
+        """Modify the user's permissions."""
+
+        group = Group.objects.get(name='Admin')
+
+        if permissions == 'admin':
+            self.groups.add(group)
+        else:
+            self.groups.remove(group)
+
 class Invite(Model):
+    id = UUIDField(default=uuid.uuid4, primary_key=True)
     email = CharField(max_length=255, unique=True)
-
     person = OneToOneField(Person, null=False, related_name='invited_person', on_delete=CASCADE)
-
     permissions = CharField(max_length=255, default='')
-
     expiration_date = DateTimeField(default=get_expiration_date)
-
-    url = UUIDField(default=uuid.uuid4)
