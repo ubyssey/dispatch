@@ -333,3 +333,12 @@ class PollField(ModelField):
 
     model = Poll
     serializer = PollSerializer
+
+class InstructionField(Field):
+    type = 'instruction'
+
+    def __init__(self, label, options=[], required=False):
+        self.options = options
+        self.valid_options = set(option[0] for option in self.options)
+
+        super(InstructionField, self).__init__(label=label, many=False, required=required)

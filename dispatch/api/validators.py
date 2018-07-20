@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.exceptions import ValidationError
 
 from django.contrib.auth.password_validation import validate_password
@@ -60,3 +62,11 @@ def AuthorValidator(data):
         if 'type' in author and not isinstance(author['type'], basestring):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
+
+def TimelineValidator(json_data):
+    """Raise a ValidationError if data does not adhere to the timeline template requirements."""
+    if 'timeline_date' not in json_data or json_data['timeline_date'] is None:
+        raise ValidationError({'timeline_date': ['A date must be provided']})
+    if 'description' not in json_data or json_data['description'] is None or len(json_data['description'].strip()) <= 0:
+        raise ValidationError({'description': ['A description must be provided']})
+    
