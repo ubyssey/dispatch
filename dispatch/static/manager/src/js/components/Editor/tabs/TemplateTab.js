@@ -16,7 +16,6 @@ class TemplateTabComponent extends React.Component {
   }
 
   updateField(name, value) {
-    console.log(value)
     if (value instanceof Date) {
       value = String(value)
     }

@@ -129,6 +129,9 @@
   position: absolute;
   right: 0;
   top: -2px;
+  max-height: 22px;
+  overflow: scroll;
+  max-width: 80%;
 }
 
 .c-form-input .pt-button {
