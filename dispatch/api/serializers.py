@@ -10,7 +10,7 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator)
+    SlugValidator, AuthorValidator, TimelineValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -560,6 +560,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
 
+        if instance.template == 'timeline':
+            TimelineValidator(validated_data.get('template_data', None))
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
