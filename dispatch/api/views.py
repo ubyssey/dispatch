@@ -59,6 +59,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
+    update_fields = ('tags')
 
     def get_queryset(self):
         """Optionally restricts the returned articles by filtering against a `topic`
@@ -76,10 +77,11 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
                 'authors'
             )
 
-        queryset = queryset.order_by('-updated_at') \
+        queryset = queryset.order_by('-updated_at') 
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
+        tags = self.request.query_params.getlist('tags', None)
         author = self.request.query_params.get('author', None)
 
         if q is not None:
@@ -87,9 +89,15 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
+        
+        if tags is not None:
+            for tag in tags:
+                queryset = queryset.filter(tags__id=tag)
 
         if author is not None:
             queryset = queryset.filter(authors__person_id=author)
+
+        print(self.request.build_absolute_uri())
 
         return queryset
 
@@ -222,8 +230,11 @@ class ImageViewSet(viewsets.ModelViewSet):
         tags = self.request.query_params.getlist('tags', None)
         q = self.request.query_params.get('q', None)
 
+        print(self.request.query_params)
+        
         if author is not None:
             queryset = queryset.filter(authors__person_id=author)
+
         if tags is not None:
             for tag in tags:
                 queryset = queryset.filter(tags__id=tag)

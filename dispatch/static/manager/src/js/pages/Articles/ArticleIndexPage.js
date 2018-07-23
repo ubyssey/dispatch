@@ -2,10 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
-import SectionFilterInput  from '../../components/inputs/filters/SectionFilterInput'
-import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
+import {AuthorFilterInput, SectionFilterInput, TagsFilterInput}  from '../../components/inputs/filters/'
+// import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
 import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
+// import TagsFilterInput from '../../components/inputs/filters/TagsFilterInput'
 
 const mapStateToProps = (state) => {
   return {
@@ -39,8 +40,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItems: (token, articleIds) => {
       dispatch(articlesActions.deleteMany(token, articleIds))
     },
-    searchArticles: (author, section, query) => {
-      dispatch(articlesActions.search(author, section, query))
+    searchArticles: (author, section, tags, query) => {
+      dispatch(articlesActions.search(author, section, tags, query))
     }
   }
 }
@@ -53,11 +54,15 @@ function ArticlePageComponent(props) {
     <SectionFilterInput
       key={'SectionFilter'}
       selected={props.location.query.section}
-      update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)} />,
+      update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.tags, props.location.query.q)} />,
     <AuthorFilterInput
       key={'AuthorFilter'}
       selected={props.location.query.author}
-      update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)} />
+      update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.tags, props.location.query.q)} />,
+    <TagsFilterInput
+      key={'tagsFilter'}
+      selected={props.location.query.tags}
+      update={(tags) => props.searchArticles(props.location.query.author, props.location.query.section, tags, props.location.query.q)} />
   ]
 
   return (
