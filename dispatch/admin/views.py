@@ -12,6 +12,8 @@ from dispatch.admin.forms import SignUpForm
 from django.http import Http404
 
 def signup(request, uuid=None):
+    """Handles requests to the user signup page."""
+
     invite = get_object_or_404(Invite.objects.all(), id=uuid)
 
     if invite.expiration_date < timezone.now():
@@ -36,9 +38,23 @@ def signup(request, uuid=None):
 
             return redirect('dispatch-admin')
         else:
-            return render(request, 'registration/signup.html', {'form': form, 'email': invite.email})
+            return render(
+                request,
+                'registration/signup.html',
+                {
+                    'form': form,
+                    'email': invite.email
+                }
+            )
 
     else:
         form = SignUpForm()
 
-    return render(request, 'registration/signup.html', {'form': form, 'email': invite.email})
+    return render(
+        request,
+        'registration/signup.html',
+        {
+            'form': form,
+            'email': invite.email
+        }
+    )
