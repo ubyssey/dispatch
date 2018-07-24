@@ -1,6 +1,20 @@
 import React from 'react'
 
-import { ImageInput, FormInput, TextInput } from '../../../components/inputs'
+import { ImageInput, FormInput, TextInput, SelectInput } from '../../../components/inputs'
+
+const STYLE_OPTIONS = [
+  ['default', 'default'],
+  ['left', 'left'],
+  ['right', 'right'],
+]
+
+const WIDTH_OPTIONS = [
+  ['100px', '100px'],
+  ['150px', '150px'],
+  ['200px', '200px'],
+  ['250px', '250px'],
+  ['300px', '300px'],
+]
 
 function ImageEmbedComponent(props) {
   return (
@@ -11,6 +25,18 @@ function ImageEmbedComponent(props) {
             fill={true}
             selected={props.data.image_id}
             onChange={imageId => props.updateField('image_id', imageId)} />
+        </FormInput>
+        <FormInput label='Style'>
+          <SelectInput
+            options={STYLE_OPTIONS}
+            selected={props.data.style}
+            onChange={e => props.updateField('style', e.target.value)} />
+          {props.data.style !== 'default' && 
+            <SelectInput
+              options={WIDTH_OPTIONS}
+              selected={props.data.width}
+              onChange={e => props.updateField('width', e.target.value)} /> 
+          }
         </FormInput>
         <FormInput label='Caption'>
           <TextInput
@@ -34,6 +60,8 @@ export default {
   component: ImageEmbedComponent,
   defaultData: {
     image_id: null,
+    style: 'default',
+    width: 'auto',
     caption: '',
     credit: '',
   },

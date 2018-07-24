@@ -252,6 +252,8 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
         fields = (
             'image',
             'image_id',
+            'style',
+            'width',
             'caption',
             'credit'
         )
