@@ -92,6 +92,7 @@ class ArticleEditorComponent extends React.Component {
   }
 
   saveArticle() {
+    console.log('save')
     if (this.props.isNew) {
       this.props.createArticle(this.props.token, this.getArticle())
     } else {

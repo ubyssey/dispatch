@@ -34,10 +34,11 @@ class Field(object):
 
     _creation_counter = 0
 
-    def __init__(self, label, many=False, required=False):
+    def __init__(self, label, many=False, required=False, isRequired=False):
         self.label = label
         self.many = many
         self.required = required
+        self.isRequired = required
 
         if self.many:
             self.default = []
@@ -119,7 +120,6 @@ class CharField(Field):
     type = 'char'
 
     def validate(self, data):
-
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 

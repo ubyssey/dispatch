@@ -70,3 +70,9 @@ def TimelineValidator(json_data):
     if 'description' not in json_data or json_data['description'] is None or len(json_data['description'].strip()) <= 0:
         raise ValidationError({'description': ['A description must be provided']})
     
+def TemplateValidator(json_data):
+    print(json_data)
+    # if 'required' in json_data:
+    #     for required in json_data[required]:
+    #         if required not in json_data or json_data[required] is None:
+    #              raise ValidationError({required: [required.message]})

@@ -269,6 +269,7 @@ const DispatchAPI = {
       return getRequest('templates', null, query, token)
     },
     get: (token, templateId) => {
+      console.log('get templates')
       return getRequest('templates', templateId, null, token)
     }
   },

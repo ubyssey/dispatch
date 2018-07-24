@@ -74,6 +74,7 @@ class Publishable(Model):
 
     template = CharField(max_length=255, default='default')
     template_data = JSONField(default={})
+    template_required = JSONField(default={})
 
     seo_keyword = CharField(max_length=100, null=True)
     seo_description = TextField(null=True)
@@ -95,6 +96,7 @@ class Publishable(Model):
             template = self.get_template()
             if template:
                 template.set_data(self.template_data)
+                # template.set_data(self.template_required)
                 self._template_fields = template.prepare_data()
         return self._template_fields
 

@@ -27,6 +27,10 @@ class TemplateTabComponent extends React.Component {
 
   render() {
     const template = this.props.entities.templates[this.props.template] || null
+    const required = template.fields.map((field) => {
+      return field.isRequired
+    })
+    console.log(required)
     const fields = (
       <FieldGroup
         name={`template-field__${template.id}`}
