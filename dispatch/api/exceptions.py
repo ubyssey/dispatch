@@ -24,3 +24,7 @@ class PollClosed(APIException):
 class InvalidPoll(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Invalid poll'
+
+class AlreadySubscribed(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = 'User is already subscribed'

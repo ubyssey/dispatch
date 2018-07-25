@@ -326,10 +326,11 @@ class Article(Publishable, AuthorMixin):
         return self.headline
 
     def get_related(self, n=5):
-        """
-        Returns n related articles.
-        """
-        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:n]
+        """ Returns n related articles. """
+        return Article.objects \
+        .exclude(pk=self.id) \
+        .filter(section=self.section,is_published=True) \
+        .order_by('-published_at')[:n]
 
     def get_reading_list(self, ref=None, dur=None):
         articles = self.get_related()

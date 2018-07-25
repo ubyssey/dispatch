@@ -37,10 +37,6 @@ function updateInstantArticle(update, integrations, enabled) {
 
 }
 
-function updateScheduledNotification(update, dt) {
-  return update('scheduled_notification', dateObjToAPIString(dt))
-}
-
 export default function DeliveryTab(props) {
   const isInstantArticlesEnabled = props.availableIntegrations['fb-instant-articles'] && props.availableIntegrations['fb-instant-articles'].settings.page_configured
 
@@ -84,7 +80,7 @@ export default function DeliveryTab(props) {
       <FormInput label='Schedule Notification'>
         <DateTimeInput
           value={props.scheduled_notification}
-          onChange={dt => updateScheduledNotification(props.update, dt)} />
+          onChange={dt => props.update('scheduled_notification', dateObjToAPIString(dt))} />
       </FormInput>
 
     </div>

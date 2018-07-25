@@ -2,6 +2,7 @@ import json
 from pywebpush import webpush, WebPushException
 
 from django.db.models import Q, ProtectedError, Prefetch
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from django.utils import timezone
@@ -20,7 +21,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
-    Notification)
+    Notification, Subscription)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
@@ -28,7 +29,7 @@ from dispatch.api.serializers import (
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
     PollVoteSerializer, NotificationSerializer )
-from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
+from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll, AlreadySubscribed
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
@@ -299,26 +300,24 @@ class NotificationsViewSet(DispatchModelViewSet):
     model = Notification
     serializer_class = NotificationSerializer
     permission_classes = (IsAuthenticated,)
+    queryset = Notification.objects.all().order_by('created_at')
 
-
-    def get_queryset(self):
-        queryset = Notification.objects.all().order_by('created_at')
-        return queryset
 
     @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
     def subscribe(self, request, pk=None):
         data = {
             'endpoint': request.data['endpoint'],
-            'auth':request.data['keys']['auth'],
-            'p256dh':request.data['keys']['p256dh'],
+            'auth': request.data['keys']['auth'],
+            'p256dh': request.data['keys']['p256dh'],
         }
+
         try:
             serializer = SubscriptionSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
         except:
-            print('User already subscribed')
+            raise AlreadySubscribed()
 
         return Response(serializer.data)
 
@@ -328,8 +327,10 @@ class NotificationsViewSet(DispatchModelViewSet):
             'headline': article.headline,
             'url': article.get_absolute_url(),
             'snippet': article.snippet,
-            'image': article.featured_image.image.get_thumbnail_url()
             }
+        if article.featured_image is not None:
+            data['image'] = article.featured_image.image.get_thumbnail_url()
+
         subscriptions = Subscription.objects.all()
         for sub in subscriptions:
             try:
@@ -341,7 +342,7 @@ class NotificationsViewSet(DispatchModelViewSet):
                             "auth": sub.auth
                         }},
                     data=json.dumps(data),
-                    vapid_private_key="Mp2OSApC5ZQ11iHtKfTfAWycrr-YYl9yphpkeqKIy9E",
+                    vapid_private_key=settings.NOTIFICATION_KEY,
                     vapid_claims={
                             "sub": "mailto:YourNameHere@example.org===",
                         }
@@ -351,15 +352,15 @@ class NotificationsViewSet(DispatchModelViewSet):
 
     @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
     def push(self, request, pk=None):
-        notification = Notification.objects.filter(scheduled_push_time__lte=timezone.now()).order_by('scheduled_push_time').first()
+        notification = Notification.objects \
+        .filter(scheduled_push_time__lte=timezone.now()) \
+        .order_by('scheduled_push_time') \
+        .first()
 
         if notification is not None:
             self.push_notifications(notification.article)
             notification.delete()
         return Response({'detail': 'success'})
-
-
-
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views"""

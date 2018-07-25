@@ -866,18 +866,6 @@ class SubscriptionSerializer(DispatchModelSerializer):
             'p256dh'
         )
 
-    def create(self, validated_data):
-        # Create new Subscription instance
-        instance = Subscription()
-
-        instance.endpoint = validated_data.get('endpoint', instance.endpoint)
-        instance.auth = validated_data.get('auth', instance.auth)
-        instance.p256dh = validated_data.get('p256dh', instance.p256dh)
-
-        instance.save()
-
-        return instance
-
 class NotificationSerializer(DispatchModelSerializer):
     """Serializes the Notification model."""
 
