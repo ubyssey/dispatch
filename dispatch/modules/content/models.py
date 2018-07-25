@@ -503,7 +503,11 @@ class Image(Model, AuthorMixin, TagMixin):
                         tag, created = Tag.objects.get_or_create(name=tag_name)
                         self.tags.add(tag)
                         counter += 1
-                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                        try:
+                            tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                        except:
+                            print 'end of tags'
+                            pass
 
                     try:
                         author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
