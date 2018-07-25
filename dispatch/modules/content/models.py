@@ -498,7 +498,7 @@ class Image(Model, AuthorMixin, TagMixin):
 
                     counter = 1
                     tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                    while tag_name:
+                    while tag_name != '':
                         print 'XMP tag: %s' % tag_name
                         tag, created = Tag.objects.get_or_create(name=tag_name)
                         self.tags.add(tag)
