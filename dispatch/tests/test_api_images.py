@@ -160,11 +160,14 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertTrue(self.fileExists(response.data['url']))
+        
         # Assert that image XMP metadata was stored instead of EXIF
         self.assertEqual(response.data['caption'], 'corey in JTree')
+
         # Assert that author names were pulled from both XMP and EXIF
-        self.assertEquals(response.data['authors'][0]['person']['full_name'],  'William Matous')
-        self.assertEquals(response.data['authors'][1]['person']['full_name'],  'William A. H. Matous')
+        self.assertIn(response.data['authors'][0]['person']['full_name'], ('William Matous', 'William A. H. Matous'))
+        self.assertIn(response.data['authors'][1]['person']['full_name'], ('William Matous', 'William A. H. Matous'))
+        self.assertNotEqual(response.data['authors'][0]['person']['full_name'], response.data['authors'][1]['person']['full_name'])
 
     def test_create_image_invalid_filename(self):
         """Should not be able to upload image with non-ASCII characters in filename."""
