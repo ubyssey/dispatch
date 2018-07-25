@@ -3,10 +3,9 @@ import os
 import re
 import uuid
 import io
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryFile
 
-from libxmp import XMPFiles
-from libxmp import XMPError
+from libxmp import XMPFiles, XMPMeta, XMPError
 from PIL import Image as Img
 from jsonfield import JSONField
 
@@ -447,13 +446,39 @@ class Image(Model, AuthorMixin, TagMixin):
 
         b = bytearray(buffer)
 
-        with NamedTemporaryFile() as f:
+        with TemporaryFile() as f:
             f.write(b)
             f.seek(0)
 
+            def dirty_parse_xmp(infile):
+                # Find the XMP data in the file
+                xmp_data = ''
+                xmp_started = False
+
+                for line in infile:
+                    if not xmp_started:
+                        xmp_started = '<x:xmpmeta' in line
+                    if xmp_started:
+                        xmp_data += line
+                        if line.find('</x:xmpmeta') > -1:
+                            break
+                else:  # if XMP data is not found
+                    return None
+                xmp_open_tag = xmp_data.find('<x:xmpmeta')
+                xmp_close_tag = xmp_data.find('</x:xmpmeta>')
+                xmp_str = xmp_data[xmp_open_tag:xmp_close_tag + 12]
+
+                # Pass just the XMP data to libxmp as a string
+                meta = XMPMeta()
+                meta.parse_from_str(xmp_str)
+
+                return meta
+
             try:
-                xmpfile = XMPFiles(file_path=f.name)
-                xmp = xmpfile.get_xmp()
+                # xmpfile = XMPFiles(file_path=f.name)
+                # xmp = xmpfile.get_xmp()
+
+                xmp = dirty_parse_xmp(f)
 
                 if xmp is not None:
                     ns = xmp.get_namespace_for_prefix('dc')
