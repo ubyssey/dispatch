@@ -481,6 +481,8 @@ class Image(Model, AuthorMixin, TagMixin):
             except XMPError:
                 pass
 
+        print author_names
+
         for n, name in enumerate(author_names):
             person, created = Person.objects.get_or_create(full_name=name)
             author = Author.objects.create(person=person, order=n, type='photographer')
