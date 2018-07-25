@@ -1,5 +1,6 @@
 import json
 from pywebpush import webpush, WebPushException
+from django.utils import timezone
 
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -78,7 +79,8 @@ class DispatchPublishableMixin(object):
         # self.pushNotification(instance)
 
         if isinstance(instance, Article):
-            if instance.scheduled_notification is not None:
+            if instance.scheduled_notification is not None and instance.scheduled_notification > timezone.now():
+                Notification.objects.filter(article=instance).delete()
                 Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
         return Response(serializer.data)

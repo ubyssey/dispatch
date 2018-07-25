@@ -22,6 +22,7 @@ import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
 import pollsReducer from './PollsReducer'
+import notificationsReducer from './notificationsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -45,5 +46,6 @@ export default combineReducers({
   events: eventsReducer,
   users: userReducer,
   videos: videosReducer,
-  polls: pollsReducer
+  polls: pollsReducer,
+  notifications: notificationsReducer
 })

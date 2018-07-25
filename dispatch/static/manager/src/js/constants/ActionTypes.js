@@ -16,6 +16,7 @@ export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
 export const USERS = resourceActionTypes('USERS')
 export const VIDEOS = resourceActionTypes('VIDEOS')
 export const POLLS = resourceActionTypes('POLLS')
+export const NOTIFICATIONS = resourceActionTypes('NOTIFICATIONS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

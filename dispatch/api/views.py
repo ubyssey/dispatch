@@ -302,7 +302,6 @@ class NotificationsViewSet(DispatchModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Notification.objects.all().order_by('created_at')
 
-
     @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
     def subscribe(self, request, pk=None):
         data = {

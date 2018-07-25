@@ -26,6 +26,7 @@ export default function Header(props) {
             to='/events/'
             className="pt-button pt-minimal pt-icon-timeline-events c-banner__badge"
             data-badge={props.pendingCount}>Events</Link>
+          <Link to='/notifications/' className="pt-button pt-minimal pt-icon-notifications">Notifications</Link>
         </div>
         <div className="pt-navbar-group pt-align-right">
           <Link to='/tags/' className="pt-button pt-minimal">Tags</Link>
