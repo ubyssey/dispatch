@@ -505,12 +505,16 @@ class Image(Model, AuthorMixin, TagMixin):
                         counter += 1
                         tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
 
-                    author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
+                    try:
+                        author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
+                        print 'XMP creator: %s' % author_name
 
-                    print 'XMP creator: %s' % author_name
+                        if author_name:
+                            author_names.add(author_name)
+                    except:
+                        print 'no author'
 
-                    if author_name:
-                        author_names.add(author_name)
+
 
             except XMPError as e:
                 pass
