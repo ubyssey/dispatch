@@ -479,6 +479,8 @@ class Image(Model, AuthorMixin, TagMixin):
 
                 xmp = dirty_parse_xmp(f)
 
+                print xmp
+
                 if xmp is not None:
                     ns = xmp.get_namespace_for_prefix('dc')
 
@@ -486,24 +488,23 @@ class Image(Model, AuthorMixin, TagMixin):
                     if title:
                         self.title = title
 
-                    # description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
-                    # if description:
-                    #     self.caption = description
+                    description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
+                    if description:
+                        self.caption = description
 
-                    # counter = 1
-                    # tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                    # while tag_name:
-                    #     tag, created = Tag.objects.get_or_create(name=tag_name)
-                    #     self.tags.add(tag)
-                    #     counter += 1
-                    #     tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    counter = 1
+                    tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    while tag_name:
+                        tag, created = Tag.objects.get_or_create(name=tag_name)
+                        self.tags.add(tag)
+                        counter += 1
+                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
 
-                    # author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
-                    # if author_name:
-                    #     author_names.add(author_name)
+                    author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
+                    if author_name:
+                        author_names.add(author_name)
 
             except XMPError as e:
-                print e
                 pass
 
         print author_names
