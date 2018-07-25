@@ -224,7 +224,7 @@ class UserViewSet(DispatchModelViewSet):
             return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
 
         permissions = request.data.get('permissions', None)
-        modify_permissions(user, permissions)
+        user.modify_permissions(permissions)
 
         return super(UserViewSet, self).partial_update(request)
 
