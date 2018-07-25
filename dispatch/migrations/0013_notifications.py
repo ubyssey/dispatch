@@ -10,7 +10,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0013_article_relation'),
+        ('dispatch', '0012_polls'),
     ]
 
     operations = [

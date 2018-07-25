@@ -366,11 +366,6 @@ class Article(Publishable, AuthorMixin):
         """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
-class ArticleRelation(Model):
-    parent = ForeignKey('Article', related_name='parent_article')
-    article = ForeignKey('Article', related_name='article')
-    count = PositiveIntegerField(default=1)
-
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
     parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
