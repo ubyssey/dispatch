@@ -86,7 +86,7 @@ class InviteTests(DispatchAPITestCase):
         )
 
         invite = Invite.objects.get(id=response.data['id'])
-        url = '%s%s' % (reverse('dispatch-signup'), str(invite.id))
+        url = reverse('dispatch-signup', args=[str(invite.id)])
 
         response = self.client.get(url, {}, format='html')
 
@@ -102,7 +102,7 @@ class InviteTests(DispatchAPITestCase):
         invite = Invite.objects.get(id=response.data['id'])
         person = invite.person
 
-        url = '%s%s' % (reverse('dispatch-signup'), str(invite.id))
+        url = reverse('dispatch-signup', args=[str(invite.id)])
 
         data = {
             'password1': 'acompliantpassword',
@@ -135,7 +135,7 @@ class InviteTests(DispatchAPITestCase):
         invite.expiration_date = datetime.datetime.now() - datetime.timedelta(days=1)
         invite.save()
 
-        url = '%s%s' % (reverse('dispatch-signup'), str(invite.id))
+        url = reverse('dispatch-signup', args=[str(invite.id)])
 
         response = self.client.get(url, {}, format='json')
 
