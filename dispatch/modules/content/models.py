@@ -451,7 +451,6 @@ class Image(Model, AuthorMixin, TagMixin):
             f.seek(0)
 
             def dirty_parse_xmp(infile):
-                # Find the XMP data in the file
                 xmp_data = ''
                 xmp_started = False
 
@@ -462,13 +461,13 @@ class Image(Model, AuthorMixin, TagMixin):
                         xmp_data += line
                         if line.find('</x:xmpmeta') > -1:
                             break
-                else:  # if XMP data is not found
+                else:
                     return None
+
                 xmp_open_tag = xmp_data.find('<x:xmpmeta')
                 xmp_close_tag = xmp_data.find('</x:xmpmeta>')
                 xmp_str = xmp_data[xmp_open_tag:xmp_close_tag + 12]
 
-                # Pass just the XMP data to libxmp as a string
                 meta = XMPMeta()
                 meta.parse_from_str(xmp_str)
 
@@ -491,13 +490,13 @@ class Image(Model, AuthorMixin, TagMixin):
                     if description:
                         self.caption = description
 
-                    counter = 1
-                    tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                    while tag_name:
-                        tag, created = Tag.objects.get_or_create(name=tag_name)
-                        self.tags.add(tag)
-                        counter += 1
-                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    # counter = 1
+                    # tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    # while tag_name:
+                    #     tag, created = Tag.objects.get_or_create(name=tag_name)
+                    #     self.tags.add(tag)
+                    #     counter += 1
+                    #     tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
 
                     # author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
                     # if author_name:
