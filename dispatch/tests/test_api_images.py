@@ -166,8 +166,6 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEquals(response.data['authors'][0]['person']['full_name'],  'William Matous')
         self.assertEquals(response.data['authors'][1]['person']['full_name'],  'William A. H. Matous')
 
-
-
     def test_create_image_invalid_filename(self):
         """Should not be able to upload image with non-ASCII characters in filename."""
 

@@ -82,3 +82,31 @@ class AuthorMixin(object):
         """Returns list of authors (including hyperlinks) as a
         comma-separated string (with 'and' before last author)."""
         return self.get_author_string(True)
+
+class TagMixin(object):
+    def save_tags(self, tag_ids, clear=True):
+        """Save tags with given ids to this instance."""
+
+        if clear:
+            self.tags.clear()
+
+        for tag_id in tag_ids:
+            try:
+                tag = self.TagModel.objects.get(id=int(tag_id))
+                self.tags.add(tag)
+            except self.TagModel.DoesNotExist:
+                pass
+
+class TopicMixin(object):
+    def save_topic(self, topic_id):
+        """Save topic with given id to this instance."""
+
+        if topic_id is None:
+            self.topic = None
+        else:
+            try:
+                topic = self.TopicModel.objects.get(id=int(topic_id))
+                topic.update_timestamp()
+                self.topic = topic
+            except self.TopicModel.DoesNotExist:
+                pass

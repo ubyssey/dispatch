@@ -3,13 +3,12 @@ import os
 import re
 import uuid
 import io
+from tempfile import NamedTemporaryFile
+
 from libxmp import XMPFiles
 from libxmp import XMPError
-from tempfile import NamedTemporaryFile
-import exifread
-
-from jsonfield import JSONField
 from PIL import Image as Img
+from jsonfield import JSONField
 
 from django.db import IntegrityError
 from django.db.models import (
@@ -26,7 +25,7 @@ from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
-from dispatch.modules.content.mixins import AuthorMixin
+from dispatch.modules.content.mixins import AuthorMixin, TagMixin, TopicMixin
 from dispatch.modules.auth.models import Person, User
 
 class Tag(Model):
@@ -53,9 +52,7 @@ class Author(Model):
         ordering = ['order']
 
 class Publishable(Model):
-    """
-    Base model for Article and Page models.
-    """
+    """Base model for Article and Page models."""
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
@@ -156,12 +153,10 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
-        """
-        Handles the saving/updating of a Publishable instance.
+        """Handles the saving/updating of a Publishable instance.
 
         Arguments:
-        revision - if True, a new version of this Publishable will be created.
-        """
+        revision - if True, a new version of this Publishable will be created."""
 
         if revision:
             # If this is a revision, set it to be the head of the list and increment the revision id
@@ -209,8 +204,7 @@ class Publishable(Model):
         return self
 
     def save_featured_image(self, data):
-        """
-        Handles saving the featured image.
+        """Handles saving the featured image.
 
         If data is None, the featured image will be removed.
 
@@ -297,7 +291,7 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
-class Article(Publishable, AuthorMixin):
+class Article(Publishable, AuthorMixin, TagMixin, TopicMixin):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
@@ -321,6 +315,8 @@ class Article(Publishable, AuthorMixin):
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
 
     AuthorModel = Author
+    TagModel = Tag
+    TopicModel = Topic
 
     @property
     def title(self):
@@ -338,30 +334,8 @@ class Article(Publishable, AuthorMixin):
             'name': name
         }
 
-    def save_tags(self, tag_ids):
-        self.tags.clear()
-        for tag_id in tag_ids:
-            try:
-                tag = Tag.objects.get(id=int(tag_id))
-                self.tags.add(tag)
-            except Tag.DoesNotExist:
-                pass
-
-    def save_topic(self, topic_id):
-        if topic_id is None:
-            self.topic = None
-        else:
-            try:
-                topic = Topic.objects.get(id=int(topic_id))
-                topic.update_timestamp()
-                self.topic = topic
-            except Topic.DoesNotExist:
-                pass
-
     def get_absolute_url(self):
-        """
-        Returns article URL.
-        """
+        """Returns article URL."""
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
 class Page(Publishable):
@@ -373,16 +347,14 @@ class Page(Publishable):
         return None
 
     def get_absolute_url(self):
-        """
-        Returns page URL.
-        """
+        """Returns page URL."""
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Model, AuthorMixin):
+class Image(Model, AuthorMixin, TagMixin):
 
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
@@ -412,6 +384,7 @@ class Image(Model, AuthorMixin):
     THUMBNAIL_SIZE = 'square'
 
     AuthorModel = Author
+    TagModel = Tag
 
     def is_gif(self):
         """Returns true if image is a gif."""
@@ -447,6 +420,65 @@ class Image(Model, AuthorMixin):
         """Returns the thumbnail URL."""
         return '%s%s-%s.jpg' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
+    def save_exif_data(self, buffer, image):
+        """Extracts and saves EXIF/XMP data from the image file."""
+
+        # EXIF tag list: https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
+        EXIF_DESCRIPTION = 270
+        EXIF_ARTIST = 315
+
+        author_names = set()
+
+        # EXIF data is only read from files with TIFF or JPEG format, otherwise an error will occur
+        if self.get_extension() in Image.EXIF_FORMATS:
+            exiftags = image._getexif()
+
+            if exiftags is not None:
+                self.caption = exiftags.get(EXIF_DESCRIPTION)
+
+                author_name = exiftags.get(EXIF_ARTIST)
+                if author_name is not None:
+                    author_names.add(author_name)
+
+        b = bytearray(buffer)
+
+        with NamedTemporaryFile() as f:
+            f.write(b)
+
+            try:
+                xmpfile = XMPFiles(file_path=f.name)
+
+                xmp = xmpfile.get_xmp()
+
+                if xmp is not None:
+                    ns = xmp.get_namespace_for_prefix('dc')
+
+                    self.title = xmp.get_array_item(ns, 'title', 1)
+
+                    description = xmp.get_array_item(ns, 'description', 1)
+                    if description:
+                        self.caption = description
+
+                    counter = 1
+                    tag_name = xmp.get_array_item(ns, 'subject', counter)
+                    while tag_name != '':
+                        tag, created = Tag.objects.get_or_create(name=tag_name)
+                        self.tags.add(tag)
+                        counter += 1
+                        tag_name = xmp.get_array_item(ns, 'subject', counter)
+
+                    author_name = xmp.get_array_item(ns, 'creator', 1)
+                    if author_name:
+                        author_names.add(author_name)
+
+            except XMPError:
+                pass
+
+        for n, name in enumerate(author_names):
+            person, created = Person.objects.get_or_create(full_name=name)
+            author = Author.objects.create(person=person, order=n, type='photographer')
+            self.authors.add(author)
+
     # Overriding
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
@@ -460,70 +492,14 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            s = self.img.read()
-            image = Img.open(StringIO.StringIO(s))
+            buffer = self.img.read()
+            image = Img.open(StringIO.StringIO(buffer))
             self.width, self.height = image.size
 
-            author_names = set()
-
-            # Exif data is only read from files with TIFF or JPEG format, otherwise an error will occur
-            if self.get_extension() in Image.EXIF_FORMATS:
-                exiftags = image._getexif()
-
-                if exiftags is not None:
-                    # exiftags.get() returns None if no entry exists for a given key or if the entry is empty
-
-                    # exiftags object is a dictionary indexed by numeric tags corresponding to particular fields we may be
-                    # interested in. For a full list: https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
-                    self.caption = exiftags.get(270)
-                    # caption will be assigned to the image's description or None if no description is available
-                    # author will only be assigned if a string is given by the exif data
-                    author_name = exiftags.get(315)
-                    if author_name is not None:
-                        author_names.add(author_name)
-
-
-            b = bytearray(s)
-
-            with NamedTemporaryFile() as f:
-                f.write(b)
-
-                try:
-                    xmpfile = XMPFiles(file_path=f.name)
-
-                    xmp = xmpfile.get_xmp()
-
-                    if xmp is not None:
-                        #  xmp data returns an empty string if no entry is found
-                        #  exif data is read first. caption and author are parsed, if additional data is found in xmp,
-                        #  xmp caption will replace exif caption, but both authors will be saved
-                        self.title = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'title', 1)
-
-
-                        xmpdesc = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'description', 1)
-                        if xmpdesc != '':
-                            self.caption = xmpdesc
-
-                        counter = 1
-                        tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
-                        while tag_name != '':
-                            tag, created = Tag.objects.get_or_create(name=tag_name)
-                            self.tags.add(tag)
-                            counter += 1
-                            tag_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'subject', counter)
-
-                        author_name = xmp.get_array_item(xmp.get_namespace_for_prefix('dc'), 'creator', 1)
-                        if author_name != '':
-                            author_names.add(author_name)
-                except XMPError:
-                    None
-
-            for an in author_names:
-                person, created = Person.objects.get_or_create(full_name=an)
-                author = Author.objects.create(person=person, order = 0, type="photographer")
-                self.authors.add(author)
+            self.save_exif_data(buffer, image)
 
             super(Image, self).save()
+
             ext = self.get_extension()
             name = self.get_name()
 
@@ -555,17 +531,6 @@ class Image(Model, AuthorMixin):
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
-
-    def save_tags(self, tag_ids):
-
-        # self.tags.clear()
-
-        for tag_id in tag_ids:
-            try:
-                tag = Tag.objects.get(id=int(tag_id))
-                self.tags.add(tag)
-            except Tag.DoesNotExist:
-                pass
 
 class VideoAttachment(Model):
     article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
@@ -611,9 +576,7 @@ class File(Model):
     updated_at = DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
-        """
-        Returns the absolute file URL.
-        """
+        """Returns the absolute file URL."""
         return settings.MEDIA_URL + str(self.file)
 
 class Issue(Model):

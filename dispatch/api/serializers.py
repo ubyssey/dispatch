@@ -208,17 +208,21 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
+        is_new = instance.pk is None
+
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save authors
-        authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors)
+        author_ids = validated_data.get('author_ids')
+        if author_ids:
+            instance.save_authors(author_ids)
 
-        tag_ids = validated_data.get('tag_ids', False)
-
-        if tag_ids != False:
-            instance.save_tags(tag_ids)
+        # Save_tags
+        tag_ids = validated_data.get('tag_ids')
+        if tag_ids:
+            # Do not clear tags for first save. This prevents deletion of EXIF tags
+            clear = not is_new
+            instance.save_tags(tag_ids, clear=clear)
 
         return instance
 
@@ -578,9 +582,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_video != False:
             instance.save_featured_video(featured_video)
 
-        authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors, is_publishable=True)
+        author_ids = validated_data.get('author_ids')
+        if author_ids:
+            instance.save_authors(author_ids, is_publishable=True)
 
         tag_ids = validated_data.get('tag_ids', False)
         if tag_ids != False:
