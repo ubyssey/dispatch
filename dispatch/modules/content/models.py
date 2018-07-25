@@ -507,7 +507,7 @@ class Image(Model, AuthorMixin, TagMixin):
                             tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
                         except:
                             print 'end of tags'
-                            pass
+                            break
 
                     try:
                         author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
