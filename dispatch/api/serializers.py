@@ -140,7 +140,7 @@ class InviteSerializer(DispatchModelSerializer):
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
-        send_invitation(validated_data['email'], instance.url)
+        send_invitation(validated_data['email'], instance.id)
         return super(InviteSerializer, self).update(instance, validated_data)
 
 class FileSerializer(DispatchModelSerializer):
