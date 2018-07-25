@@ -348,7 +348,8 @@ class NotificationsViewSet(DispatchModelViewSet):
                         }
                 )
             except WebPushException as ex:
-                sub.delete()
+                if ex.response.status_code == 410:
+                    sub.delete()
 
     @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
     def push(self, request, pk=None):
