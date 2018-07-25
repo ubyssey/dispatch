@@ -5,29 +5,36 @@ from django.db import IntegrityError
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissions
-from rest_framework.decorators import detail_route, api_view, authentication_classes, permission_classes
+from rest_framework.permissions import (
+    AllowAny, IsAuthenticated, DjangoModelPermissions)
+from rest_framework.decorators import (
+    detail_route, api_view, authentication_classes, permission_classes)
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
 
-from dispatch.modules.integrations.integrations import integrationLib, IntegrationNotFound, IntegrationCallbackError
+from dispatch.modules.integrations.integrations import (
+    integrationLib, IntegrationNotFound, IntegrationCallbackError)
 from dispatch.modules.actions.actions import list_actions, recent_articles
 
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
-    Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote, Invite)
+    Page, Author, Person, Section, Tag, Topic, User, Video,
+    Poll, PollAnswer, PollVote, Invite)
 
 from dispatch.core.settings import get_settings
 from dispatch.admin.registration import reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
-    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
-    ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer,
-    IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer, InviteSerializer )
-from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer,
+    FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
+    TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
+    ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
+    PollSerializer, PollVoteSerializer, InviteSerializer)
+from dispatch.api.exceptions import (
+    ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
+    UnpermittedActionError)
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
@@ -139,7 +146,9 @@ class PersonViewSet(DispatchModelViewSet):
         try:
             instance.delete()
         except ProtectedError:
-            raise ProtectedResourceError('Deletion failed because person belongs to a user')
+            raise ProtectedResourceError(
+                'Deletion failed because person belongs to a user'
+            )
 
     @detail_route(methods=['get'])
     def user(self, request, pk=None):
@@ -165,7 +174,7 @@ class PersonViewSet(DispatchModelViewSet):
             invite = Invite.objects.get(person=person)
             serializer = InviteSerializer(invite)
         except Invite.DoesNotExist:
-            return Response({'detail':'person has no invite'})
+            return Response({'detail': 'Person has no invitation'})
 
         return Response(serializer.data)
 
@@ -181,7 +190,7 @@ class InviteViewSet(DispatchModelViewSet):
         queryset = Invite.objects.all()
         q = self.request.query_params.get('q', None)
         if q is not None:
-            queryset = queryset.filter(person__id = q)
+            queryset = queryset.filter(person__id=q)
         return queryset
 
 class UserViewSet(DispatchModelViewSet):
@@ -203,7 +212,7 @@ class UserViewSet(DispatchModelViewSet):
         q = self.request.query_params.get('q', None)
 
         if q is not None:
-            queryset = queryset.filter(person__id = q)
+            queryset = queryset.filter(person__id=q)
         return queryset
 
     def retrieve(self, request, pk=None):
@@ -221,7 +230,7 @@ class UserViewSet(DispatchModelViewSet):
         user = User.objects.get(pk=pk)
 
         if user != request.user and not request.user.has_perm('dispatch.change_user'):
-            return Response({ 'detail', 'You do not have permission to perform this action'}, status=status.HTTP_401_UNAUTHORIZED)
+            raise UnpermittedActionError()
 
         permissions = request.data.get('permissions', None)
         user.modify_permissions(permissions)
@@ -236,10 +245,7 @@ class UserViewSet(DispatchModelViewSet):
             reset_password(user.email, request)
             return Response(status.HTTP_202_ACCEPTED)
         else:
-            return Response(
-                {'detail', 'You do not have permission to perform this action'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            raise UnpermittedActionError()
 
 class TagViewSet(DispatchModelViewSet):
     """Viewset for Tag model views."""
@@ -316,7 +322,7 @@ class ImageViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(tags__id=tag)
 
         if q is not None:
-            queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q) )
+            queryset = queryset.filter(Q(title__icontains=q) | Q(img__icontains=q))
 
         return queryset
 
@@ -364,7 +370,8 @@ class PollViewSet(DispatchModelViewSet):
         # Change vote
         if 'vote_id' in request.data:
             vote_id = request.data['vote_id']
-            vote = PollVote.objects.filter(answer__poll=poll, id=vote_id).update(answer=answer)
+            vote = PollVote.objects.filter(answer__poll=poll, id=vote_id) \
+                .update(answer=answer)
             return Response({'id': vote_id})
 
         serializer = PollVoteSerializer(data=request.data)
@@ -375,7 +382,7 @@ class PollViewSet(DispatchModelViewSet):
         return Response(serializer.data)
 
 class TemplateViewSet(viewsets.GenericViewSet):
-    """Viewset for Template views"""
+    """Viewset for Template views."""
     permission_classes = (IsAuthenticated,)
 
     def get_object_or_404(self, pk=None):
@@ -451,12 +458,12 @@ class IntegrationViewSet(viewsets.GenericViewSet):
         try:
             data = integration.callback(request.user, request.GET)
         except IntegrationCallbackError, e:
-            return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
+            return Response({ 'detail': e.message }, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
 class ZoneViewSet(viewsets.GenericViewSet):
-    """Viewset for widget zones"""
+    """Viewset for widget zones."""
 
     permission_classes = (IsAuthenticated,)
 
