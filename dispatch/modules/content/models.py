@@ -357,21 +357,15 @@ class Article(Publishable, AuthorMixin):
                 pass
 
     def get_absolute_url(self):
-        """
-        Returns article URL.
-        """
+        """ Returns article URL. """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
     def get_column(self):
-        """
-        Returns the column set in the parent article
-        """
+        """ Returns the column set in the parent article """
         return self.parent.column
 
     def save_column(self, column_id):
-        """
-        Save the column to the parent article
-        """
+        """ Save the column to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(column_id=column_id)
 
 class Column(Model, AuthorMixin):
@@ -394,9 +388,7 @@ class Column(Model, AuthorMixin):
         return Article.objects.filter(column=self, is_published=True)
 
     def get_absolute_url(self):
-        """
-        Returns the column URL.
-        """
+        """ Returns the column URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
@@ -408,9 +400,7 @@ class Page(Publishable):
         return None
 
     def get_absolute_url(self):
-        """
-        Returns page URL.
-        """
+        """ Returns page URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Video(Model):
