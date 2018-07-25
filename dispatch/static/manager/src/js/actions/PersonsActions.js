@@ -25,7 +25,7 @@ class PersonsActions extends ResourceActions {
 
   getUser(token, id) {
     return (dispatch) => {
-      dispatch({ type: pending(types.PERSONS.GET_USER)})
+      dispatch({ type: pending(types.PERSONS.GET_USER) })
 
       return DispatchAPI.persons.getUser(token, id)
         .then((response) => {
@@ -34,9 +34,9 @@ class PersonsActions extends ResourceActions {
             payload: response
           })
         })
-          .catch(() => {
-            dispatch({ type: rejected(types.PERSONS.GET_USER)})
-          })
+        .catch(() => {
+          dispatch({ type: rejected(types.PERSONS.GET_USER) })
+        })
     }
   }
 
@@ -51,7 +51,7 @@ class PersonsActions extends ResourceActions {
 
   getInvite(token, id) {
     return (dispatch) => {
-      dispatch({ type: pending(types.PERSONS.GET_INVITE)})
+      dispatch({ type: pending(types.PERSONS.GET_INVITE) })
 
       return DispatchAPI.persons.getInvite(token, id)
         .then((response) => {
@@ -60,9 +60,9 @@ class PersonsActions extends ResourceActions {
             payload: response
           })
         })
-          .catch(() => {
-            dispatch({ type: rejected(types.PERSONS.GET_INVITE)})
-          })
+        .catch(() => {
+          dispatch({ type: rejected(types.PERSONS.GET_INVITE) })
+        })
     }
   }
 
