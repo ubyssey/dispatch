@@ -87,19 +87,19 @@ class UserActions extends ResourceActions {
     }
   }
 
-  reset_password(token, userId) {
+  resetPassword(token, userId) {
     return (dispatch) => {
       dispatch({ type: pending(types.USERS.RESET_PASSWORD) })
 
-      return DispatchAPI.users.reset_password(token, userId)
+      return DispatchAPI.users.resetPassword(token, userId)
         .then(() => {
           dispatch({
             type: fulfilled(types.USERS.RESET_PASSWORD)
           })
         })
-          .catch(() => {
-            dispatch({ type: rejected(types.USERS.RESET_PASSWORD)})
-          })
+        .catch(() => {
+          dispatch({ type: rejected(types.USERS.RESET_PASSWORD)})
+        })
     }
   }
 }

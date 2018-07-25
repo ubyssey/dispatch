@@ -15,16 +15,18 @@ import SelectInput from '../../components/inputs/selects/SelectInput'
 require('../../../styles/components/user_form.scss')
 
 const DEFAULT = {
-  'id': '',
-  'email': '',
-  'permission': '',
+  id: '',
+  email: '',
+  permission: '',
 }
+
 class PersonPageComponent extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
-      'editingUser':false
+      editingUser: false
     }
   }
 
@@ -34,7 +36,7 @@ class PersonPageComponent extends React.Component {
   }
 
   startEditingUser() {
-    this.setState({'editingUser':true})
+    this.setState({ editingUser: true })
   }
 
   resetProps() {
@@ -57,11 +59,9 @@ class PersonPageComponent extends React.Component {
       let invite = this.props.invite
       invite.person = this.props.invite.person.id
       this.props.saveInvite(this.props.token, this.props.invite.id, this.props.invite)
-    }
-    else if (!this.props.user.id) {
+    } else if (!this.props.user.id) {
       this.inviteUser(this.props.token, this.props.invite)
-    }
-    else {
+    } else {
       let user = this.props.user
       user.person = this.props.user.person.id
       user.permission_level = this.props.user.permissions
@@ -101,7 +101,6 @@ class PersonPageComponent extends React.Component {
   }
 
   renderUserForm() {
-
     const PERMISSIONS = [
       ['', ''],
       ['admin', 'admin'],
@@ -166,7 +165,7 @@ class PersonPageComponent extends React.Component {
   }
 
   renderUserEditSection() {
-    return this.state.editingUser ? this.renderUserForm() :  this.renderEditUserButton()
+    return this.state.editingUser ? this.renderUserForm() : this.renderEditUserButton()
   }
 
   render() {
@@ -226,7 +225,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(invitesActions.delete(token, inviteId))
     },
     resetPassword: (token, id) => {
-      dispatch(userActions.reset_password(token, id))
+      dispatch(userActions.resetPassword(token, id))
     }
   }
 }

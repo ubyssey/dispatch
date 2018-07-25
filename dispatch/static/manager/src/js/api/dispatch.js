@@ -449,7 +449,7 @@ const DispatchAPI = {
     delete: (token, userId) => {
       return deleteRequest('users', userId, null, token)
     },
-    reset_password: (token, userId) => {
+    resetPassword: (token, userId) => {
       return postRequest('users.reset_password', userId, null, token)
     }
   },
