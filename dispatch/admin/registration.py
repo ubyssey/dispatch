@@ -5,7 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 
 def build_url(uuid):
-    return reverse('dispatch-signup', kwargs={'uuid': str(uuid)})
+    return "%s%s" % (settings.BASE_URL.strip('/'), reverse('dispatch-signup', kwargs={'uuid': str(uuid)}))
 
 def send_invitation(email, uuid):
     msg = render_to_string(

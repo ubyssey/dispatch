@@ -71,6 +71,7 @@ class PersonPageComponent extends React.Component {
 
   inviteUser(token, user) {
     user.person = this.props.params.personId
+    delete user.id
     this.props.inviteUser(token, user)
   }
 
