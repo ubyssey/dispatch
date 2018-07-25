@@ -11,12 +11,12 @@ export default function FieldGroup(props) {
   }
   
   const fields = props.fields.map((field) => (
-    <FieldWrapper
-      key={`${props.name}__${field.name}`}
-      field={field}
-      error={props.errors[field.name]}
-      data={R.prop(field.name, props.data || {}) || null}
-      onChange={(data) => props.onChange(field.name, data)} />
+      <FieldWrapper
+        key={`${props.name}__${field.name}`}
+        field={field}
+        error={props.errors ? props.errors[field.name] : null}
+        data={R.prop(field.name, props.data || {}) || null}
+        onChange={(data) => props.onChange(field.name, data)} />
   ))
 
   if (props.title) {

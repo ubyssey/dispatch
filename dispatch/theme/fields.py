@@ -34,11 +34,10 @@ class Field(object):
 
     _creation_counter = 0
 
-    def __init__(self, label, many=False, required=False, isRequired=False):
+    def __init__(self, label, many=False, required=False):
         self.label = label
         self.many = many
         self.required = required
-        self.isRequired = required
 
         if self.many:
             self.default = []
@@ -145,11 +144,12 @@ class DateTimeField(Field):
     def validate(self, data):
         if not data or (isinstance(data, basestring) and not len(data)):
             if self.required:
-                raise InvalidField('%s is required')
+                raise InvalidField('%s is required' % self.label)
             else:
                 return
 
         if not parse_datetime(data):
+            print(data, type(data))
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):
@@ -342,3 +342,6 @@ class InstructionField(Field):
         self.valid_options = set(option[0] for option in self.options)
 
         super(InstructionField, self).__init__(label=label, many=False, required=required)
+
+    def validate(self, data):
+        pass

@@ -19,6 +19,7 @@ class TemplateTabComponent extends React.Component {
     if (value instanceof Date) {
       value = String(value)
     }
+    console.log(name, value)
     this.props.update(
       'template_data',
       R.assoc(name, value, this.props.data)
@@ -27,16 +28,12 @@ class TemplateTabComponent extends React.Component {
 
   render() {
     const template = this.props.entities.templates[this.props.template] || null
-    const required = template.fields.map((field) => {
-      return field.isRequired
-    })
-    console.log(required)
     const fields = (
       <FieldGroup
         name={`template-field__${template.id}`}
         fields={(this.props.data ? (template ? template.fields : []) : null)}
         data={this.props.data}
-        errors={this.props.errors}
+        errors={this.props.errors.template_data}
         onChange={(name, data) => this.updateField(name, data)} />
     )
 

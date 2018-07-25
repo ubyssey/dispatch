@@ -10,10 +10,10 @@ from dispatch.modules.auth.models import Person, User
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TimelineValidator, TemplateValidator)
+    SlugValidator, AuthorValidator, TemplateValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
-from dispatch.theme.exceptions import WidgetNotFound, InvalidField
+from dispatch.theme.exceptions import WidgetNotFound, InvalidField, TemplateNotFound
 
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
@@ -313,7 +313,6 @@ class FieldSerializer(serializers.Serializer):
     many = serializers.BooleanField()
     widgets = serializers.JSONField(required=False)
     options = serializers.ListField(required=False)
-    isRequired = serializers.BooleanField(required=False)
 
 class TemplateSerializer(serializers.Serializer):
     id = serializers.SlugField()
@@ -497,8 +496,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
-    template_data = JSONField(required=False)
-    template_required = JSONField(required=False)
+    template_data = JSONField(required=False, validators=[TemplateValidator()])
 
     integrations = JSONField(required=False)
 
@@ -533,7 +531,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'template',
             'template_id',
             'template_data',
-            'template_required',
             'seo_keyword',
             'seo_description',
             'integrations'
@@ -562,14 +559,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.integrations = validated_data.get('integrations', instance.integrations)
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
-        instance.template_required = validated_data.get('template_required', instance.template_required)
-        
-        # if instance.template == 'timeline':
-        #     TimelineValidator(validated_data.get('template_data', None))
-        print(validated_data)
-        TemplateValidator(instance.template_data)
+        print('update', instance.template_data)
 
-        # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
