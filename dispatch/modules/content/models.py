@@ -427,6 +427,11 @@ class Image(Model, AuthorMixin, TagMixin):
         EXIF_DESCRIPTION = 270
         EXIF_ARTIST = 315
 
+        XMP_TITLE = 'title'
+        XMP_DESCRIPTION = 'description'
+        XMP_SUBJECT = 'subject'
+        XMP_CREATOR = 'creator'
+
         author_names = set()
 
         # EXIF data is only read from files with TIFF or JPEG format, otherwise an error will occur
@@ -444,30 +449,32 @@ class Image(Model, AuthorMixin, TagMixin):
 
         with NamedTemporaryFile() as f:
             f.write(b)
+            f.seek(0)
 
             try:
                 xmpfile = XMPFiles(file_path=f.name)
-
                 xmp = xmpfile.get_xmp()
 
                 if xmp is not None:
                     ns = xmp.get_namespace_for_prefix('dc')
 
-                    self.title = xmp.get_array_item(ns, 'title', 1)
+                    title = xmp.get_array_item(ns, XMP_TITLE, 1)
+                    if title:
+                        self.title = title
 
-                    description = xmp.get_array_item(ns, 'description', 1)
+                    description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
                     if description:
                         self.caption = description
 
                     counter = 1
-                    tag_name = xmp.get_array_item(ns, 'subject', counter)
-                    while tag_name != '':
+                    tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    while tag_name:
                         tag, created = Tag.objects.get_or_create(name=tag_name)
                         self.tags.add(tag)
                         counter += 1
-                        tag_name = xmp.get_array_item(ns, 'subject', counter)
+                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
 
-                    author_name = xmp.get_array_item(ns, 'creator', 1)
+                    author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
                     if author_name:
                         author_names.add(author_name)
 

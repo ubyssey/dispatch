@@ -127,7 +127,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Should be able to read XMP and EXIF data from a JPEG image."""
 
         url = reverse('api-images-list')
-        file = 'test_exif_xmp_full.jpg'
+        file = 'test_exif_xmp.jpg'
 
         with open(self.get_input_file(file)) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
@@ -135,24 +135,23 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
         # Assert that image metadata was read
-        self.assertEqual(response.data['title'], 'corey')
+        self.assertEqual(response.data['title'], 'Test Image')
 
-        self.assertEqual(response.data['caption'], 'corey in joshua tree')
+        self.assertEqual(response.data['caption'], 'This is a test image.')
 
-        self.assertEquals(response.data['authors'][0]['person']['full_name'],  'William A. H. Matous')
+        self.assertEquals(response.data['authors'][0]['person']['full_name'], 'Person A')
 
-        tag_dict = {'corey':False, 'climb':False, 'joshua':False, 'tree':False, 'park':False}
+        expected_tags = ('climb', 'joshua', 'tree', 'park')
+
         for test_tag in response.data['tags']:
-            tag_dict[test_tag['name']] = True
-
-        for v in tag_dict.values():
-            self.assertTrue(v)
+            if test_tag['name'] not in expected_tags:
+                self.fail('%s tag is expected.' % test_tag['name'])
 
     def test_create_image_jpeg_with_differing_meta(self):
         """Should preferentially use XMP data over EXIF."""
 
         url = reverse('api-images-list')
-        file = 'test_different_exif_xmp.jpg'
+        file = 'test_exif_xmp_different.jpg'
 
         with open(self.get_input_file(file)) as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
@@ -160,13 +159,13 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertTrue(self.fileExists(response.data['url']))
-        
+
         # Assert that image XMP metadata was stored instead of EXIF
-        self.assertEqual(response.data['caption'], 'corey in JTree')
+        self.assertEqual(response.data['caption'], 'This is another test image.')
 
         # Assert that author names were pulled from both XMP and EXIF
-        self.assertIn(response.data['authors'][0]['person']['full_name'], ('William Matous', 'William A. H. Matous'))
-        self.assertIn(response.data['authors'][1]['person']['full_name'], ('William Matous', 'William A. H. Matous'))
+        self.assertIn(response.data['authors'][0]['person']['full_name'], ('Person A', 'Person B'))
+        self.assertIn(response.data['authors'][1]['person']['full_name'], ('Person A', 'Person B'))
         self.assertNotEqual(response.data['authors'][0]['person']['full_name'], response.data['authors'][1]['person']['full_name'])
 
     def test_create_image_invalid_filename(self):
