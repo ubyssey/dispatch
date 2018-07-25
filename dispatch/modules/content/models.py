@@ -482,13 +482,13 @@ class Image(Model, AuthorMixin, TagMixin):
                 if xmp is not None:
                     ns = xmp.get_namespace_for_prefix('dc')
 
-                    title = xmp.get_array_item(ns, XMP_TITLE, 1)
-                    if title:
-                        self.title = title
-
-                    description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
-                    if description:
-                        self.caption = description
+                    # title = xmp.get_array_item(ns, XMP_TITLE, 1)
+                    # if title:
+                    #     self.title = title
+                    #
+                    # description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
+                    # if description:
+                    #     self.caption = description
 
                     # counter = 1
                     # tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
