@@ -59,7 +59,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
-    update_fields = ('tags')
 
     def get_queryset(self):
         """Optionally restricts the returned articles by filtering against a `topic`
@@ -96,8 +95,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         if author is not None:
             queryset = queryset.filter(authors__person_id=author)
-
-        print(self.request.build_absolute_uri())
 
         return queryset
 
@@ -230,8 +227,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         tags = self.request.query_params.getlist('tags', None)
         q = self.request.query_params.get('q', None)
 
-        print(self.request.query_params)
-        
         if author is not None:
             queryset = queryset.filter(authors__person_id=author)
 

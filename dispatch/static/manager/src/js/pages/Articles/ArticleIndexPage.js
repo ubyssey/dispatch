@@ -3,10 +3,8 @@ import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
 import {AuthorFilterInput, SectionFilterInput, TagsFilterInput}  from '../../components/inputs/filters/'
-// import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
 import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
-// import TagsFilterInput from '../../components/inputs/filters/TagsFilterInput'
 
 const mapStateToProps = (state) => {
   return {
