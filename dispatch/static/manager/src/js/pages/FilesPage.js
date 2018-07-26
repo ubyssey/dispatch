@@ -109,7 +109,10 @@ class FilesPageComponent extends React.Component {
 
               headers={['Filename', 'Created', 'Updated']}
               columns={[
-                item => (<a href={item.url} target='_blank'>{item.name}</a>),
+                item => (<a
+                  href={item.url}
+                  target='_blank'
+                  rel='noopener noreferrer'>{item.name}</a>),
                 item => humanizeDatetime(item.created_at),
                 item => humanizeDatetime(item.updated_at),
               ]}
@@ -122,8 +125,7 @@ class FilesPageComponent extends React.Component {
                 toggleAllItems: this.props.toggleAllFiles,
                 deleteItems: (fileIds) => this.handleDeleteFiles(fileIds),
                 searchItems: (query) => this.handleSearchFiles(query)
-              }}
-            />
+              }} />
           </div>
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag files into window or click here to upload</p>
@@ -137,7 +139,7 @@ class FilesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    files: state.app.files,
+    files: state.app.files.list,
     entities: {
       files: state.app.entities.files
     }

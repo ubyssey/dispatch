@@ -21,7 +21,7 @@ export default class PersonForm extends React.Component {
     super(props)
 
     this.state = {
-      displayImg: null
+      displayImg: null,
     }
   }
 
@@ -41,7 +41,7 @@ export default class PersonForm extends React.Component {
             placeholder='Full Name'
             value={this.props.listItem.full_name || ''}
             fill={true}
-            onChange={ e => this.props.update('full_name', e.target.value) } />
+            onChange={e => this.props.update('full_name', e.target.value)} />
         </FormInput>
         <FormInput
           label='Slug'
@@ -51,7 +51,7 @@ export default class PersonForm extends React.Component {
             placeholder='Slug'
             value={this.props.listItem.slug || ''}
             fill={true}
-            onChange={ e => this.props.update('slug', e.target.value) } />
+            onChange={e => this.props.update('slug', e.target.value)} />
         </FormInput>
         <FormInput
           label='Facebook'
@@ -61,7 +61,7 @@ export default class PersonForm extends React.Component {
             placeholder='Facebook url'
             value={this.props.listItem.facebook_url || ''}
             fill={true}
-            onChange={ e => this.props.update('facebook_url', e.target.value) } />
+            onChange={e => this.props.update('facebook_url', e.target.value)} />
         </FormInput>
         <FormInput
           label='Twitter'
@@ -71,9 +71,8 @@ export default class PersonForm extends React.Component {
             placeholder='Twitter handle'
             value={this.props.listItem.twitter_url || ''}
             fill={true}
-            onChange={ e => this.props.update('twitter_url', e.target.value) } />
+            onChange={e => this.props.update('twitter_url', e.target.value)} />
         </FormInput>
-
         <Dropzone
           ref={(node) => { this.dropzone = node }}
           className='c-person-form__image__dropzone'
@@ -89,7 +88,7 @@ export default class PersonForm extends React.Component {
               </div>}
             <img
               className='c-person-form__images'
-              src={this.state.displayImg || this.props.listItem.image_url}/>
+              src={this.state.displayImg || this.props.listItem.image_url} />
           </div>
         </Dropzone>
 
@@ -112,7 +111,7 @@ export default class PersonForm extends React.Component {
             placeholder='Description'
             value={this.props.listItem.description || ''}
             fill={true}
-            onChange={ e => this.props.update('description', e.target.value) } />
+            onChange={e => this.props.update('description', e.target.value)} />
         </FormInput>
       </form>
     )

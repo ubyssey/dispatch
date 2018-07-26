@@ -3,19 +3,17 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery,
-    Issue, File, Page, Author, Section, Tag, Topic,
-    Video, VideoAttachment)
-
-from dispatch.modules.auth.models import Person, User
+    Article, Image, ImageAttachment, ImageGallery, Issue,
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
+from dispatch.modules.auth.models import Person, User, Invite
+from dispatch.admin.registration import send_invitation
+from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator)
+    SlugValidator, AuthorValidator, TimelineValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
-
-from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
@@ -63,10 +61,17 @@ class UserSerializer(DispatchModelSerializer):
     )
     password_a = serializers.CharField(
         required=False,
+        allow_blank=True,
         write_only=True,
         validators=[PasswordValidator(confirm_field='password_b')]
     )
-    password_b = serializers.CharField(required=False, write_only=True)
+    password_b = serializers.CharField(required=False, allow_blank=True, write_only=True)
+
+    permissions = serializers.CharField(source='get_permissions', read_only=True)
+
+    permission_level = serializers.CharField(required=False, allow_null=True, write_only=True)
+
+    user_id = serializers.IntegerField(source='get_user_id', read_only=True)
 
     class Meta:
         model = User
@@ -76,10 +81,13 @@ class UserSerializer(DispatchModelSerializer):
             'person',
             'password_a',
             'password_b',
+            'permissions',
+            'permission_level',
+            'user_id'
         )
 
     def create(self, validated_data):
-        instance = User()
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permission_level'])
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -91,7 +99,49 @@ class UserSerializer(DispatchModelSerializer):
 
         instance.save()
 
+        permissions = validated_data.get('permission_level')
+        instance.modify_permissions(permissions)
+
         return instance
+
+class InviteSerializer(DispatchModelSerializer):
+    """Serializes the Invite model."""
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    permissions = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+
+    expiration_date = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Invite
+        fields = (
+            'id',
+            'email',
+            'person',
+            'permissions',
+            'expiration_date'
+        )
+
+    def create(self, validated_data):
+        instance = Invite()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        send_invitation(validated_data['email'], instance.id)
+        return super(InviteSerializer, self).update(instance, validated_data)
 
 class FileSerializer(DispatchModelSerializer):
     """Serializes the File model."""
@@ -148,6 +198,7 @@ class IssueSerializer(DispatchModelSerializer):
 
 class TagSerializer(DispatchModelSerializer):
     """Serializes the Tag model."""
+
     class Meta:
         model = Tag
         fields = (
@@ -228,6 +279,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""
+
     class Meta:
         model = Topic
         fields = (
@@ -307,6 +359,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
 
 class SectionSerializer(DispatchModelSerializer):
     """Serializes the Section model."""
+
     class Meta:
         model = Section
         fields = (
@@ -395,7 +448,7 @@ class ContentSerializer(serializers.Serializer):
 
     def sanitize_block(self, block):
         """Santizes the data for the given block.
-        If block has a matching embed serializer, use the `to_internal_value` method"""
+        If block has a matching embed serializer, use the `to_internal_value` method."""
 
         embed_type = block.get('type', None)
         data = block.get('data', {})
@@ -410,6 +463,7 @@ class ContentSerializer(serializers.Serializer):
 
     def queue_instance(self, embed_type, data):
         """Queue an instance to be fetched from the database."""
+
         serializer = self.serializers.get(embed_type, None)
 
         if serializer is None:
@@ -425,6 +479,7 @@ class ContentSerializer(serializers.Serializer):
     def load_instances(self, embed_type, ids):
         """Fetch all queued instances of type `embed_type`, save results
         to `self.instances`"""
+
         serializer = self.serializers.get(embed_type, None)
 
         if serializer is None:
@@ -434,6 +489,7 @@ class ContentSerializer(serializers.Serializer):
 
     def insert_instance(self, block):
         """Insert a fetched instance into embed block."""
+
         embed_type = block.get('type', None)
         data = block.get('data', {})
         serializer = self.serializers.get(embed_type, None)
@@ -454,16 +510,19 @@ class ContentSerializer(serializers.Serializer):
 
     def queue_data(self, content):
         """Queue data to be loaded for each embed block."""
+
         for block in content:
             self.queue_instance(block['type'], block['data'])
 
     def load_data(self):
         """Load data in bulk for each embed block."""
+
         for embed_type in self.ids.keys():
             self.load_instances(embed_type, self.ids[embed_type])
 
     def insert_data(self, content):
         """Insert loaded data into embed data blocks."""
+
         return map(self.insert_instance, content)
 
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
@@ -569,6 +628,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
 
+        if instance.template == 'timeline':
+            TimelineValidator(validated_data.get('template_data', None))
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
@@ -621,6 +682,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
     template_data = JSONField(required=False)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Page
@@ -634,6 +696,7 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'snippet',
             'content',
             'published_at',
+            'updated_at',
             'is_published',
             'published_version',
             'current_version',
@@ -751,5 +814,104 @@ class ZoneSerializer(serializers.Serializer):
             instance.delete()
         else:
             instance.save(validated_data)
+
+        return instance
+
+class PollVoteSerializer(DispatchModelSerializer):
+    """Serializes the PollVote model"""
+
+    answer_id =  serializers.IntegerField(write_only=True)
+
+    class Meta:
+
+        model = PollVote
+        fields = (
+            'id',
+            'answer_id',
+        )
+
+class PollAnswerSerializer(DispatchModelSerializer):
+    """Serializes the PollAnswer model"""
+
+    poll_id =  serializers.IntegerField(write_only=True)
+    vote_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PollAnswer
+        fields = (
+            'id',
+            'name',
+            'vote_count',
+            'poll_id'
+        )
+
+    def get_vote_count(self, obj):
+        vote_count = 0
+        poll = Poll.objects.get(id=obj.poll_id)
+
+        if self.is_authenticated() or poll.show_results:
+            vote_count = obj.get_vote_count()
+
+        return vote_count
+
+class PollSerializer(DispatchModelSerializer):
+    """Serializes the Poll model."""
+
+    answers = serializers.SerializerMethodField()
+    answers_json = JSONField(
+        required=False,
+        write_only=True
+    )
+    total_votes = serializers.SerializerMethodField()
+    question = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = Poll
+        fields = (
+            'id',
+            'is_open',
+            'show_results',
+            'name',
+            'question',
+            'answers',
+            'answers_json',
+            'total_votes'
+        )
+
+    def get_total_votes(self,obj):
+        total_votes = 0
+
+        if self.is_authenticated() or obj.show_results:
+            total_votes = obj.get_total_votes()
+
+        return total_votes
+
+    def get_answers(self, obj):
+        answers = PollAnswer.objects.filter(poll_id=obj.id)
+        serializer = PollAnswerSerializer(answers, many=True, context=self.context)
+        return serializer.data
+
+    def create(self, validated_data):
+        # Create new ImageGallery instance
+        instance = Poll()
+
+        # Then save as usual
+        return self.update(instance, validated_data, True)
+
+    def update(self, instance, validated_data, is_new=False):
+        # Update all the basic fields
+        instance.question = validated_data.get('question', instance.question)
+        instance.name = validated_data.get('name', instance.name)
+        instance.is_open = validated_data.get('is_open', instance.is_open)
+        instance.show_results = validated_data.get('show_results', instance.show_results)
+        # Save instance before processing/saving content in order to
+        # save associations to correct ID
+        instance.save()
+
+        answers = validated_data.get('answers_json')
+
+        if isinstance(answers, list):
+            instance.save_answers(answers, is_new)
 
         return instance

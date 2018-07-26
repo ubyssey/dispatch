@@ -15,7 +15,7 @@ function prepareMultipartPayload(payload) {
       if (payload[key] && payload[key].constructor === File) {
         formData.append(key, payload[key])
       } else if (typeof payload[key] !== 'undefined') {
-        if(payload[key] === null) {
+        if (payload[key] === null) {
           formData.append(key, '')
         }
         else {
@@ -78,7 +78,7 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function getPageRequest(uri, token=null) {
@@ -89,7 +89,7 @@ function getPageRequest(uri, token=null) {
       headers: buildHeaders(token)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postRequest(route, id=null, payload={}, token=null) {
@@ -101,7 +101,7 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
@@ -113,7 +113,7 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function patchMultipartRequest(route, id=null, payload={}, token=null) {
@@ -125,7 +125,7 @@ function patchMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 function deleteRequest(route, id=null, payload={}, token=null) {
@@ -137,7 +137,7 @@ function deleteRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(handleError)
+    .then(handleError)
 }
 
 function patchRequest(route, id=null, payload={}, token=null) {
@@ -149,7 +149,7 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-  .then(parseJSON)
+    .then(parseJSON)
 }
 
 const DispatchAPI = {
@@ -278,6 +278,12 @@ const DispatchAPI = {
     },
     get: (token, personId) => {
       return getRequest('persons', personId, null, token)
+    },
+    getUser: (token, personId) => {
+      return getRequest('persons.user', personId, null, token)
+    },
+    getInvite: (token, personId) => {
+      return getRequest('persons.invite', personId, null, token)
     },
     save: (token, personId, data) => {
       return patchMultipartRequest('persons', personId, data, token)
@@ -431,9 +437,56 @@ const DispatchAPI = {
     get: (token, userId) => {
       return getRequest('users', userId, null, token)
     },
+    list: (token, query) => {
+      return getRequest('users', null, query, token)
+    },
+    create: (token, data) => {
+      return postRequest('users', null, data, token)
+    },
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
+    },
+    delete: (token, userId) => {
+      return deleteRequest('users', userId, null, token)
+    },
+    resetPassword: (token, userId) => {
+      return postRequest('users.reset_password', userId, null, token)
     }
+  },
+  'invites': {
+    get: (token, query) => {
+      return getRequest('invites', null, query, token)
+    },
+    create: (token, data) => {
+      return postRequest('invites', null, data, token)
+    },
+    list: (token, query) => {
+      return getRequest('invites', null, query, token)
+    },
+    save: (token, inviteId, data)  => {
+      return patchRequest('invites', inviteId, data, token)
+    },
+    delete: (token, inviteId) => {
+      return deleteRequest('invites', inviteId, null, token)
+    }
+  },
+  'polls': {
+    list: (token, query) => {
+      return getRequest('polls', null, query, token)
+    },
+    get: (token, pollId) => {
+      return getRequest('polls', pollId, null, token)
+    },
+    save: (token, pollId, data) => {
+      return patchRequest('polls', pollId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('polls', null, data, token)
+    },
+    delete: (token, pollId) => {
+      return deleteRequest('polls', pollId, null, token)
+    },
+
   }
 }
 

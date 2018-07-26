@@ -44,7 +44,7 @@ class ImageManagerComponent extends React.Component {
   }
 
   loadMore() {
-    if(this.props.images.count > this.state.limit){
+    if (this.props.images.count > this.state.limit){
       this.setState(prevState => ({
         limit: prevState.limit + 10
       }), this.props.listImages(this.props.token, {limit: this.state.limit, ordering: '-created_at'}))
@@ -150,13 +150,13 @@ class ImageManagerComponent extends React.Component {
               ref={(node) => { this.images = node }}>{images}</div>
           </Dropzone>
           {!this.props.many ?
-          <div className='c-image-manager__active'>
-            {image ? imagePanel : null}
-          </div> : null}
+            <div className='c-image-manager__active'>
+              {image ? imagePanel : null}
+            </div> : null}
           
         </div>
         <div className='c-image-manager__footer'>
-          <div className='c-image-manger__footer__selected'></div>
+          <div className='c-image-manger__footer__selected' />
           <AnchorButton
             disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
             onClick={() => this.insertImage()}>Insert</AnchorButton>

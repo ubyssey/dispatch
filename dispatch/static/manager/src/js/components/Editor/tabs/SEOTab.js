@@ -59,7 +59,7 @@ export default function SEOTab(props) {
           placeholder='Focus Keywords'
           value={props.seo_keyword}
           fill={true}
-          onChange={ e => props.update('seo_keyword', e.target.value) } />
+          onChange={e => props.update('seo_keyword', e.target.value)} />
 
         <div className='c-article-sidebar__confirmation'>
           <ConfirmationTag
@@ -77,7 +77,7 @@ export default function SEOTab(props) {
           placeholder='Meta Description'
           value={props.seo_description}
           rows='5'
-          onChange={ e => props.update('seo_description', e.target.value) } />
+          onChange={e => props.update('seo_description', e.target.value)} />
         <div className='c-article-sidebar__confirmation'>
           <CharacterCount
             count={props.seo_description.length}

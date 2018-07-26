@@ -6,15 +6,17 @@ export const ARTICLES = resourceActionTypes('ARTICLES', ['PUBLISH', 'UNPUBLISH']
 export const PAGES = resourceActionTypes('PAGES', ['PUBLISH', 'UNPUBLISH'])
 export const FILES = resourceActionTypes('FILES')
 export const IMAGES = resourceActionTypes('IMAGES')
-export const PERSONS = resourceActionTypes('PERSONS')
+export const PERSONS = resourceActionTypes('PERSONS', ['GET_USER', 'SET_USER', 'GET_INVITE', 'SET_INVITE'])
 export const TOPICS = resourceActionTypes('TOPICS')
 export const TAGS = resourceActionTypes('TAGS')
 export const ISSUES = resourceActionTypes('ISSUES')
 export const TEMPLATES = resourceActionTypes('TEMPLATES')
 export const GALLERIES = resourceActionTypes('GALLERIES')
 export const EVENTS = resourceActionTypes('EVENTS', ['COUNT_PENDING'])
-export const USERS = resourceActionTypes('USERS')
+export const USERS = resourceActionTypes('USERS', ['RESET_PASSWORD'])
 export const VIDEOS = resourceActionTypes('VIDEOS')
+export const INVITES = resourceActionTypes('INVITES')
+export const POLLS = resourceActionTypes('POLLS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

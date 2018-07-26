@@ -42,6 +42,26 @@ class ArticleContentTests(DispatchAPITestCase, DispatchMediaTestMixin):
         ]
 
         expected = '<p>This is a test paragraph</p><p>This is another test paragraph</p>'
+        
+        
+
+        self.assertEqual(self.article.html, expected)
+    
+    def test_ads(self):
+        """Should be able to render ad node"""
+
+        self.article.content = [
+            {
+                'type': 'ad',
+                'data': 'This is a test ad'
+            },
+            {
+                'type': 'ad',
+                'data': 'This is another test ad'
+            }
+        ]
+        
+        expected = '<div class="o-article-embed o-article-embed--advertisement"><div class="o-article-embed__advertisement"><div class="o-advertisement o-advertisment--banner o-advertisement--center"><div class="adslot" id="div-gpt-ad-1443288719995-10-1" data-size="banner" data-dfp="Intra_Article_1"></div></div></div></div>\n<div class="o-article-embed o-article-embed--advertisement"><div class="o-article-embed__advertisement"><div class="o-advertisement o-advertisment--banner o-advertisement--center"><div class="adslot" id="div-gpt-ad-1443288719995-11-1" data-size="banner" data-dfp="Intra_Article_2"></div></div></div></div>\n'
 
         self.assertEqual(self.article.html, expected)
 

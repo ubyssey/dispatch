@@ -11,26 +11,28 @@ import FieldGroup from '../../fields/FieldGroup'
 
 class TemplateTabComponent extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getTemplate(this.props.token, this.props.template)
   }
 
-  updateField(fieldName, value) {
+  updateField(name, value) {
+    if (value instanceof Date) {
+      value = String(value)
+    }
     this.props.update(
       'template_data',
-      R.assoc(fieldName, value, this.props.data)
+      R.assoc(name, value, this.props.data)
     )
   }
 
   render() {
     const template = this.props.entities.templates[this.props.template] || null
-
     const fields = (
       <FieldGroup
         name={`template-field__${template.id}`}
-        fields={template ? template.fields : []}
-        data={this.props.zone.data}
-        errors={this.props.data}
+        fields={(this.props.data ? (template ? template.fields : []) : null)}
+        data={this.props.data}
+        errors={this.props.errors}
         onChange={(name, data) => this.updateField(name, data)} />
     )
 
@@ -39,7 +41,7 @@ class TemplateTabComponent extends React.Component {
         <FormInput label='Template'>
           <TemplateSelectInput
             selected={this.props.template}
-            update={template => this.props.update('template', template) } />
+            update={template => this.props.update('template', template)} />
         </FormInput>
         <div>{fields}</div>
       </div>
@@ -48,7 +50,9 @@ class TemplateTabComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const zone = state.app.entities.local.zones[state.app.zones.single.id]
   return {
+    zone: zone,
     templates: state.app.templates,
     entities: {
       templates: state.app.entities.templates

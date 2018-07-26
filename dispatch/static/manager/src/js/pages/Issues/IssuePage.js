@@ -6,7 +6,7 @@ export default function IssuePage(props) {
   return (
     <IssueEditor
       itemId={props.params.issueId}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

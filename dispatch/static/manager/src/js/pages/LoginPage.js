@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as userActions from '../actions/UserActions'
+import userActions from '../actions/UserActions'
 
 require('../../styles/components/login_page.scss')
 
@@ -47,14 +47,14 @@ class LoginPageComponent extends React.Component {
               type="email"
               placeholder='Email'
               value={this.state.email}
-              onChange={this.onChangeEmail} /><br/>
+              onChange={this.onChangeEmail} /><br />
             <input
               className='pt-input'
               name="password"
               type="password"
               placeholder='Password'
               value={this.state.password}
-              onChange={this.onChangePassword} /><br/>
+              onChange={this.onChangePassword} /><br />
             <button
               className='pt-button'
               type="submit">

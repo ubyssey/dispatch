@@ -45,7 +45,7 @@ class ImagesPageComponent extends React.Component {
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
 
- 
+
     if (this.props.location.query.author) {
       query.author = this.props.location.query.author
     }
@@ -100,10 +100,8 @@ class ImagesPageComponent extends React.Component {
   }
 
   renderThumb(url) {
-    return(
-      <div className={'c-image-page-thumb'} style={{backgroundImage: 'url(' + url + ')'}}>
-
-      </div>
+    return (
+      <div className={'c-image-page-thumb'} style={{backgroundImage: 'url(' + url + ')'}} />
     )
   }
 
@@ -131,18 +129,16 @@ class ImagesPageComponent extends React.Component {
       item => humanizeDatetime(item.created_at, true),
       item => humanizeDatetime(item.updated_at, true)
     ])
- 
+
     const filters = [
       <AuthorFilterInput
         key={'authorFilter'}
         selected={this.props.location.query.author}
-        update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)}
-        />,
+        update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)} />,
       <TagsFilterInput
         key={'tagsFilter'}
         selected={this.convertTags(this.props.location.query.tags)}
-        update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)}
-        />
+        update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 
     return (
@@ -180,8 +176,7 @@ class ImagesPageComponent extends React.Component {
                 toggleAllItems: this.props.toggleAllImages,
                 deleteItems: (imageIds) => this.handleDeleteImages(imageIds),
                 searchItems: (query) => this.handleSearchImages(query)
-              }}
-            />
+              }} />
           </div>
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>

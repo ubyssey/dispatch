@@ -4,8 +4,8 @@ from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
-from dispatch.models import Article, Image
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer
+from dispatch.models import Article, Image, Poll
+from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, PollSerializer
 
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.validators import is_valid_id
@@ -327,3 +327,18 @@ class WidgetField(Field):
         widget = self.get_widget(data['id'])
         widget.set_data(data['data'])
         return widget
+
+class PollField(ModelField):
+    type = 'poll'
+
+    model = Poll
+    serializer = PollSerializer
+
+class InstructionField(Field):
+    type = 'instruction'
+
+    def __init__(self, label, options=[], required=False):
+        self.options = options
+        self.valid_options = set(option[0] for option in self.options)
+
+        super(InstructionField, self).__init__(label=label, many=False, required=required)

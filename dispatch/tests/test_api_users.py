@@ -3,6 +3,7 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 from dispatch.models import Person, User
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
@@ -28,6 +29,31 @@ class UserTests(DispatchAPITestCase):
 
         self.assertEqual(response.data['email'], TEST_USER_EMAIL)
         self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
+
+    def test_admin_creation(self):
+        """Test creating an admin user"""
+
+        url = reverse('api-users-list')
+
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        data = {
+            'email' : TEST_USER_EMAIL,
+            'person' : person_id,
+            'password_a': 'TheBestPassword',
+            'password_b': 'TheBestPassword',
+            'permission_level': 'admin'
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        user = User.objects.get(person=person_id)
+
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(response.data['email'], TEST_USER_EMAIL)
+        self.assertEqual(response.data['person']['full_name'], TEST_USER_FULL_NAME)
+        self.assertTrue(user.has_perm('dispatch.add_user'))
 
     def test_user_invalid_person(self):
         """Test to ensure user creation fails if wrong person ID is given"""
@@ -231,7 +257,6 @@ class UserTests(DispatchAPITestCase):
             email=TEST_USER_EMAIL,
             full_name=TEST_USER_FULL_NAME
         )
-
         user_id = response.data['id']
         person_id = response.data['person']['id']
 
@@ -290,3 +315,31 @@ class UserTests(DispatchAPITestCase):
         response = self.client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_reset_password(self):
+        """Should be able to send a password reset email to a user"""
+
+        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+
+        url = '%s%s/' % (reverse('api-users-detail', args=[user_id]),'reset_password')
+
+        response = self.client.post(url, {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_reset_password_unpermitted(self):
+        """A non-admin user should not be able to reset another users password"""
+
+        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+
+        non_admin_user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
+
+        token, created = Token.objects.get_or_create(user_id=non_admin_user.data['id'])
+
+        url = '%s%s/' % (reverse('api-users-detail', args=[user_id]),'reset_password')
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token %s' % token.key)
+
+        response = self.client.post(url, {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

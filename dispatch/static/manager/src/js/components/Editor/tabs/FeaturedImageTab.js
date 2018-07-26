@@ -6,7 +6,7 @@ import { FormInput, TextAreaInput, ImageInput } from '../../inputs'
 export default function FeaturedImageTab(props) {
 
   function updateImage(imageId) {
-    if(imageId){
+    if (imageId){
       return props.update(
         'featured_image',
         R.merge(props.featured_image, { image: imageId })

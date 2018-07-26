@@ -6,7 +6,7 @@ export default function NewIssuePage(props) {
   return (
     <IssueEditor
       isNew={true}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

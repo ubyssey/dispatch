@@ -29,7 +29,7 @@ class DashboardPageComponent extends React.Component {
           <div className='c-dashboard__activity__item__text'>
             <span className='c-dashboard__activity__item__text__person'>{elem.meta.author}</span>
             {elem.meta.count == 1 ? ` ${elem.meta.action} ` : ` made ${elem.meta.count} ${elem.meta.action} to ` }
-            <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}}/>
+            <Link to={`articles/${elem.meta.id}`} dangerouslySetInnerHTML={{__html: elem.meta.headline}} />
             <span className='c-dashboard__leftlistspan'>{` ${moment(elem.timestamp).from(moment())}`}</span>
           </div>
         </li>
@@ -44,7 +44,7 @@ class DashboardPageComponent extends React.Component {
           <Link to={`/articles/${article.id}`} dangerouslySetInnerHTML={{__html: article.headline}} />
         </li>
       )
-    )
+      )
   }
 
   render() {
@@ -61,12 +61,12 @@ class DashboardPageComponent extends React.Component {
             <ul className='c-dashboard_quick-actions'>
               <li className='c-dashboard_quick-actions__item'>
                 <LinkButton to='/articles/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add'></span>New Article
+                  <span className='pt-icon-standard pt-icon-add' />New Article
                 </LinkButton>
               </li>
               <li className='c-dashboard_quick-actions__item'>
                 <LinkButton to='/pages/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add'></span>New Page
+                  <span className='pt-icon-standard pt-icon-add' />New Page
                 </LinkButton>
               </li>
             </ul>

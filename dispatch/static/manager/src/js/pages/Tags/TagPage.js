@@ -6,7 +6,7 @@ export default function TagPage(props) {
   return (
     <TagEditor
       itemId={props.params.tagId}
-      goBack={props.history.goBack}
+      goBack={props.router.goBack}
       route={props.route} />
   )
 }

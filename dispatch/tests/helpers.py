@@ -156,7 +156,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='multipart')
 
     @classmethod
-    def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword'):
+    def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword', permissions=None):
         """
         A helper method that creates a simple user object with the given attributes
         and returns the response
@@ -168,7 +168,8 @@ class DispatchTestHelpers(object):
             'email' : email,
             'person' : person,
             'password_a': password,
-            'password_b': password
+            'password_b': password,
+            'permission_level': permissions
         }
 
         return client.post(url, data, format='json')
@@ -206,5 +207,38 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-videos-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_invite(cls, client, email, person=None, permissions=''):
+        """Create dummy invite instance"""
+
+        if person is None:
+            person = cls.create_person(client, full_name='Invited person')
+
+        url = reverse('api-invites-list')
+
+        data = {
+            'email': email,
+            'permissions': permissions,
+            'person': person.data['id']
+        }
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_poll(cls, client, name='test name', question='test question', answers=[{'id':1,'name':'answer1'},{'id':2,'name':'answer2'}], is_open=True, show_results=True):
+        """Create a dummy poll instance"""
+
+        data = {
+            'name': name,
+            'question': question,
+            'answers_json': answers,
+            'is_open': is_open,
+            'show_results': show_results
+        }
+
+        url = reverse('api-polls-list')
 
         return client.post(url, data, format='json')
