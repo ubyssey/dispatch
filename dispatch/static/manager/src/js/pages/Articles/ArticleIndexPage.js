@@ -77,7 +77,11 @@ function ArticlePageComponent(props) {
         item => item.latest_version + ' revisions'
       ]}
       shouldReload={(prevProps, props) => {
-        return (prevProps.location.query.section !== props.location.query.section) || (prevProps.location.query.author !== props.location.query.author)
+        return (
+          (prevProps.location.query.section !== props.location.query.section) || 
+          (prevProps.location.query.author !== props.location.query.author)  ||
+          (prevProps.location.query.tags !== props.location.query.tags)
+        )
       }}
       queryHandler={(query, props) => {
         if (props.location.query.section) {
@@ -86,9 +90,12 @@ function ArticlePageComponent(props) {
         if (props.location.query.author) {
           query.author = props.location.query.author
         }
+        if (props.location.query.tags) {
+          query.tags = props.location.query.tags
+        }
         return query
       }}
-      searchListItems={(query) => props.searchArticles(props.location.query.author, props.location.query.section, query)}
+      searchListItems={(query) => props.searchArticles(props.location.query.author, props.location.query.section, props.location.query.tags, query)}
       {...props} />
   )
 }

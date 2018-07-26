@@ -21,7 +21,7 @@ export default class PersonForm extends React.Component {
     super(props)
 
     this.state = {
-      displayImg: null
+      displayImg: null,
     }
   }
 
@@ -73,7 +73,6 @@ export default class PersonForm extends React.Component {
             fill={true}
             onChange={e => this.props.update('twitter_url', e.target.value)} />
         </FormInput>
-
         <Dropzone
           ref={(node) => { this.dropzone = node }}
           className='c-person-form__image__dropzone'
