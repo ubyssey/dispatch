@@ -134,11 +134,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.fileExists(response.data['url']))
+
         # Assert that image metadata was read
         self.assertEqual(response.data['title'], 'Test Image')
-
         self.assertEqual(response.data['caption'], 'This is a test image.')
-
         self.assertEquals(response.data['authors'][0]['person']['full_name'], 'Person A')
 
         expected_tags = ('climb', 'joshua', 'tree', 'park')
@@ -157,7 +156,6 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         self.assertTrue(self.fileExists(response.data['url']))
 
         # Assert that image XMP metadata was stored instead of EXIF
