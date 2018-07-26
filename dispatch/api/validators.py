@@ -66,7 +66,6 @@ def AuthorValidator(data):
 
 class TemplateValidator(object):
     def set_context(self, serializer_field):
-        # self.data = serializer_field.parent.initial_data
         self.instance = serializer_field.parent.instance
         
     def __call__(self, value):
@@ -75,18 +74,13 @@ class TemplateValidator(object):
 
         errors = {}
 
-        # print(value)
-
         if self.instance.template is not None:
             try:
                 template = ThemeManager.Templates.get(self.instance.template)
             except TemplateNotFound as e:
                 errors['template'] = str(e)
-            # print(self.instance.template_data)
             for field in template.fields:
                 try:
-                    # data = self.instance.template_data.get(field.name)
-                    print(value.get(field.name))
                     field.validate(value.get(field.name))
                 except KeyError:
                     pass

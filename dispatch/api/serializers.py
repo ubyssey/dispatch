@@ -559,7 +559,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.integrations = validated_data.get('integrations', instance.integrations)
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
-        print('update', instance.template_data)
 
         instance.save()
 

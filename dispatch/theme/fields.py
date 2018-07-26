@@ -1,4 +1,5 @@
 import json
+import dateutil.parser as dt
 
 from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
@@ -147,9 +148,11 @@ class DateTimeField(Field):
                 raise InvalidField('%s is required' % self.label)
             else:
                 return
+        print(data)
+        # print(dt.parse(data))
+        
 
         if not parse_datetime(data):
-            print(data, type(data))
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):

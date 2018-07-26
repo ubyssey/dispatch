@@ -2,7 +2,7 @@ import React from 'react'
 import { Popover, Position } from '@blueprintjs/core'
 import { DatePicker, DateTimePicker } from '@blueprintjs/datetime'
 
-import { humanizeDatetime } from '../../util/helpers'
+import { humanizeDatetime, makeDateTime } from '../../util/helpers'
 
 const TODAY = new Date()
 const MIN_DATE = new Date(0)
@@ -23,6 +23,7 @@ function ensureDate(date) {
 
 export default function DateTimeInput(props) {
   const date = ensureDate(props.value)
+  console.log(date)
 
   const selectString = props.showTimePicker ?
     'Select a date and time...' :
