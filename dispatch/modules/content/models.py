@@ -477,7 +477,7 @@ class Image(Model, AuthorMixin, TagMixin):
                 if author_name:
                     author_names.add(author_name)
 
-        except XMPError as e:
+        except XMPError:
             pass
 
         for n, name in enumerate(author_names):
