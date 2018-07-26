@@ -4,8 +4,6 @@ class Template:
 
     __metaclass__ = MetaFields
     
-    required = []
-
     def __init__(self):
         self.data = {}
 

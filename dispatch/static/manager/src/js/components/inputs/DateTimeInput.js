@@ -2,7 +2,7 @@ import React from 'react'
 import { Popover, Position } from '@blueprintjs/core'
 import { DatePicker, DateTimePicker } from '@blueprintjs/datetime'
 
-import { humanizeDatetime, makeDateTime } from '../../util/helpers'
+import { humanizeDatetime } from '../../util/helpers'
 
 const TODAY = new Date()
 const MIN_DATE = new Date(0)
