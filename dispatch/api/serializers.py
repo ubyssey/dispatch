@@ -12,7 +12,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TimelineValidator)
+    SlugValidator, AuthorValidator, TemplateValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -559,7 +559,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     template = TemplateSerializer(required=False, source='get_template')
     template_id = serializers.CharField(required=False, write_only=True)
-    template_data = JSONField(required=False)
+    template_data = JSONField(required=False, validators=[TemplateValidator()])
 
     integrations = JSONField(required=False)
 
@@ -623,9 +623,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.template = validated_data.get('template_id', instance.template)
         instance.template_data = validated_data.get('template_data', instance.template_data)
 
-        if instance.template == 'timeline':
-            TimelineValidator(validated_data.get('template_data', None))
-        # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
@@ -791,7 +788,8 @@ class ZoneSerializer(serializers.Serializer):
                     if field_data is not None:
                         try:
                             field.validate(field_data)
-                        except InvalidField as e:
+                        except 
+                        as e:
                             errors[field.name] = str(e)
                     elif field.required:
                         errors[field.name] = '%s is required' % field.label
