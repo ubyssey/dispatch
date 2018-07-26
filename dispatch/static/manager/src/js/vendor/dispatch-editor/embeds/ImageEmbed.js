@@ -9,11 +9,10 @@ const STYLE_OPTIONS = [
 ]
 
 const WIDTH_OPTIONS = [
-  ['100px', '100px'],
-  ['150px', '150px'],
-  ['200px', '200px'],
-  ['250px', '250px'],
-  ['300px', '300px'],
+  ['100%', 'full'],
+  ['100px', 'small'],
+  ['200px', 'medium'],
+  ['300px', 'large'],
 ]
 
 function ImageEmbedComponent(props) {
@@ -31,12 +30,10 @@ function ImageEmbedComponent(props) {
             options={STYLE_OPTIONS}
             selected={props.data.style}
             onChange={e => props.updateField('style', e.target.value)} />
-          {props.data.style !== 'default' && 
-            <SelectInput
-              options={WIDTH_OPTIONS}
-              selected={props.data.width}
-              onChange={e => props.updateField('width', e.target.value)} /> 
-          }
+          <SelectInput
+            options={WIDTH_OPTIONS}
+            selected={props.data.width}
+            onChange={e => props.updateField('width', e.target.value)} /> 
         </FormInput>
         <FormInput label='Caption'>
           <TextInput
