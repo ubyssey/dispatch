@@ -3,9 +3,8 @@ import os
 import re
 import uuid
 import io
-from tempfile import TemporaryFile
 
-from libxmp import XMPFiles, XMPMeta, XMPError
+from libxmp import XMPError
 from PIL import Image as Img
 from jsonfield import JSONField
 
@@ -24,6 +23,7 @@ from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
+from dispatch.modules.content.xmp import parse_xmp
 from dispatch.modules.content.mixins import AuthorMixin, TagMixin, TopicMixin
 from dispatch.modules.auth.models import Person, User
 
@@ -444,86 +444,39 @@ class Image(Model, AuthorMixin, TagMixin):
                 if author_name is not None:
                     author_names.add(author_name)
 
-        b = bytearray(buffer)
+        xmp = parse_xmp(buffer)
 
-        with TemporaryFile() as f:
-            f.write(b)
-            f.seek(0)
+        try:
+            if xmp is not None:
+                ns = xmp.get_namespace_for_prefix('dc')
 
-            def dirty_parse_xmp(infile):
-                xmp_data = ''
-                xmp_started = False
+                title = xmp.get_array_item(ns, XMP_TITLE, 1)
+                if title:
+                    self.title = title
 
-                for line in infile:
-                    if not xmp_started:
-                        xmp_started = '<x:xmpmeta' in line
-                    if xmp_started:
-                        xmp_data += line
-                        if line.find('</x:xmpmeta') > -1:
-                            break
-                else:
-                    return None
+                description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
+                if description:
+                    self.caption = description
 
-                xmp_open_tag = xmp_data.find('<x:xmpmeta')
-                xmp_close_tag = xmp_data.find('</x:xmpmeta>')
-                xmp_str = xmp_data[xmp_open_tag:xmp_close_tag + 12]
-
-                meta = XMPMeta()
-                meta.parse_from_str(xmp_str)
-
-                return meta
-
-            try:
-                # xmpfile = XMPFiles(file_path=f.name)
-                # xmp = xmpfile.get_xmp()
-
-                xmp = dirty_parse_xmp(f)
-
-                #print xmp
-
-                if xmp is not None:
-                    ns = xmp.get_namespace_for_prefix('dc')
-
-                    title = xmp.get_array_item(ns, XMP_TITLE, 1)
-                    if title:
-                        self.title = title
-
-                    print 'XMP title: %s' % title
-
-                    description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
-                    if description:
-                        self.caption = description
-
-                    print 'XMP description: %s' % description
-
-                    counter = 1
-                    tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                    while tag_name != '':
-                        print 'XMP tag: %s' % tag_name
-                        tag, created = Tag.objects.get_or_create(name=tag_name)
-                        self.tags.add(tag)
-                        counter += 1
-                        try:
-                            tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                        except:
-                            print 'end of tags'
-                            break
+                counter = 1
+                tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                while tag_name != '':
+                    tag, created = Tag.objects.get_or_create(name=tag_name)
+                    self.tags.add(tag)
+                    counter += 1
 
                     try:
-                        author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
-                        print 'XMP creator: %s' % author_name
+                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
+                    except XMPError:
+                        break
 
-                        if author_name:
-                            author_names.add(author_name)
-                    except:
-                        print 'no author'
+                author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
 
+                if author_name:
+                    author_names.add(author_name)
 
-
-            except XMPError as e:
-                pass
-
-        #print author_names
+        except XMPError as e:
+            pass
 
         for n, name in enumerate(author_names):
             person, created = Person.objects.get_or_create(full_name=name)
