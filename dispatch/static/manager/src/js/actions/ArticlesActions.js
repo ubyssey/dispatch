@@ -44,7 +44,7 @@ class ArticlesActions extends PublishableActions {
     return data
   }
 
-  search(author, section, query) {
+  search(author, section, tags, query) {
     let queryObj = {}
 
     if (query) {
@@ -53,6 +53,10 @@ class ArticlesActions extends PublishableActions {
 
     if (section) {
       queryObj.section = section
+    }
+
+    if (tags) {
+      queryObj.tags = tags
     }
 
     if (author) {
