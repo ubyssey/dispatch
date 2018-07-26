@@ -1,0 +1,5 @@
+Welcome to {{ organization }}! You can set your password and login at the link below:
+
+(This link will expire in 24 hours)
+
+{{ url }}

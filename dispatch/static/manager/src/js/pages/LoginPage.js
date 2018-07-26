@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DocumentTitle from 'react-document-title'
 
-import * as userActions from '../actions/UserActions'
+import userActions from '../actions/UserActions'
 
 require('../../styles/components/login_page.scss')
 

@@ -16,7 +16,8 @@ const mapStateToProps = (state) => {
       remote: state.app.entities.persons,
       local: state.app.entities.local.persons,
     },
-    token: state.app.auth.token
+    token: state.app.auth.token,
+    settings: state.app.settings
   }
 }
 
