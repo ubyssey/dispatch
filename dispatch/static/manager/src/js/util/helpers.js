@@ -14,7 +14,6 @@ export function humanizeDatetime(timestamp, isDateTime) {
 export function pythonifyDateTime(timestamp) {
   
   if (!timestamp) {
-    console.log('not timestamp', timestamp)
     return null
   }
 

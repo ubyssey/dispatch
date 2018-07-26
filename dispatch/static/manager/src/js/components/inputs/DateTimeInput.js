@@ -23,7 +23,6 @@ function ensureDate(date) {
 
 export default function DateTimeInput(props) {
   const date = ensureDate(props.value)
-  console.log(date)
 
   const selectString = props.showTimePicker ?
     'Select a date and time...' :

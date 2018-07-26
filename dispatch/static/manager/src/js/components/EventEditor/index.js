@@ -37,7 +37,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(eventsActions.get(token, eventId))
     },
     setListItem: (event) => {
-      console.log(event)
       dispatch(eventsActions.set(event))
     },
     saveListItem: (token, eventId, data) => {
