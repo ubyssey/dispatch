@@ -213,6 +213,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     filename = serializers.CharField(source='get_filename', read_only=True)
 
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    caption = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_medium = serializers.CharField(source='get_medium_url', read_only=True)
@@ -227,7 +228,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(
         write_only=True,
-        required=False,
+        required=True,
         child=serializers.IntegerField())
 
     width = serializers.IntegerField(read_only=True)
@@ -240,6 +241,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
             'img',
             'filename',
             'title',
+            'caption',
             'authors',
             'author_ids',
             'tags',
@@ -257,16 +259,21 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
+        is_new = instance.pk is None
+
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save authors
-        authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors)
+        author_ids = validated_data.get('author_ids')
+        if author_ids:
+            instance.save_authors(author_ids)
 
-        tag_ids = validated_data.get('tag_ids', False)
-        if tag_ids != False:
-            instance.save_tags(tag_ids)
+        # Save_tags
+        tag_ids = validated_data.get('tag_ids')
+        if tag_ids:
+            # Do not clear tags for first save. This prevents deletion of EXIF tags
+            clear = not is_new
+            instance.save_tags(tag_ids, clear=clear)
 
         return instance
 
@@ -636,9 +643,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if featured_video != False:
             instance.save_featured_video(featured_video)
 
-        authors = validated_data.get('author_ids')
-        if authors:
-            instance.save_authors(authors, is_publishable=True)
+        author_ids = validated_data.get('author_ids')
+        if author_ids:
+            instance.save_authors(author_ids, is_publishable=True)
 
         tag_ids = validated_data.get('tag_ids', False)
         if tag_ids != False:

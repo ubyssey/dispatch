@@ -2,9 +2,10 @@ import StringIO
 import os
 import re
 import uuid
+import io
 
-from jsonfield import JSONField
 from PIL import Image as Img
+from jsonfield import JSONField
 
 from django.db import IntegrityError
 from django.db import transaction
@@ -23,8 +24,9 @@ from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
-from dispatch.modules.content.mixins import AuthorMixin
-from dispatch.modules.auth.models import Person
+from dispatch.modules.content.image import parse_metadata, get_extension
+from dispatch.modules.content.mixins import AuthorMixin, TagMixin, TopicMixin
+from dispatch.modules.auth.models import Person, User
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -50,9 +52,7 @@ class Author(Model):
         ordering = ['order']
 
 class Publishable(Model):
-    """
-    Base model for Article and Page models.
-    """
+    """Base model for Article and Page models."""
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
@@ -153,12 +153,10 @@ class Publishable(Model):
 
     # Overriding
     def save(self, revision=True, *args, **kwargs):
-        """
-        Handles the saving/updating of a Publishable instance.
+        """Handles the saving/updating of a Publishable instance.
 
         Arguments:
-        revision - if True, a new version of this Publishable will be created.
-        """
+        revision - if True, a new version of this Publishable will be created."""
 
         if revision:
             # If this is a revision, set it to be the head of the list and increment the revision id
@@ -206,8 +204,7 @@ class Publishable(Model):
         return self
 
     def save_featured_image(self, data):
-        """
-        Handles saving the featured image.
+        """Handles saving the featured image.
 
         If data is None, the featured image will be removed.
 
@@ -294,7 +291,7 @@ class Publishable(Model):
     class Meta:
         abstract = True
 
-class Article(Publishable, AuthorMixin):
+class Article(Publishable, AuthorMixin, TagMixin, TopicMixin):
 
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
@@ -318,6 +315,8 @@ class Article(Publishable, AuthorMixin):
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
 
     AuthorModel = Author
+    TagModel = Tag
+    TopicModel = Topic
 
     @property
     def title(self):
@@ -335,30 +334,8 @@ class Article(Publishable, AuthorMixin):
             'name': name
         }
 
-    def save_tags(self, tag_ids):
-        self.tags.clear()
-        for tag_id in tag_ids:
-            try:
-                tag = Tag.objects.get(id=int(tag_id))
-                self.tags.add(tag)
-            except Tag.DoesNotExist:
-                pass
-
-    def save_topic(self, topic_id):
-        if topic_id is None:
-            self.topic = None
-        else:
-            try:
-                topic = Topic.objects.get(id=int(topic_id))
-                topic.update_timestamp()
-                self.topic = topic
-            except Topic.DoesNotExist:
-                pass
-
     def get_absolute_url(self):
-        """
-        Returns article URL.
-        """
+        """Returns article URL."""
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
 class Page(Publishable):
@@ -370,23 +347,23 @@ class Page(Publishable):
         return None
 
     def get_absolute_url(self):
-        """
-        Returns page URL.
-        """
+        """Returns page URL."""
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
 
-class Image(Model, AuthorMixin):
+class Image(Model, AuthorMixin, TagMixin):
+
     img = ImageField(upload_to='images/%Y/%m')
     title = CharField(max_length=255, blank=True, null=True)
+    caption = CharField(max_length=255, blank=True, null=True)
     width = PositiveIntegerField(blank=True, null=True)
     height = PositiveIntegerField(blank=True, null=True)
 
     authors = ManyToManyField(Author, related_name='image_authors')
-    tags = ManyToManyField('Tag')
+    tags = ManyToManyField(Tag)
 
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
@@ -405,6 +382,7 @@ class Image(Model, AuthorMixin):
     THUMBNAIL_SIZE = 'square'
 
     AuthorModel = Author
+    TagModel = Tag
 
     def is_gif(self):
         """Returns true if image is a gif."""
@@ -420,11 +398,7 @@ class Image(Model, AuthorMixin):
 
     def get_extension(self):
         """Returns the file extension."""
-        ext = os.path.splitext(self.img.name)[1]
-        if ext:
-            # Remove period from extension
-            return ext[1:]
-        return ext
+        return get_extension(self.img)
 
     def get_absolute_url(self):
         """Returns the full size image URL."""
@@ -453,13 +427,28 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
+            metadata = parse_metadata(self.img)
             image = Img.open(StringIO.StringIO(self.img.read()))
+
             self.width, self.height = image.size
+
+            # Save metadata
+            self.title = metadata.get('title')
+            self.caption = metadata.get('description')
+
+            for tag_name in metadata.get('tags', set()):
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                self.tags.add(tag)
+
+            for n, name in enumerate(metadata.get('authors', set())):
+                person, created = Person.objects.get_or_create(full_name=name)
+                author = Author.objects.create(person=person, order=n, type='photographer')
+                self.authors.add(author)
 
             super(Image, self).save()
 
-            name = self.get_name()
             ext = self.get_extension()
+            name = self.get_name()
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
@@ -489,15 +478,6 @@ class Image(Model, AuthorMixin):
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
-
-    def save_tags(self, tag_ids):
-        self.tags.clear()
-        for tag_id in tag_ids:
-            try:
-                tag = Tag.objects.get(id=int(tag_id))
-                self.tags.add(tag)
-            except Tag.DoesNotExist:
-                pass
 
 class VideoAttachment(Model):
     article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
@@ -543,9 +523,7 @@ class File(Model):
     updated_at = DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
-        """
-        Returns the absolute file URL.
-        """
+        """Returns the absolute file URL."""
         return settings.MEDIA_URL + str(self.file)
 
 class Issue(Model):
