@@ -788,8 +788,7 @@ class ZoneSerializer(serializers.Serializer):
                     if field_data is not None:
                         try:
                             field.validate(field_data)
-                        except 
-                        as e:
+                        except InvalidField as e:
                             errors[field.name] = str(e)
                     elif field.required:
                         errors[field.name] = '%s is required' % field.label

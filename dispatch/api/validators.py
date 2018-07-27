@@ -86,6 +86,8 @@ class TemplateValidator(object):
                     pass
                 except InvalidField as e:
                     errors[field.name] = str(e)
+            if (len(self.instance.tags.filter(name__icontains='timeline-')) <= 0) :
+                errors['Instructions'] = 'Must have a corresponding timeline tag'
 
         if errors:
             raise ValidationError(errors)
