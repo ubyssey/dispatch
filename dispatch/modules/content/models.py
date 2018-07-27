@@ -4,7 +4,6 @@ import re
 import uuid
 import io
 
-from libxmp import XMPError
 from PIL import Image as Img
 from jsonfield import JSONField
 
@@ -25,7 +24,7 @@ from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
-from dispatch.modules.content.xmp import parse_xmp
+from dispatch.modules.content.image import parse_metadata, get_extension
 from dispatch.modules.content.mixins import AuthorMixin, TagMixin, TopicMixin
 from dispatch.modules.auth.models import Person, User
 
@@ -380,8 +379,6 @@ class Image(Model, AuthorMixin, TagMixin):
 
     IMAGE_FORMATS = '.(jpg|JPEG|jpeg|JPG|gif|png|PNG|tiff|tif|dng)'
 
-    EXIF_FORMATS = '.(jpg|JPEG|jpeg|JPG|tiff|tif)'
-
     THUMBNAIL_SIZE = 'square'
 
     AuthorModel = Author
@@ -401,11 +398,7 @@ class Image(Model, AuthorMixin, TagMixin):
 
     def get_extension(self):
         """Returns the file extension."""
-        ext = os.path.splitext(self.img.name)[1]
-        if ext:
-            # Remove period from extension
-            return ext[1:]
-        return ext
+        return get_extension(self.img)
 
     def get_absolute_url(self):
         """Returns the full size image URL."""
@@ -421,70 +414,6 @@ class Image(Model, AuthorMixin, TagMixin):
         """Returns the thumbnail URL."""
         return '%s%s-%s.jpg' % (settings.MEDIA_URL, self.get_name(), self.THUMBNAIL_SIZE)
 
-    def save_exif_data(self, buffer, image):
-        """Extracts and saves EXIF/XMP data from the image file."""
-
-        # EXIF tag list: https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
-        EXIF_DESCRIPTION = 270
-        EXIF_ARTIST = 315
-
-        XMP_TITLE = 'title'
-        XMP_DESCRIPTION = 'description'
-        XMP_SUBJECT = 'subject'
-        XMP_CREATOR = 'creator'
-
-        author_names = set()
-
-        # EXIF data is only read from files with TIFF or JPEG format, otherwise an error will occur
-        if self.get_extension() in Image.EXIF_FORMATS:
-            exiftags = image._getexif()
-
-            if exiftags is not None:
-                self.caption = exiftags.get(EXIF_DESCRIPTION)
-
-                author_name = exiftags.get(EXIF_ARTIST)
-                if author_name is not None:
-                    author_names.add(author_name)
-
-        xmp = parse_xmp(buffer)
-
-        try:
-            if xmp is not None:
-                ns = xmp.get_namespace_for_prefix('dc')
-
-                title = xmp.get_array_item(ns, XMP_TITLE, 1)
-                if title:
-                    self.title = title
-
-                description = xmp.get_array_item(ns, XMP_DESCRIPTION, 1)
-                if description:
-                    self.caption = description
-
-                counter = 1
-                tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                while tag_name != '':
-                    tag, created = Tag.objects.get_or_create(name=tag_name)
-                    self.tags.add(tag)
-                    counter += 1
-
-                    try:
-                        tag_name = xmp.get_array_item(ns, XMP_SUBJECT, counter)
-                    except XMPError:
-                        break
-
-                author_name = xmp.get_array_item(ns, XMP_CREATOR, 1)
-
-                if author_name:
-                    author_names.add(author_name)
-
-        except XMPError:
-            pass
-
-        for n, name in enumerate(author_names):
-            person, created = Person.objects.get_or_create(full_name=name)
-            author = Author.objects.create(person=person, order=n, type='photographer')
-            self.authors.add(author)
-
     # Overriding
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
@@ -498,11 +427,23 @@ class Image(Model, AuthorMixin, TagMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            buffer = self.img.read()
-            image = Img.open(StringIO.StringIO(buffer))
+            metadata = parse_metadata(self.img)
+            image = Img.open(StringIO.StringIO(self.img.read()))
+
             self.width, self.height = image.size
 
-            self.save_exif_data(buffer, image)
+            # Save metadata
+            self.title = metadata.get('title')
+            self.caption = metadata.get('description')
+
+            for tag_name in metadata.get('tags', set()):
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                self.tags.add(tag)
+
+            for n, name in enumerate(metadata.get('authors', set())):
+                person, created = Person.objects.get_or_create(full_name=name)
+                author = Author.objects.create(person=person, order=n, type='photographer')
+                self.authors.add(author)
 
             super(Image, self).save()
 
