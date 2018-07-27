@@ -80,7 +80,7 @@ class DispatchPublishableMixin(object):
 
         if isinstance(instance, Article):
             if instance.scheduled_notification is not None and instance.scheduled_notification > timezone.now():
-                Notification.objects.filter(article=instance).delete()
+                Notification.objects.filter(article__parent_id=instance.parent_id).delete()
                 Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
         return Response(serializer.data)

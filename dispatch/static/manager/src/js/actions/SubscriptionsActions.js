@@ -23,7 +23,7 @@ class SubscriptionsActions extends ResourceActions {
 }
 
 export default new SubscriptionsActions(
-  types.NOTIFICATIONS,
+  types.SUBSCRIPTIONS,
   DispatchAPI.subscriptions,
   subscriptionSchema
 )
