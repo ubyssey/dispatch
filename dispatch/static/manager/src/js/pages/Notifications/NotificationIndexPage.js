@@ -7,7 +7,7 @@ import ItemIndexPage from '../ItemIndexPage'
 import notificationsActions from '../../actions/NotificationsActions'
 import subscriptionsActions from '../../actions/SubscriptionsActions'
 import { Line as LineChart } from 'react-chartjs'
-require('../../../styles/components/subscription_chart.scss')
+require('../../../styles/components/notifications.scss')
 
 const chartOptions = {
   scaleGridLineColor : 'rgba(0,0,0,.05)',
@@ -48,7 +48,7 @@ class NotificationsPageComponent extends React.Component {
 
     return (
       <div className='c-subscription-chart-container'>
-        <h1>Subscriptions</h1>
+        <h1>Active Subscriptions: {counts.length > 0 ? counts[counts.length-1] : 0}</h1>
         <LineChart data={chartData} options={chartOptions} />
       </div>
     )
@@ -60,6 +60,7 @@ class NotificationsPageComponent extends React.Component {
         <ItemIndexPage
           typeSingular='notification'
           typePlural='notifications'
+          emptyMessage='There are no notifications scheduled'
           displayColumn='article_headline'
           pageTitle='Notifications'
           headers={['Headline', 'Push time']}
@@ -67,8 +68,7 @@ class NotificationsPageComponent extends React.Component {
             item => humanizeDatetime(item.scheduled_push_time, true)
           ]}
           {... this.props} />
-          {this.props.subscriptionCounts ? this.renderChart() : null}
-
+          {this.renderChart()}
       </div>
     )
   }

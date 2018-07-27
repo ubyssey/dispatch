@@ -9,8 +9,18 @@
   bottom:0;
   width:100%;
   height:200px;
+
   h1 {
     font-size:1.5rem;
-    padding-left: 3rem;
+    padding-left: 2rem;
   }
+}
+
+.c-notification-editor--container {
+  height:100%;
+  overflow:visible !important;
+}
+
+.o-notification-date-select {
+  padding-bottom:5em;
 }

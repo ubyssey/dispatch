@@ -8,7 +8,7 @@ export default function IssueForm(props) {
   return (
     <form onSubmit={e => e.preventDefault()}>
       <FormInput
-        label='Title'
+        label='Article Headline'
         padded={false}
         error={props.errors.title}>
         <TextInput

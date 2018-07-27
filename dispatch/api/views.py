@@ -1,4 +1,6 @@
 import json
+import datetime
+
 from pywebpush import webpush, WebPushException
 
 from django.db.models import Q, ProtectedError, Prefetch
@@ -299,7 +301,7 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
 
     model = SubscriptionCount
     serializer_class = SubscriptionCountSerializer
-    queryset = SubscriptionCount.objects.all()
+    queryset = SubscriptionCount.objects.filter(date__gte=timezone.now() - datetime.timedelta(days=90)).order_by('-date')
 
 class NotificationsViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""
