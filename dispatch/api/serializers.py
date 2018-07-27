@@ -4,7 +4,7 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue, Subscription,
-    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote, Notification)
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote, Notification, SubscriptionCount)
 from dispatch.modules.auth.models import Person, User
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
@@ -882,4 +882,14 @@ class NotificationSerializer(DispatchModelSerializer):
             'article_id',
             'article_headline',
             'scheduled_push_time'
+        )
+
+class SubscriptionCountSerializer(DispatchModelSerializer):
+    """Serializes the SubscriptionCount model."""
+
+    class Meta:
+        model = SubscriptionCount
+        fields = (
+            'count',
+            'date'
         )

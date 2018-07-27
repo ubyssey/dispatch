@@ -21,14 +21,14 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video, Poll, PollAnswer, PollVote,
-    Notification, Subscription)
+    Notification, Subscription, SubscriptionCount)
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer, NotificationSerializer )
+    PollVoteSerializer, NotificationSerializer, SubscriptionSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll, AlreadySubscribed
 
 from dispatch.theme import ThemeManager
@@ -293,6 +293,13 @@ class PollViewSet(DispatchModelViewSet):
         serializer.save()
 
         return Response(serializer.data)
+
+class SubscriptionCountViewSet(DispatchModelViewSet):
+    """Viewset for the SubscriptionCount model views."""
+
+    model = SubscriptionCount
+    serializer_class = SubscriptionSerializer
+    queryset = SubscriptionCount.objects.all()
 
 class NotificationsViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""

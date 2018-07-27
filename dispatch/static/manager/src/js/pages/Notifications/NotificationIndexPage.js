@@ -52,7 +52,33 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 function NotificationsPageComponent(props) {
+
+  let dates = []
+  let counts = []
+  let chartData = {}
+  if (props.subscriptionCounts) {
+    for (var subscriptionCount in props.subscriptionCounts) {
+      dates.push(subscriptionCount.date)
+      counts.push(subscriptionCount.count)
+    }
+    chartData = {
+      labels: dates,
+      datasets: [
+        {
+          label: 'Subscriptions',
+          fillColor: 'rgba(220,220,220,0.2)',
+          strokeColor: 'rgba(220,220,220,1)',
+          pointColor: 'rgba(220,220,220,1)',
+          pointStrokeColor: '#fff',
+          pointHighlightFill: '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data: counts
+        }
+      ]
+    }
+  }
   return (
+    <div>
     <ItemIndexPage
       typeSingular='notification'
       typePlural='notifications'
@@ -63,6 +89,8 @@ function NotificationsPageComponent(props) {
         item => humanizeDatetime(item.scheduled_push_time, true)
       ]}
       {... props} />
+    {chartData ? null : null}
+    </div>
   )
 }
 
