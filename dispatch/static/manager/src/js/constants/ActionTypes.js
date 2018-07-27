@@ -17,6 +17,7 @@ export const USERS = resourceActionTypes('USERS')
 export const VIDEOS = resourceActionTypes('VIDEOS')
 export const POLLS = resourceActionTypes('POLLS')
 export const NOTIFICATIONS = resourceActionTypes('NOTIFICATIONS')
+export const SUBSCRIPTIONS = resourceActionTypes('SUBSCRIPTIONS')
 
 // Authentication actions
 export const AUTH = actionTypes('AUTH', [

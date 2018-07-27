@@ -5,7 +5,7 @@ import { humanizeDatetime } from '../../util/helpers'
 
 import ItemIndexPage from '../ItemIndexPage'
 import notificationsActions from '../../actions/NotificationsActions'
-
+import subscriptionsActions from '../../actions/SubscriptionsActions'
 
 const mapStateToProps = (state) => {
   return {
@@ -13,7 +13,8 @@ const mapStateToProps = (state) => {
     listItems: state.app.notifications.list,
     entities: {
       listItems: state.app.entities.notifications
-    }
+    },
+    subscriptionCounts: state.app.entities.subscriptions
   }
 }
 
@@ -21,6 +22,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
       dispatch(notificationsActions.list(token, query))
+      dispatch(subscriptionsActions.list(token, null))
     },
     toggleListItem: (notificationId) => {
       dispatch(notificationsActions.toggle(notificationId))
@@ -58,8 +60,8 @@ function NotificationsPageComponent(props) {
   let chartData = {}
   if (props.subscriptionCounts) {
     for (var subscriptionCount in props.subscriptionCounts) {
-      dates.push(subscriptionCount.date)
-      counts.push(subscriptionCount.count)
+      dates.push(props.subscriptionCounts[subscriptionCount].date)
+      counts.push(props.subscriptionCounts[subscriptionCount].count)
     }
     chartData = {
       labels: dates,
@@ -77,6 +79,7 @@ function NotificationsPageComponent(props) {
       ]
     }
   }
+
   return (
     <div>
     <ItemIndexPage

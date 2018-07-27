@@ -468,6 +468,11 @@ const DispatchAPI = {
     delete: (token, notificationId) => {
       return deleteRequest('notifications', notificationId, null, token)
     }
+  },
+  'subscriptions': {
+    list: (token, query) => {
+      return getRequest('subscriptioncount', null, query, token)
+    }
   }
 }
 

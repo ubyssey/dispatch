@@ -617,6 +617,9 @@ class SubscriptionCount(Model):
     count = PositiveIntegerField()
     date = DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('-date',)
+
 class Notification(Model):
     created_at = DateTimeField(auto_now_add=True)
     article = ForeignKey(Article, related_name='notification_artilce', on_delete=CASCADE)

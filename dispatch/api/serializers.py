@@ -890,6 +890,7 @@ class SubscriptionCountSerializer(DispatchModelSerializer):
     class Meta:
         model = SubscriptionCount
         fields = (
+            'id',
             'count',
             'date'
         )

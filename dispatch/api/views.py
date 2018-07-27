@@ -28,7 +28,7 @@ from dispatch.api.serializers import (
     ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer, FileSerializer, IssueSerializer,
     ImageGallerySerializer, TagSerializer, TopicSerializer, PersonSerializer, UserSerializer, SubscriptionSerializer,
     IntegrationSerializer, ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer, PollSerializer,
-    PollVoteSerializer, NotificationSerializer, SubscriptionSerializer )
+    PollVoteSerializer, NotificationSerializer, SubscriptionSerializer, SubscriptionCountSerializer )
 from dispatch.api.exceptions import ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll, AlreadySubscribed
 
 from dispatch.theme import ThemeManager
@@ -298,7 +298,7 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
     """Viewset for the SubscriptionCount model views."""
 
     model = SubscriptionCount
-    serializer_class = SubscriptionSerializer
+    serializer_class = SubscriptionCountSerializer
     queryset = SubscriptionCount.objects.all()
 
 class NotificationsViewSet(DispatchModelViewSet):
