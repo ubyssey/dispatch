@@ -116,10 +116,10 @@ def parse_xmp(img, metadata={}):
         if author_name:
             authors.add(author_name)
 
+        metadata['authors'] = authors
+
     except XMPError:
         pass
-
-    metadata['authors'] = authors
 
     return metadata
 
