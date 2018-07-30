@@ -9,7 +9,7 @@ from rest_framework import status
 
 from django.core.urlresolvers import reverse
 
-from dispatch.models import Image, Person, Tag
+from dispatch.models import Image, Person, Tag, Author
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -122,6 +122,49 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Check that filenames are different
         self.assertTrue(image_1.data['url'] != image_2.data['url'])
+
+    def test_create_image_jpeg_with_meta(self):
+        """Should be able to read XMP and EXIF data from a JPEG image."""
+
+        url = reverse('api-images-list')
+        file = 'test_exif_xmp.jpg'
+
+        with open(self.get_input_file(file)) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+
+        # Assert that image metadata was read
+        self.assertEqual(response.data['title'], 'Test Image')
+        self.assertEqual(response.data['caption'], 'This is a test image.')
+        self.assertEquals(response.data['authors'][0]['person']['full_name'], 'Person A')
+
+        expected_tags = ('climb', 'joshua', 'tree', 'park')
+
+        for test_tag in response.data['tags']:
+            if test_tag['name'] not in expected_tags:
+                self.fail('%s tag is expected.' % test_tag['name'])
+
+    def test_create_image_jpeg_with_differing_meta(self):
+        """Should preferentially use XMP data over EXIF."""
+
+        url = reverse('api-images-list')
+        file = 'test_exif_xmp_different.jpg'
+
+        with open(self.get_input_file(file)) as test_image:
+            response = self.client.post(url, { 'img': test_image }, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(self.fileExists(response.data['url']))
+
+        # Assert that image XMP metadata was stored instead of EXIF
+        self.assertEqual(response.data['caption'], 'This is another test image.')
+
+        # Assert that author names were pulled from both XMP and EXIF
+        self.assertIn(response.data['authors'][0]['person']['full_name'], ('Person A', 'Person B'))
+        self.assertIn(response.data['authors'][1]['person']['full_name'], ('Person A', 'Person B'))
+        self.assertNotEqual(response.data['authors'][0]['person']['full_name'], response.data['authors'][1]['person']['full_name'])
 
     def test_create_image_invalid_filename(self):
         """Should not be able to upload image with non-ASCII characters in filename."""

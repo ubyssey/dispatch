@@ -11,7 +11,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0013_user_groups'),
+        ('dispatch', '0014_user_groups'),
     ]
 
     operations = [
