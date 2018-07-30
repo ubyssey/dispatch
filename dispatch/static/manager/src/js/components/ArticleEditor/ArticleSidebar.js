@@ -53,11 +53,9 @@ function tabHighlight(localErrors, errors) {
   return ''
 }
 
-
 function renderTab(data, index, errors) {
   return <Tab key={index} className={'c-article-sidebar__tab ' + tabHighlight(data.errors, errors)}><span className={'pt-icon-standard ' + data.icon} />{data.title}</Tab>
 }
-
 
 export default function ArticleSidebar(props) {
   return (

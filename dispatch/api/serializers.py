@@ -671,10 +671,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             update_fields=['content', 'featured_image', 'featured_video', 'topic'],
             revision=False)
 
-
-
-
-
         return instance
 
 class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
