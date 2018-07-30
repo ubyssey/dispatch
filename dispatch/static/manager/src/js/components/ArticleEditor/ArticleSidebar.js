@@ -11,16 +11,33 @@ import SEOTab from '../Editor/tabs/SEOTab'
 
 require('../../../styles/components/article_sidebar.scss')
 
+function tabHighlight(errors, article) {
+  let tabErrors = []
+  for (const error of Object.keys(errors)) {
+    if (Object.keys(article.template_data).includes(error) && !tabErrors.includes('template')) {
+      tabErrors.push('template')
+    } else if (Object.keys(article).includes(error)) {
+      tabErrors.push('basic')
+    }
+  }
+  
+  return tabErrors
+}
+
+
 export default function ArticleSidebar(props) {
+  const tabErrors = tabHighlight(props.errors, props.article)
+  const basicError = tabErrors.includes('basic') ? 'c-article-sidebar__tab-error' : ''
+  const templateError = tabErrors.includes('template') ? 'c-article-sidebar__tab-error' : ''
   return (
     <div className='c-article-sidebar'>
       <Tabs>
         <TabList className='c-article-sidebar__tablist'>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
+          <Tab className={'c-article-sidebar__tab ' + basicError}><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media' />Featured image</Tab>
           {/* <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-video' />Featured video</Tab> */}
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope' />Delivery</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
+          <Tab className={'c-article-sidebar__tab ' + templateError}><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
           <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media' />SEO</Tab>
         </TabList>
 

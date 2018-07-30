@@ -41,6 +41,13 @@
   border-bottom: 1px solid rgb(228, 228, 228);
 }
 
+.c-article-sidebar__tab-error.pt-tab {
+  // Background
+  background-color: #db3737;
+  // Text
+  color: white;
+}
+
 .c-article-sidebar__tab.pt-tab {
   // Structure
   height: 3rem;
