@@ -2,8 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
-import SectionFilterInput  from '../../components/inputs/filters/SectionFilterInput'
-import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
+import {AuthorFilterInput, SectionFilterInput, TagsFilterInput}  from '../../components/inputs/filters/'
 import articlesActions from '../../actions/ArticlesActions'
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -39,8 +38,8 @@ const mapDispatchToProps = (dispatch) => {
     deleteListItems: (token, articleIds) => {
       dispatch(articlesActions.deleteMany(token, articleIds))
     },
-    searchArticles: (author, section, query) => {
-      dispatch(articlesActions.search(author, section, query))
+    searchArticles: (author, section, tags, query) => {
+      dispatch(articlesActions.search(author, section, tags, query))
     }
   }
 }
@@ -53,11 +52,15 @@ function ArticlePageComponent(props) {
     <SectionFilterInput
       key={'SectionFilter'}
       selected={props.location.query.section}
-      update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.q)} />,
+      update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.tags, props.location.query.q)} />,
     <AuthorFilterInput
       key={'AuthorFilter'}
       selected={props.location.query.author}
-      update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.q)} />
+      update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.tags, props.location.query.q)} />,
+    <TagsFilterInput
+      key={'tagsFilter'}
+      selected={props.location.query.tags}
+      update={(tags) => props.searchArticles(props.location.query.author, props.location.query.section, tags, props.location.query.q)} />
   ]
 
   return (
@@ -74,7 +77,11 @@ function ArticlePageComponent(props) {
         item => item.latest_version + ' revisions'
       ]}
       shouldReload={(prevProps, props) => {
-        return (prevProps.location.query.section !== props.location.query.section) || (prevProps.location.query.author !== props.location.query.author)
+        return (
+          (prevProps.location.query.section !== props.location.query.section) || 
+          (prevProps.location.query.author !== props.location.query.author)  ||
+          (prevProps.location.query.tags !== props.location.query.tags)
+        )
       }}
       queryHandler={(query, props) => {
         if (props.location.query.section) {
@@ -83,9 +90,12 @@ function ArticlePageComponent(props) {
         if (props.location.query.author) {
           query.author = props.location.query.author
         }
+        if (props.location.query.tags) {
+          query.tags = props.location.query.tags
+        }
         return query
       }}
-      searchListItems={(query) => props.searchArticles(props.location.query.author, props.location.query.section, query)}
+      searchListItems={(query) => props.searchArticles(props.location.query.author, props.location.query.section, props.location.query.tags, query)}
       {...props} />
   )
 }

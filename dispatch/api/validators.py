@@ -1,4 +1,7 @@
+import json
+
 from rest_framework.exceptions import ValidationError
+from dispatch.theme.exceptions import InvalidField, TemplateNotFound
 
 from django.contrib.auth.password_validation import validate_password
 
@@ -60,3 +63,31 @@ def AuthorValidator(data):
         if 'type' in author and not isinstance(author['type'], basestring):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
+
+class TemplateValidator(object):
+    def set_context(self, serializer_field):
+        self.instance = serializer_field.parent.instance
+        
+    def __call__(self, value):
+        """Perform validation of the Template data"""
+        from dispatch.theme import ThemeManager
+
+        errors = {}
+
+        if self.instance.template is not None:
+            try:
+                template = ThemeManager.Templates.get(self.instance.template)
+            except TemplateNotFound as e:
+                errors['template'] = str(e)
+            for field in template.fields:
+                try:
+                    field.validate(value.get(field.name))
+                except KeyError:
+                    pass
+                except InvalidField as e:
+                    errors[field.name] = str(e)
+            if (len(self.instance.tags.filter(name__icontains='timeline-')) <= 0) :
+                errors['Instructions'] = 'Must have a corresponding timeline tag'
+
+        if errors:
+            raise ValidationError(errors)

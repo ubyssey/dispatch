@@ -10,8 +10,7 @@ import { Link } from 'react-router'
 import imageActions from '../../actions/ImagesActions'
 import ItemList from '../../components/ItemList'
 import { humanizeDatetime } from  '../../util/helpers'
-import AuthorFilterInput from '../../components/inputs/filters/AuthorFilterInput'
-import TagsFilterInput from '../../components/inputs/filters/TagsFilterInput'
+import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
 
 require('../../../styles/components/files.scss')
 require('../../../styles/components/images.scss')
@@ -105,11 +104,6 @@ class ImagesPageComponent extends React.Component {
     )
   }
 
-  //converts tags from string to number
-  convertTags(tags) {
-    return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
-  }
-
   render() {
 
     // The first column will always be a link, as defined here,
@@ -137,7 +131,7 @@ class ImagesPageComponent extends React.Component {
         update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)} />,
       <TagsFilterInput
         key={'tagsFilter'}
-        selected={this.convertTags(this.props.location.query.tags)}
+        selected={this.props.location.query.tags}
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 

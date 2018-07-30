@@ -48,8 +48,9 @@ function PagesPageComponent(props) {
       typeSingular='page'
       displayColumn='title'
       pageTitle='Pages'
-      headers={[ 'Title', 'Published', 'Revisions' ]}
+      headers={[ 'Title', 'Updated', 'Published', 'Revisions' ]}
       extraColumns={[
+        item => item.updated_at ? humanizeDatetime(item.updated_at) : '',
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
         item => item.latest_version + ' revisions'
       ]}

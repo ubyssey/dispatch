@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import * as userActions from '../actions/UserActions'
+import userActions from '../actions/UserActions'
 
 class App extends React.Component {
 
@@ -20,7 +20,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.app.auth.token
+    token: state.app.auth.token,
+    settings: state.app.settings
   }
 }
 

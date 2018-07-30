@@ -1,5 +1,3 @@
-import datetime
-
 from django.template import loader
 from django.core.urlresolvers import reverse
 
