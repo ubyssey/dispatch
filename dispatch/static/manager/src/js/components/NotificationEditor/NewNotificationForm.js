@@ -1,4 +1,6 @@
 import React from 'react'
+import { Position } from '@blueprintjs/core'
+
 import { FormInput, DateTimeInput } from '../inputs'
 import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
 
@@ -21,6 +23,7 @@ export default function NotificationForm(props) {
         error={props.errors.scheduled_push_time}>
         <DateTimeInput
           value={props.listItem.scheduled_push_time}
+          position={Position.BOTTOM}
           onChange={dt => props.update('scheduled_push_time', dt)} />
       </FormInput>
     </form>
