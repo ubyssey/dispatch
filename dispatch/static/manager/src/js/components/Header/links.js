@@ -1,4 +1,4 @@
-export default {
+export const links = {
   Content: {
     icon: 'pt-icon-edit',
     link: [

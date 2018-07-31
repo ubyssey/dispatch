@@ -11,7 +11,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0013_user_groups'),
+        ('dispatch', '0012_polls'),
     ]
 
     operations = [
@@ -24,10 +24,6 @@ class Migration(migrations.Migration):
                 ('expiration_date', models.DateTimeField(default=dispatch.modules.auth.helpers.get_expiration_date)),
                 ('person', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='invited_person', to='dispatch.Person')),
             ],
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='is_staff',
         ),
         migrations.AlterField(
             model_name='user',
