@@ -31,11 +31,18 @@ $border-bottom-height: 2px;
   align-items: center;
   justify-content: flex-start;
 }
-.c-header {
 
-  @media ($bp-larger-than-phablet) {
-    
-  }
+.c-header {
+  min-height: 50px;
+  box-shadow: none;
+  border: none;
+  position: relative;
+  color: $color-text-dispatch-gray-light;
+  background-color: $color-dispatch-gray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
   // Border
   border-bottom: 1px solid $color-border-gray;
 
@@ -47,17 +54,9 @@ $border-bottom-height: 2px;
   z-index: $z-index-2;
 
   width: 100%;
-  height: 100px;
-  box-shadow: none;
-  border: none;
-  position: relative;
-  z-index: 10;
-  color: $color-text-dispatch-gray-light;
-  background-color: $color-dispatch-gray;
-  display: flex;
-  align-items: center;
+  height: 50px;
   font-size: 1rem;
-  color: white;
+
 
   padding-left: 20px;
   padding-right: 20px;
@@ -65,104 +64,147 @@ $border-bottom-height: 2px;
   // Extra
   box-shadow: none;
   border: none;
-
-  .pt-navbar-divider{
-    align-self: center;
-    background-color: $color-text-dispatch-gray-light;
-    &:hover {
-      background-color: $color-dispatch-header-hover;
-    }
+  .pt-button:not([class*="pt-intent-"]), .pt-button[class*="pt-icon-"]::before {
+    color: $color-text-dispatch-gray-light;
   }
+  .pt-button[class*="pt-icon-large"]::before {
+    font-size: 30px;
 
-  .pt-button.pt-minimal,
-  .pt-button[class*="pt-icon-"]::before {
-    color: $color-text-dispatch-gray-light !important;
   }
- 
-  .pt-button[class*="pt-icon-"]:empty {
-    padding: 0 10px;
-  }
-
-  .nav-dropdown-button {
-    // Structure
+  .nav-link-group {
     display: flex;
-    justify-content: flex-start;
-
-    .pt-icon-standard {
-      margin-right: 7px;
-    }
-  }
-
-  .nav-dropdown-container {
-    // Structure
-    height: 100%;
-    width: 120px;
+    flex-wrap: wrap;
+    width: 90%;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    left: 10%;
+    height: 220px;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 15px;
+  }
 
-    border-bottom: $border-bottom-height solid transparent;
-    &:hover {
-      // Border
-      border-bottom: $border-bottom-height solid $color-text-dispatch-gray-light;
+  .nav-dropdown-content{
+    width: 100vw;
+    margin-top: 20px;
+    position: absolute;
+    padding: 20px 10px;
+    display:flex;
+    flex-direction: column;
+    background-color: $color-dispatch-gray;
+    transition: transform .25s;
+    &.open{
+      transform: translateX(-30px);
+    }
+    &.closed {
+      transform: translateX(calc(-100% - 30px));
+    }
+  }
+
+  @media ($bp-larger-than-phablet) {
+    .nav-link-group {
+      flex-direction: row;
+      margin-top: 0;
+      width: auto;
+      height: 100%;
+      left: 0;
+      align-items: center;
     }
 
-    .nav-dropdown-content {
-      // Structure
-      display: none;
-      align-self: flex-start;
-      margin-top: 50px;
-      flex-direction: column;
-      position: absolute;
-      padding: 10px;
-      left: 0;
-      right: 0;
-
-      // Background
-      background-color: $color-dispatch-gray;
-      
-      // Text
-      color: $color-text-dispatch-gray-light;
-
-      .pt-button.pt-minimal{
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+    .pt-navbar-divider{
+      align-self: center;
+      background-color: $color-text-dispatch-gray-light;
+      &:hover {
+        background-color: $color-dispatch-header-hover;
       }
+    }
+
+    .pt-button.pt-minimal,
+    .pt-button[class*="pt-icon-"]::before {
+      color: $color-text-dispatch-gray-light !important;
+    }
+  
+    .pt-button[class*="pt-icon-"]:empty {
+      padding: 0 10px;
     }
 
     .nav-dropdown-button {
-      // Text
-      color: $color-text-dispatch-gray-light;
-
       // Structure
-      position: relative;
-      top: $border-bottom-height;
-      padding: 10px;
-      border-radius: 3px;
-      width: 100px;
-    }
+      display: flex;
+      justify-content: flex-start;
 
-    &:hover {
-      .nav-dropdown-content {
-        // Structure
-        display: flex;
-
-        // Extra 
-        opacity: 1;
-
+      .pt-icon-standard {
+        margin-right: 7px;
       }
     }
 
-    .nav-navbar-divider{
-      // Border
-      border-left-color: inherit;
+    .nav-dropdown-container {
+      // Structure
+      height: 100%;
+      width: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-bottom: $border-bottom-height solid transparent;
+      &:hover {
+        // Border
+        border-bottom: $border-bottom-height solid $color-text-dispatch-gray-light;
+      }
+
+      .nav-dropdown-content {
+        // Structure
+        display: none;
+        align-self: flex-start;
+        margin-top: 50px;
+        flex-direction: column;
+        position: absolute;
+        padding: 10px;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+
+        // Background
+        background-color: $color-dispatch-gray;
+        
+        // Text
+        color: inherit;
+
+        .pt-button.pt-minimal{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+      }
+
+      .nav-dropdown-button {
+        // Text
+        color: inherit;
+
+        // Structure
+        position: relative;
+        top: $border-bottom-height;
+        padding: 10px;
+        border-radius: 3px;
+        width: 100px;
+      }
+
+      &:hover {
+        .nav-dropdown-content {
+          // Structure
+          display: flex;
+
+          // Extra 
+          opacity: 1;
+        }
+      }
+
+      .nav-navbar-divider{
+        // Border
+        border-left-color: inherit;
+      }
     }
-  }
-  @media($bp-larger-than-phablet){
-    height: 50px;
-    font-size: 1rem;
   }
 }
 
@@ -172,8 +214,15 @@ $border-bottom-height: 2px;
   margin-bottom: 10px;
   border-bottom: 1px solid white;
 }
+
 .nav-padded{
   padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  h3 {
+    color: inherit;
+  }
 }
 
 .nav-logo {

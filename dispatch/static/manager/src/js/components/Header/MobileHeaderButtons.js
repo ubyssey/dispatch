@@ -5,29 +5,25 @@ import {links} from './links'
 require('../../../styles/components/header.scss')
 require('../../../styles/utilities/_pseudo_bootstrap.scss')
 
-const MobileHeaderButtons = () => {
+const MobileHeaderButtons = (props) => {
   return (
-    <div>
+    <div className='nav-link-group'>
     {      
-      Object.keys(links).map( key => {
+      Object.keys(links).map( (key, index) => {
         const item = links[key]
         return (
-          <div key={key}>
-            {
-              Object.keys(item['link']).map( (subkey, index) => {
-                const link = item['link'][index]['link']
-                const icon = item['link'][index]['icon']
-                return (
-                  <Link 
-                    to={'/' + link.toLowerCase() + '/'} 
-                    key={index}
-                    className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
-                    {link}
-                  </Link>
-                )
-              })
-            }
-          </div>
+          Object.keys(item['link']).map( (subkey, index) => {
+            const link = item['link'][index]['link']
+            const icon = item['link'][index]['icon']
+            return (
+              <Link 
+                to={'/' + link.toLowerCase() + '/'} 
+                key={index}
+                className={['pt-button pt-minimal', 'pt-icon-document', icon].join(' ')}>
+                {link}
+              </Link>
+            )
+          })
         )
       })
     }
