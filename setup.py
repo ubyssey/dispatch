@@ -16,7 +16,6 @@ setup(name='dispatch',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
-        'python-xmp-toolkit',
     ],
     extras_require={
         'dev': [
