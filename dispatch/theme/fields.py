@@ -119,7 +119,6 @@ class CharField(Field):
     type = 'char'
 
     def validate(self, data):
-
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
@@ -145,7 +144,7 @@ class DateTimeField(Field):
     def validate(self, data):
         if not data or (isinstance(data, basestring) and not len(data)):
             if self.required:
-                raise InvalidField('%s is required')
+                raise InvalidField('%s is required' % self.label)
             else:
                 return
 
@@ -333,3 +332,15 @@ class PollField(ModelField):
 
     model = Poll
     serializer = PollSerializer
+
+class InstructionField(Field):
+    type = 'instruction'
+
+    def __init__(self, label, options=[], required=False):
+        self.options = options
+        self.valid_options = set(option[0] for option in self.options)
+
+        super(InstructionField, self).__init__(label=label, many=False, required=required)
+
+    def validate(self, data):
+        pass

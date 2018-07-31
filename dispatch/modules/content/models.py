@@ -25,7 +25,7 @@ from django.dispatch import receiver
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.content.mixins import AuthorMixin
-from dispatch.modules.auth.models import Person, User
+from dispatch.modules.auth.models import Person
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -526,6 +526,8 @@ class ImageAttachment(Model):
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
+    style = CharField(max_length=255, blank=True, null=True)
+    width = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
 
     order = PositiveIntegerField(null=True)

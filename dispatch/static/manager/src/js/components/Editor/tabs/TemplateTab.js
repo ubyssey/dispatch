@@ -8,6 +8,7 @@ import { FormInput } from '../../inputs'
 import TemplateSelectInput from '../../inputs/selects/TemplateSelectInput'
 
 import FieldGroup from '../../fields/FieldGroup'
+import { dateObjToAPIString } from '../../../util/helpers'
 
 class TemplateTabComponent extends React.Component {
 
@@ -16,6 +17,9 @@ class TemplateTabComponent extends React.Component {
   }
 
   updateField(name, value) {
+    if (value instanceof Date) {
+      value = dateObjToAPIString(value)
+    }
     this.props.update(
       'template_data',
       R.assoc(name, value, this.props.data)
@@ -29,7 +33,7 @@ class TemplateTabComponent extends React.Component {
         name={`template-field__${template.id}`}
         fields={(this.props.data ? (template ? template.fields : []) : null)}
         data={this.props.data}
-        errors={this.props.data}
+        errors={this.props.errors}
         onChange={(name, data) => this.updateField(name, data)} />
     )
 

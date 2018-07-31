@@ -14,7 +14,7 @@ export default function FieldGroup(props) {
     <FieldWrapper
       key={`${props.name}__${field.name}`}
       field={field}
-      error={props.errors[field.name]}
+      error={props.errors ? props.errors[field.name] : null}
       data={R.prop(field.name, props.data || {}) || null}
       onChange={(data) => props.onChange(field.name, data)} />
   ))

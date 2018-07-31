@@ -17,7 +17,7 @@ class DispatchAPITestCase(TestCase):
         super(DispatchAPITestCase, cls).setUpClass()
 
         # Create dummy user for testing
-        user = User.objects.create_user(TEST_EMAIL, TEST_PASSWORD)
+        user = User.objects.create_user(TEST_EMAIL, TEST_PASSWORD, 'admin')
         (token, created) = Token.objects.get_or_create(user=user)
 
     def setUp(self):
