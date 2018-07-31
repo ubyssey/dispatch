@@ -563,6 +563,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
+    currently_breaking = serializers.BooleanField(source='is_currently_breaking', read_only=True)
+
     class Meta:
         model = Article
         fields = (
@@ -585,6 +587,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'section_id',
             'published_at',
             'is_published',
+            'is_breaking',
+            'breaking_timeout',
+            'currently_breaking',
             'published_version',
             'current_version',
             'latest_version',
@@ -630,6 +635,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
+        instance.is_breaking = validated_data.get('is_breaking', instance.is_breaking)
+        instance.breaking_timeout = validated_data.get('breaking_timeout', instance.breaking_timeout)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
         instance.integrations = validated_data.get('integrations', instance.integrations)

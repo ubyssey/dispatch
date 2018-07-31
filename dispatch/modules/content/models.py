@@ -2,6 +2,7 @@ import StringIO
 import os
 import re
 import uuid
+import datetime
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -304,6 +305,9 @@ class Article(Publishable, AuthorMixin):
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
+    is_breaking = BooleanField(default=False)
+    breaking_timeout = DateTimeField(blank=True, null=True)
+
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
@@ -334,6 +338,12 @@ class Article(Publishable, AuthorMixin):
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
+
+    def is_currently_breaking(self):
+        if self.is_published and self.is_breaking:
+            if self.breaking_timeout:
+                return timezone.now() < self.breaking_timeout
+        return False
 
     def save_tags(self, tag_ids):
         self.tags.clear()

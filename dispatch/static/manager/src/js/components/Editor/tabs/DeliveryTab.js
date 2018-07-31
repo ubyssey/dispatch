@@ -1,7 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, SelectInput, LinkButton } from '../../inputs'
+import { FormInput, SelectInput, LinkButton, DateTimeInput } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
 
 const IMPORTANCE_OPTIONS = [
@@ -50,6 +50,16 @@ export default function DeliveryTab(props) {
     )
   }
 
+  const timeoutPicker = props.is_breaking ?
+    <div>
+      <p>Timeout</p>
+      <DateTimeInput
+        hidden={!props.is_breaking}
+        value={props.breaking_timeout}
+        onChange={dt => props.update('breaking_timeout', dt)} />
+    </div> : null
+
+
   return (
     <div>
 
@@ -74,6 +84,15 @@ export default function DeliveryTab(props) {
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
           onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
         {warningMessage}
+      </FormInput>
+
+      <FormInput
+        label='Breaking news'>
+        <Switch
+          className='pt-large'
+          checked={props.is_breaking}
+          onChange={e => props.update('is_breaking', e.target.checked)} />
+          {timeoutPicker}
       </FormInput>
 
     </div>

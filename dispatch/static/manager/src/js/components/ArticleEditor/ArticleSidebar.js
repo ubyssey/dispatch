@@ -98,6 +98,8 @@ export default function ArticleSidebar(props) {
             importance={props.article.importance}
             reading_time={props.article.reading_time}
             integrations={props.article.integrations}
+            is_breaking={props.article.is_breaking}
+            breaking_timeout={props.article.breaking_timeout}
             availableIntegrations={props.integrations} />
         </TabPanel>
 
