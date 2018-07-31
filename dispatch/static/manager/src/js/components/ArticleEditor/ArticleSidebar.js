@@ -11,17 +11,58 @@ import SEOTab from '../Editor/tabs/SEOTab'
 
 require('../../../styles/components/article_sidebar.scss')
 
+const tabData = [
+  {
+    icon: 'pt-icon-application',
+    title: 'Basic fields',
+    errors: ['slug', 'section_id', 'author_ids', 'tag_ids', 'topic_ids' ,'snippet']
+  },
+  {
+    icon: 'pt-icon-media',
+    title: 'Featured image',
+    errors: []
+  },
+  // {
+  //   icon: 'pt-icon-video',
+  //   title: 'Featured video',
+  //   errors: []
+  // },
+  {
+    icon: 'pt-icon-envelope',
+    title: 'Delivery',
+    errors: []
+  },
+  {
+    icon: 'pt-icon-widget',
+    title: 'Template',
+    errors: ['instructions', 'header_layout', 'description', 'timeline_date']
+  },
+  {
+    icon: 'pt-icon-media',
+    title: 'SEO',
+    errors: []
+  }
+]
+
+function tabHighlight(localErrors, errors) {
+  for (const error of localErrors) {
+    if (errors.includes(error)){
+      return 'c-article-sidebar__tab-error'
+    }
+  }
+  return ''
+}
+
+function renderTab(data, index, errors) {
+  return <Tab key={index} className={'c-article-sidebar__tab ' + tabHighlight(data.errors, errors)}><span className={'pt-icon-standard ' + data.icon} />{data.title}</Tab>
+}
+
 export default function ArticleSidebar(props) {
   return (
     <div className='c-article-sidebar'>
       <Tabs>
         <TabList className='c-article-sidebar__tablist'>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-application' />Basic fields</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-media' />Featured image</Tab>
-          {/* <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-video' />Featured video</Tab> */}
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-envelope' />Delivery</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-widget' />Template</Tab>
-          <Tab className='c-article-sidebar__tab'><span className='pt-icon-standard pt-icon-social-media' />SEO</Tab>
+          {tabData.map((data, index) => (renderTab(data, index, Object.keys(props.errors))))}
         </TabList>
 
         <TabPanel className='c-article-sidebar__panel'>

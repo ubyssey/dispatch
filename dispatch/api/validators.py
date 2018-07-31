@@ -1,6 +1,7 @@
 import json
 
 from rest_framework.exceptions import ValidationError
+from dispatch.theme.exceptions import InvalidField, TemplateNotFound
 
 from django.contrib.auth.password_validation import validate_password
 
@@ -63,10 +64,30 @@ def AuthorValidator(data):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
 
-def TimelineValidator(json_data):
-    """Raise a ValidationError if data does not adhere to the timeline template requirements."""
-    if 'timeline_date' not in json_data or json_data['timeline_date'] is None:
-        raise ValidationError({'timeline_date': ['A date must be provided']})
-    if 'description' not in json_data or json_data['description'] is None or len(json_data['description'].strip()) <= 0:
-        raise ValidationError({'description': ['A description must be provided']})
-    
+def TemplateValidator(template, template_data, tags):
+
+    from dispatch.theme import ThemeManager
+
+    errors = {}
+
+    if template is not None:
+        try:
+            template = ThemeManager.Templates.get(template)
+        except TemplateNotFound as e:
+            errors['template'] = str(e)
+        for field in template.fields:
+            try:
+                field.validate(template_data.get(field.name))
+            except KeyError:
+                pass
+            except InvalidField as e:
+                errors[field.name] = str(e)
+        if template.name == 'Timeline':
+            if tags:
+                if not True in map(lambda tag: 'timeline-' in tag.name, tags):
+                    errors['instructions'] = 'Must have a corresponding timeline tag'
+            else:
+                errors['instructions'] = 'Must have a corresponding timeline tag'
+
+    if errors:
+        raise ValidationError(errors)

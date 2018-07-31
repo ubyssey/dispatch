@@ -516,6 +516,8 @@ class ImageAttachment(Model):
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
+    style = CharField(max_length=255, blank=True, null=True)
+    width = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
 
     order = PositiveIntegerField(null=True)

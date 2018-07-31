@@ -119,7 +119,6 @@ class CharField(Field):
     type = 'char'
 
     def validate(self, data):
-
         if not isinstance(data, basestring):
             raise InvalidField('%s data must be a string' % self.label)
 
@@ -145,7 +144,7 @@ class DateTimeField(Field):
     def validate(self, data):
         if not data or (isinstance(data, basestring) and not len(data)):
             if self.required:
-                raise InvalidField('%s is required')
+                raise InvalidField('%s is required' % self.label)
             else:
                 return
 
@@ -342,3 +341,6 @@ class InstructionField(Field):
         self.valid_options = set(option[0] for option in self.options)
 
         super(InstructionField, self).__init__(label=label, many=False, required=required)
+
+    def validate(self, data):
+        pass

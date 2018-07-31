@@ -12,7 +12,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TimelineValidator)
+    SlugValidator, AuthorValidator, TemplateValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -306,6 +306,8 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
         fields = (
             'image',
             'image_id',
+            'style',
+            'width',
             'caption',
             'credit'
         )
@@ -607,6 +609,19 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
+        template = validated_data.get('template_id', instance.template)
+        template_data = validated_data.get('template_data', instance.template_data)
+        tag_ids = validated_data.get('tag_ids', False)
+
+        tags = []
+        if tag_ids != False:
+            for tag_id in tag_ids:
+                try:
+                    tags.append(Tag.objects.get(id=int(tag_id)))
+                except Tag.DoesNotExist:
+                    pass
+
+        TemplateValidator(template, template_data, tags)
 
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
@@ -618,12 +633,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
         instance.integrations = validated_data.get('integrations', instance.integrations)
-        instance.template = validated_data.get('template_id', instance.template)
-        instance.template_data = validated_data.get('template_data', instance.template_data)
-
-        if instance.template == 'timeline':
-            TimelineValidator(validated_data.get('template_data', None))
-        # Save instance before processing/saving content in order to save associations to correct ID
+        instance.template = template
+        instance.template_data = template_data
+        
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
@@ -640,7 +652,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if authors:
             instance.save_authors(authors, is_publishable=True)
 
-        tag_ids = validated_data.get('tag_ids', False)
         if tag_ids != False:
             instance.save_tags(tag_ids)
 
