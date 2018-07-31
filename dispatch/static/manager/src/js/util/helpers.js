@@ -11,6 +11,15 @@ export function humanizeDatetime(timestamp, isDateTime) {
     moment(timestamp).format('ll')   // April 18, 2017
 }
 
+export function pythonifyDateTime(timestamp) {
+
+  if (!timestamp) {
+    return null
+  }
+
+  return moment(timestamp).format()
+}
+
 export function confirmNavigation(router, route, shouldConfirm) {
   router.setRouteLeaveHook(
     route,

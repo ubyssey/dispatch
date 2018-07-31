@@ -8,7 +8,7 @@ import { FormInput } from '../../inputs'
 import TemplateSelectInput from '../../inputs/selects/TemplateSelectInput'
 
 import FieldGroup from '../../fields/FieldGroup'
-import { dateObjToAPIString } from '../../../util/helpers'
+import { pythonifyDateTime } from '../../../util/helpers'
 
 class TemplateTabComponent extends React.Component {
 
@@ -18,7 +18,7 @@ class TemplateTabComponent extends React.Component {
 
   updateField(name, value) {
     if (value instanceof Date) {
-      value = dateObjToAPIString(value)
+      value = pythonifyDateTime(value)
     }
     this.props.update(
       'template_data',
