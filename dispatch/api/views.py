@@ -467,7 +467,7 @@ class NotificationsViewSet(DispatchModelViewSet):
             data['image'] = article.featured_image.image.get_thumbnail_url()
 
         subscriptions = Subscription.objects.all()
-        print('subscriptions', subscriptions)
+
         for sub in subscriptions:
             try:
                 webpush(
@@ -484,7 +484,6 @@ class NotificationsViewSet(DispatchModelViewSet):
                         }
                 )
             except WebPushException as ex:
-                print('exception didnt push')
                 if ex.response.status_code == 410:
                     sub.delete()
 
