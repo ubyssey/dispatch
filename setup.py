@@ -14,7 +14,7 @@ setup(name='dispatch',
         'django == 1.11',
         'djangorestframework == 3.6.2',
         'pillow',
-        'requests == 2.6.0',
+        'requests == 2.13.0',
         'jsonfield',
         'pywebpush'
     ],
