@@ -16,7 +16,7 @@ require('../../../../styles/components/image_manager.scss')
 const SCROLL_THRESHOLD = 100
 
 const DEFAULT_QUERY = {
-  limit: 30,
+  limit: 50,
   ordering: '-created_at'
 }
 
@@ -44,10 +44,10 @@ class ImageManagerComponent extends React.Component {
   }
 
   loadMore() {
-    if (this.props.images.count > this.state.limit){
+    if (this.props.images.count > this.state.limit) {
       this.setState(prevState => ({
-        limit: prevState.limit + 10
-      }), this.props.listImages(this.props.token, {limit: this.state.limit, ordering: '-created_at'}))
+        limit: prevState.limit + 25
+      }), this.props.listImages(this.props.token, R.assoc('q', this.state.q, {limit: this.state.limit, ordering: '-created_at' })))
     }
   }
 
@@ -97,7 +97,7 @@ class ImageManagerComponent extends React.Component {
 
   onDrop(files) {
     files.forEach(file => {
-      this.props.createImage(this.props.token, {img: file})
+      this.props.createImage(this.props.token, { img: file })
     })
   }
 
@@ -105,7 +105,7 @@ class ImageManagerComponent extends React.Component {
 
     const image = this.getImage()
 
-    const images = this.props.images.ids.map( id => {
+    const images = this.props.images.ids.map(id => {
       const image = this.props.entities.remote[id]
       return (
         <ImageThumb
@@ -147,13 +147,15 @@ class ImageManagerComponent extends React.Component {
             activeClassName='c-image-manager__images--active'>
             <div
               className='c-image-manager__images__container'
-              ref={(node) => { this.images = node }}>{images}</div>
+              ref={(node) => { this.images = node }}>{images}
+            </div>
+            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}  
           </Dropzone>
           {!this.props.many ?
             <div className='c-image-manager__active'>
               {image ? imagePanel : null}
             </div> : null}
-          
+
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
