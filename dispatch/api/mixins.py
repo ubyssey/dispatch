@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
+from django.db.models import F
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
 from dispatch.models import Subscription, Notification, Article
@@ -42,6 +43,9 @@ class DispatchPublishableMixin(object):
 
             if version is not None:
                 queryset = queryset.filter(revision_id=version)
+            elif self.request.method == 'DELETE':
+                if queryset:
+                    queryset = queryset.filter(id=F('parent_id'))
             else:
                 queryset = queryset.filter(head=True)
         else:

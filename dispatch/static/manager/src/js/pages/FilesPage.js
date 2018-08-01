@@ -139,7 +139,7 @@ class FilesPageComponent extends React.Component {
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    files: state.app.files,
+    files: state.app.files.list,
     entities: {
       files: state.app.entities.files
     }

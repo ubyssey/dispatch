@@ -21,6 +21,8 @@ import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
+import settingsReducer from './SettingsReducer'
+import invitesReducer from './InvitesReducer'
 import pollsReducer from './PollsReducer'
 import notificationsReducer from './notificationsReducer'
 import subscriptionsReducer from './subscriptionsReducer'
@@ -46,8 +48,10 @@ export default combineReducers({
   widgets: widgetsReducer,
   events: eventsReducer,
   users: userReducer,
+  invites: invitesReducer,
   videos: videosReducer,
   polls: pollsReducer,
   notifications: notificationsReducer,
-  subscriptions: subscriptionsReducer
+  subscriptions: subscriptionsReducer,
+  settings: settingsReducer
 })
