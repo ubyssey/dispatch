@@ -55,7 +55,6 @@ export default function DeliveryTab(props) {
     <div>
       <p>Timeout</p>
       <DateTimeInput
-        hidden={!props.is_breaking}
         value={props.breaking_timeout}
         onChange={dt => props.update('breaking_timeout', dt)} />
     </div> : null
@@ -63,6 +62,7 @@ export default function DeliveryTab(props) {
   const notificationScheduler = (
     <FormInput label='Schedule Notification'>
       <DateTimeInput
+        hidden={props.is_breaking}
         value={props.scheduled_notification}
         onChange={dt => props.update('scheduled_notification', dateObjToAPIString(dt))} />
     </FormInput>

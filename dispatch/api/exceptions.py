@@ -25,12 +25,10 @@ class InvalidPoll(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = 'Invalid poll'
 
-<<<<<<< HEAD
 class AlreadySubscribed(APIException):
-    status_code = status.HTTP_400_BAD_REQUEST
+    status_code = status.HTTP_202_ACCEPTED
     default_detail = 'User is already subscribed'
-=======
+
 class UnpermittedActionError(APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
     default_detail = 'You do not have permission to perform this action'
->>>>>>> develop

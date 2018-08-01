@@ -405,6 +405,31 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
     serializer_class = SubscriptionCountSerializer
     queryset = SubscriptionCount.objects.filter(date__gte=timezone.now() - datetime.timedelta(days=90)).order_by('-date')
 
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = [AllowAny,]
+        else:
+            permission_classes = [IsAuthenticated,]
+        return [permission() for permission in permission_classes]
+
+    def create(self, request):
+        try:
+            subscription_count = Subscription.objects.all().count()
+            data = {
+                'count': subscription_count
+            }
+            serializer = SubscriptionCountSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response({'detail': 'Subscriber count recorded'})
+        except:
+            return Response({ 'detail': 'Subscriber count for today has already been created' }, status.HTTP_400_BAD_REQUEST)
+
 class NotificationsViewSet(DispatchModelViewSet):
     """Viewset for the Poll model views."""
 
@@ -442,6 +467,7 @@ class NotificationsViewSet(DispatchModelViewSet):
             data['image'] = article.featured_image.image.get_thumbnail_url()
 
         subscriptions = Subscription.objects.all()
+        print('subscriptions', subscriptions)
         for sub in subscriptions:
             try:
                 webpush(
@@ -458,6 +484,7 @@ class NotificationsViewSet(DispatchModelViewSet):
                         }
                 )
             except WebPushException as ex:
+                print('exception didnt push')
                 if ex.response.status_code == 410:
                     sub.delete()
 

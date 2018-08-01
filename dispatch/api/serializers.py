@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery, Issue, Subscription
+    Article, Image, ImageAttachment, ImageGallery, Issue, Subscription,
     File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote, Notification, SubscriptionCount)
 from dispatch.modules.auth.models import Person, User, Invite
 from dispatch.admin.registration import send_invitation
@@ -967,6 +967,8 @@ class NotificationSerializer(DispatchModelSerializer):
 
 class SubscriptionCountSerializer(DispatchModelSerializer):
     """Serializes the SubscriptionCount model."""
+
+    date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = SubscriptionCount

@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.db import transaction
 
 from django.db.models import (
-    Model, DateTimeField, CharField, TextField, PositiveIntegerField,
+    Model, DateField, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
     ManyToManyField, SlugField, SET_NULL, CASCADE)
 from django.conf import settings
@@ -627,7 +627,7 @@ class Subscription(Model):
 
 class SubscriptionCount(Model):
     count = PositiveIntegerField()
-    date = DateTimeField(auto_now_add=True)
+    date = DateField(auto_now_add=True, unique=True)
 
     class Meta:
         ordering = ('-date',)
