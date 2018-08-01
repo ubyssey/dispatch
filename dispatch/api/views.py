@@ -436,7 +436,7 @@ class NotificationsViewSet(DispatchModelViewSet):
     model = Notification
     serializer_class = NotificationSerializer
     permission_classes = (IsAuthenticated,)
-    queryset = Notification.objects.all().order_by('created_at')
+    queryset = Notification.objects.all().order_by('scheduled_push_time')
 
     @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
     def subscribe(self, request, pk=None):
