@@ -12,7 +12,7 @@ $border-bottom-height: 2px;
 
 .flex {
   display: flex;
-  align-items:center;
+  align-items: center;
 }
 
 .flex-start {
@@ -25,127 +25,140 @@ $border-bottom-height: 2px;
   justify-content: flex-end;
 }
 
-.nav-link-group {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
 .c-header {
-  min-height: 50px;
-  box-shadow: none;
-  border: none;
-  position: relative;
-  color: $color-text-dispatch-gray-light;
-  background-color: $color-dispatch-gray;
+  // Structure
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
-  // Border
-  border-bottom: 1px solid $color-border-gray;
-
-  // Text
-  font-family: $font-family-default;
-
-  // Extra
-  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
-  z-index: $z-index-2;
-
+  // Position
+  position: relative;
+  // Dimension
   width: 100%;
   height: 50px;
+  min-height: 50px;
+  // Background
+  background-color: $color-dispatch-gray;
+  // Text
+  color: $color-text-dispatch-gray-light;
   font-size: 1rem;
-
-
+  font-family: $font-family-default;
+  // Spacing
   padding-left: 20px;
   padding-right: 20px;
-
+  // Border
+  border: none;
   // Extra
   box-shadow: none;
-  border: none;
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
+  z-index: $z-index-2;
   .pt-button:not([class*="pt-intent-"]), .pt-button[class*="pt-icon-"]::before {
+    // Text
     color: $color-text-dispatch-gray-light;
   }
   .pt-button[class*="pt-icon-large"]::before {
+    // Text
     font-size: 30px;
 
   }
   .nav-link-group {
+    // Structure
     display: flex;
-    flex-wrap: wrap;
-    width: 90%;
-    position: relative;
-    left: 10%;
-    height: 220px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    // Dimension
+    height: 100%;
+    width: 100%;
+    // Position
+    position: relative;
+    // Spacing
     margin-top: 15px;
   }
 
   .nav-dropdown-content{
-    width: 100vw;
-    margin-top: 20px;
-    position: absolute;
-    padding: 20px 10px;
+    // Structure
     display:flex;
     flex-direction: column;
+    // Dimension
+    width: 100vw;
+    // Position
+    position: absolute;
+    // Background
     background-color: $color-dispatch-gray;
+    // Spacing
+    margin-top: 20px;
+    padding: 20px 10px;
+    // Extra
     transition: transform .25s;
     &.open{
+      // Position
       transform: translateX(-30px);
     }
     &.closed {
+      // Position
       transform: translateX(calc(-100% - 30px));
     }
   }
 
-  @media ($bp-larger-than-phablet) {
+  @media ($bp-larger-than-tablet) {
     .nav-link-group {
+      // Structure
       flex-direction: row;
-      margin-top: 0;
+      align-items: center;
+      // Dimension
       width: auto;
       height: 100%;
+      // Position
       left: 0;
-      align-items: center;
+      // Spacing
+      margin-top: 0;
     }
 
     .pt-navbar-divider{
+      // Structure
       align-self: center;
+      // Background
       background-color: $color-text-dispatch-gray-light;
       &:hover {
+        // Background
         background-color: $color-dispatch-header-hover;
       }
     }
 
     .pt-button.pt-minimal,
     .pt-button[class*="pt-icon-"]::before {
+      // Text
       color: $color-text-dispatch-gray-light !important;
     }
   
     .pt-button[class*="pt-icon-"]:empty {
+      // Spacing
       padding: 0 10px;
     }
 
     .nav-dropdown-button {
       // Structure
       display: flex;
+      align-items: center;
       justify-content: flex-start;
-
       .pt-icon-standard {
+        // Spacing
         margin-right: 7px;
       }
     }
 
     .nav-dropdown-container {
       // Structure
-      height: 100%;
-      width: 120px;
-      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-
+      // Dimension
+      height: 100%;
+      width: 120px;
+      // Position
+      position: relative;
+      // Border
       border-bottom: $border-bottom-height solid transparent;
       &:hover {
         // Border
@@ -155,46 +168,48 @@ $border-bottom-height: 2px;
       .nav-dropdown-content {
         // Structure
         display: none;
-        align-self: flex-start;
-        margin-top: 50px;
         flex-direction: column;
-        position: absolute;
+        align-self: flex-start;
+        // Dimension
+        width: 100%;
+        // Spacing
+        margin-top: 50px;
         padding: 10px;
+        // Position
+        position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        width: 100%;
-
         // Background
         background-color: $color-dispatch-gray;
-        
         // Text
         color: inherit;
-
         .pt-button.pt-minimal{
+          // Structure
           display: flex;
-          justify-content: flex-start;
           align-items: center;
+          justify-content: flex-start;
         }
       }
 
       .nav-dropdown-button {
-        // Text
-        color: inherit;
-
-        // Structure
+        // Position
         position: relative;
         top: $border-bottom-height;
-        padding: 10px;
+        // Border
         border-radius: 3px;
+        // Dimension
         width: 100px;
+        // Spacing
+        padding: 10px;
+        // Text
+        color: inherit;
       }
 
       &:hover {
         .nav-dropdown-content {
           // Structure
           display: flex;
-
           // Extra 
           opacity: 1;
         }
@@ -209,44 +224,59 @@ $border-bottom-height: 2px;
 }
 
 .nav-spacer {
+  // Dimension
   width: 90%;
+  // Spacing
   margin-top: 10px;
   margin-bottom: 10px;
+  // Border
   border-bottom: 1px solid white;
 }
 
 .nav-padded{
-  padding: 0 10px;
+  // Structure
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
+  // Spacing
+  padding: 0 10px;
   h3 {
+    // Text
     color: inherit;
   }
 }
 
 .nav-logo {
+  // Dimension
   width: 100px;
+  // Spacing
   padding: 0;
 }
 
 .c-banner__badge{
+  // Position
   position: relative;
 }
 
 .c-banner__badge[data-badge]:after{
-  content: attr(data-badge);
+  // Dimension
+  width: 18px;
+  height: 18px;
+  // Position
   position: absolute;
   top: -5px;
   right: -10px;
-  font-size: 0.7em;
+  // Background
   background: red;
+  // Text
   color: white;
-  width: 18px;
-  height: 18px;
+  font-size: 0.7em;
   text-align: center;
   line-height: 18px;
+  // Border
   border-radius: 50%;
+  // Extra
+  content: attr(data-badge);
 }
 
 .c-banner__badge[date-badge=""]:after{

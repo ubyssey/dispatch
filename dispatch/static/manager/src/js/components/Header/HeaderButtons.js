@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import {links} from './links'
 
 require('../../../styles/components/header.scss')
-require('../../../styles/utilities/_pseudo_bootstrap.scss')
 
 const HeaderButtons = () => {
   return (
@@ -28,7 +27,7 @@ const HeaderButtons = () => {
                       <Link 
                         to={'/' + link.toLowerCase() + '/'} 
                         key={index}
-                        className={'pt-button pt-minimal pt-icon-document ' + icon}>
+                        className={'pt-button pt-minimal ' + icon}>
                         {link}
                       </Link>
                     )

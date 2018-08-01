@@ -8,7 +8,7 @@ export const links = {
       },
       {
         link: 'Pages',
-        icon: 'pt-icon-page'
+        icon: 'pt-icon-document'
       }
     ]
   },
@@ -60,7 +60,19 @@ export const links = {
       {
         link: 'People',
         icon: 'pt-icon-person'
-      }  
+      },  
+      {
+        link: 'Tags',
+        icon: 'pt-icon-tag',
+      },
+      {
+        link: 'Topics',
+        icon: 'pt-icon-info-sign'
+      },
+      {
+        link: 'Sections',
+        icon: 'pt-icon-new-grid-item',
+      }
     ]
   }
 }
