@@ -487,18 +487,6 @@ class NotificationsViewSet(DispatchModelViewSet):
                 if ex.response.status_code == 410:
                     sub.delete()
 
-    @list_route(permission_classes=[IsAuthenticated], methods=['post'],)
-    def push(self, request, pk=None):
-        notification = Notification.objects \
-        .filter(scheduled_push_time__lte=timezone.now()) \
-        .order_by('scheduled_push_time') \
-        .first()
-
-        if notification is not None:
-            self.push_notifications(notification.article)
-            notification.delete()
-        return Response({'detail': 'success'})
-
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views."""
     permission_classes = (IsAuthenticated,)
