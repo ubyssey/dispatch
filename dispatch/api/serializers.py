@@ -952,7 +952,7 @@ class NotificationSerializer(DispatchModelSerializer):
 
     article_id = serializers.IntegerField()
     created_at = serializers.DateTimeField(read_only=True)
-    scheduled_push_time = serializers.DateTimeField()
+    scheduled_push_time = serializers.DateTimeField(required=True)
     article_headline = serializers.CharField(source='get_article_headline', read_only=True)
 
     class Meta:

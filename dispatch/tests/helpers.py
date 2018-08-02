@@ -1,3 +1,4 @@
+import datetime
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -5,6 +6,7 @@ from rest_framework import status
 from dispatch.models import Article, Author, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
 from dispatch.modules.content.mixins import AuthorMixin
+from django.utils import timezone
 
 class DispatchTestHelpers(object):
 
@@ -238,5 +240,18 @@ class DispatchTestHelpers(object):
         }
 
         url = reverse('api-polls-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_notification(cls, client, article):
+        """Create a dummy notification instance"""
+
+        data = {
+            'article_id': article.id,
+            'scheduled_push_time': timezone.now() + datetime.timedelta(hours=1)
+        }
+
+        url = reverse('api-notifications-list')
 
         return client.post(url, data, format='json')

@@ -426,7 +426,7 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            return Response({'detail': 'Subscriber count recorded'})
+            return Response({ 'detail': 'Subscriber count recorded' })
         except:
             return Response({ 'detail': 'Subscriber count for today has already been created' }, status.HTTP_400_BAD_REQUEST)
 
