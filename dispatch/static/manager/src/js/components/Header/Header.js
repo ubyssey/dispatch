@@ -3,11 +3,10 @@ import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
 import HeaderButtons from './HeaderButtons'
 import MobileHeader from './MobileHeader'
+import { desktopSize } from '../../util/helpers'
 
 require('../../../styles/components/header.scss')
 require('../../../styles/components/loading_bar.scss')
-
-const desktopSize = 960
 
 const renderLink = (url, classes, value) => {
   return (
@@ -21,12 +20,12 @@ const DesktopHeader = () => {
   return (
     <header className='c-header'>
       <div className={'row no-gutters'}>
-        <div className='col-8 flex-start'>
+        <div className='col-10 flex-start'>
           {renderLink('/', 'nav-logo pt-icon-selection', 'dispatch')}
           <span className="pt-navbar-divider" />
           <HeaderButtons />
         </div>
-        <div className={'col-4 flex-end'}>
+        <div className={'col-2 flex-end'}>
           {renderLink('/profile/', 'pt-icon-user', '')}
           {renderLink('/logout/', 'pt-icon-log-out', '')}
         </div>

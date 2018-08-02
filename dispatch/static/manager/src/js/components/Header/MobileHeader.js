@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import MobileHeaderButtons from './MobileHeaderButtons'
 
 require('../../../styles/components/header.scss')
-require('../../../styles/components/loading_bar.scss')
 
 class MobileHeader extends Component {
   constructor(props) {
