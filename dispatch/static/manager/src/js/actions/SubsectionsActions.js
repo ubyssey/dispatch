@@ -2,13 +2,13 @@ import R from 'ramda'
 import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
-import { columnSchema } from '../constants/Schemas'
+import { subsectionSchema } from '../constants/Schemas'
 
 import DispatchAPI from '../api/dispatch'
 
 import { ResourceActions } from '../util/redux'
 
-class ColumnsActions extends ResourceActions {
+class SubsectionsActions extends ResourceActions {
 
   toRemote(data) {
     data = R.clone(data)
@@ -40,13 +40,13 @@ class ColumnsActions extends ResourceActions {
     }
 
     return dispatch => {
-      dispatch(push({ pathname: '/columns/', query: queryObj }))
+      dispatch(push({ pathname: '/subsections/', query: queryObj }))
     }
   }
 }
 
-export default new ColumnsActions(
-  types.COLUMNS,
-  DispatchAPI.columns,
-  columnSchema
+export default new SubsectionsActions(
+  types.SUBSECTIONS,
+  DispatchAPI.subsections,
+  subsectionSchema
 )

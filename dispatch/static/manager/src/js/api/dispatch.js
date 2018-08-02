@@ -190,21 +190,21 @@ const DispatchAPI = {
       return deleteRequest('sections', sectionId, null, token)
     },
   },
-  columns: {
+  subsections: {
     list: (token, query) => {
-      return getRequest('columns', null, query, token)
+      return getRequest('subsections', null, query, token)
     },
-    get: (token, columnId) => {
-      return getRequest('columns', columnId, null, token)
+    get: (token, subsectionId) => {
+      return getRequest('subsections', subsectionId, null, token)
     },
-    save: (token, columnId, data) => {
-      return patchRequest('columns', columnId, data, token)
+    save: (token, subsectionId, data) => {
+      return patchRequest('subsections', subsectionId, data, token)
     },
     create: (token, data) => {
-      return postRequest('columns', null, data, token)
+      return postRequest('subsections', null, data, token)
     },
-    delete: (token, columnId) => {
-      return deleteRequest('columns', columnId, null, token)
+    delete: (token, subsectionId) => {
+      return deleteRequest('subsections', subsectionId, null, token)
     }
   },
   articles: {

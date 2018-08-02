@@ -11,7 +11,7 @@ export default {
         icon: 'pt-icon-page'
       },
       {
-        link: 'Columns',
+        link: 'Subsections',
         icon: 'pt-icon-column-layout'
       }
     ]

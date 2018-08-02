@@ -18,7 +18,7 @@ export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
 export const inviteSchema = new Schema('invites')
 export const pollSchema = new Schema('polls')
-export const columnSchema = new Schema('columns')
+export const subsectionSchema = new Schema('subsections')
 
 articleSchema.define({
   section: sectionSchema,
@@ -26,7 +26,7 @@ articleSchema.define({
     person: personSchema
   }),
   tags: arrayOf(tagSchema),
-  column: columnSchema,
+  subsection: subsectionSchema,
   topic: topicSchema,
   template: templateSchema,
   featured_image: {
@@ -37,7 +37,7 @@ articleSchema.define({
   }
 })
 
-columnSchema.define({
+subsectionSchema.define({
   authors: arrayOf({
     person: personSchema
   })

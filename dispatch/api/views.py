@@ -20,7 +20,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video,
-    Poll, PollAnswer, PollVote, Invite, Column)
+    Poll, PollAnswer, PollVote, Invite, Subsection)
 
 from dispatch.core.settings import get_settings
 from dispatch.admin.registration import reset_password
@@ -31,7 +31,7 @@ from dispatch.api.serializers import (
     FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
     TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
     ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
-    PollSerializer, PollVoteSerializer, InviteSerializer, ColumnSerializer)
+    PollSerializer, PollVoteSerializer, InviteSerializer, SubsectionSerializer)
 from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
     UnpermittedActionError)
@@ -109,13 +109,13 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         return queryset
 
-class ColumnViewSet(DispatchModelViewSet):
-    """Viewset for the Column model views."""
-    model = Column
-    serializer_class = ColumnSerializer
+class SubsectionViewSet(DispatchModelViewSet):
+    """Viewset for the Subsection model views."""
+    model = Subsection
+    serializer_class = SubsectionSerializer
 
     def get_queryset(self):
-        queryset = Column.objects.all()
+        queryset = Subsection.objects.all()
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
 

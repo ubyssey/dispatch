@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
 import SectionFilterInput  from '../../components/inputs/filters/SectionFilterInput'
-import columnsActions from '../../actions/ColumnsActions'
+import subsectionsActions from '../../actions/SubsectionsActions'
 
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
-    listItems: state.app.columns.list,
+    listItems: state.app.subsections.list,
     entities: {
-      listItems: state.app.entities.columns,
+      listItems: state.app.entities.subsections,
       sections: state.app.entities.sections
     }
   }
@@ -19,43 +19,43 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
-      dispatch(columnsActions.list(token, query))
+      dispatch(subsectionsActions.list(token, query))
     },
-    toggleListItem: (columnId) => {
-      dispatch(columnsActions.toggle(columnId))
+    toggleListItem: (subsectionId) => {
+      dispatch(subsectionsActions.toggle(subsectionId))
     },
-    toggleAllListItems: (columnIds) => {
-      dispatch(columnsActions.toggleAll(columnIds))
+    toggleAllListItems: (subsectionIds) => {
+      dispatch(subsectionsActions.toggleAll(subsectionIds))
     },
     clearSelectedListItems: () => {
-      dispatch(columnsActions.clearSelected())
+      dispatch(subsectionsActions.clearSelected())
     },
     clearListItems: () => {
-      dispatch(columnsActions.clearAll())
+      dispatch(subsectionsActions.clearAll())
     },
-    deleteListItems: (token, columnIds) => {
-      dispatch(columnsActions.deleteMany(token, columnIds))
+    deleteListItems: (token, subsectionIds) => {
+      dispatch(subsectionsActions.deleteMany(token, subsectionIds))
     },
-    searchColumns: (section, query) => {
-      dispatch(columnsActions.search(section, query))
+    searchSubsections: (section, query) => {
+      dispatch(subsectionsActions.search(section, query))
     }
   }
 }
 
-function ColumnPageComponent(props) {
+function SubsectionPageComponent(props) {
 
   const filters = [
     <SectionFilterInput
       key={'SectionFilter'}
       selected={props.location.query.section}
-      update={(section) => props.searchColumns(section, props.location.query.q)} />
+      update={(section) => props.searchSubsections(section, props.location.query.q)} />
   ]
 
   return (
     <ItemIndexPage
-      pageTitle='Columns'
-      typePlural='columns'
-      typeSingular='column'
+      pageTitle='Subsections'
+      typePlural='subsections'
+      typeSingular='subsection'
       displayColumn='name'
       filters={filters}
       headers={[ 'Name', 'Section', 'Articles']}
@@ -72,15 +72,15 @@ function ColumnPageComponent(props) {
         }
         return query
       }}
-      searchListItems={(query) => props.searchColumns(props.location.query.section, query)}
+      searchListItems={(query) => props.searchSubsections(props.location.query.section, query)}
       {...props} />
   )
 }
 
 
-const ColumnsPage = connect(
+const SubsectionsPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ColumnPageComponent)
+)(SubsectionPageComponent)
 
-export default ColumnsPage
+export default SubsectionsPage

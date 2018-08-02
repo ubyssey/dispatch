@@ -5,7 +5,7 @@ import { FormInput, TextInput, TextAreaInput } from '../inputs'
 import SectionSelectInput from '../inputs/selects/SectionSelectInput'
 import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
 import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
-export default function ColumnForm(props) {
+export default function SubsectionForm(props) {
 
   const articles = !props.listItem.articles ? [] : props.listItem.articles
     .map(article => article.id)

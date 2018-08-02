@@ -26,7 +26,7 @@ router.register(r'token', views.TokenViewSet, base_name='api-token')
 router.register(r'videos', views.VideoViewSet, base_name='api-videos')
 router.register(r'invites', views.InviteViewSet, base_name='api-invites')
 router.register(r'polls', views.PollViewSet, base_name='api-polls')
-router.register(r'columns', views.ColumnViewSet, base_name='api-columns')
+router.register(r'subsections', views.SubsectionViewSet, base_name='api-subsections')
 
 dashboard_recent_articles = views.DashboardViewSet.as_view({'get': 'list_recent_articles'})
 dashboard_user_actions = views.DashboardViewSet.as_view({'get': 'list_actions'})

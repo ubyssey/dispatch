@@ -19,7 +19,7 @@ class ArticlesActions extends PublishableActions {
 
     data.section_id = data.section
 
-    data.column_id = data.column
+    data.subsection_id = data.subsection
 
     data.author_ids = data.authors
 

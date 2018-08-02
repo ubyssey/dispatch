@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
     File, Page, Author, Section, Tag, Topic, Video,
-    VideoAttachment, Poll, PollAnswer, PollVote, Column)
+    VideoAttachment, Poll, PollAnswer, PollVote, Subsection)
 from dispatch.modules.auth.models import Person, User, Invite
 from dispatch.admin.registration import send_invitation
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -13,7 +13,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TemplateValidator, ColumnSlugValidator)
+    SlugValidator, AuthorValidator, TemplateValidator, SubsectionSlugValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -521,8 +521,8 @@ class ContentSerializer(serializers.Serializer):
 
         return map(self.insert_instance, content)
 
-class ColumnArticleSerializer(DispatchModelSerializer):
-    """Serializes articles for the Column model"""
+class SubsectionArticleSerializer(DispatchModelSerializer):
+    """Serializes articles for the Subsection model"""
     id = serializers.ReadOnlyField(source='parent_id')
     authors = AuthorSerializer(many=True, read_only=True)
 
@@ -535,8 +535,8 @@ class ColumnArticleSerializer(DispatchModelSerializer):
             'published_version'
         )
 
-class ColumnSerializer(DispatchModelSerializer):
-    """Serializes the Column model"""
+class SubsectionSerializer(DispatchModelSerializer):
+    """Serializes the Subsection model"""
 
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
@@ -546,7 +546,7 @@ class ColumnSerializer(DispatchModelSerializer):
     )
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
-    articles = ColumnArticleSerializer(many=True, read_only=True, source='get_articles')
+    articles = SubsectionArticleSerializer(many=True, read_only=True, source='get_articles')
     article_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
@@ -555,10 +555,10 @@ class ColumnSerializer(DispatchModelSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    slug = serializers.SlugField(validators=[ColumnSlugValidator()])
+    slug = serializers.SlugField(validators=[SubsectionSlugValidator()])
 
     class Meta:
-        model = Column
+        model = Subsection
         fields = (
             'id',
             'name',
@@ -575,7 +575,7 @@ class ColumnSerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-        instance = Column()
+        instance = Subsection()
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -611,8 +611,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    column = ColumnSerializer(source='get_column', read_only=True)
-    column_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+    subsection = SubsectionSerializer(source='get_subsection', read_only=True)
+    subsection_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
@@ -670,8 +670,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'authors_string',
             'section',
             'section_id',
-            'column',
-            'column_id',
+            'subsection',
+            'subsection_id',
             'published_at',
             'is_published',
             'is_breaking',
@@ -754,9 +754,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if topic_id != False:
             instance.save_topic(topic_id)
 
-        column_id = validated_data.get('column_id', None)
-        if column_id is not None:
-            instance.save_column(column_id)
+        subsection_id = validated_data.get('subsection_id', None)
+        if subsection_id is not None:
+            instance.save_subsection(subsection_id)
 
         # Perform a final save (without revision), update content and featured image
         instance.save(

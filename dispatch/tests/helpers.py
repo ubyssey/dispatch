@@ -9,7 +9,7 @@ from dispatch.modules.content.mixins import AuthorMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], column_id=None):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], subsection_id=None):
         """Create a dummy article instance"""
 
         # Create test person
@@ -38,8 +38,8 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_column(cls, client, name='Test column', slug='test-column', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], article_headlines = ['Test headline']):
-        """Create a dummy column instance"""
+    def create_subsection(cls, client, name='Test subsection', slug='test-subsection', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], article_headlines = ['Test headline']):
+        """Create a dummy subsection instance"""
         # Create test person
         authors = []
 
@@ -59,7 +59,7 @@ class DispatchTestHelpers(object):
             articles.append(article.id)
 
 
-        url = reverse('api-columns-list')
+        url = reverse('api-subsections-list')
 
         data = {
             'name': name,

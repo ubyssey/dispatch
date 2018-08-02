@@ -64,7 +64,7 @@ def AuthorValidator(data):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
 
-class ColumnSlugValidator(object):
+class SubsectionSlugValidator(object):
     def set_context(self, serializer_field):
         self.instance = serializer_field.parent.instance
         self.model = serializer_field.parent.Meta.model
@@ -76,11 +76,11 @@ class ColumnSlugValidator(object):
             raise ValidationError('A page with that slug already exists')
         if self.instance is None:
             if self.model.objects.filter(slug=slug).exists():
-                raise ValidationError('A column with that slug already exists')
+                raise ValidationError('A subsection with that slug already exists')
         else:
             if self.model.objects.filter(slug=slug).exclude(id=self.instance.id).exists():
-                raise ValidationError('A column with that slug already exists')
-                
+                raise ValidationError('A subsection with that slug already exists')
+
 def TemplateValidator(template, template_data, tags):
 
     from dispatch.theme import ThemeManager
