@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
+from django.conf import settings
 from django.db.models import F
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
@@ -78,12 +79,10 @@ class DispatchPublishableMixin(object):
 
         self.perform_publish(serializer)
 
-        #TODO: add in breaking news notification logic
-        # check for if article is breaking
-        # self.pushNotification(instance)
-
         if isinstance(instance, Article):
-            if instance.scheduled_notification is not None and instance.scheduled_notification > timezone.now():
+            if instance.is_breaking:
+                self.pushNotification(instance)
+            elif instance.scheduled_notification is not None and instance.scheduled_notification > timezone.now():
                 Notification.objects.filter(article__parent_id=instance.parent_id).delete()
                 Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
@@ -106,8 +105,11 @@ class DispatchPublishableMixin(object):
             'headline': article.headline,
             'url': article.get_absolute_url(),
             'snippet': article.snippet,
-            'image': article.featured_image.image.get_thumbnail_url()
-            }
+        }
+
+        if article.featured_image is not None:
+            data['image'] = article.featured_image.image.get_thumbnail_url()
+
         subscriptions = Subscription.objects.all()
         for sub in subscriptions:
             try:
@@ -119,13 +121,14 @@ class DispatchPublishableMixin(object):
                             "auth": sub.auth
                         }},
                     data=json.dumps(data),
-                    vapid_private_key="Mp2OSApC5ZQ11iHtKfTfAWycrr-YYl9yphpkeqKIy9E",
+                    vapid_private_key=settings.NOTIFICATION_KEY,
                     vapid_claims={
                             "sub": "mailto:YourNameHere@example.org===",
                         }
                 )
             except WebPushException as ex:
-                sub.delete()
+                if ex.response.status_code == 410:
+                    sub.delete()
 
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
