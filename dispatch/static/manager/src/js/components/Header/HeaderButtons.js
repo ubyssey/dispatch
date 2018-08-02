@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import {links} from './links'
+import { links } from './links'
 
 require('../../../styles/components/header.scss')
 
