@@ -588,10 +588,6 @@ class SubsectionSerializer(DispatchModelSerializer):
         # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
-        # featured_image = validated_data.get('featured_image', False)
-        # if featured_image != False:
-        #     instance.save_featured_image(featured_image)
-
         authors = validated_data.get('author_ids')
 
         instance.save_authors(authors, is_publishable=False)
