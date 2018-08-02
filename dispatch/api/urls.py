@@ -24,6 +24,7 @@ router.register(r'issues',views.IssueViewSet, base_name='api-issues')
 router.register(r'zones', views.ZoneViewSet, base_name='api-zones')
 router.register(r'token', views.TokenViewSet, base_name='api-token')
 router.register(r'videos', views.VideoViewSet, base_name='api-videos')
+router.register(r'invites', views.InviteViewSet, base_name='api-invites')
 router.register(r'polls', views.PollViewSet, base_name='api-polls')
 router.register(r'columns', views.ColumnViewSet, base_name='api-columns')
 

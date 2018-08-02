@@ -30,7 +30,7 @@ export default class ConfirmButton extends React.Component {
         <Alert
           isOpen={this.state.alertOpen}
           cancelButtonText='Cancel'
-          confirmButtonText='Delete'
+          confirmButtonText={this.props.confirmButtonText}
           iconName='trash'
           onCancel={() => this.setState({ alertOpen: false })}
           onConfirm={() => this.onConfirm()}
@@ -43,5 +43,6 @@ export default class ConfirmButton extends React.Component {
 }
 
 ConfirmButton.defaultProps = {
-  message: 'Are you sure you want to delete this?'
+  message: 'Are you sure you want to delete this?',
+  confirmButtonText: 'Delete'
 }

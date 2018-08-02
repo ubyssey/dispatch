@@ -30,7 +30,6 @@ class ImagesActions extends ResourceActions {
     if (query) {
       queryObj.q = query
     }
-
     return (dispatch) => {
       dispatch(push({ pathname: '/images/', query: queryObj }))
     }

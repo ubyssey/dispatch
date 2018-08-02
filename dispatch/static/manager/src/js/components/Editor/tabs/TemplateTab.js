@@ -29,7 +29,7 @@ class TemplateTabComponent extends React.Component {
         name={`template-field__${template.id}`}
         fields={(this.props.data ? (template ? template.fields : []) : null)}
         data={this.props.data}
-        errors={this.props.data}
+        errors={this.props.errors}
         onChange={(name, data) => this.updateField(name, data)} />
     )
 

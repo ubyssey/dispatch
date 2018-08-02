@@ -296,6 +296,12 @@ const DispatchAPI = {
     get: (token, personId) => {
       return getRequest('persons', personId, null, token)
     },
+    getUser: (token, personId) => {
+      return getRequest('persons.user', personId, null, token)
+    },
+    getInvite: (token, personId) => {
+      return getRequest('persons.invite', personId, null, token)
+    },
     save: (token, personId, data) => {
       return patchMultipartRequest('persons', personId, data, token)
     },
@@ -448,8 +454,37 @@ const DispatchAPI = {
     get: (token, userId) => {
       return getRequest('users', userId, null, token)
     },
+    list: (token, query) => {
+      return getRequest('users', null, query, token)
+    },
+    create: (token, data) => {
+      return postRequest('users', null, data, token)
+    },
     save: (token, userId, data) => {
       return patchRequest('users', userId, data, token)
+    },
+    delete: (token, userId) => {
+      return deleteRequest('users', userId, null, token)
+    },
+    resetPassword: (token, userId) => {
+      return postRequest('users.reset_password', userId, null, token)
+    }
+  },
+  'invites': {
+    get: (token, query) => {
+      return getRequest('invites', null, query, token)
+    },
+    create: (token, data) => {
+      return postRequest('invites', null, data, token)
+    },
+    list: (token, query) => {
+      return getRequest('invites', null, query, token)
+    },
+    save: (token, inviteId, data)  => {
+      return patchRequest('invites', inviteId, data, token)
+    },
+    delete: (token, inviteId) => {
+      return deleteRequest('invites', inviteId, null, token)
     }
   },
   'polls': {

@@ -4,17 +4,17 @@ from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote,
-    Column)
-from dispatch.modules.auth.models import Person, User
+    File, Page, Author, Section, Tag, Topic, Video,
+    VideoAttachment, Poll, PollAnswer, PollVote, Column)
+from dispatch.modules.auth.models import Person, User, Invite
+from dispatch.admin.registration import send_invitation
+from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, ColumnSlugValidator)
+    SlugValidator, AuthorValidator, TemplateValidator, ColumnSlugValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
-
-from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
@@ -62,10 +62,17 @@ class UserSerializer(DispatchModelSerializer):
     )
     password_a = serializers.CharField(
         required=False,
+        allow_blank=True,
         write_only=True,
         validators=[PasswordValidator(confirm_field='password_b')]
     )
-    password_b = serializers.CharField(required=False, write_only=True)
+    password_b = serializers.CharField(required=False, allow_blank=True, write_only=True)
+
+    permissions = serializers.CharField(source='get_permissions', read_only=True)
+
+    permission_level = serializers.CharField(required=False, allow_null=True, write_only=True)
+
+    user_id = serializers.IntegerField(source='get_user_id', read_only=True)
 
     class Meta:
         model = User
@@ -75,10 +82,13 @@ class UserSerializer(DispatchModelSerializer):
             'person',
             'password_a',
             'password_b',
+            'permissions',
+            'permission_level',
+            'user_id'
         )
 
     def create(self, validated_data):
-        instance = User()
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permission_level'])
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -90,7 +100,49 @@ class UserSerializer(DispatchModelSerializer):
 
         instance.save()
 
+        permissions = validated_data.get('permission_level')
+        instance.modify_permissions(permissions)
+
         return instance
+
+class InviteSerializer(DispatchModelSerializer):
+    """Serializes the Invite model."""
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    person = ForeignKeyField(
+        model=Person,
+        serializer=PersonSerializer(),
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    permissions = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+
+    expiration_date = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = Invite
+        fields = (
+            'id',
+            'email',
+            'person',
+            'permissions',
+            'expiration_date'
+        )
+
+    def create(self, validated_data):
+        instance = Invite()
+        return self.update(instance, validated_data)
+
+    def update(self, instance, validated_data):
+        send_invitation(validated_data['email'], instance.id)
+        return super(InviteSerializer, self).update(instance, validated_data)
 
 class FileSerializer(DispatchModelSerializer):
     """Serializes the File model."""
@@ -147,6 +199,7 @@ class IssueSerializer(DispatchModelSerializer):
 
 class TagSerializer(DispatchModelSerializer):
     """Serializes the Tag model."""
+
     class Meta:
         model = Tag
         fields = (
@@ -220,6 +273,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
 
 class TopicSerializer(DispatchModelSerializer):
     """Serializes the Topic model."""
+
     class Meta:
         model = Topic
         fields = (
@@ -253,6 +307,8 @@ class ImageAttachmentSerializer(DispatchModelSerializer):
         fields = (
             'image',
             'image_id',
+            'style',
+            'width',
             'caption',
             'credit'
         )
@@ -299,6 +355,7 @@ class ImageGallerySerializer(DispatchModelSerializer):
 
 class SectionSerializer(DispatchModelSerializer):
     """Serializes the Section model."""
+
     class Meta:
         model = Section
         fields = (
@@ -387,7 +444,7 @@ class ContentSerializer(serializers.Serializer):
 
     def sanitize_block(self, block):
         """Santizes the data for the given block.
-        If block has a matching embed serializer, use the `to_internal_value` method"""
+        If block has a matching embed serializer, use the `to_internal_value` method."""
 
         embed_type = block.get('type', None)
         data = block.get('data', {})
@@ -402,6 +459,7 @@ class ContentSerializer(serializers.Serializer):
 
     def queue_instance(self, embed_type, data):
         """Queue an instance to be fetched from the database."""
+
         serializer = self.serializers.get(embed_type, None)
 
         if serializer is None:
@@ -417,6 +475,7 @@ class ContentSerializer(serializers.Serializer):
     def load_instances(self, embed_type, ids):
         """Fetch all queued instances of type `embed_type`, save results
         to `self.instances`"""
+
         serializer = self.serializers.get(embed_type, None)
 
         if serializer is None:
@@ -426,6 +485,7 @@ class ContentSerializer(serializers.Serializer):
 
     def insert_instance(self, block):
         """Insert a fetched instance into embed block."""
+
         embed_type = block.get('type', None)
         data = block.get('data', {})
         serializer = self.serializers.get(embed_type, None)
@@ -446,11 +506,13 @@ class ContentSerializer(serializers.Serializer):
 
     def queue_data(self, content):
         """Queue data to be loaded for each embed block."""
+
         for block in content:
             self.queue_instance(block['type'], block['data'])
 
     def load_data(self):
         """Load data in bulk for each embed block."""
+
         for embed_type in self.ids.keys():
             self.load_instances(embed_type, self.ids[embed_type])
 
@@ -586,6 +648,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
+    currently_breaking = serializers.BooleanField(source='is_currently_breaking', read_only=True)
+
     class Meta:
         model = Article
         fields = (
@@ -610,6 +674,9 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'column_id',
             'published_at',
             'is_published',
+            'is_breaking',
+            'breaking_timeout',
+            'currently_breaking',
             'published_version',
             'current_version',
             'latest_version',
@@ -634,6 +701,20 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
+        template = validated_data.get('template_id', instance.template)
+        template_data = validated_data.get('template_data', instance.template_data)
+        tag_ids = validated_data.get('tag_ids', False)
+
+        tags = []
+        if tag_ids != False:
+            for tag_id in tag_ids:
+                try:
+                    tags.append(Tag.objects.get(id=int(tag_id)))
+                except Tag.DoesNotExist:
+                    pass
+
+        TemplateValidator(template, template_data, tags)
+
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
         instance.section_id = validated_data.get('section_id', instance.section_id)
@@ -641,13 +722,14 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
         instance.importance = validated_data.get('importance', instance.importance)
+        instance.is_breaking = validated_data.get('is_breaking', instance.is_breaking)
+        instance.breaking_timeout = validated_data.get('breaking_timeout', instance.breaking_timeout)
         instance.seo_keyword = validated_data.get('seo_keyword', instance.seo_keyword)
         instance.seo_description = validated_data.get('seo_description', instance.seo_description)
         instance.integrations = validated_data.get('integrations', instance.integrations)
-        instance.template = validated_data.get('template_id', instance.template)
-        instance.template_data = validated_data.get('template_data', instance.template_data)
+        instance.template = template
+        instance.template_data = template_data
 
-        # Save instance before processing/saving content in order to save associations to correct ID
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
@@ -665,7 +747,6 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         if authors:
             instance.save_authors(authors, is_publishable=True)
 
-        tag_ids = validated_data.get('tag_ids', False)
         if tag_ids != False:
             instance.save_tags(tag_ids)
 

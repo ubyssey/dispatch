@@ -118,6 +118,8 @@ class ImageEmbed(AbstractTemplateEmbed):
 
         return {
             'image': image,
+            'style': data.get('style', None),
+            'width': data.get('width', None),
             'caption': data.get('caption', None),
             'credit': data.get('credit', None)
         }

@@ -2,6 +2,7 @@ import StringIO
 import os
 import re
 import uuid
+import datetime
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -24,7 +25,7 @@ from django.dispatch import receiver
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.content.mixins import AuthorMixin
-from dispatch.modules.auth.models import Person, User
+from dispatch.modules.auth.models import Person
 
 class Tag(Model):
     name = CharField(max_length=255, unique=True)
@@ -122,7 +123,7 @@ class Publishable(Model):
     @property
     def html(self):
         """Return HTML representation of content"""
-        return content_to_html(self.content)
+        return content_to_html(self.content, self.id)
 
     def is_parent(self):
         return self.parent is None
@@ -305,6 +306,9 @@ class Article(Publishable, AuthorMixin):
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
+    is_breaking = BooleanField(default=False)
+    breaking_timeout = DateTimeField(blank=True, null=True)
+
     IMPORTANCE_CHOICES = [(i,i) for i in range(1,6)]
 
     importance = PositiveIntegerField(validators=[MaxValueValidator(5)], choices=IMPORTANCE_CHOICES, default=3)
@@ -335,6 +339,12 @@ class Article(Publishable, AuthorMixin):
             'ids': ",".join([str(a.parent_id) for a in articles]),
             'name': name
         }
+
+    def is_currently_breaking(self):
+        if self.is_published and self.is_breaking:
+            if self.breaking_timeout:
+                return timezone.now() < self.breaking_timeout
+        return False
 
     def save_tags(self, tag_ids):
         self.tags.clear()
@@ -544,6 +554,8 @@ class ImageAttachment(Model):
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
+    style = CharField(max_length=255, blank=True, null=True)
+    width = CharField(max_length=255, blank=True, null=True)
     image = ForeignKey(Image, related_name='image', on_delete=SET_NULL, null=True)
 
     order = PositiveIntegerField(null=True)
