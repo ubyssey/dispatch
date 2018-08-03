@@ -6,7 +6,6 @@ from pywebpush import webpush, WebPushException
 from django.db.models import Q, ProtectedError, Prefetch
 from django.conf import settings
 from django.contrib.auth import authenticate
-from django.conf import settings
 from django.db import IntegrityError
 from django.utils import timezone
 
@@ -456,18 +455,18 @@ class NotificationsViewSet(DispatchModelViewSet):
 
         return Response(serializer.data)
 
-    def push_notifications(self, article):
+    def push_notification(self, article):
         # grab each endpoint from list in database and make a push
-        data={
+        data = {
             'headline': article.headline,
             'url': article.get_absolute_url(),
             'snippet': article.snippet,
-            }
+        }
+
         if article.featured_image is not None:
             data['image'] = article.featured_image.image.get_thumbnail_url()
 
         subscriptions = Subscription.objects.all()
-
         for sub in subscriptions:
             try:
                 webpush(
@@ -486,6 +485,21 @@ class NotificationsViewSet(DispatchModelViewSet):
             except WebPushException as ex:
                 if ex.response.status_code == 410:
                     sub.delete()
+
+    @list_route(permission_classes=[AllowAny], methods=['post'],)
+    def push(self, request):
+        notification = Notification.objects \
+        .filter(scheduled_push_time__lte=timezone.now()) \
+        .order_by('scheduled_push_time') \
+        .first()
+
+        if notification is not None:
+            article = Article.objects.filter(parent__id=notification.article.parent_id, is_published=True).first()
+            if article is not None:
+                self.push_notification(article)
+                notification.delete()
+
+        return Response(status=status.HTTP_200_OK)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views."""
