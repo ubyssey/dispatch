@@ -1,10 +1,13 @@
 import json
 from pywebpush import webpush, WebPushException
+from django.utils import timezone
 
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
+from django.conf import settings
+from django.db.models import F
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
 from dispatch.models import Subscription, Notification, Article
@@ -41,6 +44,9 @@ class DispatchPublishableMixin(object):
 
             if version is not None:
                 queryset = queryset.filter(revision_id=version)
+            elif self.request.method == 'DELETE':
+                if queryset:
+                    queryset = queryset.filter(id=F('parent_id'))
             else:
                 queryset = queryset.filter(head=True)
         else:
@@ -73,12 +79,12 @@ class DispatchPublishableMixin(object):
 
         self.perform_publish(serializer)
 
-        #TODO: add in breaking news notification logic
-        # check for if article is breaking
-        # self.pushNotification(instance)
-
         if isinstance(instance, Article):
-            Notification.objects.create(article=instance)
+            if instance.is_breaking:
+                self.push_notification(instance)
+            elif instance.scheduled_notification is not None and instance.scheduled_notification > timezone.now():
+                Notification.objects.filter(article__parent_id=instance.parent_id).delete()
+                Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
         return Response(serializer.data)
 
@@ -92,6 +98,39 @@ class DispatchPublishableMixin(object):
         self.perform_unpublish(serializer)
 
         return Response(serializer.data)
+
+    @classmethod
+    def push_notification(self, article):
+        # grab each endpoint from list in database and make a push
+        data={
+            'headline': article.headline,
+            'url': article.get_absolute_url(),
+            'snippet': article.snippet,
+        }
+
+        if article.featured_image is not None:
+            data['image'] = article.featured_image.image.get_thumbnail_url()
+
+        subscriptions = Subscription.objects.all()
+        for sub in subscriptions:
+            try:
+                webpush(
+                    subscription_info={
+                        "endpoint": sub.endpoint,
+                        "keys": {
+                            "p256dh": sub.p256dh,
+                            "auth": sub.auth
+                        }},
+                    data=json.dumps(data),
+                    vapid_private_key=settings.NOTIFICATION_KEY,
+                    vapid_claims={
+                            "sub": "mailto:YourNameHere@example.org===",
+                        }
+                )
+            except WebPushException as ex:
+                if ex.response.status_code == 410:
+                    sub.delete()
+
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
     def __init__(self, *args, **kwargs):

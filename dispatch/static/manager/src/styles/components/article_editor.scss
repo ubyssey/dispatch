@@ -20,12 +20,46 @@
   width: 100%;
 }
 
+.c-article-editor__breaking {
+    background-color:#e41818;
+    color:white;
+    font-weight: bold;
+    display:inline-block;
+    padding:0.3rem;
+}
+
+.c-article-toolbar__breaking {
+  background-color: #e41818;
+  color:white;
+  font-weight: bold;
+  padding:0.3rem;
+  padding-bottom: 0.5rem;
+}
+
 .c-article-editor__toolbar__article-buttons {
   // Structure
   flex: 1;
 
   .pt-button {
     margin-right: 0.75rem;
+  }
+}
+
+.c-article-editor__toolbar__breaking {
+  display: flex;
+  align-items: center;
+
+  .c-article-editor__toolbar__breaking__checkbox {
+    float: right;
+    position:relative;
+    margin-bottom: 0;
+    padding-left: 0;
+    height:100%;
+  }
+
+  span {
+    float: left;
+    padding-right: 0.5rem;
   }
 }
 

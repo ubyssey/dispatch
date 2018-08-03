@@ -4,6 +4,8 @@ Default Dispatch settings
 
 import os
 
+ORGANIZATION_NAME = 'Dispatch'
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Application definition
@@ -87,3 +89,6 @@ STATICFILES_DIRS = (
 
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'CA'
+
+NOTIFICATION_KEY = "Mp2OSApC5ZQ11iHtKfTfAWycrr-YYl9yphpkeqKIy9E"
+PASSWORD_RESET_TIMEOUT_DAYS = 1

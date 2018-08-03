@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='dispatch',
-    version='0.4.11',
+    version='0.4.24',
     description='A publishing platform for modern newspapers',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
@@ -14,8 +14,9 @@ setup(name='dispatch',
         'django == 1.11',
         'djangorestframework == 3.6.2',
         'pillow',
-        'requests == 2.6.0',
+        'requests == 2.13.0',
         'jsonfield',
+        'pywebpush'
     ],
     extras_require={
         'dev': [

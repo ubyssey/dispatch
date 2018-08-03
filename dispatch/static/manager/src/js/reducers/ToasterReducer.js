@@ -214,6 +214,24 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast('User saved')
   case rejected(types.USERS.SAVE):
     return showToast('User could not be saved', Intent.DANGER)
+  case fulfilled(types.USERS.RESET_PASSWORD):
+    return showToast('Password reset sent')
+  case rejected(types.USERS.RESET_PASSWORD):
+    return showToast('Could not send reset email', Intent.DANGER)
+  case fulfilled(types.USERS.DELETE):
+    return showToast('User account deactivated')
+
+  // Invites
+  case fulfilled(types.INVITES.SAVE):
+    return showToast('Invite saved')
+  case rejected(types.INVITES.SAVE):
+    return showToast('Invite could not be sent', Intent.DANGER)
+  case fulfilled(types.INVITES.CREATE):
+    return showToast('Invite sent')
+  case rejected(types.INVITES.CREATE):
+    return showToast('Invite could not be sent', Intent.DANGER)
+  case fulfilled(types.INVITES.DELETE):
+    return showToast('Invitation cancelled')
 
   // Videos
   case fulfilled(types.VIDEOS.CREATE):
@@ -226,6 +244,18 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.VIDEOS.DELETE_MANY):
     return showToast('Some videos could not be deleted', Intent.DANGER)
+
+  // Notifications
+  case fulfilled(types.NOTIFICATIONS.CREATE):
+  case fulfilled(types.NOTIFICATIONS.SAVE):
+    return showToast('Notification saved')
+  case rejected(types.NOTIFICATIONS.CREATE):
+  case rejected(types.NOTIFICATIONS.SAVE):
+    return showToast('Notification could not be saved', Intent.DANGER)
+  case fulfilled(types.NOTIFICATIONS.DELETE_MANY):
+    return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.NOTIFICATIONS.DELETE_MANY):
+    return showToast('Some notifications could not be deleted', Intent.DANGER)
 
   default:
     return toaster
