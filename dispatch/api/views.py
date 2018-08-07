@@ -44,10 +44,8 @@ from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
     UnpermittedActionError, AlreadySubscribed)
 
-
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
-
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -404,7 +402,6 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
     serializer_class = SubscriptionCountSerializer
     queryset = SubscriptionCount.objects.filter(date__gte=timezone.now() - datetime.timedelta(days=90)).order_by('-date')
 
-
     def get_permissions(self):
         """
         Instantiates and returns the list of permissions that this view requires.
@@ -463,7 +460,7 @@ class NotificationsViewSet(DispatchModelViewSet):
         .first()
 
         if notification is not None:
-            article = Article.objects.filter(parent__id=notification.article.parent_id, is_published=True).first()
+            article = Article.objects.get(parent__id=notification.article.parent_id, is_published=True)
             if article is not None:
                 DispatchPublishableMixin.push_notification(article)
                 notification.delete()

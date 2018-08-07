@@ -102,11 +102,20 @@ class DispatchPublishableMixin(object):
     @classmethod
     def push_notification(self, article):
         # grab each endpoint from list in database and make a push
-        data={
-            'headline': article.headline,
-            'url': article.get_absolute_url(),
-            'snippet': article.snippet,
-        }
+        if (article.is_breaking):
+            data = {
+                'headline': article.headline,
+                'url': article.get_absolute_url(),
+                'snippet': article.snippet,
+                'tag': 'breaking'
+            }
+        else:
+            data = {
+                'headline': article.headline,
+                'url': article.get_absolute_url(),
+                'snippet': article.snippet,
+                'tag': 'ubyssey'
+            }
 
         if article.featured_image is not None:
             data['image'] = article.featured_image.image.get_thumbnail_url()
