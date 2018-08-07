@@ -7,7 +7,6 @@ import {
   buildSingleResourceReducer
 } from '../util/redux'
 
-
 export default combineReducers({
   list: buildManyResourceReducer(types.NOTIFICATIONS).getReducer(),
   single: buildSingleResourceReducer(types.NOTIFICATIONS).getReducer(),
