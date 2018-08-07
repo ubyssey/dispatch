@@ -68,7 +68,6 @@ class ImageManagerComponent extends React.Component {
   }
 
   searchImages() {
-
     this.props.listImages(this.props.token, this.buildQuery())
   }
 
@@ -111,7 +110,7 @@ class ImageManagerComponent extends React.Component {
   onSearch(author, tags, q) {
     this.setState({ 
       author: author,
-      tags: tags === '' ? null: tags,
+      tags: tags,
       q: q 
     }, this.searchImages)
   }
