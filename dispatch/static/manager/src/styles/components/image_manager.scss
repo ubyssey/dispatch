@@ -47,6 +47,9 @@ $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
   // Structure
   height: 60px;
   line-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .c-image-manager__header__left {

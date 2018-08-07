@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
+import { AuthorFilterInput, TagsFilterInput }  from '../../inputs/filters/'
 
 import imagesActions from '../../../actions/ImagesActions'
 
@@ -28,6 +29,8 @@ class ImageManagerComponent extends React.Component {
     this.scrollListener = this.scrollListener.bind(this)
 
     this.state = {
+      author: '',
+      tags: '',
       q: '',
       limit: DEFAULT_QUERY.limit,
     }
@@ -130,6 +133,15 @@ class ImageManagerComponent extends React.Component {
             <AnchorButton
               intent={Intent.SUCCESS}
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
+
+            <AuthorFilterInput
+              key={'AuthorFilter'}
+              selected={this.state.author}
+              update={(author) => this.props.searchImages(author, null, this.state.tags, this.state.q)} />
+            <TagsFilterInput
+              key={'tagsFilter'}
+              selected={this.state.tags}
+              update={(tags) => this.props.searchImages(this.state.author, null, tags, this.state.q)} />
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput
@@ -184,11 +196,15 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listImages: (token, params) => {
+      console.log(params)
       dispatch(imagesActions.list(token, params))
     },
     listImagesPage: (token, uri) => {
       dispatch(imagesActions.listPage(token, uri))
     },
+    // searchImages: (author, tags, query) => {
+    //   dispatch(imagesActions.search(author, tags, query))
+    // },
     selectImage: (imageId) => {
       dispatch(imagesActions.select(imageId))
     },
