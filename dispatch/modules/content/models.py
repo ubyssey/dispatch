@@ -153,6 +153,7 @@ class Publishable(Model):
         return self
 
     # Overriding
+    @transaction.atomic
     def save(self, revision=True, *args, **kwargs):
         """
         Handles the saving/updating of a Publishable instance.
@@ -179,6 +180,9 @@ class Publishable(Model):
 
                 # New version is unpublished by default
                 self.is_published = False
+
+                if type(self).objects.filter(parent=self.parent, head=True).exclude(id=self.id).exists():
+                    raise IntegrityError("%s with head=True already exists." % (type(self).__name__,))
 
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
