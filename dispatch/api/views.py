@@ -44,10 +44,8 @@ from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
     UnpermittedActionError, AlreadySubscribed)
 
-
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
-
 
 class SectionViewSet(DispatchModelViewSet):
     """Viewset for Section model views."""
@@ -403,7 +401,6 @@ class SubscriptionCountViewSet(DispatchModelViewSet):
     model = SubscriptionCount
     serializer_class = SubscriptionCountSerializer
     queryset = SubscriptionCount.objects.filter(date__gte=timezone.now() - datetime.timedelta(days=90)).order_by('-date')
-
 
     def get_permissions(self):
         """

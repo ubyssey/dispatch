@@ -29,7 +29,7 @@ class NotificationsPageComponent extends React.Component {
       counts.push(this.props.subscriptionCounts[subscriptionCount].count)
     }
 
-    let chartData = {
+    const chartData = {
       labels: dates,
       datasets: [
         {
