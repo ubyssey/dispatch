@@ -34,21 +34,6 @@ class ImagesActions extends ResourceActions {
       dispatch(push({ pathname: '/images/', query: queryObj }))
     }
   }
-
-  // list(token, params) {
-  //   return {
-  //     type: this.types.LIST,
-  //     payload: this.api.list(token, params)
-  //       .then(json => ({
-  //         count: json.count,
-  //         data: normalize(
-  //           json.results.map(this.fromRemote),
-  //           arrayOf(this.schema)
-  //         )
-  //       }))
-  //   }
-  // }
-  
 }
 
 export default new ImagesActions(

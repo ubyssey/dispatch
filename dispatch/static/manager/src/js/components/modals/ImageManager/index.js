@@ -30,7 +30,7 @@ class ImageManagerComponent extends React.Component {
 
     this.state = {
       author: '',
-      tags: '',
+      tags: [],
       q: '',
       limit: DEFAULT_QUERY.limit,
     }
@@ -46,16 +46,30 @@ class ImageManagerComponent extends React.Component {
     this.images.parentElement.removeEventListener('scroll', this.scrollListener)
   }
 
+  buildQuery() {
+    let queryObj = {
+      'q': this.state.q
+    }
+    if (this.state.author) {
+      queryObj.author = this.state.author
+    }
+    if (this.state.tags) {
+      queryObj.tags = this.state.tags
+    }
+    return Object.assign(queryObj, DEFAULT_QUERY)
+  }
+
   loadMore() {
     if (this.props.images.count > this.state.limit) {
       this.setState(prevState => ({
         limit: prevState.limit + 25
-      }), this.props.listImages(this.props.token, R.assoc('q', this.state.q, {limit: this.state.limit, ordering: '-created_at' })))
+      }), this.props.listImages(this.props.token, this.buildQuery()))
     }
   }
 
   searchImages() {
-    this.props.listImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
+
+    this.props.listImages(this.props.token, this.buildQuery())
   }
 
   scrollListener() {
@@ -94,8 +108,12 @@ class ImageManagerComponent extends React.Component {
     }
   }
 
-  onSearch(q) {
-    this.setState({ q: q }, this.searchImages)
+  onSearch(author, tags, q) {
+    this.setState({ 
+      author: author,
+      tags: tags === '' ? null: tags,
+      q: q 
+    }, this.searchImages)
   }
 
   onDrop(files) {
@@ -105,7 +123,6 @@ class ImageManagerComponent extends React.Component {
   }
 
   render() {
-
     const image = this.getImage()
 
     const images = this.props.images.ids.map(id => {
@@ -136,18 +153,18 @@ class ImageManagerComponent extends React.Component {
 
             <AuthorFilterInput
               key={'AuthorFilter'}
-              selected={this.state.author}
-              update={(author) => this.props.searchImages(author, null, this.state.tags, this.state.q)} />
+              selected={this.state.author || ''}
+              update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />
             <TagsFilterInput
               key={'tagsFilter'}
-              selected={this.state.tags}
-              update={(tags) => this.props.searchImages(this.state.author, null, tags, this.state.q)} />
+              selected={this.state.tags || ''}
+              update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput
               placeholder='Search'
               value={this.state.q}
-              onChange={e => this.onSearch(e.target.value)} />
+              onChange={e => this.onSearch(this.state.author, this.state.tags, e.target.value)} />
           </div>
         </div>
         <div className='c-image-manager__body'>
@@ -196,15 +213,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listImages: (token, params) => {
-      console.log(params)
       dispatch(imagesActions.list(token, params))
     },
     listImagesPage: (token, uri) => {
       dispatch(imagesActions.listPage(token, uri))
     },
-    // searchImages: (author, tags, query) => {
-    //   dispatch(imagesActions.search(author, tags, query))
-    // },
     selectImage: (imageId) => {
       dispatch(imagesActions.select(imageId))
     },
