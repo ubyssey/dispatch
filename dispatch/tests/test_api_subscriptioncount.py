@@ -20,7 +20,7 @@ class SubscriptionCountsTests(DispatchAPITestCase):
         subscription_count = Subscription.objects.all().count()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(SubscriptionCount.objects.all().count(), 1)
+        self.assertEqual(SubscriptionCount.objects.all().first().count, subscription_count)
 
     def test_create_subscriptioncount_same_day(self):
         """Should only be able to create 1 subscription count per day"""
