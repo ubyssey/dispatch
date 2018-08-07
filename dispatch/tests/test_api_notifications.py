@@ -115,3 +115,24 @@ class NotificationsTests(DispatchAPITestCase):
 
         self.assertTrue(Notification.objects.filter(article__id=article.id).exists())
         self.assertEqual(scheduled_push_time, Notification.objects.get(article__id=article.id).scheduled_push_time)
+
+    def test_push_notifications(self):
+        """A post request to /notifications/push should push the oldest notification and delete it"""
+
+        section = Section.objects.create(name='Test Section', slug='test')
+
+        article_1 = Article.objects.create(headline='Article 1', slug='article-1', section=section)
+
+        url = reverse('api-articles-publish', args=[article_1.id])
+
+        response = self.client.post(url, format='json')
+
+        scheduled_push_time = timezone.now() - datetime.timedelta(hours=2)
+
+        notification = DispatchTestHelpers.create_notification(self.client, article=article_1, scheduled_push_time=scheduled_push_time)
+
+        url = reverse('api-notifications-push')
+
+        response = self.client.post(url, format='json')
+
+        self.assertFalse(Notification.objects.all().exists())

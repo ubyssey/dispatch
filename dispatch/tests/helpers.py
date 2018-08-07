@@ -244,12 +244,12 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_notification(cls, client, article):
+    def create_notification(cls, client, article, scheduled_push_time=timezone.now() + datetime.timedelta(hours=1)):
         """Create a dummy notification instance"""
 
         data = {
             'article_id': article.id,
-            'scheduled_push_time': timezone.now() + datetime.timedelta(hours=1)
+            'scheduled_push_time': scheduled_push_time
         }
 
         url = reverse('api-notifications-list')
