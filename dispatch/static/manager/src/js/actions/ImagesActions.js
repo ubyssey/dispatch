@@ -34,7 +34,6 @@ class ImagesActions extends ResourceActions {
       dispatch(push({ pathname: '/images/', query: queryObj }))
     }
   }
-  
 }
 
 export default new ImagesActions(
