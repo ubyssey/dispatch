@@ -73,6 +73,7 @@
 // Component: ItemListHeader
 .c-item-list__header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -107,8 +108,35 @@
 
 .c-item-list__header__filters {
   // Structure
-  display: flex;
+  display: flex !important;
   flex-wrap: wrap;
+  position: relative;
+  width: 250px;
+
+  .c-item-list__header__filters__button {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .c-item-list__header__filters__dropdown {
+    position: absolute;
+    margin-top: 30px;
+    display: flex;
+    width: auto;
+    height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    &:hover {
+      height: auto;
+    }
+  }
+  &:hover{
+    .c-item-list__header__filters__dropdown {
+      height: auto;
+    }
+  }
 }
 
 .c-item-list__header__filters__filter {

@@ -34,7 +34,13 @@ export default function ItemListHeader(props) {
         onConfirm={() => props.actions.deleteItems(props.items.selected)}
         disabled={!props.items.selected.length}>Delete</ConfirmButton>
       <div className='c-item-list__header__filters'>
-        {props.filters}
+        <div className='c-item-list__header__filters__button pt-button' style={{display: 'flex', alignItems: 'center'}}>
+          <h3>Filters</h3>
+          <span className='pt-icon-caret-down pt-icon-standard' />
+        </div>
+        <div className='c-item-list__header__filters__dropdown'>
+          {props.filters}
+        </div>
       </div>
       {props.toolbarContent}
     </div>

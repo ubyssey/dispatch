@@ -155,14 +155,18 @@ $border-bottom-height: 2px;
       justify-content: center;
       // Dimension
       height: 100%;
-      width: 140px;
+      width: 110px;
       // Position
       position: relative;
       // Border
       border-bottom: $border-bottom-height solid transparent;
+
+      transition: .2s width;
+
       &:hover {
         // Border
         border-bottom: $border-bottom-height solid $color-text-dispatch-gray-light;
+        width: 140px;
       }
 
       .nav-dropdown-content {

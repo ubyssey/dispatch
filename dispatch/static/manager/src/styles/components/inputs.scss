@@ -15,7 +15,6 @@
 .c-input--item-select {
   // Text
   font-weight: $font-weight-semi-bold;
-  margin-left: 12px;
 
   .pt-popover {
     // Structure
@@ -25,6 +24,14 @@
   .pt-popover-target {
     // Structure
     display: block;
+  }
+  .pt-control-group > :first-child {
+    width: 90px;
+    text-align: left;
+  }
+  .pt-control-group > :last-child {
+    width: 150px;
+    text-align: right;
   }
 }
 
