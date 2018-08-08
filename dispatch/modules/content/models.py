@@ -206,6 +206,12 @@ class Publishable(Model):
 
         return self
 
+    # Overriding delete the parent article to cascade delete all versions
+    def delete(self, *args, **kwargs):
+        if self.parent == self:
+            return super(Publishable, self).delete(*args, **kwargs)
+        return self.parent.delete()
+
     def save_featured_image(self, data):
         """
         Handles saving the featured image.

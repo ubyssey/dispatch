@@ -107,7 +107,8 @@
 
 .c-item-list__header__filters {
   // Structure
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .c-item-list__header__filters__filter {

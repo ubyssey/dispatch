@@ -44,9 +44,6 @@ class DispatchPublishableMixin(object):
 
             if version is not None:
                 queryset = queryset.filter(revision_id=version)
-            elif self.request.method == 'DELETE':
-                if queryset:
-                    queryset = queryset.filter(id=F('parent_id'))
             else:
                 queryset = queryset.filter(head=True)
         else:

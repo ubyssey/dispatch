@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
 import { AnchorButton, Intent } from '@blueprintjs/core'
+import { AuthorFilterInput, TagsFilterInput }  from '../../inputs/filters/'
 
 import imagesActions from '../../../actions/ImagesActions'
 
@@ -16,7 +17,7 @@ require('../../../../styles/components/image_manager.scss')
 const SCROLL_THRESHOLD = 100
 
 const DEFAULT_QUERY = {
-  limit: 30,
+  limit: 50,
   ordering: '-created_at'
 }
 
@@ -28,6 +29,8 @@ class ImageManagerComponent extends React.Component {
     this.scrollListener = this.scrollListener.bind(this)
 
     this.state = {
+      author: '',
+      tags: [],
       q: '',
       limit: DEFAULT_QUERY.limit,
     }
@@ -43,16 +46,29 @@ class ImageManagerComponent extends React.Component {
     this.images.parentElement.removeEventListener('scroll', this.scrollListener)
   }
 
+  buildQuery() {
+    let queryObj = {
+      'q': this.state.q
+    }
+    if (this.state.author) {
+      queryObj.author = this.state.author
+    }
+    if (this.state.tags) {
+      queryObj.tags = this.state.tags
+    }
+    return Object.assign(queryObj, DEFAULT_QUERY)
+  }
+
   loadMore() {
-    if (this.props.images.count > this.state.limit){
+    if (this.props.images.count > this.state.limit) {
       this.setState(prevState => ({
-        limit: prevState.limit + 10
-      }), this.props.listImages(this.props.token, {limit: this.state.limit, ordering: '-created_at'}))
+        limit: prevState.limit + 25
+      }), this.props.listImages(this.props.token, this.buildQuery()))
     }
   }
 
   searchImages() {
-    this.props.listImages(this.props.token, R.assoc('q', this.state.q, DEFAULT_QUERY))
+    this.props.listImages(this.props.token, this.buildQuery())
   }
 
   scrollListener() {
@@ -91,21 +107,24 @@ class ImageManagerComponent extends React.Component {
     }
   }
 
-  onSearch(q) {
-    this.setState({ q: q }, this.searchImages)
+  onSearch(author, tags, q) {
+    this.setState({ 
+      author: author,
+      tags: tags,
+      q: q 
+    }, this.searchImages)
   }
 
   onDrop(files) {
     files.forEach(file => {
-      this.props.createImage(this.props.token, {img: file})
+      this.props.createImage(this.props.token, { img: file })
     })
   }
 
   render() {
-
     const image = this.getImage()
 
-    const images = this.props.images.ids.map( id => {
+    const images = this.props.images.ids.map(id => {
       const image = this.props.entities.remote[id]
       return (
         <ImageThumb
@@ -130,12 +149,20 @@ class ImageManagerComponent extends React.Component {
             <AnchorButton
               intent={Intent.SUCCESS}
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
+            <AuthorFilterInput
+              key={'AuthorFilter'}
+              selected={this.state.author || ''}
+              update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />
+            <TagsFilterInput
+              key={'tagsFilter'}
+              selected={this.state.tags || ''}
+              update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput
               placeholder='Search'
               value={this.state.q}
-              onChange={e => this.onSearch(e.target.value)} />
+              onChange={e => this.onSearch(this.state.author, this.state.tags, e.target.value)} />
           </div>
         </div>
         <div className='c-image-manager__body'>
@@ -147,13 +174,15 @@ class ImageManagerComponent extends React.Component {
             activeClassName='c-image-manager__images--active'>
             <div
               className='c-image-manager__images__container'
-              ref={(node) => { this.images = node }}>{images}</div>
+              ref={(node) => { this.images = node }}>{images}
+            </div>
+            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}  
           </Dropzone>
           {!this.props.many ?
             <div className='c-image-manager__active'>
               {image ? imagePanel : null}
             </div> : null}
-          
+
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
