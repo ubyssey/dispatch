@@ -1,14 +1,20 @@
+import json
+import datetime
+
+from pywebpush import webpush, WebPushException
+
 from django.db.models import Q, ProtectedError, Prefetch
-from django.contrib.auth import authenticate
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.db import IntegrityError
+from django.utils import timezone
 
 from rest_framework import viewsets, mixins, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import (
     AllowAny, IsAuthenticated, DjangoModelPermissions)
 from rest_framework.decorators import (
-    detail_route, api_view, authentication_classes, permission_classes)
+    list_route, detail_route, api_view, authentication_classes, permission_classes)
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.authtoken.models import Token
@@ -20,7 +26,8 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video,
-    Poll, PollAnswer, PollVote, Invite)
+    Poll, PollAnswer, PollVote, Invite, Notification, Subscription,
+    SubscriptionCount)
 
 from dispatch.core.settings import get_settings
 from dispatch.admin.registration import reset_password
@@ -31,10 +38,11 @@ from dispatch.api.serializers import (
     FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
     TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
     ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
-    PollSerializer, PollVoteSerializer, InviteSerializer)
+    PollSerializer, PollVoteSerializer, NotificationSerializer, InviteSerializer,
+    SubscriptionSerializer, SubscriptionCountSerializer)
 from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
-    UnpermittedActionError)
+    UnpermittedActionError, AlreadySubscribed)
 
 from dispatch.theme import ThemeManager
 from dispatch.theme.exceptions import ZoneNotFound, TemplateNotFound
@@ -87,7 +95,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
                 'authors'
             )
 
-        queryset = queryset.order_by('-updated_at') 
+        queryset = queryset.order_by('-updated_at')
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
@@ -99,7 +107,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
-        
+
         if tags is not None:
             for tag in tags:
                 queryset = queryset.filter(tags__id=tag)
@@ -386,6 +394,78 @@ class PollViewSet(DispatchModelViewSet):
         serializer.save()
 
         return Response(serializer.data)
+
+class SubscriptionCountViewSet(DispatchModelViewSet):
+    """Viewset for the SubscriptionCount model views."""
+
+    model = SubscriptionCount
+    serializer_class = SubscriptionCountSerializer
+    queryset = SubscriptionCount.objects.filter(date__gte=timezone.now() - datetime.timedelta(days=90)).order_by('-date')
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = [AllowAny,]
+        else:
+            permission_classes = [IsAuthenticated,]
+        return [permission() for permission in permission_classes]
+
+    def create(self, request):
+        try:
+            subscription_count = Subscription.objects.all().count()
+            data = {
+                'count': subscription_count
+            }
+            serializer = SubscriptionCountSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response({ 'detail': 'Subscriber count recorded' })
+        except:
+            return Response({ 'detail': 'Subscriber count for today has already been created' }, status.HTTP_400_BAD_REQUEST)
+
+class NotificationsViewSet(DispatchModelViewSet):
+    """Viewset for the Poll model views."""
+
+    model = Notification
+    serializer_class = NotificationSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = Notification.objects.all().order_by('scheduled_push_time')
+
+    @detail_route(permission_classes=[AllowAny], methods=['post', 'patch'],)
+    def subscribe(self, request, pk=None):
+        data = {
+            'endpoint': request.data['endpoint'],
+            'auth': request.data['keys']['auth'],
+            'p256dh': request.data['keys']['p256dh'],
+        }
+
+        try:
+            serializer = SubscriptionSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        except:
+            raise AlreadySubscribed()
+
+        return Response(serializer.data)
+
+    @list_route(permission_classes=[AllowAny], methods=['post'],)
+    def push(self, request):
+        notification = Notification.objects \
+        .filter(scheduled_push_time__lte=timezone.now()) \
+        .order_by('scheduled_push_time') \
+        .first()
+
+        if notification is not None:
+            article = Article.objects.get(parent__id=notification.article.parent_id, is_published=True)
+            if article is not None:
+                DispatchPublishableMixin.push_notification(article)
+                notification.delete()
+
+        return Response(status=status.HTTP_200_OK)
 
 class TemplateViewSet(viewsets.GenericViewSet):
     """Viewset for Template views."""

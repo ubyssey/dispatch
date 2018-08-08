@@ -3,8 +3,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from dispatch.modules.content.models import (
-    Article, Image, ImageAttachment, ImageGallery, Issue,
-    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment, Poll, PollAnswer, PollVote)
+    Article, Image, ImageAttachment, ImageGallery, Issue, Subscription,
+    File, Page, Author, Section, Tag, Topic, Video, VideoAttachment,
+    Poll, PollAnswer, PollVote, Notification, SubscriptionCount)
 from dispatch.modules.auth.models import Person, User, Invite
 from dispatch.admin.registration import send_invitation
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
@@ -563,6 +564,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     integrations = JSONField(required=False)
 
+    scheduled_notification = serializers.DateTimeField(required=False, allow_null=True)
     currently_breaking = serializers.BooleanField(source='is_currently_breaking', read_only=True)
 
     class Meta:
@@ -578,6 +580,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             'content',
             'authors',
             'author_ids',
+            'scheduled_notification',
             'tags',
             'tag_ids',
             'topic',
@@ -630,6 +633,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
+        instance.scheduled_notification = validated_data.get('scheduled_notification', instance.scheduled_notification)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
@@ -642,7 +646,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.integrations = validated_data.get('integrations', instance.integrations)
         instance.template = template
         instance.template_data = template_data
-        
+
         instance.save()
 
         instance.content = validated_data.get('content', instance.content)
@@ -926,3 +930,50 @@ class PollSerializer(DispatchModelSerializer):
             instance.save_answers(answers, is_new)
 
         return instance
+
+class SubscriptionSerializer(DispatchModelSerializer):
+    """Serializes the Subscription model."""
+
+    endpoint = serializers.CharField(required=True, write_only=True)
+    auth = serializers.CharField(required=True, write_only=True)
+    p256dh = serializers.CharField(required=True, write_only=True)
+
+    class Meta:
+        model = Subscription
+        fields = (
+            'id',
+            'endpoint',
+            'auth',
+            'p256dh'
+        )
+
+class NotificationSerializer(DispatchModelSerializer):
+    """Serializes the Notification model."""
+
+    article_id = serializers.IntegerField()
+    created_at = serializers.DateTimeField(read_only=True)
+    scheduled_push_time = serializers.DateTimeField(required=True)
+    article_headline = serializers.CharField(source='get_article_headline', read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'created_at',
+            'article_id',
+            'article_headline',
+            'scheduled_push_time'
+        )
+
+class SubscriptionCountSerializer(DispatchModelSerializer):
+    """Serializes the SubscriptionCount model."""
+
+    date = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = SubscriptionCount
+        fields = (
+            'id',
+            'count',
+            'date'
+        )

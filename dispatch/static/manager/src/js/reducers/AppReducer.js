@@ -24,6 +24,8 @@ import videosReducer from './VideosReducer'
 import settingsReducer from './SettingsReducer'
 import invitesReducer from './InvitesReducer'
 import pollsReducer from './PollsReducer'
+import notificationsReducer from './NotificationsReducer'
+import subscriptionsReducer from './SubscriptionsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -48,6 +50,8 @@ export default combineReducers({
   users: userReducer,
   invites: invitesReducer,
   videos: videosReducer,
-  settings: settingsReducer,
-  polls: pollsReducer
+  polls: pollsReducer,
+  notifications: notificationsReducer,
+  subscriptions: subscriptionsReducer,
+  settings: settingsReducer
 })

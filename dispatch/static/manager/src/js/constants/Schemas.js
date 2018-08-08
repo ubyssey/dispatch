@@ -18,6 +18,8 @@ export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
 export const inviteSchema = new Schema('invites')
 export const pollSchema = new Schema('polls')
+export const notificationSchema = new Schema('notifications')
+export const subscriptionSchema = new Schema('subscriptions')
 
 articleSchema.define({
   section: sectionSchema,

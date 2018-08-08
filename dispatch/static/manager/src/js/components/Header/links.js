@@ -72,6 +72,10 @@ export const links = {
       {
         link: 'Sections',
         icon: 'pt-icon-new-grid-item',
+      },
+      {
+        link: 'Notifications',
+        icon: 'pt-icon-notifications',
       }
     ]
   }

@@ -1,0 +1,33 @@
+.c-subscription-chart-container {
+  // Spacing
+  padding-right:1em;
+  padding-left:1em;
+  padding-top:1em;
+  padding-bottom:2em;
+  // Border
+  border-style: solid;
+  // Position
+  bottom:0;
+  // Size
+  width:100%;
+  height:200px;
+
+  h1 {
+    // Spacing
+    padding-left: 2rem;
+    // Text
+    font-size:1.5rem;
+  }
+}
+
+.c-notification-editor--container {
+  // Size
+  height:100%;
+  // Extra
+  overflow:visible !important;
+}
+
+.o-notification-date-select {
+  // Spacing
+  padding-bottom:5em;
+}
