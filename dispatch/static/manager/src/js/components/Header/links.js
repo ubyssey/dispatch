@@ -25,13 +25,13 @@ export const links = {
       },
       {
         link: 'Events',
-        icon: 'pt-icon-pulse'   
+        icon: 'pt-icon-pulse'
       }
     ]
   },
   Media: {
     icon: 'pt-icon-media',
-    link: [ 
+    link: [
       {
         link: 'Galleries',
         icon: 'pt-icon-image-rotate-right'
@@ -47,7 +47,7 @@ export const links = {
       {
         link: 'Videos',
         icon: 'pt-icon-video'
-      } 
+      }
     ]
   },
   Misc: {
@@ -58,9 +58,9 @@ export const links = {
         icon: 'pt-icon-issue',
       },
       {
-        link: 'People',
+        link: 'Persons',
         icon: 'pt-icon-person'
-      },  
+      },
       {
         link: 'Tags',
         icon: 'pt-icon-tag',
