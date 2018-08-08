@@ -17,7 +17,6 @@ import * as Images from './Images'
 import * as Events from './Events'
 import * as Videos from './Videos'
 import * as Polls from './Polls'
-import * as Notifications from './Notifications'
 export {
   LoginPage as Login,
   LogoutPage as Logout,
@@ -36,6 +35,5 @@ export {
   Persons as Persons,
   Events as Events,
   Videos as Videos,
-  Polls as Polls,
-  Notifications as Notifications
+  Polls as Polls
 }

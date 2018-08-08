@@ -245,18 +245,6 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.VIDEOS.DELETE_MANY):
     return showToast('Some videos could not be deleted', Intent.DANGER)
 
-  // Notifications
-  case fulfilled(types.NOTIFICATIONS.CREATE):
-  case fulfilled(types.NOTIFICATIONS.SAVE):
-    return showToast('Notification saved')
-  case rejected(types.NOTIFICATIONS.CREATE):
-  case rejected(types.NOTIFICATIONS.SAVE):
-    return showToast('Notification could not be saved', Intent.DANGER)
-  case fulfilled(types.NOTIFICATIONS.DELETE_MANY):
-    return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
-  case rejected(types.NOTIFICATIONS.DELETE_MANY):
-    return showToast('Some notifications could not be deleted', Intent.DANGER)
-
   default:
     return toaster
 
