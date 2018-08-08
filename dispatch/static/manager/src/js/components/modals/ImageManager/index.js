@@ -149,7 +149,6 @@ class ImageManagerComponent extends React.Component {
             <AnchorButton
               intent={Intent.SUCCESS}
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
-
             <AuthorFilterInput
               key={'AuthorFilter'}
               selected={this.state.author || ''}
