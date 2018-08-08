@@ -118,7 +118,7 @@ export default class ListItemsPageComponent extends React.Component {
           columns={columns}
           headers={this.props.headers}
 
-          emptyMessage={this.props.emptyMessage ? this.props.emptyMessage : `You haven\'t created any ${this.props.typePlural} yet.`}
+          emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
             <LinkButton intent={Intent.SUCCESS} to={`${this.props.typePlural}/new`}>
               <span className='pt-icon-standard pt-icon-add' />Create {this.typeString}

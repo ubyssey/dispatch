@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.db import transaction
 
 from django.db.models import (
-    Model, DateField, DateTimeField, CharField, TextField, PositiveIntegerField,
+    Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
     ManyToManyField, SlugField, SET_NULL, CASCADE)
 from django.conf import settings
@@ -311,8 +311,6 @@ class Article(Publishable, AuthorMixin):
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
 
-    scheduled_notification = DateTimeField(null=True)
-
     is_breaking = BooleanField(default=False)
     breaking_timeout = DateTimeField(blank=True, null=True)
 
@@ -335,12 +333,8 @@ class Article(Publishable, AuthorMixin):
     def title(self):
         return self.headline
 
-    def get_related(self, n=5):
-        """ Returns n related articles. """
-        return Article.objects \
-        .exclude(pk=self.id) \
-        .filter(section=self.section,is_published=True) \
-        .order_by('-published_at')[:n]
+    def get_related(self):
+        return Article.objects.exclude(pk=self.id).filter(section=self.section,is_published=True).order_by('-published_at')[:5]
 
     def get_reading_list(self, ref=None, dur=None):
         articles = self.get_related()
@@ -619,30 +613,3 @@ class PollVote(Model):
     id = UUIDField(default=uuid.uuid4, primary_key=True)
     answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
     timestamp = DateTimeField(auto_now_add=True)
-
-class Subscription(Model):
-    id = UUIDField(default=uuid.uuid4, primary_key=True)
-    endpoint = CharField(max_length=255, unique=True)
-    auth = CharField(max_length=255, unique=True)
-    p256dh = CharField(max_length=255, unique=True)
-
-    created_at = DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('created_at',)
-
-class SubscriptionCount(Model):
-    count = PositiveIntegerField()
-    date = DateField(auto_now_add=True, unique=True)
-
-    class Meta:
-        ordering = ('-date',)
-
-class Notification(Model):
-    created_at = DateTimeField(auto_now_add=True)
-    article = ForeignKey(Article, related_name='notification_artilce', on_delete=CASCADE)
-    scheduled_push_time = DateTimeField(null=True)
-
-    def get_article_headline(self):
-        """Return the notification article's headline"""
-        return self.article.headline

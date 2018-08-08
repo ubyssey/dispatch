@@ -99,11 +99,6 @@ render((
             <Route path=':pollId' component={Pages.Polls.Poll} />
           </Route>
 
-          <Route path='notifications'>
-            <IndexRoute component={Pages.Notifications.Index} />
-            <Route path='new' component={Pages.Notifications.NewNotification} />
-            <Route path=':notificationId' component={Pages.Notifications.Notification} />
-          </Route>
         </Route>
 
         <Route component={Containers.Basic}>

@@ -19,8 +19,6 @@ const initialState = {
   sections: {},
   files: {},
   images: {},
-  notifications: {},
-  subscriptions: {},
   templates: {},
   persons: {},
   topics: {},

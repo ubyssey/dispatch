@@ -1,6 +1,5 @@
 import React from 'react'
 import R from 'ramda'
-import { dateObjToAPIString } from '../../../util/helpers'
 
 import { FormInput, SelectInput, LinkButton, DateTimeInput } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
@@ -55,18 +54,11 @@ export default function DeliveryTab(props) {
     <div>
       <p>Timeout</p>
       <DateTimeInput
+        hidden={!props.is_breaking}
         value={props.breaking_timeout}
         onChange={dt => props.update('breaking_timeout', dt)} />
     </div> : null
 
-  const notificationScheduler = (
-    <FormInput label='Schedule Notification'>
-      <DateTimeInput
-        hidden={props.is_breaking}
-        value={props.scheduled_notification}
-        onChange={dt => props.update('scheduled_notification', dateObjToAPIString(dt))} />
-    </FormInput>
-  )
 
   return (
     <div>
@@ -102,8 +94,6 @@ export default function DeliveryTab(props) {
           onChange={e => props.update('is_breaking', e.target.checked)} />
           {timeoutPicker}
       </FormInput>
-
-      {props.is_breaking ? null : notificationScheduler}
 
     </div>
   )

@@ -485,29 +485,8 @@ const DispatchAPI = {
     },
     delete: (token, pollId) => {
       return deleteRequest('polls', pollId, null, token)
-    }
-  },
-  'notifications': {
-    list: (token, query) => {
-      return getRequest('notifications', null, query, token)
     },
-    get: (token, pollId) => {
-      return getRequest('notifications', pollId, null, token)
-    },
-    save: (token, pollId, data) => {
-      return patchRequest('notifications', pollId, data, token)
-    },
-    create: (token, data) => {
-      return postRequest('notifications', null, data, token)
-    },
-    delete: (token, notificationId) => {
-      return deleteRequest('notifications', notificationId, null, token)
-    }
-  },
-  'subscriptions': {
-    list: (token, query) => {
-      return getRequest('subscriptioncount', null, query, token)
-    }
+
   }
 }
 

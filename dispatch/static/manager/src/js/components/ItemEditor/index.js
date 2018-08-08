@@ -67,6 +67,7 @@ class ItemEditor extends React.Component {
   handleUpdate(field, value) {
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
   }
+
   render() {
 
     const listItem = this.getListItem()
@@ -79,7 +80,7 @@ class ItemEditor extends React.Component {
 
     return (
       <DocumentTitle title={title}>
-        <div className={this.props.showOverflow ? 'u-container-main--notifications' : 'u-container-main'}>
+        <div className='u-container-main'>
           <ListItemToolbar
             name={listItem[this.props.displayField] || listItem.name || listItem.title ||listItem.filename}
             type={this.props.type}
@@ -88,7 +89,7 @@ class ItemEditor extends React.Component {
             deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}
             goBack={this.props.goBack}
             extraButton={this.props.extraButton} />
-          <div className={'u-container u-container--padded ' + (this.props.showOverflow ? '' : 'u-container--vscroll')}>
+          <div className='u-container u-container--padded u-container--vscroll'>
             <this.props.form
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}
