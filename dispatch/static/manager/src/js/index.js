@@ -69,7 +69,7 @@ render((
             <Route path=':galleryId' component={Pages.Galleries.Gallery} />
           </Route>
 
-          <Route path='widgets'>
+          <Route path='zones'>
             <IndexRoute component={Pages.Widgets.Index} />
             <Route path=':zoneId' component={Pages.Widgets.Zone} />
           </Route>

@@ -6,19 +6,30 @@ import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
 import eventsActions from '../actions/EventsActions'
 
-import Header from '../components/Header'
+import Header from '../components/Header/Header'
 import ModalContainer from '../components/ModalContainer'
 
 require('../../styles/components/toaster.scss')
 
 class Main extends React.Component {
-
-  // componentWillMount() {
-  //   this.props.countPending(this.props.token, { pending: 1, limit: 0 })
-  // }
+  constructor(props) {
+    super(props)
+    this.state = { width: 0 }
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions)
+  }
 
   componentDidMount() {
     this.props.setupToaster(this.refs.toaster)
+    this.updateWindowDimensions()
+    window.addEventListener('resize', this.updateWindowDimensions)
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth })
   }
 
   renderModal() {
