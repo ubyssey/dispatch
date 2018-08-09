@@ -8,7 +8,7 @@ import tagsActions from '../../../actions/TagsActions'
 class TagsFilterInputComponent extends React.Component {
 
   // converts query of string type to number type
-  convertTags(tags) {
+  convertSelected(tags) {
     return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
   }
 
@@ -26,7 +26,7 @@ class TagsFilterInputComponent extends React.Component {
     return (
       <FilterSelectInput
         many={true}
-        selected={this.convertTags(this.props.selected)}
+        selected={this.convertSelected(this.props.selected)}
         results={this.props.tags}
         entities={this.props.entities.tags}
         update={(selected) => this.props.update(selected)}

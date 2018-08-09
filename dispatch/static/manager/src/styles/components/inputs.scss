@@ -25,6 +25,14 @@
     // Structure
     display: block;
   }
+  .pt-control-group > :first-child {
+    width: 90px;
+    text-align: left;
+  }
+  .pt-control-group > :last-child {
+    width: 150px;
+    text-align: right;
+  }
 }
 
 .c-input--item-select__item {

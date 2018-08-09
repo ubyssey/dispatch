@@ -1,6 +1,8 @@
 import moment from 'moment'
 import R from 'ramda'
 
+export const desktopSize = 960
+
 export function humanizeDatetime(timestamp, isDateTime) {
   if (!timestamp) {
     return null
