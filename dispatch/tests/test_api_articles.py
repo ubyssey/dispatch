@@ -433,6 +433,25 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_delete_article_multiple_versions(self):
+        """Ensure that deleting an article deletes all versions of the article"""
+
+        article = DispatchTestHelpers.create_article(self.client)
+
+        # Update the article to create a new version
+        data = {
+            'content': []
+        }
+
+        url = reverse('api-articles-detail', args=[article.data['id']])
+        response = self.client.patch(url, data, format='json')
+
+        # Delete the article
+        response = self.client.delete(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Article.objects.filter(parent__id=article.data['id']).exists())
+
     def test_publish_article(self):
         """Ensure that an existing article can be published"""
 

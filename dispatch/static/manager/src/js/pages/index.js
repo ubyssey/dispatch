@@ -12,7 +12,7 @@ import * as Tags from './Tags'
 import * as Issues from './Issues'
 import * as Topics from './Topics'
 import * as Galleries from './Galleries'
-import * as Widgets from './Widgets'
+import * as Zones from './Widgets'
 import * as Persons from './Persons'
 import * as Images from './Images'
 import * as Events from './Events'
@@ -33,7 +33,7 @@ export {
   Issues as Issues,
   Topics as Topics,
   Galleries as Galleries,
-  Widgets as Widgets,
+  Zones as Zones,
   Persons as Persons,
   Events as Events,
   Videos as Videos,

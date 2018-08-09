@@ -16,11 +16,15 @@ class SectionFilterInputComponent extends React.Component {
 
     this.props.listSections(this.props.token, queryObj)
   }
+  //converts tags from string to number
+  convertSelected(tags) {
+    return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
+  }
 
   render() {
     return (
       <FilterSelectInput
-        selected={this.props.selected}
+        selected={this.convertSelected(this.props.selected)}
         results={this.props.sections}
         entities={this.props.entities.sections}
         update={(selected) => this.props.update(selected)}

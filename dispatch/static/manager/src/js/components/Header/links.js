@@ -1,4 +1,4 @@
-export default {
+export const links = {
   Content: {
     icon: 'pt-icon-edit',
     link: [
@@ -8,7 +8,7 @@ export default {
       },
       {
         link: 'Pages',
-        icon: 'pt-icon-page'
+        icon: 'pt-icon-document'
       },
       {
         link: 'Subsections',
@@ -64,6 +64,18 @@ export default {
       {
         link: 'Persons',
         icon: 'pt-icon-person'
+      },
+      {
+        link: 'Tags',
+        icon: 'pt-icon-tag',
+      },
+      {
+        link: 'Topics',
+        icon: 'pt-icon-info-sign'
+      },
+      {
+        link: 'Sections',
+        icon: 'pt-icon-new-grid-item',
       }
     ]
   }
