@@ -9,16 +9,16 @@ class MobileHeader extends Component {
     super(props)
 
     this.state = {
-      slideOpen: false
+      isOpen: false
     }
   }
 
   render () {
-    const open = this.state.slideOpen ? 'open' : 'closed'
+    const open = this.state.isOpen ? 'open' : 'closed'
     return (
       <header className='c-header'>
         <span 
-          onClick={() => this.setState(prevstate => ({slideOpen: !prevstate.slideOpen}))}
+          onClick={() => this.setState(prevstate => ({isOpen: !prevstate.isOpen}))}
           className='nav-padded pt-icon-standard pt-icon-menu '>
           <div className={'nav-dropdown-content ' + open} >
             <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
