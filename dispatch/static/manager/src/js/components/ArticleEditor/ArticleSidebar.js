@@ -69,7 +69,7 @@ class ArticleSidebar extends Component {
 
   renderSideBar() {
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <Tabs>
           <TabList className='c-article-sidebar__tablist'>
             {tabData.map((data, index) => (this.renderTab(data, index, Object.keys(this.props.errors))))}
@@ -159,8 +159,3 @@ class ArticleSidebar extends Component {
 }
 
 export default ArticleSidebar
-
-// export default function ArticleSidebar(props) {
-//   const windowWidth = window.document.body.clientWidth || window.innerWidth 
-//   return windowWidth > desktopSize ? renderDesktopSidebar(props): <MobileArticleSidebar renderTab={() => renderTab()} tabHighlight={() => tabHighlight()} tabData={tabData} />
-// }
