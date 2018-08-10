@@ -390,6 +390,7 @@ class Subsection(Model, AuthorMixin):
     description = TextField(null=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
     section = ForeignKey('Section')
+    is_active = BooleanField(default=True)
 
     AuthorModel = Author
 

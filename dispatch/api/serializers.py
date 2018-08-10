@@ -545,7 +545,6 @@ class SubsectionSerializer(DispatchModelSerializer):
         validators=[AuthorValidator]
     )
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
-    featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     articles = SubsectionArticleSerializer(many=True, read_only=True, source='get_articles')
     article_ids = serializers.ListField(
         write_only=True,
@@ -561,12 +560,12 @@ class SubsectionSerializer(DispatchModelSerializer):
         model = Subsection
         fields = (
             'id',
+            'is_active',
             'name',
             'section',
             'section_id',
             'slug',
             'description',
-            'featured_image',
             'authors',
             'author_ids',
             'authors_string',
@@ -582,6 +581,7 @@ class SubsectionSerializer(DispatchModelSerializer):
         # Update basic fields
         instance.name = validated_data.get('name', instance.name)
         instance.slug = validated_data.get('slug', instance.slug)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.description = validated_data.get('description', instance.description)
 

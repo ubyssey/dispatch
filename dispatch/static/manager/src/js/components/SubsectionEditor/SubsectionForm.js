@@ -1,4 +1,5 @@
 import React from 'react'
+import { Switch } from '@blueprintjs/core'
 
 import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
@@ -47,6 +48,16 @@ export default function SubsectionForm(props) {
           value={props.listItem.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
+      </FormInput>
+
+      <FormInput
+        label='Is Active'
+        padded={false}
+        error={props.errors.is_active} >
+        <Switch
+          className='pt-large'
+          checked={props.listItem.is_active}
+          onChange={e => props.update('is_active', e.target.checked)} />
       </FormInput>
 
       <FormInput
