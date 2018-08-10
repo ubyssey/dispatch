@@ -58,10 +58,11 @@ function SubsectionPageComponent(props) {
       typeSingular='subsection'
       displayColumn='name'
       filters={filters}
-      headers={[ 'Name', 'Section', 'Articles']}
+      headers={[ 'Name', 'Section', 'Articles', 'Active']}
       extraColumns={[
         item => item.section.name,
-        item => item.articles.length
+        item => item.articles.length,
+        item => item.is_active ? 'Active' : 'Inactive'
       ]}
       shouldReload={(prevProps, props) => {
         return (prevProps.location.query.section !== props.location.query.section)
