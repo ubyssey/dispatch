@@ -154,6 +154,7 @@ class ImageManagerComponent extends React.Component {
         selected={this.state.tags || ''}
         update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
     ]
+    
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
