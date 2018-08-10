@@ -9,7 +9,6 @@ import DeliveryTab from '../Editor/tabs/DeliveryTab'
 import TemplateTab from '../Editor/tabs/TemplateTab'
 import SEOTab from '../Editor/tabs/SEOTab'
 import { desktopSize } from '../../util/helpers'
-// import MobileArticleSidebar from './MobileArticleSidebar'
 
 require('../../../styles/components/article_sidebar.scss')
 
@@ -45,97 +44,6 @@ const tabData = [
     errors: []
   }
 ]
-
-// function tabHighlight(localErrors, errors) {
-//   for (const error of localErrors) {
-//     if (errors.includes(error)){
-//       return 'c-article-sidebar__tab-error'
-//     }
-//   }
-//   return ''
-// }
-
-// function renderTab(data, index, errors) {
-//   return <Tab key={index} className={'c-article-sidebar__tab ' + tabHighlight(data.errors, errors)}><span className={'pt-icon-standard ' + data.icon} />{data.title}</Tab>
-// }
-
-// function renderDesktopSidebar(props) {
-//   return (
-//     <div className='c-article-sidebar'>
-//       <Tabs>
-//         <TabList className='c-article-sidebar__tablist'>
-//           {tabData.map((data, index) => (renderTab(data, index, Object.keys(props.errors))))}
-//         </TabList>
-
-//         <TabPanel className='c-article-sidebar__panel'>
-//           <BasicFieldsTab
-//             update={props.update}
-//             section={props.article.section}
-//             authors={props.article.authors || []}
-//             tags={props.article.tags || []}
-//             topic={props.article.topic}
-//             slug={props.article.slug}
-//             snippet={props.article.snippet}
-//             errors={props.errors} />
-//         </TabPanel>
-
-//         <TabPanel className='c-article-sidebar__panel'>
-//           <FeaturedImageTab
-//             update={props.update}
-//             featured_image={props.article.featured_image}
-//             entities={props.entities} />
-//         </TabPanel>
-
-//         {/* uncomment when featured videos are ready */}
-//         {/* <TabPanel className='c-article-sidebar__panel'>
-//           <FeaturedVideoTab
-//             update={props.update}
-//             featured_video={props.article.featured_video}
-//             entities={props.entities} />
-//         </TabPanel> */}
-
-//         <TabPanel className='c-article-sidebar__panel'>
-//           <DeliveryTab
-//             update={props.update}
-//             importance={props.article.importance}
-//             reading_time={props.article.reading_time}
-//             integrations={props.article.integrations}
-//             is_breaking={props.article.is_breaking}
-//             breaking_timeout={props.article.breaking_timeout}
-//             availableIntegrations={props.integrations} />
-//         </TabPanel>
-
-//         <TabPanel className='c-article-sidebar__panel'>
-//           <TemplateTab
-//             update={props.update}
-//             template={props.article.template || 'default'}
-//             data={props.article.template_data || {}}
-//             errors={props.errors} />
-//         </TabPanel>
-
-//         <TabPanel className='c-article-sidebar__panel'>
-//           <SEOTab
-//             update={props.updfunction tabHighlight(localErrors, errors) {
-//   for (const error of localErrors) {
-//     if (errors.includes(error)){
-//       return 'c-article-sidebar__tab-error'
-//     }
-//   }
-//   return ''
-// }
-
-// function renderTab(data, index, errors) {
-//   return <Tab key={index} className={'c-article-sidebar__tab ' + tabHighlight(data.errors, errors)}><span className={'pt-icon-standard ' + data.icon} />{data.title}</Tab>
-// }ate}
-//             headline={props.article.headline}
-//             slug={props.article.slug}
-//             seo_keyword={props.article.seo_keyword || ''}
-//             seo_description={props.article.seo_description || ''} />
-//         </TabPanel>
-//       </Tabs>
-//     </div>
-//   )
-// }
 
 class ArticleSidebar extends Component {
   constructor(props) {
@@ -230,7 +138,8 @@ class ArticleSidebar extends Component {
     const isDesktop = window.document.body.clientWidth > desktopSize 
     const open = isDesktop ? '' : (this.state.isOpen ? 'open': 'closed')
     const sliderStyle = {
-      position: 'relative', 
+      position: 'absolute', 
+      top: 0,
       left: '-42px', 
       padding: '13px', 
       backgroundColor: '#394b59', 
@@ -239,11 +148,11 @@ class ArticleSidebar extends Component {
       cursor: 'pointer'}
     return (
         <div className={'c-article-sidebar ' + open}>
+          { this.renderSideBar() }
           { !isDesktop && <span 
             onClick={() => this.setState(prevstate => ({isOpen: !prevstate.isOpen}))}
             style={sliderStyle}
             className='nav-padded pt-icon-standard pt-icon-menu' /> }
-          { this.renderSideBar() }
         </div>
     )
   }

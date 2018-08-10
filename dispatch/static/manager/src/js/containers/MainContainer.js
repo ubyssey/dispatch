@@ -14,12 +14,8 @@ require('../../styles/components/toaster.scss')
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { width: 0 }
+    this.state = { viewWidth: 0 }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-  }
-  
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions)
   }
 
   componentDidMount() {
@@ -28,8 +24,13 @@ class Main extends React.Component {
     window.addEventListener('resize', this.updateWindowDimensions)
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions)
+  }
+
   updateWindowDimensions() {
-    this.setState({ width: window.innerWidth })
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    this.setState({ viewWidth: width })
   }
 
   renderModal() {
@@ -47,7 +48,7 @@ class Main extends React.Component {
           className='c-toaster'
           position={Position.TOP}
           ref='toaster' />
-        <Header pendingCount={this.props.pending} />
+        <Header viewWidth={this.state.viewWidth} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>
@@ -66,7 +67,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     closeModal: () => {
-      dispatch(modalActions.closeModal())
+      dispatch(modalActions.clospropseModal())
     },
     setupToaster: (toaster) => {
       dispatch(toasterActions.setupToaster(toaster))

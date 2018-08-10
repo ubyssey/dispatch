@@ -38,7 +38,7 @@
 
   // Extras
   box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 5px;
-  transition: right 0.3s ease-in-out;
+  transition: right 0.3s ease-in-out, transform .25s;
 
   div.fieldset {
     div.col:first-child {
@@ -53,7 +53,6 @@
     flex-direction: column;
     height: 100%;
     position:relative;
-    top: -42px;
 
     .pt-tab:not(:last-of-type) {
       // Structure
