@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 import { Tabs, TabList, Tab, TabPanel } from '@blueprintjs/core'
 
@@ -45,7 +45,7 @@ const tabData = [
   }
 ]
 
-class ArticleSidebar extends Component {
+class ArticleSidebar extends React.Component {
   constructor(props) {
     super(props)
 
@@ -56,7 +56,7 @@ class ArticleSidebar extends Component {
 
   tabHighlight(localErrors, errors) {
     for (const error of localErrors) {
-      if (errors.includes(error)){
+      if (errors.includes(error)) {
         return 'c-article-sidebar__tab-error'
       }
     }
@@ -145,14 +145,14 @@ class ArticleSidebar extends Component {
       backgroundColor: '#394b59', 
       borderRadius: '0 0 0 10px',
       color: 'white',
-      cursor: 'pointer'}
+      cursor: 'pointer' }
     return (
         <div className={'c-article-sidebar ' + open}>
           { this.renderSideBar() }
           { !isDesktop && <span 
             onClick={() => this.setState(prevstate => ({isOpen: !prevstate.isOpen}))}
             style={sliderStyle}
-            className='nav-padded pt-icon-standard pt-icon-menu' /> }
+            className='nav-padded pt-icon-standard pt-icon-sidebar pt-icon-menu' /> }
         </div>
     )
   }

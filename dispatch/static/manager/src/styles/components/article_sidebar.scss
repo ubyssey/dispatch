@@ -97,10 +97,15 @@
     color: inherit;
   }
 
-  .pt-icon-standard-sidebar {
-    position: relative;
-    right: 24px;
-    top: 12px;
+  .pt-icon-sidebar {
+    position: absolute; 
+    top: 0;
+    left: -42px;
+    padding: 13px; 
+    background-color: #394b59; 
+    border-radius: 0 0 0 10px;
+    color: white;
+    cursor: pointer
   }
 }
 
