@@ -6,7 +6,6 @@ from dispatch.tests.cases import DispatchAPITestCase
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Subsection, Article, Person, Section
 
-
 class SubsectionsTests(DispatchAPITestCase):
 
     def test_create_subsection_unauthorized(self):
