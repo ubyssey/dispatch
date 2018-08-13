@@ -10,6 +10,7 @@
   flex: 1;
   flex-direction: column;
   height: 100%;
+  z-index: 0;
 }
 
 // Component: ItemListTable
@@ -111,20 +112,24 @@
   display: flex !important;
   flex-wrap: wrap;
   position: relative;
-  width: 250px;
+  width: 280px;
 
   .c-item-list__header__filters__button {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    &.pt-button {
+      margin: 0;
+    }
   }
 
   .c-item-list__header__filters__dropdown {
     position: absolute;
     margin-top: 30px;
     display: flex;
-    width: auto;
+    width: 100%;
     height: 0;
     flex-direction: column;
     overflow: hidden;

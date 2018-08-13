@@ -50,7 +50,7 @@ $border-bottom-height: 2px;
   // Extra
   box-shadow: none;
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
-  z-index: $z-index-2;
+  z-index: 20;
   .pt-button:not([class*="pt-intent-"]), .pt-button[class*="pt-icon-"]::before {
     // Text
     color: $color-text-dispatch-gray-light;
