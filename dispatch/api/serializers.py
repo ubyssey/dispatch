@@ -13,7 +13,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TemplateValidator, SubsectionSlugValidator)
+    SlugValidator, AuthorValidator, TemplateValidator)
 from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -554,7 +554,7 @@ class SubsectionSerializer(DispatchModelSerializer):
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
-    slug = serializers.SlugField(validators=[SubsectionSlugValidator()])
+    slug = serializers.SlugField(validators=[SlugValidator()])
 
     class Meta:
         model = Subsection
