@@ -24,11 +24,13 @@ import videosReducer from './VideosReducer'
 import settingsReducer from './SettingsReducer'
 import invitesReducer from './InvitesReducer'
 import pollsReducer from './PollsReducer'
+import subsectionsReducer from './SubsectionsReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
   auth: authReducer,
   sections: sectionsReducer,
+  subsections: subsectionsReducer,
   articles: articlesReducer,
   pages: pagesReducer,
   files: filesReducer,

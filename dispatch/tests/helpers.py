@@ -9,7 +9,7 @@ from dispatch.modules.content.mixins import AuthorMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person']):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], subsection_id=None):
         """Create a dummy article instance"""
 
         # Create test person
@@ -33,6 +33,40 @@ class DispatchTestHelpers(object):
             'author_ids': authors,
             'slug': slug,
             'content': []
+        }
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def create_subsection(cls, client, name='Test subsection', slug='test-subsection', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], article_headlines = ['Test headline']):
+        """Create a dummy subsection instance"""
+        # Create test person
+        authors = []
+
+        for author in author_names:
+            (person, created) = Person.objects.get_or_create(full_name=author)
+            authors.append({
+                'person': person.id,
+                'type': 'author'
+            })
+
+        articles = []
+        # Create test section
+        (section, created) = Section.objects.get_or_create(name=section, slug=slug_section)
+
+        for headline in article_headlines:
+            (article, created) = Article.objects.get_or_create(headline=headline, section=section, slug=headline)
+            articles.append(article.id)
+
+
+        url = reverse('api-subsections-list')
+
+        data = {
+            'name': name,
+            'slug': slug,
+            'section_id': section.id,
+            'author_ids': authors,
+            'article_ids': articles
         }
 
         return client.post(url, data, format='json')

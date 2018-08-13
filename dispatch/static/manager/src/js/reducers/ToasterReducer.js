@@ -85,6 +85,17 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.POLLS.DELETE_MANY):
     return showToast('Some polls could not be deleted', Intent.DANGER)
 
+  // Subsections
+  case fulfilled(types.SUBSECTIONS.CREATE):
+  case fulfilled(types.SUBSECTIONS.SAVE):
+    return showToast('Subsection saved')
+  case rejected(types.SUBSECTIONS.CREATE):
+  case rejected(types.SUBSECTIONS.SAVE):
+    return showToast('Subsection could not be saved', Intent.DANGER)
+  case fulfilled(types.SUBSECTIONS.DELETE_MANY):
+    return showToast(`${action.payload.length} subsection${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.SUBSECTIONS.DELETE_MANY):
+    return showToast('Some subsections could not be deleted', Intent.DANGER)
   // Images
   case fulfilled(types.IMAGES.SAVE):
     return showToast('Image saved')

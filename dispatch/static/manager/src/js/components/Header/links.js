@@ -9,6 +9,14 @@ export const links = {
       {
         link: 'Pages',
         icon: 'pt-icon-document'
+      },
+      {
+        link: 'Sections',
+        icon: 'pt-icon-new-grid-item',
+      },
+      {
+        link: 'Subsections',
+        icon: 'pt-icon-column-layout'
       }
     ]
   },
@@ -68,10 +76,6 @@ export const links = {
       {
         link: 'Topics',
         icon: 'pt-icon-info-sign'
-      },
-      {
-        link: 'Sections',
-        icon: 'pt-icon-new-grid-item',
       }
     ]
   }
