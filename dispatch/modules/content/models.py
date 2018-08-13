@@ -13,7 +13,7 @@ from django.db import transaction
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE)
+    ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -307,6 +307,7 @@ class Article(Publishable, AuthorMixin):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
+    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
@@ -372,10 +373,40 @@ class Article(Publishable, AuthorMixin):
                 pass
 
     def get_absolute_url(self):
-        """
-        Returns article URL.
-        """
+        """ Returns article URL. """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
+
+    def get_subsection(self):
+        """ Returns the subsection set in the parent article """
+        return self.parent.subsection
+
+    def save_subsection(self, subsection_id):
+        """ Save the subsection to the parent article """
+        Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
+
+class Subsection(Model, AuthorMixin):
+    name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True)
+    authors = ManyToManyField('Author', related_name='subsection_authors')
+    section = ForeignKey('Section')
+    is_active = BooleanField(default=False)
+
+    AuthorModel = Author
+
+    def save_articles(self, article_ids):
+        Article.objects.filter(subsection=self).update(subsection=None)
+        Article.objects.filter(parent_id__in=article_ids).update(subsection=self)
+
+    def get_articles(self):
+        return Article.objects.filter(subsection=self, id=F('parent_id'))
+
+    def get_published_articles(self):
+        return Article.objects.filter(subsection=self, is_published=True)
+
+    def get_absolute_url(self):
+        """ Returns the subsection URL. """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
@@ -386,9 +417,7 @@ class Page(Publishable):
         return None
 
     def get_absolute_url(self):
-        """
-        Returns page URL.
-        """
+        """ Returns page URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Video(Model):

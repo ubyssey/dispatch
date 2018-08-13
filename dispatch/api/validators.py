@@ -2,11 +2,12 @@ import json
 
 from rest_framework.exceptions import ValidationError
 from dispatch.theme.exceptions import InvalidField, TemplateNotFound
+from django.contrib.contenttypes.models import ContentType
 
 from django.contrib.auth.password_validation import validate_password
 
 from dispatch.api.exceptions import InvalidFilename, InvalidGalleryAttachments
-from dispatch.models import Image, Person
+from dispatch.models import Image, Person, Section, Page, Subsection, Article
 
 class PasswordValidator(object):
     def __init__(self, confirm_field):
@@ -44,12 +45,29 @@ class SlugValidator(object):
         self.model = serializer_field.parent.Meta.model
 
     def __call__(self, slug):
-        if self.instance is None:
+        if self.model.__name__ is 'Subsection':
+            self.validate_subsection_slug(slug)
+        elif self.instance is None:
             if self.model.objects.filter(slug=slug).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
         else:
             if self.model.objects.filter(slug=slug).exclude(parent=self.instance.parent).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+
+    def validate_subsection_slug(self, slug):
+        if Section.objects.filter(slug=slug).exists():
+            raise ValidationError('A section with that slug already exists.')
+        if Page.objects.filter(slug=slug).exists():
+            raise ValidationError('A page with that slug already exists')
+
+        if self.instance is None:
+            if self.model.objects.filter(slug=slug).exists():
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+        else:
+            if self.model.objects.filter(slug=slug).exclude(id=self.instance.id):
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+
+
 
 def AuthorValidator(data):
     """Raise a ValidationError if data does not match the author format."""

@@ -11,7 +11,7 @@ const HeaderButtons = () => {
         Object.keys(links).map( key => {
           const item = links[key]
           return (
-            <div 
+            <div
               key={key}
               className='nav-dropdown-container nav-padded'>
               <div className='nav-dropdown-button pt-minimal'>
@@ -24,8 +24,8 @@ const HeaderButtons = () => {
                     const link = item['link'][index]['link']
                     const icon = item['link'][index]['icon']
                     return (
-                      <Link 
-                        to={'/' + link.toLowerCase() + '/'} 
+                      <Link
+                        to={'/' + link.toLowerCase() + '/'}
                         key={index}
                         className={'pt-button pt-minimal ' + icon}>
                         {link}

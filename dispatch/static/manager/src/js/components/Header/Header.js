@@ -36,6 +36,6 @@ const DesktopHeader = () => {
 }
 
 export default function Header() {
-  const windowWidth = window.document.body.clientWidth || window.innerWidth 
+  const windowWidth = window.document.body.clientWidth || window.innerWidth
   return windowWidth > desktopSize ? DesktopHeader() : <MobileHeader />
 }

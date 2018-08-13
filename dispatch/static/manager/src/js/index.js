@@ -36,6 +36,12 @@ render((
             <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
+          <Route path='subsections'>
+            <IndexRoute component={Pages.Subsections.Index} />
+            <Route path='new' component={Pages.Subsections.NewSubsection} />
+            <Route path=':subsectionId' component={Pages.Subsections.Subsection} />
+          </Route>
+
           <Route path='files' component={Pages.Files} />
 
           <Route path='images'>
