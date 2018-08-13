@@ -46,18 +46,27 @@ class SlugValidator(object):
 
     def __call__(self, slug):
         if self.model.__name__ is 'Subsection':
-            if Section.objects.filter(slug=slug).exists():
-                raise ValidationError('A section with that slug already exists.')
-            if Page.objects.filter(slug=slug).exists():
-                raise ValidationError('A page with that slug already exists')
-            if self.model.objects.filter(slug=slug).exists():
-                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+            self.validate_subsection_slug(slug)
         elif self.instance is None:
             if self.model.objects.filter(slug=slug).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
         else:
             if self.model.objects.filter(slug=slug).exclude(parent=self.instance.parent).exists():
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+
+    def validate_subsection_slug(self, slug):
+        if Section.objects.filter(slug=slug).exists():
+            raise ValidationError('A section with that slug already exists.')
+        if Page.objects.filter(slug=slug).exists():
+            raise ValidationError('A page with that slug already exists')
+
+        if self.instance is None:
+            if self.model.objects.filter(slug=slug).exists():
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+        else:
+            if self.model.objects.filter(slug=slug).exclude(id=self.instance.id):
+                raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
+
 
 
 def AuthorValidator(data):
