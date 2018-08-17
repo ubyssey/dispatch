@@ -1,10 +1,9 @@
 import React from 'react'
 import R from 'ramda'
+import { Tag } from '@blueprintjs/core'
 
 import Dropdown from '../../Dropdown'
-
 import TextInput from '../TextInput'
-
 import SortableList from '../SortableList'
 
 function Item(props) {
@@ -81,6 +80,14 @@ class ItemSelectInput extends React.Component {
         ),
         this.props.extraFields
       )
+    } else {
+      this.props.onChange(null, {})
+    }
+  }
+
+  clearValues() {
+    if (this.props.many) {
+      this.props.onChange([], {})
     } else {
       this.props.onChange(null, {})
     }
@@ -202,26 +209,36 @@ class ItemSelectInput extends React.Component {
   }
 
   render() {
+    const selected = this.getSelected()
+
     const anchorButton = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
     )
 
-    const filterButton = (
-      <div>
-        <div className='pt-control-group'>
-          <button className={`pt-button pt-icon-${this.props.filterIcon}`}>
-            {this.props.filterLabel}
-          </button>
-          <button
-            className='pt-button c-item-list__header__filters__filter'
-            onClick={() => this.refs.dropdown.open()}>
-            {this.props.editMessage}
-            <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
-          </button>
-        </div>
-      </div>
+    const tagButton = selected.length ? (
+      <Tag
+        large={true}
+        round={true}
+        icon={this.props.icon}
+        interactive={true}
+        onRemove={(e) => {
+          this.clearValues()
+          e.stopPropagation()
+        }}
+        onClick={() => this.refs.dropdown.open()}>
+          {this.props.editMessage}
+      </Tag>
+    ) : (
+      <Tag
+        large={true}
+        round={true}
+        icon={this.props.icon}
+        interactive={true}
+        onClick={() => this.refs.dropdown.open()}>
+          {this.props.editMessage}
+      </Tag>
     )
 
     return (
@@ -232,7 +249,7 @@ class ItemSelectInput extends React.Component {
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          {this.props.filterButton ? filterButton : anchorButton}
+          {this.props.tag ? tagButton : anchorButton}
         </Dropdown>
       </div>
     )

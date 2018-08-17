@@ -20,7 +20,7 @@
     "Ron Yong"
   ],
   "dependencies": {
-    "@blueprintjs/core": "1.35.7",
+    "@blueprintjs/core": "^3.3.0",
     "@blueprintjs/datetime": "^1.16.0",
     "babel": "^6.23.0",
     "babel-core": "^6.21.0",

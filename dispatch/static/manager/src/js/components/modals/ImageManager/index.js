@@ -11,7 +11,6 @@ import imagesActions from '../../../actions/ImagesActions'
 import { TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
-import FilterDropdown from '../../inputs/filters/FilterDropdown'
 
 require('../../../../styles/components/image_manager.scss')
 
@@ -109,10 +108,10 @@ class ImageManagerComponent extends React.Component {
   }
 
   onSearch(author, tags, q) {
-    this.setState({ 
+    this.setState({
       author: author,
       tags: tags,
-      q: q 
+      q: q
     }, this.searchImages)
   }
 
@@ -154,7 +153,7 @@ class ImageManagerComponent extends React.Component {
         selected={this.state.tags || ''}
         update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
     ]
-    
+
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
@@ -162,7 +161,7 @@ class ImageManagerComponent extends React.Component {
             <AnchorButton
               intent={Intent.SUCCESS}
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
-            <FilterDropdown filters={filters} />
+            {filters}
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput
@@ -182,7 +181,7 @@ class ImageManagerComponent extends React.Component {
               className='c-image-manager__images__container'
               ref={(node) => { this.images = node }}>{images}
             </div>
-            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}  
+            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}
           </Dropzone>
           {!this.props.many ?
             <div className='c-image-manager__active'>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Alert, Intent } from '@blueprintjs/core'
+import { Button, Alert, Intent } from '@blueprintjs/core'
 
 export default class ConfirmButton extends React.Component {
   constructor(props) {
@@ -20,13 +20,13 @@ export default class ConfirmButton extends React.Component {
   render() {
     return (
       <div className='c-input--confirm'>
-        <AnchorButton
+        <Button
           className={this.props.className}
           intent={this.props.intent}
           disabled={this.props.disabled}
           onClick={() => this.setState({ alertOpen: true })}>
           {this.props.children}
-        </AnchorButton>
+        </Button>
         <Alert
           isOpen={this.state.alertOpen}
           cancelButtonText='Cancel'

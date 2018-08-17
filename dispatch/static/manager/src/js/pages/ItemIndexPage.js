@@ -114,6 +114,7 @@ export default class ListItemsPageComponent extends React.Component {
           entities={this.props.entities.listItems}
 
           filters={this.props.filters}
+          hasFilters={this.props.hasFilters}
 
           columns={columns}
           headers={this.props.headers}

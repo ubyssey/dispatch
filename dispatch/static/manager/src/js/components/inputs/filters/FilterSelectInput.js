@@ -13,9 +13,9 @@ class FilterSelectInput extends React.Component {
   render() {
     return (
       <ItemSelectInput
-        many={this.props.many}
+        many={false}
         selected={this.props.selected}
-        inline={false}
+        inline={true}
         showSortableList={false}
         results={this.props.results.ids}
         entities={this.props.entities}
@@ -23,9 +23,9 @@ class FilterSelectInput extends React.Component {
         fetchResults={this.props.fetchResults}
         attribute={this.props.attribute}
         editMessage={this.getEditMessage()}
-        filterButton={true}
+        tag={true}
         filterLabel={this.props.label}
-        filterIcon={this.props.icon} />
+        icon={this.props.icon} />
     )
   }
 }

@@ -180,6 +180,50 @@
   }
 }
 
+// Component: ItemListFilters
+.c-item-list__filters {
+  // Structure
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
+
+  .c-input {
+    // Structure
+    display: inline-block;
+    margin-right: 0.5rem;
+
+    .bp3-tag {
+      // Background
+      background: transparent;
+
+      // Border
+      border: 1px solid $color-border-gray;
+
+      // Text
+      color: $color-text-gray;
+
+      &:hover, &:active, &.bp3-active {
+        // Background
+        background: $color-text-gray-light;
+      }
+
+      &:focus {
+        // Extras
+        outline: none;
+      }
+
+      > .bp3-icon {
+        // Extras
+        fill: $color-text-gray;
+      }
+    }
+  }
+}
+
 // Component: ItemListEmpty
 .c-item-list-empty {
   // Structure
