@@ -9,7 +9,6 @@
   min-height: 50px;
   padding-left: 2rem;
   padding-right: 2rem;
-  z-index: 100;
 
   // Border
   border-bottom: thin solid $color-border-gray;
@@ -22,17 +21,22 @@
   font-size: 14px;
   line-height: 48px;
 
-  .pt-button {
+  .bp3-button {
     // Structure
     margin-right: 0.75rem;
+
+    &:last-child {
+      // Structure
+      margin-right: 0;
+    }
   }
 
-  a:last-child .pt-button {
+  a:last-child .bp3-button {
     // Structure
     margin-right: 0;
   }
 
-  .pt-tag {
+  .bp3-tag {
     vertical-align: middle;
   }
 }
@@ -40,8 +44,10 @@
 .c-toolbar__left {
   // Structure
   flex: 1;
+  display: flex;
+  align-items: center;
 
-  .pt-button:last-child {
+  .bp3-button:last-child {
     // Structure
     margin-right: 0.75rem;
   }

@@ -61,13 +61,13 @@ export default function DateTimeInput(props) {
     <div className='c-input--datetime'>
       <Popover
         content={picker}
-        popoverClassName='pt-popover-content-sizing'
+        popoverClassName='bp3-popover-content-sizing'
         position={props.position || Position.TOP}>
-        <div className='pt-control-group'>
-          <button className='pt-button pt-icon-calendar c-input--datetime-button' />
+        <div className='bp3-control-group'>
+          <button className='bp3-button bp3-icon-calendar c-input--datetime-button' />
           <input
             type='text'
-            className='pt-input c-input--datetime--textfield'
+            className='bp3-input c-input--datetime--textfield'
             value={textString}
             readOnly={true} />
         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import R from 'ramda'
-import { Tag } from '@blueprintjs/core'
+import { Tag, Icon } from '@blueprintjs/core'
 
 import Dropdown from '../../Dropdown'
 import TextInput from '../TextInput'
@@ -12,9 +12,9 @@ function Item(props) {
       <li
         className='o-dropdown-list__item o-dropdown-list__item--selected'
         onClick={props.onClick}>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick' />
+        <Icon className='o-dropdown-list__item__icon' icon='small-tick' />
         <span className='o-dropdown-list__item__text'>{props.text}</span>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross' />
+        <Icon className='o-dropdown-list__item__icon' icon='cross' />
       </li>
     )
   } else {
@@ -145,7 +145,7 @@ class ItemSelectInput extends React.Component {
       ))
     const createButton = this.props.create ? (
       <button
-        className='pt-button c-input--item-select__search__button'
+        className='bp3-button c-input--item-select__search__button'
         onClick={() => this.props.create(this.state.query, data => this.addValue(data.id))}>
         Add
       </button>
@@ -154,7 +154,7 @@ class ItemSelectInput extends React.Component {
     return (
       <div className='c-input--item-select__dropdown'>
         <div className='c-input--item-select__search'>
-          <div className='pt-control-group'>
+          <div className='bp3-control-group'>
             <TextInput
               onChange={e => this.handleInputChange(e)}
               value={this.state.query}
@@ -187,7 +187,7 @@ class ItemSelectInput extends React.Component {
       <div className='c-input--item-select__item'>
         <div className='c-panel__select'>{item[this.props.attribute]}</div>
         <select
-          className='pt-button c-panel__select__right'
+          className='bp3-button c-panel__select__right'
           value={this.props.extraFields[item.id]}
           onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
       </div>
@@ -211,7 +211,7 @@ class ItemSelectInput extends React.Component {
   render() {
     const selected = this.getSelected()
 
-    const anchorButton = (
+    const Button = (
       <a onClick={() => this.refs.dropdown.open()}>
         {this.props.editMessage}
       </a>
@@ -243,13 +243,13 @@ class ItemSelectInput extends React.Component {
 
     return (
       <div
-        className='c-input c-input--item-select'>
+        className={`c-input c-input--item-select ${this.props.className}`}>
         {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          {this.props.tag ? tagButton : anchorButton}
+          {this.props.tag ? tagButton : Button}
         </Dropdown>
       </div>
     )

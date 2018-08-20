@@ -28,6 +28,7 @@ export default class ItemListSearchBar extends React.Component {
         <form onSubmit={e => this.handleSubmit(e)}>
           <TextInput
             value={this.state.query}
+            type='search'
             placeholder='Search'
             onChange={e => this.setState({ query: e.target.value })} />
         </form>

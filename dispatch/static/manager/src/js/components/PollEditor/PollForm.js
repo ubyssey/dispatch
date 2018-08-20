@@ -53,9 +53,9 @@ export default class PollForm extends React.Component {
               fill={true}
               onChange={e => this.handleUpdateAnswer(e, index)} />
             <span
-              className={['poll-form', 'pt-icon-standard', 'pt-icon-trash'].join(' ')}
+              className={['poll-form', 'bp3-icon-standard', 'bp3-icon-trash'].join(' ')}
               onClick={() => this.removeAnswer(index)}>
-              <span className={'pt-icon-standard-text'}>Remove answer</span>
+              <span className={'bp3-icon-standard-text'}>Remove answer</span>
             </span>
           </FormInput>
         )

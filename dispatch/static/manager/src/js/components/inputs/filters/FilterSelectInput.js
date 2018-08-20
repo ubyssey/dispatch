@@ -13,6 +13,7 @@ class FilterSelectInput extends React.Component {
   render() {
     return (
       <ItemSelectInput
+        className='c-input--filter'
         many={false}
         selected={this.props.selected}
         inline={true}

@@ -1,82 +1,101 @@
-export const links = {
-  Content: {
-    icon: 'pt-icon-edit',
-    link: [
+export const links = [
+  {
+    text: 'Content',
+    icon: 'edit',
+    children: [
       {
-        link: 'Articles',
-        icon: 'pt-icon-book'
+        text: 'Articles',
+        url: '/articles/',
+        icon: 'book'
       },
       {
-        link: 'Pages',
-        icon: 'pt-icon-document'
+        text: 'Pages',
+        url: '/pages/',
+        icon: 'document'
       },
       {
-        link: 'Sections',
-        icon: 'pt-icon-new-grid-item',
+        text: 'Issues',
+        url: '/issues/',
+        icon: 'manual',
       },
       {
-        link: 'Subsections',
-        icon: 'pt-icon-column-layout'
+        text: 'Sections',
+        url: '/sections/',
+        icon: 'new-grid-item',
+      },
+      {
+        text: 'Subsections',
+        url: '/subsections/',
+        icon: 'column-layout'
       }
     ]
   },
-  Widgets: {
-    icon: 'pt-icon-helper-management',
-    link: [
+  {
+    text: 'Widgets',
+    icon: 'helper-management',
+    children: [
       {
-        link: 'Polls',
-        icon: 'pt-icon-vertical-bar-chart-asc'
+        text: 'Polls',
+        url: '/polls/',
+        icon: 'vertical-bar-chart-asc'
       },
       {
-        link: 'Zones',
-        icon: 'pt-icon-widget'
+        text: 'Zones',
+        url: '/zones/',
+        icon: 'widget'
       },
       {
-        link: 'Events',
-        icon: 'pt-icon-pulse'
+        text: 'Events',
+        url: '/events/',
+        icon: 'pulse'
       }
     ]
   },
-  Media: {
-    icon: 'pt-icon-media',
-    link: [
+  {
+    text: 'Media',
+    icon: 'media',
+    children: [
       {
-        link: 'Galleries',
-        icon: 'pt-icon-image-rotate-right'
+        text: 'Galleries',
+        url: '/galleries/',
+        icon: 'image-rotate-right'
       },
       {
-        link: 'Files',
-        icon: 'pt-icon-folder-close'
+        text: 'Files',
+        url: '/files/',
+        icon: 'folder-close'
       },
       {
-        link: 'Images',
-        icon: 'pt-icon-camera'
+        text: 'Images',
+        url: '/images/',
+        icon: 'camera'
       },
       {
-        link: 'Videos',
-        icon: 'pt-icon-video'
+        text: 'Videos',
+        url: '/videos/',
+        icon: 'video'
       }
     ]
   },
-  Misc: {
-    icon: 'pt-icon-layout-grid',
-    link: [
+  {
+    text: 'Misc',
+    icon: 'layout-grid',
+    children: [
       {
-        link: 'Issues',
-        icon: 'pt-icon-issue',
+        text: 'People',
+        url: '/persons/',
+        icon: 'person'
       },
       {
-        link: 'Persons',
-        icon: 'pt-icon-person'
+        text: 'Tags',
+        url: '/tags/',
+        icon: 'tag',
       },
       {
-        link: 'Tags',
-        icon: 'pt-icon-tag',
-      },
-      {
-        link: 'Topics',
-        icon: 'pt-icon-info-sign'
+        text: 'Topics',
+        url: '/topics/',
+        icon: 'info-sign'
       }
     ]
   }
-}
+]

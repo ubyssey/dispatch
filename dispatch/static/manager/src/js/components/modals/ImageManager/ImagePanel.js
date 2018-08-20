@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { FormInput, TextInput } from '../../inputs'
 import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
@@ -12,12 +12,12 @@ export default function ImagePanel(props) {
   return (
     <div className='c-image-panel'>
       <div className='c-image-panel__header'>
-        <AnchorButton
+        <Button
           intent={Intent.SUCCESS}
-          onClick={() => props.save()}>Update</AnchorButton>
-        <AnchorButton
+          onClick={() => props.save()}>Update</Button>
+        <Button
           intent={Intent.DANGER}
-          onClick={() => props.delete()}>Delete</AnchorButton>
+          onClick={() => props.delete()}>Delete</Button>
       </div>
       <div className='c-image-panel__image'>
         <img className='c-image-panel__image__img' src={props.image.url_medium} />

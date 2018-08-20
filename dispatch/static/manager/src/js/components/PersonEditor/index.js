@@ -7,6 +7,7 @@ import PersonForm from './PersonForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Person'
+const TYPE_PLURAL = 'People'
 const AFTER_DELETE = 'persons'
 
 const mapStateToProps = (state) => {
@@ -45,6 +46,7 @@ function PersonEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={PersonForm}
       displayField='full_name'

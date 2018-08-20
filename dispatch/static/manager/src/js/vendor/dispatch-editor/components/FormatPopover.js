@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnchorButton } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import ContentEditorLinkEditor from './LinkEditor'
 
@@ -48,42 +48,42 @@ export default class FormatPopover extends React.Component {
   renderButtons() {
     return (
       <div>
-        <AnchorButton
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'BOLD')}
           title='Bold'>
-          <span className='pt-icon-standard pt-icon-bold' />
-        </AnchorButton>
-        <AnchorButton
+          <span className='bp3-icon-standard bp3-icon-bold' />
+        </Button>
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'ITALIC')}
           title='Italic'>
-          <span className='pt-icon-standard pt-icon-italic' />
-        </AnchorButton>
-        <AnchorButton
+          <span className='bp3-icon-standard bp3-icon-italic' />
+        </Button>
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'UNDERLINE')}
           title='Underline'>
-          <span className='pt-icon-standard pt-icon-underline' />
-        </AnchorButton>
-        <AnchorButton
+          <span className='bp3-icon-standard bp3-icon-underline' />
+        </Button>
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleBlockType(e, 'header-two')}
           title='Header'>
-          <span className='pt-icon-standard pt-icon-header' />
-        </AnchorButton>
-        <AnchorButton
+          <span className='bp3-icon-standard bp3-icon-header' />
+        </Button>
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleBlockType(e, 'unordered-list-item')}
           title='List'>
-          <span className='pt-icon-standard pt-icon-properties' />
-        </AnchorButton>
-        <AnchorButton
+          <span className='bp3-icon-standard bp3-icon-properties' />
+        </Button>
+        <Button
           className='c-dispatch-editor__popover__button'
           onClick={() => this.showLinkInput()}
           title='Link'>
-          <span className='pt-icon-standard pt-icon-link' />
-        </AnchorButton>
+          <span className='bp3-icon-standard bp3-icon-link' />
+        </Button>
       </div>
     )
   }

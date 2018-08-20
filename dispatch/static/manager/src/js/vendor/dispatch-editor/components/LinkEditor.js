@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { TextInput } from '../../../components/inputs'
 
@@ -41,11 +41,11 @@ export default class ContentEditorLinkEditor extends React.Component {
 
   renderBackButton() {
     return (
-      <AnchorButton
+      <Button
         className='c-dispatch-editor__link-popover__back'
         onClick={this.props.back}>
-        <span className='pt-icon-standard pt-icon-arrow-left' />
-      </AnchorButton>
+        <span className='bp3-icon-standard bp3-icon-arrow-left' />
+      </Button>
     )
   }
 
@@ -66,12 +66,12 @@ export default class ContentEditorLinkEditor extends React.Component {
           onKeyPress={this.handleKeyPress}
           onChange={e => this.updateLink(e.target.value)}
           placeholder='Enter a URL here' />
-        <AnchorButton
+        <Button
           className='c-dispatch-editor__link-popover__remove'
           intent={Intent.DANGER}
           onClick={() => this.removeLink()}>
-          <span className='pt-icon-standard pt-icon-trash' />
-        </AnchorButton>
+          <span className='bp3-icon-standard bp3-icon-trash' />
+        </Button>
       </div>
     )
   }

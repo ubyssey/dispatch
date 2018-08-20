@@ -19,14 +19,13 @@ export default class ConfirmButton extends React.Component {
 
   render() {
     return (
-      <div className='c-input--confirm'>
-        <Button
-          className={this.props.className}
-          intent={this.props.intent}
-          disabled={this.props.disabled}
-          onClick={() => this.setState({ alertOpen: true })}>
-          {this.props.children}
-        </Button>
+      <Button
+        className={this.props.className}
+        intent={this.props.intent}
+        icon={this.props.icon}
+        disabled={this.props.disabled}
+        onClick={() => this.setState({ alertOpen: true })}>
+        {this.props.children}
         <Alert
           isOpen={this.state.alertOpen}
           cancelButtonText='Cancel'
@@ -37,7 +36,7 @@ export default class ConfirmButton extends React.Component {
           intent={Intent.DANGER}>
           <p>{this.props.message}</p>
         </Alert>
-      </div>
+      </Button>
     )
   }
 }

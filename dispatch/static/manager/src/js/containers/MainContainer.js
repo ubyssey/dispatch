@@ -4,6 +4,7 @@ import { Position, Toaster } from '@blueprintjs/core'
 
 import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
+import * as navigationActions from '../actions/NavigationActions'
 import eventsActions from '../actions/EventsActions'
 
 import Header from '../components/Header/Header'
@@ -48,7 +49,9 @@ class Main extends React.Component {
           className='c-toaster'
           position={Position.TOP}
           ref='toaster' />
-        <Header viewWidth={this.state.viewWidth} />
+        <Header
+          viewWidth={this.state.viewWidth}
+          goTo={this.props.goTo} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>
@@ -67,13 +70,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     closeModal: () => {
-      dispatch(modalActions.clospropseModal())
+      dispatch(modalActions.closeModal())
     },
     setupToaster: (toaster) => {
       dispatch(toasterActions.setupToaster(toaster))
     },
     countPending: (token) => {
       dispatch(eventsActions.countPending(token))
+    },
+    goTo: (route) => {
+      dispatch(navigationActions.goTo(route))
     }
   }
 }

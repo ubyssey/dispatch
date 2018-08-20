@@ -2,12 +2,12 @@
 @import '../utilities/fonts';
 @import '../utilities/colors';
 
-.c-form-input label.pt-label > .pt-input,
-.c-form-input label.pt-label > .pt-select,
-.c-form-input label.pt-label > .pt-button,
-.c-form-input label.pt-label > .pt-switch,
-.c-form-input label.pt-label > .c-input--item-select,
-.c-form-input label.pt-label > .c-input--file {
+.c-form-input label.bp3-label > .bp3-input,
+.c-form-input label.bp3-label > .bp3-select,
+.c-form-input label.bp3-label > .bp3-button,
+.c-form-input label.bp3-label > .bp3-switch,
+.c-form-input label.bp3-label > .c-input--item-select,
+.c-form-input label.bp3-label > .c-input--file {
   margin-top: 10px;
 }
 
@@ -16,23 +16,30 @@
   // Text
   font-weight: $font-weight-semi-bold;
 
-  .pt-popover {
+  .bp3-popover {
     // Structure
     margin-bottom: 1rem;
   }
 
-  .pt-popover-target {
+  .bp3-popover-target {
     // Structure
     display: block;
   }
-  .pt-control-group > :first-child {
+
+  .bp3-control-group > :first-child {
     width: 35%;
     text-align: left;
   }
-  .pt-control-group > :last-child {
+
+  .bp3-control-group > :last-child {
     width: 65%;
     text-align: right;
   }
+}
+
+.bp3-popover .bp3-popover-arrow {
+  // Structure
+  margin-top: 1px;
 }
 
 .c-input--item-select__item {
@@ -71,10 +78,6 @@
   border-bottom: 1px solid $color-border-gray;
 }
 
-.c-input--item-select__search__button {
-  margin-top: 5px;
-}
-
 // Component: InputGroup
 .c-input-group {
   // Structure
@@ -111,7 +114,7 @@
     margin-right: 0;
   }
 
-  label.pt-label {
+  label.bp3-label {
     margin: 0;
   }
 }
@@ -132,7 +135,7 @@
   font-weight: $font-weight-bold;
 }
 
-.c-form-input__error.pt-tag {
+.c-form-input__error.bp3-tag {
   // Structure
   position: absolute;
   right: 0;
@@ -142,7 +145,7 @@
   max-width: 80%;
 }
 
-.c-form-input .pt-button {
+.c-form-input .bp3-button {
   // Structure
   margin-right: 0.75rem;
 }
@@ -250,4 +253,40 @@
   // Structure
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.c-input--filter {
+  // Structure
+  display: inline-block;
+  margin-right: 0.5rem;
+
+  .bp3-tag {
+    // Background
+    background: transparent;
+
+    // Border
+    border: 1px solid $color-border-gray;
+
+    // Text
+    color: $color-text-gray;
+
+    &:hover,
+    &.bp3-interactive:hover,
+    &.bp3-interactive:active,
+    &.bp3-active,
+    &.bp3-interactive.bp3-active {
+      // Background
+      background-color: $color-text-gray-light;
+    }
+
+    &:focus {
+      // Extras
+      outline: none;
+    }
+
+    > .bp3-icon {
+      // Extras
+      fill: $color-text-gray;
+    }
+  }
 }

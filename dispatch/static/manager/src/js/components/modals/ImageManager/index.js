@@ -3,7 +3,7 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 import { AuthorFilterInput, TagsFilterInput }  from '../../inputs/filters/'
 
 import imagesActions from '../../../actions/ImagesActions'
@@ -158,9 +158,6 @@ class ImageManagerComponent extends React.Component {
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
           <div className='c-image-manager__header__left'>
-            <AnchorButton
-              intent={Intent.SUCCESS}
-              onClick={() => this.dropzone.open()}>Upload</AnchorButton>
             {filters}
           </div>
           <div className='c-image-manager__header__right'>
@@ -168,6 +165,10 @@ class ImageManagerComponent extends React.Component {
               placeholder='Search'
               value={this.state.q}
               onChange={e => this.onSearch(this.state.author, this.state.tags, e.target.value)} />
+            <Button
+              intent={Intent.SUCCESS}
+              icon='upload'
+              onClick={() => this.dropzone.open()}>Upload</Button>
           </div>
         </div>
         <div className='c-image-manager__body'>
@@ -191,9 +192,9 @@ class ImageManagerComponent extends React.Component {
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
-          <AnchorButton
+          <Button
             disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
-            onClick={() => this.insertImage()}>Insert</AnchorButton>
+            onClick={() => this.insertImage()}>Insert</Button>
         </div>
       </div>
     )

@@ -22,6 +22,7 @@ export default function ItemListHeader(props) {
     <Button
       onClick={() => props.toggleFilters()}
       minimal={true}
+      icon='filter'
       rightIcon={props.showFilters ? 'caret-up' : 'caret-down'}>Filters</Button>
   )
 
