@@ -10,6 +10,7 @@ import SelectInput from './selects/SelectInput'
 import GallerySelectInput from './selects/GallerySelectInput'
 import DateTimeInput from './DateTimeInput'
 import FileInput from './FileInput'
+import SearchInput from './SearchInput'
 
 require('../../../styles/components/inputs.scss')
 
@@ -25,5 +26,6 @@ export {
   SelectInput as SelectInput,
   GallerySelectInput as GallerySelectInput,
   DateTimeInput as DateTimeInput,
-  FileInput as FileInput
+  FileInput as FileInput,
+  SearchInput as SearchInput
 }

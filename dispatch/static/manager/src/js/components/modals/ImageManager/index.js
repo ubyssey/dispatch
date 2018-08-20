@@ -8,7 +8,7 @@ import { AuthorFilterInput, TagsFilterInput }  from '../../inputs/filters/'
 
 import imagesActions from '../../../actions/ImagesActions'
 
-import { TextInput } from '../../inputs'
+import { SearchInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
 
@@ -161,7 +161,7 @@ class ImageManagerComponent extends React.Component {
             {filters}
           </div>
           <div className='c-image-manager__header__right'>
-            <TextInput
+            <SearchInput
               placeholder='Search'
               value={this.state.q}
               onChange={e => this.onSearch(this.state.author, this.state.tags, e.target.value)} />

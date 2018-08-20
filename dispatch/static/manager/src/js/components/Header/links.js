@@ -56,16 +56,6 @@ export const links = [
     icon: 'media',
     children: [
       {
-        text: 'Galleries',
-        url: '/galleries/',
-        icon: 'image-rotate-right'
-      },
-      {
-        text: 'Files',
-        url: '/files/',
-        icon: 'folder-close'
-      },
-      {
         text: 'Images',
         url: '/images/',
         icon: 'camera'
@@ -73,7 +63,17 @@ export const links = [
       {
         text: 'Videos',
         url: '/videos/',
-        icon: 'video'
+        icon: 'film'
+      },
+      {
+        text: 'Galleries',
+        url: '/galleries/',
+        icon: 'grid-view'
+      },
+      {
+        text: 'Files',
+        url: '/files/',
+        icon: 'folder-close'
       }
     ]
   },
