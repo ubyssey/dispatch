@@ -39,16 +39,6 @@ export default class ContentEditorLinkEditor extends React.Component {
     this.props.close()
   }
 
-  renderBackButton() {
-    return (
-      <Button
-        className='c-dispatch-editor__link-popover__back'
-        onClick={this.props.back}>
-        <span className='bp3-icon-standard bp3-icon-arrow-left' />
-      </Button>
-    )
-  }
-
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.props.close()
@@ -56,9 +46,16 @@ export default class ContentEditorLinkEditor extends React.Component {
   }
 
   render() {
+    const backButton = (
+      <Button
+        className='c-dispatch-editor__link-popover__back'
+        onClick={this.props.back}
+        icon='arrow-left' />
+    )
+
     return (
       <div className='c-dispatch-editor__link-popover'>
-        {this.props.back ? this.renderBackButton() : null}
+        {this.props.back ? backButton : null}
         <TextInput
           className='c-dispatch-editor__link-popover__input'
           ref='textInput'
@@ -69,9 +66,8 @@ export default class ContentEditorLinkEditor extends React.Component {
         <Button
           className='c-dispatch-editor__link-popover__remove'
           intent={Intent.DANGER}
-          onClick={() => this.removeLink()}>
-          <span className='bp3-icon-standard bp3-icon-trash' />
-        </Button>
+          onClick={() => this.removeLink()}
+          icon='trash' />
       </div>
     )
   }

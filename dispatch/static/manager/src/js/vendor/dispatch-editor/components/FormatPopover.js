@@ -51,39 +51,33 @@ export default class FormatPopover extends React.Component {
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'BOLD')}
-          title='Bold'>
-          <span className='bp3-icon-standard bp3-icon-bold' />
-        </Button>
+          title='Bold'
+          icon='bold' />
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'ITALIC')}
-          title='Italic'>
-          <span className='bp3-icon-standard bp3-icon-italic' />
-        </Button>
+          title='Italic'
+          icon='italic' />
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleInlineStyle(e, 'UNDERLINE')}
-          title='Underline'>
-          <span className='bp3-icon-standard bp3-icon-underline' />
-        </Button>
+          title='Underline'
+          icon='underline' />
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleBlockType(e, 'header-two')}
-          title='Header'>
-          <span className='bp3-icon-standard bp3-icon-header' />
-        </Button>
+          title='Header'
+          icon='header' />
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={e => this.toggleBlockType(e, 'unordered-list-item')}
-          title='List'>
-          <span className='bp3-icon-standard bp3-icon-properties' />
-        </Button>
+          title='List'
+          icon='properties' />
         <Button
           className='c-dispatch-editor__popover__button'
           onClick={() => this.showLinkInput()}
-          title='Link'>
-          <span className='bp3-icon-standard bp3-icon-link' />
-        </Button>
+          title='Link'
+          icon='link' />
       </div>
     )
   }
