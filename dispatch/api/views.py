@@ -21,6 +21,7 @@ from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video,
     Poll, PollAnswer, PollVote, Invite, Subsection)
+from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
 
 from dispatch.core.settings import get_settings
 from dispatch.admin.registration import reset_password
@@ -31,7 +32,8 @@ from dispatch.api.serializers import (
     FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
     TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
     ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
-    PollSerializer, PollVoteSerializer, InviteSerializer, SubsectionSerializer)
+    PollSerializer, PollVoteSerializer, InviteSerializer, SubsectionSerializer,
+    PodcastSerializer, PodcastEpisodeSerializer)
 from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
     UnpermittedActionError)
@@ -604,3 +606,36 @@ class TokenViewSet(viewsets.ViewSet):
         token.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PodcastViewSet(DispatchModelViewSet):
+    """Viewset for Podcast model views."""
+    model = Podcast
+    serializer_class = PodcastSerializer
+
+    def get_queryset(self):
+        queryset = Podcast.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `title`
+            queryset = queryset.filter(title__icontains=q)
+        return queryset
+
+class PodcastEpisodeViewSet(DispatchModelViewSet):
+    """Viewset for PodcastEpisode model views."""
+    model = PodcastEpisode
+    serializer_class = PodcastEpisodeSerializer
+
+    def get_queryset(self):
+        queryset = Podcast.objects.all()
+
+        q = self.request.query_params.get('q', None)
+        podcast = self.request.query_params.get('podcast', None)
+
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `title`
+            queryset = queryset.filter(title__icontains=q)
+
+        if podcast is not None:
+            queryset = queryset.filter(podcast_id=podcast)
+
+        return queryset

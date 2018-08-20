@@ -7,6 +7,8 @@ from dispatch.modules.content.models import (
     File, Page, Author, Section, Tag, Topic, Video,
     VideoAttachment, Poll, PollAnswer, PollVote, Subsection)
 from dispatch.modules.auth.models import Person, User, Invite
+from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
+
 from dispatch.admin.registration import send_invitation
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
@@ -1014,3 +1016,36 @@ class PollSerializer(DispatchModelSerializer):
             instance.save_answers(answers, is_new)
 
         return instance
+
+class PodcastSerializer(DispatchModelSerializer):
+    """Serializes the Podcast model."""
+
+    class Meta:
+        model = Podcast
+        fields = (
+            'id',
+            'title',
+            'desciption',
+            'author',
+            'image',
+            'category'
+        )
+
+class PodcastEpisodeSerializer(DispatchModelSerializer):
+    """Serializes the PodcastEpisode model."""
+
+    class Meta:
+        model = PodcastEpisode
+        fields = (
+            'id',
+            'podcast_id',
+            'title',
+            'desciption',
+            'author',
+            'image',
+            'category',
+            'duration',
+            'published_at',
+            'explicit',
+            'file'
+        )
