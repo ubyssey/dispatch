@@ -28,7 +28,7 @@ export default function PageToolbar(props) {
       <ToolbarLeft>
         <ul className='bp3-breadcrumbs'>
           <li><Link to='pages' className='bp3-breadcrumb'>Pages</Link></li>
-          <li><span className='bp3-breadcrumb bp3-breadcrumb-current'>{props.isNew ? 'New page' : <Text ellipsize={true}>{props.pagep.title}</Text> }</span></li>
+          <li><span className='bp3-breadcrumb bp3-breadcrumb-current'>{props.isNew ? 'New page' : <Text ellipsize={true}>{props.page.title}</Text> }</span></li>
         </ul>
       </ToolbarLeft>
       <ToolbarRight>
