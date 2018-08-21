@@ -85,10 +85,10 @@ class ItemEditor extends React.Component {
             name={listItem[this.props.displayField] || listItem.name || listItem.title ||listItem.filename}
             type={this.props.type}
             typePlural={this.props.typePlural}
+            listRoute={this.props.afterDelete}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}
             deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}
-            goBack={this.props.goBack}
             extraButton={this.props.extraButton} />
           <div className='u-container u-container--padded u-container--vscroll'>
             <this.props.form

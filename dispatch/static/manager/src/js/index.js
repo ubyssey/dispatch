@@ -105,6 +105,16 @@ render((
             <Route path=':pollId' component={Pages.Polls.Poll} />
           </Route>
 
+          <Route path='podcasts'>
+            <IndexRoute component={Pages.Podcasts.Index} />
+            <Route path='new' component={Pages.Podcasts.NewPodcast} />
+            <Route path=':podcastId' component={Pages.Podcasts.Podcast} />
+            <Route path=':podcastId/episodes' component={Pages.Podcasts.EpisodeIndex} />
+            <Route path=':podcastId/episodes/new' component={Pages.Podcasts.NewEpisode} />
+            <Route path=':podcastId/episodes/:episodeId' component={Pages.Podcasts.Episode} />
+
+          </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>

@@ -22,6 +22,8 @@ const initialState = {
   images: {},
   templates: {},
   persons: {},
+  podcasts: {},
+  podcastEpisodes: {},
   topics: {},
   tags: {},
   galleries: {},

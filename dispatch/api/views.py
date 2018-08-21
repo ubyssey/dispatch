@@ -626,7 +626,7 @@ class PodcastEpisodeViewSet(DispatchModelViewSet):
     serializer_class = PodcastEpisodeSerializer
 
     def get_queryset(self):
-        queryset = Podcast.objects.all()
+        queryset = PodcastEpisode.objects.all()
 
         q = self.request.query_params.get('q', None)
         podcast = self.request.query_params.get('podcast', None)

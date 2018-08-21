@@ -1020,19 +1020,33 @@ class PollSerializer(DispatchModelSerializer):
 class PodcastSerializer(DispatchModelSerializer):
     """Serializes the Podcast model."""
 
+    id = serializers.UUIDField(read_only=True)
+    image = ImageSerializer(read_only=True)
+    image_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = Podcast
         fields = (
             'id',
             'title',
-            'desciption',
+            'description',
             'author',
             'image',
+            'image_id',
             'category'
         )
 
 class PodcastEpisodeSerializer(DispatchModelSerializer):
     """Serializes the PodcastEpisode model."""
+
+    id = serializers.UUIDField(read_only=True)
+    image = ImageSerializer(read_only=True)
+    image_id = serializers.IntegerField(write_only=True, required=False)
+
+    podcast_id = serializers.UUIDField()
+
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
+    file_str = serializers.FileField(source='file', read_only=True, use_url=False)
 
     class Meta:
         model = PodcastEpisode
@@ -1040,12 +1054,13 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
             'id',
             'podcast_id',
             'title',
-            'desciption',
+            'description',
             'author',
             'image',
-            'category',
+            'image_id',
             'duration',
             'published_at',
             'explicit',
-            'file'
+            'file',
+            'file_str'
         )
