@@ -540,7 +540,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.data['latest_version'], 2)
 
         # Publish earlier version
-        url = reverse('api-articles-publish', args=[article.data['id']])
+        url = '%s?version=%d' % (reverse('api-articles-publish', args=[article.data['id']]), 1)
         response = self.client.post(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
