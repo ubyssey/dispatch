@@ -1029,6 +1029,7 @@ class PodcastSerializer(DispatchModelSerializer):
         fields = (
             'id',
             'title',
+            'slug',
             'description',
             'author',
             'image',
