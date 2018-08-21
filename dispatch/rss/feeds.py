@@ -13,7 +13,6 @@ class PodcastFeed(Feed):
         self.link = settings.BASE_URL
         self.podcast = podcast
 
-
     def items(self):
         return PodcastEpisode.objects.filter(podcast=self.podcast).order_by('-published_at')[:5]
 
