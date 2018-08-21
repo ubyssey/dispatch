@@ -7,14 +7,20 @@ from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
 
 class PodcastFeed(Feed):
 
-    def __init__(self, podcast):
-        self.title = podcast.title
-        self.description = podcast.description
-        self.link = settings.BASE_URL
-        self.podcast = podcast
+    def get_object(self, request, slug=None):
+        return Podcast.objects.get(slug=slug)
 
-    def items(self):
-        return PodcastEpisode.objects.filter(podcast=self.podcast).order_by('-published_at')[:5]
+    def title(self, obj):
+        return obj.title
+
+    def link(self):
+        return settings.BASE_URL
+
+    def description(self, obj):
+        return obj.description
+
+    def items(self, obj):
+        return PodcastEpisode.objects.filter(podcast=obj).order_by('-published_at')[:5]
 
     def item_title(self, item):
         return item.title
