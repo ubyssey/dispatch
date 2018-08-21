@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import { replace } from 'react-router-redux'
 import DocumentTitle from 'react-document-title'
 import { Intent } from '@blueprintjs/core'
+import { humanizeDatetime } from  '../../util/helpers'
 
 import { Toolbar, ToolbarLeft, ToolbarRight } from '../../components/Toolbar'
 import ItemList from '../../components/ItemList'
@@ -152,7 +153,7 @@ class PodcastEpisodesPageComponent extends React.Component {
             dangerouslySetInnerHTML={{ __html: item.title }} />
         </strong>
       ),
-      item => item.published_at
+      item => humanizeDatetime(item.published_at)
     ]
 
     return (
