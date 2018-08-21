@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
 
 require('../../../styles/components/poll.scss')
 
 const COLOR_OPACITY = .8
 
-class Poll extends Component {
+class Poll extends React.Component {
   constructor(props){
     super(props)
     this.state = {

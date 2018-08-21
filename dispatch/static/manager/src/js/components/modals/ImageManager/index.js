@@ -11,6 +11,7 @@ import imagesActions from '../../../actions/ImagesActions'
 import { TextInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
+import FilterDropdown from '../../inputs/filters/FilterDropdown'
 
 require('../../../../styles/components/image_manager.scss')
 
@@ -142,6 +143,18 @@ class ImageManagerComponent extends React.Component {
         save={() => this.handleSave()}
         delete={() => this.handleDelete()} />
     )
+
+    const filters = [
+      <AuthorFilterInput
+        key={'AuthorFilter'}
+        selected={this.state.author || ''}
+        update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />,
+      <TagsFilterInput
+        key={'tagsFilter'}
+        selected={this.state.tags || ''}
+        update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
+    ]
+    
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
@@ -149,14 +162,7 @@ class ImageManagerComponent extends React.Component {
             <AnchorButton
               intent={Intent.SUCCESS}
               onClick={() => this.dropzone.open()}>Upload</AnchorButton>
-            <AuthorFilterInput
-              key={'AuthorFilter'}
-              selected={this.state.author || ''}
-              update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />
-            <TagsFilterInput
-              key={'tagsFilter'}
-              selected={this.state.tags || ''}
-              update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
+            <FilterDropdown filters={filters} />
           </div>
           <div className='c-image-manager__header__right'>
             <TextInput

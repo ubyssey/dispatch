@@ -63,12 +63,12 @@
 
 .c-article-editor {
   // Content panel
-
   flex: 1.4;
 
   background: white;
   height: 100%;
   overflow: auto;
+  z-index: 0;
 
   &.expanded {
     margin-right: 0;

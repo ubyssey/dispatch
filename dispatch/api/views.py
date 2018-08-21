@@ -20,7 +20,7 @@ from dispatch.modules.actions.actions import list_actions, recent_articles
 from dispatch.models import (
     Article, File, Image, ImageAttachment, ImageGallery, Issue,
     Page, Author, Person, Section, Tag, Topic, User, Video,
-    Poll, PollAnswer, PollVote, Invite)
+    Poll, PollAnswer, PollVote, Invite, Subsection)
 
 from dispatch.core.settings import get_settings
 from dispatch.admin.registration import reset_password
@@ -31,7 +31,7 @@ from dispatch.api.serializers import (
     FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
     TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
     ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
-    PollSerializer, PollVoteSerializer, InviteSerializer)
+    PollSerializer, PollVoteSerializer, InviteSerializer, SubsectionSerializer)
 from dispatch.api.exceptions import (
     ProtectedResourceError, BadCredentials, PollClosed, InvalidPoll,
     UnpermittedActionError)
@@ -87,7 +87,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
                 'authors'
             )
 
-        queryset = queryset.order_by('-updated_at') 
+        queryset = queryset.order_by('-updated_at')
 
         q = self.request.query_params.get('q', None)
         section = self.request.query_params.get('section', None)
@@ -99,13 +99,31 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         if section is not None:
             queryset = queryset.filter(section_id=section)
-        
+
         if tags is not None:
             for tag in tags:
                 queryset = queryset.filter(tags__id=tag)
 
         if author is not None:
             queryset = queryset.filter(authors__person_id=author)
+
+        return queryset
+
+class SubsectionViewSet(DispatchModelViewSet):
+    """Viewset for the Subsection model views."""
+    model = Subsection
+    serializer_class = SubsectionSerializer
+
+    def get_queryset(self):
+        queryset = Subsection.objects.all()
+        q = self.request.query_params.get('q', None)
+        section = self.request.query_params.get('section', None)
+
+        if q is not None:
+            queryset = queryset.filter(name__icontains=q)
+
+        if section is not None:
+            queryset = queryset.filter(section_id=section)
 
         return queryset
 

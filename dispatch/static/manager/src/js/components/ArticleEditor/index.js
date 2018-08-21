@@ -155,7 +155,6 @@ class ArticleEditorComponent extends React.Component {
     }
 
     const title = this.props.isNew ? 'New article' : `Edit - ${article.headline}`
-
     return (
       <DocumentTitle title={title}>
         <div className='u-container-main'>

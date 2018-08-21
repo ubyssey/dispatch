@@ -12,6 +12,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 0;
 }
 
 .u-container-main--row {
@@ -19,10 +20,13 @@
 }
 
 .u-container-editor {
+  position: relative;
   display: flex;
   flex-direction: row;
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 0;
 }
 
 .u-container-body {
@@ -34,6 +38,7 @@
 .u-container {
   padding-left: 2rem;
   padding-right: 2rem;
+  height:100%;
 }
 
 .u-container--align-left {
