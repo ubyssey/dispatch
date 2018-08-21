@@ -56,10 +56,7 @@ function PodcastsPageComponent(props) {
       typePlural='podcasts'
       displayColumn='title'
       pageTitle='Podcasts'
-      headers={[ 'Title', 'URL' ]}
-      extraColumns={[
-        item => item.url
-      ]}
+      headers={['Title']}
       {... props} />
   )
 }
