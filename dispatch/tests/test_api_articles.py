@@ -875,12 +875,3 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.data['featured_video'], None)
-
-    def test_preview_article_unpublished(self):
-        """Ensure that an unpublished article can be previewed"""
-
-        article = DispatchTestHelpers.create_article(self.client)
-
-        url = '/%s/%s/?version=%d&preview_id=%s' % (article.data['section']['slug'], article.data['slug'], article.data['current_version'], article.data['preview_id'])
-
-        response = self.client.get(url, format='json')
