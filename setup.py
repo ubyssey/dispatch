@@ -16,6 +16,7 @@ setup(name='dispatch',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
+        'mutagen',
     ],
     extras_require={
         'dev': [
