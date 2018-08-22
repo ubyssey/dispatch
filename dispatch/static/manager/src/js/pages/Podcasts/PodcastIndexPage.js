@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
+import { Link } from 'react-router'
 
 import ItemIndexPage from '../ItemIndexPage'
 import podcastsActions from '../../actions/PodcastsActions'
@@ -50,6 +51,14 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 function PodcastsPageComponent(props) {
+  const titleColumn = (item) => (
+    <strong>
+      <Link
+        to={`/podcasts/${item.id}/episodes/`}
+        dangerouslySetInnerHTML={{ __html: item.title }} />
+    </strong>
+  )
+
   return (
     <ItemIndexPage
       typeSingular='podcast'
@@ -57,6 +66,7 @@ function PodcastsPageComponent(props) {
       displayColumn='title'
       pageTitle='Podcasts'
       headers={['Title']}
+      columns={[titleColumn]}
       {... props} />
   )
 }
