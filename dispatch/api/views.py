@@ -10,7 +10,7 @@ from rest_framework.permissions import (
 from rest_framework.decorators import (
     detail_route, api_view, authentication_classes, permission_classes)
 from rest_framework.generics import get_object_or_404
-from rest_framework.exceptions import APIException, NotFound
+from rest_framework.exceptions import APIException, NotFound, ValidationError
 from rest_framework.authtoken.models import Token
 
 from dispatch.modules.integrations.integrations import (
@@ -639,3 +639,16 @@ class PodcastEpisodeViewSet(DispatchModelViewSet):
             queryset = queryset.filter(podcast_id=podcast)
 
         return queryset
+
+    def perform_create(self, serializer):
+        try:
+            super(PodcastEpisodeViewSet, self).perform_create(serializer)
+        except PodcastEpisode.InvalidAudioFile:
+            raise ValidationError({ 'file': 'File must be a valid audio file.' })
+
+
+    def perform_update(self, serializer):
+        try:
+            super(PodcastEpisodeViewSet, self).perform_create(serializer)
+        except PodcastEpisode.InvalidAudioFile:
+            raise ValidationError({ 'file': 'File must be a valid audio file.' })

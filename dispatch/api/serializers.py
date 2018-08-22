@@ -1032,6 +1032,8 @@ class PodcastSerializer(DispatchModelSerializer):
             'slug',
             'description',
             'author',
+            'owner_name',
+            'owner_email',
             'image',
             'image_id',
             'category'

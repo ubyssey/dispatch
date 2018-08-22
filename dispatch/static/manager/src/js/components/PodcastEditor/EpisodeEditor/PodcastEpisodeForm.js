@@ -6,8 +6,15 @@ import {
   TextAreaInput,
   ImageInput,
   DateTimeInput,
-  FileInput
+  FileInput,
+  SelectInput
 } from '../../inputs'
+
+const EXPLICIT_OPTIONS = [
+  ['no', 'No'],
+  ['yes', 'Yes'],
+  ['clean', 'Clean'],
+]
 
 export default function PodcastEpisodeForm(props) {
   return (
@@ -61,6 +68,15 @@ export default function PodcastEpisodeForm(props) {
         <ImageInput
           selected={props.listItem.image}
           onChange={imageId => props.update('image', imageId)} />
+      </FormInput>
+
+      <FormInput
+        label='Explicit'
+        padded={false}>
+        <SelectInput
+          options={EXPLICIT_OPTIONS}
+          selected={props.listItem.explicit}
+          onChange={e => props.update('explicit', e.target.value)} />
       </FormInput>
 
       <FormInput

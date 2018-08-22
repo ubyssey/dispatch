@@ -4,8 +4,29 @@ import {
   FormInput,
   TextInput,
   TextAreaInput,
-  ImageInput
+  ImageInput,
+  SelectInput
 } from '../inputs'
+
+
+const CATEGORY_OPTIONS = [
+    ['Arts', 'Arts'],
+    ['Business', 'Business'],
+    ['Comedy', 'Comedy'],
+    ['Education', 'Education'],
+    ['Games &amp; Hobbies', 'Games & Hobbies'],
+    ['Government &amp; Organizations', 'Government & Organizations'],
+    ['Health', 'Health'],
+    ['Kids &amp; Family', 'Kids & Family'],
+    ['Music', 'Music'],
+    ['News &amp; Politics', 'News & Politics'],
+    ['Religion &amp; Spirituality', 'Religion & Spirituality'],
+    ['Science &amp; Medicine', 'Science & Medicine'],
+    ['Society &amp; Culture', 'Society & Culture'],
+    ['Sports &amp; Recreation', 'Sports & Recreation'],
+    ['Technology', 'Technology'],
+    ['TV &amp; Film', 'TV & Film'],
+]
 
 export default function PodcastForm(props) {
   return (
@@ -55,16 +76,36 @@ export default function PodcastForm(props) {
       </FormInput>
 
       <FormInput
-        label='Category'
+        label='Owner Name'
         padded={false}
-        error={props.errors.category}>
+        error={props.errors.owner_name}>
         <TextInput
-          placeholder='Category'
-          value={props.listItem.category || ''}
+          placeholder='Owner Name'
+          value={props.listItem.owner_name || ''}
           fill={true}
-          onChange={e => props.update('category', e.target.value)} />
+          onChange={e => props.update('owner_name', e.target.value)} />
       </FormInput>
 
+      <FormInput
+        label='Owner Email'
+        padded={false}
+        error={props.errors.owner_email}>
+        <TextInput
+          placeholder='Owner Email'
+          type='email'
+          value={props.listItem.owner_email || ''}
+          fill={true}
+          onChange={e => props.update('owner_email', e.target.value)} />
+      </FormInput>
+
+      <FormInput
+        label='Category'
+        padded={false}>
+        <SelectInput
+          options={CATEGORY_OPTIONS}
+          selected={props.listItem.category}
+          onChange={e => props.update('category', e.target.value)} />
+      </FormInput>
 
       <FormInput
         label='Image'
