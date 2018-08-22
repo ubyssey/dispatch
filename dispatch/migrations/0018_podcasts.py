@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('owner_name', models.CharField(max_length=255)),
                 ('owner_email', models.EmailField(max_length=255)),
                 ('category', models.CharField(max_length=255)),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dispatch.Image')),
+                ('image', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dispatch.Image')),
             ],
         ),
         migrations.CreateModel(

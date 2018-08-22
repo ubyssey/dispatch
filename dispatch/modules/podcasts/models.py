@@ -25,7 +25,7 @@ class Podcast(Model):
     owner_name = CharField(max_length=255)
     owner_email = EmailField(max_length=255)
 
-    image = ForeignKey(Image)
+    image = ForeignKey(Image, null=True)
 
     CATEGORY_CHOICES = (
         ('Arts', 'Arts'),
