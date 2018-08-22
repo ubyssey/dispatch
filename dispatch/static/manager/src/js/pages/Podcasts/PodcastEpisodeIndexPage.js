@@ -82,6 +82,8 @@ class PodcastEpisodesPageComponent extends React.Component {
       query.q = this.props.location.query.q
     }
 
+    query.podcast = this.props.params.podcastId
+
     return query
   }
 
@@ -158,7 +160,7 @@ class PodcastEpisodesPageComponent extends React.Component {
 
     return (
       <DocumentTitle title={`${podcast.title} - Episodes`}>
-        <div>
+        <div className='u-container-main'>
           <Toolbar>
             <ToolbarLeft>
               <ul className='bp3-breadcrumbs'>
