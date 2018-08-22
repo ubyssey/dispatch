@@ -117,6 +117,10 @@ class PodcastEpisodeEditorComponent extends React.Component {
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
   }
 
+  handleBulkUpdate(data) {
+    this.props.setListItem(R.merge(this.getListItem(), data))
+  }
+
   render() {
     const podcast = R.path(['podcasts', this.props.podcastId], this.props.entities)
     const listItem = this.getListItem()
@@ -158,6 +162,7 @@ class PodcastEpisodeEditorComponent extends React.Component {
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}
               update={(field, value) => this.handleUpdate(field, value)}
+              bulkUpdate={(data) => this.handleBulkUpdate(data)}
               settings={this.props.settings ? this.props.settings : {}} />
           </div>
         </div>

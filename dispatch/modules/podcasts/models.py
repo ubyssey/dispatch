@@ -1,8 +1,6 @@
 import uuid
 import StringIO
 
-import mutagen
-
 from django.conf import settings
 
 from django.db.models import (
@@ -73,29 +71,5 @@ class PodcastEpisode(Model):
 
     file = FileField(upload_to='podcasts/')
 
-    class InvalidAudioFile(Exception):
-        pass
-
     def get_absolute_url(self):
         return self.file.url
-
-    # Override
-    def save(self, **kwargs):
-        """Custom save method to extract information from audio file."""
-
-        audio = mutagen.File(fileobj=self.file.file)
-
-        if audio is None:
-            raise PodcastEpisode.InvalidAudioFile()
-
-        mimes = audio.mime
-
-        type = mimes[0]
-        duration = int(audio.info.length)
-
-        self.duration = duration
-        self.type = type
-
-        self.file.file.close()
-
-        super(PodcastEpisode, self).save(**kwargs)

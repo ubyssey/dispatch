@@ -1050,6 +1050,7 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
 
     file = serializers.FileField(write_only=True, validators=[FilenameValidator])
     file_str = serializers.FileField(source='file', read_only=True, use_url=False)
+    file_url = serializers.FileField(source='file', read_only=True, use_url=True)
 
     class Meta:
         model = PodcastEpisode
@@ -1061,9 +1062,11 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
             'author',
             'image',
             'image_id',
-            'duration',
             'published_at',
             'explicit',
             'file',
-            'file_str'
+            'file_str',
+            'file_url',
+            'duration',
+            'type',
         )

@@ -7,8 +7,15 @@
 .c-form-input label.bp3-label > .bp3-button,
 .c-form-input label.bp3-label > .bp3-switch,
 .c-form-input label.bp3-label > .c-input--item-select,
-.c-form-input label.bp3-label > .c-input--file {
+.c-form-input label.bp3-label > .c-input--file,
+.c-form-input label.bp3-label > audio {
+  // Structure
   margin-top: 10px;
+}
+
+.c-form-input label.bp3-label > audio {
+  // Structure
+  width: 100%;
 }
 
 // Component: MultiSelectInput

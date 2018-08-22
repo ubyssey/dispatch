@@ -16,80 +16,112 @@ const EXPLICIT_OPTIONS = [
   ['clean', 'Clean'],
 ]
 
-export default function PodcastEpisodeForm(props) {
-  return (
-    <form>
-      <FormInput
-        label='Title'
-        padded={false}
-        error={props.errors.title}>
-        <TextInput
-          placeholder='Title'
-          value={props.listItem.title || ''}
-          fill={true}
-          onChange={e => props.update('title', e.target.value)} />
-      </FormInput>
+export default class PodcastEpisodeForm extends React.Component {
 
-      <FormInput
-        label='Description'
-        padded={false}
-        error={props.errors.description}>
-        <TextAreaInput
-          placeholder='Description'
-          value={props.listItem.description || ''}
-          fill={true}
-          onChange={e => props.update('description', e.target.value)} />
-      </FormInput>
+  constructor(props) {
+    super(props)
 
-      <FormInput
-        label='Author'
-        padded={false}
-        error={props.errors.author}>
-        <TextInput
-          placeholder='Author'
-          value={props.listItem.author || ''}
-          fill={true}
-          onChange={e => props.update('author', e.target.value)} />
-      </FormInput>
+    this.state = {
+      audioFile: this.props.listItem.file_url
+    }
+  }
 
-      <FormInput
-        label='Published At'
-        padded={false}
-        error={props.errors.published_at}>
-        <DateTimeInput
-          value={props.listItem.published_at}
-          onChange={dt => props.update('published_at', dt)} />
-      </FormInput>
+  componentDidMount() {
+    this.refs.audioPlayer.ondurationchange = () => {
+      const duration = Math.round(this.refs.audioPlayer.duration)
+      this.props.update('duration', duration)
+    }
+  }
 
-      <FormInput
-        label='Image'
-        padded={false}
-        error={props.errors.image}>
-        <ImageInput
-          selected={props.listItem.image}
-          onChange={imageId => props.update('image', imageId)} />
-      </FormInput>
+  updateFile(file) {
+    const fileUrl = URL.createObjectURL(file)
 
-      <FormInput
-        label='Explicit'
-        padded={false}>
-        <SelectInput
-          options={EXPLICIT_OPTIONS}
-          selected={props.listItem.explicit}
-          onChange={e => props.update('explicit', e.target.value)} />
-      </FormInput>
+    this.setState({ audioFile: fileUrl })
 
-      <FormInput
-        label='Audio File'
-        padded={false}
-        error={props.errors.file}>
-        <FileInput
-          placeholder={props.listItem.file_str || 'Choose a file...'}
-          value={props.listItem.file || ''}
-          fill={true}
-          onChange={file => props.update('file', file)} />
-      </FormInput>
+    const type = file.type
 
-    </form>
-  )
+    this.props.bulkUpdate({
+      file: file,
+      type: type
+    })
+  }
+
+  render() {
+    return (
+      <form>
+        <FormInput
+          label='Title'
+          padded={false}
+          error={this.props.errors.title}>
+          <TextInput
+            placeholder='Title'
+            value={this.props.listItem.title || ''}
+            fill={true}
+            onChange={e => this.props.update('title', e.target.value)} />
+        </FormInput>
+
+        <FormInput
+          label='Description'
+          padded={false}
+          error={this.props.errors.description}>
+          <TextAreaInput
+            placeholder='Description'
+            value={this.props.listItem.description || ''}
+            fill={true}
+            onChange={e => this.props.update('description', e.target.value)} />
+        </FormInput>
+
+        <FormInput
+          label='Author'
+          padded={false}
+          error={this.props.errors.author}>
+          <TextInput
+            placeholder='Author'
+            value={this.props.listItem.author || ''}
+            fill={true}
+            onChange={e => this.props.update('author', e.target.value)} />
+        </FormInput>
+
+        <FormInput
+          label='Published At'
+          padded={false}
+          error={this.props.errors.published_at}>
+          <DateTimeInput
+            value={this.props.listItem.published_at}
+            onChange={dt => this.props.update('published_at', dt)} />
+        </FormInput>
+
+        <FormInput
+          label='Image'
+          padded={false}
+          error={this.props.errors.image}>
+          <ImageInput
+            selected={this.props.listItem.image}
+            onChange={imageId => this.props.update('image', imageId)} />
+        </FormInput>
+
+        <FormInput
+          label='Explicit'
+          padded={false}>
+          <SelectInput
+            options={EXPLICIT_OPTIONS}
+            selected={this.props.listItem.explicit}
+            onChange={e => this.props.update('explicit', e.target.value)} />
+        </FormInput>
+
+        <FormInput
+          label='Audio File'
+          padded={false}
+          error={this.props.errors.file}>
+          <FileInput
+            placeholder={this.props.listItem.file_str || 'Choose a file...'}
+            value={this.props.listItem.file || ''}
+            fill={true}
+            onChange={file => this.updateFile(file)} />
+          <audio ref='audioPlayer' src={this.state.audioFile} controls />
+        </FormInput>
+
+      </form>
+    )
+  }
 }

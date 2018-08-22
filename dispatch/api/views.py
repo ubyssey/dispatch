@@ -639,16 +639,3 @@ class PodcastEpisodeViewSet(DispatchModelViewSet):
             queryset = queryset.filter(podcast_id=podcast)
 
         return queryset
-
-    def perform_create(self, serializer):
-        try:
-            super(PodcastEpisodeViewSet, self).perform_create(serializer)
-        except PodcastEpisode.InvalidAudioFile:
-            raise ValidationError({ 'file': 'File must be a valid audio file.' })
-
-
-    def perform_update(self, serializer):
-        try:
-            super(PodcastEpisodeViewSet, self).perform_create(serializer)
-        except PodcastEpisode.InvalidAudioFile:
-            raise ValidationError({ 'file': 'File must be a valid audio file.' })
