@@ -110,7 +110,8 @@
 // Component: ItemListPagination
 .c-item-list__pagination {
   // Structure
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin-right: 1rem;
 
   .bp3-control-group {

@@ -53,6 +53,12 @@
   }
 }
 
+.c-toolbar__right {
+  // Structure
+  display: flex;
+  align-items: center;
+}
+
 .c-toolbar__title {
   // Structure
   display: inline-block;

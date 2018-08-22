@@ -1,4 +1,6 @@
 import React from 'react'
+import { Text } from '@blueprintjs/core'
+
 import { LinkButton } from '../inputs'
 
 import { getPath }  from '../../util/helpers'
@@ -19,9 +21,9 @@ export default function ItemListPagination(props) {
         {props.currentPage > 1 ? prevButton : null}
         {props.currentPage < props.totalPages ? nextButton : null}
       </div>
-      <div className='c-item-list__pagination__text'>
+      <Text className='c-item-list__pagination__text'>
         {`Page ${props.currentPage} of ${props.totalPages}`}
-      </div>
+      </Text>
     </div>
   )
 }
