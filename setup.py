@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='dispatch',
-    version='0.5.2',
+    version='0.5.3',
     description='A publishing platform for modern newspapers',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
@@ -16,7 +16,6 @@ setup(name='dispatch',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
-        'mutagen',
     ],
     extras_require={
         'dev': [
