@@ -1,5 +1,6 @@
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.conf import settings
 
 from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
@@ -38,7 +39,7 @@ class iTunesPodcastsFeedGenerator(Rss201rev2Feed):
     handler.startElement('enclosure', {
         'length': item['duration'],
         'type': item['type'],
-        'url': item['link']
+        'url': item['url']
     })
     handler.endElement('enclosure')
 
@@ -65,6 +66,9 @@ class PodcastFeed(Feed):
     def item_title(self, item):
         return item.title
 
+    def item_link(self, item):
+        return item.file.url
+
     def item_description(self, item):
         return item.description
 
@@ -72,19 +76,20 @@ class PodcastFeed(Feed):
         return item.published_at
 
     def item_guid(self, item):
-        return settings.BASE_URL.strip('/') + item.file.url
+        return item.file.url
 
     def feed_extra_kwargs(self, obj):
         return {
             'itunes_name': obj.owner_name,
             'itunes_email': obj.owner_email,
-            'itunes_image_url': settings.BASE_URL.strip('/') + obj.image.get_absolute_url(),
+            'itunes_image_url': obj.image.img.url,
             'category': obj.category,
         }
 
     def item_extra_kwargs(self, item):
         return {
             'duration': str(item.duration),
+            'url': item.file.url,
             'type': item.type,
             'summary': item.description,
             'explicit': item.explicit

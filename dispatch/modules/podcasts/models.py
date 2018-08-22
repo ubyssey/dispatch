@@ -79,7 +79,7 @@ class PodcastEpisode(Model):
         pass
 
     def get_absolute_url(self):
-        return settings.MEDIA_URL + str(self.file)
+        return self.file.url
 
     # Override
     def save(self, **kwargs):
