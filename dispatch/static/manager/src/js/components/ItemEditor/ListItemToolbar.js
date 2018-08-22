@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { Toolbar, ToolbarLeft, ToolbarRight } from '../Toolbar'
@@ -19,16 +19,16 @@ export default function ListItemToolbar(props) {
     <Toolbar>
       <ToolbarLeft>
         <ul className='bp3-breadcrumbs'>
-          <li><a className='bp3-breadcrumb' href='#' onClick={() => props.goBack()}>{props.typePlural}</a></li>
+          <li><Link className='bp3-breadcrumb' to={props.listRoute}>{props.typePlural}</Link></li>
           <li><span className='bp3-breadcrumb bp3-breadcrumb-current'>{props.isNew ? `New ${props.type}` : props.name}</span></li>
         </ul>
       </ToolbarLeft>
       <ToolbarRight>
+        {props.extraButton}
         <Button
           intent={Intent.SUCCESS}
           icon='tick'
           onClick={() => props.saveListItem()}>{props.isNew ? 'Save' : 'Update'}</Button>
-        {props.extraButton}
         {props.deleteListItem ? deleteButton : null}
       </ToolbarRight>
     </Toolbar>

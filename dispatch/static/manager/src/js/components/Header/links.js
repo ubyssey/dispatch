@@ -74,6 +74,11 @@ export const links = [
         text: 'Files',
         url: '/files/',
         icon: 'folder-close'
+      },
+      {
+        text: 'Podcasts',
+        url: '/podcasts/',
+        icon: 'cell-tower'
       }
     ]
   },

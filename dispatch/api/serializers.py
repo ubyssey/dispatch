@@ -7,6 +7,8 @@ from dispatch.modules.content.models import (
     File, Page, Author, Section, Tag, Topic, Video,
     VideoAttachment, Poll, PollAnswer, PollVote, Subsection)
 from dispatch.modules.auth.models import Person, User, Invite
+from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
+
 from dispatch.admin.registration import send_invitation
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
@@ -1014,3 +1016,54 @@ class PollSerializer(DispatchModelSerializer):
             instance.save_answers(answers, is_new)
 
         return instance
+
+class PodcastSerializer(DispatchModelSerializer):
+    """Serializes the Podcast model."""
+
+    id = serializers.UUIDField(read_only=True)
+    image = ImageSerializer(read_only=True)
+    image_id = serializers.IntegerField(write_only=True, required=False)
+
+    class Meta:
+        model = Podcast
+        fields = (
+            'id',
+            'title',
+            'slug',
+            'description',
+            'author',
+            'owner_name',
+            'owner_email',
+            'image',
+            'image_id',
+            'category'
+        )
+
+class PodcastEpisodeSerializer(DispatchModelSerializer):
+    """Serializes the PodcastEpisode model."""
+
+    id = serializers.UUIDField(read_only=True)
+    image = ImageSerializer(read_only=True)
+    image_id = serializers.IntegerField(write_only=True, required=False)
+
+    podcast_id = serializers.UUIDField()
+
+    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
+    file_str = serializers.FileField(source='file', read_only=True, use_url=False)
+
+    class Meta:
+        model = PodcastEpisode
+        fields = (
+            'id',
+            'podcast_id',
+            'title',
+            'description',
+            'author',
+            'image',
+            'image_id',
+            'duration',
+            'published_at',
+            'explicit',
+            'file',
+            'file_str'
+        )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover, Position } from '@blueprintjs/core'
+import { Popover, Position, Button } from '@blueprintjs/core'
 import { DatePicker, DateTimePicker } from '@blueprintjs/datetime'
 
 import { humanizeDatetime } from '../../util/helpers'
@@ -38,13 +38,12 @@ export default function DateTimeInput(props) {
       onChange={props.onChange}
       timePickerProps={{
         onChange: props.onChange,
-        selectAllOnFocus: true,
-        showArrowButtons: true
+        precision: 'second',
+        useAmPm: true
       }}
       datePickerProps={{
         minDate: MIN_DATE,
         maxDate: MAX_DATE,
-        showActionsBar: true
       }} />
   ) : (
     <DatePicker
@@ -61,10 +60,12 @@ export default function DateTimeInput(props) {
     <div className='c-input--datetime'>
       <Popover
         content={picker}
-        popoverClassName='bp3-popover-content-sizing'
         position={props.position || Position.TOP}>
         <div className='bp3-control-group'>
-          <button className='bp3-button bp3-icon-calendar c-input--datetime-button' />
+          <Button
+            icon='calendar'
+            className='c-input--datetime-button'
+            onClick={e => e.preventDefault()} />
           <input
             type='text'
             className='bp3-input c-input--datetime--textfield'

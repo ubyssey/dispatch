@@ -19,6 +19,8 @@ export const videoSchema = new Schema('videos')
 export const inviteSchema = new Schema('invites')
 export const pollSchema = new Schema('polls')
 export const subsectionSchema = new Schema('subsections')
+export const podcastSchema = new Schema('podcasts')
+export const podcastEpisodeSchema = new Schema('podcastEpisodes')
 
 articleSchema.define({
   section: sectionSchema,
@@ -66,4 +68,12 @@ zoneSchema.define({
 
 userSchema.define({
   person: personSchema
+})
+
+podcastSchema.define({
+  image: imageSchema,
+})
+
+podcastEpisodeSchema.define({
+  image: imageSchema,
 })
