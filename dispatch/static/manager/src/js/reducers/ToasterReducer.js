@@ -120,6 +120,28 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.FILES.DELETE_MANY):
     return showToast('Some files could not be deleted', Intent.DANGER)
 
+  case fulfilled(types.PODCASTS.CREATE):
+  case fulfilled(types.PODCASTS.SAVE):
+    return showToast('Podcast saved')
+  case rejected(types.PODCASTS.CREATE):
+  case rejected(types.PODCASTS.SAVE):
+    return showToast('Podcast could not be saved', Intent.DANGER)
+  case fulfilled(types.PODCASTS.DELETE_MANY):
+    return showToast(`${action.payload.length} podcast${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PODCASTS.DELETE_MANY):
+    return showToast('Some podcasts could not be deleted', Intent.DANGER)
+
+  case fulfilled(types.PODCAST_EPISODES.CREATE):
+  case fulfilled(types.PODCAST_EPISODES.SAVE):
+    return showToast('Podcast episode saved')
+  case rejected(types.PODCAST_EPISODES.CREATE):
+  case rejected(types.PODCAST_EPISODES.SAVE):
+    return showToast('Podcast episode could not be saved', Intent.DANGER)
+  case fulfilled(types.PODCAST_EPISODES.DELETE_MANY):
+    return showToast(`${action.payload.length} podcast episode${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PODCAST_EPISODES.DELETE_MANY):
+    return showToast('Some episodes could not be deleted', Intent.DANGER)
+
   // Integrations
   case fulfilled(types.INTEGRATIONS.SAVE):
     return showToast('Integration updated')

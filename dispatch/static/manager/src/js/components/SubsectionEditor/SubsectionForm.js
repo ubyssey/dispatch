@@ -55,7 +55,7 @@ export default function SubsectionForm(props) {
         padded={false}
         error={props.errors.is_active} >
         <Switch
-          className='pt-large'
+          className='bp3-large'
           checked={props.listItem.is_active}
           onChange={e => props.update('is_active', e.target.checked)} />
       </FormInput>

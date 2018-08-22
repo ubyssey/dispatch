@@ -1,0 +1,91 @@
+from django.contrib.syndication.views import Feed
+from django.utils.feedgenerator import Rss201rev2Feed
+from django.conf import settings
+
+from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
+
+class iTunesPodcastsFeedGenerator(Rss201rev2Feed):
+
+  def rss_attributes(self):
+    return {
+        'version': self._version,
+        'xmlns:atom': 'http://www.w3.org/2005/Atom',
+        'xmlns:itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'
+    }
+
+  def add_root_elements(self, handler):
+    super(iTunesPodcastsFeedGenerator, self).add_root_elements(handler)
+
+    handler.addQuickElement('itunes:subtitle', self.feed['subtitle'])
+    handler.addQuickElement('itunes:author', self.feed['author_name'])
+    handler.addQuickElement('itunes:summary', self.feed['description'])
+    handler.addQuickElement('itunes:category', self.feed['category'])
+
+    handler.startElement('itunes:owner', {})
+    handler.addQuickElement('itunes:name', self.feed['itunes_name'])
+    handler.addQuickElement('itunes:email', self.feed['itunes_email'])
+    handler.endElement('itunes:owner')
+
+    handler.startElement('itunes:image', {'href': self.feed['itunes_image_url']})
+    handler.endElement('itunes:image')
+
+  def add_item_elements(self, handler, item):
+    super(iTunesPodcastsFeedGenerator, self).add_item_elements(handler, item)
+
+    handler.addQuickElement('itunes:summary', item['summary'])
+    handler.addQuickElement('itunes:explicit', item['explicit'])
+
+    handler.startElement('enclosure', {
+        'length': item['duration'],
+        'type': item['type'],
+        'url': item['link']
+    })
+    handler.endElement('enclosure')
+
+class PodcastFeed(Feed):
+
+    feed_type = iTunesPodcastsFeedGenerator
+
+    def get_object(self, request, slug=None):
+        return Podcast.objects.get(slug=slug)
+
+    def items(self, obj):
+        return PodcastEpisode.objects.filter(podcast=obj) \
+            .order_by('-published_at')[:5]
+
+    def title(self, obj):
+        return obj.title
+
+    def link(self):
+        return settings.BASE_URL
+
+    def description(self, obj):
+        return obj.description
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.description
+
+    def item_pubdate(self, item):
+        return item.published_at
+
+    def item_guid(self, item):
+        return settings.BASE_URL.strip('/') + item.file.url
+
+    def feed_extra_kwargs(self, obj):
+        return {
+            'itunes_name': obj.owner_name,
+            'itunes_email': obj.owner_email,
+            'itunes_image_url': settings.BASE_URL.strip('/') + obj.image.get_absolute_url(),
+            'category': obj.category,
+        }
+
+    def item_extra_kwargs(self, item):
+        return {
+            'duration': str(item.duration),
+            'type': item.type,
+            'summary': item.description,
+            'explicit': item.explicit
+        }

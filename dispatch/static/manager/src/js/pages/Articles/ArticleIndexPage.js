@@ -48,6 +48,8 @@ function ArticlePageComponent(props) {
   const section = props.entities.sections[props.location.query.section]
   const title = section ? `${section.name} - Articles` : 'Articles'
 
+  const hasFilters = props.location.query.section || props.location.query.author || props.location.query.tags
+
   const filters = [
     <SectionFilterInput
       key={'SectionFilter'}
@@ -74,6 +76,7 @@ function ArticlePageComponent(props) {
       typeSingular='article'
       displayColumn='headline'
       filters={filters}
+      hasFilters={hasFilters}
       headers={[ 'Headline', '', 'Authors', 'Published', 'Revisions']}
       extraColumns={[
         item => item.currently_breaking ? breakingNews : '',
@@ -83,7 +86,7 @@ function ArticlePageComponent(props) {
       ]}
       shouldReload={(prevProps, props) => {
         return (
-          (prevProps.location.query.section !== props.location.query.section) || 
+          (prevProps.location.query.section !== props.location.query.section) ||
           (prevProps.location.query.author !== props.location.query.author)  ||
           (prevProps.location.query.tags !== props.location.query.tags)
         )

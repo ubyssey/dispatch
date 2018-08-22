@@ -111,7 +111,7 @@ class PersonPageComponent extends React.Component {
       <ConfirmButton
         intent={Intent.DANGER}
         onConfirm={() => this.handleDelete()}>
-        <span className='pt-icon-standard pt-icon-trash' />{this.props.invite.id ? 'Cancel invitation' : 'Deactivate User'}
+        <span className='bp3-icon-standard bp3-icon-trash' />{this.props.invite.id ? 'Cancel invitation' : 'Deactivate User'}
       </ConfirmButton>
     )
 

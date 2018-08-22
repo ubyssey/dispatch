@@ -487,7 +487,7 @@ const DispatchAPI = {
       return deleteRequest('invites', inviteId, null, token)
     }
   },
-  'polls': {
+  polls: {
     list: (token, query) => {
       return getRequest('polls', null, query, token)
     },
@@ -503,7 +503,42 @@ const DispatchAPI = {
     delete: (token, pollId) => {
       return deleteRequest('polls', pollId, null, token)
     },
-
+  },
+  podcasts: {
+    podcasts: {
+      list: (token, query) => {
+        return getRequest('podcasts/podcasts', null, query, token)
+      },
+      get: (token, id) => {
+        return getRequest('podcasts/podcasts', id, null, token)
+      },
+      save: (token, id, data) => {
+        return patchRequest('podcasts/podcasts', id, data, token)
+      },
+      create: (token, data) => {
+        return postRequest('podcasts/podcasts', null, data, token)
+      },
+      delete: (token, id) => {
+        return deleteRequest('podcasts/podcasts', id, null, token)
+      },
+    },
+    episodes: {
+      list: (token, query) => {
+        return getRequest('podcasts/episodes', null, query, token)
+      },
+      get: (token, id) => {
+        return getRequest('podcasts/episodes', id, null, token)
+      },
+      save: (token, id, data) => {
+        return patchMultipartRequest('podcasts/episodes', id, data, token)
+      },
+      create: (token, data) => {
+        return postMultipartRequest('podcasts/episodes', null, data, token)
+      },
+      delete: (token, id) => {
+        return deleteRequest('podcasts/episodes', id, null, token)
+      },
+    }
   }
 }
 

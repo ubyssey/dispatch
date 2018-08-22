@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { AnchorButton } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import { FormInput, TextInput, TextAreaInput, DateTimeInput, SelectInput } from '../inputs'
 
@@ -85,9 +85,9 @@ export default class EventForm extends React.Component {
         </Dropzone>
 
         <div className='c-person-form__image__button'>
-          <AnchorButton
+          <Button
             onClick={() => this.dropzone.open()}>Select Image
-          </AnchorButton>
+          </Button>
         </div>
 
         <FormInput

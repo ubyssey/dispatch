@@ -46,8 +46,9 @@ $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
 .c-image-manager__header__right,
 .c-image-manager__footer {
   // Structure
+  display: flex;
+  align-items: center;
   height: 60px;
-  line-height: 60px;
 }
 
 .c-image-manager__header__left {
@@ -56,6 +57,20 @@ $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
   flex-wrap: wrap;
   display: flex;
   align-items: center;
+}
+
+.c-image-manager__header__right {
+  .bp3-input,
+  .bp3-input-group,
+  .bp3-button {
+    // Structure
+    margin-right: 0.75rem;
+
+    &:last-child {
+      // Structure
+      margin-right: 0;
+    }
+  }
 }
 
 .c-image-manager__body {

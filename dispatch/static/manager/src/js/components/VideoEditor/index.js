@@ -7,6 +7,7 @@ import VideoForm from './VideoForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Video'
+const TYPE_PLURAL = 'Videos'
 const AFTER_DELETE = 'videos'
 
 const mapStateToProps = (state) => {
@@ -44,6 +45,7 @@ function VideoEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={VideoForm}
       displayField='title'

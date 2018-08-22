@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { dateObjToAPIString } from '../../util/helpers'
 
@@ -11,6 +11,7 @@ import EventForm from './EventForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Event'
+const TYPE_PLURAL = 'Events'
 const AFTER_DELETE = 'events'
 
 const mapStateToProps = (state) => {
@@ -66,28 +67,29 @@ const mapDispatchToProps = (dispatch) => {
 function EventEditorComponent(props) {
 
   const publishButton = (
-    <AnchorButton
+    <Button
       onClick={() => props.publishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th' />
+      <span className='bp3-icon-standard bp3-icon-th' />
       Publish
-    </AnchorButton>
+    </Button>
   )
 
   const unpublishButton = (
-    <AnchorButton
+    <Button
       onClick={() => props.unpublishEvent(props.token, props.listItem.id)}
       intent={Intent.PRIMARY}
       disabled={props.isNew} >
-      <span className='pt-icon-standard pt-icon-th' />
+      <span className='bp3-icon-standard bp3-icon-th' />
       Unpublish
-    </AnchorButton>
+    </Button>
   )
 
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={EventForm}
       displayField='title'

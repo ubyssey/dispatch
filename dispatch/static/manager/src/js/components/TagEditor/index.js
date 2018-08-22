@@ -7,6 +7,7 @@ import TagForm from './TagForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Tag'
+const TYPE_PLURAL = 'Tags'
 const AFTER_DELETE = 'tags'
 
 const mapStateToProps = (state) => {
@@ -44,6 +45,7 @@ function TagEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={TagForm}
       {... props} />

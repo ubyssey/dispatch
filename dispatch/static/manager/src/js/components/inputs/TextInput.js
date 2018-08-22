@@ -37,7 +37,7 @@ export default class TextInput extends React.Component {
     return (
       <input
         ref='input'
-        className={`pt-input${ this.props.fill ? ' pt-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
+        className={`bp3-input${ this.props.fill ? ' bp3-fill' : '' }${ this.props.className ? ' ' + this.props.className : ''}`}
         type={this.props.type || 'text'}
         value={this.props.value || ''}
         step={this.props.step || ''}

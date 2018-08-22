@@ -6,7 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import Measure from 'react-measure'
 import autobind from 'class-autobind'
 
-import { Popover, Position, AnchorButton } from '@blueprintjs/core'
+import { Popover, Position, Button } from '@blueprintjs/core'
 
 import imagesActions from '../../actions/ImagesActions'
 import * as modalActions from '../../actions/ModalActions'
@@ -264,14 +264,14 @@ class GalleryFormComponent extends React.Component {
           }
         </Measure>
 
-        <AnchorButton onClick={this.openImageSelector}>
+        <Button onClick={this.openImageSelector}>
           Add Images
-        </AnchorButton>
+        </Button>
 
         <div className='c-gallery-clear-button'>
-          <AnchorButton onClick={this.clearGallery}>
+          <Button onClick={this.clearGallery}>
             Clear Gallery
-          </AnchorButton>
+          </Button>
         </div>
       </form>
     )

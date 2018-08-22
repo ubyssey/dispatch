@@ -19,7 +19,7 @@ class EventPendingTagComponent extends React.Component {
 
     return (
       <Link to='/events/audit'>
-        <div className='pt-tag pt-large pt-intent-warning'>
+        <div className='bp3-tag bp3-large bp3-intent-warning'>
           {this.props.pending} pending events
         </div>
       </Link>

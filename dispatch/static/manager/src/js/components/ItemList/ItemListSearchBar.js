@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput } from '../inputs'
+import { SearchInput } from '../inputs'
 
 export default class ItemListSearchBar extends React.Component {
 
@@ -26,7 +26,7 @@ export default class ItemListSearchBar extends React.Component {
     return (
       <div className='c-item-list__searchbar'>
         <form onSubmit={e => this.handleSubmit(e)}>
-          <TextInput
+          <SearchInput
             value={this.state.query}
             placeholder='Search'
             onChange={e => this.setState({ query: e.target.value })} />
