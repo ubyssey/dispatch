@@ -11,8 +11,6 @@ from django.db.models import (
 
 from dispatch.modules.content.models import Image
 
-AUDIO_READ_LENGTH = 1024
-
 class Podcast(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4)
     slug = SlugField(unique=True)
@@ -85,10 +83,6 @@ class PodcastEpisode(Model):
     def save(self, **kwargs):
         """Custom save method to extract information from audio file."""
 
-        # Read 1MB of audio file
-        f = self.file.read()[:AUDIO_READ_LENGTH]
-        fileobj = StringIO.StringIO(f)
-
         audio = mutagen.File(fileobj=self.file.file)
 
         if audio is None:
@@ -101,5 +95,7 @@ class PodcastEpisode(Model):
 
         self.duration = duration
         self.type = type
+
+        self.file.file.close()
 
         super(PodcastEpisode, self).save(**kwargs)
