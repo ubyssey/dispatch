@@ -84,6 +84,7 @@ class ItemEditor extends React.Component {
           <ListItemToolbar
             name={listItem[this.props.displayField] || listItem.name || listItem.title ||listItem.filename}
             type={this.props.type}
+            typePlural={this.props.typePlural}
             isNew={this.props.isNew}
             saveListItem={() => this.saveListItem()}
             deleteListItem={() => this.props.deleteListItem(this.props.token, this.props.itemId, this.props.afterDelete)}

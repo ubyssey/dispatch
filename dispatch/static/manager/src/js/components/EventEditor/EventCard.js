@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 import { TextInput, TextAreaInput, LinkButton } from '../inputs'
 import { humanizeDatetime } from '../../util/helpers'
 
@@ -80,17 +80,17 @@ export default function EventCard(props) {
 
         <div className='c-event-card__buttons'>
 
-          <AnchorButton
+          <Button
             intent={Intent.SUCCESS}
             onClick={() => props.approve()}>
             Approve
-          </AnchorButton>
+          </Button>
 
-          <AnchorButton
+          <Button
             intent={Intent.DANGER}
             onClick={() => props.disapprove()}>
             Disapprove
-          </AnchorButton>
+          </Button>
 
           <LinkButton
             to={`/events/${props.event.id}`}>

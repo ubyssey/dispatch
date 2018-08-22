@@ -95,6 +95,7 @@ class ZoneEditorComponent extends React.Component {
             <ListItemToolbar
               name={this.props.zone.name}
               type='Zone'
+              typePlural='Zones'
               saveListItem={() => this.saveZone()}
               goBack={this.props.goBack} />
             <div className='u-container-body'>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { HTMLSelect } from '@blueprintjs/core'
 
 export default function SelectInput(props) {
 
@@ -14,13 +15,11 @@ export default function SelectInput(props) {
   ))
 
   return (
-    <div className='pt-select'>
-      <select
-        value={props.selected}
-        onChange={props.onChange}>
-        {placeholder}
-        {options}
-      </select>
-    </div>
+    <HTMLSelect
+      value={props.selected}
+      onChange={props.onChange}>
+      {placeholder}
+      {options}
+    </HTMLSelect>
   )
 }

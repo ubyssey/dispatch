@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router'
 import LoadingBar from 'react-redux-loading-bar'
+import { Button } from '@blueprintjs/core'
+
 import HeaderButtons from './HeaderButtons'
 import MobileHeaderButtons from './MobileHeaderButtons'
-import { desktopSize } from '../../util/helpers'
+// import { desktopSize } from '../../util/helpers'
 
 require('../../../styles/components/header.scss')
 require('../../../styles/components/loading_bar.scss')
@@ -17,28 +19,31 @@ class Header extends React.Component {
     }
   }
 
-  renderLink(url, classes, value) {
+  renderLink(url, classes, icon, value) {
     return (
-      <div className='nav-padded'>
-        <Link to={url} className={'pt-button pt-minimal ' + classes}>{value}</Link>
-      </div>
+      <Button
+        minimal={true}
+        onClick={() => this.props.goTo(url)}
+        icon={icon}>
+        {value}
+      </Button>
     )
   }
 
   renderDesktopHeader() {
     return (
       <header className='c-header'>
-        <div className={'row no-gutters'}>
-          <div className='col-10 flex-start'>
-            {this.renderLink('/', 'nav-logo pt-icon-selection', 'dispatch')}
-            <span className="pt-navbar-divider" />
-            <HeaderButtons />
+        <nav className='bp3-navbar bp3-dark'>
+          <div className='bp3-navbar-group bp3-align-left'>
+            {this.renderLink('/', 'nav-logo', 'selection', 'dispatch')}
+            <span className='bp3-navbar-divider' />
+            <HeaderButtons goTo={this.props.goTo} />
           </div>
-          <div className={'col-2 flex-end'}>
-            {this.renderLink('/profile/', 'pt-icon-user', '')}
-            {this.renderLink('/logout/', 'pt-icon-log-out', '')}
+          <div className='bp3-navbar-group bp3-align-right'>
+            {this.renderLink('/profile/', null, 'user', '')}
+            {this.renderLink('/logout/', null, 'log-out', '')}
           </div>
-        </div>
+        </nav>
         <LoadingBar className='c-loading-bar' />
       </header>
     )
@@ -48,33 +53,33 @@ class Header extends React.Component {
     const open = this.state.isOpen ? 'open' : 'closed'
     return (
       <header className='c-header'>
-        <span 
+        <span
           onClick={() => this.setState(prevstate => ({isOpen: !prevstate.isOpen}))}
-          className='nav-padded pt-icon-standard pt-icon-menu '>
+          className='nav-padded bp3-icon-standard bp3-icon-menu '>
           <div className={'nav-dropdown-content ' + open} >
             <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
               <div className='nav-padded'>
-                <Link to='/profile/' className="pt-button pt-minimal pt-icon-large pt-icon-user" />
+                <Link to='/profile/' icon='user' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-user' />
                 <h3>Profile</h3>
               </div>
               <div className='nav-padded'>
-                <Link to='/logout/' className="pt-button pt-minimal pt-icon-large pt-icon-log-out" />
+                <Link to='/logout/' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-log-out' />
                 <h3>Logout</h3>
               </div>
             </div>
             <MobileHeaderButtons />
           </div>
         </span>
-        <Link to='/' className='pt-button pt-minimal pt-icon-selection nav-logo'>dispatch</Link>
-        <span className='nav-padded pt-icon-standard pt-icon-blank ' />
+        <Link to='/' className='bp3-button bp3-minimal bp3-icon-selection nav-logo'>dispatch</Link>
+        <span className='nav-padded bp3-icon-standard bp3-icon-blank ' />
       </header>
     )
   }
-  
+
   render() {
     return (
       <div>
-        { this.props.viewWidth > desktopSize ? this.renderDesktopHeader() : this.renderMobileHeader() }
+        {this.renderDesktopHeader()}
       </div>
     )
   }

@@ -2,7 +2,7 @@ import React from 'react'
 import R from 'ramda'
 import { connect } from 'react-redux'
 
-import { AnchorButton } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import * as modalActions from '../../actions/ModalActions'
 import imagesActions from '../../actions/ImagesActions'
@@ -17,7 +17,7 @@ function Image(props) {
       <div
         className='c-input--image__remove'
         onClick={props.onClick}>
-        <span className='pt-icon-standard pt-icon-cross' />
+        <span className='bp3-icon-standard bp3-icon-cross' />
       </div>
     </div>
   )
@@ -89,12 +89,12 @@ class ImageInputComponent extends React.Component {
               url={this.props.many ? image.url_thumb : image.url_medium}
               onClick={() => this.removeImage(image.id)} />
           )} />
-        <AnchorButton
+        <Button
           onClick={() => this.chooseImage()}>{this.props.many ? 'Add image' : (this.props.selected ? 'Change image' : 'Select image')}
-        </AnchorButton>
-        {(this.props.selected && this.props.removable) && <AnchorButton
+        </Button>
+        {(this.props.selected && this.props.removable) && <Button
           onClick={() => this.removeImage()}>{'Remove image'}
-        </AnchorButton>}
+        </Button>}
       </div>
     )
   }

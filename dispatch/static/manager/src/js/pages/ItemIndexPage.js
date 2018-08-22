@@ -53,7 +53,6 @@ export default class ListItemsPageComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-
     if (this.isNewQuery(prevProps, this.props)
       || this.props.shouldReload(prevProps, this.props)) {
       this.props.clearListItems()
@@ -114,14 +113,18 @@ export default class ListItemsPageComponent extends React.Component {
           entities={this.props.entities.listItems}
 
           filters={this.props.filters}
+          hasFilters={this.props.hasFilters}
 
           columns={columns}
           headers={this.props.headers}
 
           emptyMessage={`You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
-            <LinkButton intent={Intent.SUCCESS} to={`${this.props.typePlural}/new`}>
-              <span className='pt-icon-standard pt-icon-add' />Create {this.typeString}
+            <LinkButton
+              intent={Intent.SUCCESS}
+              icon='add'
+              to={`${this.props.typePlural}/new`}>
+              Create {this.typeString}
             </LinkButton>)
           }
 

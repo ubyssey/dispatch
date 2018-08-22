@@ -107,53 +107,16 @@
   margin-left: 1rem;
 }
 
-.c-item-list__header__filters {
-  // Structure
-  display: flex !important;
-  flex-wrap: wrap;
-  position: relative;
-  width: 280px;
-
-  .c-item-list__header__filters__button {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-
-    &.pt-button {
-      margin: 0;
-    }
-  }
-
-  .c-item-list__header__filters__dropdown {
-    position: absolute;
-    margin-top: 30px;
-    display: flex;
-    width: 100%;
-    height: 0;
-    flex-direction: column;
-    overflow: hidden;
-    &:hover {
-      height: auto;
-    }
-  }
-  &:hover{
-    .c-item-list__header__filters__dropdown {
-      height: auto;
-    }
-  }
-}
-
-.c-item-list__header__filters__filter {
-  // Structure
-  display: inline-block;
-}
-
 // Component: ItemListPagination
 .c-item-list__pagination {
   // Structure
   display: inline-block;
   margin-right: 1rem;
+
+  .bp3-control-group {
+    // Structure
+    display: inline-flex;
+  }
 }
 
 .c-item-list__pagination__text {
@@ -167,17 +130,22 @@
   // Structure
   display: inline-block;
 
-  .pt-input {
+  .bp3-input-group {
     // Structure
-    width: 175px;
-
-    // Extras
-    transition: width 0.25s;
-
-    &:focus {
-      width: 275px;
-    }
+    width: 200px;
   }
+}
+
+// Component: ItemListFilters
+.c-item-list__filters {
+  // Structure
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  // Border
+  border-bottom: 1px solid $color-border-gray;
 }
 
 // Component: ItemListEmpty

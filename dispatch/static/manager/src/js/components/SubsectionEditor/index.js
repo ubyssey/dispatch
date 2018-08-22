@@ -7,6 +7,7 @@ import SubsectionForm from './SubsectionForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Subsection'
+const TYPE_PLURAL = 'Subsections'
 const AFTER_DELETE = 'subsections'
 
 const mapStateToProps = (state) => {
@@ -44,6 +45,7 @@ function SubsectionEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={SubsectionForm}
       displayField='name'

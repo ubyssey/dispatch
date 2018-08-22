@@ -1,6 +1,7 @@
 import React from 'react'
 import R from 'ramda'
-import {Entity} from 'draft-js'
+import { Entity } from 'draft-js'
+import { Button } from '@blueprintjs/core'
 
 require('../styles/embeds/embed.scss')
 
@@ -59,15 +60,10 @@ export default class Embed extends React.Component {
         onFocus={() => this.startEditing()}
         onBlur={() => this.stopEditing()} >
         <div className='o-embed-container__header'>
-          <div className='o-embed-container__header__title'>{this.props.blockProps.type}</div>
-          <ul className='o-embed-container__header__options'>
-            <li>
-              <a onClick={() => this.removeEmbed()}>
-                <span className='pt-icon-standard pt-icon-trash' />
-                <span>Remove</span>
-              </a>
-            </li>
-          </ul>
+          <Button
+            minimal={true}
+            icon='cross'
+            onClick={() => this.removeEmbed()} />
         </div>
         <div className='o-embed-container__body'>
           <this.props.blockProps.embedComponent {...embedProps} />

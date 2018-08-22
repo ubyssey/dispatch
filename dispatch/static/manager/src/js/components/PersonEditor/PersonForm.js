@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { AnchorButton } from '@blueprintjs/core'
+import { Button } from '@blueprintjs/core'
 
 import { FormInput, TextInput, TextAreaInput } from '../inputs'
 
@@ -93,12 +93,12 @@ export default class PersonForm extends React.Component {
         </Dropzone>
 
         <div className='c-person-form__image__button'>
-          <AnchorButton
-            onClick={() => this.dropzone.open()}>Select Image</AnchorButton>
+          <Button
+            onClick={() => this.dropzone.open()}>Select Image</Button>
         </div>
 
         {this.props.errors.detail ?
-          <div className='pt-callout pt-intent-danger c-person-form__image__error'>
+          <div className='bp3-callout bp3-intent-danger c-person-form__image__error'>
             {this.props.errors.detail}
           </div> : null}
 

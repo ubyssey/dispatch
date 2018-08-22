@@ -62,7 +62,7 @@ export default class ImageForm extends React.Component {
           </div>
         </div>
         {this.props.errors.detail ?
-          <div className='pt-callout pt-intent-danger c-person-form__image__error'>
+          <div className='bp3-callout bp3-intent-danger c-person-form__image__error'>
             {this.props.errors.detail}
           </div> : null}
       </form>

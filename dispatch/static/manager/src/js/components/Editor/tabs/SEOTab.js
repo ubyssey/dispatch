@@ -23,7 +23,7 @@ function ConfirmationTag(props) {
   let intent = props.confirmed ? 'success' : 'danger'
 
   return (
-    <div className={`pt-tag pt-minimal pt-intent-${intent}`}>{props.label}</div>
+    <div className={`bp3-tag bp3-minimal bp3-intent-${intent}`}>{props.label}</div>
   )
 }
 
@@ -43,7 +43,7 @@ function CharacterCount(props) {
   }
 
   return (
-    <div className={`pt-tag pt-minimal pt-intent-${intent}`}>
+    <div className={`bp3-tag bp3-minimal bp3-intent-${intent}`}>
       {`Characters: ${props.count}/${props.max}`}
     </div>
   )

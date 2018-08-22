@@ -43,7 +43,7 @@ export default function DeliveryTab(props) {
 
   if (!isInstantArticlesEnabled) {
     warningMessage = (
-      <div className='u-flex pt-callout pt-intent-danger'>
+      <div className='u-flex bp3-callout bp3-intent-danger'>
         <div className='u-flex--fill u-flex--align-middle'>Please enable Facebook Instant Articles to use this feature</div>
         <div><LinkButton to='integrations/fb-instant-articles'>Enable</LinkButton></div>
       </div>
@@ -79,7 +79,7 @@ export default function DeliveryTab(props) {
 
       <FormInput label='Enable as Facebook Instant Article'>
         <Switch
-          className='pt-large'
+          className='bp3-large'
           disabled={!isInstantArticlesEnabled}
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
           onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
@@ -89,7 +89,7 @@ export default function DeliveryTab(props) {
       <FormInput
         label='Breaking news'>
         <Switch
-          className='pt-large'
+          className='bp3-large'
           checked={props.is_breaking}
           onChange={e => props.update('is_breaking', e.target.checked)} />
           {timeoutPicker}
