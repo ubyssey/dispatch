@@ -44,11 +44,20 @@ class PodcastsActions extends ResourceActions {
 
       this.api.save(token, id, this.toRemote(data))
         .then(json => {
-          if (file) {
-            const url = json.file_upload_url
-            const contentType = json.type
+          const url = json.file_upload_url
+          const contentType = json.type
 
-            putFile(url, contentType, file)
+          const updateProgress = (progress) => {
+            dispatch({
+              type: types.UPLOAD_PROGRESS,
+              progress: progress
+            })
+          }
+
+          if (file && url) {
+            dispatch({ type: types.UPLOAD_START })
+
+            putFile(url, contentType, file, updateProgress)
               .then(() => {
                 dispatch({
                   type: fulfilled(this.types.SAVE),
@@ -59,12 +68,14 @@ class PodcastsActions extends ResourceActions {
                     )
                   }
                 })
+                dispatch({ type: types.UPLOAD_COMPLETE })
               })
               .catch(() => {
                 dispatch({
                   type: rejected(this.types.SAVE),
                   payload: { file: 'Audio file could not be uploaded' }
                 })
+                dispatch({ type: types.UPLOAD_COMPLETE })
               })
           } else {
             dispatch({
@@ -103,11 +114,20 @@ class PodcastsActions extends ResourceActions {
             }))
           }
 
-          if (file) {
-            const url = json.file_upload_url
-            const contentType = json.type
+          const url = json.file_upload_url
+          const contentType = json.type
 
-            putFile(url, contentType, file)
+          const updateProgress = (progress) => {
+            dispatch({
+              type: types.UPLOAD_PROGRESS,
+              progress: progress
+            })
+          }
+
+          if (file && url) {
+            dispatch({ type: types.UPLOAD_START })
+
+            putFile(url, contentType, file, updateProgress)
               .then(() => {
                 dispatch({
                   type: fulfilled(this.types.CREATE),
@@ -118,6 +138,7 @@ class PodcastsActions extends ResourceActions {
                     )
                   }
                 })
+                dispatch({ type: types.UPLOAD_COMPLETE })
 
                 if (typeof callback === 'function') {
                   callback(json)
@@ -128,6 +149,7 @@ class PodcastsActions extends ResourceActions {
                   type: rejected(this.types.CREATE),
                   payload: { file: 'Audio file could not be uploaded' }
                 })
+                dispatch({ type: types.UPLOAD_COMPLETE })
               })
           } else {
             dispatch({

@@ -60,3 +60,8 @@ export const ZONES = actionTypes('ZONES', [
 
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
+
+// File upload progress
+export const UPLOAD_START = 'UPLOAD_START'
+export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS'
+export const UPLOAD_COMPLETE = 'UPLOAD_COMPLETE'

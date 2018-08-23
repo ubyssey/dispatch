@@ -27,6 +27,7 @@ import settingsReducer from './SettingsReducer'
 import invitesReducer from './InvitesReducer'
 import pollsReducer from './PollsReducer'
 import subsectionsReducer from './SubsectionsReducer'
+import uploadReducer from './UploadReducer'
 
 export default combineReducers({
   entities: entitiesReducer,
@@ -55,5 +56,6 @@ export default combineReducers({
   podcasts: podcastsReducer,
   podcastEpisodes: podcastEpisodesReducer,
   settings: settingsReducer,
-  polls: pollsReducer
+  polls: pollsReducer,
+  upload: uploadReducer,
 })
