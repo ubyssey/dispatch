@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
+from django.conf import settings
+
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
     File, Page, Author, Section, Tag, Topic, Video,
@@ -1048,8 +1050,10 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
 
     podcast_id = serializers.UUIDField()
 
-    file = serializers.FileField(write_only=True, validators=[FilenameValidator])
-    file_str = serializers.FileField(source='file', read_only=True, use_url=False)
+    if settings.GS_USE_SIGNED_URLS:
+        file = serializers.CharField()
+        file_upload_url = serializers.CharField(read_only=True)
+
     file_url = serializers.FileField(source='file', read_only=True, use_url=True)
 
     class Meta:
@@ -1065,8 +1069,12 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
             'published_at',
             'explicit',
             'file',
-            'file_str',
             'file_url',
             'duration',
             'type',
         )
+
+        if settings.GS_USE_SIGNED_URLS:
+            fields += (
+                'file_upload_url',
+            )

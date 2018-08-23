@@ -87,6 +87,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dispatch/static/manager/dist'),
 )
 
+GS_LOCATION = None
+GS_STORAGE_BUCKET_NAME = None
+GS_USE_SIGNED_URLS = False
+
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'CA'
 

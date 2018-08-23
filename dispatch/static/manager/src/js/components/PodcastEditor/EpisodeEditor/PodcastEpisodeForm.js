@@ -18,14 +18,6 @@ const EXPLICIT_OPTIONS = [
 
 export default class PodcastEpisodeForm extends React.Component {
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      audioFile: this.props.listItem.file_url
-    }
-  }
-
   componentDidMount() {
     this.refs.audioPlayer.ondurationchange = () => {
       const duration = Math.round(this.refs.audioPlayer.duration)
@@ -36,12 +28,12 @@ export default class PodcastEpisodeForm extends React.Component {
   updateFile(file) {
     const fileUrl = URL.createObjectURL(file)
 
-    this.setState({ audioFile: fileUrl })
-
     const type = file.type
 
     this.props.bulkUpdate({
-      file: file,
+      file: file.name,
+      file_obj: file,
+      file_url: fileUrl,
       type: type
     })
   }
@@ -114,11 +106,11 @@ export default class PodcastEpisodeForm extends React.Component {
           padded={false}
           error={this.props.errors.file}>
           <FileInput
-            placeholder={this.props.listItem.file_str || 'Choose a file...'}
+            placeholder={this.props.listItem.file || 'Choose a file...'}
             value={this.props.listItem.file || ''}
             fill={true}
             onChange={file => this.updateFile(file)} />
-          <audio ref='audioPlayer' src={this.state.audioFile} controls />
+          <audio ref='audioPlayer' src={this.props.listItem.file_url} controls />
         </FormInput>
 
       </form>

@@ -1,4 +1,5 @@
 import uuid
+import os
 import StringIO
 
 from django.conf import settings
@@ -8,6 +9,7 @@ from django.db.models import (
     FileField, BooleanField, UUIDField, ForeignKey, SlugField, EmailField)
 
 from dispatch.modules.content.models import Image
+from dispatch.core.storage import generate_signed_url
 
 class Podcast(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4)
@@ -45,6 +47,12 @@ class Podcast(Model):
     category = CharField(max_length=255, choices=CATEGORY_CHOICES)
 
 class PodcastEpisode(Model):
+    __original_file = None
+
+    def __init__(self, *args, **kwargs):
+        super(PodcastEpisode, self).__init__(*args, **kwargs)
+        self.__original_file = str(self.file)
+
     id = UUIDField(primary_key=True, default=uuid.uuid4)
 
     podcast = ForeignKey(Podcast)
@@ -73,3 +81,21 @@ class PodcastEpisode(Model):
 
     def get_absolute_url(self):
         return self.file.url
+
+    def save(self, **kwargs):
+        super(PodcastEpisode, self).save(**kwargs)
+
+        if settings.GS_USE_SIGNED_URLS:
+
+            filepath = str(self.file)
+
+            if filepath != self.__original_file:
+                upload_to = self._meta.get_field('file').upload_to
+                filepath = os.path.join(upload_to, filepath)
+
+                self.file = filepath
+                super(PodcastEpisode, self).save(update_fields=['file'])
+
+            upload_url = generate_signed_url(filepath, self.type)
+
+            self.file_upload_url = upload_url

@@ -44,7 +44,6 @@ class Header extends React.Component {
             {this.renderLink('/logout/', null, 'log-out', '')}
           </div>
         </nav>
-        <LoadingBar className='c-loading-bar' />
       </header>
     )
   }
@@ -80,6 +79,7 @@ class Header extends React.Component {
     return (
       <div>
         {this.renderDesktopHeader()}
+        <LoadingBar className='c-loading-bar' />
       </div>
     )
   }
