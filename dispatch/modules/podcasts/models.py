@@ -83,13 +83,15 @@ class PodcastEpisode(Model):
         return self.file.url
 
     def save(self, **kwargs):
+        is_new = self._state.adding is True
+
         super(PodcastEpisode, self).save(**kwargs)
 
         if settings.GS_USE_SIGNED_URLS:
 
             filepath = str(self.file)
 
-            if filepath != self.__original_file:
+            if filepath != self.__original_file or is_new:
                 upload_to = self._meta.get_field('file').upload_to
                 filepath = os.path.join(upload_to, filepath)
 

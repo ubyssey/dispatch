@@ -6,7 +6,7 @@ import {
   TextAreaInput,
   ImageInput,
   DateTimeInput,
-  FileInput,
+  AudioInput,
   SelectInput
 } from '../../inputs'
 
@@ -17,13 +17,6 @@ const EXPLICIT_OPTIONS = [
 ]
 
 export default class PodcastEpisodeForm extends React.Component {
-
-  componentDidMount() {
-    this.refs.audioPlayer.ondurationchange = () => {
-      const duration = Math.round(this.refs.audioPlayer.duration)
-      this.props.update('duration', duration)
-    }
-  }
 
   updateFile(file) {
     const fileUrl = URL.createObjectURL(file)
@@ -105,12 +98,13 @@ export default class PodcastEpisodeForm extends React.Component {
           label='Audio File'
           padded={false}
           error={this.props.errors.file}>
-          <FileInput
+          <AudioInput
             placeholder={this.props.listItem.file || 'Choose a file...'}
             value={this.props.listItem.file || ''}
+            url={this.props.listItem.file_url}
             fill={true}
+            onDurationChange={duration => this.props.update('duration', duration)}
             onChange={file => this.updateFile(file)} />
-          <audio ref='audioPlayer' src={this.props.listItem.file_url} controls />
         </FormInput>
 
       </form>

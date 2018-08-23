@@ -14,8 +14,9 @@ setup(name='dispatch',
         'django == 1.11',
         'djangorestframework == 3.6.2',
         'pillow',
-        'requests == 2.6.0',
+        'requests',
         'jsonfield',
+        'google-cloud-storage',
     ],
     extras_require={
         'dev': [

@@ -1,9 +1,23 @@
-export function putFile(url, contentType, file) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, 100, 'foo')
+export function putFile(url, contentType, file, progressCallback) {
 
+  const updateProgress = (e) => {
+    if (e.lengthComputable) {
+      const percentComplete = e.loaded / e.total
+
+      if (typeof progressCallback === 'function') {
+        progressCallback(percentComplete)
+      }
+    }
+  }
+
+  return new Promise((resolve, reject) => {
     var xhr = new XMLHttpRequest()
+
+    xhr.upload.addEventListener('progress', updateProgress)
+
     xhr.open('PUT', url, true)
+
+    progressCallback(0)
 
     xhr.setRequestHeader('Content-Type', contentType)
     xhr.send(file)
@@ -19,5 +33,6 @@ export function putFile(url, contentType, file) {
     xhr.onerror = () => {
       reject()
     }
+
   })
 }
