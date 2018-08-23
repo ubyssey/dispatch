@@ -16,6 +16,7 @@ setup(name='dispatch',
         'pillow',
         'requests == 2.6.0',
         'jsonfield',
+        'google-cloud-storage',
     ],
     extras_require={
         'dev': [
