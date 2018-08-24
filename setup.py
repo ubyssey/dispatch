@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='dispatch',
-    version='0.5.4',
+    version='0.5.5',
     description='A publishing platform for modern newspapers',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
@@ -16,7 +16,7 @@ setup(name='dispatch',
         'pillow',
         'requests',
         'jsonfield',
-        'google-cloud-storage',
+        'google-cloud',
     ],
     extras_require={
         'dev': [
