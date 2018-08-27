@@ -153,6 +153,7 @@ class Publishable(Model):
         return self
 
     # Overriding
+    @transaction.atomic
     def save(self, revision=True, *args, **kwargs):
         """
         Handles the saving/updating of a Publishable instance.
@@ -192,6 +193,14 @@ class Publishable(Model):
         if revision:
             self.updated_at = timezone.now()
 
+        # Check that there is only one 'head'
+        if self.is_conflicting_head():
+            raise IntegrityError("%s with head=True already exists." % (type(self).__name__,))
+
+        # Check that there is only one version with this revision_id
+        if self.is_conflicting_revision_id():
+            raise IntegrityError("%s with revision_id=%s already exists." % (self.revision_id, type(self).__name__))
+
         super(Publishable, self).save(*args, **kwargs)
 
         # Update the parent foreign key
@@ -211,6 +220,12 @@ class Publishable(Model):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
         return self.parent.delete()
+
+    def is_conflicting_head(self):
+        return self.head is True and type(self).objects.filter(parent=self.parent, head=True).exclude(id=self.id).exists()
+
+    def is_conflicting_revision_id(self):
+        return type(self).objects.filter(parent=self.parent, id=self.id).count() > 1
 
     def save_featured_image(self, data):
         """
