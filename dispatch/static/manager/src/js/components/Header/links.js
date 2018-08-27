@@ -75,11 +75,11 @@ export const links = [
         url: '/files/',
         icon: 'folder-close'
       },
-      {
-        text: 'Podcasts',
-        url: '/podcasts/',
-        icon: 'cell-tower'
-      }
+      // {
+      //   text: 'Podcasts',
+      //   url: '/podcasts/',
+      //   icon: 'cell-tower'
+      // }
     ]
   },
   {
