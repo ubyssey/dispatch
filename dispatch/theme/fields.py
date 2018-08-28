@@ -20,7 +20,7 @@ class MetaFields(type):
                 field.name = name
                 return field
 
-            fields = filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items())
+            fields = list(filter(lambda f: f[0] != 'fields' and isinstance(f[1], Field), classdict.items()))
             fields.sort(key=lambda f: f[1]._creation_counter)
 
             return [get_field(name, field) for name, field in fields]
@@ -47,7 +47,7 @@ class Field(object):
         self._creation_counter = Field._creation_counter
         Field._creation_counter += 1
 
-        if not isinstance(self.label, basestring):
+        if not isinstance(self.label, str):
             raise InvalidField('Label must be a string')
 
     def validate(self, data):
@@ -96,7 +96,7 @@ class ModelField(Field):
 
         try:
             if self.many:
-                return map(self.get_model_json, data)
+                return list(map(self.get_model_json, data))
             else:
                 return self.get_model_json(data)
         except:
@@ -119,7 +119,8 @@ class CharField(Field):
     type = 'char'
 
     def validate(self, data):
-        if not isinstance(data, basestring):
+
+        if not isinstance(data, str):
             raise InvalidField('%s data must be a string' % self.label)
 
         if len(data) > 255:
@@ -132,7 +133,7 @@ class TextField(Field):
     type = 'text'
 
     def validate(self, data):
-        if not isinstance(data, basestring):
+        if not isinstance(data, str):
             raise InvalidField('%s data must be a string' % self.label)
 
         if not len(data) and self.required:
@@ -142,7 +143,7 @@ class DateTimeField(Field):
     type = 'datetime'
 
     def validate(self, data):
-        if not data or (isinstance(data, basestring) and not len(data)):
+        if not data or (isinstance(data, str) and not len(data)):
             if self.required:
                 raise InvalidField('%s is required' % self.label)
             else:
@@ -152,7 +153,7 @@ class DateTimeField(Field):
             raise InvalidField('%s must be valid format' % self.label)
 
     def prepare_data(self, data):
-        return parse_datetime(data) if data and isinstance(data, basestring) else None
+        return parse_datetime(data) if data and isinstance(data, str) else None
 
 class IntegerField(Field):
     type = 'integer'
@@ -168,7 +169,7 @@ class IntegerField(Field):
         super(IntegerField, self).__init__(label=label, many=many, required=required)
 
     def validate(self, data):
-        if not data or (isinstance(data, basestring) and not len(data)):
+        if not data or (isinstance(data, str) and not len(data)):
             if self.required:
                 raise InvalidField('%s is required')
             else:

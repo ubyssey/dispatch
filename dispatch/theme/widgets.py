@@ -14,8 +14,7 @@ class MetaZone(type):
 
         super(MetaZone, cls).__init__(name, bases, nmspc)
 
-class Zone(object):
-    __metaclass__ = MetaZone
+class Zone(object, metaclass = MetaZone):
 
     def __init__(self):
         self._is_loaded = False
@@ -95,9 +94,7 @@ class Zone(object):
         """Delete widget data for this zone."""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
-class Widget(object):
-
-    __metaclass__ = MetaFields
+class Widget(object, metaclass = MetaFields):
 
     accepted_keywords = ()
     """Accepted extra keyword arguments when rendered via template tag.
@@ -141,13 +138,16 @@ class Widget(object):
 
     def render(self, data=None, add_context=None):
         """Renders the widget as HTML."""
+        # check if add_context is empty
+        if not bool(add_context):
+            add_context = None
+        
         template = loader.get_template(self.template)
-
         if not data:
             data = self.context(self.prepare_data())
-
+        
         if add_context is not None:
-            for key, value in add_context.iteritems():
+            for key, value in add_context.items():
                 if key in self.accepted_keywords:
                     data[key] = value
 

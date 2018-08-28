@@ -1,8 +1,12 @@
-import StringIO
+
 import os
 import re
 import uuid
+<<<<<<< HEAD
 import datetime
+=======
+import io
+>>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -12,8 +16,13 @@ from django.db import transaction
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
+<<<<<<< HEAD
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
     ManyToManyField, SlugField, SET_NULL, CASCADE, F)
+=======
+    ImageField, FileField, BooleanField, UUIDField, ForeignKey, CASCADE,
+    ManyToManyField, SlugField, SET_NULL)
+>>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -43,7 +52,7 @@ class Section(Model):
     slug = SlugField(unique=True)
 
 class Author(Model):
-    person = ForeignKey(Person)
+    person = ForeignKey(Person, on_delete=CASCADE)
     order = PositiveIntegerField()
     type = CharField(blank=True, default='author', max_length=100)
 
@@ -303,13 +312,17 @@ class Publishable(Model):
 
 class Article(Publishable, AuthorMixin):
 
-    parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
+    parent = ForeignKey('Article', on_delete=CASCADE, related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
+<<<<<<< HEAD
     section = ForeignKey('Section')
     subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
+=======
+    section = ForeignKey('Section', on_delete=CASCADE)
+>>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
     authors = ManyToManyField('Author', related_name='article_authors')
-    topic = ForeignKey('Topic', null=True)
+    topic = ForeignKey('Topic', on_delete=CASCADE, null=True)
     tags = ManyToManyField('Tag')
 
     is_breaking = BooleanField(default=False)
@@ -409,17 +422,24 @@ class Subsection(Model, AuthorMixin):
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
-    parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
-    parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
+    parent = ForeignKey('Page', on_delete=CASCADE, related_name='page_parent', blank=True, null=True)
+    parent_page = ForeignKey('Page', on_delete=CASCADE, related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
     def get_author_string(self):
         return None
 
     def get_absolute_url(self):
+<<<<<<< HEAD
         """ Returns page URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
+=======
+        """
+        Returns page URL.
+        """
+        return "%s%s/" % (settings.BASE_URL, self.slug)
+>>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
@@ -498,7 +518,7 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+            image = Img.open(io.BytesIO(self.img.read()))
             self.width, self.height = image.size
 
             super(Image, self).save()
@@ -525,13 +545,16 @@ class Image(Model, AuthorMixin):
         if file_type in self.JPG_FORMATS:
             file_type = 'JPEG'
 
-        # Write new thumbnail to StringIO object
-        image_io = StringIO.StringIO()
+        # Write new thumbnail to io.StringIO object
+        image_io = io.BytesIO()
+        # image_io = io.StringIO()
+        
         image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', len(str(image_io)), None)
 
+        # thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.getbuffer().nbytes, None)
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
 
@@ -555,9 +578,15 @@ class VideoAttachment(Model):
     order = PositiveIntegerField(null=True)
 
 class ImageAttachment(Model):
+<<<<<<< HEAD
     article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
     page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
     gallery = ForeignKey('ImageGallery', blank=True, null=True)
+=======
+    article = ForeignKey(Article, on_delete=CASCADE, blank=True, null=True, related_name='article')
+    page = ForeignKey(Page, on_delete=CASCADE, blank=True, null=True, related_name='page')
+    gallery = ForeignKey('ImageGallery', on_delete=CASCADE, blank=True, null=True)
+>>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)

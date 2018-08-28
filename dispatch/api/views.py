@@ -483,8 +483,8 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         try:
             data = integration.callback(request.user, request.GET)
-        except IntegrationCallbackError, e:
-            return Response({ 'detail': e.message }, status.HTTP_400_BAD_REQUEST)
+        except (IntegrationCallbackError, e):
+            return Response({ 'detail': e.message}, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
 
@@ -557,7 +557,7 @@ class DashboardViewSet(viewsets.GenericViewSet):
     def list_recent_articles(self, request):
         recent = recent_articles(request.user)
 
-        articles = map(lambda a: self.get_serializer(a).data, recent)
+        articles = list(map(lambda a: self.get_serializer(a).data, recent))
 
         data = {
             'results': articles
@@ -579,8 +579,9 @@ class TokenViewSet(viewsets.ViewSet):
             settings = get_settings(token)
 
             data = {
-                'token': unicode(token),
+                'token': str(token),
                 'settings': settings
+                
             }
 
             return Response(data, status=status.HTTP_202_ACCEPTED)

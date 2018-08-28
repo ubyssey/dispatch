@@ -11,6 +11,7 @@ function openPreviewWindow(url, id) {
 export default class PublishableActions extends ResourceActions {
 
   publish(token, id, data) {
+
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.PUBLISH) })

@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import status
 
@@ -155,7 +155,7 @@ class DispatchTestHelpers(object):
             }
           ]
         }
-
+        
         return client.post(url, data, format='json')
 
     @classmethod

@@ -2,6 +2,8 @@ from django.utils.safestring import mark_safe
 
 from dispatch.modules.content.embeds import embeds, EmbedException
 
+from functools import reduce
+
 def content_to_html(content, article_id):
     """Returns artilce/page content as HTML"""
 
@@ -51,4 +53,4 @@ def content_to_json(content):
                 'data': embeds.to_json(node['type'], node['data'])
             }
 
-    return map(render_node, content)
+    return list(map(render_node, content))

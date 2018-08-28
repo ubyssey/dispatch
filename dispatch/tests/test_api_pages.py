@@ -1,6 +1,6 @@
 from rest_framework import status
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -59,7 +59,7 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
             page = Page.objects.get(pk=response.data['id'])
         except Page.DoesNotExist:
             self.fail('The page should exist in the database')
-
+        
         # Check Data
         self.assertEqual(response.data['title'], 'Test Page')
         self.assertEqual(response.data['slug'], 'test-page')

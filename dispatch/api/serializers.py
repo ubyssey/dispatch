@@ -444,7 +444,7 @@ class ContentSerializer(serializers.Serializer):
 
     def to_internal_value(self, content):
         """Convert each block in `content` to its internal value before saving."""
-        return map(self.sanitize_block, content)
+        return list(map(self.sanitize_block, content))
 
     def sanitize_block(self, block):
         """Santizes the data for the given block.
@@ -522,8 +522,7 @@ class ContentSerializer(serializers.Serializer):
 
     def insert_data(self, content):
         """Insert loaded data into embed data blocks."""
-
-        return map(self.insert_instance, content)
+        return list(map(self.insert_instance, content))
 
 class SubsectionArticleSerializer(DispatchModelSerializer):
     """Serializes articles for the Subsection model"""
@@ -913,7 +912,7 @@ class ZoneSerializer(serializers.Serializer):
 
         widget = validated_data.get('widget')
 
-        if not widget:
+        if (not widget):
             instance.delete()
         else:
             instance.save(validated_data)
