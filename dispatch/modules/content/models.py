@@ -2,11 +2,8 @@
 import os
 import re
 import uuid
-<<<<<<< HEAD
 import datetime
-=======
 import io
->>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -16,13 +13,8 @@ from django.db import transaction
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-<<<<<<< HEAD
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
     ManyToManyField, SlugField, SET_NULL, CASCADE, F)
-=======
-    ImageField, FileField, BooleanField, UUIDField, ForeignKey, CASCADE,
-    ManyToManyField, SlugField, SET_NULL)
->>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -315,12 +307,8 @@ class Article(Publishable, AuthorMixin):
     parent = ForeignKey('Article', on_delete=CASCADE, related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
-<<<<<<< HEAD
-    section = ForeignKey('Section')
-    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
-=======
     section = ForeignKey('Section', on_delete=CASCADE)
->>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
+    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', on_delete=CASCADE, null=True)
     tags = ManyToManyField('Tag')
@@ -430,16 +418,10 @@ class Page(Publishable):
         return None
 
     def get_absolute_url(self):
-<<<<<<< HEAD
-        """ Returns page URL. """
-        return "%s%s/" % (settings.BASE_URL, self.slug)
-
-=======
         """
         Returns page URL.
         """
         return "%s%s/" % (settings.BASE_URL, self.slug)
->>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 class Video(Model):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
@@ -578,15 +560,9 @@ class VideoAttachment(Model):
     order = PositiveIntegerField(null=True)
 
 class ImageAttachment(Model):
-<<<<<<< HEAD
-    article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
-    gallery = ForeignKey('ImageGallery', blank=True, null=True)
-=======
     article = ForeignKey(Article, on_delete=CASCADE, blank=True, null=True, related_name='article')
     page = ForeignKey(Page, on_delete=CASCADE, blank=True, null=True, related_name='page')
     gallery = ForeignKey('ImageGallery', on_delete=CASCADE, blank=True, null=True)
->>>>>>> 0b55cf10def78e67dd0924b4940d1691066c908e
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
