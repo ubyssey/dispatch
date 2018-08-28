@@ -308,7 +308,7 @@ class Article(Publishable, AuthorMixin):
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section', on_delete=CASCADE)
-    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
+    subsection = ForeignKey('Subsection', on_delete=CASCADE, related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', on_delete=CASCADE, null=True)
     tags = ManyToManyField('Tag')
@@ -390,7 +390,7 @@ class Subsection(Model, AuthorMixin):
     slug = SlugField(unique=True)
     description = TextField(null=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
-    section = ForeignKey('Section')
+    section = ForeignKey('Section', on_delete=CASCADE,)
     is_active = BooleanField(default=False)
 
     AuthorModel = Author
@@ -550,8 +550,8 @@ class Image(Model, AuthorMixin):
                 pass
 
 class VideoAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='video_page')
+    article = ForeignKey(Article, blank=True, null=True, related_name='video_article', on_delete=CASCADE)
+    page = ForeignKey(Page, blank=True, null=True, related_name='video_page', on_delete=CASCADE)
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
