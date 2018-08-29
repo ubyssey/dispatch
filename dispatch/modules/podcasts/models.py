@@ -48,7 +48,6 @@ class Podcast(Model):
     )
 
     category = CharField(max_length=255, choices=CATEGORY_CHOICES)
-str
 class PodcastEpisode(Model):
     __original_file = None
 

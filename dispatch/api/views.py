@@ -77,6 +77,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
         """Optionally restricts the returned articles by filtering against a `topic`
         query parameter in the URL."""
 
+        print(settings.STATICFILES_DIRS)
         # Get base queryset from DispatchPublishableMixin
         queryset = self.get_publishable_queryset()
 
