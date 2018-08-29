@@ -402,7 +402,7 @@ class Article(Publishable, AuthorMixin):
 class Subsection(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
-    description = TextField(null=True)
+    description = TextField(null=True, blank=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
     section = ForeignKey('Section')
     is_active = BooleanField(default=False)
