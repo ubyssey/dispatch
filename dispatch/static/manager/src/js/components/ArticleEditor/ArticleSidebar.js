@@ -49,6 +49,7 @@ class ArticleSidebar extends React.Component {
                 authors={this.props.article.authors || []}
                 tags={this.props.article.tags || []}
                 topic={this.props.article.topic}
+                subsection={this.props.article.subsection}
                 slug={this.props.article.slug}
                 snippet={this.props.article.snippet}
                 errors={this.props.errors} />

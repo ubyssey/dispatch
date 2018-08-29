@@ -755,8 +755,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
             instance.save_topic(topic_id)
 
         subsection_id = validated_data.get('subsection_id', None)
-        if subsection_id is not None:
-            instance.save_subsection(subsection_id)
+        instance.save_subsection(subsection_id)
 
         # Perform a final save (without revision), update content and featured image
         instance.save(
