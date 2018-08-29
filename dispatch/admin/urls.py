@@ -18,7 +18,7 @@ def admin(request):
 urlpatterns = [
     url(r'signup/(?P<uuid>[0-9a-f-]+)/', views.signup, name='dispatch-signup'),
     url(r'reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})',
-        auth_views.password_reset_confirm, name='password_reset_confirm'),
-    url(r'reset/done', auth_views.password_reset_complete, name='password_reset_complete'),
+        auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'reset/done', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     url(r'.*', admin, name='dispatch-admin')
 ]

@@ -1,6 +1,9 @@
 import uuid
 import os
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from django.conf import settings
 
@@ -45,7 +48,7 @@ class Podcast(Model):
     )
 
     category = CharField(max_length=255, choices=CATEGORY_CHOICES)
-
+str
 class PodcastEpisode(Model):
     __original_file = None
 
