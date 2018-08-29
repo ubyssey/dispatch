@@ -417,7 +417,7 @@ class Subsection(Model, AuthorMixin):
         return Article.objects.filter(subsection=self, id=F('parent_id'))
 
     def get_published_articles(self):
-        return Article.objects.filter(subsection=self, is_published=True)
+        return Article.objects.filter(subsection=self, is_published=True).order_by('-published_at')
 
     def get_absolute_url(self):
         """ Returns the subsection URL. """
