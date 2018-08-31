@@ -5,7 +5,7 @@ import { Button } from '@blueprintjs/core'
 
 import HeaderButtons from './HeaderButtons'
 import MobileHeaderButtons from './MobileHeaderButtons'
-// import { desktopSize } from '../../util/helpers'
+import { desktopSize } from '../../util/helpers'
 
 require('../../../styles/components/header.scss')
 require('../../../styles/components/loading_bar.scss')
@@ -48,6 +48,7 @@ class Header extends React.Component {
     )
   }
 
+  // BLUEPRINT REDESIGN
   renderMobileHeader() {
     const open = this.state.isOpen ? 'open' : 'closed'
     return (
@@ -62,7 +63,7 @@ class Header extends React.Component {
                 <h3>Profile</h3>
               </div>
               <div className='nav-padded'>
-                <Link to='/logout/' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-log-out' />
+                <Link to='/logout/' icon='manual' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-log-out' />
                 <h3>Logout</h3>
               </div>
             </div>
@@ -78,7 +79,8 @@ class Header extends React.Component {
   render() {
     return (
       <div>
-        {this.renderDesktopHeader()}
+        { this.props.viewWidth > desktopSize ? this.renderDesktopHeader() : this.renderMobileHeader() }
+        {/* {this.renderDesktopHeader()} */}
         <LoadingBar className='c-loading-bar' />
       </div>
     )
