@@ -153,6 +153,7 @@ class Publishable(Model):
         return self
 
     # Overriding
+    @transaction.atomic
     def save(self, revision=True, *args, **kwargs):
         """
         Handles the saving/updating of a Publishable instance.
@@ -192,6 +193,14 @@ class Publishable(Model):
         if revision:
             self.updated_at = timezone.now()
 
+        # Check that there is only one 'head'
+        if self.is_conflicting_head():
+            raise IntegrityError("%s with head=True already exists." % (type(self).__name__,))
+
+        # Check that there is only one version with this revision_id
+        if self.is_conflicting_revision_id():
+            raise IntegrityError("%s with revision_id=%s already exists." % (self.revision_id, type(self).__name__))
+
         super(Publishable, self).save(*args, **kwargs)
 
         # Update the parent foreign key
@@ -211,6 +220,12 @@ class Publishable(Model):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
         return self.parent.delete()
+
+    def is_conflicting_head(self):
+        return self.head is True and type(self).objects.filter(parent=self.parent, head=True).exclude(id=self.id).exists()
+
+    def is_conflicting_revision_id(self):
+        return type(self).objects.filter(parent=self.parent, id=self.id).count() > 1
 
     def save_featured_image(self, data):
         """
@@ -387,7 +402,7 @@ class Article(Publishable, AuthorMixin):
 class Subsection(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
-    description = TextField(null=True)
+    description = TextField(null=True, blank=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
     section = ForeignKey('Section')
     is_active = BooleanField(default=False)
@@ -402,7 +417,7 @@ class Subsection(Model, AuthorMixin):
         return Article.objects.filter(subsection=self, id=F('parent_id'))
 
     def get_published_articles(self):
-        return Article.objects.filter(subsection=self, is_published=True)
+        return Article.objects.filter(subsection=self, is_published=True).order_by('-published_at')
 
     def get_absolute_url(self):
         """ Returns the subsection URL. """
