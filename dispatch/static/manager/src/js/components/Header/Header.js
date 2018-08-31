@@ -59,11 +59,11 @@ class Header extends React.Component {
           <div className={'nav-dropdown-content ' + open} >
             <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
               <div className='nav-padded'>
-                <Link to='/profile/' icon='user' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-user' />
+                <Link to='/profile/' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-user' />
                 <h3>Profile</h3>
               </div>
               <div className='nav-padded'>
-                <Link to='/logout/' icon='manual' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-log-out' />
+                <Link to='/logout/' className='bp3-button bp3-minimal bp3-icon-large bp3-icon-log-out' />
                 <h3>Logout</h3>
               </div>
             </div>
@@ -80,7 +80,6 @@ class Header extends React.Component {
     return (
       <div>
         { this.props.viewWidth > desktopSize ? this.renderDesktopHeader() : this.renderMobileHeader() }
-        {/* {this.renderDesktopHeader()} */}
         <LoadingBar className='c-loading-bar' />
       </div>
     )

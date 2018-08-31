@@ -26,7 +26,6 @@ const MobileHeaderButtons = () => {
             )
           })
         )
-        return (<div />)
       })
     }
     </div>
