@@ -26,7 +26,7 @@ class TemplateTabComponent extends React.Component {
     const template = this.props.entities.templates[this.props.template] || null
     const fields = (
       <FieldGroup
-        name={`template-field__${template.id}`}
+        name={`template-field__${template ? template.id : null}`}
         fields={(this.props.data ? (template ? template.fields : []) : null)}
         data={this.props.data}
         errors={this.props.errors}
