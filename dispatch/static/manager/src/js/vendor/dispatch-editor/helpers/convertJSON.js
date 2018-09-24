@@ -185,7 +185,10 @@ function toJSON(contentState) {
   }
 
   // Converts from ContentState to JSON
-  return contentState.getBlockMap().reduce(blockToJSON, List()).toJSON()
+  return contentState
+    .getBlockMap()
+    .reduce(blockToJSON, List())
+    .toJSON()
 }
 
 export {
