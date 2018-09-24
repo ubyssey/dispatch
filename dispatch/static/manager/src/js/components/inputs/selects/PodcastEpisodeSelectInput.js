@@ -16,8 +16,8 @@ class PodcastEpisodeSelectInputComponent extends React.Component {
       <ItemSelectInput
         value={this.props.value}
         results={this.props.podcastEpisodes.ids}
-        entities={this.props.entities.tags}
-        onChange={(value) => this.props.update(value)}
+        entities={this.props.entities.podcastEpisodes}
+        onChange={(value) => this.props.onChange(value)}
         fetchResults={(query) => this.listTags(query)}
         attribute='title'
         editMessage={Array.isArray(this.props.value) ? 'Edit podcasts' : 'Add podcast'} />
