@@ -29,7 +29,7 @@ function prepareMultipartPayload(payload) {
 }
 
 function buildRoute(route, id) {
-  let pieces = route.split('.')
+  const pieces = route.split('.')
 
   let fullRoute = API_URL + pieces[0]
 
@@ -42,7 +42,7 @@ function buildRoute(route, id) {
   }
 
   // Append slash to all urls
-  let lastCharacter = fullRoute.slice(-1)
+  const lastCharacter = fullRoute.slice(-1)
 
   if (lastCharacter !== '/') {
     fullRoute += '/'
@@ -70,7 +70,7 @@ function parseJSON(response) {
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  let urlString = buildRoute(route, id) + url.format({ query: query })
+  const urlString = buildRoute(route, id) + url.format({ query: query })
   return fetch(
     urlString,
     {

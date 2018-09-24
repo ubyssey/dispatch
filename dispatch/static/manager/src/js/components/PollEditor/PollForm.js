@@ -2,9 +2,8 @@ import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
 import R from 'ramda'
 
-import { FormInput, TextInput } from '../inputs'
+import { FormInput, TextInput, SelectInput } from '../inputs'
 import Poll from './Poll'
-import SelectInput from '../inputs/selects/SelectInput'
 
 require('../../../styles/components/poll_form.scss')
 
@@ -91,7 +90,7 @@ export default class PollForm extends React.Component {
         <div className='c-poll-form__results-select'>
           <SelectInput
             options={OPTIONS}
-            selected={this.props.listItem.is_open}
+            value={this.props.listItem.is_open}
             onChange={e => this.props.update('is_open', e.target.value)} />
         </div>
       </FormInput>
@@ -112,7 +111,7 @@ export default class PollForm extends React.Component {
           <div className='c-poll-form__results-select'>
             <SelectInput
               options={OPTIONS}
-              selected={this.props.listItem.show_results}
+              value={this.props.listItem.show_results}
               onChange={e => this.props.update('show_results', e.target.value)} />
           </div>
         </FormInput>

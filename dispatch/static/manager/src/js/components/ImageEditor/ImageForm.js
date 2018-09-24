@@ -39,11 +39,11 @@ export default class ImageForm extends React.Component {
             fill={true}
             onChange={e => this.props.update('title', e.target.value)} />
         </FormInput>
-        <FormInput 
+        <FormInput
           label='Photographers'
           padded={false}>
           <AuthorSelectInput
-            selected={this.props.listItem.authors}
+            value={this.props.listItem.authors}
             update={authors => this.props.update('authors', authors)}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </FormInput>
@@ -52,7 +52,7 @@ export default class ImageForm extends React.Component {
           error={this.props.errors.tag_ids}
           padded={false}>
           <TagSelectInput
-            selected={this.props.listItem.tags}
+            value={this.props.listItem.tags}
             update={tags => this.props.update('tags', tags)} />
         </FormInput>
         <div className='c-image-panel-image-page'>

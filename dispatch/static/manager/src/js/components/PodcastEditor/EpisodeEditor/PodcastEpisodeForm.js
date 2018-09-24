@@ -81,7 +81,7 @@ export default class PodcastEpisodeForm extends React.Component {
           padded={false}
           error={this.props.errors.image}>
           <ImageInput
-            selected={this.props.listItem.image}
+            value={this.props.listItem.image}
             onChange={imageId => this.props.update('image', imageId)} />
         </FormInput>
 
@@ -90,7 +90,7 @@ export default class PodcastEpisodeForm extends React.Component {
           padded={false}>
           <SelectInput
             options={EXPLICIT_OPTIONS}
-            selected={this.props.listItem.explicit}
+            value={this.props.listItem.explicit}
             onChange={e => this.props.update('explicit', e.target.value)} />
         </FormInput>
 

@@ -8,6 +8,7 @@ import {
   SelectInput
 } from '../inputs'
 
+import FormContainer from '../../containers/FormContainer'
 
 const CATEGORY_OPTIONS = [
     ['Arts', 'Arts'],
@@ -30,7 +31,8 @@ const CATEGORY_OPTIONS = [
 
 export default function PodcastForm(props) {
   return (
-    <form>
+    <FormContainer>
+
       <FormInput
         label='Title'
         padded={false}
@@ -103,7 +105,8 @@ export default function PodcastForm(props) {
         padded={false}>
         <SelectInput
           options={CATEGORY_OPTIONS}
-          selected={props.listItem.category}
+          default={CATEGORY_OPTIONS[9][0]}
+          value={props.listItem.category}
           onChange={e => props.update('category', e.target.value)} />
       </FormInput>
 
@@ -112,10 +115,10 @@ export default function PodcastForm(props) {
         padded={false}
         error={props.errors.image}>
         <ImageInput
-          selected={props.listItem.image}
+          value={props.listItem.image}
           onChange={imageId => props.update('image', imageId)} />
       </FormInput>
 
-    </form>
+    </FormContainer>
   )
 }

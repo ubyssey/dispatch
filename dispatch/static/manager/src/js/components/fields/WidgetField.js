@@ -59,7 +59,7 @@ export default class WidgetFieldComponent extends React.Component {
         <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
             compatibleWidgets={this.props.field.widgets}
-            selected={this.getWidgetId()}
+            value={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
         {fields}

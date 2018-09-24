@@ -10,7 +10,8 @@ import SubsectionSelectInput from '../../inputs/selects/SubsectionSelectInput'
 
 export default function BasicFieldsTab(props) {
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
+
       <FormInput
         label='Slug'
         error={props.errors.slug}>
@@ -25,7 +26,7 @@ export default function BasicFieldsTab(props) {
         label='Section'
         error={props.errors.section_id}>
         <SectionSelectInput
-          selected={props.section}
+          value={props.section}
           update={section => props.update('section', section)} />
       </FormInput>
 
@@ -33,7 +34,7 @@ export default function BasicFieldsTab(props) {
         label='Authors'
         error={props.errors.author_ids}>
         <AuthorSelectInput
-          selected={props.authors}
+          value={props.authors}
           update={authors => props.update('authors', authors)} />
       </FormInput>
 
@@ -41,7 +42,7 @@ export default function BasicFieldsTab(props) {
         label='Tags'
         error={props.errors.tag_ids}>
         <TagSelectInput
-          selected={props.tags}
+          value={props.tags}
           update={tags => props.update('tags', tags)} />
       </FormInput>
 
@@ -49,7 +50,7 @@ export default function BasicFieldsTab(props) {
         label='Topic'
         error={props.errors.topic_ids}>
         <TopicSelectInput
-          selected={props.topic}
+          value={props.topic}
           update={topic => props.update('topic', topic)} />
       </FormInput>
 
@@ -58,7 +59,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.subsection}>
         <SubsectionSelectInput
           many={false}
-          selected={props.subsection}
+          value={props.subsection}
           update={subsection => props.update('subsection', subsection)} />
       </FormInput>
 

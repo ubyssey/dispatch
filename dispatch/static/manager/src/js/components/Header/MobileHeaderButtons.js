@@ -10,7 +10,6 @@ const MobileHeaderButtons = () => {
     {
       Object.keys(links).map((key) => {
         const item = links[key]
-        console.log(item['children'])
         return (
           Object.keys(item['children']).map( (index) => {
             const text = item['children'][index]['text']

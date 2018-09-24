@@ -10,7 +10,7 @@ export default function FeaturedVideoTab(props) {
   function updateVideo(videoId) {
     return props.update(
       'featured_video',
-      R.merge(props.featured_video, { video: videoId })        
+      R.merge(props.featured_video, { video: videoId })
     )
   }
 
@@ -30,11 +30,12 @@ export default function FeaturedVideoTab(props) {
 
   if (props.featured_video && props.featured_video.video) {
     return (
-      <div>
+      <div className='c-article-sidebar__panel'>
+
         <FormInput
           label='Video'>
           <VideoSelectInput
-            selected={props.featured_video.video}
+            value={props.featured_video.video}
             update={updateVideo} />
         </FormInput>
 
@@ -53,6 +54,7 @@ export default function FeaturedVideoTab(props) {
             rows='2'
             onChange={e => updateCredit(e.target.value)} />
         </FormInput>
+
       </div>
     )
   } else {

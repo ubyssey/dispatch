@@ -52,7 +52,7 @@ function CharacterCount(props) {
 export default function SEOTab(props) {
 
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
 
       <FormInput label='Focus Keywords'>
         <TextInput

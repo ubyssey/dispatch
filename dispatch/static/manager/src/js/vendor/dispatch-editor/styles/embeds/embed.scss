@@ -39,4 +39,9 @@ $embed-padding: 1rem;
   border-color: $color-border-gray;
   border-bottom-left-radius: $embed-border-radius;
   border-bottom-right-radius: $embed-border-radius;
+
+  form {
+    // Structure
+    padding: 1rem;
+  }
 }

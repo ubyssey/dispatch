@@ -1,7 +1,7 @@
 import React from 'react'
 import AceEditor from 'react-ace'
 
-import SelectInput from '../../../components/inputs/selects/SelectInput'
+import { SelectInput } from '../../../components/inputs'
 
 import 'brace/mode/html'
 import 'brace/mode/css'

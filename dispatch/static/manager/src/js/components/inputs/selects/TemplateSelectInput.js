@@ -22,13 +22,13 @@ class TemplateSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         results={this.props.templates.ids}
         entities={this.props.entities.templates}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listTemplates(query)}
         attribute='name'
-        editMessage={this.props.selected ? 'Change template' : 'Set template'} />
+        editMessage={this.props.value ? 'Change template' : 'Set template'} />
     )
   }
 

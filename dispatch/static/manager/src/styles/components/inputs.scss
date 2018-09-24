@@ -96,19 +96,19 @@
 // Component: FormInput
 .c-form-input {
   // Structure
-  padding-top: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 
-  // Border
-  border-bottom: 1px solid $color-border-gray;
-
-  &:last-child {
-    border-bottom: none;
+  &:first-child {
+    // Structure
+    margin-top: 0;
   }
 
-  // Extras
+  &:last-child {
+    // Structure
+    margin-bottom: 0;
+  }
+
   .c-input {
     // Structure
     width: 100%;
@@ -119,12 +119,6 @@
   label.bp3-label {
     margin: 0;
   }
-}
-
-.c-form-input--no-padding {
-  // Structure
-  padding-left: 0;
-  padding-right: 0;
 }
 
 .c-form-input__label {

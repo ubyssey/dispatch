@@ -86,29 +86,25 @@ class ZoneEditorComponent extends React.Component {
         onChange={(name, data) => this.updateField(name, data)} />
     )
 
-
-
     return (
       <DocumentTitle title={`Widgets - ${this.props.zone.name}`}>
-        <div>
-          <div className='u-container-main'>
-            <ListItemToolbar
-              name={this.props.zone.name}
-              type='Zone'
-              typePlural='Zones'
-              saveListItem={() => this.saveZone()}
-              goBack={this.props.goBack} />
-            <div className='u-container-body'>
-              <Panel title='Widget'>
-                <FormInput>
-                  <WidgetSelectInput
-                    zoneId={this.props.zoneId}
-                    selected={this.props.zone.widget}
-                    update={widgetId => this.updateWidget(widgetId)} />
-                </FormInput>
-              </Panel>
-              {fields}
-            </div>
+        <div className='u-container-main'>
+          <ListItemToolbar
+            name={this.props.zone.name}
+            type='Zone'
+            typePlural='Zones'
+            saveListItem={() => this.saveZone()}
+            listRoute='zones' />
+          <div className='u-container-body u-container--vscroll'>
+            <Panel title='Widget'>
+              <FormInput>
+                <WidgetSelectInput
+                  zoneId={this.props.zoneId}
+                  value={this.props.zone.widget}
+                  update={widgetId => this.updateWidget(widgetId)} />
+              </FormInput>
+            </Panel>
+            {fields}
           </div>
         </div>
       </DocumentTitle>
