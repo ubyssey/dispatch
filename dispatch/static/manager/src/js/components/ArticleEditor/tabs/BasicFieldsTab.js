@@ -51,6 +51,7 @@ export default function BasicFieldsTab(props) {
         error={props.errors.topic_ids}>
         <TopicSelectInput
           value={props.topic}
+          many={false}
           update={topic => props.update('topic', topic)} />
       </FormInput>
 

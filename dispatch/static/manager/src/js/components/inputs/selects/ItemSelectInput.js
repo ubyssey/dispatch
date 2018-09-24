@@ -110,6 +110,10 @@ class ItemSelectInput extends React.Component {
     }
   }
 
+  hasSelected() {
+    return this.getSelected().length !== 0
+  }
+
   isNotSelected(id) {
     return !R.contains(id, this.getSelected())
   }
