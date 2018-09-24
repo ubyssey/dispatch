@@ -11,7 +11,8 @@ import {
   widgetSchema,
   articleSchema,
   imageSchema,
-  eventSchema
+  eventSchema,
+  topicSchema
 } from '../constants/Schemas'
 
 function normalizeZoneData(field, data) {
@@ -22,6 +23,8 @@ function normalizeZoneData(field, data) {
     return field.many ? normalize(data, arrayOf(imageSchema)) : normalize(data, imageSchema)
   case 'event':
     return field.many ? normalize(data, arrayOf(eventSchema)) : normalize(data, eventSchema)
+  case 'topic':
+    return field.many ? normalize(data, arrayOf(topicSchema)) : normalize(data, topicSchema)
   case 'widget':
     return normalizeZone(data, true)
   default:

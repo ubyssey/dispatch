@@ -61,19 +61,19 @@ export default function DeliveryTab(props) {
 
 
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
 
       <FormInput label='Importance'>
         <SelectInput
           options={IMPORTANCE_OPTIONS}
-          selected={props.importance}
+          value={props.importance}
           onChange={e => props.update('importance', e.target.value)} />
       </FormInput>
 
       <FormInput label='Reading Time'>
         <SelectInput
           options={READING_TIME_OPTIONS}
-          selected={props.reading_time}
+          value={props.reading_time}
           onChange={e => props.update('reading_time', e.target.value)} />
       </FormInput>
 

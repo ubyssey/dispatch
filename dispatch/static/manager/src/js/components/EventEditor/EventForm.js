@@ -135,7 +135,7 @@ export default class EventForm extends React.Component {
           padded={false}
           error={this.props.errors.category}>
           <SelectInput
-            selected={this.props.listItem.category}
+            value={this.props.listItem.category}
             placeholder='Please Select'
             options={CATEGORY_CHOICES}
             onChange={e => this.props.update('category', e.target.value)} />

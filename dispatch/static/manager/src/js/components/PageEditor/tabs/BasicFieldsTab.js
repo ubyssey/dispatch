@@ -5,7 +5,7 @@ import { FormInput, TextInput, TextAreaInput } from '../../inputs'
 export default function BasicFieldsTab(props) {
 
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
 
       <FormInput
         label='Slug'

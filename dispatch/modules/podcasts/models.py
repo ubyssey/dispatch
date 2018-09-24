@@ -5,8 +5,9 @@ import StringIO
 from django.conf import settings
 
 from django.db.models import (
-    Model, DateTimeField, CharField, TextField, PositiveIntegerField, ImageField,
-    FileField, BooleanField, UUIDField, ForeignKey, SlugField, EmailField)
+    Model, DateTimeField, CharField, TextField, PositiveIntegerField,
+    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
+    SlugField, EmailField)
 
 from dispatch.modules.content.models import Image
 from dispatch.core.storage import generate_signed_url
@@ -44,7 +45,10 @@ class Podcast(Model):
         ('TV &amp; Film', 'TV & Film'),
     )
 
-    category = CharField(max_length=255, choices=CATEGORY_CHOICES)
+    category = CharField(
+        max_length=255,
+        choices=CATEGORY_CHOICES,
+        default='News &amp; Politics')
 
 class PodcastEpisode(Model):
     __original_file = None

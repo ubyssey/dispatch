@@ -5,7 +5,9 @@ from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 from dispatch.models import Article, Image, Poll
-from dispatch.api.serializers import ArticleSerializer, ImageSerializer, WidgetSerializer, PollSerializer
+from dispatch.api.serializers import (
+    ArticleSerializer, ImageSerializer, TopicSerializer,
+     WidgetSerializer, PollSerializer)
 
 from dispatch.theme.exceptions import InvalidField, WidgetNotFound
 from dispatch.theme.validators import is_valid_id
@@ -232,6 +234,14 @@ class ArticleField(ModelField):
     model = Article
     serializer = ArticleSerializer
 
+class TopicField(ModelField):
+    type = 'topic'
+
+    from dispatch.models import Topic
+
+    model = Topic
+    serializer = TopicSerializer
+
 class ImageField(ModelField):
     type = 'image'
 
@@ -239,6 +249,12 @@ class ImageField(ModelField):
 
     model = Image
     serializer = ImageSerializer
+
+class PollField(ModelField):
+    type = 'poll'
+
+    model = Poll
+    serializer = PollSerializer
 
 class WidgetField(Field):
     type = 'widget'

@@ -32,13 +32,13 @@ export default function ImagePanel(props) {
         </FormInput>
         <FormInput label='Photographers'>
           <AuthorSelectInput
-            selected={props.image.authors}
+            value={props.image.authors}
             update={authors => props.update('authors', authors)}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </FormInput>
         <FormInput label='Tags'>
           <TagSelectInput
-            selected={props.image.tags}
+            value={props.image.tags}
             update={tags => props.update('tags', tags)} />
         </FormInput>
       </form>

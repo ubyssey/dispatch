@@ -20,15 +20,15 @@ class TopicSelectInputComponent extends React.Component {
   render() {
     return (
       <ItemSelectInput
-        many={false}
-        selected={this.props.selected}
+        many={this.props.many}
+        value={this.props.value}
         results={this.props.topics.ids}
         entities={this.props.entities.topics}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listTopics(query)}
         create={(name, cb) => this.props.createTopic(this.props.token, { name }, cb)}
         attribute='name'
-        editMessage={this.props.selected ? 'Edit topic' : 'Add topic'} />
+        editMessage={this.props.value ? 'Edit topic' : 'Add topic'} />
     )
   }
 

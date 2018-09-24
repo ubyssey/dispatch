@@ -1023,8 +1023,11 @@ class PodcastSerializer(DispatchModelSerializer):
 
     id = serializers.UUIDField(read_only=True)
     image = ImageSerializer(read_only=True)
-    image_id = serializers.IntegerField(write_only=True, required=False)
-
+    image_id = serializers.IntegerField(
+        write_only=True,
+        required=False,
+        allow_null=True)
+        
     class Meta:
         model = Podcast
         fields = (
@@ -1045,7 +1048,10 @@ class PodcastEpisodeSerializer(DispatchModelSerializer):
 
     id = serializers.UUIDField(read_only=True)
     image = ImageSerializer(read_only=True)
-    image_id = serializers.IntegerField(write_only=True, required=False)
+    image_id = serializers.IntegerField(
+        write_only=True,
+        required=False,
+        allow_null=True)
 
     podcast_id = serializers.UUIDField()
 

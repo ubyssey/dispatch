@@ -7,10 +7,8 @@ import userActions from '../../actions/UserActions'
 import personsActions from '../../actions/PersonsActions'
 import invitesActions from '../../actions/InvitesActions'
 import PersonEditor from '../../components/PersonEditor'
-import { FormInput, TextInput } from '../../components/inputs'
+import { FormInput, TextInput, SelectInput } from '../../components/inputs'
 import ConfirmButton from '../../components/inputs/ConfirmButton'
-
-import SelectInput from '../../components/inputs/selects/SelectInput'
 
 require('../../../styles/components/user_form.scss')
 

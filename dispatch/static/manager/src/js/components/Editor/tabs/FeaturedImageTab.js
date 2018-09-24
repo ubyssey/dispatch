@@ -37,12 +37,13 @@ export default function FeaturedImageTab(props) {
   if (props.featured_image && props.featured_image.image) {
 
     return (
-      <div>
+      <div className='c-article-sidebar__panel'>
+
         <FormInput label='Image'>
           <ImageInput
             fill={true}
             removable={true}
-            selected={props.featured_image.image}
+            value={props.featured_image.image}
             onChange={updateImage} />
         </FormInput>
 
@@ -61,11 +62,12 @@ export default function FeaturedImageTab(props) {
             rows='2'
             onChange={e => updateCredit(e.target.value)} />
         </FormInput>
+
       </div>
     )
   } else {
     return (
-      <div>
+      <div className='c-article-sidebar__panel'>
         <FormInput label='Image'>
           <ImageInput
             onChange={updateImage} />

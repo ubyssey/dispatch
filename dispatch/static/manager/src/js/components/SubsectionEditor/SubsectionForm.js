@@ -65,7 +65,7 @@ export default function SubsectionForm(props) {
         padded={false}
         error={props.errors.section_id}>
         <SectionSelectInput
-          selected={props.listItem.section ? props.listItem.section.id : null}
+          value={props.listItem.section ? props.listItem.section.id : null}
           update={section => updateSection(section)} />
       </FormInput>
 
@@ -74,7 +74,7 @@ export default function SubsectionForm(props) {
         padded={false}
         error={props.errors.author_ids}>
         <AuthorSelectInput
-          selected={props.listItem.authors || []}
+          value={props.listItem.authors || []}
           update={authors => props.update('authors', authors)} />
       </FormInput>
 
@@ -83,7 +83,7 @@ export default function SubsectionForm(props) {
         padded={false}
         error={props.errors.article_ids}>
         <ArticleSelectInput
-          selected={articles}
+          value={articles}
           many={true}
           onChange={(articles) => updateArticles(articles)} />
       </FormInput>

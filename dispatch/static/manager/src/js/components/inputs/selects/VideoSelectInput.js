@@ -22,15 +22,15 @@ class VideoSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         inline={this.props.inline}
         showSortableList={this.props.showSortableList}
         results={this.props.videos.ids}
         entities={this.props.entities.videos}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listVideos(query)}
         attribute='title'
-        editMessage={this.props.selected ? 'Edit video' : 'Add video'} />
+        editMessage={this.props.value ? 'Edit video' : 'Add video'} />
     )
   }
 

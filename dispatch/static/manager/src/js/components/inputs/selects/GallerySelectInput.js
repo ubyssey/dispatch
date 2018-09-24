@@ -21,10 +21,10 @@ class GallerySelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         results={this.props.galleries.ids}
         entities={this.props.entities.galleries}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listGalleries(query)}
         attribute='title'
         editMessage='Select Gallery' />

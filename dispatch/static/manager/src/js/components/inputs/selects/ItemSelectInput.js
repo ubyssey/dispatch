@@ -100,14 +100,18 @@ class ItemSelectInput extends React.Component {
 
   getSelected() {
     if (this.props.many){
-      if (this.props.selected){
-        return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
+      if (this.props.value){
+        return typeof this.props.value !== 'object' ? [this.props.value] : this.props.value
       } else {
         return []
       }
     } else {
-      return this.props.selected ? [this.props.selected] : []
+      return this.props.value ? [this.props.value] : []
     }
+  }
+
+  hasSelected() {
+    return this.getSelected().length !== 0
   }
 
   isNotSelected(id) {

@@ -30,6 +30,11 @@
   font-weight: $font-weight-semi-bold;
 }
 
+.c-panel__body {
+  // Structure
+  padding: 1rem;
+}
+
 .c-panel__select {
   // Structure
   flex: 2;

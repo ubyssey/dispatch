@@ -34,10 +34,10 @@ class TemplateTabComponent extends React.Component {
     )
 
     return (
-      <div>
+      <div className='c-article-sidebar__panel'>
         <FormInput label='Template'>
           <TemplateSelectInput
-            selected={this.props.template}
+            value={this.props.template}
             update={template => this.props.update('template', template)} />
         </FormInput>
         <div>{fields}</div>

@@ -35,14 +35,14 @@ export const links = [
     icon: 'helper-management',
     children: [
       {
-        text: 'Polls',
-        url: '/polls/',
-        icon: 'vertical-bar-chart-asc'
-      },
-      {
         text: 'Zones',
         url: '/zones/',
         icon: 'widget'
+      },
+      {
+        text: 'Polls',
+        url: '/polls/',
+        icon: 'vertical-bar-chart-asc'
       },
       {
         text: 'Events',
@@ -75,11 +75,11 @@ export const links = [
         url: '/files/',
         icon: 'folder-close'
       },
-      // {
-      //   text: 'Podcasts',
-      //   url: '/podcasts/',
-      //   icon: 'cell-tower'
-      // }
+      {
+        text: 'Podcasts',
+        url: '/podcasts/',
+        icon: 'cell-tower'
+      }
     ]
   },
   {
