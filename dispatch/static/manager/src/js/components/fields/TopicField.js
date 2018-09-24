@@ -5,7 +5,7 @@ import TopicSelectInput from '../inputs/selects/TopicSelectInput'
 export default function TopicField(props) {
   return (
     <TopicSelectInput
-      selected={props.data}
+      value={props.data}
       many={props.field.many}
       update={selected => props.onChange(selected)} />
   )

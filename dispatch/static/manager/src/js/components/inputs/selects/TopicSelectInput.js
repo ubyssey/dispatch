@@ -20,7 +20,7 @@ class TopicSelectInputComponent extends React.Component {
   render() {
     return (
       <ItemSelectInput
-        many={false}
+        many={this.props.many}
         value={this.props.value}
         results={this.props.topics.ids}
         entities={this.props.entities.topics}
