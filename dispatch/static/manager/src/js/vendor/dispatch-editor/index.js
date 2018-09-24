@@ -7,7 +7,8 @@ import {
   VideoEmbed,
   CodeEmbed,
   WidgetEmbed,
-  PollEmbed
+  PollEmbed,
+  PodcastEmbed
 } from './embeds'
 
 import {
@@ -30,5 +31,6 @@ export {
   VideoEmbed,
   CodeEmbed,
   WidgetEmbed,
-  PollEmbed
+  PollEmbed,
+  PodcastEmbed
 }
