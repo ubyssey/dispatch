@@ -33,8 +33,7 @@ export default function FeaturedVideoTab(props) {
     return (
       <div className='c-article-sidebar__panel'>
 
-        <Form.Input
-          label='Video'>
+        <Form.Input label='Video'>
           <VideoSelectInput
             value={props.featured_video.video}
             update={updateVideo} />

@@ -8,7 +8,7 @@ import * as Form from '../Form'
 
 export default function IssueForm(props) {
   return (
-    <Form.Container onSubmit={e => e.preventDefault()}>
+    <Form.Container>
 
       <Form.Input
         label='Title'

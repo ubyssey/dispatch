@@ -35,11 +35,10 @@ export default class PersonForm extends React.Component {
 
   render() {
     return (
-      <Form.Container onSubmit={e => e.preventDefault()}>
+      <Form.Container>
 
         <Form.Input
           label='Full Name'
-          padded={false}
           error={this.props.errors.full_name}>
           <TextInput
             placeholder='Full Name'
@@ -50,7 +49,6 @@ export default class PersonForm extends React.Component {
 
         <Form.Input
           label='Slug'
-          padded={false}
           error={this.props.errors.slug}>
           <TextInput
             placeholder='Slug'
@@ -61,7 +59,6 @@ export default class PersonForm extends React.Component {
 
         <Form.Input
           label='Facebook'
-          padded={false}
           error={this.props.errors.facebook_url}>
           <TextInput
             placeholder='Facebook url'
@@ -72,7 +69,6 @@ export default class PersonForm extends React.Component {
 
         <Form.Input
           label='Twitter'
-          padded={false}
           error={this.props.errors.twitter_url}>
           <TextInput
             placeholder='Twitter handle'

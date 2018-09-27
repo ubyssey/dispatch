@@ -231,7 +231,7 @@ class GalleryFormComponent extends React.Component {
       }) : null
 
     return (
-      <Form.Container onSubmit={e => e.preventDefault()}>
+      <Form.Container>
 
         <Form.Input
           label='Title'

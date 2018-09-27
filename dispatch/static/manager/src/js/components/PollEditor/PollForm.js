@@ -127,7 +127,8 @@ export default class PollForm extends React.Component {
     return (
       <div className={'c-poll-form-container'}>
         <div className={'c-equal-width'}>
-          <Form.Container onSubmit={e => e.preventDefault()}>
+          <Form.Container>
+
             <Form.Input
               label='Name'
               padded={false}
@@ -138,6 +139,7 @@ export default class PollForm extends React.Component {
                 fill={true}
                 onChange={e => this.props.update('name', e.target.value)} />
             </Form.Input>
+
             <Form.Input
               label='Question'
               padded={false}
@@ -148,9 +150,11 @@ export default class PollForm extends React.Component {
                 fill={true}
                 onChange={e => this.props.update('question', e.target.value)} />
             </Form.Input>
+
             {this.renderAnswers()}
             {this.renderAddAnswerButton()}
             {this.renderOptions()}
+            
           </Form.Container>
         </div>
         <div className={'c-equal-width'}>

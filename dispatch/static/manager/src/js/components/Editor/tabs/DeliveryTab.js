@@ -88,8 +88,7 @@ export default function DeliveryTab(props) {
         {warningMessage}
       </Form.Input>
 
-      <Form.Input
-        label='Breaking news'>
+      <Form.Input label='Breaking news'>
         <Switch
           className='bp3-large'
           checked={props.is_breaking}

@@ -39,7 +39,7 @@ export default class EventForm extends React.Component {
 
   render() {
     return (
-      <Form.Container onSubmit={e => e.preventDefault()}>
+      <Form.Container>
 
         <Form.Input
           label='Title'

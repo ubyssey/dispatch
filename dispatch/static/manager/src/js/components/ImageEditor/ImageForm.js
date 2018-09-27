@@ -31,7 +31,7 @@ export default class ImageForm extends React.Component {
 
   render() {
     return (
-      <Form.Container onSubmit={e => e.preventDefault()}>
+      <Form.Container>
 
         <Form.Input label='Title'>
           <TextInput
@@ -67,6 +67,7 @@ export default class ImageForm extends React.Component {
           <div className='bp3-callout bp3-intent-danger c-person-form__image__error'>
             {this.props.errors.detail}
           </div> : null}
+          
       </Form.Container>
     )
   }
