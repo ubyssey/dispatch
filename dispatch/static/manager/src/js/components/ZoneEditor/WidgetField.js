@@ -1,8 +1,7 @@
 import React from 'react'
 
 import * as fields from '../fields'
-
-import { FormInput } from '../inputs'
+import * as Form from '../Form'
 
 export default function WidgetField(props) {
   const Field = fields[props.field.type]
@@ -20,7 +19,7 @@ export default function WidgetField(props) {
   }
 
   return (
-    <FormInput
+    <Form.Input
       error={fieldError}
       label={props.field.label}>
       <Field
@@ -28,7 +27,7 @@ export default function WidgetField(props) {
         field={props.field}
         data={props.data}
         onChange={props.onChange} />
-    </FormInput>
+    </Form.Input>
   )
 
 }

@@ -1,104 +1,100 @@
 import React from 'react'
 import { Switch } from '@blueprintjs/core'
 
-import { FormInput, TextInput, TextAreaInput } from '../inputs'
+import { TextInput, TextAreaInput } from '../inputs'
+
+import * as Form from '../Form'
 
 import SectionSelectInput from '../inputs/selects/SectionSelectInput'
 import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
 import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
+
 export default function SubsectionForm(props) {
 
-  const articles = !props.listItem.articles ? [] : props.listItem.articles
-    .map(article => article.id)
-
-  function updateArticles(article_ids) {
-    const articles = article_ids.map(id => ({
+  function updateArticles(articleIds) {
+    const articles = articleIds.map(id => ({
       id: id
     }))
     props.update('articles', articles)
   }
 
-  function updateSection(section_id) {
+  function updateSection(sectionId) {
     const section = {
-      id: section_id
+      id: sectionId
     }
     props.update('section', section)
   }
 
-  return (
-    <form>
+  const articles = !props.listItem.articles ?
+    [] : props.listItem.articles.map(article => article.id)
 
-      <FormInput
+  return (
+    <Form.Container>
+
+      <Form.Input
         label='Name'
-        padded={false}
         error={props.errors.name}>
         <TextInput
           placeholder='Name'
           value={props.listItem.name || ''}
           fill={true}
           onChange={e => props.update('name', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Slug'
-        padded={false}
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
           value={props.listItem.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Is Active'
-        padded={false}
         error={props.errors.is_active} >
         <Switch
           className='bp3-large'
           checked={props.listItem.is_active}
           onChange={e => props.update('is_active', e.target.checked)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Section'
-        padded={false}
         error={props.errors.section_id}>
         <SectionSelectInput
           value={props.listItem.section ? props.listItem.section.id : null}
           update={section => updateSection(section)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Authors'
-        padded={false}
         error={props.errors.author_ids}>
         <AuthorSelectInput
           value={props.listItem.authors || []}
           update={authors => props.update('authors', authors)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Articles'
-        padded={false}
         error={props.errors.article_ids}>
         <ArticleSelectInput
           value={articles}
           many={true}
-          onChange={(articles) => updateArticles(articles)} />
-      </FormInput>
+          onChange={articles => updateArticles(articles)} />
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Description'
-        error={props.errors.snippet}
-        padded={false}>
+        error={props.errors.snippet}>
         <TextAreaInput
           placeholder='Description'
           value={props.listItem.description || ''}
           rows='5'
           onChange={e => props.update('description', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-    </form>
+    </Form.Container>
   )
 }

@@ -1,7 +1,9 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, TextAreaInput, ImageInput } from '../../inputs'
+import { TextAreaInput, ImageInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 export default function FeaturedImageTab(props) {
 
@@ -39,39 +41,39 @@ export default function FeaturedImageTab(props) {
     return (
       <div className='c-article-sidebar__panel'>
 
-        <FormInput label='Image'>
+        <Form.Input label='Image'>
           <ImageInput
             fill={true}
             removable={true}
             value={props.featured_image.image}
             onChange={updateImage} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput label='Caption'>
+        <Form.Input label='Caption'>
           <TextAreaInput
             placeholder='Caption'
             value={props.featured_image.caption || ''}
             rows='2'
             onChange={e => updateCaption(e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput label='Credit'>
+        <Form.Input label='Credit'>
           <TextAreaInput
             placeholder='Credit'
             value={props.featured_image.credit || ''}
             rows='2'
             onChange={e => updateCredit(e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
       </div>
     )
   } else {
     return (
       <div className='c-article-sidebar__panel'>
-        <FormInput label='Image'>
+        <Form.Input label='Image'>
           <ImageInput
             onChange={updateImage} />
-        </FormInput>
+        </Form.Input>
       </div>
     )
   }

@@ -2,7 +2,10 @@ import React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
 import R from 'ramda'
 
-import { FormInput, TextInput, SelectInput } from '../inputs'
+import { TextInput, SelectInput } from '../inputs'
+
+import * as Form from '../Form'
+
 import Poll from './Poll'
 
 require('../../../styles/components/poll_form.scss')
@@ -42,7 +45,7 @@ export default class PollForm extends React.Component {
     const answers = this.getAnswers().map(
       (answer, index) => {
         return (
-          <FormInput
+          <Form.Input
             key={index + 1}
             label={`Answer ${index + 1} Votes: ${answer.vote_count}`}
             padded={false}>
@@ -56,7 +59,7 @@ export default class PollForm extends React.Component {
               onClick={() => this.removeAnswer(index)}>
               <span className={'bp3-icon-standard-text'}>Remove answer</span>
             </span>
-          </FormInput>
+          </Form.Input>
         )
       }
     )
@@ -84,7 +87,7 @@ export default class PollForm extends React.Component {
     ]
 
     return (
-      <FormInput
+      <Form.Input
         label='Poll Options'
         padded={false}>
         <div className='c-poll-form__results-select'>
@@ -93,7 +96,7 @@ export default class PollForm extends React.Component {
             value={this.props.listItem.is_open}
             onChange={e => this.props.update('is_open', e.target.value)} />
         </div>
-      </FormInput>
+      </Form.Input>
     )
   }
 
@@ -105,7 +108,7 @@ export default class PollForm extends React.Component {
 
     return (
       <div>
-        <FormInput
+        <Form.Input
           label='Results Options'
           padded={false}>
           <div className='c-poll-form__results-select'>
@@ -114,7 +117,7 @@ export default class PollForm extends React.Component {
               value={this.props.listItem.show_results}
               onChange={e => this.props.update('show_results', e.target.value)} />
           </div>
-        </FormInput>
+        </Form.Input>
         {(this.props.listItem.id === 'new') ? null : this.renderPollOpenSelect()}
       </div>
     )
@@ -124,8 +127,8 @@ export default class PollForm extends React.Component {
     return (
       <div className={'c-poll-form-container'}>
         <div className={'c-equal-width'}>
-          <form onSubmit={e => e.preventDefault()}>
-            <FormInput
+          <Form.Container onSubmit={e => e.preventDefault()}>
+            <Form.Input
               label='Name'
               padded={false}
               error={this.props.errors.name}>
@@ -134,8 +137,8 @@ export default class PollForm extends React.Component {
                 value={this.props.listItem.name || ''}
                 fill={true}
                 onChange={e => this.props.update('name', e.target.value)} />
-            </FormInput>
-            <FormInput
+            </Form.Input>
+            <Form.Input
               label='Question'
               padded={false}
               error={this.props.errors.question}>
@@ -144,11 +147,11 @@ export default class PollForm extends React.Component {
                 value={this.props.listItem.question || ''}
                 fill={true}
                 onChange={e => this.props.update('question', e.target.value)} />
-            </FormInput>
+            </Form.Input>
             {this.renderAnswers()}
             {this.renderAddAnswerButton()}
             {this.renderOptions()}
-          </form>
+          </Form.Container>
         </div>
         <div className={'c-equal-width'}>
           <Poll

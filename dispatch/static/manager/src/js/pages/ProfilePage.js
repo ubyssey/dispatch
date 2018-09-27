@@ -5,7 +5,9 @@ import { Button, Intent } from '@blueprintjs/core'
 
 import userActions from '../actions/UserActions'
 import PersonEditor from '../components/PersonEditor'
-import { FormInput, TextInput } from '../components/inputs'
+import { TextInput } from '../components/inputs'
+
+import * as Form from '../components/Form'
 
 require('../../styles/components/user_form.scss')
 
@@ -57,8 +59,8 @@ class ProfilePageComponent extends React.Component {
     const userForm = userId ? (
       <div className='u-container u-container--padded c-user-form'>
         <div className='c-user-form__heading'>Account Details</div>
-        <form onSubmit={e => e.preventDefault()}>
-          <FormInput
+        <Form.Container onSubmit={e => e.preventDefault()}>
+          <Form.Input
             label='Email'
             padded={false}
             error={errors.email}>
@@ -67,8 +69,8 @@ class ProfilePageComponent extends React.Component {
               value={user.email || ''}
               fill={true}
               onChange={e => this.handleUpdate('email', e.target.value)} />
-          </FormInput>
-          <FormInput
+          </Form.Input>
+          <Form.Input
             label='Password'
             padded={false}
             error={errors.password_a}>
@@ -78,8 +80,8 @@ class ProfilePageComponent extends React.Component {
               fill={true}
               type='password'
               onChange={e => this.handleUpdate('password_a', e.target.value)} />
-          </FormInput>
-          <FormInput
+          </Form.Input>
+          <Form.Input
             label='Password Again'
             padded={false}
             error={errors.password_b}>
@@ -89,8 +91,8 @@ class ProfilePageComponent extends React.Component {
               fill={true}
               type='password'
               onChange={e => this.handleUpdate('password_b', e.target.value)} />
-          </FormInput>
-        </form>
+          </Form.Input>
+        </Form.Container>
         <Button
           intent={Intent.SUCCESS}
           onClick={() => this.save()}>

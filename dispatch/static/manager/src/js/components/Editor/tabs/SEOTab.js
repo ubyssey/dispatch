@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { FormInput, TextInput, TextAreaInput } from '../../inputs'
+import { TextInput, TextAreaInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 function containsKeyword(field, keyword, divider) {
   if (field && keyword) {
@@ -28,7 +30,6 @@ function ConfirmationTag(props) {
 }
 
 function CharacterCount(props) {
-
   let intent
 
   if (props.count <= props.min - props.margin || props.count >= props.max + props.margin) {
@@ -54,7 +55,7 @@ export default function SEOTab(props) {
   return (
     <div className='c-article-sidebar__panel'>
 
-      <FormInput label='Focus Keywords'>
+      <Form.Input label='Focus Keywords'>
         <TextInput
           placeholder='Focus Keywords'
           value={props.seo_keyword}
@@ -70,9 +71,9 @@ export default function SEOTab(props) {
             confirmed={containsKeyword(props.slug, props.seo_keyword, '-')} />
         </div>
 
-      </FormInput>
+      </Form.Input>
 
-      <FormInput label='Meta Description'>
+      <Form.Input label='Meta Description'>
         <TextAreaInput
           placeholder='Meta Description'
           value={props.seo_description}
@@ -85,7 +86,7 @@ export default function SEOTab(props) {
             max={160}
             margin={10} />
         </div>
-      </FormInput>
+      </Form.Input>
 
     </div>
   )

@@ -1,13 +1,15 @@
 import React from 'react'
 
-import { FormInput, TextInput, TextAreaInput } from '../../inputs'
+import { TextInput, TextAreaInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 export default function BasicFieldsTab(props) {
 
   return (
     <div className='c-article-sidebar__panel'>
 
-      <FormInput
+      <Form.Input
         label='Slug'
         error={props.errors.slug}>
         <TextInput
@@ -15,9 +17,9 @@ export default function BasicFieldsTab(props) {
           value={props.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Snippet'
         error={props.errors.snippet}>
         <TextAreaInput
@@ -25,7 +27,7 @@ export default function BasicFieldsTab(props) {
           value={props.snippet || ''}
           rows='5'
           onChange={e => props.update('snippet', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
     </div>
   )

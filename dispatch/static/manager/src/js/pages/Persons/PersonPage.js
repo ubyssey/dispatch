@@ -6,9 +6,12 @@ import { Button, Intent } from '@blueprintjs/core'
 import userActions from '../../actions/UserActions'
 import personsActions from '../../actions/PersonsActions'
 import invitesActions from '../../actions/InvitesActions'
+
 import PersonEditor from '../../components/PersonEditor'
-import { FormInput, TextInput, SelectInput } from '../../components/inputs'
+import { TextInput, SelectInput } from '../../components/inputs'
 import ConfirmButton from '../../components/inputs/ConfirmButton'
+
+import * as Form from '../../components/Form'
 
 require('../../../styles/components/user_form.scss')
 
@@ -125,8 +128,8 @@ class PersonPageComponent extends React.Component {
       <div className='u-container u-container--padded c-user-form'>
         <div className='c-user-form__heading'>{this.props.invite.id ? 'Pending Invite' :
         'Account Details'}</div>
-        <form onSubmit={e => e.preventDefault()}>
-          <FormInput
+        <Form.Container onSubmit={e => e.preventDefault()}>
+          <Form.Input
             label='Email'
             padded={false}>
             <TextInput
@@ -134,8 +137,8 @@ class PersonPageComponent extends React.Component {
               value={this.props.user.email || this.props.invite.email || ''}
               fill={true}
               onChange={e => this.handleUpdate('email', e.target.value)} />
-          </FormInput>
-          <FormInput
+          </Form.Input>
+          <Form.Input
             label='Set Permissions'
             padded={false}>
             <div className='c-user-form__permission-select'>
@@ -144,8 +147,8 @@ class PersonPageComponent extends React.Component {
                 selected={this.props.user.permissions || this.props.invite.permissions}
                 onChange={(e) => this.handleUpdate('permissions', e.target.value)} />
             </div>
-          </FormInput>
-        </form>
+          </Form.Input>
+        </Form.Container>
         <span className='c-user-form__buttons'>
           <Button
             intent={Intent.SUCCESS}

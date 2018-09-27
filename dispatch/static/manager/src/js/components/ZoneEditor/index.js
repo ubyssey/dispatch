@@ -8,7 +8,7 @@ import * as zonesActions from '../../actions/ZonesActions'
 import ListItemToolbar from '../ItemEditor/ListItemToolbar'
 import Panel from '../Panel'
 import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
-import { FormInput } from '../inputs'
+import * as Form from '../Form'
 
 import FieldGroup from '../fields/FieldGroup'
 
@@ -97,12 +97,12 @@ class ZoneEditorComponent extends React.Component {
             listRoute='zones' />
           <div className='u-container-body u-container--vscroll'>
             <Panel title='Widget'>
-              <FormInput>
+              <Form.Input>
                 <WidgetSelectInput
                   zoneId={this.props.zoneId}
                   value={this.props.zone.widget}
                   update={widgetId => this.updateWidget(widgetId)} />
-              </FormInput>
+              </Form.Input>
             </Panel>
             {fields}
           </div>

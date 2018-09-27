@@ -3,7 +3,6 @@ import LinkButton from './LinkButton'
 import TextInput from './TextInput'
 import ImageInput from './ImageInput'
 import InputGroup from './InputGroup'
-import FormInput from './FormInput'
 import ItemSelectInput from './selects/ItemSelectInput'
 import TextAreaInput from './TextAreaInput'
 import SelectInput from './SelectInput'
@@ -21,7 +20,6 @@ export {
   TextInput as TextInput,
   ImageInput as ImageInput,
   InputGroup as InputGroup,
-  FormInput as FormInput,
   ItemSelectInput as ItemSelectInput,
   TextAreaInput as TextAreaInput,
   SelectInput as SelectInput,

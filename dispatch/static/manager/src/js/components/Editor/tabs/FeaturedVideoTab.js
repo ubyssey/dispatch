@@ -1,9 +1,10 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, TextAreaInput } from '../../inputs'
-
+import { TextAreaInput } from '../../inputs'
 import VideoSelectInput from '../../inputs/selects/VideoSelectInput'
+
+import * as Form from '../../Form'
 
 export default function FeaturedVideoTab(props) {
 
@@ -32,39 +33,39 @@ export default function FeaturedVideoTab(props) {
     return (
       <div className='c-article-sidebar__panel'>
 
-        <FormInput
+        <Form.Input
           label='Video'>
           <VideoSelectInput
             value={props.featured_video.video}
             update={updateVideo} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput label='Caption'>
+        <Form.Input label='Caption'>
           <TextAreaInput
             placeholder='Caption'
             value={props.featured_video.caption || ''}
             rows='2'
             onChange={e => updateCaption(e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput label='Credit'>
+        <Form.Input label='Credit'>
           <TextAreaInput
             placeholder='Credit'
             value={props.featured_video.credit || ''}
             rows='2'
             onChange={e => updateCredit(e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
       </div>
     )
   } else {
     return (
       <div>
-        <FormInput
+        <Form.Input
           label='Video'>
           <VideoSelectInput
             update={updateVideo} />
-        </FormInput>
+        </Form.Input>
       </div>
     )
   }
