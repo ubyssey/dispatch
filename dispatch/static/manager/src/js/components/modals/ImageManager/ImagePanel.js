@@ -2,9 +2,11 @@ import React from 'react'
 
 import { Button, Intent } from '@blueprintjs/core'
 
-import { FormInput, TextInput } from '../../inputs'
+import { TextInput } from '../../inputs'
 import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
 import TagSelectInput from '../../inputs/selects/TagSelectInput'
+
+import * as Form from '../../Form'
 
 require('../../../../styles/components/image_panel.scss')
 
@@ -24,23 +26,23 @@ export default function ImagePanel(props) {
         <div className='c-image-panel__image__filename'>{props.image.filename}</div>
       </div>
       <form>
-        <FormInput label='Title'>
+        <Form.Input label='Title'>
           <TextInput
             value={props.image.title || ''}
             onChange={e => props.update('title', e.target.value)}
             fill={true} />
-        </FormInput>
-        <FormInput label='Photographers'>
+        </Form.Input>
+        <Form.Input label='Photographers'>
           <AuthorSelectInput
             value={props.image.authors}
             update={authors => props.update('authors', authors)}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
-        </FormInput>
-        <FormInput label='Tags'>
+        </Form.Input>
+        <Form.Input label='Tags'>
           <TagSelectInput
             value={props.image.tags}
             update={tags => props.update('tags', tags)} />
-        </FormInput>
+        </Form.Input>
       </form>
     </div>
   )

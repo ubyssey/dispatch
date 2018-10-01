@@ -2,8 +2,9 @@ import React from 'react'
 import R from 'ramda'
 
 import WidgetSelectInput from '../../../components/inputs/selects/WidgetSelectInput'
-import { FormInput } from '../../../components/inputs'
 import WidgetFields from '../../../components/WidgetFields'
+
+import * as Form from '../../../components/Form'
 
 function WidgetEmbedComponent(props) {
 
@@ -14,8 +15,8 @@ function WidgetEmbedComponent(props) {
 
   return (
     <div className='o-embed o-embed--widget'>
-      <form>
-        <FormInput label='Widget'>
+      <Form.Container>
+        <Form.Input label='Widget'>
           <WidgetSelectInput
             zoneId='embed'
             selected={props.data.widget_id}
@@ -23,15 +24,14 @@ function WidgetEmbedComponent(props) {
               props.updateField('widget_id', widgetId)
               props.stopEditing()
             }} />
-        </FormInput>
-
-        <FormInput label='Fields'>
+        </Form.Input>
+        <Form.Input label='Fields'>
           <WidgetFields
             updateField={updateWidgetField}
             widgetId={props.data.widget_id}
             data={props.data.data} />
-        </FormInput>
-      </form>
+        </Form.Input>
+      </Form.Container>
     </div>
   )
 }

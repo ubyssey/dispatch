@@ -1,34 +1,34 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
+import { TextInput } from '../inputs'
+
+import * as Form from '../Form'
 
 export default function SectionForm(props) {
 
   return (
-    <form>
+    <Form.Container>
 
-      <FormInput
+      <Form.Input
         label='Name'
-        padded={false}
         error={props.errors.name}>
         <TextInput
           placeholder='Name'
           value={props.listItem.name || ''}
           fill={true}
           onChange={e => props.update('name', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Slug'
-        padded={false}
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
           value={props.listItem.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-    </form>
+    </Form.Container>
   )
 }

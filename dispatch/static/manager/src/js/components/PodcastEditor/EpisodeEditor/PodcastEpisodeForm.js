@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  FormInput,
   TextInput,
   TextAreaInput,
   ImageInput,
@@ -9,6 +8,8 @@ import {
   AudioInput,
   SelectInput
 } from '../../inputs'
+
+import * as Form from '../../Form'
 
 const EXPLICIT_OPTIONS = [
   ['no', 'No'],
@@ -33,8 +34,9 @@ export default class PodcastEpisodeForm extends React.Component {
 
   render() {
     return (
-      <form>
-        <FormInput
+      <Form.Container>
+
+        <Form.Input
           label='Title'
           padded={false}
           error={this.props.errors.title}>
@@ -43,9 +45,9 @@ export default class PodcastEpisodeForm extends React.Component {
             value={this.props.listItem.title || ''}
             fill={true}
             onChange={e => this.props.update('title', e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Description'
           padded={false}
           error={this.props.errors.description}>
@@ -54,9 +56,9 @@ export default class PodcastEpisodeForm extends React.Component {
             value={this.props.listItem.description || ''}
             fill={true}
             onChange={e => this.props.update('description', e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Author'
           padded={false}
           error={this.props.errors.author}>
@@ -65,36 +67,36 @@ export default class PodcastEpisodeForm extends React.Component {
             value={this.props.listItem.author || ''}
             fill={true}
             onChange={e => this.props.update('author', e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Published At'
           padded={false}
           error={this.props.errors.published_at}>
           <DateTimeInput
             value={this.props.listItem.published_at}
             onChange={dt => this.props.update('published_at', dt)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Image'
           padded={false}
           error={this.props.errors.image}>
           <ImageInput
             value={this.props.listItem.image}
             onChange={imageId => this.props.update('image', imageId)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Explicit'
           padded={false}>
           <SelectInput
             options={EXPLICIT_OPTIONS}
             value={this.props.listItem.explicit}
             onChange={e => this.props.update('explicit', e.target.value)} />
-        </FormInput>
+        </Form.Input>
 
-        <FormInput
+        <Form.Input
           label='Audio File'
           padded={false}
           error={this.props.errors.file}>
@@ -105,9 +107,9 @@ export default class PodcastEpisodeForm extends React.Component {
             fill={true}
             onDurationChange={duration => this.props.update('duration', duration)}
             onChange={file => this.updateFile(file)} />
-        </FormInput>
+        </Form.Input>
 
-      </form>
+      </Form.Container>
     )
   }
 }

@@ -1,14 +1,13 @@
 import React from 'react'
 
 import {
-  FormInput,
   TextInput,
   TextAreaInput,
   ImageInput,
   SelectInput
 } from '../inputs'
 
-import FormContainer from '../../containers/FormContainer'
+import * as Form from '../Form'
 
 const CATEGORY_OPTIONS = [
     ['Arts', 'Arts'],
@@ -31,66 +30,60 @@ const CATEGORY_OPTIONS = [
 
 export default function PodcastForm(props) {
   return (
-    <FormContainer>
+    <Form.Container>
 
-      <FormInput
+      <Form.Input
         label='Title'
-        padded={false}
         error={props.errors.title}>
         <TextInput
           placeholder='Title'
           value={props.listItem.title || ''}
           fill={true}
           onChange={e => props.update('title', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Slug'
-        padded={false}
         error={props.errors.slug}>
         <TextInput
           placeholder='Slug'
           value={props.listItem.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Description'
-        padded={false}
         error={props.errors.description}>
         <TextAreaInput
           placeholder='Description'
           value={props.listItem.description || ''}
           fill={true}
           onChange={e => props.update('description', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Author'
-        padded={false}
         error={props.errors.author}>
         <TextInput
           placeholder='Author'
           value={props.listItem.author || ''}
           fill={true}
           onChange={e => props.update('author', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Owner Name'
-        padded={false}
         error={props.errors.owner_name}>
         <TextInput
           placeholder='Owner Name'
           value={props.listItem.owner_name || ''}
           fill={true}
           onChange={e => props.update('owner_name', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Owner Email'
-        padded={false}
         error={props.errors.owner_email}>
         <TextInput
           placeholder='Owner Email'
@@ -98,27 +91,25 @@ export default function PodcastForm(props) {
           value={props.listItem.owner_email || ''}
           fill={true}
           onChange={e => props.update('owner_email', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
-        label='Category'
-        padded={false}>
+      <Form.Input
+        label='Category'>
         <SelectInput
           options={CATEGORY_OPTIONS}
           default={CATEGORY_OPTIONS[9][0]}
           value={props.listItem.category}
           onChange={e => props.update('category', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Image'
-        padded={false}
         error={props.errors.image}>
         <ImageInput
           value={props.listItem.image}
           onChange={imageId => props.update('image', imageId)} />
-      </FormInput>
+      </Form.Input>
 
-    </FormContainer>
+    </Form.Container>
   )
 }

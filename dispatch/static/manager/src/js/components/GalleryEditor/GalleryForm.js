@@ -11,11 +11,12 @@ import { Popover, Position, Button } from '@blueprintjs/core'
 import imagesActions from '../../actions/ImagesActions'
 import * as modalActions from '../../actions/ModalActions'
 
-import { FormInput, TextInput } from '../inputs'
+import { TextInput } from '../inputs'
 import DnDThumb from './DnDThumb'
 import DnDZone from './DnDZone'
 import AttachmentForm from './AttachmentForm'
 import ImageManager from '../modals/ImageManager'
+import * as Form from '../Form'
 
 require('../../../styles/components/gallery_editor.scss')
 
@@ -230,17 +231,18 @@ class GalleryFormComponent extends React.Component {
       }) : null
 
     return (
-      <form onSubmit={e => e.preventDefault()}>
-        <FormInput
+      <Form.Container>
+
+        <Form.Input
           label='Title'
-          padded={false}
           error={this.props.errors.title}>
           <TextInput
             placeholder='Name'
             value={this.props.listItem.title || ''}
             fill={true}
             onChange={e => this.props.update('title', e.target.value)} />
-        </FormInput>
+        </Form.Input>
+
         <h2 className='c-gallery-editor-heading'>Gallery</h2>
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
@@ -273,7 +275,8 @@ class GalleryFormComponent extends React.Component {
             Clear Gallery
           </Button>
         </div>
-      </form>
+        
+      </Form.Container>
     )
   }
 }
