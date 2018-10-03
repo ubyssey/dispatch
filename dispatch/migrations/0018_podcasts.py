@@ -10,7 +10,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0016_subsections'),
+        ('dispatch', '0017_subsections'),
     ]
 
     operations = [
