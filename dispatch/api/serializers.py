@@ -1025,6 +1025,8 @@ class PodcastSerializer(DispatchModelSerializer):
     image = ImageSerializer(read_only=True)
     image_id = serializers.IntegerField(write_only=True, required=False)
 
+    # url = serializers.CharField(source='get_absolute_url', read_only=True)
+
     class Meta:
         model = Podcast
         fields = (

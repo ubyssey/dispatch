@@ -54,7 +54,7 @@ class ArticleSidebar extends React.Component {
                 snippet={this.props.article.snippet}
                 errors={this.props.errors} />
             } />
-
+          What about randome stuff here
           <Tab
             id='featured-image'
             className='c-article-sidebar__tab'
