@@ -2,10 +2,15 @@ import React from 'react'
 import { HTMLSelect } from '@blueprintjs/core'
 
 export default function SelectInput(props) {
-
   let placeholder = null
   if (props.placeholder) {
-    placeholder = <option key={0} disabled selected hidden>{props.placeholder}</option>
+    placeholder = (
+      <option
+        key={0}
+        disabled selected hidden>
+        {props.placeholder}
+      </option>
+    )
   }
 
   const options = props.options.map((option, i) => (
@@ -16,10 +21,21 @@ export default function SelectInput(props) {
 
   return (
     <HTMLSelect
-      value={props.selected}
+      value={props.value || props.default}
       onChange={props.onChange}>
       {placeholder}
       {options}
     </HTMLSelect>
   )
+}
+
+SelectInput.propTypes = {
+  options: React.PropTypes.array.isRequired,
+  onChange: React.PropTypes.func.isRequired,
+  value: React.PropTypes.any,
+  placeholder: React.PropTypes.string
+}
+
+SelectInput.defaultProps = {
+  default: null
 }

@@ -8,7 +8,7 @@ import * as zonesActions from '../../actions/ZonesActions'
 import ListItemToolbar from '../ItemEditor/ListItemToolbar'
 import Panel from '../Panel'
 import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
-import { FormInput } from '../inputs'
+import * as Form from '../Form'
 
 import FieldGroup from '../fields/FieldGroup'
 
@@ -86,29 +86,25 @@ class ZoneEditorComponent extends React.Component {
         onChange={(name, data) => this.updateField(name, data)} />
     )
 
-
-
     return (
       <DocumentTitle title={`Widgets - ${this.props.zone.name}`}>
-        <div>
-          <div className='u-container-main'>
-            <ListItemToolbar
-              name={this.props.zone.name}
-              type='Zone'
-              typePlural='Zones'
-              saveListItem={() => this.saveZone()}
-              goBack={this.props.goBack} />
-            <div className='u-container-body'>
-              <Panel title='Widget'>
-                <FormInput>
-                  <WidgetSelectInput
-                    zoneId={this.props.zoneId}
-                    selected={this.props.zone.widget}
-                    update={widgetId => this.updateWidget(widgetId)} />
-                </FormInput>
-              </Panel>
-              {fields}
-            </div>
+        <div className='u-container-main'>
+          <ListItemToolbar
+            name={this.props.zone.name}
+            type='Zone'
+            typePlural='Zones'
+            saveListItem={() => this.saveZone()}
+            listRoute='zones' />
+          <div className='u-container-body u-container--vscroll'>
+            <Panel title='Widget'>
+              <Form.Input>
+                <WidgetSelectInput
+                  zoneId={this.props.zoneId}
+                  value={this.props.zone.widget}
+                  update={widgetId => this.updateWidget(widgetId)} />
+              </Form.Input>
+            </Panel>
+            {fields}
           </div>
         </div>
       </DocumentTitle>

@@ -6,6 +6,7 @@ require('../../../styles/components/poll.scss')
 const COLOR_OPACITY = .8
 
 class Poll extends React.Component {
+
   constructor(props){
     super(props)
     this.state = {

@@ -52,16 +52,16 @@ function ArticlePageComponent(props) {
 
   const filters = [
     <SectionFilterInput
-      key={'SectionFilter'}
-      selected={props.location.query.section}
+      key='SectionFilter'
+      value={props.location.query.section}
       update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.tags, props.location.query.q)} />,
     <AuthorFilterInput
-      key={'AuthorFilter'}
-      selected={props.location.query.author}
+      key='AuthorFilter'
+      value={props.location.query.author}
       update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.tags, props.location.query.q)} />,
     <TagsFilterInput
-      key={'tagsFilter'}
-      selected={props.location.query.tags}
+      key='TagsFilter'
+      value={props.location.query.tags}
       update={(tags) => props.searchArticles(props.location.query.author, props.location.query.section, tags, props.location.query.q)} />
   ]
 

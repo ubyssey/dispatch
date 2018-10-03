@@ -1,21 +1,24 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
+import { TextInput } from '../inputs'
+
+import * as Form from '../Form'
 
 export default function TagForm(props) {
 
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <FormInput
+    <Form.Container>
+
+      <Form.Input
         label='Name'
-        padded={false}
         error={props.errors.name}>
         <TextInput
           placeholder='Name'
           value={props.listItem.name || ''}
           fill={true}
           onChange={e => props.update('name', e.target.value)} />
-      </FormInput>
-    </form>
+      </Form.Input>
+
+    </Form.Container>
   )
 }

@@ -2,17 +2,6 @@
 @import '../utilities/fonts';
 @import '../utilities/colors';
 
-.c-form-input label.bp3-label > .bp3-input,
-.c-form-input label.bp3-label > .bp3-select,
-.c-form-input label.bp3-label > .bp3-button,
-.c-form-input label.bp3-label > .bp3-switch,
-.c-form-input label.bp3-label > .c-input--item-select,
-.c-form-input label.bp3-label > .c-input--file,
-.c-form-input label.bp3-label > .c-input--audio {
-  // Structure
-  margin-top: 10px;
-}
-
 // Component: MultiSelectInput
 .c-input--item-select {
   // Text
@@ -93,67 +82,7 @@
   }
 }
 
-// Component: FormInput
-.c-form-input {
-  // Structure
-  padding-top: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1rem;
-
-  // Border
-  border-bottom: 1px solid $color-border-gray;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  // Extras
-  .c-input {
-    // Structure
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  label.bp3-label {
-    margin: 0;
-  }
-}
-
-.c-form-input--no-padding {
-  // Structure
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.c-form-input__label {
-  // Structure
-  display: block;
-  position: relative;
-  margin-bottom: 7px;
-
-  // Text
-  font-weight: $font-weight-bold;
-}
-
-.c-form-input__error.bp3-tag {
-  // Structure
-  position: absolute;
-  right: 0;
-  top: -2px;
-  max-height: 22px;
-  overflow: auto;
-  max-width: 80%;
-}
-
-.c-form-input .bp3-button {
-  // Structure
-  margin-right: 0.75rem;
-}
-
 // Component: ImageInput
-
 .c-input--image {
   // Structure
   margin-top: 0.5rem;

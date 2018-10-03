@@ -1,6 +1,8 @@
 import React from 'react'
 
-import { FormInput, TextInput, TextAreaInput } from '../../inputs'
+import { TextInput, TextAreaInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 import SectionSelectInput from '../../inputs/selects/SectionSelectInput'
 import AuthorSelectInput from '../../inputs/selects/AuthorSelectInput'
@@ -10,8 +12,9 @@ import SubsectionSelectInput from '../../inputs/selects/SubsectionSelectInput'
 
 export default function BasicFieldsTab(props) {
   return (
-    <div>
-      <FormInput
+    <div className='c-article-sidebar__panel'>
+
+      <Form.Input
         label='Slug'
         error={props.errors.slug}>
         <TextInput
@@ -19,50 +22,51 @@ export default function BasicFieldsTab(props) {
           value={props.slug || ''}
           fill={true}
           onChange={e => props.update('slug', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Section'
         error={props.errors.section_id}>
         <SectionSelectInput
-          selected={props.section}
+          value={props.section}
           update={section => props.update('section', section)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Authors'
         error={props.errors.author_ids}>
         <AuthorSelectInput
-          selected={props.authors}
+          value={props.authors}
           update={authors => props.update('authors', authors)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Tags'
         error={props.errors.tag_ids}>
         <TagSelectInput
-          selected={props.tags}
+          value={props.tags}
           update={tags => props.update('tags', tags)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Topic'
         error={props.errors.topic_ids}>
         <TopicSelectInput
-          selected={props.topic}
+          value={props.topic}
+          many={false}
           update={topic => props.update('topic', topic)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Subsection'
         error={props.errors.subsection}>
         <SubsectionSelectInput
           many={false}
-          selected={props.subsection}
+          value={props.subsection}
           update={subsection => props.update('subsection', subsection)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
+      <Form.Input
         label='Snippet'
         error={props.errors.snippet}>
         <TextAreaInput
@@ -70,7 +74,7 @@ export default function BasicFieldsTab(props) {
           value={props.snippet || ''}
           rows='5'
           onChange={e => props.update('snippet', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
     </div>
   )

@@ -35,14 +35,14 @@ export const links = [
     icon: 'helper-management',
     children: [
       {
-        text: 'Polls',
-        url: '/polls/',
-        icon: 'vertical-bar-chart-asc'
-      },
-      {
         text: 'Zones',
         url: '/zones/',
         icon: 'widget'
+      },
+      {
+        text: 'Polls',
+        url: '/polls/',
+        icon: 'vertical-bar-chart-asc'
       },
       {
         text: 'Events',

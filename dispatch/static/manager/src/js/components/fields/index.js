@@ -10,6 +10,7 @@ import SelectField from './SelectField'
 import WidgetField from './WidgetField'
 import PollField from './PollField'
 import InstructionField from './InstructionField'
+import TopicField from './TopicField'
 
 export {
   CharField as char,
@@ -24,4 +25,5 @@ export {
   WidgetField as widget,
   PollField as poll,
   InstructionField as instruction,
+  TopicField as topic,
 }

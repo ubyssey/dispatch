@@ -21,14 +21,14 @@ class SubsectionSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={this.props.many}
-        selected={this.props.selected}
+        value={this.props.value}
         showSortableList={true}
         results={this.props.subsections.ids}
         entities={this.props.entities.subsections}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listSubsections(query)}
         attribute='name'
-        editMessage={this.props.selected ? 'Edit subsection' : 'Add subsection'} />
+        editMessage={this.props.value ? 'Edit subsection' : 'Add subsection'} />
     )
   }
 }

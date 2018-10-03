@@ -146,11 +146,11 @@ class ImageManagerComponent extends React.Component {
     const filters = [
       <AuthorFilterInput
         key={'AuthorFilter'}
-        selected={this.state.author || ''}
+        value={this.state.author || ''}
         update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />,
       <TagsFilterInput
         key={'tagsFilter'}
-        selected={this.state.tags || ''}
+        value={this.state.tags || ''}
         update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
     ]
 

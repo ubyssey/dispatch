@@ -1,8 +1,10 @@
 import React from 'react'
 import R from 'ramda'
 
-import { FormInput, SelectInput, LinkButton, DateTimeInput } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
+import {  SelectInput, LinkButton, DateTimeInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 const IMPORTANCE_OPTIONS = [
   [1, 1],
@@ -61,39 +63,38 @@ export default function DeliveryTab(props) {
 
 
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
 
-      <FormInput label='Importance'>
+      <Form.Input label='Importance'>
         <SelectInput
           options={IMPORTANCE_OPTIONS}
-          selected={props.importance}
+          value={props.importance}
           onChange={e => props.update('importance', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput label='Reading Time'>
+      <Form.Input label='Reading Time'>
         <SelectInput
           options={READING_TIME_OPTIONS}
-          selected={props.reading_time}
+          value={props.reading_time}
           onChange={e => props.update('reading_time', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput label='Enable as Facebook Instant Article'>
+      <Form.Input label='Enable as Facebook Instant Article'>
         <Switch
           className='bp3-large'
           disabled={!isInstantArticlesEnabled}
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
           onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
         {warningMessage}
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
-        label='Breaking news'>
+      <Form.Input label='Breaking news'>
         <Switch
           className='bp3-large'
           checked={props.is_breaking}
           onChange={e => props.update('is_breaking', e.target.checked)} />
           {timeoutPicker}
-      </FormInput>
+      </Form.Input>
 
     </div>
   )

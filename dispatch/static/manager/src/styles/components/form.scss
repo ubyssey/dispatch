@@ -1,0 +1,78 @@
+@import '../utilities/fonts';
+
+// Component: Form.Container
+.c-form {
+  // Structure
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+.u-container > .c-form {
+  // Structure
+  max-width: 640px;
+}
+
+// Component: Form.Input
+.c-form__input {
+  // Structure
+  margin-top: 1.15rem;
+  margin-bottom: 1.15rem;
+
+  &:first-child {
+    // Structure
+    margin-top: 0;
+  }
+
+  &:last-child {
+    // Structure
+    margin-bottom: 0;
+  }
+
+  .c-input {
+    // Structure
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  label.bp3-label {
+    margin: 0;
+  }
+}
+
+.c-form__input__label {
+  // Structure
+  display: block;
+  position: relative;
+  margin-bottom: 7px;
+
+  // Text
+  font-weight: $font-weight-bold;
+}
+
+.c-form__input__error.bp3-tag {
+  // Structure
+  position: absolute;
+  right: 0;
+  top: -2px;
+  max-height: 22px;
+  overflow: auto;
+  max-width: 80%;
+}
+
+.c-form__input .bp3-button {
+  // Structure
+  margin-right: 0.75rem;
+}
+
+.c-form__input label.bp3-label > .bp3-input,
+.c-form__input label.bp3-label > .bp3-select,
+.c-form__input label.bp3-label > .bp3-button,
+.c-form__input label.bp3-label > .bp3-switch,
+.c-form__input label.bp3-label > .c-input--item-select,
+.c-form__input label.bp3-label > .c-input--file,
+.c-form__input label.bp3-label > .c-input--audio {
+  // Structure
+  margin-top: 0.5rem;
+}

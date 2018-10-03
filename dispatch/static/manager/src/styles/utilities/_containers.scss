@@ -8,6 +8,7 @@
 }
 
 .u-container-main {
+  height: 100%;
   flex: 1;
   overflow: hidden;
   display: flex;
@@ -32,7 +33,6 @@
 .u-container-body {
   flex: 1;
   padding: 2rem;
-  padding-bottom: 15rem;
 }
 
 .u-container {

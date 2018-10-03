@@ -153,7 +153,7 @@ function JSONToBlock(acc, block) {
     blocksFromJSON = embedToBlock(block)
   }
 
-  if (blocksFromJSON) {
+  if (blocksFromJSON && blocksFromJSON.contentBlocks) {
     acc.contentBlocks = acc.contentBlocks.concat(blocksFromJSON.contentBlocks)
     acc.entityMap = acc.entityMap.merge(blocksFromJSON.entityMap)
   }
@@ -185,7 +185,10 @@ function toJSON(contentState) {
   }
 
   // Converts from ContentState to JSON
-  return contentState.getBlockMap().reduce(blockToJSON, List()).toJSON()
+  return contentState
+    .getBlockMap()
+    .reduce(blockToJSON, List())
+    .toJSON()
 }
 
 export {
