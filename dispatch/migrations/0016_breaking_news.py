@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0014_image_wrap'),
+        ('dispatch', '0015_image_wrap'),
     ]
 
     operations = [

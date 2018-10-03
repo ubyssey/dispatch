@@ -8,6 +8,9 @@ from dispatch.models import Article, Image, Author
 def move_authors(apps, schema_editor):
     OldAuthor = apps.get_model('dispatch', 'Author')
 
+    Topic = apps.get_model('dispatch', 'Topic')
+
+
     with connection.cursor() as cursor:
         cursor.execute('SELECT id, article_id FROM dispatch_author WHERE article_id IS NOT NULL')
         for author in cursor.fetchall():

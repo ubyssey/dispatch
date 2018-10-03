@@ -37,7 +37,7 @@ def remove_groups(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('dispatch', '0011_polls'),
+        ('dispatch', '0012_polls'),
     ]
 
     operations = [

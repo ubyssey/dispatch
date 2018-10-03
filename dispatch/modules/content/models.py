@@ -48,6 +48,7 @@ class Topic(Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self._generate_slug()
+        
         super(Topic, self).save(*args, **kwargs)
 
 class Section(Model):
