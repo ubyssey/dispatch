@@ -624,7 +624,6 @@ class PodcastEpisodeViewSet(DispatchModelViewSet):
     """Viewset for PodcastEpisode model views."""
     model = PodcastEpisode
     serializer_class = PodcastEpisodeSerializer
-    
 
     def get_queryset(self):
         queryset = PodcastEpisode.objects.all()

@@ -95,7 +95,7 @@ class PodcastEpisode(Model):
     def get_slug_from_title(self):
         return self.title.lower().replace(" ", "-")
 
-def save(self, **kwargs):
+    def save(self, **kwargs):
         is_new = self._state.adding is True
 
         super(PodcastEpisode, self).save(**kwargs)
