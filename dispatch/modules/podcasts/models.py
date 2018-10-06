@@ -86,14 +86,8 @@ class PodcastEpisode(Model):
 
     file = FileField(upload_to='podcasts/')
 
-    def get_absolute_url(self):
-        return "%spodcast/%s#%s" % (settings.BASE_URL, self.podcast.slug, self.get_slug_from_title())
-
     def get_file_url(self):
         return "%s%s/" % (settings.MEDIA_URL, self.file)
-
-    def get_slug_from_title(self):
-        return self.title.lower().replace(" ", "-")
 
     def save(self, **kwargs):
         is_new = self._state.adding is True
