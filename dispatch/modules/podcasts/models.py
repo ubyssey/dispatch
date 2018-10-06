@@ -50,9 +50,6 @@ class Podcast(Model):
         choices=CATEGORY_CHOICES,
         default='News &amp; Politics')
 
-    def get_absolute_url(self):
-        return "%spodcast/%s/" % (settings.BASE_URL, self.podcast.slug)
-
 class PodcastEpisode(Model):
     __original_file = None
 
