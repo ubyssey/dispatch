@@ -34,7 +34,7 @@ class ImageInputComponent extends React.Component {
   }
 
   getSelected() {
-    return this.props.many ? (this.props.selected || []) : (this.props.selected ? [this.props.selected] : [])
+    return this.props.many ? (this.props.value || []) : (this.props.value ? [this.props.value] : [])
   }
 
   addImage(imageId) {
@@ -90,9 +90,9 @@ class ImageInputComponent extends React.Component {
               onClick={() => this.removeImage(image.id)} />
           )} />
         <Button
-          onClick={() => this.chooseImage()}>{this.props.many ? 'Add image' : (this.props.selected ? 'Change image' : 'Select image')}
+          onClick={() => this.chooseImage()}>{this.props.many ? 'Add image' : (this.props.value ? 'Change image' : 'Select image')}
         </Button>
-        {(this.props.selected && this.props.removable) && <Button
+        {(this.props.value && this.props.removable) && <Button
           onClick={() => this.removeImage()}>{'Remove image'}
         </Button>}
       </div>

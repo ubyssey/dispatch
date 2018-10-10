@@ -24,7 +24,7 @@ class GalleryEmbedComponent extends React.Component {
           <Form.Input label='Gallery'>
             <GallerySelectInput
               fill={true}
-              selected={this.props.data.id}
+              value={this.props.data.id}
               update={id => {
                 this.props.updateField('id', id)
                 this.props.stopEditing()
