@@ -28,6 +28,12 @@ const CATEGORY_OPTIONS = [
     ['TV &amp; Film', 'TV & Film'],
 ]
 
+const EXPLICIT_OPTIONS = [
+  ['no', 'No'],
+  ['yes', 'Yes'],
+  ['clean', 'Clean'],
+]
+
 export default function PodcastForm(props) {
   return (
     <Form.Container>
@@ -97,9 +103,19 @@ export default function PodcastForm(props) {
         label='Category'>
         <SelectInput
           options={CATEGORY_OPTIONS}
-          default={CATEGORY_OPTIONS[9][0]}
+          default={CATEGORY_OPTIONS[0][0]}
           value={props.listItem.category}
           onChange={e => props.update('category', e.target.value)} />
+      </Form.Input>
+
+      <Form.Input
+        label='Explicit'
+        padded={false}>
+        <SelectInput
+          options={EXPLICIT_OPTIONS}
+          default={EXPLICIT_OPTIONS[0][0]}
+          value={props.listItem.explicit}
+          onChange={e => props.update('explicit', e.target.value)} />
       </Form.Input>
 
       <Form.Input
