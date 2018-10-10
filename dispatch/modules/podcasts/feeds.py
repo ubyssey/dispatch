@@ -18,7 +18,7 @@ class iTunesPodcastsFeedGenerator(Rss201rev2Feed):
     super(iTunesPodcastsFeedGenerator, self).add_root_elements(handler)
 
     handler.addQuickElement('itunes:subtitle', self.feed['subtitle'])
-    handler.addQuickElement('itunes:author', self.feed['author_name'])
+    handler.addQuickElement('itunes:author', self.feed['author'])
     handler.addQuickElement('itunes:summary', self.feed['description'])
     handler.addQuickElement('itunes:explicit', self.feed['explicit'])
 
@@ -83,6 +83,7 @@ class PodcastFeed(Feed):
 
     def feed_extra_kwargs(self, feed):
         return {
+            'author': feed.author,
             'itunes_name': feed.owner_name,
             'itunes_email': feed.owner_email,
             'itunes_image_url': feed.image.img.url if feed.image else '',
