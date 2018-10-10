@@ -29,9 +29,9 @@ const CATEGORY_OPTIONS = [
 ]
 
 const EXPLICIT_OPTIONS = [
-  ['no', 'No'],
-  ['yes', 'Yes'],
-  ['clean', 'Clean'],
+  ['No', 'No'],
+  ['Yes', 'Yes'],
+  ['Clean', 'Clean'],
 ]
 
 export default function PodcastForm(props) {
