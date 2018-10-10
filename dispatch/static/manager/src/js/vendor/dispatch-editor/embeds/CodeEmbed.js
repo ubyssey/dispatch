@@ -34,7 +34,7 @@ function CodeEmbedComponent(props) {
         <div className='o-embed--code__mode'>
           <SelectInput
             options={MODES}
-            selected={props.data.mode}
+            value={props.data.mode}
             onChange={(e) => props.updateField('mode', e.target.value)} />
         </div>
       </div>

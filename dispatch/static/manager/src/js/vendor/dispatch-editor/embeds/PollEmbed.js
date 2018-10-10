@@ -11,7 +11,7 @@ function PollEmbedComponent(props) {
         <Form.Input label='Poll'>
           <PollSelectInput
             fill={true}
-            selected={props.data.poll}
+            value={props.data.poll}
             onChange={selected => {
               props.updateField('poll',selected)
               props.stopEditing()

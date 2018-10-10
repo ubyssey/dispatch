@@ -127,11 +127,11 @@ class ImagesPageComponent extends React.Component {
     const filters = [
       <AuthorFilterInput
         key={'authorFilter'}
-        selected={this.props.location.query.author}
+        value={this.props.location.query.author}
         update={(author) => this.props.searchImages(author, this.props.location.query.tags, this.props.location.query.q)} />,
       <TagsFilterInput
         key={'tagsFilter'}
-        selected={this.props.location.query.tags}
+        value={this.props.location.query.tags}
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 

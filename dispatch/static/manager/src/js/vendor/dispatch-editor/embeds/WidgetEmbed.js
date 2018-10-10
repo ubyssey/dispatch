@@ -19,7 +19,7 @@ function WidgetEmbedComponent(props) {
         <Form.Input label='Widget'>
           <WidgetSelectInput
             zoneId='embed'
-            selected={props.data.widget_id}
+            value={props.data.widget_id}
             update={widgetId => {
               props.updateField('widget_id', widgetId)
               props.stopEditing()

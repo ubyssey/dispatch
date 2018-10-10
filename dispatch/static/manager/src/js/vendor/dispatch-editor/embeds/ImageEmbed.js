@@ -24,17 +24,17 @@ function ImageEmbedComponent(props) {
         <Form.Input label='Image'>
           <ImageInput
             fill={true}
-            selected={props.data.image_id}
+            value={props.data.image_id}
             onChange={imageId => props.updateField('image_id', imageId)} />
         </Form.Input>
         <Form.Input label='Style'>
           <SelectInput
             options={STYLE_OPTIONS}
-            selected={props.data.style}
+            value={props.data.style}
             onChange={e => props.updateField('style', e.target.value)} />
           <SelectInput
             options={WIDTH_OPTIONS}
-            selected={props.data.width}
+            value={props.data.width}
             onChange={e => props.updateField('width', e.target.value)} />
         </Form.Input>
         <Form.Input label='Caption'>
@@ -43,7 +43,7 @@ function ImageEmbedComponent(props) {
             value={props.data.caption}
             onChange={e => props.updateField('caption', e.target.value)} />
         </Form.Input>
-        <Form.Input label='Custom Credit'>
+        <Form.Input label='Credit'>
           <TextInput
             fill={true}
             value={props.data.credit || ''}

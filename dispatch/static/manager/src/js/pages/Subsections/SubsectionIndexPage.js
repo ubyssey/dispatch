@@ -47,7 +47,7 @@ function SubsectionPageComponent(props) {
   const filters = [
     <SectionFilterInput
       key={'SectionFilter'}
-      selected={props.location.query.section}
+      value={props.location.query.section}
       update={(section) => props.searchSubsections(section, props.location.query.q)} />
   ]
 
