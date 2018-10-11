@@ -144,7 +144,7 @@ class PersonPageComponent extends React.Component {
             <div className='c-user-form__permission-select'>
               <SelectInput
                 options={PERMISSIONS}
-                selected={this.props.user.permissions || this.props.invite.permissions}
+                value={this.props.user.permissions || this.props.invite.permissions}
                 onChange={(e) => this.handleUpdate('permissions', e.target.value)} />
             </div>
           </Form.Input>

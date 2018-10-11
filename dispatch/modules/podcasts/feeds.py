@@ -18,9 +18,12 @@ class iTunesPodcastsFeedGenerator(Rss201rev2Feed):
     super(iTunesPodcastsFeedGenerator, self).add_root_elements(handler)
 
     handler.addQuickElement('itunes:subtitle', self.feed['subtitle'])
-    handler.addQuickElement('itunes:author', self.feed['author_name'])
+    handler.addQuickElement('itunes:author', self.feed['author'])
     handler.addQuickElement('itunes:summary', self.feed['description'])
-    handler.addQuickElement('itunes:category', self.feed['category'])
+    handler.addQuickElement('itunes:explicit', self.feed['explicit'])
+
+    handler.startElement('itunes:category', {'text': self.feed['category']})
+    handler.endElement('itunes:category')
 
     handler.startElement('itunes:owner', {})
     handler.addQuickElement('itunes:name', self.feed['itunes_name'])
@@ -78,12 +81,14 @@ class PodcastFeed(Feed):
     def item_guid(self, item):
         return item.file.url
 
-    def feed_extra_kwargs(self, obj):
+    def feed_extra_kwargs(self, feed):
         return {
-            'itunes_name': obj.owner_name,
-            'itunes_email': obj.owner_email,
-            'itunes_image_url': obj.image.img.url,
-            'category': obj.category,
+            'author': feed.author,
+            'itunes_name': feed.owner_name,
+            'itunes_email': feed.owner_email,
+            'itunes_image_url': feed.image.img.url if feed.image else '',
+            'category': feed.category,
+            'explicit': feed.explicit,
         }
 
     def item_extra_kwargs(self, item):

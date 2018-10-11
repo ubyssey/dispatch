@@ -1,6 +1,7 @@
 import uuid
 import os
 import StringIO
+from urlparse import urlparse
 
 from django.conf import settings
 
@@ -11,6 +12,31 @@ from django.db.models import (
 
 from dispatch.modules.content.models import Image
 from dispatch.core.storage import generate_signed_url
+
+CATEGORY_CHOICES = (
+    ('Arts', 'Arts'),
+    ('Business', 'Business'),
+    ('Comedy', 'Comedy'),
+    ('Education', 'Education'),
+    ('Games &amp; Hobbies', 'Games & Hobbies'),
+    ('Government &amp; Organizations', 'Government & Organizations'),
+    ('Health', 'Health'),
+    ('Kids &amp; Family', 'Kids & Family'),
+    ('Music', 'Music'),
+    ('News &amp; Politics', 'News & Politics'),
+    ('Religion &amp; Spirituality', 'Religion & Spirituality'),
+    ('Science &amp; Medicine', 'Science & Medicine'),
+    ('Society &amp; Culture', 'Society & Culture'),
+    ('Sports &amp; Recreation', 'Sports & Recreation'),
+    ('Technology', 'Technology'),
+    ('TV &amp; Film', 'TV & Film'),
+)
+
+EXPLICIT_CHOICES = (
+    ('No', 'No'),
+    ('Yes', 'Yes'),
+    ('Clean', 'Clean'),
+)
 
 class Podcast(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4)
@@ -26,29 +52,15 @@ class Podcast(Model):
 
     image = ForeignKey(Image, null=True)
 
-    CATEGORY_CHOICES = (
-        ('Arts', 'Arts'),
-        ('Business', 'Business'),
-        ('Comedy', 'Comedy'),
-        ('Education', 'Education'),
-        ('Games &amp; Hobbies', 'Games & Hobbies'),
-        ('Government &amp; Organizations', 'Government & Organizations'),
-        ('Health', 'Health'),
-        ('Kids &amp; Family', 'Kids & Family'),
-        ('Music', 'Music'),
-        ('News &amp; Politics', 'News & Politics'),
-        ('Religion &amp; Spirituality', 'Religion & Spirituality'),
-        ('Science &amp; Medicine', 'Science & Medicine'),
-        ('Society &amp; Culture', 'Society & Culture'),
-        ('Sports &amp; Recreation', 'Sports & Recreation'),
-        ('Technology', 'Technology'),
-        ('TV &amp; Film', 'TV & Film'),
-    )
-
     category = CharField(
         max_length=255,
         choices=CATEGORY_CHOICES,
-        default='News &amp; Politics')
+        default=CATEGORY_CHOICES[0][0])
+
+    explicit = CharField(
+        max_length=5, 
+        choices=EXPLICIT_CHOICES, 
+        default=EXPLICIT_CHOICES[0][0])
 
 class PodcastEpisode(Model):
     __original_file = None
@@ -73,14 +85,11 @@ class PodcastEpisode(Model):
 
     published_at = DateTimeField()
 
-    EXPLICIT_CHOICES = (
-        ('no', 'No'),
-        ('yes', 'Yes'),
-        ('clean', 'Clean'),
-    )
-
-    explicit = CharField(max_length=5, choices=EXPLICIT_CHOICES, default='no')
-
+    explicit = CharField(
+        max_length=5, 
+        choices=EXPLICIT_CHOICES, 
+        default=EXPLICIT_CHOICES[0][0])
+    
     file = FileField(upload_to='podcasts/')
 
     def get_file_url(self):

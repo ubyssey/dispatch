@@ -12,9 +12,9 @@ import {
 import * as Form from '../../Form'
 
 const EXPLICIT_OPTIONS = [
-  ['no', 'No'],
-  ['yes', 'Yes'],
-  ['clean', 'Clean'],
+  ['No', 'No'],
+  ['Yes', 'Yes'],
+  ['Clean', 'Clean'],
 ]
 
 export default class PodcastEpisodeForm extends React.Component {
@@ -92,6 +92,7 @@ export default class PodcastEpisodeForm extends React.Component {
           padded={false}>
           <SelectInput
             options={EXPLICIT_OPTIONS}
+            default={EXPLICIT_OPTIONS[0][0]}
             value={this.props.listItem.explicit}
             onChange={e => this.props.update('explicit', e.target.value)} />
         </Form.Input>
