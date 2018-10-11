@@ -1,8 +1,13 @@
 #!/usr/bin/env python
+
 import os
 import sys
 import dispatch
 import coverage
+
+from dispatch.resources import messages as messages
+from docopt import docopt
+from pprint import pprint
 
 import django
 from django.conf import settings
@@ -62,6 +67,11 @@ def coverage_html_report():
     cov.load()
     cov.html_report()
 
+def show_help():
+    #Show help
+    message = docopt(messages.DISPATCH_ADMIN_HELP_TEXT, version = dispatch.__version__)
+    pprint(message)
+
 commands = {
     'test': run_tests,
     'coverage': run_coverage,
@@ -78,7 +88,7 @@ if __name__ == "__main__":
     try:
         func = commands[command_name]
     except KeyError:
-        print "%s isn't a valid command" % command_name
+        show_help()
         exit()
 
     # Execute the function
