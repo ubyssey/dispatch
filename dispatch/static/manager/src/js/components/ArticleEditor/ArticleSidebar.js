@@ -54,7 +54,7 @@ class ArticleSidebar extends React.Component {
                 snippet={this.props.article.snippet}
                 errors={this.props.errors} />
             } />
-
+          
           <Tab
             id='featured-image'
             className='c-article-sidebar__tab'
