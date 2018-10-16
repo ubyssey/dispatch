@@ -11,6 +11,12 @@ Options:
     -h --help     Show this screen.
     -v --version  Show version.
 
+Commands:
+    test          Run tests.
+    coverage      Run coverage.
+    report        Generate coverage report.
+    report_html   Generate html coverage report.
+
 """
 import os
 import sys
