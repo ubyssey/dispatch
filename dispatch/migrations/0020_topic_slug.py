@@ -10,6 +10,11 @@ def set_defaults(apps, schema_editor):
         topic.slug = topic._generate_slug()
         topic.save()
 
+def reverse_set_defaults(apps, schema_editor):
+    for topic in Topic.objects.all():
+        topic.slug = None
+        topic.save()
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -23,7 +28,7 @@ class Migration(migrations.Migration):
             field=models.SlugField(default='temp-slug'),
             preserve_default=False,
         ),
-        migrations.RunPython(set_defaults),
+        migrations.RunPython(set_defaults, reverse_set_defaults),
         migrations.AlterField(
             model_name='topic',
             name='slug',
