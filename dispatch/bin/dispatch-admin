@@ -96,13 +96,16 @@ commands = {
 
 if __name__ == "__main__":
 
-    arguments = docopt(__doc__)
+    if len(sys.argv) == 1:
+        sys.argv.append("-h")
+
+    arguments = docopt(__doc__, version="Dispatch Admin 0.5.17")
 
     # Attempt to find command function
     try:
-        func = commands[arguments['<command_name>']]
+        func = commands[arguments["<command_name>"]]
     except KeyError:
-        print "%s isn't a valid command" % arguments['<command_name>']
+        print "%s isn't a valid command" % arguments["<command_name>"]
         exit()
 
     # Execute the function
