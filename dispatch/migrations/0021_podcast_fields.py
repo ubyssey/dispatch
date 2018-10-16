@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0021_topic_slug_unique'),
+        ('dispatch', '0020_topic_slug'),
     ]
 
     operations = [

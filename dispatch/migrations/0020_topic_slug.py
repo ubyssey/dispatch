@@ -32,6 +32,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='topic',
             name='slug',
-            field=models.SlugField(unique=False),
+            field=models.SlugField(unique=True),
         ),
     ]
