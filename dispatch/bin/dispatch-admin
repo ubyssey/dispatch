@@ -2,12 +2,14 @@
 """Dispatch Admin.
 
 Usage:
-    dispatch_admin.py <command_name>
-    dispatch_admin.py <command_name> [<test_labels>...]
-    dispatch_admin.py -h | --help
+    dispatch_admin <command_name>
+    dispatch_admin <command_name> [<test_labels>...]
+    dispatch_admin (-h | --help)
+    dispatch_admin (-v | --version)
 
 Options:
-    -h --help   Show this screen.
+    -h --help     Show this screen.
+    -v --version  Show version.
 
 """
 import os
