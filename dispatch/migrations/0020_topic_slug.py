@@ -3,12 +3,20 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from dispatch.models import Topic
+from dispatch.models import Topic, Article
 
 def set_defaults(apps, schema_editor):
     for topic in Topic.objects.all():
-        topic.slug = topic._generate_slug()
-        topic.save()
+            topic.slug = topic._generate_slug()
+            topic.save()
+    
+    seen_topic_slugs = set()
+    for topic in Topic.objects.all():
+        if topic.slug in seen_topic_slugs:
+            topic.delete()
+        else:
+            Article.objects.filter(topic__slug=topic.slug).update(topic=topic)
+            seen_topic_slugs.add(topic.slug)
 
 def reverse_set_defaults(apps, schema_editor):
     for topic in Topic.objects.all():
