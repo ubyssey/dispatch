@@ -32,7 +32,7 @@ class Tag(Model):
 
 class Topic(Model):
     name = CharField(max_length=255)
-    slug = SlugField(unique=True)
+    slug = SlugField(unique=True, max_length=255)
     last_used = DateTimeField(null=True)
 
     def update_timestamp(self):
@@ -542,8 +542,6 @@ class Image(Model, AuthorMixin):
 
             for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
-
-            image.close()
 
     def save_thumbnail(self, image, size, name, label, file_type):
         """Processes and saves a resized thumbnail version of the image."""

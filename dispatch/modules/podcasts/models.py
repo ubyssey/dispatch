@@ -93,7 +93,7 @@ class PodcastEpisode(Model):
     file = FileField(upload_to='podcasts/')
 
     def get_file_url(self):
-        return "%s%s/" % (settings.MEDIA_URL, self.file)
+        return "%s%s" % (settings.MEDIA_URL, self.file)
 
     def save(self, **kwargs):
         is_new = self._state.adding is True
