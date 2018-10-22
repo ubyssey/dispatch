@@ -1,14 +1,35 @@
 #!/usr/bin/env python
+"""Dispatch Admin.
+
+Usage:
+    dispatch_admin <command_name>
+    dispatch_admin <command_name> [<test_labels>...]
+    dispatch_admin (-h | --help)
+    dispatch_admin (-v | --version)
+
+Options:
+    -h --help     Show this screen.
+    -v --version  Show version.
+
+Commands:
+    test          Run tests.
+    coverage      Run coverage.
+    report        Generate coverage report.
+    report_html   Generate html coverage report.
+
+"""
 import os
 import sys
 import dispatch
 import coverage
+from docopt import docopt
 
 import django
 from django.conf import settings
 from django.test.utils import get_runner
 
 PACKAGE_DIR = os.path.dirname(dispatch.__file__)
+
 
 def run_tests(*args):
     os.environ['DJANGO_SETTINGS_MODULE'] = 'dispatch.tests.settings'
@@ -24,6 +45,7 @@ def run_tests(*args):
 
     if failures:
         sys.exit(1)
+
 
 def run_coverage(*args):
     # Setup coverage
@@ -50,17 +72,20 @@ def run_coverage(*args):
     # Save coverage report
     cov.save()
 
+
 def coverage_report():
     # Show report
     cov = coverage.Coverage()
     cov.load()
     cov.report()
 
+
 def coverage_html_report():
     # Show report
     cov = coverage.Coverage()
     cov.load()
     cov.html_report()
+
 
 commands = {
     'test': run_tests,
@@ -71,15 +96,17 @@ commands = {
 
 if __name__ == "__main__":
 
-    command_name = sys.argv[1]
-    args = sys.argv[2:]
+    if len(sys.argv) == 1:
+        sys.argv.append("-h")
+
+    arguments = docopt(__doc__, version="Dispatch Admin %s" % dispatch.__version__)
 
     # Attempt to find command function
     try:
-        func = commands[command_name]
+        func = commands[arguments["<command_name>"]]
     except KeyError:
-        print "%s isn't a valid command" % command_name
+        print "%s isn't a valid command" % arguments["<command_name>"]
         exit()
 
     # Execute the function
-    func(*args)
+    func(*arguments['<test_labels>'])

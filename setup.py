@@ -16,6 +16,7 @@ setup(name='dispatch',
         'pillow',
         'requests',
         'jsonfield',
+        'docopt == 0.6.2'
     ],
     extras_require={
         'dev': [
