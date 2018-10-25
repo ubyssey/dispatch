@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='dispatch',
-    version='0.5.21',
+    version='0.5.22',
     description='A publishing platform for modern newspapers',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
@@ -16,6 +16,7 @@ setup(name='dispatch',
         'pillow',
         'requests',
         'jsonfield',
+        'docopt == 0.6.2'
     ],
     extras_require={
         'dev': [
