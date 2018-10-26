@@ -9,6 +9,7 @@ import BoolField from './BoolField'
 import SelectField from './SelectField'
 import WidgetField from './WidgetField'
 import PollField from './PollField'
+import PodcastField from './PodcastField'
 import InstructionField from './InstructionField'
 import TopicField from './TopicField'
 
@@ -26,4 +27,5 @@ export {
   PollField as poll,
   InstructionField as instruction,
   TopicField as topic,
+  PodcastField as podcast,
 }
