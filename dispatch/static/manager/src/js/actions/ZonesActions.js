@@ -9,89 +9,11 @@ import * as types from '../constants/ActionTypes'
 import {
   zoneSchema,
   widgetSchema,
-  articleSchema,
-  imageSchema,
-  eventSchema,
-  topicSchema,
-  podcastEpisodeSchema,
 } from '../constants/Schemas'
 
-function normalizeZoneData(field, data) {
-  switch (field.type) {
-  case 'article':
-    return field.many ? normalize(data, arrayOf(articleSchema)) : normalize(data, articleSchema)
-  case 'image':
-    return field.many ? normalize(data, arrayOf(imageSchema)) : normalize(data, imageSchema)
-  case 'event':
-    return field.many ? normalize(data, arrayOf(eventSchema)) : normalize(data, eventSchema)
-  case 'topic':
-    return field.many ? normalize(data, arrayOf(topicSchema)) : normalize(data, topicSchema)
-  case 'podcast':
-    return field.many ? normalize(data, arrayOf(podcastEpisodeSchema)) : normalize(data, podcastEpisodeSchema)
-  case 'widget':
-    return normalizeZone(data, true)
-  default:
-    return {
-      result: data,
-      entities: {}
-    }
-  }
-}
+import * as fields from '../components/fields'
 
-function normalizeZone(zone, isNestedWidget=false) {
-  const fields = R.path(['widget', 'fields'], zone) || []
-
-  let fieldEntities = {}
-
-  fields.forEach(field => {
-    if (!zone.data || !zone.data[field.name]) {
-      return
-    }
-
-    const normalizedData = normalizeZoneData(field, zone.data[field.name])
-
-    fieldEntities = R.mergeWith(
-      R.merge,
-      fieldEntities,
-      normalizedData.entities
-    )
-
-    if (field.type != 'widget') {
-      zone.data[field.name] = normalizedData.result
-    }
-  })
-
-  let result = !isNestedWidget ? normalize(zone, zoneSchema) : {}
-
-  result.entities = R.mergeWith(
-    R.merge,
-    result.entities,
-    fieldEntities
-  )
-
-  return result
-}
-
-function normalizeZones(zones) {
-  let results = []
-  let entities = {}
-
-  zones.forEach(zone => {
-    const normalizedData = normalizeZone(zone)
-    results.push(normalizedData.result)
-
-    entities = R.mergeWith(
-      R.merge,
-      entities,
-      normalizedData.entities
-    )
-  })
-
-  return {
-    result: results,
-    entities: entities
-  }
-}
+const schemaMap = initSchemaMap()
 
 export function list(token, query) {
   return {
@@ -159,4 +81,84 @@ export function listWidgets(token, zoneId) {
         zoneId
       }))
   }
+}
+
+function normalizeZoneData(field, data) {
+  if (schemaMap.has(field.type)) {
+    const schema = schemaMap.get(field.type)
+    return field.many ? normalize(data, arrayOf(schema)) : normalize(data, schema)
+  } else {
+    return {
+      result: data,
+      entities: {}
+    }
+  }
+}
+
+function normalizeZone(zone, isNestedWidget=false) {
+  const fields = R.path(['widget', 'fields'], zone) || []
+
+  let fieldEntities = {}
+
+  fields.forEach(field => {
+    if (!zone.data || !zone.data[field.name]) {
+      return
+    }
+
+    const normalizedData = normalizeZoneData(field, zone.data[field.name])
+
+    fieldEntities = R.mergeWith(
+      R.merge,
+      fieldEntities,
+      normalizedData.entities
+    )
+
+    if (field.type != 'widget') {
+      zone.data[field.name] = normalizedData.result
+    }
+  })
+
+  let result = !isNestedWidget ? normalize(zone, zoneSchema) : {}
+
+  result.entities = R.mergeWith(
+    R.merge,
+    result.entities,
+    fieldEntities
+  )
+
+  return result
+}
+
+function normalizeZones(zones) {
+  let results = []
+  let entities = {}
+
+  zones.forEach(zone => {
+    const normalizedData = normalizeZone(zone)
+    results.push(normalizedData.result)
+
+    entities = R.mergeWith(
+      R.merge,
+      entities,
+      normalizedData.entities
+    )
+  })
+
+  return {
+    result: results,
+    entities: entities
+  }
+}
+
+function initSchemaMap() {
+  var schemaMap = new Map()
+
+  for (let fieldType in fields) {
+    const field = fields[fieldType]
+    if (field.schema) {
+      schemaMap.set(field.type, field.schema)
+    }
+  }
+
+  return schemaMap
 }

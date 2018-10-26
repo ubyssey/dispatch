@@ -1,31 +1,31 @@
-import CharField from './CharField'
-import TextField from './TextField'
 import ArticleField from './ArticleField'
-import ImageField from './ImageField'
-import EventField from './EventField'
-import DateTimeField from './DateTimeField'
-import IntegerField from './IntegerField'
 import BoolField from './BoolField'
-import SelectField from './SelectField'
-import WidgetField from './WidgetField'
-import PollField from './PollField'
-import PodcastField from './PodcastField'
+import CharField from './CharField'
+import DateTimeField from './DateTimeField'
+import EventField from './EventField'
+import ImageField from './ImageField'
 import InstructionField from './InstructionField'
+import IntegerField from './IntegerField'
+import PodcastField from './PodcastField'
+import PollField from './PollField'
+import SelectField from './SelectField'
+import TextField from './TextField'
 import TopicField from './TopicField'
+import WidgetField from './WidgetField'
 
 export {
-  CharField as char,
-  TextField as text,
   ArticleField as article,
-  ImageField as image,
-  EventField as event,
-  DateTimeField as datetime,
-  IntegerField as integer,
   BoolField as bool,
-  SelectField as select,
-  WidgetField as widget,
-  PollField as poll,
+  CharField as char,
+  DateTimeField as datetime,
+  EventField as event,
+  ImageField as image,
   InstructionField as instruction,
-  TopicField as topic,
+  IntegerField as integer,
   PodcastField as podcast,
+  PollField as poll,
+  SelectField as select,
+  TextField as text,
+  TopicField as topic,
+  WidgetField as widget,
 }

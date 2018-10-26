@@ -1,8 +1,10 @@
 import React from 'react'
 
+import { articleSchema } from '../../constants/Schemas'
+
 import ArticleSelectInput from '../inputs/selects/ArticleSelectInput'
 
-export default function ArticleField(props) {
+function ArticleField(props) {
   return (
     <ArticleSelectInput
       value={props.data}
@@ -10,3 +12,8 @@ export default function ArticleField(props) {
       onChange={selected => props.onChange(selected)} />
   )
 }
+
+ArticleField.type = 'article'
+ArticleField.schema = articleSchema
+
+export default ArticleField
