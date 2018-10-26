@@ -15,6 +15,7 @@ class PodcastEpisodeSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         value={this.props.value}
+        many={this.props.many}
         results={this.props.podcastEpisodes.ids}
         entities={this.props.entities.podcastEpisodes}
         onChange={(value) => this.props.onChange(value)}
