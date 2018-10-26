@@ -73,7 +73,6 @@ class ModelField(Field):
                 raise InvalidField('Data must be list of integers or UUIDs')
         else:
             if not is_valid_id(data):
-                print data
                 raise InvalidField('Data must be an integer or UUID')
 
     def get_many(self, ids):
