@@ -5,12 +5,11 @@ import DocumentTitle from 'react-document-title'
 
 import * as zonesActions from '../../actions/ZonesActions'
 
-import ListItemToolbar from '../ItemEditor/ListItemToolbar'
-import Panel from '../Panel'
-import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 import * as Form from '../Form'
-
+import Panel from '../Panel'
 import FieldGroup from '../fields/FieldGroup'
+import ListItemToolbar from '../ItemEditor/ListItemToolbar'
+import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 
 class ZoneEditorComponent extends React.Component {
 
@@ -35,24 +34,10 @@ class ZoneEditorComponent extends React.Component {
       return zone
     }
 
-    function processWidget(widget, fields) {
-      if (!fields) {
-        return widget
-      }
-
-      fields.forEach((field) => {
-        if (field.type == 'widget') {
-          const newWidget = R.path(['data', field.name], widget)
-          if (newWidget) {
-            widget.data[field.name] = processWidget(newWidget, R.path(['widget', 'fields'], newWidget))
-            widget = R.dissocPath(['data', field.name, 'widget'], widget)
-          }
-        }
-      })
-      return widget
-    }
-
-    return processWidget(zone, R.prop('fields', this.props.widget || {}))
+    return processNestedWidgets(
+      zone, 
+      R.prop('fields', this.props.widget || {})
+    )
   }
 
   saveZone() {
@@ -110,6 +95,30 @@ class ZoneEditorComponent extends React.Component {
       </DocumentTitle>
     )
   }
+}
+
+function processNestedWidgets(widget, fields) {
+  if (!fields) {
+    return widget
+  }
+
+  fields.forEach((field) => {
+    if (field.type == 'widget') {
+      const newWidget = R.path(['data', field.name], widget)
+
+      if (newWidget) {
+
+        widget.data[field.name] = processNestedWidgets(
+          newWidget, 
+          R.path(['widget', 'fields'], newWidget)
+        )
+
+        widget = R.dissocPath(['data', field.name, 'widget'], widget)
+      }
+    }
+  })
+
+  return widget
 }
 
 const mapStateToProps = (state) => {

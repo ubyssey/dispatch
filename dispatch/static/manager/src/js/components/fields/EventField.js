@@ -1,8 +1,10 @@
 import React from 'react'
 
+import { eventSchema } from '../../constants/Schemas'
+
 import EventSelectInput from '../inputs/selects/EventSelectInput'
 
-export default function EventField(props) {
+function EventField(props) {
   return (
     <EventSelectInput
       value={props.data}
@@ -10,3 +12,8 @@ export default function EventField(props) {
       onChange={selected => props.onChange(selected)} />
   )
 }
+
+EventField.type = 'event'
+EventField.schema = eventSchema
+
+export default EventField

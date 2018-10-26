@@ -1,8 +1,10 @@
 import React from 'react'
 
+import { topicSchema } from '../../constants/Schemas'
+
 import TopicSelectInput from '../inputs/selects/TopicSelectInput'
 
-export default function TopicField(props) {
+function TopicField(props) {
   return (
     <TopicSelectInput
       value={props.data}
@@ -10,3 +12,8 @@ export default function TopicField(props) {
       update={selected => props.onChange(selected)} />
   )
 }
+
+TopicField.type = 'topic'
+TopicField.schema = topicSchema
+
+export default TopicField
