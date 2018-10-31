@@ -157,7 +157,7 @@ class Publishable(Model):
 
     def unpublish(self):
         type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
-        self.is_published = False
+        self.is_published = None
 
         # Unset published version for all articles
         type(self).objects.filter(parent=self.parent).update(published_version=None)
