@@ -225,6 +225,7 @@ class Publishable(Model):
     def delete(self, *args, **kwargs):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
+        
         return self.parent.delete()
 
     def save_featured_image(self, data):
@@ -308,7 +309,9 @@ class Publishable(Model):
         if self.parent == self:
             return self
         try:
-            revision = type(self).objects.filter(parent=self.parent).order_by('-pk')[1]
+            revision = type(self).objects \
+                .filter(parent=self.parent) \
+                .order_by('-pk')[1]
             return revision
         except:
             return self
@@ -317,7 +320,6 @@ class Publishable(Model):
         abstract = True
 
 class Article(Publishable, AuthorMixin):
-
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
@@ -427,7 +429,7 @@ class Subsection(Model, AuthorMixin):
         return Article.objects.filter(subsection=self, is_published=True).order_by('-published_at')
 
     def get_absolute_url(self):
-        """ Returns the subsection URL. """
+        """Returns the subsection URL."""
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
