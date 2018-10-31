@@ -143,7 +143,7 @@ class Publishable(Model):
 
     def publish(self):
         # Unpublish last published version
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
         self.is_published = True
         if self.published_at is None:
             self.published_at = timezone.now()
@@ -156,7 +156,7 @@ class Publishable(Model):
         return self
 
     def unpublish(self):
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
         self.is_published = False
 
         # Unset published version for all articles
@@ -184,7 +184,9 @@ class Publishable(Model):
 
             if not self.is_parent():
                 # If this is a revision, delete the old head of the list.
-                type(self).objects.filter(parent=self.parent, head=True).update(head=False)
+                type(self).objects \
+                    .filter(parent=self.parent, head=True) \
+                    .update(head=None)
 
                 # Clear the instance id to force Django to save a new instance.
                 # Both fields (pk, id) required for this to work -- something to do with model inheritance
@@ -197,6 +199,7 @@ class Publishable(Model):
         # Raise integrity error if instance with given slug already exists.
         if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
             raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
+                self.is_published = None
 
         # Set created_at to current time, but only for first version
         if not self.created_at:
@@ -223,7 +226,10 @@ class Publishable(Model):
 
         if revision:
             # Set latest version for all articles
-            type(self).objects.filter(parent=self.parent).update(latest_version=self.revision_id)
+            type(self).objects \
+                .filter(parent=self.parent) \
+                .update(latest_version=self.revision_id)
+                
             self.latest_version = self.revision_id
 
         return self
