@@ -18,7 +18,7 @@ from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSeri
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
     SlugValidator, AuthorValidator, TemplateValidator)
-from dispatch.api.fields import JSONField, PrimaryKeyField, ForeignKeyField
+from dispatch.api.fields import JSONField, NullBooleanField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
     """Serializes the Person model."""
@@ -608,6 +608,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     id = serializers.ReadOnlyField(source='parent_id')
     slug = serializers.SlugField(validators=[SlugValidator()])
 
+    is_published = NullBooleanField(read_only=True)
+
     section = SectionSerializer(read_only=True)
     section_id = serializers.IntegerField(write_only=True)
 
@@ -769,6 +771,8 @@ class PageSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
 
     id = serializers.ReadOnlyField(source='parent_id')
     slug = serializers.SlugField(validators=[SlugValidator()])
+
+    is_published = NullBooleanField(read_only=True)
 
     featured_image = ImageAttachmentSerializer(required=False, allow_null=True)
     featured_video = VideoAttachmentSerializer(required=False, allow_null=True)
