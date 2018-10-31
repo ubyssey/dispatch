@@ -194,11 +194,6 @@ class Publishable(Model):
                 self.id = None
 
                 # New version is unpublished by default
-                self.is_published = False
-
-        # Raise integrity error if instance with given slug already exists.
-        if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
-            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
                 self.is_published = None
 
         # Set created_at to current time, but only for first version
@@ -208,14 +203,6 @@ class Publishable(Model):
 
         if revision:
             self.updated_at = timezone.now()
-
-        # Check that there is only one 'head'
-        if self.is_conflicting_head():
-            raise IntegrityError("%s with head=True already exists." % (type(self).__name__,))
-
-        # Check that there is only one version with this revision_id
-        if self.is_conflicting_revision_id():
-            raise IntegrityError("%s with revision_id=%s already exists." % (self.revision_id, type(self).__name__))
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -239,12 +226,6 @@ class Publishable(Model):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
         return self.parent.delete()
-
-    def is_conflicting_head(self):
-        return self.head is True and type(self).objects.filter(parent=self.parent, head=True).exclude(id=self.id).exists()
-
-    def is_conflicting_revision_id(self):
-        return type(self).objects.filter(parent=self.parent, id=self.id).count() > 1
 
     def save_featured_image(self, data):
         """
