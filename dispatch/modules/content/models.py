@@ -12,8 +12,8 @@ from django.db import transaction
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE, F)
+    ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
+    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -70,10 +70,10 @@ class Publishable(Model):
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
-    head = BooleanField(default=False, db_index=True)
+    head = NullBooleanField(default=None, db_index=True, null=True)
 
-    is_published = BooleanField(default=False, db_index=True)
-    is_active = BooleanField(default=True)
+    is_published = NullBooleanField(default=None, db_index=True)
+    is_active = NullBooleanField(default=True)
 
     published_version = PositiveIntegerField(null=True)
     latest_version = PositiveIntegerField(null=True)
@@ -356,6 +356,13 @@ class Article(Publishable, AuthorMixin):
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
 
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
+
     AuthorModel = Author
 
     @property
@@ -440,6 +447,13 @@ class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
     parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
+
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
 
     def get_author_string(self):
         return None
