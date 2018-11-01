@@ -12,8 +12,8 @@ from django.db import transaction
 
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE, F)
+    ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
+    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -70,10 +70,10 @@ class Publishable(Model):
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
-    head = BooleanField(default=False, db_index=True)
+    head = NullBooleanField(default=None, db_index=True, null=True)
 
-    is_published = BooleanField(default=False, db_index=True)
-    is_active = BooleanField(default=True)
+    is_published = NullBooleanField(default=None, db_index=True)
+    is_active = NullBooleanField(default=True)
 
     published_version = PositiveIntegerField(null=True)
     latest_version = PositiveIntegerField(null=True)
@@ -143,7 +143,7 @@ class Publishable(Model):
 
     def publish(self):
         # Unpublish last published version
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
         self.is_published = True
         if self.published_at is None:
             self.published_at = timezone.now()
@@ -156,8 +156,8 @@ class Publishable(Model):
         return self
 
     def unpublish(self):
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
-        self.is_published = False
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
+        self.is_published = None
 
         # Unset published version for all articles
         type(self).objects.filter(parent=self.parent).update(published_version=None)
@@ -184,7 +184,9 @@ class Publishable(Model):
 
             if not self.is_parent():
                 # If this is a revision, delete the old head of the list.
-                type(self).objects.filter(parent=self.parent, head=True).update(head=False)
+                type(self).objects \
+                    .filter(parent=self.parent, head=True) \
+                    .update(head=None)
 
                 # Clear the instance id to force Django to save a new instance.
                 # Both fields (pk, id) required for this to work -- something to do with model inheritance
@@ -192,11 +194,7 @@ class Publishable(Model):
                 self.id = None
 
                 # New version is unpublished by default
-                self.is_published = False
-
-        # Raise integrity error if instance with given slug already exists.
-        if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
-            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
+                self.is_published = None
 
         # Set created_at to current time, but only for first version
         if not self.created_at:
@@ -205,14 +203,6 @@ class Publishable(Model):
 
         if revision:
             self.updated_at = timezone.now()
-
-        # Check that there is only one 'head'
-        if self.is_conflicting_head():
-            raise IntegrityError("%s with head=True already exists." % (type(self).__name__,))
-
-        # Check that there is only one version with this revision_id
-        if self.is_conflicting_revision_id():
-            raise IntegrityError("%s with revision_id=%s already exists." % (self.revision_id, type(self).__name__))
 
         super(Publishable, self).save(*args, **kwargs)
 
@@ -223,7 +213,10 @@ class Publishable(Model):
 
         if revision:
             # Set latest version for all articles
-            type(self).objects.filter(parent=self.parent).update(latest_version=self.revision_id)
+            type(self).objects \
+                .filter(parent=self.parent) \
+                .update(latest_version=self.revision_id)
+                
             self.latest_version = self.revision_id
 
         return self
@@ -232,13 +225,8 @@ class Publishable(Model):
     def delete(self, *args, **kwargs):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
+        
         return self.parent.delete()
-
-    def is_conflicting_head(self):
-        return self.head is True and type(self).objects.filter(parent=self.parent, head=True).exclude(id=self.id).exists()
-
-    def is_conflicting_revision_id(self):
-        return type(self).objects.filter(parent=self.parent, id=self.id).count() > 1
 
     def save_featured_image(self, data):
         """
@@ -321,7 +309,9 @@ class Publishable(Model):
         if self.parent == self:
             return self
         try:
-            revision = type(self).objects.filter(parent=self.parent).order_by('-pk')[1]
+            revision = type(self).objects \
+                .filter(parent=self.parent) \
+                .order_by('-pk')[1]
             return revision
         except:
             return self
@@ -330,7 +320,6 @@ class Publishable(Model):
         abstract = True
 
 class Article(Publishable, AuthorMixin):
-
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
@@ -355,6 +344,13 @@ class Article(Publishable, AuthorMixin):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
+
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
 
     AuthorModel = Author
 
@@ -433,13 +429,20 @@ class Subsection(Model, AuthorMixin):
         return Article.objects.filter(subsection=self, is_published=True).order_by('-published_at')
 
     def get_absolute_url(self):
-        """ Returns the subsection URL. """
+        """Returns the subsection URL."""
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
     parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
+
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
 
     def get_author_string(self):
         return None

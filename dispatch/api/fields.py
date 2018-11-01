@@ -4,15 +4,28 @@ from rest_framework.fields import Field, empty
 from rest_framework.exceptions import ValidationError
 
 class JSONField(Field):
-
     def to_internal_value(self, data):
         return data
 
     def to_representation(self, value):
         return value
 
-class PrimaryKeyField(Field):
+class NullBooleanField(Field):
+    """Forces a Django NullBooleanField to always return False for null values."""
 
+    def get_attribute(self, instance):
+        """Overrides the default get_attribute method to convert None values to False."""
+
+        attr = super(NullBooleanField, self).get_attribute(instance)
+        return True if attr else False
+
+    def to_internal_value(self, data):
+        return True if data else None
+
+    def to_representation(self, value):
+        return True if value else False
+
+class PrimaryKeyField(Field):
     def __init__(self, serializer, *args, **kwargs):
         super(PrimaryKeyField, self).__init__(*args, **kwargs)
 
