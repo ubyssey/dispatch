@@ -82,7 +82,7 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
         # Optimize queries by prefetching related data
         queryset = queryset \
-            .select_related('featured_image', 'topic', 'section') \
+            .select_related('featured_image', 'featured_video', 'topic', 'section', 'subsection') \
             .prefetch_related(
                 'tags',
                 'featured_image__image__authors',
