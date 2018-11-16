@@ -279,9 +279,9 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
-        self.assertEqual(response.data['results'][0]['filename'], image_1.data['filename'])
+        self.assertEqual(response.data['results'][0]['filename'], image_3.data['filename'])
         self.assertEqual(response.data['results'][1]['filename'], image_2.data['filename'])
-        self.assertEqual(response.data['results'][2]['filename'], image_3.data['filename'])
+        self.assertEqual(response.data['results'][2]['filename'], image_1.data['filename'])
 
     def test_tag_query(self):
         """Should be able to search images by tags"""
@@ -323,8 +323,8 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         data = response.data
 
         self.assertEqual(data['count'], 2)
-        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpg')
-        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpeg')
+        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpeg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpg')
 
     def test_author_query(self):
         """Should be able to search images by authors"""
@@ -366,8 +366,8 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         data = response.data
 
         self.assertEqual(data['count'], 2)
-        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpg')
-        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpeg')
+        self.assertEqual(data['results'][0]['filename'], 'test_image_a.jpeg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_a.jpg')
 
     def test_name_query(self):
         """Should be able to search images by name"""
@@ -390,6 +390,6 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         data = response.data
 
-        self.assertEqual(data['results'][0]['filename'], 'test_image_b.jpg')
-        self.assertEqual(data['results'][1]['filename'], 'test_image_b.jpeg')
+        self.assertEqual(data['results'][0]['filename'], 'test_image_b.jpeg')
+        self.assertEqual(data['results'][1]['filename'], 'test_image_b.jpg')
         self.assertEqual(data['count'], 2)
