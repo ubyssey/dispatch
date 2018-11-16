@@ -210,7 +210,7 @@ class GalleryFormComponent extends React.Component {
                 className='c-gallery-thumb-overlay'
                 style={{
                   width: THUMB_WIDTH,
-                  height: THUMB_HEIGHT
+                  height: 0
                 }}>
                 <div className='c-gallery-thumb-overlay-text'>
                   {i++}
@@ -275,7 +275,7 @@ class GalleryFormComponent extends React.Component {
             Clear Gallery
           </Button>
         </div>
-        
+
       </Form.Container>
     )
   }
