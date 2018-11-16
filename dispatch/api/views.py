@@ -334,7 +334,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     update_fields = ('title', 'authors', 'tags')
 
     def get_queryset(self):
-        queryset = Image.objects.all()
+        queryset = Image.objects.order_by('-updated_at')
 
         author = self.request.query_params.get('author', None)
         tags = self.request.query_params.getlist('tags', None)
