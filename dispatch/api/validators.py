@@ -93,19 +93,44 @@ def TemplateValidator(template, template_data, tags):
             template = ThemeManager.Templates.get(template)
         except TemplateNotFound as e:
             errors['template'] = str(e)
-        for field in template.fields:
-            try:
-                field.validate(template_data.get(field.name))
-            except KeyError:
-                pass
-            except InvalidField as e:
-                errors[field.name] = str(e)
-        if template.name == 'Timeline':
-            if tags:
-                if not True in map(lambda tag: 'timeline-' in tag.name, tags):
-                    errors['instructions'] = 'Must have a corresponding timeline tag'
-            else:
-                errors['instructions'] = 'Must have a corresponding timeline tag'
 
+        if template.id == 'food-insecurity':
+            for field in template.fields:
+                try:
+                    field.validate(template_data.get(field.name))
+                except KeyError:
+                    pass
+                except InvalidField as e:
+                    print(field.name)
+                    if (field.name == 'next_article'):
+                        print("next_article is true")
+                        continue
+                    if (field.name == 'article_first'):
+                        continue
+                    if (field.name == 'article_second'):
+                        continue
+                    if (field.name == 'article_third'):
+                        continue
+                    else:
+                        print("else on ", e)
+                        errors[field.name] = str(e)
+        else:
+            for field in template.fields:
+                try:
+                    field.validate(template_data.get(field.name))
+                except KeyError:
+                    pass
+                except InvalidField as e:
+                    errors[field.name] = str(e)
+
+            if template.id == 'timeline':
+                if tags:
+                    if not True in map(lambda tag: 'timeline-' in tag.name, tags):
+                        errors['instructions'] = 'Must have a corresponding timeline tag'
+                else:
+                    errors['instructions'] = 'Must have a corresponding timeline tag'
+
+        
+    
     if errors:
         raise ValidationError(errors)
