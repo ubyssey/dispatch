@@ -93,6 +93,12 @@ class ItemSelectInput extends React.Component {
     }
   }
 
+  openDropdown() {
+    this.refs.dropdown.open()
+    if (this.state.query === '' || !this.state.query) 
+      this.fetchResults()
+  }
+
   closeDropdown() {
     this.refs.dropdown.close()
     this.setState({ query: '' })
@@ -216,7 +222,7 @@ class ItemSelectInput extends React.Component {
     const selected = this.getSelected()
 
     const Button = (
-      <a onClick={() => this.refs.dropdown.open()}>
+      <a onClick={() => this.openDropdown()}>
         {this.props.editMessage}
       </a>
     )
@@ -231,7 +237,7 @@ class ItemSelectInput extends React.Component {
           this.clearValues()
           e.stopPropagation()
         }}
-        onClick={() => this.refs.dropdown.open()}>
+        onClick={() => this.openDropdown()}>
           {this.props.editMessage}
       </Tag>
     ) : (
@@ -240,7 +246,7 @@ class ItemSelectInput extends React.Component {
         round={true}
         icon={this.props.icon}
         interactive={true}
-        onClick={() => this.refs.dropdown.open()}>
+        onClick={() => this.openDropdown()}>
           {this.props.editMessage}
       </Tag>
     )

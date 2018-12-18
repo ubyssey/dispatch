@@ -101,9 +101,7 @@ def TemplateValidator(template, template_data, tags):
                 except KeyError:
                     pass
                 except InvalidField as e:
-                    print(field.name)
                     if (field.name == 'next_article'):
-                        print("next_article is true")
                         continue
                     if (field.name == 'article_first'):
                         continue
@@ -112,7 +110,6 @@ def TemplateValidator(template, template_data, tags):
                     if (field.name == 'article_third'):
                         continue
                     else:
-                        print("else on ", e)
                         errors[field.name] = str(e)
         else:
             for field in template.fields:

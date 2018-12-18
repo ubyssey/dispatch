@@ -424,7 +424,14 @@ class TemplateViewSet(viewsets.GenericViewSet):
         })
 
     def list(self, request):
-        templates = ThemeManager.Templates.list()
+        q = self.request.query_params.get('q', None)
+
+        if q is not None:
+            templates = filter(lambda x: x.name.lower().__contains__(q.lower()), ThemeManager.Templates.list())
+
+        else:
+            templates = ThemeManager.Templates.list()
+
         serializer = TemplateSerializer(templates, many=True)
         return self.get_paginated_response(serializer.data)
 
