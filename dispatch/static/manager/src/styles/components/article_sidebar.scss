@@ -72,7 +72,12 @@
   flex-wrap: wrap;
 }
 
-
+.bp3-tab.c-article-sidebar__tab.c-article-sidebar__tab-error {
+  // Background
+  background-color: #db3737 !important;
+  // Text
+  color: white !important;
+}
 .bp3-tab-indicator-wrapper ~
 .c-article-sidebar__tab-error.bp3-tab {
   // Background
