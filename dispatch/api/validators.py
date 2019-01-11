@@ -85,7 +85,6 @@ def SectionValidator(section_id, subsection_id, template, tags):
     if errors:
         raise ValidationError(errors)
 
-
 def AuthorValidator(data):
     """Raise a ValidationError if data does not match the author format."""
     if not isinstance(data, list):
