@@ -17,7 +17,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TemplateValidator)
+    SlugValidator, AuthorValidator, TemplateValidator, SectionValidator)
 from dispatch.api.fields import JSONField, NullBooleanField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -714,12 +714,15 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
                     tags.append(Tag.objects.get(id=int(tag_id)))
                 except Tag.DoesNotExist:
                     pass
+        subsection_id = validated_data.get('subsection_id', None)
+        TemplateValidator(template, template_data, tags, subsection_id)
 
-        TemplateValidator(template, template_data, tags)
+        section_id = validated_data.get('section_id', instance.section_id)
+        SectionValidator(section_id, subsection_id, template, tags)
 
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
-        instance.section_id = validated_data.get('section_id', instance.section_id)
+        instance.section_id = section_id
         instance.slug = validated_data.get('slug', instance.slug)
         instance.snippet = validated_data.get('snippet', instance.snippet)
         instance.reading_time = validated_data.get('reading_time', instance.reading_time)
@@ -731,6 +734,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         instance.integrations = validated_data.get('integrations', instance.integrations)
         instance.template = template
         instance.template_data = template_data
+        
+        
 
         instance.save()
 

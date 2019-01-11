@@ -67,7 +67,23 @@ class SlugValidator(object):
             if self.model.objects.filter(slug=slug).exclude(id=self.instance.id):
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
 
+def SectionValidator(section_id, subsection_id, template, tags):
+    from dispatch.theme import ThemeManager
+    
+    errors = {}
 
+    section = Section.objects.get(id=section_id)
+    if (section.slug == 'magazine'):
+        if template is not None:
+            try:
+                template = ThemeManager.Templates.get(template)
+            except TemplateNotFound as e:
+                errors['template'] = str(e)
+
+            if (template.id != 'magazine'):
+                errors['section_id'] = 'Articles in section magazine must have a magazine template'
+    if errors:
+        raise ValidationError(errors)
 
 def AuthorValidator(data):
     """Raise a ValidationError if data does not match the author format."""
@@ -82,7 +98,7 @@ def AuthorValidator(data):
             # If type is defined, it should be a string
             raise ValidationError('The author type must be a string.')
 
-def TemplateValidator(template, template_data, tags):
+def TemplateValidator(template, template_data, tags, subsection_id):
 
     from dispatch.theme import ThemeManager
 
@@ -101,9 +117,7 @@ def TemplateValidator(template, template_data, tags):
                 except KeyError:
                     pass
                 except InvalidField as e:
-                    print(field.name)
                     if (field.name == 'next_article'):
-                        print("next_article is true")
                         continue
                     if (field.name == 'article_first'):
                         continue
@@ -112,8 +126,8 @@ def TemplateValidator(template, template_data, tags):
                     if (field.name == 'article_third'):
                         continue
                     else:
-                        print("else on ", e)
                         errors[field.name] = str(e)
+        
         else:
             for field in template.fields:
                 try:
@@ -122,13 +136,21 @@ def TemplateValidator(template, template_data, tags):
                     pass
                 except InvalidField as e:
                     errors[field.name] = str(e)
-
+            if template.id == 'magazine':
+                if tags:
+                    # check for instance of year tag
+                    if not True in map(lambda tag: '20' in tag.name, tags):
+                        errors['tag_ids'] = 'Must have the magazine year as a tag (e.g., "2019")'
+                else:    
+                    errors['tag_ids'] = 'Must tag magazine year (e.g., "2019")'
+                if subsection_id is None:
+                    errors['subsection'] = 'Must tag magazine subsection'
             if template.id == 'timeline':
                 if tags:
                     if not True in map(lambda tag: 'timeline-' in tag.name, tags):
-                        errors['instructions'] = 'Must have a corresponding timeline tag'
+                        errors['tag_ids'] = 'Must have a corresponding timeline tag'
                 else:
-                    errors['instructions'] = 'Must have a corresponding timeline tag'
+                    errors['tag_ids'] = 'Must have a corresponding timeline tag'
 
         
     
