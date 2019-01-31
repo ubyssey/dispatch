@@ -520,7 +520,6 @@ class Image(Model, AuthorMixin):
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
         is_new = self.pk is None
-
         if is_new:
             # Make filenames lowercase
             self.img.name = self.img.name.lower()

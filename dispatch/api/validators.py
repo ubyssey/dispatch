@@ -80,7 +80,7 @@ def SectionValidator(section_id, subsection_id, template, tags):
             except TemplateNotFound as e:
                 errors['template'] = str(e)
 
-            if (template.id != 'magazine'):
+            if ('magazine' not in template.id):
                 errors['section_id'] = 'Articles in section magazine must have a magazine template'
     if errors:
         raise ValidationError(errors)
@@ -136,7 +136,7 @@ def TemplateValidator(template, template_data, tags, subsection_id):
                     pass
                 except InvalidField as e:
                     errors[field.name] = str(e)
-            if template.id == 'magazine':
+            if 'magazine' in template.id:
                 if tags:
                     # check for instance of year tag
                     if not True in map(lambda tag: '20' in tag.name, tags):

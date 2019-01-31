@@ -127,6 +127,7 @@ export class ResourceActions {
   }
 
   create(token, data, next=null, callback) {
+    console.log("data")
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.CREATE) })
