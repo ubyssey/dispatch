@@ -73,6 +73,7 @@ def SectionValidator(section_id, subsection_id, template, tags):
     errors = {}
 
     section = Section.objects.get(id=section_id)
+
     if (section.slug == 'magazine'):
         if template is not None:
             try:
@@ -135,16 +136,23 @@ def TemplateValidator(template, template_data, tags, subsection_id):
                 except KeyError:
                     pass
                 except InvalidField as e:
-                    errors[field.name] = str(e)
+                    if (field.name == 'byline_2'):
+                        continue
+                    else:
+                        errors[field.name] = str(e)
             if 'magazine' in template.id:
                 if tags:
                     # check for instance of year tag
                     if not True in map(lambda tag: '20' in tag.name, tags):
                         errors['tag_ids'] = 'Must have the magazine year as a tag (e.g., "2019")'
+                    else: 
+                        year = filter(lambda tag: '20' in tag.name, tags)[0].name
                 else:    
                     errors['tag_ids'] = 'Must tag magazine year (e.g., "2019")'
-                if subsection_id is None:
+
+                if year == '2019' and subsection_id is None:
                     errors['subsection'] = 'Must tag magazine subsection'
+
             if template.id == 'timeline':
                 if tags:
                     if not True in map(lambda tag: 'timeline-' in tag.name, tags):
