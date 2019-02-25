@@ -42,7 +42,12 @@ class ArticlesActions extends PublishableActions {
   }
 
   fromRemote(data) {
-    data.content = fromJSON(data.content)
+    try {
+      data.content = fromJSON(data.content)
+    }
+    catch (e) { 
+      //do nothing 
+    }
     return data
   }
 

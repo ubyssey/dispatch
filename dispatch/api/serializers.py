@@ -602,6 +602,30 @@ class SubsectionSerializer(DispatchModelSerializer):
 
         return instance
 
+class ArticleListSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
+    """Serializes the Article model."""
+    id = serializers.ReadOnlyField(source='parent_id')
+    slug = serializers.SlugField(validators=[SlugValidator()])
+
+    section = SectionSerializer(read_only=True)
+    authors_string = serializers.CharField(source='get_author_string', read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Article
+        fields = (
+            'id',
+            'slug',
+            'headline',
+            'authors_string',
+            'tags',
+            'section',
+            'published_at',
+            'is_breaking',
+            'published_version',
+            'latest_version',
+        )
+
 class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     """Serializes the Article model."""
 
