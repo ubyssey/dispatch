@@ -75,10 +75,12 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
 
     def get_serializer_class(self):
         try:
-            self.request.query_params['limit']
+            if (self.request.query_params['fullContent'] == 'true'):
+                return ArticleSerializer
+            return ArticleListSerializer
         except:
             return ArticleSerializer
-        return ArticleListSerializer
+        
 
     def get_queryset(self):
         """Optionally restricts the returned articles by filtering against a `topic`
