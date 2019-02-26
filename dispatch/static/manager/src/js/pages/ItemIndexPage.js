@@ -18,7 +18,7 @@ export default class ListItemsPageComponent extends React.Component {
     var query = {
       limit: DEFAULT_LIMIT,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT,
-      fullContent: this.props.fullContent
+      exclude: this.props.exclude
     }
 
     // If listItem is present, add to query

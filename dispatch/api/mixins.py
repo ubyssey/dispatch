@@ -89,6 +89,7 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
         super(DispatchModelSerializer, self).__init__(*args, **kwargs)
 
         self.hide_authenticated_fields()
+        self.exclude_fields()
 
     def is_authenticated(self):
         return (self.context.get('request') and
@@ -101,6 +102,17 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
 
         if not self.is_authenticated():
             for field in authenticated_fields:
+                self.fields.pop(field)
+    
+    def exclude_fields(self):
+        """Excludes fields that are included in the queryparameters"""
+        request = self.context.get('request')
+        if request:
+            exclude = request.query_params.get('exclude', None)
+            if exclude is None: return
+                
+            excluded_fields = exclude.split(',')
+            for field in excluded_fields:
                 self.fields.pop(field)
 
 class DispatchPublishableSerializer(object):

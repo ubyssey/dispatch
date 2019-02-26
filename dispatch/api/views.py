@@ -28,7 +28,7 @@ from dispatch.admin.registration import reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (
-    ArticleListSerializer, ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer,
+    ArticleSerializer, PageSerializer, SectionSerializer, ImageSerializer,
     FileSerializer, IssueSerializer, ImageGallerySerializer, TagSerializer,
     TopicSerializer, PersonSerializer, UserSerializer, IntegrationSerializer,
     ZoneSerializer, WidgetSerializer, TemplateSerializer, VideoSerializer,
@@ -72,15 +72,6 @@ class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     model = Article
     serializer_class = ArticleSerializer
     lookup_field = 'parent_id'
-
-    def get_serializer_class(self):
-        try:
-            if (self.request.query_params['fullContent'] == 'true'):
-                return ArticleSerializer
-            return ArticleListSerializer
-        except:
-            return ArticleSerializer
-        
 
     def get_queryset(self):
         """Optionally restricts the returned articles by filtering against a `topic`
