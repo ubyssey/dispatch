@@ -78,11 +78,12 @@ function ArticlePageComponent(props) {
       filters={filters}
       hasFilters={hasFilters}
       headers={[ 'Headline', '', 'Authors', 'Published', 'Revisions']}
+      exclude={'subsection,subsection_id'}
       extraColumns={[
         item => item.currently_breaking ? breakingNews : '',
         item => item.authors_string,
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
-        item => item.latest_version + ' revisions'
+        item => item.latest_version + ' revisions' 
       ]}
       shouldReload={(prevProps, props) => {
         return (

@@ -162,6 +162,10 @@ function JSONToBlock(acc, block) {
 }
 
 function fromJSON(jsonBlocks) {
+  if (typeof(jsonBlocks) === 'undefined'){
+    return ContentState.createFromText('')
+  }
+
   if (!jsonBlocks.length) {
     return ContentState.createFromText('')
   }

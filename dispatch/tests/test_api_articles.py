@@ -635,6 +635,25 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(response.data['results'][0]['slug'], 'article-2')
+    def test_article_exclude_query(self):
+        """Should be able to exclude fields from articles by query params"""
+
+        article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
+        article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
+
+        url = '%s?exclude=%s' % (reverse('api-articles-list'), 'content,section_id')
+        response = self.client.get(url, format='json')
+
+        data = response.data
+
+        self.assertNotIn('content', data['results'][0])
+        self.assertNotIn('section_id', data['results'][0])
+        self.assertIn('slug', data['results'][0])
+        self.assertNotIn('content', data['results'][1])
+        self.assertNotIn('section_id', data['results'][1])
+        self.assertIn('slug', data['results'][1])
+        self.assertEqual(data['count'], 2)
+
 
     def test_article_headline_query(self):
         """Should be able to search for articles by headline"""
