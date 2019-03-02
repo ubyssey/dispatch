@@ -106,6 +106,14 @@ $border-bottom-height: 2px;
     }
   }
 
+  .dispatch-version {
+    // Position
+    position: absolute;
+    margin-left: 25px;
+    // Text
+    font-size: .7rem;
+  }
+
   @media ($bp-larger-than-tablet) {
     .nav-link-group {
       // Structure

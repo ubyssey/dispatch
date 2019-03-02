@@ -19,13 +19,14 @@ class Header extends React.Component {
     }
   }
 
-  renderLink(url, classes, icon, value) {
+  renderLink(url, classes, icon, value, subscript) {
     return (
       <Button
         minimal={true}
         onClick={() => this.props.goTo(url)}
         icon={icon}>
         {value}
+        {subscript && <div className='dispatch-version'>{subscript}</div>}
       </Button>
     )
   }
@@ -35,13 +36,13 @@ class Header extends React.Component {
       <header className='c-header'>
         <nav className='bp3-navbar bp3-dark'>
           <div className='bp3-navbar-group bp3-align-left'>
-            {this.renderLink('/', 'nav-logo', 'selection', 'dispatch')}
+            {this.renderLink('/', 'nav-logo', 'selection', 'dispatch', '0.5.30')}
             <span className='bp3-navbar-divider' />
             <HeaderButtons goTo={this.props.goTo} />
           </div>
           <div className='bp3-navbar-group bp3-align-right'>
-            {this.renderLink('/profile/', null, 'user', '')}
-            {this.renderLink('/logout/', null, 'log-out', '')}
+            {this.renderLink('/profile/', null, 'user', '', null)}
+            {this.renderLink('/logout/', null, 'log-out', '', null)}
           </div>
         </nav>
       </header>
