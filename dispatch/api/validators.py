@@ -147,11 +147,10 @@ def TemplateValidator(template, template_data, tags, subsection_id):
                         errors['tag_ids'] = 'Must have the magazine year as a tag (e.g., "2019")'
                     else: 
                         year = filter(lambda tag: '20' in tag.name, tags)[0].name
+                        if year == '2019' and subsection_id is None:
+                            errors['subsection'] = 'Must tag magazine subsection'
                 else:    
                     errors['tag_ids'] = 'Must tag magazine year (e.g., "2019")'
-
-                if year == '2019' and subsection_id is None:
-                    errors['subsection'] = 'Must tag magazine subsection'
 
             if template.id == 'timeline':
                 if tags:
