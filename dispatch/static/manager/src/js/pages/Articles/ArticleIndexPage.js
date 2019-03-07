@@ -77,10 +77,11 @@ function ArticlePageComponent(props) {
       displayColumn='headline'
       filters={filters}
       hasFilters={hasFilters}
-      headers={[ 'Headline', '', 'Authors', 'Published', 'Revisions']}
+      headers={[ 'Headline', '', 'Section', 'Authors', 'Published', 'Revisions']}
       exclude={'subsection,subsection_id'}
       extraColumns={[
         item => item.currently_breaking ? breakingNews : '',
+        item => props.entities.sections[item.section]['name'],
         item => item.authors_string,
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
         item => item.latest_version + ' revisions' 
