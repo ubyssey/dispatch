@@ -15,7 +15,6 @@ const DEFAULT_LIMIT = 15
 export default class ListItemsPageComponent extends React.Component {
 
   getQuery() {
-    console.log(this.props.exclude)
     var query = {
       limit: DEFAULT_LIMIT,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT,
