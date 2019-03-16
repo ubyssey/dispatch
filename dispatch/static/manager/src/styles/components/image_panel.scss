@@ -41,9 +41,14 @@
   // Border
   border: thin solid $color-border-gray;
   border-top: none;
+  overflow: auto;
 
   // Text
   @include font-size(13);
   color: $color-black;
   line-height: 1.3em;
+}
+
+.c-image-panel__form {
+  margin: 10px;
 }

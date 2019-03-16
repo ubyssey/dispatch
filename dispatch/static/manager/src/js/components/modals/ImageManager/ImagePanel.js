@@ -25,7 +25,7 @@ export default function ImagePanel(props) {
         <img className='c-image-panel__image__img' src={props.image.url_medium} />
         <div className='c-image-panel__image__filename'>{props.image.filename}</div>
       </div>
-      <form>
+      <form className='c-image-panel__form'>
         <Form.Input label='Title'>
           <TextInput
             value={props.image.title || ''}
