@@ -193,6 +193,7 @@ class ImageManagerComponent extends React.Component {
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
           <Button
+            intent={Intent.SUCCESS}
             disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
             onClick={() => this.insertImage()}>Insert</Button>
         </div>
