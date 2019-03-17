@@ -4,8 +4,22 @@ require('../../../../styles/components/image_thumb.scss')
 
 export default function ImageThumb(props) {
 
-  const style = {
-    backgroundImage: `url('${props.image.url_thumb}')`
+  let style
+
+  if (props.isSelected) {
+    style = {
+      background: `repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 10px,
+        rgba(0, 0, 0, 0.3) 10px,
+        rgba(0, 0, 0, 0.3) 20px
+      ), url('${props.image.url_thumb}'), center center`
+    }
+  } else {
+    style = {
+      background: `url('${props.image.url_thumb}'), center center`
+    }
   }
 
   const baseClass = 'c-image-thumb'
