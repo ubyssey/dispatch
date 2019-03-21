@@ -8,6 +8,7 @@
 dist/
 node_modules/
 
+dispatch/static/manager/yarn-error.log
 yarn.lock
 
 .coverage
@@ -18,3 +19,4 @@ htmlcov/
 dispatch/tests/media
 
 dispatch/apps/**/migrations/
+
