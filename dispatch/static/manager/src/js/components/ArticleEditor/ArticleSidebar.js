@@ -3,8 +3,7 @@ import React from 'react'
 import { Tabs, Tab } from '@blueprintjs/core'
 
 import BasicFieldsTab from './tabs/BasicFieldsTab'
-import FeaturedImageTab from '../Editor/tabs/FeaturedImageTab'
-// import FeaturedVideoTab from '../Editor/tabs/FeaturedVideoTab'
+import FeaturedMediaTab from '../Editor/tabs/FeaturedMediaTab'
 import DeliveryTab from '../Editor/tabs/DeliveryTab'
 import TemplateTab from '../Editor/tabs/TemplateTab'
 import SEOTab from '../Editor/tabs/SEOTab'
@@ -54,15 +53,15 @@ class ArticleSidebar extends React.Component {
                 snippet={this.props.article.snippet}
                 errors={this.props.errors} />
             } />
-          
+
           <Tab
-            id='featured-image'
+            id='featured-media'
             className='c-article-sidebar__tab'
-            title='Featured image'
+            title='Featured Media'
             panel={
-              <FeaturedImageTab
+              <FeaturedMediaTab
                 update={this.props.update}
-                featured_image={this.props.article.featured_image}
+                article={this.props.article}
                 entities={this.props.entities} />
             } />
 
@@ -80,14 +79,6 @@ class ArticleSidebar extends React.Component {
                 breaking_timeout={this.props.article.breaking_timeout}
                 availableIntegrations={this.props.integrations} />
             } />
-
-          {/* uncomment when featured videos are ready */}
-          {/* <TabPanel className='c-article-sidebar__panel'>
-            <FeaturedVideoTab
-              update={this.props.update}
-              featured_video={this.props.article.featured_video}
-              entities={this.props.entities} />
-          </TabPanel> */}
 
           <Tab
             id='template'

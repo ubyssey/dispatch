@@ -10,6 +10,19 @@ const TYPE = 'Video'
 const TYPE_PLURAL = 'Videos'
 const AFTER_DELETE = 'videos'
 
+function VideoEditorComponent(props) {
+  // TODO: Add video preview here
+  return (
+    <ItemEditor
+      type={TYPE}
+      typePlural={TYPE_PLURAL}
+      afterDelete={AFTER_DELETE}
+      form={VideoForm}
+      displayField='title'
+      {... props} />
+  )
+}
+
 const mapStateToProps = (state) => {
   return {
     listItem: state.app.videos.single,
@@ -39,18 +52,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(videosActions.delete(token, videoId, next))
     }
   }
-}
-
-function VideoEditorComponent(props) {
-  return (
-    <ItemEditor
-      type={TYPE}
-      typePlural={TYPE_PLURAL}
-      afterDelete={AFTER_DELETE}
-      form={VideoForm}
-      displayField='title'
-      {... props} />
-  )
 }
 
 const VideoEditor = connect(
