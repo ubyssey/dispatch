@@ -61,7 +61,7 @@ function PodcastsPageComponent(props) {
   )
 
   const rssFeedColumn = (item) => (
-    <CopyToClipboard text={`${window.location.origin}/podcasts/${item.slug}/`}/>
+    <CopyToClipboard text={`${window.location.origin}/podcasts/${item.slug}/`} />
   )
 
   return (
