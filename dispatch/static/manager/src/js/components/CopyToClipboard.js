@@ -11,7 +11,7 @@ class CopyToClipboard extends React.Component {
         <textarea
           ref={(node) => { this.txtInput = node }}
           value={this.props.text} />
-        <Tooltip text={'Copied!'} position={'top'} activateOnClick>
+        <Tooltip text={'Copied!'} position={'top'} activateOnClick={true}>
           <button
             className="bp3-button bp3-icon-medium bp3-icon-clipboard"
             onClick={() => { this.txtInput.select(); document.execCommand('copy') }} />
