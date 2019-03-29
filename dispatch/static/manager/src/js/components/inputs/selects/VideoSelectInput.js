@@ -29,7 +29,7 @@ class VideoSelectInputComponent extends React.Component {
           videos={this.props.entities.videos} />
         <ItemSelectInput
           many={false}
-          value={this.props.value}
+          value={this.props.value || ''}
           inline={this.props.inline}
           showSortableList={this.props.showSortableList}
           results={this.props.videos.ids}

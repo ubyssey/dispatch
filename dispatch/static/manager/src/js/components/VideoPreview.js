@@ -4,8 +4,12 @@ import YouTube from 'react-youtube'
 export default function VideoPreview(props) {
 
   function haveVideo(props) {
+    if (!props.videos) {
+      return false
+    }
+
     let vid = props.videos[1]
-    return props.value !== null &&
+    return props.value !== '' &&
            vid !== undefined &&
            vid.url !== ''
   }
