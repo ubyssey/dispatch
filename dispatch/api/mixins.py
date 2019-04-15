@@ -129,7 +129,6 @@ class DispatchPublishableMixin(object):
                         }
                 )
             except WebPushException as ex:
-                print(ex.response.status_code)
                 if ex.response.status_code == 410 or ex.response.status_code == 404:
                     subscription.delete()
 
