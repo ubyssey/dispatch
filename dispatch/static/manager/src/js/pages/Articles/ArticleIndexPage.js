@@ -48,18 +48,20 @@ function ArticlePageComponent(props) {
   const section = props.entities.sections[props.location.query.section]
   const title = section ? `${section.name} - Articles` : 'Articles'
 
+  const hasFilters = props.location.query.section || props.location.query.author || props.location.query.tags
+
   const filters = [
     <SectionFilterInput
-      key={'SectionFilter'}
-      selected={props.location.query.section}
+      key='SectionFilter'
+      value={props.location.query.section}
       update={(section) => props.searchArticles(props.location.query.author, section, props.location.query.tags, props.location.query.q)} />,
     <AuthorFilterInput
-      key={'AuthorFilter'}
-      selected={props.location.query.author}
+      key='AuthorFilter'
+      value={props.location.query.author}
       update={(author) => props.searchArticles(author, props.location.query.section, props.location.query.tags, props.location.query.q)} />,
     <TagsFilterInput
-      key={'tagsFilter'}
-      selected={props.location.query.tags}
+      key='TagsFilter'
+      value={props.location.query.tags}
       update={(tags) => props.searchArticles(props.location.query.author, props.location.query.section, tags, props.location.query.q)} />
   ]
 
@@ -74,16 +76,19 @@ function ArticlePageComponent(props) {
       typeSingular='article'
       displayColumn='headline'
       filters={filters}
-      headers={[ 'Headline', '', 'Authors', 'Published', 'Revisions']}
+      hasFilters={hasFilters}
+      headers={[ 'Headline', '', 'Section', 'Authors', 'Published', 'Revisions']}
+      exclude={'subsection,subsection_id'}
       extraColumns={[
         item => item.currently_breaking ? breakingNews : '',
+        item => props.entities.sections[item.section]['name'],
         item => item.authors_string,
         item => item.published_at ? humanizeDatetime(item.published_at) : 'Unpublished',
-        item => item.latest_version + ' revisions'
+        item => item.latest_version + ' revisions' 
       ]}
       shouldReload={(prevProps, props) => {
         return (
-          (prevProps.location.query.section !== props.location.query.section) || 
+          (prevProps.location.query.section !== props.location.query.section) ||
           (prevProps.location.query.author !== props.location.query.author)  ||
           (prevProps.location.query.tags !== props.location.query.tags)
         )

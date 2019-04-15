@@ -7,6 +7,7 @@ import PollForm from './PollForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Poll'
+const TYPE_PLURAL = 'Polls'
 const AFTER_DELETE = 'polls'
 
 function prepareJSONData(data) {
@@ -18,6 +19,7 @@ function PollEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={PollForm}
       displayField='name'

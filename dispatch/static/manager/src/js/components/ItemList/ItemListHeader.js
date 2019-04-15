@@ -1,7 +1,7 @@
 import React from 'react'
+import { Button } from '@blueprintjs/core'
 
 import ConfirmButton from '../inputs/ConfirmButton'
-
 import { Toolbar, ToolbarLeft, ToolbarRight } from '../Toolbar'
 import ItemListPagination from './ItemListPagination'
 import ItemListSearchBar from './ItemListSearchBar'
@@ -16,6 +16,14 @@ export default function ItemListHeader(props) {
     <div className='c-item-list__header__create'>
       {props.createHandler ? props.createHandler() : null}
     </div>
+  )
+
+  const filtersButton = (
+    <Button
+      onClick={() => props.toggleFilters()}
+      minimal={true}
+      icon='filter'
+      rightIcon={props.showFilters ? 'caret-up' : 'caret-down'}>Filters</Button>
   )
 
   const toolbarLeft = (
@@ -33,9 +41,7 @@ export default function ItemListHeader(props) {
         className='c-item-list__header__delete'
         onConfirm={() => props.actions.deleteItems(props.items.selected)}
         disabled={!props.items.selected.length}>Delete</ConfirmButton>
-      <div className='c-item-list__header__filters'>
-        {props.filters}
-      </div>
+      {props.hasFilters && filtersButton}
       {props.toolbarContent}
     </div>
   )

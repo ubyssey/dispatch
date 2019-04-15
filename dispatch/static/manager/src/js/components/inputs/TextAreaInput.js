@@ -3,7 +3,7 @@ import React from 'react'
 export default function TextAreaInput(props) {
   return (
     <textarea
-      className='pt-input pt-fill'
+      className='bp3-input bp3-fill'
       placeholder={props.placeholder}
       value={props.value}
       rows={props.rows}

@@ -23,13 +23,13 @@ class PollSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         results={this.props.polls.ids}
         entities={this.props.entities.polls}
-        onChange={(selected) => this.props.onChange(selected)}
+        onChange={(value) => this.props.onChange(value)}
         fetchResults={(query) => this.listPolls(query)}
         attribute='name'
-        editMessage={this.props.selected ? `Edit ${label}` : `Add ${label}`} />
+        editMessage={this.props.value ? `Edit ${label}` : `Add ${label}`} />
     )
   }
 

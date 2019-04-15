@@ -1,11 +1,12 @@
 import React from 'react'
 import R from 'ramda'
 
-import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
+import { widgetSchema } from '../../constants/Schemas'
 
 import FieldGroup from './FieldGroup'
+import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 
-export default class WidgetFieldComponent extends React.Component {
+class WidgetField extends React.Component {
   handleWidgetChange(widgetId) {
     if (!widgetId) {
       // Set data to null when removing widget
@@ -59,7 +60,7 @@ export default class WidgetFieldComponent extends React.Component {
         <div className='c-input--widget-field__select-wrapper'>
           <WidgetSelectInput
             compatibleWidgets={this.props.field.widgets}
-            selected={this.getWidgetId()}
+            value={this.getWidgetId()}
             update={widgetId => this.handleWidgetChange(widgetId)} />
         </div>
         {fields}
@@ -68,7 +69,12 @@ export default class WidgetFieldComponent extends React.Component {
   }
 }
 
-WidgetFieldComponent.defaultProps = {
+WidgetField.defaultProps = {
   data: {},
   field: {}
 }
+
+WidgetField.type = 'widget'
+WidgetField.schema = widgetSchema
+
+export default WidgetField

@@ -5,6 +5,7 @@ import PullQuoteEmbed from './PullQuoteEmbed'
 import GalleryEmbed from './GalleryEmbed'
 import WidgetEmbed from './WidgetEmbed'
 import PollEmbed from './PollEmbed'
+import PodcastEmbed from './PodcastEmbed'
 
 export {
   ImageEmbed,
@@ -13,5 +14,6 @@ export {
   CodeEmbed,
   GalleryEmbed,
   WidgetEmbed,
-  PollEmbed
+  PollEmbed,
+  PodcastEmbed
 }

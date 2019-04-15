@@ -2,30 +2,35 @@
 @import '../utilities/fonts';
 @import '../utilities/colors';
 
-.c-form-input label.pt-label > .pt-input,
-.c-form-input label.pt-label > .pt-select,
-.c-form-input label.pt-label > .pt-button,
-.c-form-input label.pt-label > .pt-switch,
-.c-form-input label.pt-label > .c-input--item-select,
-.c-form-input label.pt-label > .c-input--file {
-  margin-top: 10px;
-}
-
 // Component: MultiSelectInput
 .c-input--item-select {
   // Text
   font-weight: $font-weight-semi-bold;
-  margin-left: 12px;
 
-  .pt-popover {
+  .bp3-popover {
     // Structure
     margin-bottom: 1rem;
   }
 
-  .pt-popover-target {
+  .bp3-popover-target {
     // Structure
     display: block;
   }
+
+  .bp3-control-group > :first-child {
+    width: 35%;
+    text-align: left;
+  }
+
+  .bp3-control-group > :last-child {
+    width: 65%;
+    text-align: right;
+  }
+}
+
+.bp3-popover .bp3-popover-arrow {
+  // Structure
+  margin-top: 1px;
 }
 
 .c-input--item-select__item {
@@ -64,10 +69,6 @@
   border-bottom: 1px solid $color-border-gray;
 }
 
-.c-input--item-select__search__button {
-  margin-top: 5px;
-}
-
 // Component: InputGroup
 .c-input-group {
   // Structure
@@ -81,67 +82,7 @@
   }
 }
 
-// Component: FormInput
-.c-form-input {
-  // Structure
-  padding-top: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1rem;
-
-  // Border
-  border-bottom: 1px solid $color-border-gray;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  // Extras
-  .c-input {
-    // Structure
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  label.pt-label {
-    margin: 0;
-  }
-}
-
-.c-form-input--no-padding {
-  // Structure
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.c-form-input__label {
-  // Structure
-  display: block;
-  position: relative;
-  margin-bottom: 7px;
-
-  // Text
-  font-weight: $font-weight-bold;
-}
-
-.c-form-input__error.pt-tag {
-  // Structure
-  position: absolute;
-  right: 0;
-  top: -2px;
-  max-height: 22px;
-  overflow: auto;
-  max-width: 80%;
-}
-
-.c-form-input .pt-button {
-  // Structure
-  margin-right: 0.75rem;
-}
-
 // Component: ImageInput
-
 .c-input--image {
   // Structure
   margin-top: 0.5rem;
@@ -243,4 +184,48 @@
   // Structure
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.c-input--filter {
+  // Structure
+  display: inline-block;
+  margin-right: 0.5rem;
+
+  .bp3-tag {
+    // Background
+    background: transparent;
+
+    // Border
+    border: 1px solid $color-border-gray;
+
+    // Text
+    color: $color-text-gray;
+
+    &:hover,
+    &.bp3-interactive:hover,
+    &.bp3-interactive:active,
+    &.bp3-active,
+    &.bp3-interactive.bp3-active {
+      // Background
+      background-color: $color-text-gray-light;
+    }
+
+    &:focus {
+      // Extras
+      outline: none;
+    }
+
+    > .bp3-icon {
+      // Extras
+      fill: $color-text-gray;
+    }
+  }
+}
+
+.c-input--audio {
+  audio, .bp3-progress-bar {
+    // Structure
+    width: 100%;
+    margin-top: 10px;
+  }
 }

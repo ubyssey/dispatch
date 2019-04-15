@@ -22,15 +22,15 @@ class SectionSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         inline={this.props.inline}
         showSortableList={this.props.showSortableList}
         results={this.props.sections.ids}
         entities={this.props.entities.sections}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
-        editMessage={this.props.selected ? 'Edit section' : 'Add section'} />
+        editMessage={this.props.value ? 'Edit section' : 'Add section'} />
     )
   }
 

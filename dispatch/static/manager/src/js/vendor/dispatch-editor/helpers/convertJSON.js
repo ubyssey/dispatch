@@ -153,7 +153,7 @@ function JSONToBlock(acc, block) {
     blocksFromJSON = embedToBlock(block)
   }
 
-  if (blocksFromJSON) {
+  if (blocksFromJSON && blocksFromJSON.contentBlocks) {
     acc.contentBlocks = acc.contentBlocks.concat(blocksFromJSON.contentBlocks)
     acc.entityMap = acc.entityMap.merge(blocksFromJSON.entityMap)
   }
@@ -162,6 +162,10 @@ function JSONToBlock(acc, block) {
 }
 
 function fromJSON(jsonBlocks) {
+  if (typeof(jsonBlocks) === 'undefined'){
+    return ContentState.createFromText('')
+  }
+
   if (!jsonBlocks.length) {
     return ContentState.createFromText('')
   }
@@ -185,7 +189,10 @@ function toJSON(contentState) {
   }
 
   // Converts from ContentState to JSON
-  return contentState.getBlockMap().reduce(blockToJSON, List()).toJSON()
+  return contentState
+    .getBlockMap()
+    .reduce(blockToJSON, List())
+    .toJSON()
 }
 
 export {

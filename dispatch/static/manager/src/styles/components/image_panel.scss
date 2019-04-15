@@ -11,7 +11,7 @@
   // Border
   border-bottom: thin solid $color-border-gray;
 
-  .pt-button {
+  .bp3-button {
     margin-right: 0.75rem;
   }
 }
@@ -41,9 +41,14 @@
   // Border
   border: thin solid $color-border-gray;
   border-top: none;
+  overflow: auto;
 
   // Text
   @include font-size(13);
   color: $color-black;
   line-height: 1.3em;
+}
+
+.c-image-panel__form {
+  margin: 10px;
 }

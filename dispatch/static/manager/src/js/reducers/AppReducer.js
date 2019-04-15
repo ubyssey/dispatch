@@ -21,9 +21,13 @@ import widgetsReducer from './WidgetsReducer'
 import eventsReducer from './EventsReducer'
 import userReducer from './UserReducer'
 import videosReducer from './VideosReducer'
+import podcastsReducer from './PodcastsReducer'
+import podcastEpisodesReducer from './PodcastEpisodesReducer'
 import settingsReducer from './SettingsReducer'
 import invitesReducer from './InvitesReducer'
 import pollsReducer from './PollsReducer'
+import subsectionsReducer from './SubsectionsReducer'
+import uploadReducer from './UploadReducer'
 import notificationsReducer from './NotificationsReducer'
 import subscriptionsReducer from './SubscriptionsReducer'
 
@@ -31,6 +35,7 @@ export default combineReducers({
   entities: entitiesReducer,
   auth: authReducer,
   sections: sectionsReducer,
+  subsections: subsectionsReducer,
   articles: articlesReducer,
   pages: pagesReducer,
   files: filesReducer,
@@ -50,8 +55,11 @@ export default combineReducers({
   users: userReducer,
   invites: invitesReducer,
   videos: videosReducer,
+  podcasts: podcastsReducer,
+  podcastEpisodes: podcastEpisodesReducer,
+  settings: settingsReducer,
   polls: pollsReducer,
+  upload: uploadReducer,
   notifications: notificationsReducer,
   subscriptions: subscriptionsReducer,
-  settings: settingsReducer
 })

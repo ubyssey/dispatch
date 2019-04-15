@@ -32,6 +32,6 @@ jobs:
       user: ubyssey
       skip_cleanup: true
       password:
-        secure: BQQSSY2KmBG4Yq8BoDIh2vHqiftXjiogU1mH6gq1fuwaAfhMnNzXK+BKnS/fqIc24cNYoFEsnH4UYQVqyDqKr/ammYBJX2+zfQtf2JqrdYaxQWZ0Fxcu7FqiWmX43nukJy7R4Yg746DJkQL15zWuk1yAzbrD+IQPzmNddFXyBF0=
+        secure: LJUK9lcTt3uTGpCbJTXFQSUg4YP6R+Rrj3MelmIwjhFUBgQDRje9KynxE9z93BEZ9S3sohHbmHdlKLJsAfTb6aeA49Edl+f2oUGJYt+WbIUnxtL7El5IHOqx4IB3MP4X46M/amBSBS1L4JTWACbHICk1XI3FA+7JDGLJLR721qE=
       on:
         tags: true

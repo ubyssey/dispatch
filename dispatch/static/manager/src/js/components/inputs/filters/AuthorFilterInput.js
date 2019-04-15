@@ -16,19 +16,19 @@ class AuthorFilterInputComponent extends React.Component {
 
     this.props.listPersons(this.props.token, queryObj)
   }
-  //converts tags from string to number
-  convertTags(tags) {
+
+  convertValue(tags) {
     return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
   }
 
   render() {
     return (
       <FilterSelectInput
-        selected={this.convertTags(this.props.selected)}
+        value={this.convertValue(this.props.value)}
         many={false}
         results={this.props.persons}
         entities={this.props.entities.persons}
-        update={(selected) => this.props.update(selected)}
+        update={(value) => this.props.update(value)}
         fetchResults={(query) => this.listPersons(query)}
         attribute='full_name'
         label='Author'

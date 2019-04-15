@@ -2,8 +2,10 @@ import React from 'react'
 import R from 'ramda'
 import { dateObjToAPIString } from '../../../util/helpers'
 
-import { FormInput, SelectInput, LinkButton, DateTimeInput } from '../../inputs'
 import { Switch } from '@blueprintjs/core'
+import {  SelectInput, LinkButton, DateTimeInput } from '../../inputs'
+
+import * as Form from '../../Form'
 
 const IMPORTANCE_OPTIONS = [
   [1, 1],
@@ -44,7 +46,7 @@ export default function DeliveryTab(props) {
 
   if (!isInstantArticlesEnabled) {
     warningMessage = (
-      <div className='u-flex pt-callout pt-intent-danger'>
+      <div className='u-flex bp3-callout bp3-intent-danger'>
         <div className='u-flex--fill u-flex--align-middle'>Please enable Facebook Instant Articles to use this feature</div>
         <div><LinkButton to='integrations/fb-instant-articles'>Enable</LinkButton></div>
       </div>
@@ -55,57 +57,56 @@ export default function DeliveryTab(props) {
     <div>
       <p>Timeout</p>
       <DateTimeInput
+        hidden={!props.is_breaking}
         value={props.breaking_timeout}
         onChange={dt => props.update('breaking_timeout', dt)} />
     </div> : null
 
   const notificationScheduler = () => {
     return (
-      <FormInput label='Schedule Notification'>
+      <Form.Input label='Schedule Notification'>
         <DateTimeInput
           hidden={props.is_breaking}
           value={props.scheduled_notification}
           onChange={dt => props.update('scheduled_notification', dateObjToAPIString(dt))} />
-      </FormInput>
+      </Form.Input>
     )
   }
 
   return (
-    <div>
+    <div className='c-article-sidebar__panel'>
 
-      <FormInput label='Importance'>
+      <Form.Input label='Importance'>
         <SelectInput
           options={IMPORTANCE_OPTIONS}
-          selected={props.importance}
+          value={props.importance}
           onChange={e => props.update('importance', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput label='Reading Time'>
+      <Form.Input label='Reading Time'>
         <SelectInput
           options={READING_TIME_OPTIONS}
-          selected={props.reading_time}
+          value={props.reading_time}
           onChange={e => props.update('reading_time', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput label='Enable as Facebook Instant Article'>
+      <Form.Input label='Enable as Facebook Instant Article'>
         <Switch
-          className='pt-large'
+          className='bp3-large'
           disabled={!isInstantArticlesEnabled}
           checked={R.path(['fb-instant-articles', 'enabled'], props.integrations)}
           onChange={e => updateInstantArticle(props.update, props.integrations, e.target.checked)} />
         {warningMessage}
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
-        label='Breaking news'>
+      <Form.Input label='Breaking news'>
         <Switch
-          className='pt-large'
+          className='bp3-large'
           checked={props.is_breaking}
           onChange={e => props.update('is_breaking', e.target.checked)} />
           {timeoutPicker}
-      </FormInput>
+      </Form.Input>
 
-      <div>Hello</div>
       {props.is_breaking ? null : notificationScheduler()}
 
     </div>

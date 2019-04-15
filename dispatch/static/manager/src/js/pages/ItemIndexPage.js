@@ -17,7 +17,12 @@ export default class ListItemsPageComponent extends React.Component {
   getQuery() {
     var query = {
       limit: DEFAULT_LIMIT,
-      offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
+      offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT,
+    }
+
+    // If fields to be excluded, add to query
+    if (this.props.exclude) {
+      query.exclude = this.props.exclude
     }
 
     // If listItem is present, add to query
@@ -53,7 +58,6 @@ export default class ListItemsPageComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-
     if (this.isNewQuery(prevProps, this.props)
       || this.props.shouldReload(prevProps, this.props)) {
       this.props.clearListItems()
@@ -90,7 +94,7 @@ export default class ListItemsPageComponent extends React.Component {
   render() {
     // The first column will always be a link, as defined here,
     // containing the item property associated with displayColumn
-    const columns = R.insert(0, item => (
+    const columns = this.props.columns || R.insert(0, item => (
       <strong>
         <Link
           to={`/${this.props.typePlural}/${item.id}`}
@@ -114,14 +118,18 @@ export default class ListItemsPageComponent extends React.Component {
           entities={this.props.entities.listItems}
 
           filters={this.props.filters}
+          hasFilters={this.props.hasFilters}
 
           columns={columns}
           headers={this.props.headers}
 
           emptyMessage={this.props.emptyMessage ? this.props.emptyMessage : `You haven\'t created any ${this.props.typePlural} yet.`}
           createHandler={() => (
-            <LinkButton intent={Intent.SUCCESS} to={`${this.props.typePlural}/new`}>
-              <span className='pt-icon-standard pt-icon-add' />Create {this.typeString}
+            <LinkButton
+              intent={Intent.SUCCESS}
+              icon='add'
+              to={`${this.props.typePlural}/new`}>
+              Create {this.typeString}
             </LinkButton>)
           }
 

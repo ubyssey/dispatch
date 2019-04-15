@@ -17,13 +17,17 @@ class SectionFilterInputComponent extends React.Component {
     this.props.listSections(this.props.token, queryObj)
   }
 
+  convertValue(tags) {
+    return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
+  }
+
   render() {
     return (
       <FilterSelectInput
-        selected={this.props.selected}
+        value={this.convertValue(this.props.value)}
         results={this.props.sections}
         entities={this.props.entities.sections}
-        update={(selected) => this.props.update(selected)}
+        update={(value) => this.props.update(value)}
         fetchResults={(query) => this.listSections(query)}
         attribute='name'
         icon='projects'

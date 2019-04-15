@@ -1,7 +1,7 @@
 @import '../../../../../styles/utilities/colors';
 
 $embed-border-radius: 5px;
-$embed-header-height: 40px;
+$embed-header-padding: 0.4rem;
 $embed-padding: 1rem;
 
 .o-embed-container {
@@ -11,57 +11,23 @@ $embed-padding: 1rem;
 
 .o-embed-container__header {
   // Structure
-  display: flex;
-  height: $embed-header-height;
   background: $color-dark-gray;
-  padding-left: $embed-padding;
-  padding-right: $embed-padding;
+  padding-top: $embed-header-padding;
+  padding-right: $embed-header-padding;
+  padding-bottom: $embed-header-padding;
+  padding-left: $embed-header-padding;
 
   // Border
   border-top-left-radius: $embed-border-radius;
   border-top-right-radius: $embed-border-radius;
 
   // Text
-  color: $color-white;
-  line-height: $embed-header-height;
-}
+  text-align: right;
 
-.o-embed-container__header__title {
-  // Structure
-  flex: 1;
-}
-
-.o-embed-container__header__options {
-  li {
-    // Structure
-    display: inline-block;
-    margin-right: 1rem;
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    a {
-      // Text
-      color: $color-text-gray-light;
-
-      // Extras
-      cursor: pointer;
-
-      &:hover {
-        // Text
-        text-decoration: underline;
-
-        // Extras
-        opacity: 0.75;
-      }
-    }
+  button.bp3-button.bp3-minimal .bp3-icon {
+    // Extras
+    fill: $color-text-gray-light;
   }
-
-  .pt-icon-standard {
-    margin-right: 0.25rem;
-  }
-
 }
 
 .o-embed-container__body {
@@ -73,4 +39,9 @@ $embed-padding: 1rem;
   border-color: $color-border-gray;
   border-bottom-left-radius: $embed-border-radius;
   border-bottom-right-radius: $embed-border-radius;
+
+  form {
+    // Structure
+    padding: 1rem;
+  }
 }

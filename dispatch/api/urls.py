@@ -26,6 +26,9 @@ router.register(r'token', views.TokenViewSet, base_name='api-token')
 router.register(r'videos', views.VideoViewSet, base_name='api-videos')
 router.register(r'invites', views.InviteViewSet, base_name='api-invites')
 router.register(r'polls', views.PollViewSet, base_name='api-polls')
+router.register(r'subsections', views.SubsectionViewSet, base_name='api-subsections')
+router.register(r'podcasts/podcasts', views.PodcastViewSet, base_name='api-podcasts')
+router.register(r'podcasts/episodes', views.PodcastEpisodeViewSet, base_name='api-podcast-episodes')
 router.register(r'notifications', views.NotificationsViewSet, base_name='api-notifications')
 router.register(r'subscriptioncount', views.SubscriptionCountViewSet, base_name='api-subscriptioncount')
 
@@ -35,5 +38,5 @@ dashboard_user_actions = views.DashboardViewSet.as_view({'get': 'list_actions'})
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
     url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
-    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions'),
+    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions')
 ]) + router.urls

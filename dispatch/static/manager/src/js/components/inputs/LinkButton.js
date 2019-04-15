@@ -1,20 +1,29 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { connect } from 'react-redux'
 import { Button } from '@blueprintjs/core'
 
-export default function LinkButton(props) {
+import * as navigationActions from '../../actions/NavigationActions'
+
+function LinkButtonComponent(props) {
   return (
-    <Link
-      to={props.to}
-      role='button'
-      onClick={e => {
-        if (props.disabled) {
-          e.preventDefault()
-        }
-      }}>
-      <Button {...props}>
-        {props.children}
-      </Button>
-    </Link>
+    <Button
+      onClick={() => props.goTo(props.to)}
+      {...props}>
+      {props.children}
+    </Button>
   )
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    goTo: (route) => {
+      dispatch(navigationActions.goTo(route))
+    }
+  }
+}
+const LinkButton = connect(
+  null,
+  mapDispatchToProps
+)(LinkButtonComponent)
+
+export default LinkButton

@@ -29,7 +29,7 @@ function prepareMultipartPayload(payload) {
 }
 
 function buildRoute(route, id) {
-  let pieces = route.split('.')
+  const pieces = route.split('.')
 
   let fullRoute = API_URL + pieces[0]
 
@@ -42,7 +42,7 @@ function buildRoute(route, id) {
   }
 
   // Append slash to all urls
-  let lastCharacter = fullRoute.slice(-1)
+  const lastCharacter = fullRoute.slice(-1)
 
   if (lastCharacter !== '/') {
     fullRoute += '/'
@@ -70,7 +70,7 @@ function parseJSON(response) {
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  let urlString = buildRoute(route, id) + url.format({ query: query })
+  const urlString = buildRoute(route, id) + url.format({ query: query })
   return fetch(
     urlString,
     {
@@ -78,7 +78,7 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-    .then(parseJSON)
+  .then(parseJSON)
 }
 
 function getPageRequest(uri, token=null) {
@@ -189,6 +189,23 @@ const DispatchAPI = {
     delete: (token, sectionId) => {
       return deleteRequest('sections', sectionId, null, token)
     },
+  },
+  subsections: {
+    list: (token, query) => {
+      return getRequest('subsections', null, query, token)
+    },
+    get: (token, subsectionId) => {
+      return getRequest('subsections', subsectionId, null, token)
+    },
+    save: (token, subsectionId, data) => {
+      return patchRequest('subsections', subsectionId, data, token)
+    },
+    create: (token, data) => {
+      return postRequest('subsections', null, data, token)
+    },
+    delete: (token, subsectionId) => {
+      return deleteRequest('subsections', subsectionId, null, token)
+    }
   },
   articles: {
     list: (token, query) => {
@@ -470,7 +487,7 @@ const DispatchAPI = {
       return deleteRequest('invites', inviteId, null, token)
     }
   },
-  'polls': {
+  polls: {
     list: (token, query) => {
       return getRequest('polls', null, query, token)
     },
@@ -487,7 +504,7 @@ const DispatchAPI = {
       return deleteRequest('polls', pollId, null, token)
     }
   },
-  'notifications': {
+  notifications: {
     list: (token, query) => {
       return getRequest('notifications', null, query, token)
     },
@@ -504,9 +521,45 @@ const DispatchAPI = {
       return deleteRequest('notifications', notificationId, null, token)
     }
   },
-  'subscriptions': {
+  subscriptions: {
     list: (token, query) => {
       return getRequest('subscriptioncount', null, query, token)
+    }
+  },
+  podcasts: {
+    podcasts: {
+      list: (token, query) => {
+        return getRequest('podcasts/podcasts', null, query, token)
+      },
+      get: (token, id) => {
+        return getRequest('podcasts/podcasts', id, null, token)
+      },
+      save: (token, id, data) => {
+        return patchRequest('podcasts/podcasts', id, data, token)
+      },
+      create: (token, data) => {
+        return postRequest('podcasts/podcasts', null, data, token)
+      },
+      delete: (token, id) => {
+        return deleteRequest('podcasts/podcasts', id, null, token)
+      },
+    },
+    episodes: {
+      list: (token, query) => {
+        return getRequest('podcasts/episodes', null, query, token)
+      },
+      get: (token, id) => {
+        return getRequest('podcasts/episodes', id, null, token)
+      },
+      save: (token, id, data) => {
+        return patchMultipartRequest('podcasts/episodes', id, data, token)
+      },
+      create: (token, data) => {
+        return postMultipartRequest('podcasts/episodes', null, data, token)
+      },
+      delete: (token, id) => {
+        return deleteRequest('podcasts/episodes', id, null, token)
+      },
     }
   }
 }

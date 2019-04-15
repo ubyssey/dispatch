@@ -1,12 +1,19 @@
 import React from 'react'
 
+import { eventSchema } from '../../constants/Schemas'
+
 import EventSelectInput from '../inputs/selects/EventSelectInput'
 
-export default function EventField(props) {
+function EventField(props) {
   return (
     <EventSelectInput
-      selected={props.data}
+      value={props.data}
       many={props.field.many}
       onChange={selected => props.onChange(selected)} />
   )
 }
+
+EventField.type = 'event'
+EventField.schema = eventSchema
+
+export default EventField

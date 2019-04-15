@@ -85,6 +85,17 @@ export default function toasterReducer(toaster = {}, action) {
   case rejected(types.POLLS.DELETE_MANY):
     return showToast('Some polls could not be deleted', Intent.DANGER)
 
+  // Subsections
+  case fulfilled(types.SUBSECTIONS.CREATE):
+  case fulfilled(types.SUBSECTIONS.SAVE):
+    return showToast('Subsection saved')
+  case rejected(types.SUBSECTIONS.CREATE):
+  case rejected(types.SUBSECTIONS.SAVE):
+    return showToast('Subsection could not be saved', Intent.DANGER)
+  case fulfilled(types.SUBSECTIONS.DELETE_MANY):
+    return showToast(`${action.payload.length} subsection${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.SUBSECTIONS.DELETE_MANY):
+    return showToast('Some subsections could not be deleted', Intent.DANGER)
   // Images
   case fulfilled(types.IMAGES.SAVE):
     return showToast('Image saved')
@@ -108,6 +119,28 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast(`${action.payload.length} file${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.FILES.DELETE_MANY):
     return showToast('Some files could not be deleted', Intent.DANGER)
+
+  case fulfilled(types.PODCASTS.CREATE):
+  case fulfilled(types.PODCASTS.SAVE):
+    return showToast('Podcast saved')
+  case rejected(types.PODCASTS.CREATE):
+  case rejected(types.PODCASTS.SAVE):
+    return showToast('Podcast could not be saved', Intent.DANGER)
+  case fulfilled(types.PODCASTS.DELETE_MANY):
+    return showToast(`${action.payload.length} podcast${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PODCASTS.DELETE_MANY):
+    return showToast('Some podcasts could not be deleted', Intent.DANGER)
+
+  case fulfilled(types.PODCAST_EPISODES.CREATE):
+  case fulfilled(types.PODCAST_EPISODES.SAVE):
+    return showToast('Podcast episode saved')
+  case rejected(types.PODCAST_EPISODES.CREATE):
+  case rejected(types.PODCAST_EPISODES.SAVE):
+    return showToast('Podcast episode could not be saved', Intent.DANGER)
+  case fulfilled(types.PODCAST_EPISODES.DELETE_MANY):
+    return showToast(`${action.payload.length} podcast episode${action.payload.length > 1 ? 's' : ''} deleted`)
+  case rejected(types.PODCAST_EPISODES.DELETE_MANY):
+    return showToast('Some episodes could not be deleted', Intent.DANGER)
 
   // Integrations
   case fulfilled(types.INTEGRATIONS.SAVE):
@@ -256,7 +289,7 @@ export default function toasterReducer(toaster = {}, action) {
     return showToast(`${action.payload.length} tag${action.payload.length > 1 ? 's' : ''} deleted`)
   case rejected(types.NOTIFICATIONS.DELETE_MANY):
     return showToast('Some notifications could not be deleted', Intent.DANGER)
-
+    
   default:
     return toaster
 

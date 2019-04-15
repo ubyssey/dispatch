@@ -19,6 +19,8 @@ class ArticlesActions extends PublishableActions {
 
     data.section_id = data.section
 
+    data.subsection_id = data.subsection
+
     data.author_ids = data.authors
 
     data.tag_ids = data.tags

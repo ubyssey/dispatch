@@ -28,13 +28,13 @@ class WidgetSelectInputComponent extends React.Component {
     return (
       <ItemSelectInput
         many={false}
-        selected={this.props.selected}
+        value={this.props.value}
         results={results}
         entities={entities}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listWidgets(query)}
         attribute='name'
-        editMessage={this.props.selected ? 'Change widget' : 'Set widget'} />
+        editMessage={this.props.value ? 'Change widget' : 'Set widget'} />
     )
   }
 

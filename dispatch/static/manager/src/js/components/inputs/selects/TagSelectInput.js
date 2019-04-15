@@ -20,14 +20,14 @@ class TagSelectInputComponent extends React.Component {
   render() {
     return (
       <ItemSelectInput
-        selected={this.props.selected}
+        value={this.props.value}
         results={this.props.tags.ids}
         entities={this.props.entities.tags}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={(query) => this.listTags(query)}
         create={(name, cb) => this.props.createTag(this.props.token, { name }, cb)}
         attribute='name'
-        editMessage={this.props.selected.length ? 'Edit tags' : 'Add tags'} />
+        editMessage={this.props.value.length ? 'Edit tags' : 'Add tags'} />
     )
   }
 

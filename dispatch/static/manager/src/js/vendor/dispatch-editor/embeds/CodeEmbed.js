@@ -1,7 +1,7 @@
 import React from 'react'
 import AceEditor from 'react-ace'
 
-import SelectInput from '../../../components/inputs/selects/SelectInput'
+import { SelectInput } from '../../../components/inputs'
 
 import 'brace/mode/html'
 import 'brace/mode/css'
@@ -34,7 +34,7 @@ function CodeEmbedComponent(props) {
         <div className='o-embed--code__mode'>
           <SelectInput
             options={MODES}
-            selected={props.data.mode}
+            value={props.data.mode}
             onChange={(e) => props.updateField('mode', e.target.value)} />
         </div>
       </div>

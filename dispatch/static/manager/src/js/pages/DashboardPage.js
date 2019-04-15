@@ -24,7 +24,7 @@ class DashboardPageComponent extends React.Component {
       (elem, i) => (
         <li key={i} className='c-dashboard__activity__item'>
           <div className='c-dashboard__activity__item__icon'>
-            <span className={`pt-icon-standard pt-icon-${elem.icon}`} aria-hidden='true' />
+            <span className={`bp3-icon-standard bp3-icon-${elem.icon}`} aria-hidden='true' />
           </div>
           <div className='c-dashboard__activity__item__text'>
             <span className='c-dashboard__activity__item__text__person'>{elem.meta.author}</span>
@@ -60,14 +60,16 @@ class DashboardPageComponent extends React.Component {
             <h2 className='c-dashboard__header'>Quick Actions</h2>
             <ul className='c-dashboard_quick-actions'>
               <li className='c-dashboard_quick-actions__item'>
-                <LinkButton to='/articles/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add' />New Article
-                </LinkButton>
+                <LinkButton
+                  to='/articles/new/'
+                  icon='add'
+                  intent={Intent.SUCCESS}>New Article</LinkButton>
               </li>
               <li className='c-dashboard_quick-actions__item'>
-                <LinkButton to='/pages/new/' intent={Intent.SUCCESS}>
-                  <span className='pt-icon-standard pt-icon-add' />New Page
-                </LinkButton>
+                <LinkButton
+                  to='/pages/new/'
+                  icon='add'
+                  intent={Intent.SUCCESS}>New Page</LinkButton>
               </li>
             </ul>
             <Panel title='Recent Articles'>

@@ -17,6 +17,9 @@ export const USERS = resourceActionTypes('USERS', ['RESET_PASSWORD'])
 export const VIDEOS = resourceActionTypes('VIDEOS')
 export const INVITES = resourceActionTypes('INVITES')
 export const POLLS = resourceActionTypes('POLLS')
+export const SUBSECTIONS = resourceActionTypes('SUBSECTIONS')
+export const PODCASTS = resourceActionTypes('PODCASTS')
+export const PODCAST_EPISODES = resourceActionTypes('PODCAST_EPISODES')
 export const NOTIFICATIONS = resourceActionTypes('NOTIFICATIONS')
 export const SUBSCRIPTIONS = resourceActionTypes('SUBSCRIPTIONS')
 
@@ -59,3 +62,8 @@ export const ZONES = actionTypes('ZONES', [
 
 // Toaster actions
 export const SETUP_TOASTER = 'SETUP_TOASTER'
+
+// File upload progress
+export const UPLOAD_START = 'UPLOAD_START'
+export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS'
+export const UPLOAD_COMPLETE = 'UPLOAD_COMPLETE'

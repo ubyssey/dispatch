@@ -1,7 +1,9 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../../../components/inputs'
 import { Button } from '@blueprintjs/core'
+import { TextInput } from '../../../components/inputs'
+
+import * as Form from '../../../components/Form'
 
 require('../styles/embeds/video.scss')
 
@@ -22,20 +24,17 @@ class VideoEmbedComponent extends React.Component {
   renderInput() {
     return (
       <div>
-        <form>
-          <FormInput label='URL'>
+        <Form.Container>
+          <Form.Input label='URL'>
             <TextInput
               fill={true}
               value={this.props.data.url}
               onChange={e => this.props.updateField('url', e.target.value)} />
-          </FormInput>
-        </form>
-        <div className='o-embed--video__button__container'>
+          </Form.Input>
           <Button onClick={() => this.insertVideo()}>Insert</Button>
-        </div>
+        </Form.Container>
       </div>
     )
-
   }
 
   renderVideo() {
@@ -44,26 +43,26 @@ class VideoEmbedComponent extends React.Component {
         <img
           className='o-embed--video__image'
           src={`http://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
-        <form>
-          <FormInput label='Title'>
+        <Form.Container>
+          <Form.Input label='Title'>
             <TextInput
               fill={true}
               value={this.props.data.title}
               onChange={e => this.props.updateField('title', e.target.value)} />
-          </FormInput>
-          <FormInput label='Caption'>
+          </Form.Input>
+          <Form.Input label='Caption'>
             <TextInput
               fill={true}
               value={this.props.data.caption}
               onChange={e => this.props.updateField('caption', e.target.value)} />
-          </FormInput>
-          <FormInput label='Credit'>
+          </Form.Input>
+          <Form.Input label='Credit'>
             <TextInput
               fill={true}
               value={this.props.data.credit}
               onChange={e => this.props.updateField('credit', e.target.value)} />
-          </FormInput>
-        </form>
+          </Form.Input>
+        </Form.Container>
       </div>
 
     )

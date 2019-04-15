@@ -1,32 +1,30 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
+import { TextInput } from '../inputs'
+
+import * as Form from '../Form'
 
 export default function AttachmentForm(props) {
 
   return (
-    <form style={{ padding: 15 }}>
+    <Form.Container>
 
-      <FormInput
-        label='Caption'
-        padded={false}>
+      <Form.Input label='Caption'>
         <TextInput
           placeholder='Caption'
           value={props.caption || ''}
           fill={true}
           onChange={e => props.update('caption', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-      <FormInput
-        label='Credit'
-        padded={false}>
+      <Form.Input label='Credit'>
         <TextInput
           placeholder='Credit'
           value={props.credit || ''}
           fill={true}
           onChange={e => props.update('credit', e.target.value)} />
-      </FormInput>
+      </Form.Input>
 
-    </form>
+    </Form.Container>
   )
 }

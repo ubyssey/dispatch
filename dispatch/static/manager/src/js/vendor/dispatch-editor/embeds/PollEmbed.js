@@ -1,23 +1,23 @@
 import React from 'react'
 
 import PollSelectInput from '../../../components/inputs/selects/PollSelectInput'
-import { FormInput } from '../../../components/inputs'
+
+import * as Form from '../../../components/Form'
 
 function PollEmbedComponent(props) {
   return (
     <div className='o-embed o-embed--poll'>
-      <form>
-        <FormInput label='Poll'>
-        <PollSelectInput
-          fill={true}
-          selected={props.data.poll}
-          onChange={selected => {
-            props.updateField('poll',selected)
-            props.stopEditing()
-          }
-        } />
-        </FormInput>
-      </form>
+      <Form.Container>
+        <Form.Input label='Poll'>
+          <PollSelectInput
+            fill={true}
+            value={props.data.poll}
+            onChange={selected => {
+              props.updateField('poll',selected)
+              props.stopEditing()
+            }} />
+        </Form.Input>
+      </Form.Container>
     </div>
   )
 }

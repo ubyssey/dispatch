@@ -37,31 +37,31 @@ class LoginPageComponent extends React.Component {
     return (
       <DocumentTitle title='Dispatch'>
         <div className='c-login-page'>
-          <form onSubmit={this.onSubmit} className='pt-card pt-dark pt-elevation-1'>
+          <form onSubmit={this.onSubmit} className='bp3-card bp3-dark bp3-elevation-1'>
             <h1 className='c-login-page__heading'>
-              <span className="pt-icon pt-icon-selection" /> dispatch
+              <span className="bp3-icon bp3-icon-selection" /> dispatch
             </h1>
             <input
-              className='pt-input'
+              className='bp3-input'
               name="email"
               type="email"
               placeholder='Email'
               value={this.state.email}
               onChange={this.onChangeEmail} /><br />
             <input
-              className='pt-input'
+              className='bp3-input'
               name="password"
               type="password"
               placeholder='Password'
               value={this.state.password}
               onChange={this.onChangePassword} /><br />
             <button
-              className='pt-button'
+              className='bp3-button'
               type="submit">
               Login
             </button>
             {this.props.error ? (
-              <div className='pt-callout pt-intent-danger'>
+              <div className='bp3-callout bp3-intent-danger'>
                 {this.props.error}
               </div>
             ): null}

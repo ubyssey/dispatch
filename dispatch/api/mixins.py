@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
-from django.conf import settings
 from django.db.models import F
+from django.conf import settings
 
 from dispatch.core.signals import post_create, post_update, post_publish, post_unpublish
 from dispatch.models import Subscription, Notification, Article
@@ -83,6 +83,7 @@ class DispatchPublishableMixin(object):
                 Notification.objects.filter(article__parent_id=instance.parent_id).delete()
                 Notification.objects.create(article=instance, scheduled_push_time=instance.scheduled_notification)
 
+
         return Response(serializer.data)
 
     @detail_route(methods=['post'])
@@ -112,14 +113,14 @@ class DispatchPublishableMixin(object):
             data['image'] = article.featured_image.image.get_thumbnail_url()
 
         subscriptions = Subscription.objects.all()
-        for sub in subscriptions:
+        for subscription in subscriptions:
             try:
                 webpush(
                     subscription_info={
-                        "endpoint": sub.endpoint,
+                        "endpoint": subscription.endpoint,
                         "keys": {
-                            "p256dh": sub.p256dh,
-                            "auth": sub.auth
+                            "p256dh": subscription.p256dh,
+                            "auth": subscription.auth
                         }},
                     data=json.dumps(data),
                     vapid_private_key=settings.NOTIFICATION_KEY,
@@ -128,9 +129,9 @@ class DispatchPublishableMixin(object):
                         }
                 )
             except WebPushException as ex:
-                if ex.response.status_code == 410:
-                    sub.delete()
-
+                print(ex.response.status_code)
+                if ex.response.status_code == 410 or ex.response.status_code == 404:
+                    subscription.delete()
 
 class DispatchModelSerializer(HyperlinkedModelSerializer):
     def __init__(self, *args, **kwargs):
@@ -138,6 +139,7 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
         super(DispatchModelSerializer, self).__init__(*args, **kwargs)
 
         self.hide_authenticated_fields()
+        self.exclude_fields()
 
     def is_authenticated(self):
         return (self.context.get('request') and
@@ -150,6 +152,17 @@ class DispatchModelSerializer(HyperlinkedModelSerializer):
 
         if not self.is_authenticated():
             for field in authenticated_fields:
+                self.fields.pop(field)
+    
+    def exclude_fields(self):
+        """Excludes fields that are included in the queryparameters"""
+        request = self.context.get('request')
+        if request:
+            exclude = request.query_params.get('exclude', None)
+            if exclude is None: return
+                
+            excluded_fields = exclude.split(',')
+            for field in excluded_fields:
                 self.fields.pop(field)
 
 class DispatchPublishableSerializer(object):

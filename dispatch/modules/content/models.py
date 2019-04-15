@@ -12,8 +12,8 @@ from django.db import transaction
 
 from django.db.models import (
     Model, DateField, DateTimeField, CharField, TextField, PositiveIntegerField,
-    ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    ManyToManyField, SlugField, SET_NULL, CASCADE)
+    ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
+    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -32,11 +32,24 @@ class Tag(Model):
 
 class Topic(Model):
     name = CharField(max_length=255)
+    slug = SlugField(unique=True, max_length=255)
     last_used = DateTimeField(null=True)
 
     def update_timestamp(self):
         self.last_used = timezone.now()
         self.save()
+
+    def _generate_slug(self):
+        if self.name:
+            return self.name.lower().replace(' ', '-')
+
+        return None
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._generate_slug()
+        
+        super(Topic, self).save(*args, **kwargs)
 
 class Section(Model):
     name = CharField(max_length=100, unique=True)
@@ -57,10 +70,10 @@ class Publishable(Model):
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
-    head = BooleanField(default=False, db_index=True)
+    head = NullBooleanField(default=None, db_index=True, null=True)
 
-    is_published = BooleanField(default=False, db_index=True)
-    is_active = BooleanField(default=True)
+    is_published = NullBooleanField(default=None, db_index=True)
+    is_active = NullBooleanField(default=True)
 
     published_version = PositiveIntegerField(null=True)
     latest_version = PositiveIntegerField(null=True)
@@ -130,7 +143,7 @@ class Publishable(Model):
 
     def publish(self):
         # Unpublish last published version
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
         self.is_published = True
         if self.published_at is None:
             self.published_at = timezone.now()
@@ -143,8 +156,8 @@ class Publishable(Model):
         return self
 
     def unpublish(self):
-        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=False, published_at=None)
-        self.is_published = False
+        type(self).objects.filter(parent=self.parent, is_published=True).update(is_published=None, published_at=None)
+        self.is_published = None
 
         # Unset published version for all articles
         type(self).objects.filter(parent=self.parent).update(published_version=None)
@@ -153,6 +166,7 @@ class Publishable(Model):
         return self
 
     # Overriding
+    @transaction.atomic
     def save(self, revision=True, *args, **kwargs):
         """
         Handles the saving/updating of a Publishable instance.
@@ -170,7 +184,9 @@ class Publishable(Model):
 
             if not self.is_parent():
                 # If this is a revision, delete the old head of the list.
-                type(self).objects.filter(parent=self.parent, head=True).update(head=False)
+                type(self).objects \
+                    .filter(parent=self.parent, head=True) \
+                    .update(head=None)
 
                 # Clear the instance id to force Django to save a new instance.
                 # Both fields (pk, id) required for this to work -- something to do with model inheritance
@@ -178,11 +194,7 @@ class Publishable(Model):
                 self.id = None
 
                 # New version is unpublished by default
-                self.is_published = False
-
-        # Raise integrity error if instance with given slug already exists.
-        if type(self).objects.filter(slug=self.slug).exclude(parent=self.parent).exists():
-            raise IntegrityError("%s with slug '%s' already exists." % (type(self).__name__, self.slug))
+                self.is_published = None
 
         # Set created_at to current time, but only for first version
         if not self.created_at:
@@ -201,7 +213,10 @@ class Publishable(Model):
 
         if revision:
             # Set latest version for all articles
-            type(self).objects.filter(parent=self.parent).update(latest_version=self.revision_id)
+            type(self).objects \
+                .filter(parent=self.parent) \
+                .update(latest_version=self.revision_id)
+                
             self.latest_version = self.revision_id
 
         return self
@@ -210,6 +225,7 @@ class Publishable(Model):
     def delete(self, *args, **kwargs):
         if self.parent == self:
             return super(Publishable, self).delete(*args, **kwargs)
+        
         return self.parent.delete()
 
     def save_featured_image(self, data):
@@ -293,7 +309,9 @@ class Publishable(Model):
         if self.parent == self:
             return self
         try:
-            revision = type(self).objects.filter(parent=self.parent).order_by('-pk')[1]
+            revision = type(self).objects \
+                .filter(parent=self.parent) \
+                .order_by('-pk')[1]
             return revision
         except:
             return self
@@ -302,11 +320,11 @@ class Publishable(Model):
         abstract = True
 
 class Article(Publishable, AuthorMixin):
-
     parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
     section = ForeignKey('Section')
+    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', null=True)
     tags = ManyToManyField('Tag')
@@ -328,6 +346,13 @@ class Article(Publishable, AuthorMixin):
     )
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
+
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
 
     AuthorModel = Author
 
@@ -378,23 +403,58 @@ class Article(Publishable, AuthorMixin):
                 pass
 
     def get_absolute_url(self):
-        """
-        Returns article URL.
-        """
+        """ Returns article URL. """
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
+
+    def get_subsection(self):
+        """ Returns the subsection set in the parent article """
+        return self.parent.subsection
+
+    def save_subsection(self, subsection_id):
+        """ Save the subsection to the parent article """
+        Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
+
+class Subsection(Model, AuthorMixin):
+    name = CharField(max_length=100, unique=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True, blank=True)
+    authors = ManyToManyField('Author', related_name='subsection_authors')
+    section = ForeignKey('Section')
+    is_active = BooleanField(default=False)
+
+    AuthorModel = Author
+
+    def save_articles(self, article_ids):
+        Article.objects.filter(subsection=self).update(subsection=None)
+        Article.objects.filter(parent_id__in=article_ids).update(subsection=self)
+
+    def get_articles(self):
+        return Article.objects.filter(subsection=self, id=F('parent_id'))
+
+    def get_published_articles(self):
+        return Article.objects.filter(subsection=self, is_published=True).order_by('-published_at')
+
+    def get_absolute_url(self):
+        """Returns the subsection URL."""
+        return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
     parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
+    class Meta:
+        unique_together = (
+            ('slug', 'head'),
+            ('parent', 'slug', 'head'),
+            ('parent', 'slug', 'is_published'),
+        )
+
     def get_author_string(self):
         return None
 
     def get_absolute_url(self):
-        """
-        Returns page URL.
-        """
+        """ Returns page URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Video(Model):
@@ -466,7 +526,7 @@ class Image(Model, AuthorMixin):
     def save(self, **kwargs):
         """Custom save method to process thumbnails and save image dimensions."""
         is_new = self.pk is None
-
+        
         if is_new:
             # Make filenames lowercase
             self.img.name = self.img.name.lower()
@@ -475,7 +535,13 @@ class Image(Model, AuthorMixin):
         super(Image, self).save(**kwargs)
 
         if is_new and self.img:
-            image = Img.open(StringIO.StringIO(self.img.read()))
+            data = self.img.read()
+
+            if not data:
+                return
+
+            image = Img.open(StringIO.StringIO(data))
+
             self.width, self.height = image.size
 
             super(Image, self).save()

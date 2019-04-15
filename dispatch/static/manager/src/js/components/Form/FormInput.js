@@ -2,17 +2,16 @@ import React from 'react'
 
 export default function FormInput(props) {
 
-  const className = props.padded ? 'c-form-input' : 'c-form-input c-form-input--no-padding'
   const error = (
-    <span className='c-form-input__error pt-tag pt-intent-danger'>
+    <span className='c-form__input__error bp3-tag bp3-intent-danger'>
       {Array.isArray(props.error) ? props.error.join(' ') : props.error}
     </span>
   )
 
   if (props.label) {
     return (
-      <div className={className}>
-        <label className='c-form-input__label pt-label'>
+      <div className='c-form__input'>
+        <label className='c-form__input__label bp3-label'>
           {props.label}
           {props.error ? error : null}
           {props.children}
@@ -21,14 +20,10 @@ export default function FormInput(props) {
     )
   } else {
     return (
-      <div className='c-form-input'>
+      <div className='c-form__input'>
         {props.children}
       </div>
     )
   }
 
-}
-
-FormInput.defaultProps = {
-  padded: true
 }

@@ -4,8 +4,8 @@ import ItemSelectInput from '../selects/ItemSelectInput'
 class FilterSelectInput extends React.Component {
 
   getEditMessage() {
-    if (this.props.entities[this.props.selected]) {
-      return this.props.entities[this.props.selected][this.props.attribute]
+    if (this.props.entities[this.props.value]) {
+      return this.props.entities[this.props.value][this.props.attribute]
     }
     return this.props.editMessage
   }
@@ -13,19 +13,20 @@ class FilterSelectInput extends React.Component {
   render() {
     return (
       <ItemSelectInput
-        many={this.props.many}
-        selected={this.props.selected}
-        inline={false}
+        className='c-input--filter'
+        many={false}
+        value={this.props.value}
+        inline={true}
         showSortableList={false}
         results={this.props.results.ids}
         entities={this.props.entities}
-        onChange={(selected) => this.props.update(selected)}
+        onChange={(value) => this.props.update(value)}
         fetchResults={this.props.fetchResults}
         attribute={this.props.attribute}
         editMessage={this.getEditMessage()}
-        filterButton={true}
+        tag={true}
         filterLabel={this.props.label}
-        filterIcon={this.props.icon} />
+        icon={this.props.icon} />
     )
   }
 }

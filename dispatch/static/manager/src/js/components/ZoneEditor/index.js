@@ -5,12 +5,11 @@ import DocumentTitle from 'react-document-title'
 
 import * as zonesActions from '../../actions/ZonesActions'
 
-import ListItemToolbar from '../ItemEditor/ListItemToolbar'
+import * as Form from '../Form'
 import Panel from '../Panel'
-import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
-import { FormInput } from '../inputs'
-
 import FieldGroup from '../fields/FieldGroup'
+import ListItemToolbar from '../ItemEditor/ListItemToolbar'
+import WidgetSelectInput from '../inputs/selects/WidgetSelectInput'
 
 class ZoneEditorComponent extends React.Component {
 
@@ -35,24 +34,10 @@ class ZoneEditorComponent extends React.Component {
       return zone
     }
 
-    function processWidget(widget, fields) {
-      if (!fields) {
-        return widget
-      }
-
-      fields.forEach((field) => {
-        if (field.type == 'widget') {
-          const newWidget = R.path(['data', field.name], widget)
-          if (newWidget) {
-            widget.data[field.name] = processWidget(newWidget, R.path(['widget', 'fields'], newWidget))
-            widget = R.dissocPath(['data', field.name, 'widget'], widget)
-          }
-        }
-      })
-      return widget
-    }
-
-    return processWidget(zone, R.prop('fields', this.props.widget || {}))
+    return processNestedWidgets(
+      zone, 
+      R.prop('fields', this.props.widget || {})
+    )
   }
 
   saveZone() {
@@ -86,33 +71,54 @@ class ZoneEditorComponent extends React.Component {
         onChange={(name, data) => this.updateField(name, data)} />
     )
 
-
-
     return (
       <DocumentTitle title={`Widgets - ${this.props.zone.name}`}>
-        <div>
-          <div className='u-container-main'>
-            <ListItemToolbar
-              name={this.props.zone.name}
-              type='Zone'
-              saveListItem={() => this.saveZone()}
-              goBack={this.props.goBack} />
-            <div className='u-container-body'>
-              <Panel title='Widget'>
-                <FormInput>
-                  <WidgetSelectInput
-                    zoneId={this.props.zoneId}
-                    selected={this.props.zone.widget}
-                    update={widgetId => this.updateWidget(widgetId)} />
-                </FormInput>
-              </Panel>
-              {fields}
-            </div>
+        <div className='u-container-main'>
+          <ListItemToolbar
+            name={this.props.zone.name}
+            type='Zone'
+            typePlural='Zones'
+            saveListItem={() => this.saveZone()}
+            listRoute='zones' />
+          <div className='u-container-body u-container--vscroll'>
+            <Panel title='Widget'>
+              <Form.Input>
+                <WidgetSelectInput
+                  zoneId={this.props.zoneId}
+                  value={this.props.zone.widget}
+                  update={widgetId => this.updateWidget(widgetId)} />
+              </Form.Input>
+            </Panel>
+            {fields}
           </div>
         </div>
       </DocumentTitle>
     )
   }
+}
+
+function processNestedWidgets(widget, fields) {
+  if (!fields) {
+    return widget
+  }
+
+  fields.forEach((field) => {
+    if (field.type == 'widget') {
+      const newWidget = R.path(['data', field.name], widget)
+
+      if (newWidget) {
+
+        widget.data[field.name] = processNestedWidgets(
+          newWidget, 
+          R.path(['widget', 'fields'], newWidget)
+        )
+
+        widget = R.dissocPath(['data', field.name, 'widget'], widget)
+      }
+    }
+  })
+
+  return widget
 }
 
 const mapStateToProps = (state) => {

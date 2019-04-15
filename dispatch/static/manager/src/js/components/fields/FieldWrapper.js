@@ -2,14 +2,14 @@ import React from 'react'
 
 import * as fields from '../fields'
 
-import { FormInput } from '../inputs'
+import * as Form from '../Form'
 
 export default function FieldWrapper(props) {
   const Field = fields[props.field.type]
   const errors = getErrors(props.field, props.error)
-    
+
   return (
-    <FormInput
+    <Form.Input
       error={errors.error}
       label={props.field.label}>
       <Field
@@ -17,7 +17,7 @@ export default function FieldWrapper(props) {
         field={props.field}
         data={props.data}
         onChange={props.onChange} />
-    </FormInput>
+    </Form.Input>
   )
 }
 

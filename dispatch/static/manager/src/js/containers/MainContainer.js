@@ -4,6 +4,7 @@ import { Position, Toaster } from '@blueprintjs/core'
 
 import * as modalActions from '../actions/ModalActions'
 import * as toasterActions from '../actions/ToasterActions'
+import * as navigationActions from '../actions/NavigationActions'
 import eventsActions from '../actions/EventsActions'
 
 import Header from '../components/Header/Header'
@@ -14,12 +15,8 @@ require('../../styles/components/toaster.scss')
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { width: 0 }
+    this.state = { viewWidth: 0 }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-  }
-  
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions)
   }
 
   componentDidMount() {
@@ -28,8 +25,13 @@ class Main extends React.Component {
     window.addEventListener('resize', this.updateWindowDimensions)
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions)
+  }
+
   updateWindowDimensions() {
-    this.setState({ width: window.innerWidth })
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    this.setState({ viewWidth: width })
   }
 
   renderModal() {
@@ -47,7 +49,9 @@ class Main extends React.Component {
           className='c-toaster'
           position={Position.TOP}
           ref='toaster' />
-        <Header pendingCount={this.props.pending} />
+        <Header
+          viewWidth={this.state.viewWidth}
+          goTo={this.props.goTo} />
         {this.props.children}
         {this.props.modal.component ? this.renderModal() : null}
       </div>
@@ -73,6 +77,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     countPending: (token) => {
       dispatch(eventsActions.countPending(token))
+    },
+    goTo: (route) => {
+      dispatch(navigationActions.goTo(route))
     }
   }
 }

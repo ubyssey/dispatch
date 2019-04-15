@@ -1,15 +1,24 @@
 import React from 'react'
 
-import { FormInput, TextInput } from '../inputs'
-
+import { TextInput } from '../inputs'
 import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
 import TagSelectInput from '../inputs/selects/TagSelectInput'
 
+import * as Form from '../Form'
 
 require('../../../styles/components/person_form.scss')
 require('../../../styles/components/image_panel.scss')
 
 export default class ImageForm extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      displayImg: null
+    }
+  }
+
   listImages(query) {
     let queryObj = {}
 
@@ -19,53 +28,47 @@ export default class ImageForm extends React.Component {
 
     this.props.listImages(this.props.token, queryObj)
   }
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      displayImg: null
-    }
-  }
 
   render() {
     return (
-      <form onSubmit={e => e.preventDefault()}>
-        <FormInput
-          label='Title'
-          padded={false}>
+      <Form.Container>
+
+        <Form.Input label='Title'>
           <TextInput
             placeholder='Image title'
             value={this.props.listItem.title || ''}
             fill={true}
             onChange={e => this.props.update('title', e.target.value)} />
-        </FormInput>
-        <FormInput 
-          label='Photographers'
-          padded={false}>
+        </Form.Input>
+
+        <Form.Input label='Photographers'>
           <AuthorSelectInput
-            selected={this.props.listItem.authors}
+            value={this.props.listItem.authors}
             update={authors => this.props.update('authors', authors)}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
-        </FormInput>
-        <FormInput
+        </Form.Input>
+
+        <Form.Input
           label='Tags'
-          error={this.props.errors.tag_ids}
-          padded={false}>
+          error={this.props.errors.tag_ids}>
           <TagSelectInput
-            selected={this.props.listItem.tags}
+            value={this.props.listItem.tags}
             update={tags => this.props.update('tags', tags)} />
-        </FormInput>
+        </Form.Input>
+
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
             <img className='c-image-panel__image__img' src={this.props.listItem.url_medium} />
             <div className='c-image-panel__image__filename'>{this.props.listItem.filename}</div>
           </div>
         </div>
+
         {this.props.errors.detail ?
-          <div className='pt-callout pt-intent-danger c-person-form__image__error'>
+          <div className='bp3-callout bp3-intent-danger c-person-form__image__error'>
             {this.props.errors.detail}
           </div> : null}
-      </form>
+          
+      </Form.Container>
     )
   }
 }

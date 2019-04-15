@@ -7,6 +7,7 @@ import TopicForm from './TopicForm'
 import ItemEditor from '../ItemEditor'
 
 const TYPE = 'Topic'
+const TYPE_PLURAL = 'Topics'
 const AFTER_DELETE = 'topics'
 
 const mapStateToProps = (state) => {
@@ -44,6 +45,7 @@ function TopicEditorComponent(props) {
   return (
     <ItemEditor
       type={TYPE}
+      typePlural={TYPE_PLURAL}
       afterDelete={AFTER_DELETE}
       form={TopicForm}
       {... props} />

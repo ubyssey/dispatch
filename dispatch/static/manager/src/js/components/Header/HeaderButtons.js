@@ -1,42 +1,38 @@
 import React from 'react'
-import { Link } from 'react-router'
+
+import { Button, Menu, Popover, Position } from '@blueprintjs/core'
+
 import { links } from './links'
 
 require('../../../styles/components/header.scss')
 
-const HeaderButtons = () => {
+const HeaderButtons = (props) => {
   return (
     <div className='nav-link-group'>
       {
-        Object.keys(links).map( key => {
-          const item = links[key]
-          return (
-            <div 
-              key={key}
-              className='nav-dropdown-container nav-padded'>
-              <div className='nav-dropdown-button pt-minimal'>
-                <span style={{marginRight:'5px'}} className={'pt-icon-standard ' + item['icon']} />
-                {String(key)}
-              </div>
-              <div className={'nav-dropdown-content nav-padded'}>
+        links.map((category, i) => (
+          <Popover
+            key={i}
+            content={
+              <Menu>
                 {
-                  Object.keys(item['link']).map( (subkey, index) => {
-                    const link = item['link'][index]['link']
-                    const icon = item['link'][index]['icon']
-                    return (
-                      <Link 
-                        to={'/' + link.toLowerCase() + '/'} 
-                        key={index}
-                        className={'pt-button pt-minimal ' + icon}>
-                        {link}
-                      </Link>
-                    )
-                  })
+                  category.children.map((item, i) => (
+                    <Menu.Item
+                      key={i}
+                      icon={item.icon}
+                      onClick={() => props.goTo(item.url)}
+                      text={item.text} />
+                  ))
                 }
-              </div>
-            </div>
-          )
-        })
+              </Menu>
+            }
+            position={Position.BOTTOM_LEFT}>
+              <Button
+                minimal={true}
+                icon={category.icon}>
+                {category.text}
+              </Button>
+          </Popover>))
       }
     </div>
   )

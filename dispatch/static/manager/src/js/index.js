@@ -36,6 +36,12 @@ render((
             <Route path=':pageId' component={Pages.Pages.Page} />
           </Route>
 
+          <Route path='subsections'>
+            <IndexRoute component={Pages.Subsections.Index} />
+            <Route path='new' component={Pages.Subsections.NewSubsection} />
+            <Route path=':subsectionId' component={Pages.Subsections.Subsection} />
+          </Route>
+
           <Route path='files' component={Pages.Files} />
 
           <Route path='images'>
@@ -70,8 +76,8 @@ render((
           </Route>
 
           <Route path='zones'>
-            <IndexRoute component={Pages.Widgets.Index} />
-            <Route path=':zoneId' component={Pages.Widgets.Zone} />
+            <IndexRoute component={Pages.Zones.Index} />
+            <Route path=':zoneId' component={Pages.Zones.Zone} />
           </Route>
 
           <Route path='persons'>
@@ -99,11 +105,21 @@ render((
             <Route path=':pollId' component={Pages.Polls.Poll} />
           </Route>
 
+          <Route path='podcasts'>
+            <IndexRoute component={Pages.Podcasts.Index} />
+            <Route path='new' component={Pages.Podcasts.NewPodcast} />
+            <Route path=':podcastId' component={Pages.Podcasts.Podcast} />
+            <Route path=':podcastId/episodes' component={Pages.Podcasts.EpisodeIndex} />
+            <Route path=':podcastId/episodes/new' component={Pages.Podcasts.NewEpisode} />
+            <Route path=':podcastId/episodes/:episodeId' component={Pages.Podcasts.Episode} />
+          </Route>
+
           <Route path='notifications'>
             <IndexRoute component={Pages.Notifications.Index} />
             <Route path='new' component={Pages.Notifications.NewNotification} />
             <Route path=':notificationId' component={Pages.Notifications.Notification} />
           </Route>
+
         </Route>
 
         <Route component={Containers.Basic}>

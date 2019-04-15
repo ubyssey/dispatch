@@ -3,12 +3,12 @@ import R from 'ramda'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 import { AuthorFilterInput, TagsFilterInput }  from '../../inputs/filters/'
 
 import imagesActions from '../../../actions/ImagesActions'
 
-import { TextInput } from '../../inputs'
+import { SearchInput } from '../../inputs'
 import ImageThumb from './ImageThumb'
 import ImagePanel from './ImagePanel'
 
@@ -108,10 +108,10 @@ class ImageManagerComponent extends React.Component {
   }
 
   onSearch(author, tags, q) {
-    this.setState({ 
+    this.setState({
       author: author,
       tags: tags,
-      q: q 
+      q: q
     }, this.searchImages)
   }
 
@@ -142,27 +142,33 @@ class ImageManagerComponent extends React.Component {
         save={() => this.handleSave()}
         delete={() => this.handleDelete()} />
     )
+
+    const filters = [
+      <AuthorFilterInput
+        key={'AuthorFilter'}
+        value={this.state.author || ''}
+        update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />,
+      <TagsFilterInput
+        key={'tagsFilter'}
+        value={this.state.tags || ''}
+        update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
+    ]
+
     return (
       <div className='c-image-manager'>
         <div className='c-image-manager__header'>
           <div className='c-image-manager__header__left'>
-            <AnchorButton
-              intent={Intent.SUCCESS}
-              onClick={() => this.dropzone.open()}>Upload</AnchorButton>
-            <AuthorFilterInput
-              key={'AuthorFilter'}
-              selected={this.state.author || ''}
-              update={(author) => this.onSearch(author, this.state.tags, this.state.q)} />
-            <TagsFilterInput
-              key={'tagsFilter'}
-              selected={this.state.tags || ''}
-              update={(tags) => this.onSearch(this.state.author, tags, this.state.q)} />
+            {filters}
           </div>
           <div className='c-image-manager__header__right'>
-            <TextInput
+            <SearchInput
               placeholder='Search'
               value={this.state.q}
               onChange={e => this.onSearch(this.state.author, this.state.tags, e.target.value)} />
+            <Button
+              intent={Intent.SUCCESS}
+              icon='upload'
+              onClick={() => this.dropzone.open()}>Upload</Button>
           </div>
         </div>
         <div className='c-image-manager__body'>
@@ -176,7 +182,7 @@ class ImageManagerComponent extends React.Component {
               className='c-image-manager__images__container'
               ref={(node) => { this.images = node }}>{images}
             </div>
-            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}  
+            {this.props.images.isLoading && <h2 style={{position:'relative', top: '-8px', width:'100%', textAlign:'center'}}>Loading...</h2>}
           </Dropzone>
           {!this.props.many ?
             <div className='c-image-manager__active'>
@@ -186,9 +192,10 @@ class ImageManagerComponent extends React.Component {
         </div>
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
-          <AnchorButton
+          <Button
+            intent={Intent.SUCCESS}
             disabled={this.props.many ? !this.props.images.selected.length : !this.props.image.id}
-            onClick={() => this.insertImage()}>Insert</AnchorButton>
+            onClick={() => this.insertImage()}>Insert</Button>
         </div>
       </div>
     )

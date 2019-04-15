@@ -6,16 +6,17 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import Measure from 'react-measure'
 import autobind from 'class-autobind'
 
-import { Popover, Position, AnchorButton } from '@blueprintjs/core'
+import { Popover, Position, Button } from '@blueprintjs/core'
 
 import imagesActions from '../../actions/ImagesActions'
 import * as modalActions from '../../actions/ModalActions'
 
-import { FormInput, TextInput } from '../inputs'
+import { TextInput } from '../inputs'
 import DnDThumb from './DnDThumb'
 import DnDZone from './DnDZone'
 import AttachmentForm from './AttachmentForm'
 import ImageManager from '../modals/ImageManager'
+import * as Form from '../Form'
 
 require('../../../styles/components/gallery_editor.scss')
 
@@ -209,7 +210,7 @@ class GalleryFormComponent extends React.Component {
                 className='c-gallery-thumb-overlay'
                 style={{
                   width: THUMB_WIDTH,
-                  height: THUMB_HEIGHT
+                  height: 0
                 }}>
                 <div className='c-gallery-thumb-overlay-text'>
                   {i++}
@@ -230,17 +231,18 @@ class GalleryFormComponent extends React.Component {
       }) : null
 
     return (
-      <form onSubmit={e => e.preventDefault()}>
-        <FormInput
+      <Form.Container>
+
+        <Form.Input
           label='Title'
-          padded={false}
           error={this.props.errors.title}>
           <TextInput
             placeholder='Name'
             value={this.props.listItem.title || ''}
             fill={true}
             onChange={e => this.props.update('title', e.target.value)} />
-        </FormInput>
+        </Form.Input>
+
         <h2 className='c-gallery-editor-heading'>Gallery</h2>
         <Measure
           onMeasure={zoneDims => this.setState({ zoneDims })}>
@@ -264,16 +266,17 @@ class GalleryFormComponent extends React.Component {
           }
         </Measure>
 
-        <AnchorButton onClick={this.openImageSelector}>
+        <Button onClick={this.openImageSelector}>
           Add Images
-        </AnchorButton>
+        </Button>
 
         <div className='c-gallery-clear-button'>
-          <AnchorButton onClick={this.clearGallery}>
+          <Button onClick={this.clearGallery}>
             Clear Gallery
-          </AnchorButton>
+          </Button>
         </div>
-      </form>
+
+      </Form.Container>
     )
   }
 }

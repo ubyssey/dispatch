@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 
 import templatesActions from '../../../actions/TemplatesActions'
 
-import { FormInput } from '../../inputs'
 import TemplateSelectInput from '../../inputs/selects/TemplateSelectInput'
-
 import FieldGroup from '../../fields/FieldGroup'
+
+import * as Form from '../../Form'
 
 class TemplateTabComponent extends React.Component {
 
@@ -26,7 +26,7 @@ class TemplateTabComponent extends React.Component {
     const template = this.props.entities.templates[this.props.template] || null
     const fields = (
       <FieldGroup
-        name={`template-field__${template.id}`}
+        name={`template-field__${template ? template.id : null}`}
         fields={(this.props.data ? (template ? template.fields : []) : null)}
         data={this.props.data}
         errors={this.props.errors}
@@ -34,12 +34,12 @@ class TemplateTabComponent extends React.Component {
     )
 
     return (
-      <div>
-        <FormInput label='Template'>
+      <div className='c-article-sidebar__panel'>
+        <Form.Input label='Template'>
           <TemplateSelectInput
-            selected={this.props.template}
+            value={this.props.template}
             update={template => this.props.update('template', template)} />
-        </FormInput>
+        </Form.Input>
         <div>{fields}</div>
       </div>
     )

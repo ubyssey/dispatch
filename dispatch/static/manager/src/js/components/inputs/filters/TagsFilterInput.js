@@ -7,29 +7,22 @@ import tagsActions from '../../../actions/TagsActions'
 
 class TagsFilterInputComponent extends React.Component {
 
-  // converts query of string type to number type
-  convertTags(tags) {
+  convertValue(tags) {
     return typeof tags === 'undefined' ? tags : (typeof tags === 'object' ? tags.map(Number) : Number(tags))
   }
 
   listTags(query) {
-    let queryObj = {}
-
-    if (query) {
-      queryObj['q'] = query
-    }
-
-    this.props.listTags(this.props.token, queryObj)
+    this.props.listTags(this.props.token, {q: query})
   }
 
   render() {
     return (
       <FilterSelectInput
         many={true}
-        selected={this.convertTags(this.props.selected)}
+        value={this.convertValue(this.props.value)}
         results={this.props.tags}
         entities={this.props.entities.tags}
-        update={(selected) => this.props.update(selected)}
+        update={(value) => this.props.update(value)}
         fetchResults={(query) => this.listTags(query)}
         attribute='name'
         label='Tag'

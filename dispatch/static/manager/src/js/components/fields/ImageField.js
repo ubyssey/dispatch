@@ -1,13 +1,20 @@
 import React from 'react'
 
+import { imageSchema } from '../../constants/Schemas'
+
 import ImageInput from '../inputs/ImageInput'
 
-export default function ImageField(props) {
+function ImageField(props) {
   return (
     <ImageInput
       removable={false}
-      selected={props.data}
+      value={props.data}
       many={props.field.many}
       onChange={selected => props.onChange(selected)} />
   )
 }
+
+ImageField.type = 'image'
+ImageField.schema = imageSchema
+
+export default ImageField

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnchorButton, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 
 import { TextInput } from '../../../components/inputs'
 
@@ -39,16 +39,6 @@ export default class ContentEditorLinkEditor extends React.Component {
     this.props.close()
   }
 
-  renderBackButton() {
-    return (
-      <AnchorButton
-        className='c-dispatch-editor__link-popover__back'
-        onClick={this.props.back}>
-        <span className='pt-icon-standard pt-icon-arrow-left' />
-      </AnchorButton>
-    )
-  }
-
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.props.close()
@@ -56,9 +46,16 @@ export default class ContentEditorLinkEditor extends React.Component {
   }
 
   render() {
+    const backButton = (
+      <Button
+        className='c-dispatch-editor__link-popover__back'
+        onClick={this.props.back}
+        icon='arrow-left' />
+    )
+
     return (
       <div className='c-dispatch-editor__link-popover'>
-        {this.props.back ? this.renderBackButton() : null}
+        {this.props.back ? backButton : null}
         <TextInput
           className='c-dispatch-editor__link-popover__input'
           ref='textInput'
@@ -66,12 +63,11 @@ export default class ContentEditorLinkEditor extends React.Component {
           onKeyPress={this.handleKeyPress}
           onChange={e => this.updateLink(e.target.value)}
           placeholder='Enter a URL here' />
-        <AnchorButton
+        <Button
           className='c-dispatch-editor__link-popover__remove'
           intent={Intent.DANGER}
-          onClick={() => this.removeLink()}>
-          <span className='pt-icon-standard pt-icon-trash' />
-        </AnchorButton>
+          onClick={() => this.removeLink()}
+          icon='trash' />
       </div>
     )
   }

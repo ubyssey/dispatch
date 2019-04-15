@@ -1,10 +1,9 @@
 import React from 'react'
 import R from 'ramda'
+import { Tag, Icon } from '@blueprintjs/core'
 
 import Dropdown from '../../Dropdown'
-
 import TextInput from '../TextInput'
-
 import SortableList from '../SortableList'
 
 function Item(props) {
@@ -13,9 +12,9 @@ function Item(props) {
       <li
         className='o-dropdown-list__item o-dropdown-list__item--selected'
         onClick={props.onClick}>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-small-tick' />
+        <Icon className='o-dropdown-list__item__icon' icon='small-tick' />
         <span className='o-dropdown-list__item__text'>{props.text}</span>
-        <span className='o-dropdown-list__item__icon pt-icon-standard pt-icon-cross' />
+        <Icon className='o-dropdown-list__item__icon' icon='cross' />
       </li>
     )
   } else {
@@ -86,6 +85,20 @@ class ItemSelectInput extends React.Component {
     }
   }
 
+  clearValues() {
+    if (this.props.many) {
+      this.props.onChange([], {})
+    } else {
+      this.props.onChange(null, {})
+    }
+  }
+
+  openDropdown() {
+    this.refs.dropdown.open()
+    if (this.state.query === '' || !this.state.query) 
+      this.fetchResults()
+  }
+
   closeDropdown() {
     this.refs.dropdown.close()
     this.setState({ query: '' })
@@ -93,14 +106,18 @@ class ItemSelectInput extends React.Component {
 
   getSelected() {
     if (this.props.many){
-      if (this.props.selected){
-        return typeof this.props.selected !== 'object' ? [this.props.selected] : this.props.selected
+      if (this.props.value){
+        return typeof this.props.value !== 'object' ? [this.props.value] : this.props.value
       } else {
         return []
       }
     } else {
-      return this.props.selected ? [this.props.selected] : []
+      return this.props.value ? [this.props.value] : []
     }
+  }
+
+  hasSelected() {
+    return this.getSelected().length !== 0
   }
 
   isNotSelected(id) {
@@ -138,7 +155,7 @@ class ItemSelectInput extends React.Component {
       ))
     const createButton = this.props.create ? (
       <button
-        className='pt-button c-input--item-select__search__button'
+        className='bp3-button c-input--item-select__search__button'
         onClick={() => this.props.create(this.state.query, data => this.addValue(data.id))}>
         Add
       </button>
@@ -147,7 +164,7 @@ class ItemSelectInput extends React.Component {
     return (
       <div className='c-input--item-select__dropdown'>
         <div className='c-input--item-select__search'>
-          <div className='pt-control-group'>
+          <div className='bp3-control-group'>
             <TextInput
               onChange={e => this.handleInputChange(e)}
               value={this.state.query}
@@ -180,7 +197,7 @@ class ItemSelectInput extends React.Component {
       <div className='c-input--item-select__item'>
         <div className='c-panel__select'>{item[this.props.attribute]}</div>
         <select
-          className='pt-button c-panel__select__right'
+          className='bp3-button c-panel__select__right'
           value={this.props.extraFields[item.id]}
           onChange={e => this.updateExtraField(item.id, e.target.value)}>{extraFields}</select>
       </div>
@@ -202,37 +219,47 @@ class ItemSelectInput extends React.Component {
   }
 
   render() {
-    const anchorButton = (
-      <a onClick={() => this.refs.dropdown.open()}>
+    const selected = this.getSelected()
+
+    const Button = (
+      <a onClick={() => this.openDropdown()}>
         {this.props.editMessage}
       </a>
     )
 
-    const filterButton = (
-      <div>
-        <div className='pt-control-group'>
-          <button className={`pt-button pt-icon-${this.props.filterIcon}`}>
-            {this.props.filterLabel}
-          </button>
-          <button
-            className='pt-button c-item-list__header__filters__filter'
-            onClick={() => this.refs.dropdown.open()}>
-            {this.props.editMessage}
-            <span className='pt-icon-standard pt-icon-caret-down pt-align-right' />
-          </button>
-        </div>
-      </div>
+    const tagButton = selected.length ? (
+      <Tag
+        large={true}
+        round={true}
+        icon={this.props.icon}
+        interactive={true}
+        onRemove={(e) => {
+          this.clearValues()
+          e.stopPropagation()
+        }}
+        onClick={() => this.openDropdown()}>
+          {this.props.editMessage}
+      </Tag>
+    ) : (
+      <Tag
+        large={true}
+        round={true}
+        icon={this.props.icon}
+        interactive={true}
+        onClick={() => this.openDropdown()}>
+          {this.props.editMessage}
+      </Tag>
     )
 
     return (
       <div
-        className='c-input c-input--item-select'>
+        className={`c-input c-input--item-select ${this.props.className}`}>
         {this.props.showSortableList ? this.renderSortableList() : null }
         <Dropdown
           ref='dropdown'
           content={this.renderDropdown()}
           inline={this.props.inline}>
-          {this.props.filterButton ? filterButton : anchorButton}
+          {this.props.tag ? tagButton : Button}
         </Dropdown>
       </div>
     )

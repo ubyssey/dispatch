@@ -10,7 +10,8 @@ import {
   GalleryEmbed,
   CodeEmbed,
   WidgetEmbed,
-  PollEmbed
+  PollEmbed,
+  PodcastEmbed
 } from '../../vendor/dispatch-editor'
 
 const embeds = [
@@ -20,7 +21,8 @@ const embeds = [
   PullQuoteEmbed,
   GalleryEmbed,
   WidgetEmbed,
-  PollEmbed
+  PollEmbed,
+  PodcastEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {
@@ -32,7 +34,7 @@ export default class ArticleContentEditor extends React.Component {
             onUpdate={this.props.onUpdate}
             headline={this.props.article.headline}
             error={this.props.errors.headline}
-            field="headline" />
+            field='headline' />
           <div className='c-article-editor__body'>
             <Editor
               content={this.props.article.content}

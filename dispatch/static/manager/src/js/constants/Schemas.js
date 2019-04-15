@@ -18,6 +18,9 @@ export const userSchema = new Schema('users')
 export const videoSchema = new Schema('videos')
 export const inviteSchema = new Schema('invites')
 export const pollSchema = new Schema('polls')
+export const subsectionSchema = new Schema('subsections')
+export const podcastSchema = new Schema('podcasts')
+export const podcastEpisodeSchema = new Schema('podcastEpisodes')
 export const notificationSchema = new Schema('notifications')
 export const subscriptionSchema = new Schema('subscriptions')
 
@@ -27,6 +30,7 @@ articleSchema.define({
     person: personSchema
   }),
   tags: arrayOf(tagSchema),
+  subsection: subsectionSchema,
   topic: topicSchema,
   template: templateSchema,
   featured_image: {
@@ -35,6 +39,12 @@ articleSchema.define({
   featured_video: {
     video: videoSchema,
   }
+})
+
+subsectionSchema.define({
+  authors: arrayOf({
+    person: personSchema
+  })
 })
 
 pageSchema.define({
@@ -60,4 +70,12 @@ zoneSchema.define({
 
 userSchema.define({
   person: personSchema
+})
+
+podcastSchema.define({
+  image: imageSchema,
+})
+
+podcastEpisodeSchema.define({
+  image: imageSchema,
 })
