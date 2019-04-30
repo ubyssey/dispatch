@@ -11,7 +11,7 @@ setup(name='dispatch',
     scripts=['dispatch/bin/dispatch-admin'],
     include_package_data=True,
     install_requires=[
-        'django == 1.11',
+        'django == 1.11.20',
         'djangorestframework == 3.6.2',
         'pillow',
         'requests',
