@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 import ImageEditor from '../../components/ImageEditor'
 
 export default function EditImagePage(props) {

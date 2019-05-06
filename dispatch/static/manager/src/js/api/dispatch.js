@@ -441,6 +441,7 @@ const DispatchAPI = {
       return getRequest('videos', videoId, null, token)
     },
     save: (token, videoId, data) => {
+      console.log(data)
       return patchRequest('videos', videoId, data, token)
     },
     create: (token, data) => {

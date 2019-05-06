@@ -9,6 +9,7 @@ import ItemEditor from '../ItemEditor'
 const TYPE = 'Image'
 const AFTER_DELETE = 'images'
 
+
 const mapStateToProps = (state) => {
   return {
     listItem: state.app.images.single,
@@ -31,8 +32,8 @@ const mapDispatchToProps = (dispatch) => {
     saveListItem: (token, imageId, image) => {
       dispatch(imagesActions.save(token, imageId, image))
     },
-    createListItem: (token, data) => {
-      dispatch(imagesActions.create(token, data))
+    createListItem: (token, image) => {
+      dispatch(imagesActions.create(token, image))
     },
     deleteListItem: (token, imageId) => {
       dispatch(imagesActions.delete(token, imageId))

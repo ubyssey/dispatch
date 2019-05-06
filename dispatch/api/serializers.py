@@ -165,16 +165,6 @@ class FileSerializer(DispatchModelSerializer):
             'updated_at'
         )
 
-class VideoSerializer(DispatchModelSerializer):
-    """Serializes the Video model."""
-    class Meta:
-        model = Video
-        fields = (
-            'id',
-            'title',
-            'url',
-        )
-
 class IssueSerializer(DispatchModelSerializer):
     """Serializes the Issue model."""
 
@@ -210,6 +200,51 @@ class TagSerializer(DispatchModelSerializer):
             'id',
             'name',
         )
+
+class VideoSerializer(serializers.HyperlinkedModelSerializer):
+    """Serializes the Video model."""
+
+    authors = AuthorSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator])
+
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
+        
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'url',
+            'authors',
+            'author_ids',
+            'tags',
+            'tag_ids'
+        )
+
+    def create(self, validated_data):
+        return self.update(Video(), validated_data)
+
+    def update(self, instance, validated_data):
+        print(validated_data)
+        instance = super(VideoSerializer, self).update(instance, validated_data)
+
+        # Save authors
+        authors = validated_data.get('author_ids')
+        if authors:
+            instance.save_authors(authors)
+
+        tag_ids = validated_data.get('tag_ids', False)
+        if tag_ids != False:
+            instance.save_tags(tag_ids)
+
+        return instance
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     """Serializes the Image model."""
@@ -262,6 +297,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
+        print("image: ", validated_data)
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save authors

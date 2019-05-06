@@ -4,14 +4,17 @@ import YouTube from 'react-youtube'
 export default function VideoPreview(props) {
 
   function haveVideo(props) {
-    let vid = props.videos[1]
-    return props.value !== null &&
-           vid !== undefined &&
-           vid.url !== ''
+    if (props.videos && props.value) {
+      let vid = props.videos[props.value]
+      return props.value !== null &&
+             vid !== undefined &&
+             vid.url !== ''
+    }
+    return false
   }
 
   function getVidId(props) {
-    let vid = props.videos[1]
+    let vid = props.videos[props.value]
     return new URL(vid.url).searchParams.get('v')
   }
 
