@@ -201,20 +201,23 @@ class TagSerializer(DispatchModelSerializer):
             'name',
         )
 
-class VideoSerializer(serializers.HyperlinkedModelSerializer):
+class VideoSerializer(DispatchModelSerializer):
     """Serializes the Video model."""
 
-    authors = AuthorSerializer(many=True, read_only=True)
-    author_ids = serializers.ListField(
-        write_only=True,
-        child=serializers.JSONField(),
-        validators=[AuthorValidator])
+    title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    url = serializers.CharField(required=True, allow_null=True, allow_blank=False)
 
-    tags = TagSerializer(many=True, read_only=True)
-    tag_ids = serializers.ListField(
-        write_only=True,
-        required=False,
-        child=serializers.IntegerField())
+    # authors = AuthorSerializer(many=True, read_only=True)
+    # author_ids = serializers.ListField(
+    #     write_only=True,
+    #     child=serializers.JSONField(),
+    #     validators=[AuthorValidator])
+
+    # tags = TagSerializer(many=True, read_only=True)
+    # tag_ids = serializers.ListField(
+    #     write_only=True,
+    #     required=False,
+    #     child=serializers.IntegerField())
         
     class Meta:
         model = Video
@@ -222,17 +225,17 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'title',
             'url',
-            'authors',
-            'author_ids',
-            'tags',
-            'tag_ids'
+            # 'authors',
+            # 'author_ids',
+            # 'tags',
+            # 'tag_ids'
         )
 
     def create(self, validated_data):
         return self.update(Video(), validated_data)
 
     def update(self, instance, validated_data):
-        print(validated_data)
+        print("video: ", validated_data)
         instance = super(VideoSerializer, self).update(instance, validated_data)
 
         # Save authors

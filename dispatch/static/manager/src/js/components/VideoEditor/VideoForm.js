@@ -44,7 +44,7 @@ export default function VideoForm(props) {
         label='Tags'
         error={props.errors.tags}>
         {/* <TagSelectInput
-          value={props.tags}
+          value={props.listItem.tags ? props.listItem.tags: []}
           update={tags => props.update('tags', tags)} /> */}
       </Form.Input>
         

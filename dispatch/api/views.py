@@ -316,6 +316,7 @@ class VideoViewSet(DispatchModelViewSet):
     """Viewset for Video model views."""
     model = Video
     serializer_class = VideoSerializer
+    filter_backends = (filters.OrderingFilter,)
     update_fields = ('title', 'authors', 'tags')
 
     def get_queryset(self):

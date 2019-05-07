@@ -47,8 +47,10 @@ class ItemEditor extends React.Component {
     if (this.props.isNew) {
       return this.props.entities.local[NEW_LISTITEM_ID]
     } else {
-      return this.props.entities.local[this.props.itemId] ||
-        R.path(['entities','remote',this.props.itemId], this.props) || false
+      const temp = this.props.entities.local[this.props.itemId] ||
+      R.path(['entities','remote',this.props.itemId], this.props) || false
+      console.log("temp: ", temp)
+      return temp
     }
   }
 

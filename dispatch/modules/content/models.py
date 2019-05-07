@@ -465,7 +465,7 @@ class Video(Model, AuthorMixin):
 
     # Overriding
     def save(self, **kwargs):
-        """Custom save method to process thumbnails and save image dimensions."""
+        """Custom sazve method to process thumbnails and save image dimensions."""
         # Call super method
         super(Video, self).save(**kwargs)
     
