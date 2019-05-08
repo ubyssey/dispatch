@@ -24,15 +24,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getListItem: (token, videoId) => {
-      console.log("get video")
       dispatch(videosActions.get(token, videoId))
     },
     setListItem: (video) => {
       dispatch(videosActions.set(video))
     },
     saveListItem: (token, videoId, video) => {
-      const temp = Object.assign({'author_ids': video['authors'], 'tag_ids': video['tags']}, video)
-      console.log("TEMP: ", temp)
       dispatch(videosActions.save(token, videoId, video))
     },
     createListItem: (token, video) => {

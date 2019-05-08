@@ -48,7 +48,6 @@ function buildRoute(route, id) {
     fullRoute += '/'
   }
 
-  console.log(fullRoute)
   return fullRoute
 }
 
@@ -442,8 +441,6 @@ const DispatchAPI = {
       return getRequest('videos', videoId, null, token)
     },
     save: (token, videoId, data) => {
-      // data = {authors: [{person: 1, type: "videographer"}], author_ids: [{person: 1, type: "videographer"}], id: 5, tags: [],
-      //   title: "Chinese Tech", url: "https://www.youtube.com/watch?v=XrLtJb-qaDg"}
       return patchRequest('videos', videoId, data, token)
     },
     create: (token, data) => {

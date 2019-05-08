@@ -33,7 +33,7 @@ export default function VideoForm(props) {
 
       <Form.Input
         label='Authors'
-        error={props.errors.authors}>
+        error={props.errors.author_ids}>
         <AuthorSelectInput
           value={props.listItem.authors ? props.listItem.authors: []}
           update={authors => props.update('authors', authors)} 
@@ -42,16 +42,16 @@ export default function VideoForm(props) {
 
       <Form.Input
         label='Tags'
-        error={props.errors.tags}>
-        {/* <TagSelectInput
+        error={props.errors.tag_ids}>
+        <TagSelectInput
           value={props.listItem.tags ? props.listItem.tags: []}
-          update={tags => props.update('tags', tags)} /> */}
+          update={tags => props.update('tags', tags)} />
       </Form.Input>
         
       {props.listItem.url && 
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
-            <img className='c-image-panel__image__img' src={`http://img.youtube.com/vi/${props.listItem.url.split("v=")[1]}/0.jpg`} />
+            <img className='c-image-panel__image__img' src={`http://img.youtube.com/vi/${props.listItem.url.split('v=')[1]}/0.jpg`} />
           </div>
         </div>
       }

@@ -4,13 +4,16 @@ import { replace } from 'react-router-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
 import videosActions from '../../actions/VideosActions'
+import { humanizeDatetime } from '../../util/helpers'
+import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
 
 const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
     listItems: state.app.videos.list,
     entities: {
-      listItems: state.app.entities.videos
+      listItems: state.app.entities.videos,
+      persons: state.app.entities.persons,
     }
   }
 }
@@ -43,23 +46,69 @@ const mapDispatchToProps = (dispatch) => {
         }))
       }
     },
-    searchListItems: (query) => {
-      dispatch(videosActions.search(query))
+    searchListItems: (author, tags, query) => {
+      dispatch(videosActions.search(author, tags, query))
     }
   }
 }
 
+const renderThumb = (url) => {
+  return (
+    <div className={'c-image-page-thumb'} style={{backgroundImage: `url(https://img.youtube.com/vi/${url.split('v=')[1]}/0.jpg)`}} />
+  )
+}
+
 function VideosPageComponent(props) {
+  
+  const hasFilters = props.location.query.section || props.location.query.author || props.location.query.tags
+
+  const filters = [
+    <AuthorFilterInput
+      key={'authorFilter'}
+      value={props.location.query.author}
+      update={(author) => props.searchListItems(author, props.location.query.tags, props.location.query.q)} />,
+    <TagsFilterInput
+      key={'tagsFilter'}
+      value={props.location.query.tags}
+      update={(tags) => props.searchListItems(props.location.query.author, tags, props.location.query.q)} />
+  ]
+
   return (
     <ItemIndexPage
       typeSingular='video'
       typePlural='videos'
       displayColumn='title'
       pageTitle='Videos'
-      headers={[ 'Title', 'URL' ]}
+      headers={[ 'Title', 'URL', 'Preview', 'Author', 'Created', 'Updated' ]}
       extraColumns={[
-        item => item.url
+        item => item.url,
+        item => (renderThumb(item.url)),
+        item => (Object.keys(props.entities.persons).length != 0 && item.authors.length ? props.entities.persons[item.authors[0].person]['full_name']: ''),
+        item => humanizeDatetime(item.created_at, true),
+        item => humanizeDatetime(item.updated_at, true)
       ]}
+      // searchListItems={props.searchListItems()}
+      filters={filters}
+      hasFilters={hasFilters}
+      shouldReload={(prevProps) => {
+        return (
+          (prevProps.location.query.section !== props.location.query.section) ||
+          (prevProps.location.query.author !== props.location.query.author)  ||
+          (prevProps.location.query.tags !== props.location.query.tags)
+        )
+      }}
+      queryHandler={(query, props) => {
+        if (props.location.query.author) {
+          query.author = props.location.query.author
+        }
+        if (props.location.query.tags) {
+          query.tags = props.location.query.tags
+        }
+        return query
+      }}
+      searchListItems={(query) => {
+        props.searchListItems(props.location.query.author, props.location.query.tags, query)}
+      }
       {... props} />
   )
 }

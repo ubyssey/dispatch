@@ -207,17 +207,17 @@ class VideoSerializer(DispatchModelSerializer):
     title = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     url = serializers.CharField(required=True, allow_null=True, allow_blank=False)
 
-    # authors = AuthorSerializer(many=True, read_only=True)
-    # author_ids = serializers.ListField(
-    #     write_only=True,
-    #     child=serializers.JSONField(),
-    #     validators=[AuthorValidator])
+    authors = AuthorSerializer(many=True, read_only=True)
+    author_ids = serializers.ListField(
+        write_only=True,
+        child=serializers.JSONField(),
+        validators=[AuthorValidator(True)])
 
-    # tags = TagSerializer(many=True, read_only=True)
-    # tag_ids = serializers.ListField(
-    #     write_only=True,
-    #     required=False,
-    #     child=serializers.IntegerField())
+    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        write_only=True,
+        required=False,
+        child=serializers.IntegerField())
         
     class Meta:
         model = Video
@@ -225,17 +225,18 @@ class VideoSerializer(DispatchModelSerializer):
             'id',
             'title',
             'url',
-            # 'authors',
-            # 'author_ids',
-            # 'tags',
-            # 'tag_ids'
+            'authors',
+            'author_ids',
+            'tags',
+            'tag_ids',
+            'created_at',
+            'updated_at'
         )
 
     def create(self, validated_data):
         return self.update(Video(), validated_data)
 
     def update(self, instance, validated_data):
-        print("video: ", validated_data)
         instance = super(VideoSerializer, self).update(instance, validated_data)
 
         # Save authors
@@ -265,7 +266,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     author_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
-        validators=[AuthorValidator])
+        validators=[AuthorValidator(False)])
 
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(
@@ -300,7 +301,6 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
-        print("image: ", validated_data)
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save authors
@@ -585,7 +585,7 @@ class SubsectionSerializer(DispatchModelSerializer):
     author_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
-        validators=[AuthorValidator]
+        validators=[AuthorValidator(False)]
     )
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
     articles = SubsectionArticleSerializer(many=True, read_only=True, source='get_articles')
@@ -664,7 +664,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     author_ids = serializers.ListField(
         write_only=True,
         child=serializers.JSONField(),
-        validators=[AuthorValidator])
+        validators=[AuthorValidator(False)])
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
 
     tags = TagSerializer(many=True, read_only=True)

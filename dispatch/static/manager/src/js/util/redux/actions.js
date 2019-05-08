@@ -114,7 +114,6 @@ export class ResourceActions {
   }
 
   save(token, id, data) {
-    console.log(data)
     return {
       type: this.types.SAVE,
       payload: this.api.save(token, id, this.toRemote(data))

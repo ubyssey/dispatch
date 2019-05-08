@@ -30,7 +30,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(imagesActions.set(imageId, image))
     },
     saveListItem: (token, imageId, image) => {
-      console.log("saveListItemImage: ", image)
       dispatch(imagesActions.save(token, imageId, image))
     },
     createListItem: (token, image) => {
