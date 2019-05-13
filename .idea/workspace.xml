@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="bde163b7-4f1f-4632-ad73-cb973b0cab63" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" />
+      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_articles.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_articles.py" />
+      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_images.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_images.py" />
+      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_persons.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_persons.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -78,7 +80,7 @@
         <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_pages.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="51">
-              <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+              <caret line="248" column="0" lean-forward="false" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -86,23 +88,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_api_persons.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="helpers.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="helpers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dispatch/tests/helpers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="160">
-              <caret line="178" column="21" lean-forward="false" selection-start-line="178" selection-start-column="14" selection-end-line="178" selection-end-column="21" />
+              <caret line="178" column="41" lean-forward="true" selection-start-line="178" selection-start-column="41" selection-end-line="178" selection-end-column="41" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
               </folding>
@@ -120,12 +110,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_api_images.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_api_images.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="201">
+              <caret line="136" column="52" lean-forward="false" selection-start-line="136" selection-start-column="52" selection-end-line="136" selection-end-column="52" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_api_articles.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_articles.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="426">
+              <caret line="758" column="44" lean-forward="false" selection-start-line="758" selection-start-column="44" selection-end-line="758" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -141,8 +143,9 @@
       <find>image = Img.open((data))</find>
       <find>sys</find>
       <find>image = self.client.post(url, { 'img': test_image }, format='multipart')</find>
-      <find>multipart</find>
       <find>helper</find>
+      <find>multipart</find>
+      <find>open</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -151,18 +154,20 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/dispatch/tests/test_api_images.py" />
         <option value="$PROJECT_DIR$/dispatch/tests/test_api_files.py" />
         <option value="$PROJECT_DIR$/dispatch/tests/test_api_imagegallery.py" />
         <option value="$PROJECT_DIR$/dispatch/modules/content/models.py" />
-        <option value="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" />
         <option value="$PROJECT_DIR$/dispatch/tests/helpers.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/test_api_persons.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/test_api_articles.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/test_api_images.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="263" />
-    <option name="y" value="50" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-121" />
+    <option name="y" value="317" />
     <option name="width" value="1231" />
     <option name="height" value="777" />
   </component>
@@ -254,7 +259,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="263" y="50" width="1231" height="777" extended-state="1" />
+    <frame x="-121" y="317" width="1231" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24978974" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -283,30 +288,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py</url>
-          <line>13</line>
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py</url>
-          <line>21</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_articles.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="8" column="40" lean-forward="false" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_files.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
@@ -441,14 +427,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_images.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dispatch/modules/content/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
@@ -459,33 +437,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_pages.py">
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/helpers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+        <state relative-caret-position="160">
+          <caret line="178" column="41" lean-forward="true" selection-start-line="178" selection-start-column="41" selection-end-line="178" selection-end-column="41" />
           <folding>
-            <element signature="e#0#33#0" expanded="true" />
+            <element signature="e#0#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+        <state relative-caret-position="186">
+          <caret line="208" column="27" lean-forward="true" selection-start-line="208" selection-start-column="27" selection-end-line="208" selection-end-column="27" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dispatch/tests/helpers.py">
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_pages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="178" column="21" lean-forward="false" selection-start-line="178" selection-start-column="14" selection-end-line="178" selection-end-column="21" />
+        <state relative-caret-position="51">
+          <caret line="248" column="0" lean-forward="false" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
           <folding>
-            <element signature="e#0#44#0" expanded="true" />
+            <element signature="e#0#33#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_articles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="758" column="44" lean-forward="false" selection-start-line="758" selection-start-column="44" selection-end-line="758" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_images.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="136" column="52" lean-forward="false" selection-start-line="136" selection-start-column="52" selection-end-line="136" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>

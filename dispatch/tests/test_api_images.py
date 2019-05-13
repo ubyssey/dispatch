@@ -25,7 +25,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -53,7 +53,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         ]
 
         for image_file in files:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -73,7 +73,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         ]
 
         for image_file in files:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -94,7 +94,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         ]
 
         for image_file in files:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -109,10 +109,10 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.assertEqual(image_1.status_code, status.HTTP_201_CREATED)
@@ -132,11 +132,11 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         valid_filename = 'test_image_a.jpg'
         invalid_filename = 'test_image_bad_filename_é.jpg'
 
-        with open(self.get_input_file(valid_filename)) as valid_image:
+        with open(self.get_input_file(valid_filename), 'rb') as valid_image:
             with open(self.get_input_file(invalid_filename), 'w') as invalid_image:
-                invalid_image.writelines(valid_image.readlines())
+                invalid_image.writelines(valid_image.decode("utf-8").readlines())
 
-        with open(self.get_input_file(invalid_filename)) as test_image:
+        with open(self.get_input_file(invalid_filename), 'rb') as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         self.remove_input_file(invalid_filename)
@@ -150,7 +150,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
@@ -179,7 +179,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         person = Person.objects.create(full_name='Test Person')
@@ -207,7 +207,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         # Clear client credentials
@@ -230,7 +230,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -251,7 +251,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-images-list')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -267,13 +267,13 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         url = reverse('api-images-list')
 
         # Upload three images
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image_1 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image_2 = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        with open(self.get_input_file('test_image_a.jpg')) as test_image:
+        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image_3 = self.client.post(url, { 'img': test_image }, format='multipart')
 
         response = self.client.get(url, format='json')
@@ -305,13 +305,13 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         for image_file in filesa:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 image = self.client.post(url, { 'img': test_image }, format='multipart')
                 imageurl = reverse('api-images-detail', args=[image.data['id']])
                 response = self.client.patch(imageurl, new_data, format='json')
 
         for image_file in filesb:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -348,13 +348,13 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         }
 
         for image_file in filesa:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 image = self.client.post(url, { 'img': test_image }, format='multipart')
                 imageurl = reverse('api-images-detail', args=[image.data['id']])
                 response = self.client.patch(imageurl, new_data, format='json')
 
         for image_file in filesb:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = reverse('api-images-detail', args=[image.data['id']])
@@ -383,7 +383,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         filename = 'test_image_b'
 
         for image_file in files:
-            with open(self.get_input_file(image_file)) as test_image:
+            with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
         url = '%s?q=%s' % (reverse('api-images-list'), filename)
