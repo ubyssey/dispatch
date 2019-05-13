@@ -1,9 +1,7 @@
 from dispatch.theme.fields import MetaFields
 
-class Template:
+class Template(metaclass=MetaFields):
 
-    __metaclass__ = MetaFields
-    
     def __init__(self):
         self.data = {}
 

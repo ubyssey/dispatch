@@ -87,7 +87,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         widget_render = widget.render()
 
-        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="article">Test headline</div>\n    <img class="image" src="%s"/>\n    \n</div>\n' % image.data['url']
+        html = '<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    <div class="article">Test headline</div>\n    <img class="image" src="%s"/>\n    \n</div>\n' % image.data['url']
 
         self.assertEqual(widget_render, html)
 
@@ -98,7 +98,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = widget.render()
 
-        html = u'<div class="widget">\n    \n    \n    \n    \n    \n</div>\n'
+        html = '<div class="widget">\n    \n    \n    \n    \n    \n</div>\n'
 
         self.assertEqual(result, html)
 
@@ -112,7 +112,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
             'description': 'test description'
         })
 
-        html = u'<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
+        html = '<div class="widget">\n    <img class="title">test title</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
 
         result = widget.render()
         self.assertEqual(result, html)
@@ -140,7 +140,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = template.render()
 
-        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
+        html = '\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
 
         self.assertEqual(result, html)
 
@@ -164,7 +164,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         zone.save(validated_data)
         widget.set_data(validated_data['data'])
 
-        html = u'<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
+        html = '<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
 
         data = widget.context(widget.prepare_data())
         result = widget.render(data)
@@ -192,7 +192,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         zone.save(validated_data)
         widget.set_data(validated_data['data'])
 
-        html = u'<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
+        html = '<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n'
 
         data = widget.before_save(widget.prepare_data())
         result = widget.render(data)
@@ -218,7 +218,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = template.render()
 
-        html = u'\n\n<div class="zone">\n\n</div>\n'
+        html = '\n\n<div class="zone">\n\n</div>\n'
 
         self.assertEqual(result,  html)
 
@@ -228,7 +228,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = template.render()
 
-        html = u'\n\n<div class="zone">\n\n</div>\n'
+        html = '\n\n<div class="zone">\n\n</div>\n'
 
         self.assertEqual(result, html)
 
@@ -255,7 +255,7 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
 
         result = template.render({ 'extra': mark_safe('<div class="testing">testing</div>') })
 
-        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    <div class="testing">testing</div>\n</div>\n\n</div>\n'
+        html = '\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    <div class="testing">testing</div>\n</div>\n\n</div>\n'
 
         self.assertEqual(result, html)
 
@@ -285,6 +285,6 @@ class WidgetRenderTestCase(DispatchAPITestCase, DispatchMediaTestMixin):
         # by the value provided in this context
         result = template.render({ 'data': { 'title': 'some invalid data' }})
 
-        html = u'\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
+        html = '\n\n<div class="zone">\n<div class="widget">\n    <img class="title">test title 1</div>\n    <div class="description">test description</div>\n    \n    \n    \n</div>\n\n</div>\n'
 
         self.assertEqual(result, html)
