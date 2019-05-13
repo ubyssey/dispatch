@@ -4,7 +4,7 @@
 import sys
 import imp
 imp.reload(sys)
-sys.setdefaultencoding('utf8')
+# sys.setdefaultencoding('utf8')
 
 from rest_framework import status
 

@@ -1,5 +1,6 @@
 import io
 import os
+import sys
 import re
 import uuid
 import datetime
@@ -534,7 +535,7 @@ class Image(Model, AuthorMixin):
             if not data:
                 return
 
-            image = Img.open(io.StringIO(data))
+            image = Img.open(io.BytesIO(data))
 
             self.width, self.height = image.size
 
@@ -563,11 +564,11 @@ class Image(Model, AuthorMixin):
             file_type = 'JPEG'
 
         # Write new thumbnail to StringIO object
-        image_io = io.StringIO()
+        image_io = io.BytesIO()
         image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', sys.getsizeof(image_io), None)
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
