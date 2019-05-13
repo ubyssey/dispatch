@@ -133,8 +133,8 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         invalid_filename = 'test_image_bad_filename_é.jpg'
 
         with open(self.get_input_file(valid_filename), 'rb') as valid_image:
-            with open(self.get_input_file(invalid_filename), 'w') as invalid_image:
-                invalid_image.writelines(valid_image.decode("utf-8").readlines())
+            with open(self.get_input_file(invalid_filename), 'wb') as invalid_image:
+                invalid_image.writelines(valid_image.readlines())
 
         with open(self.get_input_file(invalid_filename), 'rb') as test_image:
             response = self.client.post(url, { 'img': test_image }, format='multipart')
