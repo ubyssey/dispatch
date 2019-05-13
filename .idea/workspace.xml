@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bde163b7-4f1f-4632-ad73-cb973b0cab63" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/dispatch/modules/content/models.py" afterPath="$PROJECT_DIR$/dispatch/modules/content/models.py" />
-      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_files.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_files.py" />
-      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_images.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_images.py" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" afterPath="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,30 +14,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="test_api_topics.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_topics.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_api_users.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_users.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="test_api_videos.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_videos.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -99,12 +74,38 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_api_pages.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_api_pages.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_pages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="241" column="0" lean-forward="true" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="51">
+              <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_api_persons.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="201">
+              <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="helpers.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/dispatch/tests/helpers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="178" column="21" lean-forward="false" selection-start-line="178" selection-start-column="14" selection-end-line="178" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#44#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -139,6 +140,9 @@
       <find>image.save</find>
       <find>image = Img.open((data))</find>
       <find>sys</find>
+      <find>image = self.client.post(url, { 'img': test_image }, format='multipart')</find>
+      <find>multipart</find>
+      <find>helper</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -151,11 +155,14 @@
         <option value="$PROJECT_DIR$/dispatch/tests/test_api_files.py" />
         <option value="$PROJECT_DIR$/dispatch/tests/test_api_imagegallery.py" />
         <option value="$PROJECT_DIR$/dispatch/modules/content/models.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/test_api_pages.py" />
+        <option value="$PROJECT_DIR$/dispatch/tests/helpers.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="112" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="263" />
+    <option name="y" value="50" />
     <option name="width" value="1231" />
     <option name="height" value="777" />
   </component>
@@ -247,7 +254,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="112" width="1231" height="777" extended-state="0" />
+    <frame x="263" y="50" width="1231" height="777" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24978974" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -275,7 +282,20 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py</url>
+          <line>13</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py</url>
+          <line>21</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
@@ -301,16 +321,6 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#15#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#24#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -451,9 +461,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_pages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="241" column="0" lean-forward="true" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="51">
+          <caret line="248" column="0" lean-forward="true" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/test_api_persons.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="19" column="33" lean-forward="true" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dispatch/tests/helpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="178" column="21" lean-forward="false" selection-start-line="178" selection-start-column="14" selection-end-line="178" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
