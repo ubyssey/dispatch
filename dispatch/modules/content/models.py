@@ -1,6 +1,5 @@
-import io
+import StringIO
 import os
-import sys
 import re
 import uuid
 import datetime
@@ -535,7 +534,7 @@ class Image(Model, AuthorMixin):
             if not data:
                 return
 
-            image = Img.open(io.BytesIO(data))
+            image = Img.open(StringIO.StringIO(data))
 
             self.width, self.height = image.size
 
@@ -544,7 +543,7 @@ class Image(Model, AuthorMixin):
             name = self.get_name()
             ext = self.get_extension()
 
-            for size in list(self.SIZES.keys()):
+            for size in self.SIZES.keys():
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
 
     def save_thumbnail(self, image, size, name, label, file_type):
@@ -564,11 +563,11 @@ class Image(Model, AuthorMixin):
             file_type = 'JPEG'
 
         # Write new thumbnail to StringIO object
-        image_io = io.BytesIO()
+        image_io = StringIO.StringIO()
         image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', sys.getsizeof(image_io), None)
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', image_io.len, None)
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)

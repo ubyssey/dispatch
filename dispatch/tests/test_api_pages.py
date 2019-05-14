@@ -5,8 +5,7 @@ from django.core.urlresolvers import reverse
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
 from dispatch.models import Page
-from urllib import request
-from io import open
+
 class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_create_page_unauthorized(self):
@@ -232,7 +231,7 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
         
         image_file = 'test_image_a.jpg'
 
-        with open(self.get_input_file(image_file), 'rb') as test_image:
+        with open(self.get_input_file(image_file)) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         data = {
@@ -256,7 +255,7 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
         
         image_file = 'test_image_a.jpg'
 
-        with open(self.get_input_file(image_file), 'rb') as test_image:
+        with open(self.get_input_file(image_file)) as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         data = {

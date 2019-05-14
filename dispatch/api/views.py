@@ -427,7 +427,7 @@ class TemplateViewSet(viewsets.GenericViewSet):
         q = self.request.query_params.get('q', None)
 
         if q is not None:
-            templates = [x for x in ThemeManager.Templates.list() if x.name.lower().__contains__(q.lower())]
+            templates = filter(lambda x: x.name.lower().__contains__(q.lower()), ThemeManager.Templates.list())
 
         else:
             templates = ThemeManager.Templates.list()
@@ -490,7 +490,7 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         try:
             data = integration.callback(request.user, request.GET)
-        except IntegrationCallbackError as e:
+        except IntegrationCallbackError, e:
             return Response({ 'detail': e.message }, status.HTTP_400_BAD_REQUEST)
 
         return Response(data)
@@ -564,7 +564,7 @@ class DashboardViewSet(viewsets.GenericViewSet):
     def list_recent_articles(self, request):
         recent = recent_articles(request.user)
 
-        articles = [self.get_serializer(a).data for a in recent]
+        articles = map(lambda a: self.get_serializer(a).data, recent)
 
         data = {
             'results': articles
@@ -586,7 +586,7 @@ class TokenViewSet(viewsets.ViewSet):
             settings = get_settings(token)
 
             data = {
-                'token': str(token),
+                'token': unicode(token),
                 'settings': settings
             }
 

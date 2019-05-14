@@ -36,9 +36,9 @@ class AuthorMixin(object):
             return author.person.full_name
 
         if links == True or links == False:
-            authors = list(map(format_author, self.authors.all()))
+            authors = map(format_author, self.authors.all())
         else:
-            authors = list(map(format_author, saved_args))
+            authors = map(format_author, saved_args)
 
         if not authors:
             return ""

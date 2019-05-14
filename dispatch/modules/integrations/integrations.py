@@ -31,7 +31,7 @@ class IntegrationLibrary(object):
             raise IntegrationNotFound()
 
     def list(self):
-        return list(self.library.values())
+        return self.library.values()
 
 integrationLib = IntegrationLibrary()
 
@@ -111,7 +111,7 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
             # Fetch pages belonging to authenticated user
             pages = fb.list_pages('me')
 
-        except FacebookAPIError as e:
+        except FacebookAPIError, e:
             raise IntegrationCallbackError(e.message)
 
         return {
@@ -164,7 +164,7 @@ class FacebookInstantArticlesIntegration(BaseIntegration):
 
                 fb = Facebook(access_token=page_access_token)
 
-                print(fb.create_instant_article(page_id, html, False, True))
+                print fb.create_instant_article(page_id, html, False, True)
 
 
 # Register integrations

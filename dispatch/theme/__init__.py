@@ -13,7 +13,7 @@ class ThemeRegistry(object):
         self.register_defaults()
 
     def clear(self):
-        for zone in list(self.zones.values()):
+        for zone in self.zones.values():
             zone.clear_widgets()
 
         self.zones = OrderedDict()
@@ -56,7 +56,7 @@ class ThemeManager(object):
         @staticmethod
         def list():
             """Return list of registered zones"""
-            return [Z() for Z in list(register.zones.values())]
+            return [Z() for Z in register.zones.values()]
 
         @staticmethod
         def get(id):
@@ -70,7 +70,7 @@ class ThemeManager(object):
         def search(q):
             """Return list of zones matching query"""
             matches = []
-            for Z in list(register.zones.values()):
+            for Z in register.zones.values():
                 if re.search(q, Z.name, re.IGNORECASE):
                     matches.append(Z())
             return matches
@@ -88,7 +88,7 @@ class ThemeManager(object):
         @staticmethod
         def list():
             """Return list of registered templates"""
-            return [T() for T in list(register.templates.values())]
+            return [T() for T in register.templates.values()]
 
         @staticmethod
         def get(id):

@@ -155,7 +155,7 @@ class UserTests(DispatchAPITestCase):
 
         response = self.client.get(url, {}, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthorized_detail_get_request(self):
         """Test that an a get request for users detail without
@@ -168,7 +168,7 @@ class UserTests(DispatchAPITestCase):
 
         response = self.client.get(url, {}, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_user_with_password(self):
         """Check that creating a user with a password works correctly"""
@@ -176,7 +176,7 @@ class UserTests(DispatchAPITestCase):
         # NOTE: By default _create_user() supplies a good password
         response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_authentication(self):
         """Test that user authenticates"""
@@ -203,25 +203,25 @@ class UserTests(DispatchAPITestCase):
         data['password_a'] = 'matching'
         data['password_b'] = 'notmatching'
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # Too short
         data['password_a'] = 'short'
         data['password_b'] = 'short'
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # Too common
         data['password_a'] = 'password'
         data['password_b'] = 'password'
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # All numerics
         data['password_a'] = '12345654321'
         data['password_b'] = '12345654321'
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_user_update(self):
         """Ensure that user updates works correctly"""

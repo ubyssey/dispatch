@@ -14,7 +14,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_person_creation(self):
         """Test simple person creation, checks the response and database"""
 
-        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',
@@ -207,7 +207,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Test to ensure proper url is returned"""
 
         # Test a good image
-        with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
+        with open(self.get_input_file('test_image_a.jpg')) as test_image:
             response = DispatchTestHelpers.create_person(
                 self.client,
                 full_name='Test Person',
@@ -218,7 +218,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         imageDirectory = "images"
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(person.get_image_url(), join(imageDirectory, "test_image_a.jpg") )
+        self.assertEquals(person.get_image_url(), join(imageDirectory, "test_image_a.jpg") )
 
     def test_image_validation(self):
         """Test that ensures image validator on serializer is working.
@@ -231,7 +231,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
             slug='test-person-bad-image'
         )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_string_representation(self):
         """Test the string representation methods of the model"""
@@ -239,12 +239,12 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Testing when a full name is provided
         response = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
         person= Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), 'Test Person')
+        self.assertEquals(str(person), 'Test Person')
 
         # Testing without a full name
         response = DispatchTestHelpers.create_person(self.client)
         person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), '')
+        self.assertEquals(str(person), '')
 
     def test_unauthorized_listing_get_request(self):
         """Test that an a get request for persons listing without
@@ -256,7 +256,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         response = self.client.get(url, {}, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unauthorized_detail_get_request(self):
         """Test that an a get request for person detail without
@@ -269,7 +269,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         response = self.client.get(url, {}, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEquals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_persons_search(self):
         """Should be able to search through persons"""

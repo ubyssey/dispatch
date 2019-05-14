@@ -14,7 +14,9 @@ class MetaZone(type):
 
         super(MetaZone, cls).__init__(name, bases, nmspc)
 
-class Zone(object, metaclass=MetaZone):
+class Zone(object):
+    __metaclass__ = MetaZone
+
     def __init__(self):
         self._is_loaded = False
         self._zone = None
@@ -81,7 +83,7 @@ class Zone(object, metaclass=MetaZone):
 
         # Call widget before-save hook on nested widgets
         for key in list(zone.data.keys()):
-            if isinstance(zone.data[key], dict) and ('id' in list(zone.data[key].keys())) and ('data' in list(zone.data[key].keys())):
+            if isinstance(zone.data[key], dict) and ('id' in zone.data[key].keys()) and ('data' in zone.data[key].keys()):
                 zone.data[key]['data'] = self.before_save(zone.data[key]['id'], zone.data[key]['data'])
 
         # Call widget before-save hook
@@ -93,7 +95,9 @@ class Zone(object, metaclass=MetaZone):
         """Delete widget data for this zone."""
         ZoneModel.objects.get(zone_id=self.id).delete()
 
-class Widget(object, metaclass=MetaFields):
+class Widget(object):
+
+    __metaclass__ = MetaFields
 
     accepted_keywords = ()
     """Accepted extra keyword arguments when rendered via template tag.
@@ -143,7 +147,7 @@ class Widget(object, metaclass=MetaFields):
             data = self.context(self.prepare_data())
 
         if add_context is not None:
-            for key, value in add_context.items():
+            for key, value in add_context.iteritems():
                 if key in self.accepted_keywords:
                     data[key] = value
 

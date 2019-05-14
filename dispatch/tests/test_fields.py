@@ -292,8 +292,8 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Test some example entries
         self.assertEqual(json[0]['id'], 1)
         self.assertEqual(json[1]['id'], 2)
-        self.assertEqual(json[0]['headline'], 'Test headline 1')
-        self.assertEqual(json[1]['headline'], 'Test headline 2')
+        self.assertEqual(json[0]['headline'], u'Test headline 1')
+        self.assertEqual(json[1]['headline'], u'Test headline 2')
 
     def test_article_single_id(self):
         """Should be able to create article field with only 1 id"""
@@ -313,7 +313,7 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Test some example entries
         self.assertEqual(json['id'], 1)
-        self.assertEqual(json['headline'], 'Test headline')
+        self.assertEqual(json['headline'], u'Test headline')
 
     def test_article_prepare_data(self):
         """Should be able to return prepared data for the template"""

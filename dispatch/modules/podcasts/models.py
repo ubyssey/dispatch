@@ -1,7 +1,7 @@
 import uuid
 import os
-import io
-from urllib.parse import urlparse
+import StringIO
+from urlparse import urlparse
 
 from django.conf import settings
 

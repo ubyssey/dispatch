@@ -204,7 +204,7 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
             'credit' : 'This is a test credit'
         }
 
-        html_str = '<div class="image-embed">\n    <img class="image" src="%s" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n' % image.data['url']
+        html_str = u'<div class="image-embed">\n    <img class="image" src="%s" alt="This is a test caption" />\n    <div class="caption">This is a test caption</div>\n    <div class="credit">This is a test credit</div>\n</div>\n' % image.data['url']
 
         result = embeds.render('image', data)
 

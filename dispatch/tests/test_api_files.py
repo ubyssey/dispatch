@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import imp
-imp.reload(sys)
-#sys.setdefaultencoding('utf8')
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 from rest_framework import status
 
