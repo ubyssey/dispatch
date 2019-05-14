@@ -6,6 +6,7 @@ import ItemIndexPage from '../ItemIndexPage'
 import videosActions from '../../actions/VideosActions'
 import { humanizeDatetime } from '../../util/helpers'
 import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
+import PersonsActions from '../../actions/PersonsActions';
 
 const mapStateToProps = (state) => {
   return {
@@ -21,6 +22,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
+      if (props.entities.persons)
+      dispatch(PersonsActions.list(token, query))
       dispatch(videosActions.list(token, query))
     },
     toggleListItem: (videoId) => {
@@ -46,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
         }))
       }
     },
-    searchListItems: (author, tags, query) => {
+    searchVideos: (author, tags, query) => {
       dispatch(videosActions.search(author, tags, query))
     }
   }
@@ -60,25 +63,27 @@ const renderThumb = (url) => {
 
 function VideosPageComponent(props) {
   
-  const hasFilters = props.location.query.section || props.location.query.author || props.location.query.tags
+  const hasFilters = props.location.query.author || props.location.query.tags
 
   const filters = [
     <AuthorFilterInput
       key={'authorFilter'}
       value={props.location.query.author}
-      update={(author) => props.searchListItems(author, props.location.query.tags, props.location.query.q)} />,
+      update={(author) => props.searchVideos(author, props.location.query.tags, props.location.query.q)} />,
     <TagsFilterInput
       key={'tagsFilter'}
       value={props.location.query.tags}
-      update={(tags) => props.searchListItems(props.location.query.author, tags, props.location.query.q)} />
+      update={(tags) => props.searchVideos(props.location.query.author, tags, props.location.query.q)} />
   ]
 
   return (
     <ItemIndexPage
-      typeSingular='video'
+      pageTitle='Videos'  
       typePlural='videos'
+      typeSingular='video'
       displayColumn='title'
-      pageTitle='Videos'
+      filters={filters}
+      hasFilters={hasFilters}
       headers={[ 'Title', 'URL', 'Preview', 'Author', 'Created', 'Updated' ]}
       extraColumns={[
         item => item.url,
@@ -87,12 +92,8 @@ function VideosPageComponent(props) {
         item => humanizeDatetime(item.created_at, true),
         item => humanizeDatetime(item.updated_at, true)
       ]}
-      // searchListItems={props.searchListItems()}
-      filters={filters}
-      hasFilters={hasFilters}
       shouldReload={(prevProps) => {
         return (
-          (prevProps.location.query.section !== props.location.query.section) ||
           (prevProps.location.query.author !== props.location.query.author)  ||
           (prevProps.location.query.tags !== props.location.query.tags)
         )
@@ -106,9 +107,7 @@ function VideosPageComponent(props) {
         }
         return query
       }}
-      searchListItems={(query) => {
-        props.searchListItems(props.location.query.author, props.location.query.tags, query)}
-      }
+      searchListItems={(query) => props.searchVideos(props.location.query.author, props.location.query.tags, query)}
       {... props} />
   )
 }

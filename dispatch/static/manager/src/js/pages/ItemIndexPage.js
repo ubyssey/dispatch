@@ -137,7 +137,9 @@ export default class ListItemsPageComponent extends React.Component {
             toggleItem: this.props.toggleListItem,
             toggleAllItems: this.props.toggleAllListItems,
             deleteItems: (listItemIds) => this.deleteListItems(listItemIds),
-            searchItems: (query) => this.props.searchListItems(query)
+            searchItems: (query) => {
+              this.props.searchListItems(query)
+            }
           }}
 
           toolbarContent={this.props.toolbarContent} />
