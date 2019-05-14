@@ -6,7 +6,7 @@ import ItemIndexPage from '../ItemIndexPage'
 import videosActions from '../../actions/VideosActions'
 import { humanizeDatetime } from '../../util/helpers'
 import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
-import PersonsActions from '../../actions/PersonsActions';
+import PersonsActions from '../../actions/PersonsActions'
 
 const mapStateToProps = (state) => {
   return {
@@ -22,7 +22,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
-      if (props.entities.persons)
       dispatch(PersonsActions.list(token, query))
       dispatch(videosActions.list(token, query))
     },
