@@ -26,5 +26,3 @@ def zone(zone_id, **kwargs):
 def add_version(path):
     file_name, file_extension = path.split('.')
     return static('%s-%s.%s' % (file_name, settings.VERSION, file_extension) )
-
-
