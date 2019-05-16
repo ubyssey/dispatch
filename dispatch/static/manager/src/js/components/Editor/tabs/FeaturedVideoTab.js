@@ -35,7 +35,7 @@ export default function FeaturedVideoTab(props) {
 
         <Form.Input label='Video'>
           <VideoSelectInput
-            value={props.featured_video.video}
+            value={props.featured_video.video || ''}
             update={updateVideo} />
         </Form.Input>
 

@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 
 import ItemIndexPage from '../ItemIndexPage'
 import podcastsActions from '../../actions/PodcastsActions'
+import CopyToClipboard from '../../components/CopyToClipboard'
 
 const mapStateToProps = (state) => {
   return {
@@ -59,14 +60,18 @@ function PodcastsPageComponent(props) {
     </strong>
   )
 
+  const rssFeedColumn = (item) => (
+    <CopyToClipboard text={`${window.location.origin}/podcasts/${item.slug}/`} />
+  )
+
   return (
     <ItemIndexPage
       typeSingular='podcast'
       typePlural='podcasts'
       displayColumn='title'
       pageTitle='Podcasts'
-      headers={['Title']}
-      columns={[titleColumn]}
+      headers={['Title', 'Rss Feed']}
+      columns={[titleColumn, rssFeedColumn]}
       {... props} />
   )
 }

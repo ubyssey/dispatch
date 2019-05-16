@@ -21,7 +21,7 @@ export default function SelectInput(props) {
 
   return (
     <HTMLSelect
-      value={props.value || props.default}
+      value={props.value || props.default || ''}
       onChange={props.onChange}>
       {placeholder}
       {options}

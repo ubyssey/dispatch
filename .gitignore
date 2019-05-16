@@ -14,6 +14,9 @@ yarn.lock
 .coverage
 htmlcov/
 
+# swap files
+*.swp
+
 *.vscode/
 
 dispatch/tests/media
