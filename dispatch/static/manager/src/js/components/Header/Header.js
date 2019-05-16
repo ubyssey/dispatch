@@ -6,9 +6,11 @@ import { Button } from '@blueprintjs/core'
 import HeaderButtons from './HeaderButtons'
 import MobileHeaderButtons from './MobileHeaderButtons'
 import { desktopSize } from '../../util/helpers'
+import Tooltip from '../../components/Tooltip'
 
 require('../../../styles/components/header.scss')
 require('../../../styles/components/loading_bar.scss')
+require('../../../styles/components/tooltip.scss')
 
 class Header extends React.Component {
   constructor(props) {
@@ -20,13 +22,18 @@ class Header extends React.Component {
   }
 
   renderLink(url, classes, icon, value, subscript) {
+    if (subscript) {
+      value = (<Tooltip text={`${subscript}`} position={'bottom'} activateOnClick={false}>
+        {value}
+        </Tooltip>)
+    }
+  
     return (
       <Button
         minimal={true}
         onClick={() => this.props.goTo(url)}
         icon={icon}>
         {value}
-        {subscript && <div className='dispatch-version'>{subscript}</div>}
       </Button>
     )
   }
