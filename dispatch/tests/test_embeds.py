@@ -160,12 +160,19 @@ class EmbedsTest(DispatchAPITestCase, DispatchMediaTestMixin):
         result_4 = embeds.render('video', data_4)
         result_5 = embeds.render('video', data_5)
 
-        self.assertEqual(result_1.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>\n<div class="caption">\n    Test caption <span class="credit">Test credit</span>\n</div>')
-        self.assertEqual(result_2.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>\n<div class="caption">\n    Test caption <span class="credit"></span>\n</div>')
-        self.assertEqual(result_3.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>\n<div class="caption">\n     <span class="credit">Test credit</span>\n</div>')
-        self.assertEqual(result_4.strip(), '<iframe src="https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Test title</h1>')
-        self.assertEqual(result_5.strip(), '<iframe src="https://www.youtube.com/watch?v="></iframe>\n<h1></h1>')
+        prefix = ('<iframe\n' 
+                    'allowfullscreen="allowfullscreen"\n'
+                    'mozallowfullscreen="mozallowfullscreen"\n'
+                    'msallowfullscreen="msallowfullscreen"\n'
+                    'oallowfullscreen="oallowfullscreen"\n'
+                    'webkitallowfullscreen="webkitallowfullscreen"\n'
+                    'src=')
 
+        self.assertEqual(result_1.strip().replace(" ", ""), prefix + '"https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Testtitle</h1>\n<divclass="caption">\nTestcaption<spanclass="credit">Testcredit</span>\n</div>')
+        self.assertEqual(result_2.strip().replace(" ", ""), prefix + '"https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Testtitle</h1>\n<divclass="caption">\nTestcaption<spanclass="credit"></span>\n</div>')
+        self.assertEqual(result_3.strip().replace(" ", ""), prefix + '"https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Testtitle</h1>\n<divclass="caption">\n<spanclass="credit">Testcredit</span>\n</div>')
+        self.assertEqual(result_4.strip().replace(" ", ""), prefix + '"https://www.youtube.com/watch?v=1234"></iframe>\n<h1>Testtitle</h1>')
+        self.assertEqual(result_5.strip().replace(" ", ""), prefix + '"https://www.youtube.com/watch?v="></iframe>\n<h1></h1>')
     def test_not_in_embedlib(self):
         """Should raise EmbedException"""
 
