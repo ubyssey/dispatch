@@ -232,10 +232,17 @@ class DispatchTestHelpers(object):
     @classmethod
     def create_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a dummy video instance"""
+        (person, created) = Person.objects.get_or_create(full_name='Test Person')
 
         data = {
             'title': title,
             'url': url,
+            'author_ids': [
+                {
+                'person': person.id,
+                'type': 'author'
+                }
+            ]
         }
 
         url = reverse('api-videos-list')
