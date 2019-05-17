@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import imp
-imp.reload(sys)
+from importlib import reload
+reload(sys)
 
 from rest_framework import status
 
