@@ -51,4 +51,4 @@ def content_to_json(content):
                 'data': embeds.to_json(node['type'], node['data'])
             }
 
-    return map(render_node, content)
+    return list(map(render_node, content))
