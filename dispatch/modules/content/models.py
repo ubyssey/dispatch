@@ -462,12 +462,6 @@ class Video(Model, AuthorMixin):
     updated_at = DateTimeField(auto_now=True)
 
     AuthorModel = Author
-
-    # Overriding
-    def save(self, **kwargs):
-        """Custom sazve method to process thumbnails and save image dimensions."""
-        # Call super method
-        super(Video, self).save(**kwargs)
     
     def save_tags(self, tag_ids):
         self.tags.clear()

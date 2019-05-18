@@ -13,27 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='video',
-            name='authors',
-            field=models.ManyToManyField(related_name='video_authors', to='dispatch.Author'),
-        ),
-        migrations.AddField(
-            model_name='video',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='video',
-            name='tags',
-            field=models.ManyToManyField(to='dispatch.Tag'),
-        ),
-        migrations.AddField(
-            model_name='video',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True),
-        ),
         migrations.AlterField(
             model_name='article',
             name='head',
