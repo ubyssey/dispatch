@@ -48,7 +48,7 @@ def is_valid_id(id):
 
 def is_valid_uuid(id):
     """Return True if id is a valid UUID, False otherwise."""
-    if not isinstance(id, basestring):
+    if not isinstance(id, str):
         return False
 
     try:

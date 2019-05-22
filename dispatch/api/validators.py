@@ -101,7 +101,7 @@ class AuthorValidator(object):
         for author in data:
             if 'person' not in author:
                 raise ValidationError('An author must contain a person.')
-            if 'type' in author and not isinstance(author['type'], basestring):
+            if 'type' in author and not isinstance(author['type'], str):
                 # If type is defined, it should be a string
                 raise ValidationError('The author type must be a string.')
 
@@ -149,10 +149,10 @@ def TemplateValidator(template, template_data, tags, subsection_id):
             if 'magazine' in template.id:
                 if tags:
                     # check for instance of year tag
-                    if not True in map(lambda tag: '20' in tag.name, tags):
+                    if not True in ['20' in tag.name for tag in tags]:
                         errors['tag_ids'] = 'Must have the magazine year as a tag (e.g., "2019")'
                     else: 
-                        year = filter(lambda tag: '20' in tag.name, tags)[0].name
+                        year = [tag for tag in tags if '20' in tag.name][0].name
                         if year == '2019' and subsection_id is None:
                             errors['subsection'] = 'Must tag magazine subsection'
                 else:    
@@ -160,7 +160,7 @@ def TemplateValidator(template, template_data, tags, subsection_id):
 
             if template.id == 'timeline':
                 if tags:
-                    if not True in map(lambda tag: 'timeline-' in tag.name, tags):
+                    if not True in ['timeline-' in tag.name for tag in tags]:
                         errors['tag_ids'] = 'Must have a corresponding timeline tag'
                 else:
                     errors['tag_ids'] = 'Must have a corresponding timeline tag'
