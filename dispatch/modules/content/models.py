@@ -554,7 +554,7 @@ class Image(Model, AuthorMixin):
 
         # If image is larger than thumbnail size, resize image
         if (imw > width) or (imh > height):
-            image.thumbnail(size, Img.ANTIALIAS)
+            image.thumbnail(size, Img.LANCZOS)
 
         # Attach new thumbnail label to image filename
         name = "%s-%s.jpg" % (name, label)
