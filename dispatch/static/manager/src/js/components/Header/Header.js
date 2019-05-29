@@ -43,7 +43,7 @@ class Header extends React.Component {
       <header className='c-header'>
         <nav className='bp3-navbar bp3-dark'>
           <div className='bp3-navbar-group bp3-align-left'>
-            {this.renderLink('/', 'nav-logo', 'selection', 'dispatch', '0.6.1')}
+            {this.renderLink('/', 'nav-logo', 'selection', 'dispatch', '0.6.2')}
             <span className='bp3-navbar-divider' />
             <HeaderButtons goTo={this.props.goTo} />
           </div>
