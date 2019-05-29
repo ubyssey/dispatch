@@ -38,12 +38,10 @@ class ImagesPageComponent extends React.Component {
   }
 
   getQuery() {
-
     var query = {
       limit: DEFAULT_LIMIT,
       offset: (this.getCurrentPage() - 1) * DEFAULT_LIMIT
     }
-
 
     if (this.props.location.query.author) {
       query.author = this.props.location.query.author

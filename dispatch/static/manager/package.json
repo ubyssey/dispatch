@@ -60,6 +60,7 @@
     "react-redux-loading-bar": "^4.0.5",
     "react-router": "^3.2.1",
     "react-router-redux": "^4.0.8",
+    "react-youtube": "^7.9.0",
     "redux": "^3.5.2",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^4.0.0",

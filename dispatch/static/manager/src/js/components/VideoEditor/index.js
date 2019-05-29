@@ -29,11 +29,11 @@ const mapDispatchToProps = (dispatch) => {
     setListItem: (video) => {
       dispatch(videosActions.set(video))
     },
-    saveListItem: (token, videoId, data) => {
-      dispatch(videosActions.save(token, videoId, data))
+    saveListItem: (token, videoId, video) => {
+      dispatch(videosActions.save(token, videoId, video))
     },
-    createListItem: (token, data) => {
-      dispatch(videosActions.create(token, data, AFTER_DELETE))
+    createListItem: (token, video) => {
+      dispatch(videosActions.create(token, video, AFTER_DELETE))
     },
     deleteListItem: (token, videoId, next) => {
       dispatch(videosActions.delete(token, videoId, next))

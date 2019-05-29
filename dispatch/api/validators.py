@@ -86,18 +86,24 @@ def SectionValidator(section_id, subsection_id, template, tags):
     if errors:
         raise ValidationError(errors)
 
-def AuthorValidator(data):
-    """Raise a ValidationError if data does not match the author format."""
-    if not isinstance(data, list):
-        # Convert single instance to a list
-        data = [data]
+class AuthorValidator(object):
+    def __init__(self, required):
+        self.required = required
+    def __call__(self, data):
+        """Raise a ValidationError if data does not match the author format."""
+        if self.required and len(data) <= 0:
+            raise ValidationError('An author is required')
 
-    for author in data:
-        if 'person' not in author:
-            raise ValidationError('An author must contain a person.')
-        if 'type' in author and not isinstance(author['type'], str):
-            # If type is defined, it should be a string
-            raise ValidationError('The author type must be a string.')
+        if not isinstance(data, list):
+            # Convert single instance to a list
+            data = [data]
+
+        for author in data:
+            if 'person' not in author:
+                raise ValidationError('An author must contain a person.')
+            if 'type' in author and not isinstance(author['type'], str):
+                # If type is defined, it should be a string
+                raise ValidationError('The author type must be a string.')
 
 def TemplateValidator(template, template_data, tags, subsection_id):
 

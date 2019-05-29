@@ -452,9 +452,26 @@ class Page(Publishable):
         """ Returns page URL. """
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
-class Video(Model):
+class Video(Model, AuthorMixin):
     title = CharField(max_length=255)
     url = CharField(max_length=500)
+
+    authors = ManyToManyField(Author, related_name='video_authors')
+    tags = ManyToManyField('Tag')
+
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    AuthorModel = Author
+    
+    def save_tags(self, tag_ids):
+        self.tags.clear()
+        for tag_id in tag_ids:
+            try:
+                tag = Tag.objects.get(id=int(tag_id))
+                self.tags.add(tag)
+            except Tag.DoesNotExist:
+                pass
 
 class Image(Model, AuthorMixin):
     img = ImageField(upload_to='images/%Y/%m')

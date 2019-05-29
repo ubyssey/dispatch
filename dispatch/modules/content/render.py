@@ -34,7 +34,6 @@ def content_to_html(content, article_id):
         html = render_node(html, node, index)
         if (node['type'] == 'ad'):
             index += 1
-    # return mark_safe(reduce(render_node, content, ''))
     return mark_safe(html)
 
 def content_to_json(content):

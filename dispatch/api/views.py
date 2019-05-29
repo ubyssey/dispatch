@@ -54,19 +54,6 @@ class SectionViewSet(DispatchModelViewSet):
             queryset = queryset.filter(name__icontains=q)
         return queryset
 
-class VideoViewSet(DispatchModelViewSet):
-    """Viewset for Video model views."""
-    model = Video
-    serializer_class = VideoSerializer
-
-    def get_queryset(self):
-        queryset = Video.objects.all()
-        q = self.request.query_params.get('q', None)
-        if q is not None:
-            # If a search term (q) is present, filter queryset by term against `title`
-            queryset = queryset.filter(title__icontains=q)
-        return queryset
-
 class ArticleViewSet(DispatchModelViewSet, DispatchPublishableMixin):
     """Viewset for Article model views."""
     model = Article
@@ -272,20 +259,6 @@ class UserViewSet(DispatchModelViewSet):
         else:
             raise UnpermittedActionError()
 
-class TagViewSet(DispatchModelViewSet):
-    """Viewset for Tag model views."""
-    model = Tag
-    serializer_class = TagSerializer
-
-    def get_queryset(self):
-        queryset = Tag.objects.all()
-        q = self.request.query_params.get('q', None)
-        if q is not None:
-            # If a search term (q) is present, filter queryset by term against `name`
-            queryset = queryset.filter(name__icontains=q)
-
-        return queryset
-
 class TopicViewSet(DispatchModelViewSet):
     """Viewset for Topic model views."""
     model = Topic
@@ -323,6 +296,47 @@ class IssueViewSet(DispatchModelViewSet):
         if q is not None:
             # If a search term (q) is present, filter queryset by term against `name`
             queryset = queryset.filter(title__icontains=q)
+        return queryset
+
+class TagViewSet(DispatchModelViewSet):
+    """Viewset for Tag model views."""
+    model = Tag
+    serializer_class = TagSerializer
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        q = self.request.query_params.get('q', None)
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `name`
+            queryset = queryset.filter(name__icontains=q)
+
+        return queryset
+
+class VideoViewSet(DispatchModelViewSet):
+    """Viewset for Video model views."""
+    model = Video
+    serializer_class = VideoSerializer
+    filter_backends = (filters.OrderingFilter,)
+    update_fields = ('title', 'authors', 'tags')
+
+    def get_queryset(self):
+        queryset = Video.objects.order_by('-updated_at')
+        
+        author = self.request.query_params.get('author', None)
+        tags = self.request.query_params.getlist('tags', None)
+        q = self.request.query_params.get('q', None)
+
+        if author is not None:
+            queryset = queryset.filter(authors__person_id=author)
+
+        if tags is not None:
+            for tag in tags:
+                queryset = queryset.filter(tags__id=tag)
+
+        if q is not None:
+            # If a search term (q) is present, filter queryset by term against `title`
+            queryset = queryset.filter(title__icontains=q)
+            
         return queryset
 
 class ImageViewSet(viewsets.ModelViewSet):
