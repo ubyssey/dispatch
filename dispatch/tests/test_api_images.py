@@ -75,7 +75,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
             with open(self.get_input_file(image_file), 'rb') as test_image:
                 response = self.client.post(url, { 'img': test_image }, format='multipart')
 
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertTrue(self.fileExists(response.data['url']))
 
             # Assert that resized versions were created
