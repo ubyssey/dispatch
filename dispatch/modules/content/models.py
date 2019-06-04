@@ -14,7 +14,7 @@ from django.db import transaction
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
-    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE)
+    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
