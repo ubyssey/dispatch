@@ -14,7 +14,7 @@ from django.db import transaction
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
-    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
+    ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE)
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
@@ -57,7 +57,7 @@ class Section(Model):
     slug = SlugField(unique=True)
 
 class Author(Model):
-    person = ForeignKey(Person, on_delete=SET_NULL)
+    person = ForeignKey(Person, on_delete=CASCADE)
     order = PositiveIntegerField()
     type = CharField(blank=True, default='author', max_length=100)
 
@@ -321,10 +321,10 @@ class Publishable(Model):
         abstract = True
 
 class Article(Publishable, AuthorMixin):
-    parent = ForeignKey('Article', on_delete=CASCADE, related_name='article_parent', blank=True, null=True)
+    parent = ForeignKey('Article', on_delete=SET_NULL, related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
-    section = ForeignKey('Section', on_delete=SET_NULL)
+    section = ForeignKey('Section', on_delete=CASCADE)
     subsection = ForeignKey('Subsection', on_delete=SET_NULL,related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
     topic = ForeignKey('Topic', on_delete=SET_NULL, null=True)
@@ -414,7 +414,7 @@ class Subsection(Model, AuthorMixin):
     slug = SlugField(unique=True)
     description = TextField(null=True, blank=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
-    section = ForeignKey('Section', on_delete=SET_NULL)
+    section = ForeignKey('Section', on_delete=CASCADE)
     is_active = BooleanField(default=False)
 
     AuthorModel = Author

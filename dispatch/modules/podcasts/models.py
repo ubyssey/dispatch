@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models import (
     Model, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, UUIDField, ForeignKey,
-    SlugField, EmailField, SET_NULL)
+    SlugField, EmailField, SET_NULL, CASCADE)
 
 from dispatch.modules.content.models import Image
 from dispatch.core.storage import generate_signed_url
@@ -71,7 +71,7 @@ class PodcastEpisode(Model):
 
     id = UUIDField(primary_key=True, default=uuid.uuid4)
 
-    podcast = ForeignKey(Podcast, on_delete=SET_NULL)
+    podcast = ForeignKey(Podcast, on_delete=CASCADE)
 
     title = CharField(max_length=255)
     description = TextField()
