@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -35,6 +35,6 @@ dashboard_user_actions = views.DashboardViewSet.as_view({'get': 'list_actions'})
 
 urlpatterns = format_suffix_patterns([
     # Dashboard routes
-    url(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
-    url(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions')
+    re_path(r'^dashboard/recent', dashboard_recent_articles, name='dashboard_recent_articles'),
+    re_path(r'^dashboard/actions', dashboard_user_actions, name='dashboard_user_actions')
 ]) + router.urls

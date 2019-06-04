@@ -57,7 +57,7 @@ class Section(Model):
     slug = SlugField(unique=True)
 
 class Author(Model):
-    person = ForeignKey(Person)
+    person = ForeignKey(Person, on_delete=SET_NULL)
     order = PositiveIntegerField()
     type = CharField(blank=True, default='author', max_length=100)
 
@@ -321,13 +321,13 @@ class Publishable(Model):
         abstract = True
 
 class Article(Publishable, AuthorMixin):
-    parent = ForeignKey('Article', related_name='article_parent', blank=True, null=True)
+    parent = ForeignKey('Article', on_delete=CASCADE, related_name='article_parent', blank=True, null=True)
 
     headline = CharField(max_length=255)
-    section = ForeignKey('Section')
-    subsection = ForeignKey('Subsection', related_name='article_subsection', blank=True, null=True)
+    section = ForeignKey('Section', on_delete=SET_NULL)
+    subsection = ForeignKey('Subsection', on_delete=SET_NULL,related_name='article_subsection', blank=True, null=True)
     authors = ManyToManyField('Author', related_name='article_authors')
-    topic = ForeignKey('Topic', null=True)
+    topic = ForeignKey('Topic', on_delete=SET_NULL, null=True)
     tags = ManyToManyField('Tag')
 
     is_breaking = BooleanField(default=False)
@@ -414,7 +414,7 @@ class Subsection(Model, AuthorMixin):
     slug = SlugField(unique=True)
     description = TextField(null=True, blank=True)
     authors = ManyToManyField('Author', related_name='subsection_authors')
-    section = ForeignKey('Section')
+    section = ForeignKey('Section', on_delete=SET_NULL)
     is_active = BooleanField(default=False)
 
     AuthorModel = Author
@@ -434,8 +434,8 @@ class Subsection(Model, AuthorMixin):
         return "%s%s/" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
-    parent = ForeignKey('Page', related_name='page_parent', blank=True, null=True)
-    parent_page = ForeignKey('Page', related_name='parent_page_fk', null=True)
+    parent = ForeignKey('Page', on_delete=SET_NULL, related_name='page_parent', blank=True, null=True)
+    parent_page = ForeignKey('Page', on_delete=SET_NULL, related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
     class Meta:
@@ -600,8 +600,8 @@ class Image(Model, AuthorMixin):
                 pass
 
 class VideoAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='video_article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='video_page')
+    article = ForeignKey(Article, on_delete=SET_NULL, blank=True, null=True, related_name='video_article')
+    page = ForeignKey(Page, on_delete=SET_NULL, blank=True, null=True, related_name='video_page')
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)
@@ -610,9 +610,9 @@ class VideoAttachment(Model):
     order = PositiveIntegerField(null=True)
 
 class ImageAttachment(Model):
-    article = ForeignKey(Article, blank=True, null=True, related_name='image_article')
-    page = ForeignKey(Page, blank=True, null=True, related_name='image_page')
-    gallery = ForeignKey('ImageGallery', blank=True, null=True)
+    article = ForeignKey(Article, on_delete=SET_NULL, blank=True, null=True, related_name='image_article')
+    page = ForeignKey(Page, on_delete=SET_NULL, blank=True, null=True, related_name='image_page')
+    gallery = ForeignKey('ImageGallery', on_delete=SET_NULL, blank=True, null=True)
 
     caption = TextField(blank=True, null=True)
     credit = TextField(blank=True, null=True)

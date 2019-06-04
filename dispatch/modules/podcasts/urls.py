@@ -1,6 +1,6 @@
-from django.conf.urls import url
+from django.urls import re_path
 from dispatch.modules.podcasts.feeds import PodcastFeed
 
 urlpatterns = [
-    url(r'^(?P<slug>[-\w]+)/', PodcastFeed(), name='podcast'),
+    re_path(r'^(?P<slug>[-\w]+)/', PodcastFeed(), name='podcast'),
 ]
