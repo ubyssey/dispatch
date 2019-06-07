@@ -7,6 +7,7 @@ from dispatch.theme.fields import (
     ModelField, WidgetField, Field, DateTimeField,
     IntegerField, BoolField, SelectField
 )
+from django.db import NotSupportedError
 from dispatch.theme.widgets import Zone, Widget
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.helpers import DispatchTestHelpers
@@ -487,8 +488,8 @@ class FieldTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         try:
             testfield.validate(data)
-            self.fail('Code should have failed with NotImplementedError')
-        except NotImplementedError:
+            self.fail('Code should have failed with NotSupportedError')
+        except NotSupportedError:
             pass
 
     def test_image_singular_data(self):

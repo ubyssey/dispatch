@@ -3,6 +3,7 @@ import json
 from django.db.models import Case, When
 from django.utils.dateparse import parse_datetime
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import NotSupportedError
 
 from dispatch.models import Article, Image, Poll, PodcastEpisode
 from dispatch.api.serializers import (
@@ -54,7 +55,7 @@ class Field(object):
 
     def validate(self, data):
         """Validates the field data"""
-        raise NotImplementedError
+        raise NotSupportedError
 
     def to_json(self, data):
         """Returns JSON representation of field data"""

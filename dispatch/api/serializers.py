@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
+from django.core.validators import ProhibitNullCharactersValidator
 
 from django.conf import settings
 
