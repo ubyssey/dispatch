@@ -8,7 +8,7 @@ import re
 def youtube_embed_id(url):
     urlParts = url.split("?v=")
     if len(urlParts) > 1:
-        # embed_url = 'http://www.youtube.com/embed/%s' %(match.group(2))
+        # embed_url = 'https://www.youtube.com/embed/%s' %(match.group(2))
         return urlParts[1]
     return ''
 
@@ -17,7 +17,7 @@ def youtube_embed_id(url):
 def youtube_embed_url(url):
     urlParts = url.split("?v=")
     if len(urlParts) > 1:
-        embed_url = 'http://www.youtube.com/embed/%s' %(urlParts[1])
+        embed_url = 'https://www.youtube.com/embed/%s' %(urlParts[1])
         
         return embed_url
     return ''

@@ -56,7 +56,7 @@ def remove_duplicates(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0021_podcast_fields'),
+        ('dispatch', '0022_video_meta_fields'),
     ]
 
     operations = [

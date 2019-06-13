@@ -9,7 +9,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0023_publishable_constraints_default'),
+        ('dispatch', '0021_podcast_fields'),
     ]
 
     operations = [

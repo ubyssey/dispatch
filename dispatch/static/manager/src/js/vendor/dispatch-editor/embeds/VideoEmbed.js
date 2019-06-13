@@ -42,7 +42,7 @@ class VideoEmbedComponent extends React.Component {
       <div>
         <img
           className='o-embed--video__image'
-          src={`http://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
+          src={`https://img.youtube.com/vi/${this.props.data.id}/0.jpg`} />
         <Form.Container>
           <Form.Input label='Title'>
             <TextInput
