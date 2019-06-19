@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { replace } from 'react-router-redux'
 
 import ItemIndexPage from '../ItemIndexPage'
-import videosActions from '../../actions/VideosActions'
+import VideosActions from '../../actions/VideosActions'
 import { humanizeDatetime } from '../../util/helpers'
 import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
 import PersonsActions from '../../actions/PersonsActions'
@@ -22,23 +22,32 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     listListItems: (token, query) => {
-      dispatch(PersonsActions.list(token, query))
-      dispatch(videosActions.list(token, query))
+      VideosActions.list(token, query).payload.then((videos) => {
+        const personIds = [...new Set(Object.values(videos.data.entities.videos).map(video => 
+          video.authors[0].person
+        ))]
+        
+        personIds.forEach(personId => {
+          dispatch(PersonsActions.get(token, personId))
+        })
+
+        dispatch(VideosActions.list(token, query))
+      })
     },
     toggleListItem: (videoId) => {
-      dispatch(videosActions.toggle(videoId))
+      dispatch(VideosActions.toggle(videoId))
     },
     toggleAllListItems: (videoIds) => {
-      dispatch(videosActions.toggleAll(videoIds))
+      dispatch(VideosActions.toggleAll(videoIds))
     },
     clearSelectedListItems: () => {
-      dispatch(videosActions.clearSelected())
+      dispatch(VideosActions.clearSelected())
     },
     clearListItems: () => {
-      dispatch(videosActions.clearAll())
+      dispatch(VideosActions.clearAll())
     },
     deleteListItems: (token, videoIds, goDownPage) => {
-      dispatch(videosActions.deleteMany(token, videoIds))
+      dispatch(VideosActions.deleteMany(token, videoIds))
       if (goDownPage) {
         dispatch(replace({
           pathname: '/videos/',
@@ -49,7 +58,7 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     searchVideos: (author, tags, query) => {
-      dispatch(videosActions.search(author, tags, query))
+      dispatch(VideosActions.search(author, tags, query))
     }
   }
 }
