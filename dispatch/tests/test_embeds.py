@@ -1,5 +1,5 @@
 from django.template import loader
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from dispatch.modules.content.embeds import embeds, EmbedException, ListEmbed, HeaderEmbed, CodeEmbed
 from dispatch.models import ImageGallery

@@ -321,7 +321,6 @@ class VideoViewSet(DispatchModelViewSet):
 
     def get_queryset(self):
         queryset = Video.objects.order_by('-updated_at')
-        
         author = self.request.query_params.get('author', None)
         tags = self.request.query_params.getlist('tags', None)
         q = self.request.query_params.get('q', None)
@@ -592,7 +591,7 @@ class TokenViewSet(viewsets.ViewSet):
         email = request.data.get('email', None)
         password = request.data.get('password', None)
 
-        user = authenticate(username=email, password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is not None and user.is_active:
             (token, created) = Token.objects.get_or_create(user=user)
