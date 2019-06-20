@@ -21,17 +21,21 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    listListItems: (token, query) => {
-      VideosActions.list(token, query).payload.then((videos) => {
-        const personIds = [...new Set(Object.values(videos.data.entities.videos).map(video => 
-          video.authors[0].person
+    listListItems: (token, query) => {      
+      VideosActions.list(token, query).payload
+      .then((videos) => {
+        const personIds = [...new Set(Object.values(videos.data.entities.videos).flatMap(video => 
+          video.authors.map(author => author.person)
         ))]
-        
+
         personIds.forEach(personId => {
           dispatch(PersonsActions.get(token, personId))
         })
 
         dispatch(VideosActions.list(token, query))
+      })
+      .catch((err) => {
+        console.log(err)
       })
     },
     toggleListItem: (videoId) => {
