@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0024_video_meta_fields'),
+        ('dispatch', '0022_video_meta_fields'),
     ]
 
     operations = [
