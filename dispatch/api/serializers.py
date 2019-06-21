@@ -31,6 +31,7 @@ class PersonSerializer(DispatchModelSerializer):
         fields = (
             'id',
             'full_name',
+            'title',
             'slug',
             'description',
             'image',
