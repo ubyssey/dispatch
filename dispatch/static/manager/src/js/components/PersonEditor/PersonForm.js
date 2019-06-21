@@ -58,6 +58,16 @@ export default class PersonForm extends React.Component {
         </Form.Input>
 
         <Form.Input
+          label='Title'
+          error={this.props.errors.title}>
+          <TextInput
+            placeholder='Title'
+            value={this.props.listItem.title || ''}
+            fill={true}
+            onChange={e => this.props.update('title', e.target.value)} />
+        </Form.Input>
+
+        <Form.Input
           label='Facebook'
           error={this.props.errors.facebook_url}>
           <TextInput
