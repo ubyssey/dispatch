@@ -55,6 +55,10 @@ class SectionsTests(DispatchAPITestCase):
         # Check data
         self.assertEqual(response.data['name'], 'Test Section')
         self.assertEqual(response.data['slug'], 'test-section')
+        
+        url = reverse('dispatch-admin') + 'sections/' + str(response.data['id'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
     def test_create_duplicate_section(self):
         """Create duplication section should fail"""

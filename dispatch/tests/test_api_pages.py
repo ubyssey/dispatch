@@ -77,6 +77,11 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(page.snippet, 'This is a test snippet')
         self.assertEqual(page.content[0]['type'], 'paragraph')
         self.assertEqual(page.content[0]['data'], 'This is some paragraph text')
+        
+        url = reverse('dispatch-admin') + 'pages/' + str(response.data['id'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
 
     def test_update_fields_page(self):
         """Should be able to update the title, slug, snippet of the page"""

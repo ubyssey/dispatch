@@ -172,7 +172,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_person(cls, client, full_name='', image='', slug='', description=''):
+    def create_person(cls, client, full_name='', image='', slug='', description='', title=''):
         """A helper method that creates a simple person object with the given attributes
         and returns the response"""
 
@@ -182,7 +182,8 @@ class DispatchTestHelpers(object):
             'full_name': full_name,
             'image': image,
             'slug': slug,
-            'description': description
+            'description': description,
+            'title': title
         }
 
         return client.post(url, data, format='multipart')
@@ -248,6 +249,62 @@ class DispatchTestHelpers(object):
         url = reverse('api-videos-list')
 
         return client.post(url, data, format='json')
+
+    @classmethod
+    def create_tricky_video(cls, client, title='testVideo', url='testVideoURL'):
+        """Create a video instance where the authors are on the second page"""
+        for i in range(20):
+            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i))
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1))
+            
+        data = {
+            'title': title,
+            'url': url,
+            'author_ids': [
+                {
+                'person': person.id,
+                'type': 'author'
+                },
+                {
+                'person': person2.id,
+                'type': 'videographer'
+                }
+            ]
+        }
+
+        url = reverse('api-videos-list')
+
+        return client.post(url, data, format='json')
+
+    @classmethod
+    def update_video(cls, client, videoId=None, updatedProperty='title', value='updatedTitle'):
+        """Update a dummy video instance with a specific id"""
+        data = {}
+        
+        if updatedProperty == 'author_ids':
+            (person, created) = Person.objects.get_or_create(full_name='Test Person')
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person 2')
+            (person3, created3) = Person.objects.get_or_create(full_name='Test Person 3')
+            value = [
+                {
+                'person': person.id,
+                'type': 'author'
+                },
+                {
+                'person': person2.id,
+                'type': 'videographer'
+                },
+                {
+                'person': person3.id,
+                'type': 'videographer'
+                }
+            ]
+        
+        data[updatedProperty] = value
+
+        url = reverse('api-videos-detail', args=[videoId])
+
+        return client.patch(url, data, format='json')
 
     @classmethod
     def create_invite(cls, client, email, person=None, permissions=''):

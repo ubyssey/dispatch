@@ -20,18 +20,21 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
                 full_name='Test Person',
                 image=test_image,
                 slug='test-person',
-                description='This is a description'
+                description='This is a description',
+                title='Coordinating Editor'
             )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['full_name'], 'Test Person')
         self.assertEqual(response.data['slug'], 'test-person')
         self.assertEqual(response.data['description'], 'This is a description')
+        self.assertEqual(response.data['title'], 'Coordinating Editor')
 
         person = Person.objects.get(pk=response.data['id'])
         self.assertEqual(person.full_name, 'Test Person')
         self.assertEqual(person.slug, 'test-person')
         self.assertEqual(person.description, 'This is a description')
+        self.assertEqual(person.title, 'Coordinating Editor')
 
     def test_person_update(self):
         """Ensure that person update works correctly in both response and database"""
