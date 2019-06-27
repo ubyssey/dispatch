@@ -11,11 +11,11 @@ from dispatch.modules.auth.managers import UserManager
 from dispatch.modules.auth.helpers import get_expiration_date
 
 class Person(Model):
-    full_name = CharField(max_length=255, blank=True, null=True)
+    full_name = CharField(max_length=255, blank=False, null=False, unique=True)
     is_admin = BooleanField(default=True)
 
     image = ImageField(upload_to='images', null=True)
-    slug = SlugField(null=True, unique=True)
+    slug = SlugField(blank=False, null=False, unique=True)
     description = TextField(null=True, blank=True)
     title = CharField(max_length=255, null=True, blank=True)
     facebook_url = CharField(max_length=255, null=True)
