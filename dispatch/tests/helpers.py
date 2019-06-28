@@ -16,7 +16,7 @@ class DispatchTestHelpers(object):
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author, slug='author')
+            (person, created) = Person.objects.get_or_create(full_name=author, slug=author)
             authors.append({
                 'person': person.id,
                 'type': 'author'
