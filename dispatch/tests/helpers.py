@@ -16,7 +16,7 @@ class DispatchTestHelpers(object):
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author)
+            (person, created) = Person.objects.get_or_create(full_name=author, slug='author')
             authors.append({
                 'person': person.id,
                 'type': 'author'
@@ -44,7 +44,7 @@ class DispatchTestHelpers(object):
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author)
+            (person, created) = Person.objects.get_or_create(full_name=author, slug='author')
             authors.append({
                 'person': person.id,
                 'type': 'author'
@@ -233,7 +233,7 @@ class DispatchTestHelpers(object):
     @classmethod
     def create_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a dummy video instance"""
-        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
 
         data = {
             'title': title,
@@ -254,8 +254,8 @@ class DispatchTestHelpers(object):
     def create_tricky_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a video instance where the authors are on the second page"""
         for i in range(20):
-            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i))
-            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1))
+            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i), slug='test-person')
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1), slug='test-person')
             
         data = {
             'title': title,
@@ -282,9 +282,9 @@ class DispatchTestHelpers(object):
         data = {}
         
         if updatedProperty == 'author_ids':
-            (person, created) = Person.objects.get_or_create(full_name='Test Person')
-            (person2, created2) = Person.objects.get_or_create(full_name='Test Person 2')
-            (person3, created3) = Person.objects.get_or_create(full_name='Test Person 3')
+            (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person 2', slug='test-person-2')
+            (person3, created3) = Person.objects.get_or_create(full_name='Test Person 3', slug='test-person-3')
             value = [
                 {
                 'person': person.id,
