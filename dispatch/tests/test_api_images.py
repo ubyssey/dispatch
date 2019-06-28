@@ -329,7 +329,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_author_query(self):
         """Should be able to search images by authors"""
 
-        person = Person.objects.create(full_name='Test Person')
+        person = Person.objects.create(full_name='Test Person', slug='test-person')
 
         url = reverse('api-images-list')
 
