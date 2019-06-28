@@ -12,6 +12,7 @@ from dispatch.tests.helpers import DispatchTestHelpers
 
 TEST_USER_EMAIL = 'test_user@test.com'
 TEST_USER_FULL_NAME = 'John Doe'
+TEST_USER_SLUG = 'john-doe'
 
 class UserTests(DispatchAPITestCase):
     """A class to test the user API methods"""
@@ -35,7 +36,7 @@ class UserTests(DispatchAPITestCase):
 
         url = reverse('api-users-list')
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
         data = {
             'email' : TEST_USER_EMAIL,
             'person' : person_id,
@@ -69,7 +70,7 @@ class UserTests(DispatchAPITestCase):
     def test_user_duplicate_person(self):
         """Cannot associate a user with a person instance that already belongs to another user"""
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
 
         response = DispatchTestHelpers.create_user(
             self.client,
@@ -108,7 +109,7 @@ class UserTests(DispatchAPITestCase):
         """Test unauthorized user creation"""
 
         # Create person before clearing credentials
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
 
         self.client.credentials()
 
@@ -190,7 +191,7 @@ class UserTests(DispatchAPITestCase):
     def test_bad_passwords(self):
         """A test case to ensure a variety of bad passwords are not succesful"""
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
 
         url = reverse('api-users-list')
 

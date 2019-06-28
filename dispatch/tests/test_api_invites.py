@@ -17,6 +17,7 @@ from dispatch.admin.forms import SignUpForm
 
 TEST_USER_EMAIL = 'test_user@test.com'
 TEST_USER_FULL_NAME = 'John Doe'
+TEST_USER_SLUG = 'john-doe'
 
 class InviteTests(DispatchAPITestCase):
     """A class to test the invite API methods"""
@@ -24,7 +25,7 @@ class InviteTests(DispatchAPITestCase):
     def test_invite_create_unauthorized(self):
         """Test that unauthorized users cannot send invites"""
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
 
         self.client.credentials()
 
@@ -46,7 +47,7 @@ class InviteTests(DispatchAPITestCase):
 
         user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
 
         token, created = Token.objects.get_or_create(user_id=user.data['id'])
 

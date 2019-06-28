@@ -195,7 +195,7 @@ class DispatchTestHelpers(object):
         and returns the response
         """
 
-        person = person or cls.create_person(client, full_name).data['id']
+        person = person or cls.create_person(client, full_name, slug).data['id']
         url = reverse('api-users-list')
         data = {
             'email' : email,
@@ -311,7 +311,7 @@ class DispatchTestHelpers(object):
         """Create dummy invite instance"""
 
         if person is None:
-            person = cls.create_person(client, full_name='Invited person')
+            person = cls.create_person(client, full_name='Invited person', slug='invited-person')
 
         url = reverse('api-invites-list')
 
