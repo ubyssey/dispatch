@@ -181,7 +181,7 @@ class ImagesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         with open(self.get_input_file('test_image_a.jpg'), 'rb') as test_image:
             image = self.client.post(url, { 'img': test_image }, format='multipart')
 
-        person = Person.objects.create(full_name='Test Person')
+        person = Person.objects.create(full_name='Test Person', slug='test-person')
 
         new_data = {
             'title': 'Test image',
