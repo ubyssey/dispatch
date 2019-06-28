@@ -162,10 +162,10 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         url = reverse('api-articles-list')
 
-        (person1, created) = Person.objects.get_or_create(full_name='Test Person')
-        (person2, created) = Person.objects.get_or_create(full_name='Test Person 2')
-        (person3, created) = Person.objects.get_or_create(full_name='Test Person 3')
-        (person4, created) = Person.objects.get_or_create(full_name='Test Person 4')
+        (person1, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
+        (person2, created) = Person.objects.get_or_create(full_name='Test Person 2' , slug='test-person-2')
+        (person3, created) = Person.objects.get_or_create(full_name='Test Person 3', slug='test-person-3')
+        (person4, created) = Person.objects.get_or_create(full_name='Test Person 4', slug='test-person-4')
         (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
 
         data = {
@@ -211,7 +211,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_author_type(self):
         """Should be able to create article with an author and missing author type"""
 
-        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
         (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
 
         data = {
@@ -230,7 +230,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_author_type_format(self):
         """Should not be able to create article with an author and non-string author type"""
 
-        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
         (section, created) = Section.objects.get_or_create(name='Test Section', slug='test-section')
 
         data = {
