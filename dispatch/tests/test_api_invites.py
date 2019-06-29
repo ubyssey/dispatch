@@ -47,7 +47,7 @@ class InviteTests(DispatchAPITestCase):
 
         user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
 
         token, created = Token.objects.get_or_create(user_id=user.data['id'])
 

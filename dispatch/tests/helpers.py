@@ -195,7 +195,7 @@ class DispatchTestHelpers(object):
         and returns the response
         """
 
-        person = person or cls.create_person(client, full_name, slug).data['id']
+        person = person or cls.create_person(client, full_name).data['id']
         url = reverse('api-users-list')
         data = {
             'email' : email,
