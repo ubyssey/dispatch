@@ -106,10 +106,10 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         TODO: Determine if want to change this behavior by changing command line 'stuff' for superuser
         """
         response = DispatchTestHelpers.create_person(self.client)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(person.full_name, '')
+        # person = Person.objects.get(pk=response.data['id'])
+        # self.assertEqual(person.full_name, '')
 
     def test_duplicate_fullnames(self):
         """Having two persons with the same full name is not fine"""
