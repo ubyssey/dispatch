@@ -187,7 +187,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         article_string = article.get_author_type_string()
 
-        self.assertEqual(article_string, ' Written by <a href="/authors/test-person/">Test Person</a>, Photos by <a href="/authors/test-person-2/">Test Person 2</a>, Illustrations by <a href="/authors/test-person-3/">Test Person 3</a>, Videos by <a href="/authors/test-person-4/">Test Person 4</a>')
+        self.assertEqual(article_string, 'Written by <a href="/authors/test-person/">Test Person</a>, Photos by <a href="/authors/test-person-2/">Test Person 2</a>, Illustrations by <a href="/authors/test-person-3/">Test Person 3</a>, Videos by <a href="/authors/test-person-4/">Test Person 4</a>')
 
     def test_author_person(self):
         """Should not be able to create article with an author type and missing author person"""
