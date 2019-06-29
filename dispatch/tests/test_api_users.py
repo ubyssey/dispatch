@@ -228,7 +228,7 @@ class UserTests(DispatchAPITestCase):
     def test_user_update(self):
         """Ensure that user updates works correctly"""
 
-        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
+        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL, TEST_USER_SLUG)
 
         UPDATED_EMAIL = 'updateTest@gmail.com'
         UPDATED_PASSWORD = 'updatedPassword'
@@ -287,6 +287,7 @@ class UserTests(DispatchAPITestCase):
         response = DispatchTestHelpers.create_user(
             self.client,
             email=TEST_USER_EMAIL
+            slug=TEST_USER_SLUG
         )
 
         url = reverse('api-users-detail', args=[response.data['id']])
@@ -321,7 +322,7 @@ class UserTests(DispatchAPITestCase):
     def test_user_reset_password(self):
         """Should be able to send a password reset email to a user"""
 
-        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL, TEST_USER_SLUG).data['id']
 
         url = '%s%s/' % (reverse('api-users-detail', args=[user_id]),'reset_password')
 
@@ -332,9 +333,9 @@ class UserTests(DispatchAPITestCase):
     def test_user_reset_password_unpermitted(self):
         """A non-admin user should not be able to reset another users password"""
 
-        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL, TEST_USER_SLUG).data['id']
 
-        non_admin_user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
+        non_admin_user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com', 'nonadmin-user')
 
         token, created = Token.objects.get_or_create(user_id=non_admin_user.data['id'])
 
