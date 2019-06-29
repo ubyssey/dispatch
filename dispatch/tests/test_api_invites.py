@@ -25,7 +25,7 @@ class InviteTests(DispatchAPITestCase):
     def test_invite_create_unauthorized(self):
         """Test that unauthorized users cannot send invites"""
 
-        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME, TEST_USER_SLUG).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, TEST_USER_FULL_NAME).data['id']
 
         self.client.credentials()
 
