@@ -121,10 +121,10 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
         person1 = Person.objects.get(pk=response1.data['id'])
-        person2 = Person.objects.get(pk=response2.data['id'])
+        # person2 = Person.objects.get(pk=response2.data['id'])
 
         self.assertEqual(person1.full_name, 'Test Person')
-        self.assertFalse(person2.full_name, 'Test Person')
+        # self.assertFalse(person2.full_name, 'Test Person')
 
     def test_duplicate_slug(self):
         """Having two persons with the same slug is not okay,
@@ -246,8 +246,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
         # Testing without a full name
         response = DispatchTestHelpers.create_person(self.client)
-        person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), '')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_unauthorized_listing_get_request(self):
         """Test that an a get request for persons listing without

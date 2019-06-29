@@ -24,7 +24,7 @@ class UserTests(DispatchAPITestCase):
             self.client,
             email=TEST_USER_EMAIL,
             full_name=TEST_USER_FULL_NAME,
-            slug= TEST_USER_SLUG
+            slug=TEST_USER_SLUG
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
