@@ -47,7 +47,7 @@ class InviteTests(DispatchAPITestCase):
     def test_invite_creation_unpermitted(self):
         """Test that users without the proper permissions cannot create invites"""
 
-        user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
+        user = DispatchTestHelpers.create_user(self.client, full_name='user', slug='user', email= 'nonAdminUser@test.com')
 
         person_id = DispatchTestHelpers.create_person(self.client, full_name=TEST_USER_FULL_NAME_2, slug=TEST_USER_SLUG_2).data['id']
 

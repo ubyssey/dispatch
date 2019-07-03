@@ -31,7 +31,8 @@ class UserTests(DispatchAPITestCase):
         response = DispatchTestHelpers.create_user(
             self.client,
             email=TEST_USER_EMAIL,
-            full_name=TEST_USER_FULL_NAME
+            full_name=TEST_USER_FULL_NAME,
+            slug=TEST_USER_SLUG
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -69,6 +70,8 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
+            full_name='test_user_invalid_person',
+            slug='test_user_invalid_person',
             email=TEST_USER_EMAIL,
             person=123
         )
@@ -107,8 +110,8 @@ class UserTests(DispatchAPITestCase):
     def test_duplicate_emails(self):
         """Creating a user with duplicate emails should fail"""
 
-        response1 = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
-        response2 = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
+        response1 = DispatchTestHelpers.create_user(self.client, full_name='test_duplicate_emails1', slug='test_duplicate_emails1', email=TEST_USER_EMAIL)
+        response2 = DispatchTestHelpers.create_user(self.client, full_name='test_duplicate_emails2', slug='test_duplicate_emails2', email=TEST_USER_EMAIL)
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
@@ -138,7 +141,7 @@ class UserTests(DispatchAPITestCase):
     def test_unauthorized_user_update(self):
         """Test unauthorized user update"""
 
-        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
+        response = DispatchTestHelpers.create_user(self.client, full_name='test_unauthorized_user_update', slug='test_unauthorized_user_update', email=TEST_USER_EMAIL)
 
         user_id = response.data['id']
         url = reverse('api-users-detail', args=[user_id])
@@ -183,14 +186,14 @@ class UserTests(DispatchAPITestCase):
         """Check that creating a user with a password works correctly"""
 
         # NOTE: By default _create_user() supplies a good password
-        response = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL)
+        response = DispatchTestHelpers.create_user(self.client, email=TEST_USER_EMAIL, full_name='password', slug='password')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_authentication(self):
         """Test that user authenticates"""
 
-        response = DispatchTestHelpers.create_user(self.client, email=TEST_USER_EMAIL, password='TheBestPassword!')
+        response = DispatchTestHelpers.create_user(self.client, email=TEST_USER_EMAIL, full_name='authorizeduser', slug='authorizeduser', password='TheBestPassword!')
 
         user = authenticate(username=TEST_USER_EMAIL, password='TheBestPassword!')
 
@@ -264,8 +267,8 @@ class UserTests(DispatchAPITestCase):
         response = DispatchTestHelpers.create_user(
             self.client,
             email=TEST_USER_EMAIL,
-            full_name=TEST_USER_FULL_NAME
-        )
+            full_name='test_delete_user',
+            slug='test_delete_user')
         user_id = response.data['id']
         person_id = response.data['person']['id']
 
@@ -293,6 +296,8 @@ class UserTests(DispatchAPITestCase):
 
         response = DispatchTestHelpers.create_user(
             self.client,
+            full_name='test_unauthorized_user_deletion',
+            slug='test_unauthorized_user_deletion',
             email=TEST_USER_EMAIL
         )
 
@@ -328,7 +333,7 @@ class UserTests(DispatchAPITestCase):
     def test_user_reset_password(self):
         """Should be able to send a password reset email to a user"""
 
-        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+        user_id = DispatchTestHelpers.create_user(self.client, full_name='test_user_reset_password', slug='test_user_reset_password',email=TEST_USER_EMAIL).data['id']
 
         url = '%s%s/' % (reverse('api-users-detail', args=[user_id]),'reset_password')
 
@@ -339,9 +344,9 @@ class UserTests(DispatchAPITestCase):
     def test_user_reset_password_unpermitted(self):
         """A non-admin user should not be able to reset another users password"""
 
-        user_id = DispatchTestHelpers.create_user(self.client, TEST_USER_EMAIL).data['id']
+        user_id = DispatchTestHelpers.create_user(self.client, full_name='test_user_reset_password_unpermitted', slug='test_user_reset_password_unpermitted',email=TEST_USER_EMAIL).data['id']
 
-        non_admin_user = DispatchTestHelpers.create_user(self.client, 'nonAdminUser@test.com')
+        non_admin_user = DispatchTestHelpers.create_user(self.client, full_name='non_admin_user', slug='non_admin_user', email='nonAdminUser@test.com')
 
         token, created = Token.objects.get_or_create(user_id=non_admin_user.data['id'])
 

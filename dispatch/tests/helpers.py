@@ -190,7 +190,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='multipart')
 
     @classmethod
-    def create_user(cls, client, email, full_name='Attached Person' + str(randint(0,1000000)), person=None, slug='attached-person' + str(randint(0,1000000)), password='TheBestPassword', permissions=None):
+    def create_user(cls, client, email, full_name=('Attached Person' + str(randint(0,1000000))), person=None, slug=('attached-person' + str(randint(0,1000000))), password='TheBestPassword', permissions=None):
         """
         A helper method that creates a simple user object with the given attributes
         and returns the response
