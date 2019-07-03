@@ -102,29 +102,29 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
 
     def test_empty_person(self):
         """
-        Creating a person with no attributes should be pass
+        Creating a person with no attributes should be fail
         TODO: Determine if want to change this behavior by changing command line 'stuff' for superuser
         """
-        response = DispatchTestHelpers.create_person(self.client)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = DispatchTestHelpers.create_person(self.client, full_name='')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(person.full_name, '')
+        response = DispatchTestHelpers.create_person(self.client, slug='')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_duplicate_fullnames(self):
-        """Having two persons with the same full name is fine"""
+        """Having two persons with the same full name is not fine"""
 
-        response1 = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
-        response2 = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
+        response1 = DispatchTestHelpers.create_person(self.client, full_name='Test Person', slug='test-person')
+        response2 = DispatchTestHelpers.create_person(self.client, full_name='Test Person', slug='test-person2')
 
         self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
         person1 = Person.objects.get(pk=response1.data['id'])
-        person2 = Person.objects.get(pk=response2.data['id'])
+        # person2 = Person.objects.get(pk=response2.data['id'])
 
         self.assertEqual(person1.full_name, 'Test Person')
-        self.assertEqual(person2.full_name, 'Test Person')
+        # self.assertFalse(person2.full_name, 'Test Person')
 
     def test_duplicate_slug(self):
         """Having two persons with the same slug is not okay,
@@ -239,15 +239,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_string_representation(self):
         """Test the string representation methods of the model"""
 
-        # Testing when a full name is provided
-        response = DispatchTestHelpers.create_person(self.client, full_name='Test Person')
+        response = DispatchTestHelpers.create_person(self.client, full_name='Test Person', slug='test-person')
         person= Person.objects.get(pk=response.data['id'])
         self.assertEqual(str(person), 'Test Person')
-
-        # Testing without a full name
-        response = DispatchTestHelpers.create_person(self.client)
-        person = Person.objects.get(pk=response.data['id'])
-        self.assertEqual(str(person), '')
 
     def test_unauthorized_listing_get_request(self):
         """Test that an a get request for persons listing without
@@ -277,9 +271,9 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
     def test_persons_search(self):
         """Should be able to search through persons"""
 
-        person_1 = DispatchTestHelpers.create_person(self.client, full_name='John Doe')
-        person_2 = DispatchTestHelpers.create_person(self.client, full_name='Jane Doe')
-        person_3 = DispatchTestHelpers.create_person(self.client, full_name='Axel Jacobsen')
+        person_1 = DispatchTestHelpers.create_person(self.client, full_name='John Doe', slug='john-doe')
+        person_2 = DispatchTestHelpers.create_person(self.client, full_name='Jane Doe', slug='jane-doe')
+        person_3 = DispatchTestHelpers.create_person(self.client, full_name='Axel Jacobsen', slug='axel-jacobsen')
 
         url = '%s?q=%s' % (reverse('api-persons-list'), 'Doe')
 

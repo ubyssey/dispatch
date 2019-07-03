@@ -8,17 +8,19 @@ class UserManager(BaseUserManager):
 
         self.personModel = personModel
 
-    def _create_user(self, email, password=None, permissions=None, is_active=True, is_superuser=False):
+    def _create_user(self, email, password=None, permissions=None, is_active=True, is_superuser=False, person=None):
         if not email:
             raise ValueError('User must have a valid email address')
 
         if not self.is_valid_password(password):
             raise ValueError('Password is invalid')
 
+        if not person:
+            raise ValueError('User must have a valid person')
+
         user = self.model(email=email, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
-
-        person = self.personModel.objects.create()
+        
         user.person = person
 
         user.save()
@@ -29,11 +31,11 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_user(self, email, password=None, permissions=None):
-        return self._create_user(email, password, permissions, True, False)
+    def create_user(self, email, password=None, permissions=None, person=None):
+        return self._create_user(email, password, permissions, True, False, person)
 
-    def create_superuser(self, email, password):
-        return self._create_user(email, password, 'admin', True, True)
+    def create_superuser(self, email, password, person=None):
+        return self._create_user(email, password, 'admin', True, True, person)
 
     def is_valid_password(self, password):
         return len(password) >= 8

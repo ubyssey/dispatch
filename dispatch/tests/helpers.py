@@ -1,4 +1,5 @@
 from django.urls import reverse
+from random import randint
 
 from rest_framework import status
 
@@ -9,14 +10,14 @@ from dispatch.modules.content.mixins import AuthorMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], subsection_id=None):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['The Test Person'], subsection_id=None):
         """Create a dummy article instance"""
 
         # Create test person
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author)
+            (person, created) = Person.objects.get_or_create(full_name=author, slug=author)
             authors.append({
                 'person': person.id,
                 'type': 'author'
@@ -44,7 +45,7 @@ class DispatchTestHelpers(object):
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author)
+            (person, created) = Person.objects.get_or_create(full_name=author, slug='author')
             authors.append({
                 'person': person.id,
                 'type': 'author'
@@ -172,7 +173,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_person(cls, client, full_name='', image='', slug='', description='', title=''):
+    def create_person(cls, client, full_name=('Person' + str(randint(0,1000000))), slug=('person' + str(randint(0,1000000))), image='', description='', title=''):
         """A helper method that creates a simple person object with the given attributes
         and returns the response"""
 
@@ -189,13 +190,13 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='multipart')
 
     @classmethod
-    def create_user(cls, client, email, full_name='Attached Person', person=None, password='TheBestPassword', permissions=None):
+    def create_user(cls, client, email, full_name=('Attached Person' + str(randint(0,1000000))), person=None, slug=('attached-person' + str(randint(0,1000000))), password='TheBestPassword', permissions=None):
         """
         A helper method that creates a simple user object with the given attributes
         and returns the response
         """
 
-        person = person or cls.create_person(client, full_name).data['id']
+        person = person or cls.create_person(client, full_name=full_name, slug=slug).data['id']
         url = reverse('api-users-list')
         data = {
             'email' : email,
@@ -206,6 +207,7 @@ class DispatchTestHelpers(object):
         }
 
         return client.post(url, data, format='json')
+
     @classmethod
     def create_tag(cls, client, name='testTag'):
         """Create a dummy tag instance"""
@@ -233,7 +235,7 @@ class DispatchTestHelpers(object):
     @classmethod
     def create_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a dummy video instance"""
-        (person, created) = Person.objects.get_or_create(full_name='Test Person')
+        (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
 
         data = {
             'title': title,
@@ -254,8 +256,8 @@ class DispatchTestHelpers(object):
     def create_tricky_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a video instance where the authors are on the second page"""
         for i in range(20):
-            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i))
-            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1))
+            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i), slug='test-person' + str(i))
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1), slug='test-person' + str(i + 1))
             
         data = {
             'title': title,
@@ -282,9 +284,9 @@ class DispatchTestHelpers(object):
         data = {}
         
         if updatedProperty == 'author_ids':
-            (person, created) = Person.objects.get_or_create(full_name='Test Person')
-            (person2, created2) = Person.objects.get_or_create(full_name='Test Person 2')
-            (person3, created3) = Person.objects.get_or_create(full_name='Test Person 3')
+            (person, created) = Person.objects.get_or_create(full_name='Test Person', slug='test-person')
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person 2', slug='test-person-2')
+            (person3, created3) = Person.objects.get_or_create(full_name='Test Person 3', slug='test-person-3')
             value = [
                 {
                 'person': person.id,
@@ -311,7 +313,7 @@ class DispatchTestHelpers(object):
         """Create dummy invite instance"""
 
         if person is None:
-            person = cls.create_person(client, full_name='Invited person')
+            person = cls.create_person(client, full_name='Invited person', slug='invited-person')
 
         url = reverse('api-invites-list')
 

@@ -6,10 +6,12 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 
-from dispatch.models import User
+from dispatch.models import User, Person
 
 TEST_EMAIL = 'test@test.com'
 TEST_PASSWORD = 'testing123'
+TEST_SLUG = 'slug-123'
+TEST_FULL_NAME = 'full name 123'
 
 class DispatchAPITestCase(TestCase):
     @classmethod
@@ -17,7 +19,8 @@ class DispatchAPITestCase(TestCase):
         super(DispatchAPITestCase, cls).setUpClass()
 
         # Create dummy user for testing
-        user = User.objects.create_user(TEST_EMAIL, TEST_PASSWORD, 'admin')
+        TEST_PERSON = Person.objects.create(full_name=TEST_FULL_NAME, slug=TEST_SLUG)
+        user = User.objects.create_user(TEST_EMAIL, TEST_PASSWORD, 'admin', TEST_PERSON)
         (token, created) = Token.objects.get_or_create(user=user)
 
     def setUp(self):
