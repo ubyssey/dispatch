@@ -27,7 +27,7 @@ class TagSelectInputComponent extends React.Component {
         fetchResults={(query) => this.listTags(query)}
         create={(name, cb) => this.props.createTag(this.props.token, { name }, cb)}
         attribute='name'
-        editMessage={this.props.value.length ? 'Edit tags' : 'Add tags'} />
+        editMessage={this.props.value && this.props.value.length ? 'Edit tags' : 'Add tags'} />
     )
   }
 

@@ -36,11 +36,14 @@ class AuthorSelectInputComponent extends React.Component {
   }
 
   render() {
-    const value = this.props.value
-      .map(author => author.person)
-
-    const extraFields = this.props.value
+    let value = []
+    let extraFields = []
+    
+    if(this.props.value){
+      value = this.props.value.map(author => author.person)
+      extraFields = this.props.value
       .reduce((fields, author) => R.assoc(author.person, author.type, fields), {})
+    }
 
     return (
       <ItemSelectInput
@@ -55,7 +58,7 @@ class AuthorSelectInputComponent extends React.Component {
         fetchResults={(query) => this.listPersons(query)}
         extraFieldOptions={AUTHOR_TYPES}
         attribute='full_name'
-        editMessage={this.props.value.length ? 'Edit authors' : 'Add authors'} />
+        editMessage={this.props.value && this.props.value.length ? 'Edit authors' : 'Add authors'} />
     )
   }
 }

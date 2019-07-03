@@ -2,8 +2,8 @@ from itertools import groupby
 
 class AuthorMixin(object):
     def save_authors(self, authors, is_publishable=False):
-        if not is_publishable:
-            self.authors.clear()
+        #if not is_publishable:
+            #self.authors.clear()
 
         # Create a new author for each person in list
         # Use `n` to save authors in correct order

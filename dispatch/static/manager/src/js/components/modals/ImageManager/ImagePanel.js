@@ -12,7 +12,7 @@ require('../../../../styles/components/image_panel.scss')
 
 export default function ImagePanel(props) {
   return (
-    <div className='c-image-panel'>
+    !props.shouldHide && <div className='c-image-panel'>
       <div className='c-image-panel__header'>
         <Button
           intent={Intent.SUCCESS}
@@ -22,8 +22,8 @@ export default function ImagePanel(props) {
           onClick={() => props.delete()}>Delete</Button>
       </div>
       <div className='c-image-panel__image'>
-        <img className='c-image-panel__image__img' src={props.image.url_medium} />
-        <div className='c-image-panel__image__filename'>{props.image.filename}</div>
+        <img className='c-image-panel__image__img' src={props.image.url_medium? props.image.url_medium : props.image.img.preview} />
+        <div className='c-image-panel__image__filename'>{props.image.filename? props.image.filename: props.image.img.name}</div>
       </div>
       <form className='c-image-panel__form'>
         <Form.Input label='Title'>

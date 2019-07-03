@@ -11,6 +11,7 @@ import imageActions from '../../actions/ImagesActions'
 import ItemList from '../../components/ItemList'
 import { humanizeDatetime } from  '../../util/helpers'
 import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
+import ImagePanel from '../../components/modals/ImageManager/ImagePanel'
 
 require('../../../styles/components/files.scss')
 require('../../../styles/components/images.scss')
@@ -18,6 +19,15 @@ require('../../../styles/components/images.scss')
 const DEFAULT_LIMIT = 15
 
 class ImagesPageComponent extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showModal: false,
+      newImage: {'img': null, 'title': null, 'authors': null, 'tags': null }
+    }
+  }
 
   componentWillMount() {
     this.props.clearAllImages()
@@ -88,7 +98,11 @@ class ImagesPageComponent extends React.Component {
 
   onDrop(images) {
     images.forEach(image => {
-      this.props.createImage(this.props.token, {'img': image})
+      console.log(image)
+      this.setState({
+        newImage: {'img': image, 'title': null, 'authors': null, 'tags': null },
+        showModal: true
+      })
     })
   }
 
@@ -100,6 +114,71 @@ class ImagesPageComponent extends React.Component {
     return (
       <div className={'c-image-page-thumb'} style={{backgroundImage: 'url(' + url + ')'}} />
     )
+  }
+
+  modalHandleSave() {
+    this.setState({
+      newImage: {
+        'img': this.state.newImage.img, 
+        'title': this.state.newImage.title, 
+        'authors': this.state.newImage.authors, 
+        'tags': this.state.newImage.tags
+      },
+      showModal: false
+    }, () => {
+      var obj = { 'img': this.state.newImage.img }
+      if(this.state.newImage.authors){
+        obj.authors = this.state.newImage.authors
+      }
+      if(this.state.newImage.title){
+        obj.title = this.state.newImage.title
+      }
+      if(this.state.newImage.tags){
+        obj.tags = this.state.newImage.tags
+      }
+      this.props.createImage(this.props.token, obj)
+      console.log("Done")
+      console.log(obj)
+    })
+  }
+
+  modalHandleDelete() {
+    this.props.deleteImages(this.props.token, this.state.newImage.id)
+    this.props.clearSelectedImages()
+    this.setState({showModal: false})
+  }
+
+  modalHandleUpdate(field, data) {
+    if( field == 'title'){
+      this.setState({newImage: {
+        'img': this.state.newImage.img, 
+        'title': data, 
+        'authors': this.state.newImage.authors, 
+        'tags': this.state.newImage.tags }
+      })
+    }
+    else if( field == 'authors'){
+      this.setState({newImage: {
+        'img': this.state.newImage.img, 
+        'title': this.state.newImage.title, 
+        'authors': data, 
+        'tags': this.state.newImage.tags }
+      })
+    }
+    else if( field == 'tags'){
+      this.setState({newImage: {
+        'img': this.state.newImage.img, 
+        'title': this.state.newImage.title, 
+        'authors': this.state.newImage.authors, 
+        'tags': data }
+      })
+    }
+    else{
+      console.log(field)
+    }
+    // this.props.setImage(
+    //   R.assoc(field, data, this.state.newImage)
+    // )
   }
 
   render() {
@@ -133,6 +212,15 @@ class ImagesPageComponent extends React.Component {
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 
+    const imagePanel = (
+      <ImagePanel 
+        image={this.state.newImage}
+        shouldHide={!this.state.showModal}
+        update={(field, data) => this.modalHandleUpdate(field, data)}
+        save={() => this.modalHandleSave()}
+        delete={() => this.modalHandleDelete()} />
+    )
+
     return (
       <DocumentTitle title='Images'>
         <Dropzone
@@ -141,7 +229,7 @@ class ImagesPageComponent extends React.Component {
           onDrop={(images) => this.onDrop(images)}
           disableClick={true}
           activeClassName='c-files-dropzone--active'>
-
+          
           <div className='c-files-dropzone__list'>
             <ItemList
               location={this.props.location}
@@ -170,6 +258,14 @@ class ImagesPageComponent extends React.Component {
                 searchItems: (query) => this.handleSearchImages(query)
               }} />
           </div>
+          
+          {this.state.showModal ?
+          <div className='c-image-manager__body'>
+            <div className='c-image-manager__active'>
+              {this.state.newImage.img ? imagePanel : null}
+            </div> 
+          </div> : null}
+          
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>
           </div>
@@ -183,6 +279,7 @@ const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
     images: state.app.images.list,
+    image: state.app.images.single,
     entities: {
       images: state.app.entities.images,
       persons: state.app.entities.persons,
@@ -202,6 +299,9 @@ const mapDispatchToProps = (dispatch) => {
     createImage: (token, image) => {
       dispatch(imageActions.create(token, image))
     },
+    saveImage: (token, imageId, image) => {
+      dispatch(imageActions.save(token, imageId, image))
+    },
     toggleAllImages: (imageIds) => {
       dispatch(imageActions.toggleAll(imageIds))
     },
@@ -213,6 +313,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteImages: (token, imageIds) => {
       dispatch(imageActions.deleteMany(token, imageIds))
+    },
+    setImage: (imageId, image) => {
+      dispatch(imageActions.set(imageId, image))
     },
     searchImages: (author, tags, query) => {
       dispatch(imageActions.search(author, tags, query))
