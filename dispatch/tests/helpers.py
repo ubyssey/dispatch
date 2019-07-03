@@ -10,7 +10,7 @@ from dispatch.modules.content.mixins import AuthorMixin
 class DispatchTestHelpers(object):
 
     @classmethod
-    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['Test Person'], subsection_id=None):
+    def create_article(cls, client, headline='Test headline', slug='test-article', section='Test Section', slug_section = 'test_section_slug', author_names = ['The Test Person'], subsection_id=None):
         """Create a dummy article instance"""
 
         # Create test person
@@ -173,7 +173,7 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='json')
 
     @classmethod
-    def create_person(cls, client, full_name='', image='', slug='', description='', title=''):
+    def create_person(cls, client, full_name=('Person' + str(randint(0,1000000))), slug=('person' + str(randint(0,1000000))), image='', description='', title=''):
         """A helper method that creates a simple person object with the given attributes
         and returns the response"""
 
@@ -207,6 +207,7 @@ class DispatchTestHelpers(object):
         }
 
         return client.post(url, data, format='json')
+
     @classmethod
     def create_tag(cls, client, name='testTag'):
         """Create a dummy tag instance"""

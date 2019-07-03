@@ -188,8 +188,8 @@ class SubsectionsTests(DispatchAPITestCase):
         """Should be able to udpate and remove subsection authors"""
 
         subsection = DispatchTestHelpers.create_subsection(self.client, name='subsection-a', slug='slug-a')
-        person_a = DispatchTestHelpers.create_person(self.client)
-        person_b = DispatchTestHelpers.create_person(self.client)
+        person_a = DispatchTestHelpers.create_person(self.client, full_name='Test Person First', slug='tpf')
+        person_b = DispatchTestHelpers.create_person(self.client, full_name='Test Person Second', slug='tps')
 
         url = reverse('api-subsections-detail', args=[subsection.data['id']])
 

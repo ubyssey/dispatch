@@ -61,7 +61,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         # Check data
         self.assertEqual(response.data['headline'], 'Test headline')
         self.assertEqual(response.data['section']['name'], 'Test Section')
-        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'Test Person')
+        self.assertEqual(response.data['authors'][0]['person']['full_name'], 'The Test Person')
         self.assertEqual(response.data['slug'], 'test-article')
 
     def test_create_article_existing_slug(self):
@@ -716,7 +716,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         article_1 = DispatchTestHelpers.create_article(self.client, headline='Article 1', slug='article-1')
         article_2 = DispatchTestHelpers.create_article(self.client, headline='Article 2', slug='article-2')
 
-        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3', author_names=['Test Person', 'Test Person2'])
+        article_3 = DispatchTestHelpers.create_article(self.client, headline='Article 3', slug='article-3', author_names=['The Test Person', 'Test Person2'])
 
         article_4 = DispatchTestHelpers.create_article(self.client, headline='Article 4', slug='article-2', author_names=['Test Person2'])
 

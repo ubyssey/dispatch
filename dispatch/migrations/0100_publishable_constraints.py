@@ -56,7 +56,7 @@ def remove_duplicates(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dispatch', '0023_upgrade_to_django2'),
+        ('dispatch', '0024_full_name_slug_required'),
     ]
 
     operations = [
