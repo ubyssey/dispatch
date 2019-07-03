@@ -189,13 +189,13 @@ class DispatchTestHelpers(object):
         return client.post(url, data, format='multipart')
 
     @classmethod
-    def create_user(cls, client, email, full_name='Attached Person', person=None, slug='attached-person', password='TheBestPassword', permissions=None):
+    def create_user(cls, client, email, full_name, slug, password='TheBestPassword!', person=None, permissions=None):
         """
         A helper method that creates a simple user object with the given attributes
         and returns the response
         """
 
-        person = person or cls.create_person(client, full_name, slug).data['id']
+        person = person or cls.create_person(client, full_name=full_name, slug=slug).data['id']
         url = reverse('api-users-list')
         data = {
             'email' : email,
@@ -254,8 +254,8 @@ class DispatchTestHelpers(object):
     def create_tricky_video(cls, client, title='testVideo', url='testVideoURL'):
         """Create a video instance where the authors are on the second page"""
         for i in range(20):
-            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i), slug='test-person')
-            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1), slug='test-person')
+            (person, created) = Person.objects.get_or_create(full_name='Test Person' + str(i), slug='test-person'+ str(i))
+            (person2, created2) = Person.objects.get_or_create(full_name='Test Person' + str(i + 1), slug='test-person'+ str(i + 1))
             
         data = {
             'title': title,
