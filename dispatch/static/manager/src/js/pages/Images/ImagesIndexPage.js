@@ -252,7 +252,6 @@ const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
     images: state.app.images.list,
-    image: state.app.images.single,
     entities: {
       images: state.app.entities.images,
       persons: state.app.entities.persons,
@@ -272,9 +271,6 @@ const mapDispatchToProps = (dispatch) => {
     createImage: (token, image) => {
       dispatch(imageActions.create(token, image))
     },
-    saveImage: (token, imageId, image) => {
-      dispatch(imageActions.save(token, imageId, image))
-    },
     toggleAllImages: (imageIds) => {
       dispatch(imageActions.toggleAll(imageIds))
     },
@@ -286,9 +282,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteImages: (token, imageIds) => {
       dispatch(imageActions.deleteMany(token, imageIds))
-    },
-    setImage: (imageId, image) => {
-      dispatch(imageActions.set(imageId, image))
     },
     searchImages: (author, tags, query) => {
       dispatch(imageActions.search(author, tags, query))

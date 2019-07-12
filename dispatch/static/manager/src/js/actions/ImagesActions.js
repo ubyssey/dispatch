@@ -12,7 +12,7 @@ class ImagesActions extends ResourceActions {
     data.author_ids = data.authors
 
     data.tag_ids = data.tags
-    
+
     return data
   }
   

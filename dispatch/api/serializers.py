@@ -301,7 +301,6 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     def create(self, validated_data):
-        print('here: ',validated_data)
         return self.update(Image(), validated_data)
 
     def update(self, instance, validated_data):
