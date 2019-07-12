@@ -2,8 +2,8 @@ from itertools import groupby
 
 class AuthorMixin(object):
     def save_authors(self, authors, is_publishable=False):
-        #if not is_publishable:
-            #self.authors.clear()
+        if not is_publishable:
+            self.authors.clear()
 
         # Create a new author for each person in list
         # Use `n` to save authors in correct order
@@ -17,6 +17,7 @@ class AuthorMixin(object):
                 author_instance = self.AuthorModel.objects.create(
                     person_id=author['person'],
                     order=n)
+            
             self.authors.add(author_instance)
 
         if is_publishable:
@@ -45,7 +46,7 @@ class AuthorMixin(object):
         elif len(authors) == 1:
             # If this is the only author, just return author name
             return authors[0]
-
+        
         return ", ".join(authors[0:-1]) + " and " + authors[-1]
 
     def get_author_type_string(self):

@@ -130,7 +130,7 @@ export class ResourceActions {
     return (dispatch) => {
 
       dispatch({ type: pending(this.types.CREATE) })
-
+      
       this.api.create(token, this.toRemote(data))
         .then(json => {
           if (next) {
@@ -139,7 +139,7 @@ export class ResourceActions {
               state: { ignoreLeaveHook: true }
             }))
           }
-
+          
           dispatch({
             type: fulfilled(this.types.CREATE),
             payload: {

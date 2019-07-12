@@ -12,14 +12,14 @@ require('../../../../styles/components/image_panel.scss')
 
 export default function ImagePanel(props) {
   return (
-    !props.shouldHide && <div className='c-image-panel'>
+    <div className='c-image-panel'>
       <div className='c-image-panel__header'>
         <Button
           intent={Intent.SUCCESS}
-          onClick={() => props.save()}>Update</Button>
+          onClick={() => props.save()}>{props.successBtnName || 'Update'}</Button>
         <Button
           intent={Intent.DANGER}
-          onClick={() => props.delete()}>Delete</Button>
+          onClick={() => props.delete()}>{props.dangerBtnName || 'Delete'}</Button>
       </div>
       <div className='c-image-panel__image'>
         <img className='c-image-panel__image__img' src={props.image.url_medium? props.image.url_medium : props.image.img.preview} />
@@ -35,7 +35,8 @@ export default function ImagePanel(props) {
         <Form.Input label='Photographers'>
           <AuthorSelectInput
             value={props.image.authors}
-            update={authors => props.update('authors', authors)}
+            update={authors => {props.update('authors', authors)}}
+            error={props.error}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </Form.Input>
         <Form.Input label='Tags'>

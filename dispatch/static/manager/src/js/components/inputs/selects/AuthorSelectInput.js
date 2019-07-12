@@ -58,6 +58,7 @@ class AuthorSelectInputComponent extends React.Component {
         fetchResults={(query) => this.listPersons(query)}
         extraFieldOptions={AUTHOR_TYPES}
         attribute='full_name'
+        error={this.props.error} 
         editMessage={this.props.value && this.props.value.length ? 'Edit authors' : 'Add authors'} />
     )
   }

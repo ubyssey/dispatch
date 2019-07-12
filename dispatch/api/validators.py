@@ -97,15 +97,12 @@ class AuthorValidator(object):
         if not type(data) is list:
             # Convert single instance to a list
             data = list(data)
-
+        
         for author in data:
-            if not type(author) is dict:
-                raise ValidationError('cool' + json.dumps(author))
             if 'person' not in author:
                 raise ValidationError('An author must contain a person.')
-            if 'type' in author and not isinstance(author['type'], str):
-                # If type is defined, it should be a string
-                raise ValidationError('The author type must be a string.')
+            if 'type' not in author:
+                raise ValidationError('An author must contain a type.')
 
 def TemplateValidator(template, template_data, tags, subsection_id):
 

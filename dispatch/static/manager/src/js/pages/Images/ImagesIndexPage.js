@@ -24,8 +24,9 @@ class ImagesPageComponent extends React.Component {
     super(props)
 
     this.state = {
-      showModal: false,
-      newImage: {'img': null, 'title': null, 'authors': null, 'tags': null }
+      error: null,
+      images: null,
+      newImage: {'img': null, 'title': null, 'authors': [], 'tags': [] }
     }
   }
 
@@ -96,14 +97,8 @@ class ImagesPageComponent extends React.Component {
     this.props.searchImages(author, tags, query)
   }
 
-  onDrop(images) {
-    images.forEach(image => {
-      console.log(image)
-      this.setState({
-        newImage: {'img': image, 'title': null, 'authors': null, 'tags': null },
-        showModal: true
-      })
-    })
+  onDrop(uploadedImages) {
+    this.setNextImage(uploadedImages)
   }
 
   onDropzoneClick() {
@@ -116,69 +111,44 @@ class ImagesPageComponent extends React.Component {
     )
   }
 
-  modalHandleSave() {
+  setNextImage(images) {
+    const [first, ...rest] = images
     this.setState({
-      newImage: {
-        'img': this.state.newImage.img, 
-        'title': this.state.newImage.title, 
-        'authors': this.state.newImage.authors, 
-        'tags': this.state.newImage.tags
-      },
-      showModal: false
-    }, () => {
-      var obj = { 'img': this.state.newImage.img }
-      if(this.state.newImage.authors){
-        obj.authors = this.state.newImage.authors
-      }
-      if(this.state.newImage.title){
-        obj.title = this.state.newImage.title
-      }
-      if(this.state.newImage.tags){
-        obj.tags = this.state.newImage.tags
-      }
-      this.props.createImage(this.props.token, obj)
-      console.log("Done")
-      console.log(obj)
+      error: null,
+      images: rest,
+      newImage: {'img': first, 'title': null, 'authors': [], 'tags': [] }
     })
   }
 
-  modalHandleDelete() {
-    this.props.deleteImages(this.props.token, this.state.newImage.id)
-    this.props.clearSelectedImages()
-    this.setState({showModal: false})
+  modalHandleSave() {
+    var payload = { 'img': this.state.newImage.img }
+    if(this.state.newImage.authors.length > 0){
+      payload['authors'] = JSON.stringify(this.state.newImage.authors)
+    } 
+    else { 
+      this.setState({
+        error: 'This field is required.'
+      })
+      return 
+    }
+    if(this.state.newImage.title){
+      payload['title'] = this.state.newImage.title
+    }
+    if(this.state.newImage.tags.length > 0){
+      payload['tags'] = this.state.newImage.tags
+    }
+    
+    this.props.createImage(this.props.token, payload)
+    this.setNextImage(this.state.images)
+  }
+
+  modalHandleCancel() {
+    this.setNextImage(this.state.images)
   }
 
   modalHandleUpdate(field, data) {
-    if( field == 'title'){
-      this.setState({newImage: {
-        'img': this.state.newImage.img, 
-        'title': data, 
-        'authors': this.state.newImage.authors, 
-        'tags': this.state.newImage.tags }
-      })
-    }
-    else if( field == 'authors'){
-      this.setState({newImage: {
-        'img': this.state.newImage.img, 
-        'title': this.state.newImage.title, 
-        'authors': data, 
-        'tags': this.state.newImage.tags }
-      })
-    }
-    else if( field == 'tags'){
-      this.setState({newImage: {
-        'img': this.state.newImage.img, 
-        'title': this.state.newImage.title, 
-        'authors': this.state.newImage.authors, 
-        'tags': data }
-      })
-    }
-    else{
-      console.log(field)
-    }
-    // this.props.setImage(
-    //   R.assoc(field, data, this.state.newImage)
-    // )
+    this.setState(state => ( state.newImage[field] = data, state ))
+    if(field == 'authors' && data.length > 0) { this.setState({ error: null }) }
   }
 
   render() {
@@ -215,10 +185,12 @@ class ImagesPageComponent extends React.Component {
     const imagePanel = (
       <ImagePanel 
         image={this.state.newImage}
-        shouldHide={!this.state.showModal}
+        successBtnName={'Save'}
+        dangerBtnName={'Cancel'}
+        error={this.state.error}
         update={(field, data) => this.modalHandleUpdate(field, data)}
         save={() => this.modalHandleSave()}
-        delete={() => this.modalHandleDelete()} />
+        delete={() => this.modalHandleCancel()} />
     )
 
     return (
@@ -259,12 +231,13 @@ class ImagesPageComponent extends React.Component {
               }} />
           </div>
           
-          {this.state.showModal ?
-          <div className='c-image-manager__body'>
-            <div className='c-image-manager__active'>
-              {this.state.newImage.img ? imagePanel : null}
-            </div> 
-          </div> : null}
+          {this.state.newImage.img &&
+          <div className='modal-container'>
+            <div className='modal-content'>
+              {imagePanel}
+            </div>
+          </div> 
+          }
           
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>
