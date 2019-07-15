@@ -16,7 +16,7 @@ export default function ImagePanel(props) {
       <div className='c-image-panel__header'>
         <Button
           intent={Intent.SUCCESS}
-          onClick={() => props.save()}>{props.successBtnName || 'Update'}</Button>
+          onClick={() => {props.save()}}>{props.successBtnName || 'Update'}</Button>
         <Button
           intent={Intent.DANGER}
           onClick={() => props.delete()}>{props.dangerBtnName || 'Delete'}</Button>
@@ -36,7 +36,7 @@ export default function ImagePanel(props) {
           <AuthorSelectInput
             value={props.image.authors}
             update={authors => {props.update('authors', authors)}}
-            error={props.error}
+            authorErrors={props.authorErrors}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </Form.Input>
         <Form.Input label='Tags'>

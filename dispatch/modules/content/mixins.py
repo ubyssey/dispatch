@@ -17,7 +17,6 @@ class AuthorMixin(object):
                 author_instance = self.AuthorModel.objects.create(
                     person_id=author['person'],
                     order=n)
-            
             self.authors.add(author_instance)
 
         if is_publishable:
@@ -46,7 +45,7 @@ class AuthorMixin(object):
         elif len(authors) == 1:
             # If this is the only author, just return author name
             return authors[0]
-        
+
         return ", ".join(authors[0:-1]) + " and " + authors[-1]
 
     def get_author_type_string(self):

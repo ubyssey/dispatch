@@ -253,7 +253,7 @@ class ItemSelectInput extends React.Component {
 
     const error = (
       <span className='c-form__input__error bp3-tag bp3-intent-danger'>
-        {Array.isArray(this.props.error) ? this.props.error.join(' ') : this.props.error}
+        {Array.isArray(this.props.errors) ? this.props.errors.join(' ') : this.props.errors}
       </span>
     )  
 
@@ -267,7 +267,7 @@ class ItemSelectInput extends React.Component {
           inline={this.props.inline}>
           {this.props.tag ? tagButton : Button}
         </Dropdown>
-        {this.props.error ? error : null}
+        {this.props.errors && error}
       </div>
     )
   }

@@ -234,8 +234,7 @@ class GalleryFormComponent extends React.Component {
       <Form.Container>
 
         <Form.Input
-          label='Title'
-          error={this.props.errors.title}>
+          label='Title'>
           <TextInput
             placeholder='Name'
             value={this.props.listItem.title || ''}

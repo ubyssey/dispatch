@@ -24,8 +24,8 @@ class ImagesPageComponent extends React.Component {
     super(props)
 
     this.state = {
-      error: null,
-      images: null,
+      noAuthorError: null,
+      uploadedImages: null,
       newImage: {'img': null, 'title': null, 'authors': [], 'tags': [] }
     }
   }
@@ -97,8 +97,8 @@ class ImagesPageComponent extends React.Component {
     this.props.searchImages(author, tags, query)
   }
 
-  onDrop(uploadedImages) {
-    this.setNextImage(uploadedImages)
+  onDrop(images) {
+    this.setNextImage(images)
   }
 
   onDropzoneClick() {
@@ -114,8 +114,8 @@ class ImagesPageComponent extends React.Component {
   setNextImage(images) {
     const [first, ...rest] = images
     this.setState({
-      error: null,
-      images: rest,
+      noAuthorError: null,
+      uploadedImages: rest,
       newImage: {'img': first, 'title': null, 'authors': [], 'tags': [] }
     })
   }
@@ -127,28 +127,28 @@ class ImagesPageComponent extends React.Component {
     } 
     else { 
       this.setState({
-        error: 'This field is required.'
+        noAuthorError: 'This field is required.'
       })
       return 
     }
     if(this.state.newImage.title){
       payload['title'] = this.state.newImage.title
     }
-    if(this.state.newImage.tags.length > 0){
+    if(this.state.newImage.tags.length){
       payload['tags'] = this.state.newImage.tags
     }
     
     this.props.createImage(this.props.token, payload)
-    this.setNextImage(this.state.images)
+    this.setNextImage(this.state.uploadedImages)
   }
 
   modalHandleCancel() {
-    this.setNextImage(this.state.images)
+    this.setNextImage(this.state.uploadedImages)
   }
 
   modalHandleUpdate(field, data) {
     this.setState(state => ( state.newImage[field] = data, state ))
-    if(field == 'authors' && data.length > 0) { this.setState({ error: null }) }
+    if(field == 'authors' && data.length) { this.setState({ noAuthorError: null }) }
   }
 
   render() {
@@ -187,7 +187,7 @@ class ImagesPageComponent extends React.Component {
         image={this.state.newImage}
         successBtnName={'Save'}
         dangerBtnName={'Cancel'}
-        error={this.state.error}
+        errors={this.state.noAuthorError}
         update={(field, data) => this.modalHandleUpdate(field, data)}
         save={() => this.modalHandleSave()}
         delete={() => this.modalHandleCancel()} />
@@ -201,7 +201,7 @@ class ImagesPageComponent extends React.Component {
           onDrop={(images) => this.onDrop(images)}
           disableClick={true}
           activeClassName='c-files-dropzone--active'>
-          
+
           <div className='c-files-dropzone__list'>
             <ItemList
               location={this.props.location}

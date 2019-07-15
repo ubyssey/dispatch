@@ -97,7 +97,7 @@ class AuthorValidator(object):
         if not isinstance(data, list):
             # Convert single instance to a list
             data = [data]
-        
+
         for author in data:
             if 'person' not in author:
                 raise ValidationError('An author must contain a person.')

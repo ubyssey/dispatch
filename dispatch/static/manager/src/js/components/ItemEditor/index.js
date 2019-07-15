@@ -11,6 +11,14 @@ const NEW_LISTITEM_ID = 'new'
 
 class ItemEditor extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      noAuthorError: null
+    }
+  }
+
   componentDidMount() {
     if (this.props.isNew) {
       // Create empty listItem
@@ -53,6 +61,12 @@ class ItemEditor extends React.Component {
   }
 
   saveListItem() {
+    const listItem = this.getListItem()
+    if (listItem.authors && !listItem.authors.length) {
+      this.setState({ noAuthorError: 'This field is required.' })
+      return
+    }
+
     if (this.props.isNew) {
       this.props.createListItem(this.props.token, this.getListItem())
     } else {
@@ -66,6 +80,7 @@ class ItemEditor extends React.Component {
 
   handleUpdate(field, value) {
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
+    if(field == 'authors' && value.length) { this.setState({ noAuthorError: null }) }
   }
 
   render() {
@@ -93,7 +108,7 @@ class ItemEditor extends React.Component {
           <div className='u-container u-container--padded u-container--vscroll'>
             <this.props.form
               listItem={listItem}
-              errors={this.props.listItem ? this.props.listItem.errors : {}}
+              authorErrors={this.state.noAuthorError}
               update={(field, value) => this.handleUpdate(field, value)}
               settings={this.props.settings ? this.props.settings : {}} />
           </div>
