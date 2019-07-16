@@ -168,6 +168,11 @@ class ImageManagerComponent extends React.Component {
     if(field == 'authors' && data.length) { this.setState({ uploadNoAuthorError: null }) }
   }
 
+  handleSelectImage(imageId) {
+    this.props.selectImage(imageId)
+    this.setState({ editNoAuthorError: null})
+  }
+
   render() {
     const image = this.getImage()
 
@@ -178,7 +183,7 @@ class ImageManagerComponent extends React.Component {
           key={image.id}
           image={image}
           isSelected={this.props.many ? R.contains(id, this.props.images.selected) : this.props.image.id === id}
-          selectImage={this.props.many ? this.props.toggleImage : this.props.selectImage} />
+          selectImage={this.props.many ? this.props.toggleImage : (imageId) => {this.handleSelectImage(imageId)}} />
       )
     })
 
@@ -250,8 +255,8 @@ class ImageManagerComponent extends React.Component {
         </div>
 
           {this.state.newImage.img &&
-            <div className='modal-container'>
-              <div className='modal-content'>
+            <div className='c-modal-container-scrollable'>
+              <div className='c-modal-body'>
                 {uploadImagePanel}
               </div>
             </div> 

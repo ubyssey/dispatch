@@ -182,7 +182,7 @@ class ImagesPageComponent extends React.Component {
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
 
-    const imagePanel = (
+    const uploadImagePanel = (
       <ImagePanel 
         image={this.state.newImage}
         successBtnName={'Save'}
@@ -232,9 +232,9 @@ class ImagesPageComponent extends React.Component {
           </div>
           
           {this.state.newImage.img &&
-          <div className='modal-container'>
-            <div className='modal-content'>
-              {imagePanel}
+          <div className='c-modal-container-scrollable'>
+            <div className='c-modal-body'>
+              {uploadImagePanel}
             </div>
           </div> 
           }

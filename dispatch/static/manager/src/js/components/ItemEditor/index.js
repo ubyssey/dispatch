@@ -68,12 +68,12 @@ class ItemEditor extends React.Component {
     }
 
     if (this.props.isNew) {
-      this.props.createListItem(this.props.token, this.getListItem())
+      this.props.createListItem(this.props.token, listItem)
     } else {
       this.props.saveListItem(
         this.props.token,
         this.props.itemId,
-        this.getListItem()
+        listItem
       )
     }
   }
