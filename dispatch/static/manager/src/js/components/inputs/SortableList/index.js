@@ -1,9 +1,7 @@
 import React from 'react'
 import R from 'ramda'
 import PropTypes from 'prop-types'
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
-
+import DragDropContext from '../../GalleryEditor/DragDropContext'
 import Item from './Item'
 
 require('../../../../styles/components/sortable_list.scss')
@@ -55,4 +53,4 @@ SortableList.defaultProps = {
   inline: false
 }
 
-export default DragDropContext(HTML5Backend)(SortableList)
+export default DragDropContext(SortableList)

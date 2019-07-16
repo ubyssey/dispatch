@@ -187,7 +187,7 @@ class ImagesPageComponent extends React.Component {
         image={this.state.newImage}
         successBtnName={'Save'}
         dangerBtnName={'Cancel'}
-        errors={this.state.noAuthorError}
+        authorErrors={this.state.noAuthorError}
         update={(field, data) => this.modalHandleUpdate(field, data)}
         save={() => this.modalHandleSave()}
         delete={() => this.modalHandleCancel()} />

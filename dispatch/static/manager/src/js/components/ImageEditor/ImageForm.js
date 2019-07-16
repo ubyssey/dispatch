@@ -50,7 +50,8 @@ export default class ImageForm extends React.Component {
         </Form.Input>
 
         <Form.Input
-          label='Tags'>
+          label='Tags'
+          error={this.props.errors.tag_ids}>
           <TagSelectInput
             value={this.props.listItem.tags}
             update={tags => this.props.update('tags', tags)} />
@@ -62,7 +63,12 @@ export default class ImageForm extends React.Component {
             <div className='c-image-panel__image__filename'>{this.props.listItem.filename}</div>
           </div>
         </div>
-          
+
+        {this.props.errors.detail ?
+          <div className='bp3-callout bp3-intent-danger c-person-form__image__error'>
+            {this.props.errors.detail}
+          </div> : null}
+
       </Form.Container>
     )
   }

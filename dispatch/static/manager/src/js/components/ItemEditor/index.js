@@ -108,6 +108,7 @@ class ItemEditor extends React.Component {
           <div className='u-container u-container--padded u-container--vscroll'>
             <this.props.form
               listItem={listItem}
+              errors={this.props.listItem ? this.props.listItem.errors : {}}
               authorErrors={this.state.noAuthorError}
               update={(field, value) => this.handleUpdate(field, value)}
               settings={this.props.settings ? this.props.settings : {}} />
