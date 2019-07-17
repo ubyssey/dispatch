@@ -212,6 +212,8 @@ class VideoSerializer(DispatchModelSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
+        allow_empty=False,
+        required=True,
         child=serializers.JSONField(),
         validators=[AuthorValidator(True)])
 
@@ -676,6 +678,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
+        allow_empty=False,
+        required=True,
         child=serializers.JSONField(),
         validators=[AuthorValidator(False)])
     authors_string = serializers.CharField(source='get_author_string', read_only=True)
