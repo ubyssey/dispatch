@@ -122,7 +122,7 @@ class ImagesPageComponent extends React.Component {
 
   modalHandleSave() {
     var payload = { 'img': this.state.newImage.img }
-    if(this.state.newImage.authors.length > 0){
+    if(this.state.newImage.authors.length){
       payload['authors'] = JSON.stringify(this.state.newImage.authors)
     } 
     else { 
@@ -138,8 +138,9 @@ class ImagesPageComponent extends React.Component {
       payload['tags'] = this.state.newImage.tags
     }
     
-    this.props.createImage(this.props.token, payload)
-    this.setNextImage(this.state.uploadedImages)
+    this.props.createImage(this.props.token, payload, () => {
+      this.setNextImage(this.state.uploadedImages)
+    })
   }
 
   modalHandleCancel() {
@@ -268,8 +269,8 @@ const mapDispatchToProps = (dispatch) => {
     toggleImage: (imageId) => {
       dispatch(imageActions.toggle(imageId))
     },
-    createImage: (token, image) => {
-      dispatch(imageActions.create(token, image))
+    createImage: (token, image, callback) => {
+      dispatch(imageActions.create(token, image, null, callback))
     },
     toggleAllImages: (imageIds) => {
       dispatch(imageActions.toggleAll(imageIds))

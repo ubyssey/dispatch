@@ -139,7 +139,7 @@ class ImageManagerComponent extends React.Component {
 
   modalHandleSave() {
     var payload = { 'img': this.state.newImage.img }
-    if(this.state.newImage.authors.length > 0){
+    if(this.state.newImage.authors.length){
       payload['authors'] = JSON.stringify(this.state.newImage.authors)
     } 
     else { 
@@ -155,8 +155,9 @@ class ImageManagerComponent extends React.Component {
       payload['tags'] = this.state.newImage.tags
     }
     
-    this.props.createImage(this.props.token, payload)
-    this.setNextImage(this.state.uploadedImages)
+    this.props.createImage(this.props.token, payload, () => {
+      this.setNextImage(this.state.uploadedImages)
+    })
   }
 
   modalHandleCancel() {
@@ -307,8 +308,8 @@ const mapDispatchToProps = (dispatch) => {
     setImage: (imageId, image) => {
       dispatch(imagesActions.set(imageId, image))
     },
-    createImage: (token, data) => {
-      dispatch(imagesActions.create(token, data))
+    createImage: (token, data, callback) => {
+      dispatch(imagesActions.create(token, data, null, callback))
     },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.save(token, imageId, image))
