@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
 from django.conf import settings
+import json
 
 from dispatch.modules.content.models import (
     Article, Image, ImageAttachment, ImageGallery, Issue,
@@ -93,7 +94,7 @@ class UserSerializer(DispatchModelSerializer):
         )
 
     def create(self, validated_data):
-        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permission_level'], validated_data['person'])
+        instance = User.objects.create_user(validated_data['email'], validated_data['password_a'], validated_data['permission_level'])
         return self.update(instance, validated_data)
 
     def update(self, instance, validated_data):
@@ -211,6 +212,8 @@ class VideoSerializer(DispatchModelSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
+        allow_empty=False,
+        required=True,
         child=serializers.JSONField(),
         validators=[AuthorValidator(True)])
 
@@ -266,14 +269,15 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
+        allow_empty=False,
+        required=True,
         child=serializers.JSONField(),
         validators=[AuthorValidator(False)])
 
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(
         write_only=True,
-        required=False,
-        child=serializers.IntegerField())
+        required=False)
 
     width = serializers.IntegerField(read_only=True)
     height = serializers.IntegerField(read_only=True)
@@ -305,11 +309,21 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         instance = super(ImageSerializer, self).update(instance, validated_data)
 
         # Save authors
+        
         authors = validated_data.get('author_ids')
+        
+        if authors and isinstance(authors, list) and len(authors) == 1 and isinstance(authors[0], str):
+            authors = authors[0][1:-1].replace('},{', '};;{').split(';;')
+            authors = [json.loads(author) for author in authors]
+
         if authors:
             instance.save_authors(authors)
 
         tag_ids = validated_data.get('tag_ids', False)
+
+        if tag_ids and isinstance(tag_ids, list) and len(tag_ids) == 1 and isinstance(tag_ids[0], str):
+            tag_ids = [int(tag) for tag in tag_ids[0].split(',')]
+
         if tag_ids != False:
             instance.save_tags(tag_ids)
 
@@ -664,6 +678,8 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     author_ids = serializers.ListField(
         write_only=True,
+        allow_empty=False,
+        required=True,
         child=serializers.JSONField(),
         validators=[AuthorValidator(False)])
     authors_string = serializers.CharField(source='get_author_string', read_only=True)

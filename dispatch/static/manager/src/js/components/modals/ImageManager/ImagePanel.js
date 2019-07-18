@@ -16,14 +16,14 @@ export default function ImagePanel(props) {
       <div className='c-image-panel__header'>
         <Button
           intent={Intent.SUCCESS}
-          onClick={() => props.save()}>Update</Button>
+          onClick={() => {props.save()}}>{props.successBtnName || 'Update'}</Button>
         <Button
           intent={Intent.DANGER}
-          onClick={() => props.delete()}>Delete</Button>
+          onClick={() => props.delete()}>{props.dangerBtnName || 'Delete'}</Button>
       </div>
       <div className='c-image-panel__image'>
-        <img className='c-image-panel__image__img' src={props.image.url_medium} />
-        <div className='c-image-panel__image__filename'>{props.image.filename}</div>
+        <img className='c-image-panel__image__img' src={props.image.url_medium? props.image.url_medium : props.image.img.preview} />
+        <div className='c-image-panel__image__filename'>{props.image.filename? props.image.filename: props.image.img.name}</div>
       </div>
       <form className='c-image-panel__form'>
         <Form.Input label='Title'>
@@ -35,7 +35,8 @@ export default function ImagePanel(props) {
         <Form.Input label='Photographers'>
           <AuthorSelectInput
             value={props.image.authors}
-            update={authors => props.update('authors', authors)}
+            update={authors => {props.update('authors', authors)}}
+            authorErrors={props.authorErrors}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </Form.Input>
         <Form.Input label='Tags'>

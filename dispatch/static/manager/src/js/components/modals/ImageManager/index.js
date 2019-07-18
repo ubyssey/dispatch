@@ -29,6 +29,10 @@ class ImageManagerComponent extends React.Component {
     this.scrollListener = this.scrollListener.bind(this)
 
     this.state = {
+      uploadNoAuthorError: null,
+      editNoAuthorError: null,
+      uploadedImages: null,
+      newImage: {'img': null, 'title': null, 'authors': [], 'tags': [] },
       author: '',
       tags: [],
       q: '',
@@ -85,6 +89,10 @@ class ImageManagerComponent extends React.Component {
 
   handleSave() {
     const image = this.getImage()
+    if(!image.authors.length){
+      this.setState({ editNoAuthorError: 'This field is required.' })
+      return
+    }
     this.props.saveImage(this.props.token, image.id, image)
   }
 
@@ -96,6 +104,7 @@ class ImageManagerComponent extends React.Component {
     this.props.setImage(
       R.assoc(field, data, this.getImage())
     )
+    if(field == 'authors' && data.length) { this.setState({ editNoAuthorError: null }) }
   }
 
   insertImage() {
@@ -115,10 +124,54 @@ class ImageManagerComponent extends React.Component {
     }, this.searchImages)
   }
 
-  onDrop(files) {
-    files.forEach(file => {
-      this.props.createImage(this.props.token, { img: file })
+  onDrop(images) {
+    this.setNextImage(images)
+  }
+
+  setNextImage(images) {
+    const [first, ...rest] = images
+    this.setState({
+      uploadNoAuthorError: null,
+      uploadedImages: rest,
+      newImage: {'img': first, 'title': null, 'authors': [], 'tags': [] }
     })
+  }
+
+  modalHandleSave() {
+    var payload = { 'img': this.state.newImage.img }
+    if(this.state.newImage.authors.length){
+      payload['authors'] = JSON.stringify(this.state.newImage.authors)
+    } 
+    else { 
+      this.setState({
+        uploadNoAuthorError: 'This field is required.'
+      })
+      return 
+    }
+    if(this.state.newImage.title){
+      payload['title'] = this.state.newImage.title
+    }
+    if(this.state.newImage.tags.length){
+      payload['tags'] = this.state.newImage.tags
+    }
+    
+    this.props.createImage(this.props.token, payload, () => {
+      this.setNextImage(this.state.uploadedImages)
+    })
+  }
+
+  modalHandleCancel() {
+    this.setNextImage(this.state.uploadedImages)
+  }
+
+  modalHandleUpdate(field, data) {
+    this.setState(state => ( state.newImage[field] = data, state ))
+    if(field == 'authors' && data.length) { this.setState({ uploadNoAuthorError: null }) }
+  }
+
+  handleSelectImage(imageId) {
+    this.props.selectImage(imageId)
+    this.setState({ editNoAuthorError: null})
   }
 
   render() {
@@ -131,16 +184,28 @@ class ImageManagerComponent extends React.Component {
           key={image.id}
           image={image}
           isSelected={this.props.many ? R.contains(id, this.props.images.selected) : this.props.image.id === id}
-          selectImage={this.props.many ? this.props.toggleImage : this.props.selectImage} />
+          selectImage={this.props.many ? this.props.toggleImage : (imageId) => {this.handleSelectImage(imageId)}} />
       )
     })
 
-    const imagePanel = (
+    const editImagePanel = (
       <ImagePanel
         image={image}
+        authorErrors={this.state.editNoAuthorError}
         update={(field, data) => this.handleUpdate(field, data)}
         save={() => this.handleSave()}
         delete={() => this.handleDelete()} />
+    )
+
+    const uploadImagePanel = (
+      <ImagePanel 
+        image={this.state.newImage}
+        successBtnName={'Save'}
+        dangerBtnName={'Cancel'}
+        authorErrors={this.state.uploadNoAuthorError}
+        update={(field, data) => this.modalHandleUpdate(field, data)}
+        save={() => this.modalHandleSave()}
+        delete={() => this.modalHandleCancel()} />
     )
 
     const filters = [
@@ -186,10 +251,18 @@ class ImageManagerComponent extends React.Component {
           </Dropzone>
           {!this.props.many ?
             <div className='c-image-manager__active'>
-              {image ? imagePanel : null}
+              {image ? editImagePanel : null}
             </div> : null}
-
         </div>
+
+          {this.state.newImage.img &&
+            <div className='c-modal-container-scrollable'>
+              <div className='c-modal-body'>
+                {uploadImagePanel}
+              </div>
+            </div> 
+          }
+
         <div className='c-image-manager__footer'>
           <div className='c-image-manger__footer__selected' />
           <Button
@@ -235,8 +308,8 @@ const mapDispatchToProps = (dispatch) => {
     setImage: (imageId, image) => {
       dispatch(imagesActions.set(imageId, image))
     },
-    createImage: (token, data) => {
-      dispatch(imagesActions.create(token, data))
+    createImage: (token, data, callback) => {
+      dispatch(imagesActions.create(token, data, null, callback))
     },
     saveImage: (token, imageId, image) => {
       dispatch(imagesActions.save(token, imageId, image))

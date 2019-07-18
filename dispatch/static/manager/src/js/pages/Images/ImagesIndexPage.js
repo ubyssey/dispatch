@@ -11,6 +11,7 @@ import imageActions from '../../actions/ImagesActions'
 import ItemList from '../../components/ItemList'
 import { humanizeDatetime } from  '../../util/helpers'
 import { AuthorFilterInput, TagsFilterInput} from '../../components/inputs/filters'
+import ImagePanel from '../../components/modals/ImageManager/ImagePanel'
 
 require('../../../styles/components/files.scss')
 require('../../../styles/components/images.scss')
@@ -18,6 +19,16 @@ require('../../../styles/components/images.scss')
 const DEFAULT_LIMIT = 15
 
 class ImagesPageComponent extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      noAuthorError: null,
+      uploadedImages: null,
+      newImage: {'img': null, 'title': null, 'authors': [], 'tags': [] }
+    }
+  }
 
   componentWillMount() {
     this.props.clearAllImages()
@@ -87,9 +98,7 @@ class ImagesPageComponent extends React.Component {
   }
 
   onDrop(images) {
-    images.forEach(image => {
-      this.props.createImage(this.props.token, {'img': image})
-    })
+    this.setNextImage(images)
   }
 
   onDropzoneClick() {
@@ -100,6 +109,47 @@ class ImagesPageComponent extends React.Component {
     return (
       <div className={'c-image-page-thumb'} style={{backgroundImage: 'url(' + url + ')'}} />
     )
+  }
+
+  setNextImage(images) {
+    const [first, ...rest] = images
+    this.setState({
+      noAuthorError: null,
+      uploadedImages: rest,
+      newImage: {'img': first, 'title': null, 'authors': [], 'tags': [] }
+    })
+  }
+
+  modalHandleSave() {
+    var payload = { 'img': this.state.newImage.img }
+    if(this.state.newImage.authors.length){
+      payload['authors'] = JSON.stringify(this.state.newImage.authors)
+    } 
+    else { 
+      this.setState({
+        noAuthorError: 'This field is required.'
+      })
+      return 
+    }
+    if(this.state.newImage.title){
+      payload['title'] = this.state.newImage.title
+    }
+    if(this.state.newImage.tags.length){
+      payload['tags'] = this.state.newImage.tags
+    }
+    
+    this.props.createImage(this.props.token, payload, () => {
+      this.setNextImage(this.state.uploadedImages)
+    })
+  }
+
+  modalHandleCancel() {
+    this.setNextImage(this.state.uploadedImages)
+  }
+
+  modalHandleUpdate(field, data) {
+    this.setState(state => ( state.newImage[field] = data, state ))
+    if(field == 'authors' && data.length) { this.setState({ noAuthorError: null }) }
   }
 
   render() {
@@ -132,6 +182,17 @@ class ImagesPageComponent extends React.Component {
         value={this.props.location.query.tags}
         update={(tags) => this.props.searchImages(this.props.location.query.author, tags, this.props.location.query.q)} />
     ]
+
+    const uploadImagePanel = (
+      <ImagePanel 
+        image={this.state.newImage}
+        successBtnName={'Save'}
+        dangerBtnName={'Cancel'}
+        authorErrors={this.state.noAuthorError}
+        update={(field, data) => this.modalHandleUpdate(field, data)}
+        save={() => this.modalHandleSave()}
+        delete={() => this.modalHandleCancel()} />
+    )
 
     return (
       <DocumentTitle title='Images'>
@@ -170,6 +231,15 @@ class ImagesPageComponent extends React.Component {
                 searchItems: (query) => this.handleSearchImages(query)
               }} />
           </div>
+          
+          {this.state.newImage.img &&
+          <div className='c-modal-container-scrollable'>
+            <div className='c-modal-body'>
+              {uploadImagePanel}
+            </div>
+          </div> 
+          }
+          
           <div className='c-files-dropzone__text' onClick={() => this.onDropzoneClick()}>
             <p>Drag images into window or click here to upload</p>
           </div>
@@ -199,8 +269,8 @@ const mapDispatchToProps = (dispatch) => {
     toggleImage: (imageId) => {
       dispatch(imageActions.toggle(imageId))
     },
-    createImage: (token, image) => {
-      dispatch(imageActions.create(token, image))
+    createImage: (token, image, callback) => {
+      dispatch(imageActions.create(token, image, null, callback))
     },
     toggleAllImages: (imageIds) => {
       dispatch(imageActions.toggleAll(imageIds))
