@@ -73,6 +73,7 @@ export default function SubsectionForm(props) {
         error={props.errors.author_ids}>
         <AuthorSelectInput
           value={props.listItem.authors || []}
+          authorErrors={props.authorErrors}
           update={authors => props.update('authors', authors)} />
       </Form.Input>
 

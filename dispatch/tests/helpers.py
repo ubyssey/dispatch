@@ -6,6 +6,7 @@ from rest_framework import status
 from dispatch.models import Article, Author, Person, Section, Image
 from dispatch.tests.cases import DispatchMediaTestMixin
 from dispatch.modules.content.mixins import AuthorMixin
+import json
 
 class DispatchTestHelpers(object):
 
@@ -45,7 +46,7 @@ class DispatchTestHelpers(object):
         authors = []
 
         for author in author_names:
-            (person, created) = Person.objects.get_or_create(full_name=author, slug='author')
+            (person, created) = Person.objects.get_or_create(full_name=author, slug=author.lower().replace(' ', '-'))
             authors.append({
                 'person': person.id,
                 'type': 'author'
@@ -92,15 +93,25 @@ class DispatchTestHelpers(object):
         return response
 
     @classmethod
-    def create_image(cls, client):
+    def create_image(cls, client, filename='test_image_a.png', author_names=['Test Person']):
         """Upload an image that can be linked by galleries"""
+
+        # Create test person
+        authors = []
+
+        for author in author_names:
+            (person, created) = Person.objects.get_or_create(full_name=author, slug=author.lower().replace(' ', '-'))
+            authors.append({
+                'person': person.id,
+                'type': 'photographer'
+            })
 
         obj = DispatchMediaTestMixin()
 
         url = reverse('api-images-list')
 
-        with open(obj.get_input_file('test_image_a.png'), 'rb') as test_image:
-            response = client.post(url, { 'img': test_image }, format='multipart')
+        with open(obj.get_input_file(filename), 'rb') as test_image:
+            response = client.post(url, { 'img': test_image, 'authors': json.dumps(authors), 'author_ids': json.dumps(authors) }, format='multipart')
 
         return response
 
@@ -181,8 +192,8 @@ class DispatchTestHelpers(object):
 
         data = {
             'full_name': full_name,
-            'image': image,
             'slug': slug,
+            'image': image,
             'description': description,
             'title': title
         }

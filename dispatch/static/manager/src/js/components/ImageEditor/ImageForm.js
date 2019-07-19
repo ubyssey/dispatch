@@ -45,6 +45,7 @@ export default class ImageForm extends React.Component {
           <AuthorSelectInput
             value={this.props.listItem.authors}
             update={authors => this.props.update('authors', authors)}
+            authorErrors={this.props.authorErrors}
             defaultAuthorType={AuthorSelectInput.PHOTOGRAPHER} />
         </Form.Input>
 

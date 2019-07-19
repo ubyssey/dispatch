@@ -98,12 +98,22 @@ class AuthorValidator(object):
             # Convert single instance to a list
             data = [data]
 
+        AUTHOR_TYPES = {'author', 'photographer', 'illustrator', 'videographer'}
+
         for author in data:
             if 'person' not in author:
                 raise ValidationError('An author must contain a person.')
-            if 'type' in author and not isinstance(author['type'], str):
-                # If type is defined, it should be a string
-                raise ValidationError('The author type must be a string.')
+            if 'type' in author:
+                if isinstance(author, dict):
+                    if not isinstance(author['type'], str) or author['type'].lower() not in AUTHOR_TYPES:
+                        raise ValidationError('The author type must be a string, matching a predefined type.')
+                elif isinstance(author, str):
+                    tokens = author.split('"')
+                    for i in range(0, len(tokens)):
+                        if 5 + 6 * i < len(tokens):
+                            author_type = tokens[5 + 6 * i]
+                            if author_type.lower() not in AUTHOR_TYPES:
+                                raise ValidationError('The author type must be a string, matching a predefined type.')
 
 def TemplateValidator(template, template_data, tags, subsection_id):
 

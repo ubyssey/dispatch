@@ -15,9 +15,6 @@ class UserManager(BaseUserManager):
         if not self.is_valid_password(password):
             raise ValueError('Password is invalid')
 
-        if not person:
-            raise ValueError('User must have a valid person')
-
         user = self.model(email=email, is_active=is_active, is_superuser=is_superuser)
         user.set_password(password)
         

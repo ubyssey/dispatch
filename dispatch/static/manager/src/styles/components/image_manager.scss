@@ -1,4 +1,5 @@
 @import '../utilities/colors';
+@import '../utilities/variables';
 
 // Component: ImageManager
 .c-image-manager {
@@ -71,6 +72,26 @@ $image-manager-footer-box-shadow: rgba(0,0,0,0.05) 0px -1px 1px;
       margin-right: 0;
     }
   }
+}
+
+.c-modal-body {
+  background-color: $color-white;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid $color-border-gray;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.c-modal-container-scrollable {
+  position: fixed; /* Stay in place */
+  z-index: $z-index-3; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: $color-bg-black; /* Fallback color */
+  background-color: $color-bg-black-opacity; /* Black w/ opacity */
 }
 
 .c-image-manager__body {

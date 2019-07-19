@@ -11,6 +11,14 @@ const NEW_LISTITEM_ID = 'new'
 
 class ItemEditor extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      noAuthorError: null
+    }
+  }
+
   componentDidMount() {
     if (this.props.isNew) {
       // Create empty listItem
@@ -53,19 +61,26 @@ class ItemEditor extends React.Component {
   }
 
   saveListItem() {
+    const listItem = this.getListItem()
+    if (listItem.authors && !listItem.authors.length) {
+      this.setState({ noAuthorError: 'This field is required.' })
+      return
+    }
+
     if (this.props.isNew) {
-      this.props.createListItem(this.props.token, this.getListItem())
+      this.props.createListItem(this.props.token, listItem)
     } else {
       this.props.saveListItem(
         this.props.token,
         this.props.itemId,
-        this.getListItem()
+        listItem
       )
     }
   }
 
   handleUpdate(field, value) {
     this.props.setListItem(R.assoc(field, value, this.getListItem()))
+    if(field == 'authors' && value.length) { this.setState({ noAuthorError: null }) }
   }
 
   render() {
@@ -94,6 +109,7 @@ class ItemEditor extends React.Component {
             <this.props.form
               listItem={listItem}
               errors={this.props.listItem ? this.props.listItem.errors : {}}
+              authorErrors={this.state.noAuthorError}
               update={(field, value) => this.handleUpdate(field, value)}
               settings={this.props.settings ? this.props.settings : {}} />
           </div>
