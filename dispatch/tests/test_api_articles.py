@@ -246,6 +246,10 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+        data['author_ids'][0]['type'] = 'article author'
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_update_article_tags(self):
         """Should be able to update and remove article tags"""
 
@@ -736,13 +740,7 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that a featured image can be set"""
 
         article = DispatchTestHelpers.create_article(self.client)
-
-        url = reverse('api-images-list')
-
-        image_file = 'test_image_a.jpg'
-
-        with open(self.get_input_file(image_file), 'rb') as test_image:
-            image = self.client.post(url, { 'img': test_image }, format='multipart')
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
             'featured_image':   {
@@ -760,13 +758,6 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that there must have an image_id in order to set a featured image"""
 
         article = DispatchTestHelpers.create_article(self.client)
-
-        url = reverse('api-images-list')
-
-        image_file = 'test_image_a.jpg'
-
-        with open(self.get_input_file(image_file), 'rb') as test_image:
-            image = self.client.post(url, { 'img': test_image }, format='multipart')
 
         data = {
             'featured_image':   {
@@ -792,14 +783,8 @@ class ArticlesTests(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that a featured image can be removed"""
 
         article = DispatchTestHelpers.create_article(self.client)
-
-        url = reverse('api-images-list')
-
-        image_file = 'test_image_a.jpg'
-
-        with open(self.get_input_file(image_file), 'rb') as test_image:
-            image = self.client.post(url, { 'img': test_image }, format='multipart')
-
+        image = DispatchTestHelpers.create_image(self.client)
+        
         data = {
             'featured_image':   {
                 'image_id': image.data['id']

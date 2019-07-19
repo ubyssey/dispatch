@@ -231,13 +231,8 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
         """Ensure that a featured image can be set"""
 
         page = DispatchTestHelpers.create_page(self.client)
-        
-        url = reverse('api-images-list')
-        
-        image_file = 'test_image_a.jpg'
 
-        with open(self.get_input_file(image_file), 'rb') as test_image:
-            image = self.client.post(url, { 'img': test_image }, format='multipart')
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
             'featured_image':   {
@@ -256,12 +251,7 @@ class PagesTest(DispatchAPITestCase, DispatchMediaTestMixin):
 
         page = DispatchTestHelpers.create_page(self.client)
         
-        url = reverse('api-images-list')
-        
-        image_file = 'test_image_a.jpg'
-
-        with open(self.get_input_file(image_file), 'rb') as test_image:
-            image = self.client.post(url, { 'img': test_image }, format='multipart')
+        image = DispatchTestHelpers.create_image(self.client)
 
         data = {
             'featured_image':   {

@@ -137,7 +137,7 @@ class PersonsTests(DispatchAPITestCase, DispatchMediaTestMixin):
         )
         response2 = DispatchTestHelpers.create_person(
             self.client,
-            full_name='Test Person 2',
+            full_name='Test Person 20',
             slug='test-person'
         )
 
