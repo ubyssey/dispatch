@@ -1,8 +1,7 @@
 import R from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
+import DragDropContext from './DragDropContext'
 import Measure from 'react-measure'
 import autobind from 'class-autobind'
 
@@ -307,10 +306,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-
 const GalleryForm = connect(
   mapStateToProps,
   mapDispatchToProps
-)(DragDropContext(HTML5Backend)(GalleryFormComponent))
+)(DragDropContext(GalleryFormComponent))
 
 export default GalleryForm

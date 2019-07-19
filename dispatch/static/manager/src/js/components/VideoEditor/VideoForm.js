@@ -37,6 +37,7 @@ export default function VideoForm(props) {
         <AuthorSelectInput
           value={props.listItem.authors ? props.listItem.authors: []}
           update={authors => props.update('authors', authors)} 
+          authorErrors={props.authorErrors}
           defaultAuthorType={AuthorSelectInput.VIDEOGRAPHER} />
       </Form.Input>
 

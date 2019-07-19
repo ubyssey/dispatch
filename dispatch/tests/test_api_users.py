@@ -21,6 +21,8 @@ TEST_USER_FULL_NAME_4 = 'John Doe Fourth'
 TEST_USER_SLUG_4 = 'john-doe-fourth'
 TEST_USER_FULL_NAME_5 = 'John Doe Fifth'
 TEST_USER_SLUG_5 = 'john-doe-fifth'
+TEST_USER_FULL_NAME_6 = 'John Doe Sixth'
+TEST_USER_SLUG_6 = 'john-doe-sixth'
 
 class UserTests(DispatchAPITestCase):
     """A class to test the user API methods"""
@@ -45,7 +47,10 @@ class UserTests(DispatchAPITestCase):
 
         url = reverse('api-users-list')
 
-        person_id = DispatchTestHelpers.create_person(self.client, full_name=TEST_USER_FULL_NAME, slug=TEST_USER_SLUG).data['id']
+        person_id = DispatchTestHelpers.create_person(self.client, 
+            full_name=TEST_USER_FULL_NAME, 
+            slug=TEST_USER_SLUG).data['id']
+
         data = {
             'email' : TEST_USER_EMAIL,
             'person' : person_id,
@@ -57,7 +62,6 @@ class UserTests(DispatchAPITestCase):
         response = self.client.post(url, data, format='json')
 
         user = User.objects.get(person=person_id)
-
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
