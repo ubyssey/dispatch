@@ -8,7 +8,8 @@ import {
   CodeEmbed,
   WidgetEmbed,
   PollEmbed,
-  PodcastEmbed
+  PodcastEmbed,
+  InteractiveMapEmbed
 } from './embeds'
 
 import {
@@ -32,5 +33,6 @@ export {
   CodeEmbed,
   WidgetEmbed,
   PollEmbed,
-  PodcastEmbed
+  PodcastEmbed,
+  InteractiveMapEmbed
 }

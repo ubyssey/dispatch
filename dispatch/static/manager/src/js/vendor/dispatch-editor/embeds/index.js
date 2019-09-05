@@ -6,6 +6,7 @@ import GalleryEmbed from './GalleryEmbed'
 import WidgetEmbed from './WidgetEmbed'
 import PollEmbed from './PollEmbed'
 import PodcastEmbed from './PodcastEmbed'
+import InteractiveMapEmbed from './InteractiveMapEmbed'
 
 export {
   ImageEmbed,
@@ -15,5 +16,6 @@ export {
   GalleryEmbed,
   WidgetEmbed,
   PollEmbed,
-  PodcastEmbed
+  PodcastEmbed,
+  InteractiveMapEmbed
 }
