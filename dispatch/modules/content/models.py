@@ -459,7 +459,7 @@ class Video(Model, AuthorMixin):
     authors = ManyToManyField(Author, related_name='video_authors')
     tags = ManyToManyField('Tag')
 
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField(default=timezone.now)
     updated_at = DateTimeField(auto_now=True)
 
     AuthorModel = Author

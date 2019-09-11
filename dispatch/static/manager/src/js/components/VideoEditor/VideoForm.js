@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TextInput } from '../inputs'
+import { TextInput, DateTimeInput } from '../inputs'
 import AuthorSelectInput from '../inputs/selects/AuthorSelectInput'
 import TagSelectInput from '../inputs/selects/TagSelectInput'
 
@@ -48,7 +48,15 @@ export default function VideoForm(props) {
           value={props.listItem.tags ? props.listItem.tags: []}
           update={tags => props.update('tags', tags)} />
       </Form.Input>
-        
+
+      <Form.Input
+        label='Created at'
+        error={props.errors.created_at}>
+        <DateTimeInput
+          value={props.listItem.created_at}
+          onChange={dt => props.update('created_at', dt)} />
+      </Form.Input>
+      
       {props.listItem.url && 
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
