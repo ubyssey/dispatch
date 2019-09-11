@@ -31,7 +31,7 @@
     "css-loader": "^0.26.1",
     "draft-js": "^0.10.0",
     "es6-promise": "^3.2.1",
-    "eslint": "^3.17.1",
+    "eslint": "^4.18.2",
     "eslint-loader": "^1.6.3",
     "eslint-plugin-react": "^7.9.1",
     "extract-text-webpack-plugin": "^3.0.0",
