@@ -156,6 +156,7 @@ class InteractiveMapEmbedComponent extends React.Component {
     myFileReader.onloadend = () => { 
       this.formatSvg(myFileReader.result) 
       this.props.updateField('svg', this.previewMapContainer.innerHTML )
+      this.props.updateField('mapCounter', this.props.data.mapCounter + 1)
     }
     myFileReader.readAsText(file)
   }
@@ -248,8 +249,8 @@ class InteractiveMapEmbedComponent extends React.Component {
 
   handleSaveMarker() {
     this.state.currElem.setAttribute('onclick', `(() => { 
-      let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
-      let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
+      let mapImagePanel = document.getElementsByClassName('map-image-panel')[${this.props.data.mapCounter}]
+      let mapInfoPanel = document.getElementsByClassName('map-info-panel')[${this.props.data.mapCounter}]
 
       while(mapInfoPanel.firstChild) {
         mapInfoPanel.removeChild(mapInfoPanel.firstChild)
@@ -285,8 +286,8 @@ class InteractiveMapEmbedComponent extends React.Component {
 
       let backBtnSpan = document.createElement('SPAN')
       backBtnSpan.setAttribute('onclick', \`(() => {
-        let mapImagePanel = document.getElementsByClassName('map-image-panel')[0];
-        let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]; 
+        let mapImagePanel = document.getElementsByClassName('map-image-panel')[${this.props.data.mapCounter}];
+        let mapInfoPanel = document.getElementsByClassName('map-info-panel')[${this.props.data.mapCounter}]; 
         mapImagePanel.style.width='100%'; 
         mapInfoPanel.style.display='none';
       })()\`)
@@ -315,7 +316,7 @@ class InteractiveMapEmbedComponent extends React.Component {
     this.removeMapMarkerStyle()
     this.state.currElem.classList.add('map-marker-' + this.styleCounter)
     
-    let styleElem = document.getElementsByClassName('interactive-map-style')[0]
+    let styleElem = document.getElementsByClassName('interactive-map-style')[this.props.data.mapCounter]
     styleElem.appendChild(document.createTextNode(`.map-marker-${this.styleCounter}:hover{
       stroke: ${this.state.stroke}; 
       ${this.state.stroke == 'default'? '': 'stroke-width: ' + this.state.strokeWidth + ';'}
@@ -379,8 +380,8 @@ class InteractiveMapEmbedComponent extends React.Component {
   }
 
   closeMapInfoPanel() {
-    let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
-    let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
+    let mapImagePanel = document.getElementsByClassName('map-image-panel')[this.props.data.mapCounter]
+    let mapInfoPanel = document.getElementsByClassName('map-info-panel')[this.props.data.mapCounter]
     mapImagePanel.style.width='100%'
     mapInfoPanel.style.display='none'
   }
@@ -477,7 +478,8 @@ export default {
     file: null,
     filename: null,
     elems: [],
-    infos: []
+    infos: [],
+    mapCounter: 0
   },
   showEdit: true
 }
