@@ -5,7 +5,7 @@ import { Entity } from 'draft-js'
 const TAG_MAP = {
   'LINK': {
     open: (data) => {
-      return `<a href="${data.url}">`
+      return `<a href="${data.url}" target="_blank">`
     },
     close: () => '</a>'
   },
