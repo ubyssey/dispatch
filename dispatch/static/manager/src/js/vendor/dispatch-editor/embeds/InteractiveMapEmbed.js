@@ -82,8 +82,34 @@ class InteractiveMapEmbedComponent extends React.Component {
       fill: this.FILL_OPTIONS[0][0]
     }
 
-    this.styleCounter = 0
     this.ALLOWED_MARKERS = ['polygon', 'circle', 'polyline', 'ellipse', 'rect', 'marker', 'path']
+  }
+
+  addZoomOnDoubleClick(map) {
+    map.setAttribute('ondblclick', `
+      evt.preventDefault();
+      let map = document.getElementsByClassName('svg-map')[0];
+      let shouldZoomIn = map.classList.toggle('zoomed');
+      if(!shouldZoomIn){
+        map.setAttribute('viewBox', '${this.svgViewBox}');
+        return;
+      }
+      let mX = evt.clientX - map.getBoundingClientRect().left / 2;
+      let mY = evt.clientY - map.getBoundingClientRect().top / 2;
+      let viewBox = '${this.svgViewBox}'.split(' ');
+      let scale = 4;
+
+      // get difference between click point and center of map
+      mX = mX - map.getBoundingClientRect().width / 2;
+      mY = mY - map.getBoundingClientRect().height / 2;
+
+      //normalize click point to be centered in zoomed SVG
+      mX = (mX + (scale - 1) * viewBox[2] / scale) / 2; 
+      mY = (mY + (scale - 1) * viewBox[3] / scale) / 2;
+
+      const newViewBox = [mX, mY, viewBox[2] / scale, viewBox[3] / scale];
+      map.setAttribute('viewBox', newViewBox);
+  `)
   }
 
   formatSvg(svgContent) {
@@ -123,6 +149,13 @@ class InteractiveMapEmbedComponent extends React.Component {
       return
     }
 
+    mySvgElem.classList.add('svg-map');
+
+    if(mySvgElem.hasAttribute('viewBox')) { 
+      this.svgViewBox = mySvgElem.getAttribute('viewBox')
+      this.addZoomOnDoubleClick(mySvgElem)
+    }
+
     if (mySvgElem.hasAttribute('width')) { mySvgElem.removeAttribute('width') }
     if (mySvgElem.hasAttribute('height')) { mySvgElem.removeAttribute('height') }
 
@@ -156,7 +189,6 @@ class InteractiveMapEmbedComponent extends React.Component {
     myFileReader.onloadend = () => { 
       this.formatSvg(myFileReader.result) 
       this.props.updateField('svg', this.previewMapContainer.innerHTML )
-      this.props.updateField('mapCounter', this.props.data.mapCounter + 1)
     }
     myFileReader.readAsText(file)
   }
@@ -239,7 +271,7 @@ class InteractiveMapEmbedComponent extends React.Component {
   }
 
   removeMapMarkerStyle() {
-    for (var i = 0; i < this.styleCounter; i++) {
+    for (var i = 0; i < this.props.data.styleCounter; i++) {
       if (this.state.currElem.classList.contains('map-marker-' + i)) {
         this.state.currElem.classList.remove('map-marker-' + i)
         return
@@ -248,13 +280,36 @@ class InteractiveMapEmbedComponent extends React.Component {
   }
 
   handleSaveMarker() {
-    this.state.currElem.setAttribute('onclick', `(() => { 
-      let mapImagePanel = document.getElementsByClassName('map-image-panel')[${this.props.data.mapCounter}]
-      let mapInfoPanel = document.getElementsByClassName('map-info-panel')[${this.props.data.mapCounter}]
+    this.state.currElem.setAttribute('onclick', ` 
+      let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
+      let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
 
       while(mapInfoPanel.firstChild) {
         mapInfoPanel.removeChild(mapInfoPanel.firstChild)
       }
+
+      evt.preventDefault();
+      let map = document.getElementsByClassName('svg-map')[0];
+      if (!map.classList.contains('zoomed')) { map.classList.add('zoomed'); }
+      else {map.setAttribute('viewBox', '${this.svgViewBox}'); }
+      // let mX = evt.clientX - map.getBoundingClientRect().left / 2;
+      // let mY = evt.clientY - map.getBoundingClientRect().top / 2;
+      let viewBox = '${this.svgViewBox}'.split(' ');
+      let scale = 4;
+
+      // get difference between click point and center of map
+      // mX = mX - map.getBoundingClientRect().width / 2;
+      // mY = mY - map.getBoundingClientRect().height / 2;
+
+      //normalize click point to be centered in zoomed SVG
+      // mX = (mX + (scale - 1) * viewBox[2] / scale) / 2; 
+      // mY = (mY + (scale - 1) * viewBox[3] / scale) / 2;
+
+      //center of map
+      let mX = (viewBox[2] - viewBox[2] / scale) / 2;
+      let mY = (viewBox[3] - viewBox[3] / scale) / 2;
+      const newViewBox = [mX, mY, viewBox[2] / scale, viewBox[3] / scale];
+      map.setAttribute('viewBox', newViewBox);
 
       let container = document.createElement('DIV')
       let nameHeader = document.createElement('H3')
@@ -286,8 +341,8 @@ class InteractiveMapEmbedComponent extends React.Component {
 
       let backBtnSpan = document.createElement('SPAN')
       backBtnSpan.setAttribute('onclick', \`(() => {
-        let mapImagePanel = document.getElementsByClassName('map-image-panel')[${this.props.data.mapCounter}];
-        let mapInfoPanel = document.getElementsByClassName('map-info-panel')[${this.props.data.mapCounter}]; 
+        let mapImagePanel = document.getElementsByClassName('map-image-panel')[0];
+        let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]; 
         mapImagePanel.style.width='100%'; 
         mapInfoPanel.style.display='none';
       })()\`)
@@ -311,18 +366,18 @@ class InteractiveMapEmbedComponent extends React.Component {
 
       mapImagePanel.style.width = '50%'
       mapInfoPanel.style.display = 'table-cell'
-    })()`)
+    `)
 
     this.removeMapMarkerStyle()
-    this.state.currElem.classList.add('map-marker-' + this.styleCounter)
+    this.state.currElem.classList.add('map-marker-' + this.props.data.styleCounter)
     
-    let styleElem = document.getElementsByClassName('interactive-map-style')[this.props.data.mapCounter]
-    styleElem.appendChild(document.createTextNode(`.map-marker-${this.styleCounter}:hover{
+    let styleElem = document.getElementsByClassName('interactive-map-style')[0]
+    styleElem.appendChild(document.createTextNode(`.map-marker-${this.props.data.styleCounter}:hover{
       stroke: ${this.state.stroke}; 
       ${this.state.stroke == 'default'? '': 'stroke-width: ' + this.state.strokeWidth + ';'}
       cursor: pointer; 
       ${this.state.fill == 'none'? '': 'fill: ' + this.state.fill + ';'}}`))
-    this.styleCounter++
+    this.props.updateField('styleCounter', this.props.data.styleCounter + 1)
 
     this.deselectCurrElem()
     this.props.updateField('svg', this.previewMapContainer.innerHTML )
@@ -380,8 +435,8 @@ class InteractiveMapEmbedComponent extends React.Component {
   }
 
   closeMapInfoPanel() {
-    let mapImagePanel = document.getElementsByClassName('map-image-panel')[this.props.data.mapCounter]
-    let mapInfoPanel = document.getElementsByClassName('map-info-panel')[this.props.data.mapCounter]
+    let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
+    let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
     mapImagePanel.style.width='100%'
     mapInfoPanel.style.display='none'
   }
@@ -479,7 +534,7 @@ export default {
     filename: null,
     elems: [],
     infos: [],
-    mapCounter: 0
+    styleCounter: 0
   },
   showEdit: true
 }
