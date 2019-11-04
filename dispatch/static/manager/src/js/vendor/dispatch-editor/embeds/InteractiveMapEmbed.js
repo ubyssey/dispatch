@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { FileInput, TextInput, SelectInput, TextAreaInput } from '../../../components/inputs'
 
 import { Button, Intent } from '@blueprintjs/core'
@@ -85,48 +84,15 @@ class InteractiveMapEmbedComponent extends React.Component {
     this.ALLOWED_MARKERS = ['polygon', 'circle', 'polyline', 'ellipse', 'rect', 'marker', 'path']
   }
 
-  addZoomOnDoubleClick(map) {
-    map.setAttribute('ondblclick', `
-      evt.preventDefault();
-      let map = document.getElementsByClassName('svg-map')[0];
-      let shouldZoomIn = map.classList.toggle('zoomed');
-      if(!shouldZoomIn){
-        map.setAttribute('viewBox', '${this.svgViewBox}');
-        return;
-      }
-      let mX = evt.clientX - map.getBoundingClientRect().left / 2;
-      let mY = evt.clientY - map.getBoundingClientRect().top / 2;
-      let viewBox = '${this.svgViewBox}'.split(' ');
-      let scale = 4;
-
-      // get difference between click point and center of map
-      mX = mX - map.getBoundingClientRect().width / 2;
-      mY = mY - map.getBoundingClientRect().height / 2;
-
-      //normalize click point to be centered in zoomed SVG
-      mX = (mX + (scale - 1) * viewBox[2] / scale) / 2; 
-      mY = (mY + (scale - 1) * viewBox[3] / scale) / 2;
-
-      const newViewBox = [mX, mY, viewBox[2] / scale, viewBox[3] / scale];
-      map.setAttribute('viewBox', newViewBox);
-  `)
-  }
-
   formatSvg(svgContent) {
     let mapImagePanel = document.createElement('DIV')
     mapImagePanel.classList.add('map-image-panel')
     mapImagePanel.style.display = 'table-cell'
     mapImagePanel.style.width = '100%'
     mapImagePanel.style.padding = '1rem'
+    mapImagePanel.style.overflow = 'hidden'
+    mapImagePanel.style.transition = 'all 2s'
     mapImagePanel.innerHTML = svgContent
-
-    let mapInfoPanel = document.createElement('DIV')
-    mapInfoPanel.classList.add('map-info-panel')
-    mapInfoPanel.style.display = 'none'
-    mapInfoPanel.style.borderLeft = '1px solid #D3D3D3'
-    mapInfoPanel.style.verticalAlign = 'top'
-    mapInfoPanel.style.width = '50%'
-    mapInfoPanel.style.padding = '1rem'
 
     let interactiveMapContainer = document.createElement('DIV')
     interactiveMapContainer.classList.add('interactive-map-container')
@@ -136,7 +102,6 @@ class InteractiveMapEmbedComponent extends React.Component {
     interactiveMapContainer.style.width = '65%'
     
     interactiveMapContainer.appendChild(mapImagePanel)
-    interactiveMapContainer.appendChild(mapInfoPanel)
     this.previewMapContainer.appendChild(interactiveMapContainer)
 
     var defs, style, mySvgElem
@@ -150,11 +115,6 @@ class InteractiveMapEmbedComponent extends React.Component {
     }
 
     mySvgElem.classList.add('svg-map');
-
-    if(mySvgElem.hasAttribute('viewBox')) { 
-      this.svgViewBox = mySvgElem.getAttribute('viewBox')
-      this.addZoomOnDoubleClick(mySvgElem)
-    }
 
     if (mySvgElem.hasAttribute('width')) { mySvgElem.removeAttribute('width') }
     if (mySvgElem.hasAttribute('height')) { mySvgElem.removeAttribute('height') }
@@ -281,91 +241,82 @@ class InteractiveMapEmbedComponent extends React.Component {
 
   handleSaveMarker() {
     this.state.currElem.setAttribute('onclick', ` 
-      let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
-      let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
-
-      while(mapInfoPanel.firstChild) {
-        mapInfoPanel.removeChild(mapInfoPanel.firstChild)
+      if(d3){
+        clicked(evt);
       }
 
-      evt.preventDefault();
-      let map = document.getElementsByClassName('svg-map')[0];
-      if (!map.classList.contains('zoomed')) { map.classList.add('zoomed'); }
-      else {map.setAttribute('viewBox', '${this.svgViewBox}'); }
-      // let mX = evt.clientX - map.getBoundingClientRect().left / 2;
-      // let mY = evt.clientY - map.getBoundingClientRect().top / 2;
-      let viewBox = '${this.svgViewBox}'.split(' ');
-      let scale = 4;
+      let container = document.createElement('DIV');
+      container.style.textAlign = 'center';
+      let nameHeader = document.createElement('H3');
+      let nameText = document.createTextNode('${this.state.currElemName.replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}');
+      nameHeader.appendChild(nameText);
+      container.appendChild(nameHeader);
 
-      // get difference between click point and center of map
-      // mX = mX - map.getBoundingClientRect().width / 2;
-      // mY = mY - map.getBoundingClientRect().height / 2;
+      let locationSpan = document.createElement('SPAN');
+      let locationItalic = document.createElement('P');
+      locationItalic.style.fontStyle = 'italic';
+      let locationText = document.createTextNode('${this.state.currElemLocation.replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}');
 
-      //normalize click point to be centered in zoomed SVG
-      // mX = (mX + (scale - 1) * viewBox[2] / scale) / 2; 
-      // mY = (mY + (scale - 1) * viewBox[3] / scale) / 2;
-
-      //center of map
-      let mX = (viewBox[2] - viewBox[2] / scale) / 2;
-      let mY = (viewBox[3] - viewBox[3] / scale) / 2;
-      const newViewBox = [mX, mY, viewBox[2] / scale, viewBox[3] / scale];
-      map.setAttribute('viewBox', newViewBox);
-
-      let container = document.createElement('DIV')
-      let nameHeader = document.createElement('H3')
-      let nameText = document.createTextNode('${this.state.currElemName.replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}')
-      nameHeader.appendChild(nameText)
-      container.appendChild(nameHeader)
-
-      let locationSpan = document.createElement('SPAN')
-      let locationItalic = document.createElement('I')
-      let locationText = document.createTextNode('${this.state.currElemLocation.replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}')
-      let newLine = document.createElement('BR')
-
-      locationItalic.appendChild(locationText)
-      locationSpan.appendChild(locationItalic)
-      container.appendChild(locationSpan)
-      container.appendChild(newLine)
+      locationItalic.appendChild(locationText);
+      locationSpan.appendChild(locationItalic);
+      container.appendChild(locationSpan);
+      let newLine = document.createElement('BR');
+      newLine.style.display = 'inline-block';
+      container.appendChild(newLine);
       
-      let contentDivision = document.createElement('DIV')
-      let content = '${this.state.currElemContent.split('\n').join('****').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}'
+      let contentDivision = document.createElement('DIV');
+      contentDivision.style.textAlign = 'left';
+      let content = '${this.state.currElemContent.split('\n').join('****').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/'/g, "\\'")}';
       content.split('****').forEach(paragraph => {
-        let p = document.createElement('P')
-        let textNode = document.createTextNode(paragraph)
-        p.appendChild(textNode)
-        contentDivision.appendChild(p)
-      })
+        let p = document.createElement('P');
+        let textNode = document.createTextNode(paragraph);
+        p.appendChild(textNode);
+        contentDivision.appendChild(p);
+      });
       
-      container.appendChild(contentDivision)
-      container.appendChild(newLine)
+      container.appendChild(contentDivision);
+      let newLine2 = document.createElement('BR');
+      newLine2.style.display = 'inline-block';
+      container.appendChild(newLine2);
 
-      let backBtnSpan = document.createElement('SPAN')
-      backBtnSpan.setAttribute('onclick', \`(() => {
-        let mapImagePanel = document.getElementsByClassName('map-image-panel')[0];
-        let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]; 
-        mapImagePanel.style.width='100%'; 
-        mapInfoPanel.style.display='none';
-      })()\`)
-      let backBtnItalic = document.createElement('I')
-      let backBtnText = document.createTextNode(' Back')
-      backBtnItalic.classList.add('fa')
-      backBtnItalic.classList.add('fa-arrow-left')
-      backBtnItalic.setAttribute('onmouseover', \`(() => {
-        this.style.fontWeight = 'bold'; 
-        this.style.cursor = 'pointer';
-      })()\`)
-      backBtnItalic.setAttribute('onmouseout', \`(() => {
-        this.style.fontWeight = 'normal'; 
-        this.style.cursor = 'default';
-      })()\`)
-      backBtnItalic.appendChild(backBtnText)
-      backBtnSpan.appendChild(backBtnItalic)
-      container.appendChild(backBtnSpan)
+      let backBtn = document.createElement('BUTTON');
+      backBtn.setAttribute('onclick', \`
+        let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
+        let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
 
-      mapInfoPanel.appendChild(container)
+        while(modalBody.firstChild) {
+          modalBody.removeChild(modalBody.firstChild);
+        }
 
-      mapImagePanel.style.width = '50%'
-      mapInfoPanel.style.display = 'table-cell'
+        modalBody.style.opacity = '0';
+        modalContainer.style.opacity = '0';
+        modalBody.style.width = '0%';
+        modalContainer.style.width = '0%';
+        
+        if(d3){
+          let svg = d3.select('.svg-map');
+          svg.transition()
+            .duration(2000)
+            .call( zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1) );
+        }
+      \`);
+      let backBtnText = document.createTextNode('Back');
+      backBtn.classList.add('back-button');
+      backBtn.setAttribute('onmouseover', \`
+        this.style.backgroundColor = 'black';
+        this.style.color = 'white';
+      \`);
+      backBtn.setAttribute('onmouseout', \`
+        this.style.backgroundColor = 'white';
+        this.style.color = 'black'; 
+      \`);
+      backBtn.appendChild(backBtnText);
+      container.appendChild(backBtn);
+
+      if(d3){
+        let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
+        modalBody.appendChild(container);
+      }
     `)
 
     this.removeMapMarkerStyle()
@@ -390,7 +341,6 @@ class InteractiveMapEmbedComponent extends React.Component {
       'fill': this.state.fill,
     })
     
-    this.closeMapInfoPanel()
     this.unsetCurrElem()
   }
 
@@ -434,20 +384,12 @@ class InteractiveMapEmbedComponent extends React.Component {
     this.props.updateField('infos', myInfos)
   }
 
-  closeMapInfoPanel() {
-    let mapImagePanel = document.getElementsByClassName('map-image-panel')[0]
-    let mapInfoPanel = document.getElementsByClassName('map-info-panel')[0]
-    mapImagePanel.style.width='100%'
-    mapInfoPanel.style.display='none'
-  }
-
   handleRemoveMarker() {
     this.deselectCurrElem() 
     if (this.state.currElem.hasAttribute('onclick')) { this.state.currElem.removeAttribute('onclick') } 
     this.removeMapMarkerStyle() 
     this.deleteElemAndInfo(this.getIndexFromCurrElem())
     this.unsetCurrElem()
-    this.closeMapInfoPanel()
   }
 
   render() {
@@ -534,7 +476,92 @@ export default {
     filename: null,
     elems: [],
     infos: [],
-    styleCounter: 0
+    styleCounter: 0,
+    initScript: `
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    
+    <style>
+      .c-map-modal-body {
+        background-color: #ffffff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #e2e2e2;
+        border-radius: 18px;
+        width: 0%; 
+        transition: opacity 2s;
+        opacity: 0;
+      }
+      
+      .c-map-modal-container {
+        position: fixed; 
+        z-index: 20;
+        left: 0;
+        top: 0;
+        width: 0%; 
+        height: 100%; 
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.5); 
+        transition: opacity 2s;
+        opacity: 0;
+      }
+
+      .back-button {
+        background-color: white;
+        border: solid black;
+        color: black;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 26px;
+        border-radius: 18px;
+        cursor: pointer;
+        transition: all 0.75s;
+      }
+    </style>
+
+    <div class='c-map-modal-container'>
+      <div class='c-map-modal-body'></div>
+    </div> 
+    
+    <script> 
+      var svg = d3.select('.svg-map'),
+      width = (+svg.node().getBoundingClientRect().width), //- (+svg.node().style.paddingRight) - (+svg.node().style.paddingLeft) - (+svg.node().style.marginRight) - (+svg.node().style.marginLeft),
+      height = (+svg.node().getBoundingClientRect().height); //- (+svg.node().style.paddingTop) - (+svg.node().style.paddingBottom) - (+svg.node().style.marginTop) - (+svg.node().style.marginBottom);
+
+      var zoom = d3.zoom()
+        .translateExtent([[0,0],[width, height]]) 
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+         
+      function zoomed() {
+        var e = d3.event;
+        svg.attr("transform", e.transform);
+      }
+
+      function clicked(evt){
+        var rect = evt.target.getBoundingClientRect();
+        var bounds = [[rect.left - svg.node().getBoundingClientRect().x, rect.top - svg.node().getBoundingClientRect().y], [rect.right - svg.node().getBoundingClientRect().x, rect.bottom - svg.node().getBoundingClientRect().y]]
+        var dx = bounds[1][0] - bounds[0][0],
+          dy = bounds[1][1] - bounds[0][1],
+          x = (bounds[0][0] + bounds[1][0]) / 2,
+          y = (bounds[0][1] + bounds[1][1]) / 2,
+          scale = Math.max(1, Math.min(2, 0.9 / Math.max(dx / width, dy / height))),
+          translate = [width - scale * x, height - scale * y];
+
+        svg.transition()
+          .duration(2000)
+          .call( zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale) )
+          .on('end', function(){
+            let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
+            let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
+            modalBody.style.opacity = '0.9';
+            modalContainer.style.opacity = '0.9';
+            modalBody.style.width = '40%';
+            modalContainer.style.width = '100%';
+          });
+      }
+    </script>
+    `
   },
-  showEdit: true
+  showEdit: false
 }

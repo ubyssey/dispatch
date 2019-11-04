@@ -25,7 +25,7 @@ def content_to_html(content, article_id):
                     node['data']['data'] = node['data']
 
                 if node['type'] == 'interactive map':
-                    return html + node['data']['svg']
+                    return html + node['data']['svg'] + node['data']['initScript']
                     
                 return html + embeds.render(node['type'], node['data'])
             except EmbedException:
