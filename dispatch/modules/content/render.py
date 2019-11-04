@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from dispatch.modules.content.embeds import embeds, EmbedException
 
 def content_to_html(content, article_id):
-    """Returns artilce/page content as HTML"""
+    """Returns article/page content as HTML"""
 
     def render_node(html, node, index):
         """Renders node as HTML"""
@@ -24,6 +24,9 @@ def content_to_html(content, article_id):
                     node['type'] = 'widget'
                     node['data']['data'] = node['data']
 
+                if node['type'] == 'interactive map':
+                    return html + node['data']['svg'] + node['data']['initScript']
+                    
                 return html + embeds.render(node['type'], node['data'])
             except EmbedException:
                 return html

@@ -7,7 +7,8 @@ export default function FileInputComponent(props) {
     <div className={`c-input c-input--file${props.fill ? ' c-input--fill' : ''}`}>
       <FileInput
         fill={true}
-        text={props.value.name || props.placeholder}
+        inputProps={{accept: props.accept}}
+        text={props.value && props.value.name || props.placeholder}
         onInputChange={e => props.onChange(e.target.files.item(0))} />
     </div>
   )
