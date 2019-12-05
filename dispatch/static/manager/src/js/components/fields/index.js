@@ -12,6 +12,7 @@ import SelectField from './SelectField'
 import TextField from './TextField'
 import TopicField from './TopicField'
 import WidgetField from './WidgetField'
+import InteractiveMapField from './InteractiveMapField'
 
 export {
   ArticleField as article,
@@ -28,4 +29,5 @@ export {
   TextField as text,
   TopicField as topic,
   WidgetField as widget,
+  InteractiveMapField as interactive_map
 }

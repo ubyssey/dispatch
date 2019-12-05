@@ -361,3 +361,105 @@ class InstructionField(Field):
 
     def validate(self, data):
         pass
+
+class InteractiveMapField(Field):
+    type = 'interactive_map'
+
+    # def __init__(self, label):
+    #     self.data = {}
+    #     self.data['styleCounter'] = 0
+    #     self.data['filename'] = None
+    #     self.data['elems'] = []
+    #     self.data['infos'] = []
+    #     self.data['initScript'] = '''
+    #       <script src="https://d3js.org/d3.v4.min.js"></script>
+          
+    #       <style>
+    #       .c-map-modal-body {
+    #           background-color: #ffffff;
+    #           margin: 15% auto;
+    #           padding: 20px;
+    #           border: 1px solid #e2e2e2;
+    #           border-radius: 18px;
+    #           width: 0%; 
+    #           transition: opacity 2s;
+    #           opacity: 0;
+    #       }
+          
+    #       .c-map-modal-container {
+    #           position: fixed; 
+    #           z-index: 20;
+    #           left: 0;
+    #           top: 0;
+    #           width: 0%; 
+    #           height: 100%; 
+    #           background-color: rgb(0,0,0);
+    #           background-color: rgba(0,0,0, 0.5); 
+    #           transition: opacity 2s;
+    #           opacity: 0;
+    #       }
+  
+    #       .back-button {
+    #           background-color: white;
+    #           border: solid black;
+    #           color: black;
+    #           padding: 10px;
+    #           text-align: center;
+    #           text-decoration: none;
+    #           font-size: 26px;
+    #           border-radius: 18px;
+    #           cursor: pointer;
+    #           transition: all 0.75s;
+    #       }
+    #       </style>
+  
+    #       <div class='c-map-modal-container'>
+    #       <div class='c-map-modal-body'></div>
+    #       </div> 
+          
+    #       <script> 
+    #       var svg = d3.select('.svg-map'),
+    #       width = (+svg.node().getBoundingClientRect().width), //- (+svg.node().style.paddingRight) - (+svg.node().style.paddingLeft) - (+svg.node().style.marginRight) - (+svg.node().style.marginLeft),
+    #       height = (+svg.node().getBoundingClientRect().height); //- (+svg.node().style.paddingTop) - (+svg.node().style.paddingBottom) - (+svg.node().style.marginTop) - (+svg.node().style.marginBottom);
+  
+    #       var zoom = d3.zoom()
+    #           .translateExtent([[0,0],[width, height]]) 
+    #           .scaleExtent([1, 8])
+    #           .on("zoom", zoomed);
+              
+    #       function zoomed() {
+    #           var e = d3.event;
+    #           svg.attr("transform", e.transform);
+    #       }
+  
+    #       function clicked(evt){
+    #           var rect = evt.target.getBoundingClientRect();
+    #           var bounds = [[rect.left - svg.node().getBoundingClientRect().x, rect.top - svg.node().getBoundingClientRect().y], [rect.right - svg.node().getBoundingClientRect().x, rect.bottom - svg.node().getBoundingClientRect().y]]
+    #           var dx = bounds[1][0] - bounds[0][0],
+    #           dy = bounds[1][1] - bounds[0][1],
+    #           x = (bounds[0][0] + bounds[1][0]) / 2,
+    #           y = (bounds[0][1] + bounds[1][1]) / 2,
+    #           scale = Math.max(1, Math.min(2, 0.9 / Math.max(dx / width, dy / height))),
+    #           translate = [width - scale * x, height - scale * y];
+  
+    #           svg.transition()
+    #           .duration(2000)
+    #           .call( zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale) )
+    #           .on('end', function(){
+    #               let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
+    #               let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
+    #               modalBody.style.opacity = '0.9';
+    #               modalContainer.style.opacity = '0.9';
+    #               modalBody.style.width = '40%';
+    #               modalContainer.style.width = '100%';
+    #           });
+    #       }
+    #       </script>
+    #       '''
+
+    #     self.label = label
+    #     self.many = False
+    #     self.required = True
+
+    def validate(self, data):
+        pass
