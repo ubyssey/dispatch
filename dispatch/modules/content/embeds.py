@@ -124,6 +124,9 @@ class ImageEmbed(AbstractTemplateEmbed):
             'credit': data.get('credit', None)
         }
 
+class PageBreakEmbed(AbstractTemplateEmbed):
+    TEMPLATE = 'embeds/pagebreak.html'
+    
 class GalleryEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/gallery.html'
 
@@ -161,3 +164,4 @@ embeds.register('list', ListEmbed)
 embeds.register('video', VideoEmbed)
 embeds.register('image', ImageEmbed)
 embeds.register('gallery', GalleryEmbed)
+embeds.register('pagebreak', PageBreakEmbed)

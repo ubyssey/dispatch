@@ -9,7 +9,8 @@ import {
   WidgetEmbed,
   PollEmbed,
   PodcastEmbed,
-  InteractiveMapEmbed
+  InteractiveMapEmbed,
+  PageBreakEmbed
 } from './embeds'
 
 import {
@@ -34,5 +35,6 @@ export {
   WidgetEmbed,
   PollEmbed,
   PodcastEmbed,
-  InteractiveMapEmbed
+  InteractiveMapEmbed,
+  PageBreakEmbed
 }
