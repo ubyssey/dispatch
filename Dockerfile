@@ -1,3 +1,4 @@
+# At the moment, this Dockerfile is purely intended for use for VSC development containers
 FROM keeganlandrigan/ubyssey-django:latest
 
 # copy Dispatch files into the container
