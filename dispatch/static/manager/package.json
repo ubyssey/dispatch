@@ -83,8 +83,8 @@
     "url": "https://github.com/ubyssey/dispatch/issues"
   },
   "scripts": {
-    "watch": "webpack --watch --config webpack.dev.config.js",
-    "dev": "webpack --config webpack.dev.config.js",
+    "setup": "yarn install --force",
+    "start": "webpack --watch --config webpack.dev.config.js",
     "build": "webpack -p --config webpack.config.js"
-  }
+	}
 }
