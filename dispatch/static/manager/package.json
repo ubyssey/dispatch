@@ -84,7 +84,7 @@
   },
   "scripts": {
     "watch": "webpack --watch --config webpack.dev.config.js",
-	"dev": "webpack --config webpack.dev.config.js",
+    "dev": "webpack --config webpack.dev.config.js",
     "build": "webpack -p --config webpack.config.js"
   }
 }
