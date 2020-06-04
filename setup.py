@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='dispatch',
-    version='1.0.1',
+    version='1.0.2',
     description='A publishing platform for modern newspapers',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
@@ -11,7 +11,7 @@ setup(name='dispatch',
     scripts=['dispatch/bin/dispatch-admin'],
     include_package_data=True,
     install_requires=[
-        'django == 2.2.10',
+        'django == 3.0.7',
         'djangorestframework == 3.11.0',
         'pillow',
         'requests',

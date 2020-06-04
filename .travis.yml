@@ -14,8 +14,8 @@ jobs:
     node_js: 6.9.5
     install:
     - cd dispatch/static/manager
-    - yarn setup
-    script: yarn build
+    - npm install
+    script: npm run-script build
   - stage: deploy
     language: python
     python: '3.7'
@@ -25,8 +25,8 @@ jobs:
     - nvm use 6.9.5
     install:
     - cd dispatch/static/manager
-    - yarn setup
-    - yarn build
+    - npm install --force
+    - npm run-script build    
     - cd ../../../
     script: python setup.py sdist
     deploy:
