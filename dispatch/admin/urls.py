@@ -1,7 +1,7 @@
 from django.urls import re_path
 from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from dispatch.admin import views
 import dispatch
 
@@ -13,7 +13,7 @@ def admin(request):
         'app_css_bundle': 'manager-%s.css' % dispatch.__version__
     }
     
-    return render_to_response('manager/index.html', context)
+    return render(request, 'manager/index.html', context)
 
 urlpatterns = [
     re_path(r'signup/(?P<uuid>[0-9a-f-]+)/', views.signup, name='dispatch-signup'),
