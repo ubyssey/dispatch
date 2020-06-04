@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import (
     AllowAny, IsAuthenticated, DjangoModelPermissions)
 from rest_framework.decorators import (
-    detail_route, api_view, authentication_classes, permission_classes)
+    action, api_view, authentication_classes, permission_classes)
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import APIException, NotFound, ValidationError
 from rest_framework.authtoken.models import Token
@@ -162,7 +162,7 @@ class PersonViewSet(DispatchModelViewSet):
                 'Deletion failed because person belongs to a user'
             )
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def user(self, request, pk=None):
         queryset = Person.objects.all()
 
@@ -176,7 +176,7 @@ class PersonViewSet(DispatchModelViewSet):
 
         return Response(serializer.data)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def invite(self, request, pk=None):
         queryset = Person.objects.all()
 
@@ -249,7 +249,7 @@ class UserViewSet(DispatchModelViewSet):
 
         return super(UserViewSet, self).partial_update(request)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def reset_password(self, request, pk=None):
         user = get_object_or_404(User.objects.all(), pk=pk)
 
@@ -394,7 +394,7 @@ class PollViewSet(DispatchModelViewSet):
             queryset = queryset.filter(Q(name__icontains=q) | Q(question__icontains=q) )
         return queryset
 
-    @detail_route(permission_classes=[AllowAny], methods=['post'],)
+    @action(detail=True, permission_classes=[AllowAny], methods=['post'],)
     def vote(self, request, pk=None):
         poll = get_object_or_404(Poll.objects.all(), pk=pk)
 
@@ -497,7 +497,7 @@ class IntegrationViewSet(viewsets.GenericViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @detail_route(methods=['get'],)
+    @action(detail=True, methods=['get'],)
     def callback(self, request, pk=None):
         integration = self.get_object_or_404(pk)
 
@@ -552,7 +552,7 @@ class ZoneViewSet(viewsets.GenericViewSet):
 
         return Response(serializer.data)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def widgets(self, request, pk=None):
         zone = self.get_object_or_404(pk)
 
