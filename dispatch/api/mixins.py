@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import HyperlinkedModelSerializer
 from django.db.models import F
@@ -61,7 +61,7 @@ class DispatchPublishableMixin(object):
             instance=instance,
             user=self.request.user)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def publish(self, request, parent_id=None):
 
         instance = self.get_object()
@@ -72,7 +72,7 @@ class DispatchPublishableMixin(object):
 
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def unpublish(self, request, parent_id=None):
 
         instance = self.get_object()
