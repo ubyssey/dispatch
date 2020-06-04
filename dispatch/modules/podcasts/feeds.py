@@ -1,6 +1,6 @@
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.conf import settings
 
 from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
