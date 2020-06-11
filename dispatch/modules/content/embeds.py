@@ -126,6 +126,15 @@ class ImageEmbed(AbstractTemplateEmbed):
 
 class PageBreakEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/pagebreak.html'
+
+class DropCapEmbed(AbstractTemplateEmbed):
+    TEMPLATE = 'embeds/dropcap.html'
+
+    @classmethod
+    def prepare_data(self, data):
+        return {
+            'paragraph': data.get('paragraph', None)
+        }
     
 class GalleryEmbed(AbstractTemplateEmbed):
     TEMPLATE = 'embeds/gallery.html'
@@ -165,3 +174,4 @@ embeds.register('video', VideoEmbed)
 embeds.register('image', ImageEmbed)
 embeds.register('gallery', GalleryEmbed)
 embeds.register('pagebreak', PageBreakEmbed)
+embeds.register('dropcap', DropCapEmbed)
