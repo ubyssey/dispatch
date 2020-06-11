@@ -8,6 +8,7 @@ import PollEmbed from './PollEmbed'
 import PodcastEmbed from './PodcastEmbed'
 import InteractiveMapEmbed from './InteractiveMapEmbed'
 import PageBreakEmbed from './PageBreakEmbed'
+import DropCapEmbed from './DropCapEmbed'
 
 export {
   ImageEmbed,
@@ -19,5 +20,6 @@ export {
   PollEmbed,
   PodcastEmbed,
   InteractiveMapEmbed,
-  PageBreakEmbed
+  PageBreakEmbed,
+  DropCapEmbed
 }

@@ -13,7 +13,8 @@ import {
   PollEmbed,
   PodcastEmbed,
   InteractiveMapEmbed,
-  PageBreakEmbed
+  PageBreakEmbed,
+  DropCapEmbed
 } from '../../vendor/dispatch-editor'
 
 const embeds = [
@@ -26,7 +27,8 @@ const embeds = [
   PollEmbed,
   PodcastEmbed,
   InteractiveMapEmbed,
-  PageBreakEmbed
+  PageBreakEmbed,
+  DropCapEmbed
 ]
 
 export default class ArticleContentEditor extends React.Component {
