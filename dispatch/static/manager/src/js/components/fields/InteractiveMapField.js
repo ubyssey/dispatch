@@ -26,48 +26,42 @@ class InteractiveMapField extends React.Component {
         <style>
         .c-map-modal-body {
             background-color: #ffffff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #e2e2e2;
-            border-radius: 18px;
-            width: 0%; 
-            transition: opacity 2s;
+            width: 100%; 
+            height: 100%;
+            transition: opacity 1s;
             opacity: 0;
         }
         
         .c-map-modal-container {
-            position: fixed; 
-            z-index: 20;
-            left: 0;
-            top: 0;
-            width: 0%; 
-            height: 100%; 
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0, 0.5); 
-            transition: opacity 2s;
-            opacity: 0;
+          position: absolute;
+          width: 35%;
+          height: 100%;
+          margin-left: 2rem;
+          border-left: 1px solid #ccc;
+          padding-left: 1rem;
+          background-color: white;
+          overflow: scroll;
+          transition: opacity 1s;
+          opacity: 0;
         }
 
         .modal-button {
             background-color: white;
-            border: solid black;
             color: black;
-            margin: 10px;
-            padding: 10px;
+            padding: 0 5px;
+            font-weight: 500;
+            left: 0;
+            margin-left: 2rem;
+            position: absolute;
             text-align: center;
             text-decoration: none;
-            font-size: 26px;
-            border-radius: 18px;
+            font-size: 1.25em;
             cursor: pointer;
             transition: all 0.75s;
-        }
+          }
         </style>
 
-        <div class='c-map-modal-container'>
-        <div class='c-map-modal-body'></div>
-        </div> 
-        
+
         <script> 
         var svg = d3.select('.svg-map'),
         width = (+svg.node().getBoundingClientRect().width), //- (+svg.node().style.paddingRight) - (+svg.node().style.paddingLeft) - (+svg.node().style.marginRight) - (+svg.node().style.marginLeft),
@@ -97,12 +91,10 @@ class InteractiveMapField extends React.Component {
             .duration(2000)
             .call( zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale) )
             .on('end', function(){
-                let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
-                let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
-                modalBody.style.opacity = '0.9';
-                modalContainer.style.opacity = '0.9';
-                modalBody.style.width = '65%';
-                modalContainer.style.width = '100%';
+              let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
+              let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
+              modalBody.style.opacity = '1';
+              modalContainer.style.opacity = '1';
             });
         }
         </script>
@@ -211,20 +203,29 @@ class InteractiveMapField extends React.Component {
     let mapImagePanel = document.createElement('DIV')
     mapImagePanel.classList.add('map-image-panel')
     mapImagePanel.style.display = 'table-cell'
-    mapImagePanel.style.width = '100%'
-    mapImagePanel.style.padding = '1rem'
+    mapImagePanel.style.width = '50%'
+    mapImagePanel.style.marginRight = 'auto'
+    mapImagePanel.style.padding = '2rem'
     mapImagePanel.style.overflow = 'hidden'
     mapImagePanel.style.transition = 'all 2s'
     mapImagePanel.innerHTML = svgContent
 
     let interactiveMapContainer = document.createElement('DIV')
     interactiveMapContainer.classList.add('interactive-map-container')
+    interactiveMapContainer.style.position = 'relative'
     interactiveMapContainer.style.display = 'table' 
-    interactiveMapContainer.style.marginRight = 'auto'
     interactiveMapContainer.style.height = '100%'
-    interactiveMapContainer.style.width = this.props.data.mapWidth
+    interactiveMapContainer.style.width = '100%'
+
+    let mapContentContainer = document.createElement('DIV')
+    mapContentContainer.classList.add('c-map-modal-container')
+
+    let mapContentPanel = document.createElement('DIV')
+    mapContentPanel.classList.add('c-map-modal-body')
     
+    mapContentContainer.appendChild(mapContentPanel)
     interactiveMapContainer.appendChild(mapImagePanel)
+    interactiveMapContainer.appendChild(mapContentContainer)
     this.previewMapContainer.appendChild(interactiveMapContainer)
 
     var defs, style, mySvgElem
@@ -423,8 +424,6 @@ class InteractiveMapField extends React.Component {
 
         modalBody.style.opacity = '0';
         modalContainer.style.opacity = '0';
-        modalBody.style.width = '0%';
-        modalContainer.style.width = '0%';
         
         if(d3){
           let svg = d3.select('.svg-map');
@@ -436,12 +435,10 @@ class InteractiveMapField extends React.Component {
       let backBtnText = document.createTextNode('Back');
       backBtn.classList.add('modal-button');
       backBtn.setAttribute('onmouseover', \`
-        this.style.background = 'black';
-        this.style.color = 'white';
+        this.style.font-weight = '1000';
       \`);
       backBtn.setAttribute('onmouseout', \`
-        this.style.background = 'white';
-        this.style.color = 'black'; 
+        this.style.font-weight = '500';
       \`);
       backBtn.appendChild(backBtnText);
       container.appendChild(backBtn);
@@ -454,12 +451,10 @@ class InteractiveMapField extends React.Component {
         let goToArticleBtnText = document.createTextNode('Go to article');
         goToArticleBtn.classList.add('modal-button');
         goToArticleBtn.setAttribute('onmouseover', \`
-          this.style.background = 'black';
-          this.style.color = 'white';
+          this.style.fontWeight = '650';
         \`);
         goToArticleBtn.setAttribute('onmouseout', \`
-          this.style.background = 'white';
-          this.style.color = 'black'; 
+          this.style.fontWeight = '500';
         \`);
         goToArticleBtn.appendChild(goToArticleBtnText);
         container.appendChild(goToArticleBtn);
