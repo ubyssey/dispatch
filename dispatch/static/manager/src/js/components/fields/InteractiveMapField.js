@@ -26,38 +26,37 @@ class InteractiveMapField extends React.Component {
         <style>
         .c-map-modal-body {
             background-color: #ffffff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #e2e2e2;
-            border-radius: 18px;
-            width: 0%; 
-            transition: opacity 2s;
+            width: 100%; 
+            height: 100%;
+            transition: opacity 1s;
             opacity: 0;
         }
         
         .c-map-modal-container {
           position: absolute;
-          width: 35%; 
-          height: 100%; 
-          background-color: rgb(0,0,0);
-          background-color: rgba(0,0,0, 0.5); 
-          transition: opacity 2s;
+          width: 35%;
+          height: 100%;
+          margin-left: 2rem;
+          border-left: 1px solid #ccc;
+          padding-left: 2rem;
+          background-color: white;
+          transition: opacity 1s;
           opacity: 1;
         }
 
         .modal-button {
             background-color: white;
-            border: solid black;
             color: black;
-            margin: 10px;
-            padding: 10px;
+            padding: 0;
+            left: 0;
+            margin-left: 3rem;
+            position: absolute;
             text-align: center;
             text-decoration: none;
-            font-size: 26px;
-            border-radius: 18px;
+            font-size: 1.25em;
             cursor: pointer;
             transition: all 0.75s;
-        }
+          }
         </style>
 
 
@@ -92,8 +91,8 @@ class InteractiveMapField extends React.Component {
             .on('end', function(){
               let modalBody = document.getElementsByClassName('c-map-modal-body')[0];
               let modalContainer = document.getElementsByClassName('c-map-modal-container')[0];
-              modalBody.style.opacity = '0.9';
-              modalContainer.style.opacity = '0.9';
+              modalBody.style.opacity = '1';
+              modalContainer.style.opacity = '1';
             });
         }
         </script>
@@ -202,9 +201,9 @@ class InteractiveMapField extends React.Component {
     let mapImagePanel = document.createElement('DIV')
     mapImagePanel.classList.add('map-image-panel')
     mapImagePanel.style.display = 'table-cell'
-    mapImagePanel.style.width = '65%'
+    mapImagePanel.style.width = '57%'
     mapImagePanel.style.marginRight = 'auto'
-    mapImagePanel.style.padding = '1rem'
+    mapImagePanel.style.padding = '2rem'
     mapImagePanel.style.overflow = 'hidden'
     mapImagePanel.style.transition = 'all 2s'
     mapImagePanel.innerHTML = svgContent
@@ -423,8 +422,6 @@ class InteractiveMapField extends React.Component {
 
         modalBody.style.opacity = '0';
         modalContainer.style.opacity = '0';
-        modalBody.style.width = '0%';
-        modalContainer.style.width = '0%';
         
         if(d3){
           let svg = d3.select('.svg-map');
