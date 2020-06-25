@@ -38,18 +38,20 @@ class InteractiveMapField extends React.Component {
           height: 100%;
           margin-left: 2rem;
           border-left: 1px solid #ccc;
-          padding-left: 2rem;
+          padding-left: 1rem;
           background-color: white;
+          overflow: scroll;
           transition: opacity 1s;
-          opacity: 1;
+          opacity: 0;
         }
 
         .modal-button {
             background-color: white;
             color: black;
-            padding: 0;
+            padding: 0 5px;
+            font-weight: 500;
             left: 0;
-            margin-left: 3rem;
+            margin-left: 2rem;
             position: absolute;
             text-align: center;
             text-decoration: none;
@@ -201,7 +203,7 @@ class InteractiveMapField extends React.Component {
     let mapImagePanel = document.createElement('DIV')
     mapImagePanel.classList.add('map-image-panel')
     mapImagePanel.style.display = 'table-cell'
-    mapImagePanel.style.width = '57%'
+    mapImagePanel.style.width = '50%'
     mapImagePanel.style.marginRight = 'auto'
     mapImagePanel.style.padding = '2rem'
     mapImagePanel.style.overflow = 'hidden'
@@ -433,12 +435,10 @@ class InteractiveMapField extends React.Component {
       let backBtnText = document.createTextNode('Back');
       backBtn.classList.add('modal-button');
       backBtn.setAttribute('onmouseover', \`
-        this.style.background = 'black';
-        this.style.color = 'white';
+        this.style.font-weight = '1000';
       \`);
       backBtn.setAttribute('onmouseout', \`
-        this.style.background = 'white';
-        this.style.color = 'black'; 
+        this.style.font-weight = '500';
       \`);
       backBtn.appendChild(backBtnText);
       container.appendChild(backBtn);
@@ -451,12 +451,10 @@ class InteractiveMapField extends React.Component {
         let goToArticleBtnText = document.createTextNode('Go to article');
         goToArticleBtn.classList.add('modal-button');
         goToArticleBtn.setAttribute('onmouseover', \`
-          this.style.background = 'black';
-          this.style.color = 'white';
+          this.style.fontWeight = '650';
         \`);
         goToArticleBtn.setAttribute('onmouseout', \`
-          this.style.background = 'white';
-          this.style.color = 'black'; 
+          this.style.fontWeight = '500';
         \`);
         goToArticleBtn.appendChild(goToArticleBtnText);
         container.appendChild(goToArticleBtn);

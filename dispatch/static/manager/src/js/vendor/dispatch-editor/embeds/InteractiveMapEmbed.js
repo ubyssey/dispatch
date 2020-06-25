@@ -88,7 +88,7 @@ class InteractiveMapEmbedComponent extends React.Component {
     let mapImagePanel = document.createElement('DIV')
     mapImagePanel.classList.add('map-image-panel')
     mapImagePanel.style.display = 'table-cell'
-    mapImagePanel.style.width = '57%'
+    mapImagePanel.style.width = '50%'
     mapImagePanel.style.marginRight = 'auto'
     mapImagePanel.style.padding = '2rem'
     mapImagePanel.style.overflow = 'hidden'
@@ -313,12 +313,10 @@ class InteractiveMapEmbedComponent extends React.Component {
       let backBtnText = document.createTextNode('Back');
       backBtn.classList.add('back-button');
       backBtn.setAttribute('onmouseover', \`
-        this.style.backgroundColor = 'black';
-        this.style.color = 'white';
+        this.style.fontWeight = '650';
       \`);
       backBtn.setAttribute('onmouseout', \`
-        this.style.backgroundColor = 'white';
-        this.style.color = 'black'; 
+        this.style.fontWeight = '500';
       \`);
       backBtn.appendChild(backBtnText);
       container.appendChild(backBtn);
@@ -505,18 +503,20 @@ export default {
         height: 100%;
         margin-left: 2rem;
         border-left: 1px solid #ccc;
-        padding-left: 2rem;
+        padding-left: 1rem;
         background-color: white;
+        overflow: scroll;
         transition: opacity 1s;
-        opacity: 1;
+        opacity: 0;
       }
 
       .back-button {
         background-color: white;
         color: black;
-        padding: 0;
+        padding: 0 5px;
+        font-weight: 500;
         left: 0;
-        margin-left: 3rem;
+        margin-left: 2rem;
         position: absolute;
         text-align: center;
         text-decoration: none;
