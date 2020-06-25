@@ -1,9 +1,7 @@
 import React from 'react'
-import { TextInput } from '../../../components/inputs'
-
 import * as Form from '../../../components/Form'
 
-function PageBreakEmbedComponent(props) {
+function PageBreakEmbedComponent() {
   return (
     <div className='page-break'>
       <Form.Container>

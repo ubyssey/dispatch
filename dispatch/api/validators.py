@@ -45,7 +45,7 @@ class SlugValidator(object):
         self.model = serializer_field.parent.Meta.model
 
     def __call__(self, slug):
-        if self.model.__name__ is 'Subsection':
+        if self.model.__name__ == 'Subsection':
             self.validate_subsection_slug(slug)
         elif self.instance is None:
             if self.model.objects.filter(slug=slug).exists():
