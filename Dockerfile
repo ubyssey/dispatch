@@ -1,5 +1,5 @@
 # At the moment, this Dockerfile is purely intended for use for VSC development containers
-FROM keeganlandrigan/ubyssey.ca:latest
+FROM ubyssey/ubyssey.ca:latest
 
 # copy Dispatch files into the container
 WORKDIR /workspaces/
