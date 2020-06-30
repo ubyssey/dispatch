@@ -96,7 +96,7 @@ class ContentEditor extends React.Component {
       const { editorState } = this.state;
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
-      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText();
+      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, selection.getEndOffset());
 
       let contentReplaced = Modifier.insertText(content, selection, str);
       if(str === '\"' && (currentBlock.lastIndexOf('“') > currentBlock.lastIndexOf('”'))) {
