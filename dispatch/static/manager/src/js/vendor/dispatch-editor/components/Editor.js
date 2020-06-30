@@ -9,6 +9,7 @@ import {
   SelectionState,
   Entity,
   getDefaultKeyBinding,
+  Modifier,
   KeyBindingUtil,
   CompositeDecorator,
   ContentState,
@@ -91,6 +92,39 @@ class ContentEditor extends React.Component {
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
+    this.handleBeforeInput = (str) => {
+      const { editorState } = this.state;
+      const selection = editorState.getSelection();
+      const content = editorState.getCurrentContent();
+      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText();
+  
+      console.log("typed");
+      let contentReplaced = Modifier.insertText(content, selection, str);
+      let res = false;
+      
+      console.log(!currentBlock.match(/\u2019/g));
+      if(str === '\"' && (currentBlock.lastIndexOf('“') > currentBlock.lastIndexOf('”'))) {
+        contentReplaced = Modifier.insertText(content, selection, '”');
+        res = true;
+      }
+      else if(str === '\"') {
+        contentReplaced = Modifier.insertText(content, selection, '“');
+        res = true;
+      }
+      else if(str === "\'" && (currentBlock.lastIndexOf('‘') > currentBlock.lastIndexOf('’'))) {
+        contentReplaced = Modifier.insertText(content, selection, '’');
+        res = true;
+      }
+       else if(str === "\'") {
+        contentReplaced = Modifier.insertText(content, selection, '‘');
+        res = true;
+      } 
+      
+      const editorStateModified = EditorState.push(editorState, contentReplaced, 'replace-text');
+      this.setState({lastOffset: selection.getEndOffset(), editorState:editorStateModified});
+      return res;
+    } 
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -400,6 +434,7 @@ class ContentEditor extends React.Component {
             spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}
+            handleBeforeInput={this.handleBeforeInput}
             handleReturn={e => this.handleReturn(e)}
             handleKeyCommand={c => this.handleKeyCommand(c)}
             keyBindingFn={keyBindingFn}
