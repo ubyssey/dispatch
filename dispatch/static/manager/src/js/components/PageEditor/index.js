@@ -146,7 +146,6 @@ class PageEditorComponent extends React.Component {
     if (!page) {
       return (<div>Loading</div>)
     }
-
     const title = this.props.isNew ? 'New page' : `Edit - ${page.title}`
 
     return (

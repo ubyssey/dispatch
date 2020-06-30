@@ -9,6 +9,7 @@ import {
   SelectionState,
   Entity,
   getDefaultKeyBinding,
+  Modifier,
   KeyBindingUtil,
   CompositeDecorator,
   ContentState,
@@ -91,6 +92,33 @@ class ContentEditor extends React.Component {
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
+    this.handleBeforeInput = (str) => {
+      const { editorState } = this.state;
+      const selection = editorState.getSelection();
+      const content = editorState.getCurrentContent();
+      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, selection.getEndOffset());
+
+      let contentReplaced = Modifier.insertText(content, selection, str);
+      if(str === '\"' && (currentBlock.lastIndexOf('“') > currentBlock.lastIndexOf('”'))) {
+        contentReplaced = Modifier.insertText(content, selection, '”');
+      }
+      else if(str === '\"') {
+        contentReplaced = Modifier.insertText(content, selection, '“');
+      }
+      else if(str === "\'" && (currentBlock.lastIndexOf('‘') > currentBlock.lastIndexOf('’'))) {
+        contentReplaced = Modifier.insertText(content, selection, '’');
+      }
+       else if(str === "\'") {
+        contentReplaced = Modifier.insertText(content, selection, '‘');
+      } else {
+        return false;
+      }
+      
+      const editorStateModified = EditorState.push(editorState, contentReplaced, 'replace-text');
+      this.setState({lastOffset: selection.getEndOffset(), editorState:editorStateModified});
+      return true;
+    } 
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -400,6 +428,7 @@ class ContentEditor extends React.Component {
             spellCheck={true}
             readOnly={this.state.readOnly}
             editorState={this.state.editorState}
+            handleBeforeInput={this.handleBeforeInput}
             handleReturn={e => this.handleReturn(e)}
             handleKeyCommand={c => this.handleKeyCommand(c)}
             keyBindingFn={keyBindingFn}
