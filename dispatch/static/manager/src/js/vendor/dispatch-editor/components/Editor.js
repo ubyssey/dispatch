@@ -97,32 +97,26 @@ class ContentEditor extends React.Component {
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
       const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText();
-  
-      console.log("typed");
+
       let contentReplaced = Modifier.insertText(content, selection, str);
-      let res = false;
-      
-      console.log(!currentBlock.match(/\u2019/g));
       if(str === '\"' && (currentBlock.lastIndexOf('“') > currentBlock.lastIndexOf('”'))) {
         contentReplaced = Modifier.insertText(content, selection, '”');
-        res = true;
       }
       else if(str === '\"') {
         contentReplaced = Modifier.insertText(content, selection, '“');
-        res = true;
       }
       else if(str === "\'" && (currentBlock.lastIndexOf('‘') > currentBlock.lastIndexOf('’'))) {
         contentReplaced = Modifier.insertText(content, selection, '’');
-        res = true;
       }
        else if(str === "\'") {
         contentReplaced = Modifier.insertText(content, selection, '‘');
-        res = true;
-      } 
+      } else {
+        return false;
+      }
       
       const editorStateModified = EditorState.push(editorState, contentReplaced, 'replace-text');
       this.setState({lastOffset: selection.getEndOffset(), editorState:editorStateModified});
-      return res;
+      return true;
     } 
 
   }
