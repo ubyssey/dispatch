@@ -96,20 +96,22 @@ class ContentEditor extends React.Component {
       const { editorState } = this.state;
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
-      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, selection.getEndOffset());
+      const currentIndex = selection.getEndOffset();
+      const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, currentIndex);
 
       let contentReplaced = Modifier.insertText(content, selection, str);
-      if(str === '\"' && (currentBlock.lastIndexOf('“') > currentBlock.lastIndexOf('”'))) {
-        contentReplaced = Modifier.insertText(content, selection, '”');
-      }
-      else if(str === '\"') {
+      
+      if(str === '\"'  && currentBlock.lastIndexOf('“') <= currentBlock.lastIndexOf('”') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
         contentReplaced = Modifier.insertText(content, selection, '“');
       }
-      else if(str === "\'" && (currentBlock.lastIndexOf('‘') > currentBlock.lastIndexOf('’'))) {
-        contentReplaced = Modifier.insertText(content, selection, '’');
+      else if(str === '\"') {
+        contentReplaced = Modifier.insertText(content, selection, '”');
       }
-       else if(str === "\'") {
+      else if(str === "\'" && currentBlock.lastIndexOf('‘') <= currentBlock.lastIndexOf('’') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
         contentReplaced = Modifier.insertText(content, selection, '‘');
+      }
+      else if(str === "\'") {
+        contentReplaced = Modifier.insertText(content, selection, '’');
       } else {
         return false;
       }
