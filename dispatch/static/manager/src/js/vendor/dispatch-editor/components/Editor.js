@@ -100,26 +100,40 @@ class ContentEditor extends React.Component {
       const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, currentIndex);
 
       let contentReplaced = Modifier.insertText(content, selection, str);
-      
-      if(str === '\"'  && currentBlock.lastIndexOf('“') <= currentBlock.lastIndexOf('”') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
-        contentReplaced = Modifier.insertText(content, selection, '“');
-      }
-      else if(str === '\"') {
-        contentReplaced = Modifier.insertText(content, selection, '”');
-      }
-      else if(str === "\'" && currentBlock.lastIndexOf('‘') <= currentBlock.lastIndexOf('’') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
-        contentReplaced = Modifier.insertText(content, selection, '‘');
-      }
-      else if(str === "\'") {
-        contentReplaced = Modifier.insertText(content, selection, '’');
-      } else {
-        return false;
-      }
+
+      if(currentBlock !== "") {
+        if(str === '\"'  && currentBlock.lastIndexOf('“') <= currentBlock.lastIndexOf('”') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
+          contentReplaced = Modifier.insertText(content, selection, '“');
+        }
+        else if(str === '\"') {
+          contentReplaced = Modifier.insertText(content, selection, '”');
+        }
+        else if(str === "\'" && currentBlock.lastIndexOf('‘') <= currentBlock.lastIndexOf('’') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
+          contentReplaced = Modifier.insertText(content, selection, '‘');
+        }
+        else if(str === "\'") {
+          contentReplaced = Modifier.insertText(content, selection, );
+        } else {
+          return false;
+      	}
+     } 
+     else {
+        if(str === "\'") {
+          contentReplaced = Modifier.insertText(content, selection, '‘');
+        } 
+        else if (str === '\"'){
+          contentReplaced = Modifier.insertText(content, selection, '“');
+        }
+        else {
+          return false;
+        }
+     }
       
       const editorStateModified = EditorState.push(editorState, contentReplaced, 'replace-text');
       this.setState({lastOffset: selection.getEndOffset(), editorState:editorStateModified});
+      
       return true;
-    } 
+    }  
 
   }
 
