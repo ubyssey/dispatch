@@ -7,7 +7,9 @@ import TagSelectInput from '../inputs/selects/TagSelectInput'
 import * as Form from '../Form'
 
 export default function VideoForm(props) {
-
+  let youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([A-Za-z0-9\-=_]{11})/;
+  let match = props.listItem.url.match(youtubeRegex);
+  let youtubeVideoID = match[match.length - 1];
   return (
     <Form.Container>
 
@@ -60,7 +62,7 @@ export default function VideoForm(props) {
       {props.listItem.url && 
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
-            <img className='c-image-panel__image__img' src={`https://img.youtube.com/vi/${props.listItem.url.split('v=')[1]}/0.jpg`} />
+            <img className='c-image-panel__image__img' src={`https://img.youtube.com/vi/${youtubeVideoID}/0.jpg`} />
           </div>
         </div>
       }
