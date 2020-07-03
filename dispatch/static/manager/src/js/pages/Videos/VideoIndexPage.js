@@ -68,8 +68,11 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const renderThumb = (url) => {
+  let youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([A-Za-z0-9\-=_]{11})/;
+  let match = url.match(youtubeRegex);
+  let youtubeVideoID = match[match.length - 1];
   return (
-    <div className={'c-image-page-thumb'} style={{backgroundImage: `url(https://img.youtube.com/vi/${url.split('v=')[1]}/0.jpg)`}} />
+    <div className={'c-image-page-thumb'} style={{backgroundImage: `url(https://img.youtube.com/vi/${youtubeVideoID}/0.jpg)`}} />
   )
 }
 
