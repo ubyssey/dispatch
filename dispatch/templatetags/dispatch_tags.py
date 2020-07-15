@@ -24,5 +24,9 @@ def zone(zone_id, **kwargs):
 
 @register.simple_tag
 def add_version(path):
-    file_name, file_extension = path.split('.')
-    return static('%s-%s.%s' % (file_name, settings.VERSION, file_extension) )
+    """
+    To be deprecated
+    """
+    return path
+    #file_name, file_extension = path.split('.')
+    #return static('%s-%s.%s' % (file_name, settings.VERSION, file_extension) )
