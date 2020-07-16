@@ -27,6 +27,5 @@ def add_version(path):
     """
     To be deprecated
     """
-    return path
     #file_name, file_extension = path.split('.')
-    #return static('%s-%s.%s' % (file_name, settings.VERSION, file_extension) )
+    return static(path) 
