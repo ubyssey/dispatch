@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var version = require('./package.json').version;
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -7,8 +6,8 @@ module.exports = {
     index:  './src/js/index.js',
   },
   output: {
-    path: __dirname + '/dist',
-    filename: 'manager-' + version + '.js'
+    path: __dirname + '/dispatch',
+    filename: 'manager.js'
   },
   module: {
     rules: [
@@ -49,6 +48,6 @@ module.exports = {
       }
     }),
     new webpack.optimize.UglifyJsPlugin(),
-    new ExtractTextPlugin('manager-' + version + '.css')
+    new ExtractTextPlugin('manager.css')
   ]
 };

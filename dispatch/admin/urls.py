@@ -9,8 +9,9 @@ def admin(request):
     """Render HTML entry point for manager app."""
     context = {
         'api_url': settings.API_URL,
-        'app_js_bundle': 'manager-%s.js' % dispatch.__version__,
-        'app_css_bundle': 'manager-%s.css' % dispatch.__version__
+        'app_js_bundle': 'dispatch/manager.js',
+        'app_css_bundle': 'dispatch/manager.css'
+        #TODO: figure out if the namespace 'dispatch' should go in here or in the html template
     }
     
     return render(request, 'manager/index.html', context)

@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var version = require('./package.json').version;
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var prodConfig = require('./webpack.config.js');
 
@@ -12,7 +11,7 @@ devConfig.plugins = [
       'NODE_ENV': JSON.stringify('development')
     }
   }),
-  new ExtractTextPlugin('manager-' + version + '.css')
+  new ExtractTextPlugin('manager.css')
 ];
 
 module.exports = devConfig;
