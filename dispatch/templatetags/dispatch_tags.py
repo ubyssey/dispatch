@@ -21,11 +21,3 @@ def zone(zone_id, **kwargs):
         pass
 
     return ''
-
-@register.simple_tag
-def add_version(path):
-    """
-    To be deprecated
-    """
-    #file_name, file_extension = path.split('.')
-    return static(path) 
