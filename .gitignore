@@ -7,8 +7,6 @@
 
 dist/
 node_modules/
-static/dispatch
-static/manager/dispatch
 
 dispatch/static/manager/yarn-error.log
 yarn.lock
@@ -25,3 +23,4 @@ dispatch/tests/media
 
 dispatch/apps/**/migrations/
 
+dispatch/static/manager/dispatch/
