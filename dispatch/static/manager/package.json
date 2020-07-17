@@ -1,6 +1,5 @@
 {
   "name": "dispatch",
-  "version": "1.3.2",
   "description": "The frontend framework for the Dispatch publishing platform.",
   "author": "Peter Siemens <peterjsiemens@gmail.com>",
   "homepage": "https://www.ubyssey.ca",
