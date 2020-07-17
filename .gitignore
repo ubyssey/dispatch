@@ -7,6 +7,7 @@
 
 dist/
 node_modules/
+static/dispatch
 
 dispatch/static/manager/yarn-error.log
 yarn.lock
