@@ -99,7 +99,8 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         sys.argv.append("-h")
 
-    arguments = docopt(__doc__, version="Dispatch Admin %s" % dispatch.__version__)
+    # arguments = docopt(__doc__, version="Dispatch Admin %s" % dispatch.__version__)
+    arguments = docopt(__doc__)
 
     # Attempt to find command function
     try:
