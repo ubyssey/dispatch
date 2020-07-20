@@ -27,6 +27,7 @@ jobs:
     - cd dispatch/static/manager
     - npm install --force
     - npm run-script build    
+    - rm -rf node_modules
     - cd ../../../
     script: python setup.py sdist
     deploy:
