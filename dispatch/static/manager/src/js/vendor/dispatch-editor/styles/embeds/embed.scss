@@ -1,7 +1,7 @@
 @import '../../../../../styles/utilities/colors';
 
 $embed-border-radius: 5px;
-$embed-header-padding: 0.4rem;
+$embed-header-padding: 0;
 $embed-padding: 1rem;
 
 .o-embed-container {
@@ -12,10 +12,7 @@ $embed-padding: 1rem;
 .o-embed-container__header {
   // Structure
   background: $color-dark-gray;
-  padding-top: $embed-header-padding;
-  padding-right: $embed-header-padding;
-  padding-bottom: $embed-header-padding;
-  padding-left: $embed-header-padding;
+  padding: $embed-header-padding;
 
   // Border
   border-top-left-radius: $embed-border-radius;
