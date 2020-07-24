@@ -59,7 +59,7 @@ export default class ImageForm extends React.Component {
 
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
-            <img className='c-image-panel__image__img' src={this.props.listItem.url_medium} />
+            <img className='c-image-panel__image__img' src={this.props.listItem.url_medium} alt=""/>
             <div className='c-image-panel__image__filename'>{this.props.listItem.filename}</div>
           </div>
         </div>

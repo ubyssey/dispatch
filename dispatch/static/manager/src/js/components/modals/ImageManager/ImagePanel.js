@@ -22,7 +22,7 @@ export default function ImagePanel(props) {
           onClick={() => props.delete()}>{props.dangerBtnName || 'Delete'}</Button>
       </div>
       <div className='c-image-panel__image'>
-        <img className='c-image-panel__image__img' src={props.image.url_medium? props.image.url_medium : props.image.img.preview} />
+        <img className='c-image-panel__image__img' src={props.image.url_medium? props.image.url_medium : props.image.img.preview} alt=""/>
         <div className='c-image-panel__image__filename'>{props.image.filename? props.image.filename: props.image.img.name}</div>
       </div>
       <form className='c-image-panel__form'>

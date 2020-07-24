@@ -62,7 +62,7 @@ export default function VideoForm(props) {
       {props.listItem.url && 
         <div className='c-image-panel-image-page'>
           <div className='c-image-panel__image'>
-            <img className='c-image-panel__image__img' src={`https://img.youtube.com/vi/${youtubeVideoID}/0.jpg`} />
+            <img className='c-image-panel__image__img' src={`https://img.youtube.com/vi/${youtubeVideoID}/0.jpg`} alt=""/>
           </div>
         </div>
       }

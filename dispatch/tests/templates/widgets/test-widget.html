@@ -1,7 +1,7 @@
 <div class="widget">
-    {% if title %}<img class="title">{{ title|safe }}</div>{% endif %}
+    {% if title %}<img class="title" alt="">{{ title|safe }}</div>{% endif %}
     {% if description %}<div class="description">{{ description|safe }}</div>{% endif %}
     {% if article %}<div class="article">{{ article.headline|safe }}</div>{% endif %}
-    {% if image %}<img class="image" src="{{ image.get_absolute_url }}"/>{% endif %}
+    {% if image %}<img class="image" src="{{ image.get_absolute_url }} alt='test-widget-image'" alt=""/>{% endif %}
     {{ extra }}
 </div>
