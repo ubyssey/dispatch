@@ -96,6 +96,7 @@ class ContentEditor extends React.Component {
       const { editorState } = this.state;
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
+      const style = editorState.getCurrentInlineStyle();
       const currentIndex = selection.getEndOffset();
       const currentBlock = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getText().substring(0, currentIndex);
 
@@ -103,26 +104,26 @@ class ContentEditor extends React.Component {
 
       if(currentBlock !== "") {
         if(str === '\"'  && currentBlock.lastIndexOf('“') <= currentBlock.lastIndexOf('”') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
-          contentReplaced = Modifier.insertText(content, selection, '“');
+          contentReplaced = Modifier.insertText(content, selection, '“', style);
         }
         else if(str === '\"') {
-          contentReplaced = Modifier.insertText(content, selection, '”');
+          contentReplaced = Modifier.insertText(content, selection, '”', style);
         }
         else if(str === "\'" && currentBlock.lastIndexOf('‘') <= currentBlock.lastIndexOf('’') && currentBlock[currentIndex-1].match(/[\s-]/g)) {
-          contentReplaced = Modifier.insertText(content, selection, '‘');
+          contentReplaced = Modifier.insertText(content, selection, '‘', style);
         }
         else if(str === "\'") {
-          contentReplaced = Modifier.insertText(content, selection, );
+          contentReplaced = Modifier.insertText(content, selection, '’', style);
         } else {
           return false;
       	}
      } 
      else {
         if(str === "\'") {
-          contentReplaced = Modifier.insertText(content, selection, '‘');
+          contentReplaced = Modifier.insertText(content, selection, '‘', style);
         } 
         else if (str === '\"'){
-          contentReplaced = Modifier.insertText(content, selection, '“');
+          contentReplaced = Modifier.insertText(content, selection, '“', style);
         }
         else {
           return false;
