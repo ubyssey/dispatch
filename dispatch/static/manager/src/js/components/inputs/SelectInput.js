@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import { HTMLSelect } from '@blueprintjs/core'
 
 export default function SelectInput(props) {
@@ -30,10 +31,10 @@ export default function SelectInput(props) {
 }
 
 SelectInput.propTypes = {
-  options: React.PropTypes.array.isRequired,
-  onChange: React.PropTypes.func.isRequired,
-  value: React.PropTypes.any,
-  placeholder: React.PropTypes.string
+  options: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.any,
+  placeholder: PropTypes.string
 }
 
 SelectInput.defaultProps = {
