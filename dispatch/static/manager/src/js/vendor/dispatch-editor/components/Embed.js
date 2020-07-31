@@ -2,14 +2,15 @@ import React from 'react'
 import R from 'ramda'
 import { Entity } from 'draft-js'
 import { Button } from '@blueprintjs/core'
-
+//import {getContentState} from '../components/Editor'
+//import ContentEditor from '../components/Editor'
 require('../styles/embeds/embed.scss')
 
 export default class Embed extends React.Component {
 
   constructor(props) {
     super(props)
-
+    console.log("embed")
     this.state = {
       editMode: false,
       data: this.getData()
@@ -17,6 +18,8 @@ export default class Embed extends React.Component {
   }
 
   getData() {
+    //console.log(ContentEditor.getContentState())
+    //console.log(Entity.get(this.props.block.getEntityAt(0)).getData())
     return Entity.get(this.props.block.getEntityAt(0)).getData()
   }
 

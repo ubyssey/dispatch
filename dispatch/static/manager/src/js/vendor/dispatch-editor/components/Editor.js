@@ -88,7 +88,8 @@ class ContentEditor extends React.Component {
   }
 
   constructor(props) {
-    super(props)
+    console.log("editor started")
+    super(props) 
     this.embedMap = buildEmbedMap(this.props.embeds)
 
     this.state = this.initialState()
@@ -215,7 +216,7 @@ class ContentEditor extends React.Component {
 
       const isLinkEntity =
         entityKey !== null &&
-        Entity.get(entityKey).getType() === 'LINK'
+        this.state.editorState.getCurrentContent().getEntity(entityKey).getType() === 'LINK'
 
       // If there is no entity at this offset or the entity is not a link, return null
       if (!isLinkEntity) {
@@ -245,10 +246,9 @@ class ContentEditor extends React.Component {
           anchorOffset: entityRange[0],
           focusOffset: entityRange[1]
         })
-
         // Return the entity and selection state
         return {
-          entity: Entity.get(entityKey),
+          entity: this.editorState.getCurrentContent().getEntity(entityKey),
           selection: selectionState
         }
       }
@@ -323,11 +323,23 @@ class ContentEditor extends React.Component {
     this.onChange(actions.handleKeyCommand(this.state.editorState, command))
   }
 
+  getContentState(){
+    console.log(this)
+    console.log(this.state)
+    console.log("RETURNING", ContentEditor.state.editorState.getCurrentContent())
+    return this.state.editorState.getCurrentContent();
+  }
+
+  // setContentState(newState){
+  //   this.state.editorState.getCurrentContent = newState;
+  // }
+
   blockRenderer(contentBlock) {
     const type = contentBlock.getType()
 
     if (type === 'atomic') {
-      const embedType = Entity.get(contentBlock.getEntityAt(0)).getType()
+      console.log(this.getContentState())
+      const embedType = this.state.editorState.getCurrentContent().getEntity(contentBlock.getEntityAt(0)).getType()
       const embed = this.embedMap[embedType]
 
       return {
@@ -350,6 +362,7 @@ class ContentEditor extends React.Component {
   }
 
   componentDidUpdate() {
+    
     let contentState = this.state.editorState.getCurrentContent()
     let key = this.state.editorState.getSelection().getStartKey()
     let block = contentState.getBlockForKey(key)
@@ -474,4 +487,6 @@ class ContentEditor extends React.Component {
   }
 }
 
+ export let getContentState = ContentEditor.prototype.getContentState
+// export let setContentState = ContentEditor.prototype.setContentState;
 export default ContentEditor

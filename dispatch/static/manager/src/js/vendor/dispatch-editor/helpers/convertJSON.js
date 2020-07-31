@@ -94,7 +94,6 @@ function embedToBlock(block) {
     mutability: 'IMMUTABLE',
     data: block.data
   })
-
   const entityKey = Entity.add(entity)
   const charData = CharacterMetadata.create({entity: entityKey})
 
