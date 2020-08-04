@@ -8,8 +8,12 @@ import * as Form from '../Form'
 
 export default function VideoForm(props) {
   let youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([A-Za-z0-9\-=_]{11})/;
-  let match = props.listItem.url.match(youtubeRegex);
-  let youtubeVideoID = match[match.length - 1];
+  let match = '';
+  let youtubeVideoID = '';
+  if(props.listItem.url != undefined) {
+    match = props.listItem.url.match(youtubeRegex);
+    youtubeVideoID = match[match.length - 1];
+  }
   return (
     <Form.Container>
 
