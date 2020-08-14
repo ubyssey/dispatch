@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import { Popover, Position } from '@blueprintjs/core'
+import { Popover, Position } from '@blueprintjs/core';
 
 export default class Dropdown extends React.Component {
 

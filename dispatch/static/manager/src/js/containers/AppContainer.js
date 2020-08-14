@@ -1,20 +1,20 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 
-import userActions from '../actions/UserActions'
+import userActions from '../actions/UserActions';
 
 class App extends React.Component {
 
   componentDidMount() {
-    this.checkAuthenticated()
+    this.checkAuthenticated();
   }
 
   checkAuthenticated() {
-    this.props.verifyToken(this.props.token)
+    this.props.verifyToken(this.props.token);
   }
 
   render() {
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -22,20 +22,20 @@ const mapStateToProps = (state) => {
   return {
     token: state.app.auth.token,
     settings: state.app.settings
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     verifyToken: (token) => {
-      dispatch(userActions.verifyToken(token))
+      dispatch(userActions.verifyToken(token));
     }
-  }
-}
+  };
+};
 
 const AppContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(App);
 
-export default AppContainer
+export default AppContainer;

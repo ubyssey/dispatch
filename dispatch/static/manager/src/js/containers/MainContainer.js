@@ -1,37 +1,37 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Position, Toaster } from '@blueprintjs/core'
+import React from 'react';
+import { connect } from 'react-redux';
+import { Position, Toaster } from '@blueprintjs/core';
 
-import * as modalActions from '../actions/ModalActions'
-import * as toasterActions from '../actions/ToasterActions'
-import * as navigationActions from '../actions/NavigationActions'
-import eventsActions from '../actions/EventsActions'
+import * as modalActions from '../actions/ModalActions';
+import * as toasterActions from '../actions/ToasterActions';
+import * as navigationActions from '../actions/NavigationActions';
+import eventsActions from '../actions/EventsActions';
 
-import Header from '../components/Header/Header'
-import ModalContainer from '../components/ModalContainer'
+import Header from '../components/Header/Header';
+import ModalContainer from '../components/ModalContainer';
 
-require('../../styles/components/toaster.scss')
+require('../../styles/components/toaster.scss');
 
 class Main extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { viewWidth: 0 }
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    super(props);
+    this.state = { viewWidth: 0 };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   componentDidMount() {
-    this.props.setupToaster(this.refs.toaster)
-    this.updateWindowDimensions()
-    window.addEventListener('resize', this.updateWindowDimensions)
+    this.props.setupToaster(this.refs.toaster);
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions)
+    window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
   updateWindowDimensions() {
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-    this.setState({ viewWidth: width })
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({ viewWidth: width });
   }
 
   renderModal() {
