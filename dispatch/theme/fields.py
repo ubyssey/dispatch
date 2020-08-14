@@ -122,24 +122,28 @@ class CharField(Field):
     type = 'char'
 
     def validate(self, data):
-        if not isinstance(data, str):
-            raise InvalidField('%s data must be a string' % self.label)
+        # temperary workaround
+        if (self.required):
+            if not isinstance(data, str):
+                raise InvalidField('%s data must be a string' % self.label)
 
-        if len(data) > 255:
-            raise InvalidField('Max length for charfield data is 255')
+            if len(data) > 255:
+                raise InvalidField('Max length for charfield data is 255')
 
-        if not len(data) and self.required:
-            raise InvalidField('%s is required' % self.label)
+            if not len(data) and self.required:
+                raise InvalidField('%s is required' % self.label)
 
 class TextField(Field):
     type = 'text'
 
     def validate(self, data):
-        if not isinstance(data, str):
-            raise InvalidField('%s data must be a string' % self.label)
+        # temperary workaround
+        if (self.required):
+            if not isinstance(data, str):
+                raise InvalidField('%s data must be a string' % self.label)
 
-        if not len(data) and self.required:
-            raise InvalidField('%s is required' % self.label)
+            if not len(data) and self.required:
+                raise InvalidField('%s is required' % self.label)
 
 class DateTimeField(Field):
     type = 'datetime'
