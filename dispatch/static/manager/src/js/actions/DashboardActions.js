@@ -1,13 +1,13 @@
-import * as types from '../constants/ActionTypes'
-import { normalize, arrayOf } from 'normalizr'
-import { articleSchema } from '../constants/Schemas'
-import DispatchAPI from '../api/dispatch'
+import * as types from '../constants/ActionTypes';
+import { normalize, arrayOf } from 'normalizr';
+import { articleSchema } from '../constants/Schemas';
+import DispatchAPI from '../api/dispatch';
 
 export function getUserActions(token) {
   return {
     type: types.DASHBOARD.LIST_ACTIONS,
     payload: DispatchAPI.dashboard.actions(token)
-  }
+  };
 }
 
 export function getRecentArticles(token) {
@@ -17,5 +17,5 @@ export function getRecentArticles(token) {
       .then(json => ({
         data: normalize(json.results, arrayOf(articleSchema))
       }))
-  }
+  };
 }

@@ -1,5 +1,5 @@
-import * as types from '../constants/ActionTypes'
-import DispatchAPI from '../api/dispatch'
+import * as types from '../constants/ActionTypes';
+import DispatchAPI from '../api/dispatch';
 
 export function integrationCallback(token, integrationId, query) {
   return {
@@ -9,7 +9,7 @@ export function integrationCallback(token, integrationId, query) {
         id: integrationId,
         data: json
       }))
-  }
+  };
 }
 
 export function fetchIntegration(token, integrationId) {
@@ -20,7 +20,7 @@ export function fetchIntegration(token, integrationId) {
         id: integrationId,
         data: json
       }))
-  }
+  };
 }
 
 export function saveIntegration(token, integrationId, data) {
@@ -31,7 +31,7 @@ export function saveIntegration(token, integrationId, data) {
         id: integrationId,
         data: json
       }))
-  }
+  };
 }
 
 export function deleteIntegration(token, integrationId) {
@@ -41,7 +41,7 @@ export function deleteIntegration(token, integrationId) {
       .then(() => ({
         id: integrationId
       }))
-  }
+  };
 }
 
 export function updateIntegration(integrationId, data) {
@@ -51,5 +51,5 @@ export function updateIntegration(integrationId, data) {
       id: integrationId,
       data: data
     }
-  }
+  };
 }
