@@ -398,7 +398,16 @@ class Article(Publishable, AuthorMixin):
                 pass
 
     def get_absolute_url(self):
-        """ Returns article URL. """
+        """ Returns article URL. Uses alternate logic when section slug is 'guide'"""
+        if self.section.slug == 'guide' and self.subsection: 
+            # Subsection is "supposed" to be optional in most circumstances. But it's needed for guide URLs, so we need to check self.subsection.
+            # Worst case scenario should the viewer will see a guide article in the wrong template 
+            if self.published_at is not None:
+                year = self.published_at.strftime("%Y")
+            else:
+                # You might enter this block when you are writing a new guide article and there is no published_at yet.
+                year = datetime.datetime.now().strftime("%Y")
+            return "%s%s/%s/%s/%s/" % (settings.BASE_URL, self.section.slug, year, self.subsection.slug, self.slug)
         return "%s%s/%s/" % (settings.BASE_URL, self.section.slug, self.slug)
 
     def get_subsection(self):
