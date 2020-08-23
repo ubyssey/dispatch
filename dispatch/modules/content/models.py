@@ -113,10 +113,6 @@ class Publishable(Model):
                 self._template_fields = template.prepare_data()
         return self._template_fields
 
-    def add_view(self):
-        self.views += 1
-        self.save(revision=False)
-
     def get_template_path(self):
         if self.template != 'default':
             return 'article/%s.html' % self.template
