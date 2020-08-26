@@ -419,16 +419,14 @@ class Article(Publishable, AuthorMixin):
         Provides a standard dictionary of context variables to a view
         """
         context = {}
-        article = self.object
-        context['title'] = '%s - The Ubyssey' % (article.headline)
-        context['breaking'] = self.get_breaking_news().exclude(id=article.id).first()
+        context['title'] = '%s - The Ubyssey' % (self.headline)
+        context['breaking'] = self.get_breaking_news().exclude(id=self.id).first() #TODO: figure out if we can do with fewer DB hits!
 
-        # determine if user is viewing from mobile
-        article_type = 'mobile' if self.is_mobile else 'desktop'
+        # article_type = 'mobile' if self.is_mobile else 'desktop' # belongs in view, because it depends on request as input
 
-        # add a few fields to the article if it happens to have a "special" template
-        if self.object.template == 'timeline':
-            timeline_tag = article.tags.filter(name__icontains='timeline-')
+        # add a few fields to the article if it happens to have a "special" template #TODO: figure out if we can do with fewer DB hits!
+        if self.template == 'timeline':
+            timeline_tag = self.tags.filter(name__icontains='timeline-')
             timeline_articles = Article.objects.filter(tags__in=timeline_tag, is_published=True)
 
             timeline_articles = list(timeline_articles.values('parent_id', 'template_data', 'slug', 'headline', 'featured_image'))
@@ -449,15 +447,15 @@ class Article(Publishable, AuthorMixin):
                 except:
                     sorted_timeline_articles[i]['featured_image'] = None
 
-            article.timeline_articles = json.dumps(sorted_timeline_articles)
-            article.timeline_title = list(timeline_tag)[0].name.replace('timeline-', '').replace('-', ' ')
+            self.timeline_articles = json.dumps(sorted_timeline_articles)
+            self.timeline_title = list(timeline_tag)[0].name.replace('timeline-', '').replace('-', ' ')
 
-        if self.object.template == 'soccer-nationals':
-            teamData = NationalsHelper.prepare_data(self.object.content)
-            self.object.content = teamData['content']
-            self.object.team_data = json.dumps(teamData['code'])
+        if self.template == 'soccer-nationals':
+            teamData = NationalsHelper.prepare_data(self.content)
+            self.content = teamData['content']
+            self.team_data = json.dumps(teamData['code'])
 
-        if self.object.template == 'food-insecurity':
+        if self.template == 'food-insecurity':
             data = FoodInsecurityHelper.prepare_data(article.content)
             article.content = data['content']
             article.point_data = json.dumps(data['code']) if data['code'] is not None else None
@@ -465,10 +463,10 @@ class Article(Publishable, AuthorMixin):
         # set explicit status (TODO: ADDRESS SIDE EFFECT: inserting ads!)
         context['explicit'] = self.is_explicit(self.object)        
         if not context['explicit']:
-            self.object.content = self.insert_ads(self.object.content, article_type)
+            self.content = self.insert_ads(self.content, article_type) #TODO: get rid of this dangerous stuff
 
         # set the rest of the context
-        context['article'] = self.object
+        context['article'] = self
         context['base_template'] = 'base.html'
         context['meta'] = self.get_article_meta()
         context['popular'] = self.get_popular()[:5]
