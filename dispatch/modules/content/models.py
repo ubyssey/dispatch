@@ -414,6 +414,14 @@ class Article(Publishable, AuthorMixin):
         """ Save the subsection to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
 
+    def get_context_data(self):
+        """
+        Provides a standard dictionary of context variables to a view
+        """
+        context = {}
+
+        return context
+
 class Subsection(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
