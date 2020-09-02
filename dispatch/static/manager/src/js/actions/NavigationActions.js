@@ -1,7 +1,7 @@
-import { push } from 'react-router-redux'
+import { push } from 'react-router-redux';
 
 export function goTo(route) {
   return (dispatch) => {
-    dispatch(push(route))
-  }
+    dispatch(push(route));
+  };
 }

@@ -1,11 +1,11 @@
-import { normalize } from 'normalizr'
+import { normalize } from 'normalizr';
 
-import { ResourceActions, pending, fulfilled, rejected } from '../util/redux'
+import { ResourceActions, pending, fulfilled, rejected } from '../util/redux';
 
-const PREVIEW_PREFIX = '_dispatch-preview'
+const PREVIEW_PREFIX = '_dispatch-preview';
 
 function openPreviewWindow(url, id) {
-  window.open(url, `${PREVIEW_PREFIX}-${id}`)
+  window.open(url, `${PREVIEW_PREFIX}-${id}`);
 }
 
 export default class PublishableActions extends ResourceActions {
@@ -13,7 +13,7 @@ export default class PublishableActions extends ResourceActions {
   publish(token, id, data) {
     return (dispatch) => {
 
-      dispatch({ type: pending(this.types.PUBLISH) })
+      dispatch({ type: pending(this.types.PUBLISH) });
 
       this.api.save(token, id, this.toRemote(data))
         .then(() => this.api.publish(token, id))
@@ -26,15 +26,15 @@ export default class PublishableActions extends ResourceActions {
                 this.schema
               )
             }
-          })
+          });
         })
         .catch(error => {
           dispatch({
             type: rejected(this.types.PUBLISH),
             payload: error
-          })
-        })
-    }
+          });
+        });
+    };
   }
 
   unpublish(token, id) {
@@ -47,13 +47,13 @@ export default class PublishableActions extends ResourceActions {
             this.schema
           )
         }))
-    }
+    };
   }
 
   preview(token, id, data) {
     return (dispatch) => {
 
-      dispatch({ type: pending(this.types.SAVE) })
+      dispatch({ type: pending(this.types.SAVE) });
 
       this.api.save(token, id, this.toRemote(data))
         .then(json => {
@@ -65,16 +65,16 @@ export default class PublishableActions extends ResourceActions {
                 this.schema
               )
             }
-          })
-          openPreviewWindow(`${json.url}?version=${json.current_version}&preview_id=${json.preview_id}`, json.id)
+          });
+          openPreviewWindow(`${json.url}?version=${json.current_version}&preview_id=${json.preview_id}`, json.id);
         })
         .catch(error => {
           dispatch({
             type: rejected(this.types.SAVE),
             payload: error
-          })
-        })
+          });
+        });
 
-    }
+    };
   }
 }

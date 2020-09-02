@@ -1,12 +1,12 @@
-import { push } from 'react-router-redux'
-import { normalize, arrayOf } from 'normalizr'
+import { push } from 'react-router-redux';
+import { normalize, arrayOf } from 'normalizr';
 
-import * as types from '../constants/ActionTypes'
-import { sectionSchema } from '../constants/Schemas'
+import * as types from '../constants/ActionTypes';
+import { sectionSchema } from '../constants/Schemas';
 
-import DispatchAPI from '../api/dispatch'
+import DispatchAPI from '../api/dispatch';
 
-import { ResourceActions } from '../util/redux'
+import { ResourceActions } from '../util/redux';
 
 class SectionsActions extends ResourceActions {
 
@@ -17,19 +17,19 @@ class SectionsActions extends ResourceActions {
         .then(json => ({
           data: normalize(json.results, arrayOf(this.schema))
         }))
-    }
+    };
   }
 
   search(query) {
-    let queryObj = {}
+    let queryObj = {};
 
     if (query) {
-      queryObj.q = query
+      queryObj.q = query;
     }
 
     return dispatch => {
-      dispatch(push({ pathname: '/sections/', query: queryObj }))
-    }
+      dispatch(push({ pathname: '/sections/', query: queryObj }));
+    };
   }
 
 }
@@ -38,4 +38,4 @@ export default new SectionsActions(
   types.SECTIONS,
   DispatchAPI.sections,
   sectionSchema
-)
+);

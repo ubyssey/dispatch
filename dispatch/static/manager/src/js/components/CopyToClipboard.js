@@ -1,8 +1,8 @@
-import React from 'react'
-import Tooltip from '../components/Tooltip'
+import React from 'react';
+import Tooltip from '../components/Tooltip';
 
-require('../../styles/components/tooltip.scss')
-require('../../styles/components/copy_to_clipboard.scss')
+require('../../styles/components/tooltip.scss');
+require('../../styles/components/copy_to_clipboard.scss');
 
 class CopyToClipboard extends React.Component {
   render() {

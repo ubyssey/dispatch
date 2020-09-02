@@ -1,76 +1,76 @@
-import fetch from 'isomorphic-fetch'
-import url from 'url'
+import fetch from 'isomorphic-fetch';
+import url from 'url';
 
-const API_URL = window.API_URL
+const API_URL = window.API_URL;
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json'
-}
+};
 
 function prepareMultipartPayload(payload) {
-  let formData = new FormData()
+  let formData = new FormData();
 
   for (var key in payload) {
     if (payload.hasOwnProperty(key)) {
       if (payload[key] && payload[key].constructor === File) {
-        formData.append(key, payload[key])
+        formData.append(key, payload[key]);
       } else if (typeof payload[key] !== 'undefined') {
         if (payload[key] === null) {
-          formData.append(key, '')
+          formData.append(key, '');
         }
         else {
-          formData.append(key, JSON.parse(JSON.stringify(payload[key])))
+          formData.append(key, JSON.parse(JSON.stringify(payload[key])));
         }
       }
     }
   }
 
-  return formData
+  return formData;
 }
 
 function buildRoute(route, id) {
-  const pieces = route.split('.')
+  const pieces = route.split('.');
 
-  let fullRoute = API_URL + pieces[0]
+  let fullRoute = API_URL + pieces[0];
 
   if (id) {
-    fullRoute += `/${id}/`
+    fullRoute += `/${id}/`;
   }
 
   if (pieces.length > 1) {
-    fullRoute += pieces[1]
+    fullRoute += pieces[1];
   }
 
   // Append slash to all urls
-  const lastCharacter = fullRoute.slice(-1)
+  const lastCharacter = fullRoute.slice(-1);
 
   if (lastCharacter !== '/') {
-    fullRoute += '/'
+    fullRoute += '/';
   }
 
-  return fullRoute
+  return fullRoute;
 }
 
 function buildHeaders(token, useDefaultHeaders=true) {
-  let headers = {}
+  let headers = {};
   if (useDefaultHeaders) {
-    headers = DEFAULT_HEADERS
+    headers = DEFAULT_HEADERS;
   }
-  headers['Authorization'] = token ? `Token ${token}` : ''
-  return headers
+  headers.Authorization = token ? `Token ${token}` : '';
+  return headers;
 }
 
 function handleError(response) {
-  return response.ok ? response : Promise.reject(response.statusText)
+  return response.ok ? response : Promise.reject(response.statusText);
 }
 
 function parseJSON(response) {
   return response.json()
-    .then(json => response.ok ? json : Promise.reject(json))
+    .then(json => response.ok ? json : Promise.reject(json));
 }
 
 function getRequest(route, id=null, query={}, token=null) {
-  const urlString = buildRoute(route, id) + url.format({ query: query })
+  const urlString = buildRoute(route, id) + url.format({ query: query });
   return fetch(
     urlString,
     {
@@ -78,7 +78,7 @@ function getRequest(route, id=null, query={}, token=null) {
       headers: buildHeaders(token)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 function getPageRequest(uri, token=null) {
@@ -89,7 +89,7 @@ function getPageRequest(uri, token=null) {
       headers: buildHeaders(token)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 function postRequest(route, id=null, payload={}, token=null) {
@@ -101,7 +101,7 @@ function postRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 function postMultipartRequest(route, id=null, payload={}, token=null) {
@@ -113,7 +113,7 @@ function postMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 function patchMultipartRequest(route, id=null, payload={}, token=null) {
@@ -125,7 +125,7 @@ function patchMultipartRequest(route, id=null, payload={}, token=null) {
       body: prepareMultipartPayload(payload)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 function deleteRequest(route, id=null, payload={}, token=null) {
@@ -137,7 +137,7 @@ function deleteRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-    .then(handleError)
+    .then(handleError);
 }
 
 function patchRequest(route, id=null, payload={}, token=null) {
@@ -149,12 +149,12 @@ function patchRequest(route, id=null, payload={}, token=null) {
       body: JSON.stringify(payload)
     }
   )
-    .then(parseJSON)
+    .then(parseJSON);
 }
 
 const DispatchAPI = {
   fetchPage: (token, uri) => {
-    return getPageRequest(uri, token)
+    return getPageRequest(uri, token);
   },
   auth: {
     getToken: (email, password) => {
@@ -162,384 +162,384 @@ const DispatchAPI = {
       const payload = {
         email: email,
         password: password
-      }
+      };
 
-      return postRequest('token', null, payload)
+      return postRequest('token', null, payload);
     },
     verifyToken: (token) => {
-      return getRequest('token', token, null)
+      return getRequest('token', token, null);
     },
     logout: (token) => {
-      return deleteRequest('token', null, null, token)
+      return deleteRequest('token', null, null, token);
     }
   },
   sections: {
     list: (token, query) => {
-      return getRequest('sections', null, query, token)
+      return getRequest('sections', null, query, token);
     },
     get: (token, sectionId) => {
-      return getRequest('sections', sectionId, null, token)
+      return getRequest('sections', sectionId, null, token);
     },
     save: (token, sectionId, data) => {
-      return patchRequest('sections', sectionId, data, token)
+      return patchRequest('sections', sectionId, data, token);
     },
     create: (token, data) => {
-      return postRequest('sections', null, data, token)
+      return postRequest('sections', null, data, token);
     },
     delete: (token, sectionId) => {
-      return deleteRequest('sections', sectionId, null, token)
+      return deleteRequest('sections', sectionId, null, token);
     },
   },
   subsections: {
     list: (token, query) => {
-      return getRequest('subsections', null, query, token)
+      return getRequest('subsections', null, query, token);
     },
     get: (token, subsectionId) => {
-      return getRequest('subsections', subsectionId, null, token)
+      return getRequest('subsections', subsectionId, null, token);
     },
     save: (token, subsectionId, data) => {
-      return patchRequest('subsections', subsectionId, data, token)
+      return patchRequest('subsections', subsectionId, data, token);
     },
     create: (token, data) => {
-      return postRequest('subsections', null, data, token)
+      return postRequest('subsections', null, data, token);
     },
     delete: (token, subsectionId) => {
-      return deleteRequest('subsections', subsectionId, null, token)
+      return deleteRequest('subsections', subsectionId, null, token);
     }
   },
   articles: {
     list: (token, query) => {
-      return getRequest('articles', null, query, token)
+      return getRequest('articles', null, query, token);
     },
     get: (token, articleId, params) => {
-      return getRequest('articles', articleId, params, token)
+      return getRequest('articles', articleId, params, token);
     },
     save: (token, articleId, data) => {
-      return patchRequest('articles', articleId, data, token)
+      return patchRequest('articles', articleId, data, token);
     },
     create: (token, data) => {
-      return postRequest('articles', null, data, token)
+      return postRequest('articles', null, data, token);
     },
     delete: (token, articleId) => {
-      return deleteRequest('articles', articleId, null, token)
+      return deleteRequest('articles', articleId, null, token);
     },
     publish: (token, articleId) => {
-      return postRequest('articles.publish', articleId, null, token)
+      return postRequest('articles.publish', articleId, null, token);
     },
     unpublish: (token, articleId) => {
-      return postRequest('articles.unpublish', articleId, null, token)
+      return postRequest('articles.unpublish', articleId, null, token);
     }
   },
   pages: {
     list: (token, query) => {
-      return getRequest('pages', null, query, token)
+      return getRequest('pages', null, query, token);
     },
     get: (token, pageId, params) => {
-      return getRequest('pages', pageId, params, token)
+      return getRequest('pages', pageId, params, token);
     },
     save: (token, pageId, data) => {
-      return patchRequest('pages', pageId, data, token)
+      return patchRequest('pages', pageId, data, token);
     },
     create: (token, data) => {
-      return postRequest('pages', null, data, token)
+      return postRequest('pages', null, data, token);
     },
     delete: (token, pageId) => {
-      return deleteRequest('pages', pageId, null, token)
+      return deleteRequest('pages', pageId, null, token);
     },
     publish: (token, pageId) => {
-      return postRequest('pages.publish', pageId, null, token)
+      return postRequest('pages.publish', pageId, null, token);
     },
     unpublish: (token, pageId) => {
-      return postRequest('pages.unpublish', pageId, null, token)
+      return postRequest('pages.unpublish', pageId, null, token);
     }
   },
   files: {
     list: (token, query) => {
-      return getRequest('files', null, query, token)
+      return getRequest('files', null, query, token);
     },
     create: (token, data) => {
-      return postMultipartRequest('files', null, data, token)
+      return postMultipartRequest('files', null, data, token);
     },
     delete: (token, fileId) => {
-      return deleteRequest('files', fileId, null, token)
+      return deleteRequest('files', fileId, null, token);
     }
   },
   images: {
     list: (token, query) => {
-      return getRequest('images', null, query, token)
+      return getRequest('images', null, query, token);
     },
     get: (token, imageId) => {
-      return getRequest('images', imageId, null, token)
+      return getRequest('images', imageId, null, token);
     },
     save: (token, imageId, data) => {
-      return patchRequest('images', imageId, data, token)
+      return patchRequest('images', imageId, data, token);
     },
     create: (token, data) => {
-      return postMultipartRequest('images', null, data, token)
+      return postMultipartRequest('images', null, data, token);
     },
     delete: (token, imageId) => {
-      return deleteRequest('images', imageId, null, token)
+      return deleteRequest('images', imageId, null, token);
     }
   },
   templates: {
     list: (token, query) => {
-      return getRequest('templates', null, query, token)
+      return getRequest('templates', null, query, token);
     },
     get: (token, templateId) => {
-      return getRequest('templates', templateId, null, token)
+      return getRequest('templates', templateId, null, token);
     }
   },
   persons: {
     list: (token, query) => {
-      return getRequest('persons', null, query, token)
+      return getRequest('persons', null, query, token);
     },
     get: (token, personId) => {
-      return getRequest('persons', personId, null, token)
+      return getRequest('persons', personId, null, token);
     },
     getUser: (token, personId) => {
-      return getRequest('persons.user', personId, null, token)
+      return getRequest('persons.user', personId, null, token);
     },
     getInvite: (token, personId) => {
-      return getRequest('persons.invite', personId, null, token)
+      return getRequest('persons.invite', personId, null, token);
     },
     save: (token, personId, data) => {
-      return patchMultipartRequest('persons', personId, data, token)
+      return patchMultipartRequest('persons', personId, data, token);
     },
     create: (token, data) => {
-      return postMultipartRequest('persons', null, data, token)
+      return postMultipartRequest('persons', null, data, token);
     },
     delete: (token, personId) => {
-      return deleteRequest('persons', personId, null, token)
+      return deleteRequest('persons', personId, null, token);
     }
   },
   topics: {
     list: (token, query) => {
-      return getRequest('topics', null, query, token)
+      return getRequest('topics', null, query, token);
     },
     get: (token, topicId) => {
-      return getRequest('topics', topicId, null, token)
+      return getRequest('topics', topicId, null, token);
     },
     create: (token, data) => {
-      return postRequest('topics', null, data, token)
+      return postRequest('topics', null, data, token);
     },
     save: (token, topicId, data) => {
-      return patchRequest('topics', topicId, data, token)
+      return patchRequest('topics', topicId, data, token);
     },
     delete: (token, topicId) => {
-      return deleteRequest('topics', topicId, null, token)
+      return deleteRequest('topics', topicId, null, token);
     },
   },
   tags: {
     list: (token, query) => {
-      return getRequest('tags', null, query, token)
+      return getRequest('tags', null, query, token);
     },
     get: (token, tagId) => {
-      return getRequest('tags', tagId, null, token)
+      return getRequest('tags', tagId, null, token);
     },
     create: (token, data) => {
-      return postRequest('tags', null, data, token)
+      return postRequest('tags', null, data, token);
     },
     save: (token, tagId, data) => {
-      return patchRequest('tags', tagId, data, token)
+      return patchRequest('tags', tagId, data, token);
     },
     delete: (token, tagId) => {
-      return deleteRequest('tags', tagId, null, token)
+      return deleteRequest('tags', tagId, null, token);
     },
   },
   issues: {
     list: (token, query) => {
-      return getRequest('issues', null, query, token)
+      return getRequest('issues', null, query, token);
     },
     get: (token, issueId) => {
-      return getRequest('issues', issueId, null, token)
+      return getRequest('issues', issueId, null, token);
     },
     create: (token, data) => {
-      return postMultipartRequest('issues', null, data, token)
+      return postMultipartRequest('issues', null, data, token);
     },
     save: (token, issueId, data) => {
-      return patchMultipartRequest('issues', issueId, data, token)
+      return patchMultipartRequest('issues', issueId, data, token);
     },
     delete: (token, issueId) => {
-      return deleteRequest('issues', issueId, null, token)
+      return deleteRequest('issues', issueId, null, token);
     },
   },
   integrations: {
     get: (token, integrationId) => {
-      return getRequest('integrations', integrationId, null, token)
+      return getRequest('integrations', integrationId, null, token);
     },
     save: (token, integrationId, data) => {
-      return patchRequest('integrations', integrationId, data, token)
+      return patchRequest('integrations', integrationId, data, token);
     },
     delete: (token, integrationId) => {
-      return deleteRequest('integrations', integrationId, null, token)
+      return deleteRequest('integrations', integrationId, null, token);
     },
     callback: (token, integrationId, query) => {
-      return getRequest('integrations.callback', integrationId, query, token)
+      return getRequest('integrations.callback', integrationId, query, token);
     }
   },
   dashboard: {
     actions: (token) => {
-      return getRequest('dashboard/actions', null, {}, token)
+      return getRequest('dashboard/actions', null, {}, token);
     },
     recent: (token) => {
-      return getRequest('dashboard/recent', null, {}, token)
+      return getRequest('dashboard/recent', null, {}, token);
     }
   },
   galleries: {
     list: (token, query) => {
-      return getRequest('galleries', null, query, token)
+      return getRequest('galleries', null, query, token);
     },
     get: (token, galleryId) => {
-      return getRequest('galleries', galleryId, null, token)
+      return getRequest('galleries', galleryId, null, token);
     },
     create: (token, data) => {
-      return postRequest('galleries', null, data, token)
+      return postRequest('galleries', null, data, token);
     },
     save: (token, galleryId, data) => {
-      return patchRequest('galleries', galleryId, data, token)
+      return patchRequest('galleries', galleryId, data, token);
     },
     delete: (token, galleryId) => {
-      return deleteRequest('galleries', galleryId, null, token)
+      return deleteRequest('galleries', galleryId, null, token);
     }
   },
   zones: {
     list: (token, query) => {
-      return getRequest('zones', null, query, token)
+      return getRequest('zones', null, query, token);
     },
     get: (token, zoneId) => {
-      return getRequest('zones', zoneId, null, token)
+      return getRequest('zones', zoneId, null, token);
     },
     save: (token, zoneId, data) => {
-      return patchRequest('zones', zoneId, data, token)
+      return patchRequest('zones', zoneId, data, token);
     },
     widgets: (token, zoneId) => {
-      return getRequest('zones.widgets', zoneId, null, token)
+      return getRequest('zones.widgets', zoneId, null, token);
     }
   },
   events: {
     list: (token, query) => {
-      return getRequest('events', null, query, token)
+      return getRequest('events', null, query, token);
     },
     get: (token, eventId) => {
-      return getRequest('events', eventId, null, token)
+      return getRequest('events', eventId, null, token);
     },
     create: (token, data) => {
-      return postMultipartRequest('events', null, data, token)
+      return postMultipartRequest('events', null, data, token);
     },
     save: (token, eventId, data) => {
-      return patchMultipartRequest('events', eventId, data, token)
+      return patchMultipartRequest('events', eventId, data, token);
     },
     delete: (token, eventId) => {
-      return deleteRequest('events', eventId, null, token)
+      return deleteRequest('events', eventId, null, token);
     }
   },
   videos: {
     list: (token, query) => {
-      return getRequest('videos', null, query, token)
+      return getRequest('videos', null, query, token);
     },
     get: (token, videoId) => {
-      return getRequest('videos', videoId, null, token)
+      return getRequest('videos', videoId, null, token);
     },
     save: (token, videoId, data) => {
-      return patchRequest('videos', videoId, data, token)
+      return patchRequest('videos', videoId, data, token);
     },
     create: (token, data) => {
-      return postRequest('videos', null, data, token)
+      return postRequest('videos', null, data, token);
     },
     delete: (token, videoId) => {
-      return deleteRequest('videos', videoId, null, token)
+      return deleteRequest('videos', videoId, null, token);
     },
   },
   'users': {
     get: (token, userId) => {
-      return getRequest('users', userId, null, token)
+      return getRequest('users', userId, null, token);
     },
     list: (token, query) => {
-      return getRequest('users', null, query, token)
+      return getRequest('users', null, query, token);
     },
     create: (token, data) => {
-      return postRequest('users', null, data, token)
+      return postRequest('users', null, data, token);
     },
     save: (token, userId, data) => {
-      return patchRequest('users', userId, data, token)
+      return patchRequest('users', userId, data, token);
     },
     delete: (token, userId) => {
-      return deleteRequest('users', userId, null, token)
+      return deleteRequest('users', userId, null, token);
     },
     resetPassword: (token, userId) => {
-      return postRequest('users.reset_password', userId, null, token)
+      return postRequest('users.reset_password', userId, null, token);
     }
   },
   'invites': {
     get: (token, query) => {
-      return getRequest('invites', null, query, token)
+      return getRequest('invites', null, query, token);
     },
     create: (token, data) => {
-      return postRequest('invites', null, data, token)
+      return postRequest('invites', null, data, token);
     },
     list: (token, query) => {
-      return getRequest('invites', null, query, token)
+      return getRequest('invites', null, query, token);
     },
     save: (token, inviteId, data)  => {
-      return patchRequest('invites', inviteId, data, token)
+      return patchRequest('invites', inviteId, data, token);
     },
     delete: (token, inviteId) => {
-      return deleteRequest('invites', inviteId, null, token)
+      return deleteRequest('invites', inviteId, null, token);
     }
   },
   polls: {
     list: (token, query) => {
-      return getRequest('polls', null, query, token)
+      return getRequest('polls', null, query, token);
     },
     get: (token, pollId) => {
-      return getRequest('polls', pollId, null, token)
+      return getRequest('polls', pollId, null, token);
     },
     save: (token, pollId, data) => {
-      return patchRequest('polls', pollId, data, token)
+      return patchRequest('polls', pollId, data, token);
     },
     create: (token, data) => {
-      return postRequest('polls', null, data, token)
+      return postRequest('polls', null, data, token);
     },
     delete: (token, pollId) => {
-      return deleteRequest('polls', pollId, null, token)
+      return deleteRequest('polls', pollId, null, token);
     },
   },
   podcasts: {
     podcasts: {
       list: (token, query) => {
-        return getRequest('podcasts/podcasts', null, query, token)
+        return getRequest('podcasts/podcasts', null, query, token);
       },
       get: (token, id) => {
-        return getRequest('podcasts/podcasts', id, null, token)
+        return getRequest('podcasts/podcasts', id, null, token);
       },
       save: (token, id, data) => {
-        return patchRequest('podcasts/podcasts', id, data, token)
+        return patchRequest('podcasts/podcasts', id, data, token);
       },
       create: (token, data) => {
-        return postRequest('podcasts/podcasts', null, data, token)
+        return postRequest('podcasts/podcasts', null, data, token);
       },
       delete: (token, id) => {
-        return deleteRequest('podcasts/podcasts', id, null, token)
+        return deleteRequest('podcasts/podcasts', id, null, token);
       },
     },
     episodes: {
       list: (token, query) => {
-        return getRequest('podcasts/episodes', null, query, token)
+        return getRequest('podcasts/episodes', null, query, token);
       },
       get: (token, id) => {
-        return getRequest('podcasts/episodes', id, null, token)
+        return getRequest('podcasts/episodes', id, null, token);
       },
       save: (token, id, data) => {
-        return patchMultipartRequest('podcasts/episodes', id, data, token)
+        return patchMultipartRequest('podcasts/episodes', id, data, token);
       },
       create: (token, data) => {
-        return postMultipartRequest('podcasts/episodes', null, data, token)
+        return postMultipartRequest('podcasts/episodes', null, data, token);
       },
       delete: (token, id) => {
-        return deleteRequest('podcasts/episodes', id, null, token)
+        return deleteRequest('podcasts/episodes', id, null, token);
       },
     }
   }
-}
+};
 
-export default DispatchAPI
+export default DispatchAPI;

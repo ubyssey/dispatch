@@ -1,24 +1,24 @@
-import { push } from 'react-router-redux'
+import { push } from 'react-router-redux';
 
-import * as types from '../constants/ActionTypes'
-import { issueSchema } from '../constants/Schemas'
+import * as types from '../constants/ActionTypes';
+import { issueSchema } from '../constants/Schemas';
 
-import DispatchAPI from '../api/dispatch'
+import DispatchAPI from '../api/dispatch';
 
-import { ResourceActions } from '../util/redux'
+import { ResourceActions } from '../util/redux';
 
 class IssuesActions extends ResourceActions {
-
+  //TODO: why is there a class here????
   search(query) {
-    let queryObj = {}
+    let queryObj = {};
 
     if (query) {
-      queryObj.q = query
+      queryObj.q = query;
     }
 
     return dispatch => {
-      dispatch(push({ pathname: '/issues/', query: queryObj }))
-    }
+      dispatch(push({ pathname: '/issues/', query: queryObj }));
+    };
   }
 
 }
@@ -27,4 +27,4 @@ export default new IssuesActions(
   types.ISSUES,
   DispatchAPI.issues,
   issueSchema
-)
+);

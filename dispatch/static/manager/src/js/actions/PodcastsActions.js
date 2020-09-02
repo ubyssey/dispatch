@@ -1,33 +1,33 @@
-import R from 'ramda'
-import { push } from 'react-router-redux'
+import R from 'ramda';
+import { push } from 'react-router-redux';
 
-import * as types from '../constants/ActionTypes'
-import { podcastSchema } from '../constants/Schemas'
+import * as types from '../constants/ActionTypes';
+import { podcastSchema } from '../constants/Schemas';
 
-import DispatchAPI from '../api/dispatch'
+import DispatchAPI from '../api/dispatch';
 
-import { ResourceActions } from '../util/redux'
+import { ResourceActions } from '../util/redux';
 
 class PodcastsActions extends ResourceActions {
 
   toRemote(data) {
-    data = R.clone(data)
+    data = R.clone(data);
 
-    data.image_id = data.image
+    data.image_id = data.image;
 
-    return data
+    return data;
   }
 
   search(query) {
-    let queryObj = {}
+    let queryObj = {};
 
     if (query) {
-      queryObj.q = query
+      queryObj.q = query;
     }
 
     return dispatch => {
-      dispatch(push({ pathname: '/podcasts/podcasts/', query: queryObj }))
-    }
+      dispatch(push({ pathname: '/podcasts/podcasts/', query: queryObj }));
+    };
   }
 
 }
@@ -36,4 +36,4 @@ export default new PodcastsActions(
   types.PODCASTS,
   DispatchAPI.podcasts.podcasts,
   podcastSchema
-)
+);
