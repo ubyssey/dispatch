@@ -71,6 +71,8 @@ class PopularityListManager(Manager):
         """
         Creates a popularity list for the current time period.
         Costly.
+
+        Whoops I just recreated a buggy .get_or_create() hmmm
         """
 
         if 'date' in kwargs:
