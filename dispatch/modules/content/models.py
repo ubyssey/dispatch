@@ -414,18 +414,6 @@ class Article(Publishable, AuthorMixin):
         """ Save the subsection to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
     
-    def get_breaking_news(self):
-        """
-        Returns breaking news stories _at a particular time_
-        
-        Used to create context
-
-        @TODO: See if this can be readied BEFORE a request occurs!
-        Can we cache a breaking article for the period it's breaking and have it check the cache?
-        Or something
-        """
-        return Article.objects.filter(is_published=True, is_breaking=True, breaking_timeout__gte=timezone.now())
-
     def is_explicit(self):
         """
         Check if this article has explicit tags
@@ -446,60 +434,58 @@ class Article(Publishable, AuthorMixin):
         """
         context = {}
         context['title'] = '%s - The Ubyssey' % (self.headline)
-        context['breaking'] = self.get_breaking_news().exclude(id=self.id).first() #TODO: figure out if we can do with fewer DB hits!
+        context['self'] = self
+        # # article_type = 'mobile' if self.is_mobile else 'desktop' # belongs in view, because it depends on request as input
 
-        # article_type = 'mobile' if self.is_mobile else 'desktop' # belongs in view, because it depends on request as input
+        # # add a few fields to the article if it happens to have a "special" template #TODO: figure out if we can do with fewer DB hits!
+        # if self.template == 'timeline':
+        #     timeline_tag = self.tags.filter(name__icontains='timeline-')
+        #     timeline_articles = Article.objects.filter(tags__in=timeline_tag, is_published=True)
 
-        # add a few fields to the article if it happens to have a "special" template #TODO: figure out if we can do with fewer DB hits!
-        if self.template == 'timeline':
-            timeline_tag = self.tags.filter(name__icontains='timeline-')
-            timeline_articles = Article.objects.filter(tags__in=timeline_tag, is_published=True)
-
-            timeline_articles = list(timeline_articles.values('parent_id', 'template_data', 'slug', 'headline', 'featured_image'))
+        #     timeline_articles = list(timeline_articles.values('parent_id', 'template_data', 'slug', 'headline', 'featured_image'))
             
-            for a in timeline_articles:
-                # convert JSON field from string to dict if needed
-                if isinstance(a['template_data'], str):
-                    a['template_data'] = json.loads(a['template_data'])
+        #     for a in timeline_articles:
+        #         # convert JSON field from string to dict if needed
+        #         if isinstance(a['template_data'], str):
+        #             a['template_data'] = json.loads(a['template_data'])
                
-            sorted_timeline_articles = sorted(
-                timeline_articles,
-                key=lambda a: a['template_data']['timeline_date']
-            )
+        #     sorted_timeline_articles = sorted(
+        #         timeline_articles,
+        #         key=lambda a: a['template_data']['timeline_date']
+        #     )
 
-            for i, a in enumerate(sorted_timeline_articles):
-                try:
-                    sorted_timeline_articles[i]['featured_image'] = a.featured_image.image.get_thumbnail_url()
-                except:
-                    sorted_timeline_articles[i]['featured_image'] = None
+        #     for i, a in enumerate(sorted_timeline_articles):
+        #         try:
+        #             sorted_timeline_articles[i]['featured_image'] = a.featured_image.image.get_thumbnail_url()
+        #         except:
+        #             sorted_timeline_articles[i]['featured_image'] = None
 
-            self.timeline_articles = json.dumps(sorted_timeline_articles)
-            self.timeline_title = list(timeline_tag)[0].name.replace('timeline-', '').replace('-', ' ')
+        #     self.timeline_articles = json.dumps(sorted_timeline_articles)
+        #     self.timeline_title = list(timeline_tag)[0].name.replace('timeline-', '').replace('-', ' ')
 
-        if self.template == 'soccer-nationals':
-            teamData = NationalsHelper.prepare_data(self.content)
-            self.content = teamData['content']
-            self.team_data = json.dumps(teamData['code'])
+        # if self.template == 'soccer-nationals':
+        #     teamData = NationalsHelper.prepare_data(self.content)
+        #     self.content = teamData['content']
+        #     self.team_data = json.dumps(teamData['code'])
 
-        if self.template == 'food-insecurity':
-            data = FoodInsecurityHelper.prepare_data(article.content)
-            article.content = data['content']
-            article.point_data = json.dumps(data['code']) if data['code'] is not None else None
+        # if self.template == 'food-insecurity':
+        #     data = FoodInsecurityHelper.prepare_data(article.content)
+        #     article.content = data['content']
+        #     article.point_data = json.dumps(data['code']) if data['code'] is not None else None
 
-        # set explicit status (TODO: ADDRESS SIDE EFFECT: inserting ads!)
-        context['explicit'] = self.is_explicit()        
-        if not context['explicit']:
-            self.content = self.insert_ads(self.content, article_type) #TODO: get rid of this dangerous stuff
+        # # set explicit status (TODO: ADDRESS SIDE EFFECT: inserting ads!)
+        # context['explicit'] = self.is_explicit()        
+        # if not context['explicit']:
+        #     self.content = self.insert_ads(self.content, article_type) #TODO: get rid of this dangerous stuff
 
-        # set the rest of the context
-        context['article'] = self
-        context['base_template'] = 'base.html'
-        context['meta'] = self.get_article_meta()
-        context['popular'] = self.get_popular()[:5]
-        context['reading_list'] = self.get_reading_list(self.object, ref=self.ref, dur=self.dur)
-        context['reading_time'] = self.get_reading_time(self.object)
-        context['suggested'] = self.get_suggested(self.object)[:3]
-        # context['suggested'] = lambda: ArticleHelper.get_random_articles(2, section, exclude=article.id),
+        # # set the rest of the context
+        # context['article'] = self
+        # context['base_template'] = 'base.html'
+        # context['meta'] = self.get_article_meta()
+        # context['popular'] = self.get_popular()[:5]
+        # context['reading_time'] = self.get_reading_time()
+        # context['suggested'] = self.get_suggested()[:3]
+        # # context['suggested'] = lambda: ArticleHelper.get_random_articles(2, section, exclude=article.id),
 
         return context
 
