@@ -1,3 +1,7 @@
+# In Django, Some business logic ought to go in a _custom manager_, though one ought to be wary about overwriting manager behaviour.
+# For example, it is often reasonable to create 
+# https://docs.djangoproject.com/en/3.1/ref/models/instances/
+
 from django.utils import timezone
 from django.db.models import Manager
 
@@ -21,5 +25,34 @@ class PublishableManager(Manager):
         Can we cache a breaking article for the period it's breaking and have it check the cache?
         Or something
         """
-        return self.filter(is_published=True, is_breaking=True, breaking_timeout__gte=timezone.now())
+        return self.filter(is_published=True, is_breaking=True, breaking_timeout__gte=timezone.now())  
+
+class ArticleManager(PublishableManager):
+    """
+    
+    """
+
+    def create_article(self, *args, **kwargs):
+        pass
+
+    def set_all_article_metas(self, *args, **kwargs):
+        """
+        @TODO: Fix bad try-except
+        """
+        articles = self.all()
+
+        for a in articles:
+            meta = a.meta
+            try:
+                meta['image'] = a.featured_image.image.get_medium_url()
+            except:
+                meta['image'] = kwargs['default_image']
+
+            meta['title'] = a.headline
+            meta['description'] = a.seo_description if a.seo_description is not None else a.snippet
+            meta['url'] = a.get_absolute_url
+            meta['author'] = a.get_author_type_string()
+            a.meta = meta
+
+
 

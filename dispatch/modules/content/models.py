@@ -326,6 +326,8 @@ class Article(Publishable, AuthorMixin):
     topic = ForeignKey('Topic', on_delete=SET_NULL, null=True)
     tags = ManyToManyField('Tag')
 
+    meta = JSONField(default = {})
+
     is_breaking = BooleanField(default=False)
     breaking_timeout = DateTimeField(blank=True, null=True)
 
