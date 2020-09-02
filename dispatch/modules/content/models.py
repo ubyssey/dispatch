@@ -413,6 +413,32 @@ class Article(Publishable, AuthorMixin):
     def save_subsection(self, subsection_id):
         """ Save the subsection to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
+    
+    def get_breaking_news(self):
+        """
+        Returns breaking news stories _at a particular time_
+        
+        Used to create context
+
+        @TODO: See if this can be readied BEFORE a request occurs!
+        Can we cache a breaking article for the period it's breaking and have it check the cache?
+        Or something
+        """
+        return Article.objects.filter(is_published=True, is_breaking=True, breaking_timeout__gte=timezone.now())
+
+    def is_explicit(self):
+        """
+        Check if this article has explicit tags
+
+        @TODO: Replace with Taggit stuff!
+        @TODO: make more efficient than making a query!
+        """
+        explicit_tags = ['sex', 'explicit']
+        tags = self.tags.all().values_list('name', flat=True) #@TODO GET RID OF THIS LINE
+        for tag in tags:
+            if tag.lower() in explicit_tags:
+                return True
+        return False
 
     def get_context_data(self):
         """
@@ -461,7 +487,7 @@ class Article(Publishable, AuthorMixin):
             article.point_data = json.dumps(data['code']) if data['code'] is not None else None
 
         # set explicit status (TODO: ADDRESS SIDE EFFECT: inserting ads!)
-        context['explicit'] = self.is_explicit(self.object)        
+        context['explicit'] = self.is_explicit()        
         if not context['explicit']:
             self.content = self.insert_ads(self.content, article_type) #TODO: get rid of this dangerous stuff
 
