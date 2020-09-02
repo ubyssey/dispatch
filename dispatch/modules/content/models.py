@@ -8,11 +8,14 @@ from sys import getsizeof
 from jsonfield import JSONField
 from PIL import Image as Img
 
+from datetime import date
+
 from django.db import IntegrityError
 from django.db import transaction
 
+from django.db import models
 from django.db.models import (
-    Model, DateTimeField, CharField, TextField, PositiveIntegerField,
+    Model, DateField, DateTimeField, CharField, TextField, PositiveIntegerField,
     ImageField, FileField, BooleanField, NullBooleanField, UUIDField, 
     ForeignKey, ManyToManyField, SlugField, SET_NULL, CASCADE, F)
 from django.conf import settings
@@ -23,7 +26,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from dispatch.modules.content.managers import PublishableManager
+from dispatch.modules.content.managers import PublishableManager, PopularityListManager
 from dispatch.modules.content.render import content_to_html
 from dispatch.modules.content.mixins import AuthorMixin
 from dispatch.modules.auth.models import Person
@@ -779,3 +782,12 @@ class PollVote(Model):
     id = UUIDField(default=uuid.uuid4, primary_key=True)
     answer = ForeignKey(PollAnswer, related_name='votes', on_delete=CASCADE)
     timestamp = DateTimeField(auto_now_add=True)
+
+class PopularityList(Model):
+    objects = PopularityListManager()
+    date = models.DateField(default=date.today())
+    articles = models.ManyToManyField('Article',related_name='popularity_lists')
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['date'],name='unique_date')
+        ]
