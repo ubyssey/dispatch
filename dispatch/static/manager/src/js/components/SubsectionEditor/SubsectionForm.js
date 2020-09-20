@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch } from '@blueprintjs/core'
 
-import { TextInput, TextAreaInput } from '../inputs'
+import { TextInput, TextAreaInput, DateTimeInput } from '../inputs'
 
 import * as Form from '../Form'
 
@@ -27,6 +27,21 @@ export default function SubsectionForm(props) {
 
   const articles = !props.listItem.articles ?
     [] : props.listItem.articles.map(article => article.id)
+  
+  const timeoutPicker = props.listItem.subsection_banner_message ?
+    <div>
+      <p>URL</p>
+      <TextAreaInput
+          placeholder='Enter URL Here'
+          value={props.listItem.banner_url || ''}
+          rows='1'
+          onChange={e => props.update('banner_url', e.target.value)} />
+      <p>Timeout</p>
+      <DateTimeInput
+        hidden={!props.listItem.subsection_banner_message}
+        value={props.listItem.banner_timeout}
+        onChange={dt => props.update('banner_timeout', dt)} />
+    </div> : null
 
   return (
     <Form.Container>
@@ -92,8 +107,17 @@ export default function SubsectionForm(props) {
         <TextAreaInput
           placeholder='Description'
           value={props.listItem.description || ''}
-          rows='5'
+          rows='3'
           onChange={e => props.update('description', e.target.value)} />
+      </Form.Input>
+
+      <Form.Input label='Subsection Banner Message'>
+        <TextAreaInput
+          placeholder='Banner Message'
+          value={props.listItem.subsection_banner_message || ''}
+          rows='3'
+          onChange={e => props.update('subsection_banner_message', e.target.value)} />
+          {timeoutPicker}
       </Form.Input>
 
     </Form.Container>

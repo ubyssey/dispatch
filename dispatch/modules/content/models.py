@@ -421,6 +421,9 @@ class Subsection(Model, AuthorMixin):
     authors = ManyToManyField('Author', related_name='subsection_authors')
     section = ForeignKey('Section', on_delete=CASCADE)
     is_active = BooleanField(default=False)
+    subsection_banner_message = TextField(null=True, blank=True)
+    banner_url = TextField(null=True, blank=True)
+    banner_timeout = DateTimeField(blank=True, null=True)
 
     AuthorModel = Author
 
@@ -437,6 +440,12 @@ class Subsection(Model, AuthorMixin):
     def get_absolute_url(self):
         """Returns the subsection URL."""
         return "%s%s/" % (settings.BASE_URL, self.slug)
+
+    def is_currently_having_banner(self):
+        if self.is_active and self.subsection_banner_message:
+            if self.banner_timeout:
+                return timezone.now() < self.banner_timeout
+        return False
 
 class Page(Publishable):
     parent = ForeignKey('Page', on_delete=SET_NULL, related_name='page_parent', blank=True, null=True)
