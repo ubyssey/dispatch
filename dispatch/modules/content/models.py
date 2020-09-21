@@ -436,7 +436,7 @@ class Subsection(Model, AuthorMixin):
 
     def get_absolute_url(self):
         """Returns the subsection URL."""
-        return "%s%s/" % (settings.BASE_URL, self.slug)
+        return "%ssubsection/%s" % (settings.BASE_URL, self.slug)
 
 class Page(Publishable):
     parent = ForeignKey('Page', on_delete=SET_NULL, related_name='page_parent', blank=True, null=True)
