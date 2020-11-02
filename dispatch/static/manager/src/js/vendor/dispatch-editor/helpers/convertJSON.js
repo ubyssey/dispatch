@@ -112,20 +112,12 @@ function embedToBlock(block) {
 }
 
 function paragraphToBlock(block) {
-  try{
-    return convertFromHTML(block.data);
-  } catch(err) {
-      console.log("paragraphToBlock error");
-  }
+  return convertFromHTML(block.data)
 }
 
 function headerToBlock(block) {
-  try{
-    const contentBlocks = convertFromHTML(block.data.content).contentBlocks
-    .map(contentBlock => contentBlock.set('type', DRAFT_TYPES.HEADER));
-  } catch(err) {
-      console.log("headerToBlock error");
-  }
+  const contentBlocks = convertFromHTML(block.data.content).contentBlocks
+    .map(contentBlock => contentBlock.set('type', DRAFT_TYPES.HEADER))
 
   return {
     contentBlocks: contentBlocks,
@@ -134,13 +126,9 @@ function headerToBlock(block) {
 }
 
 function listToBlock(block) {
-  try{
   const contentBlocks = block.data
     .map(text => convertFromHTML(text).contentBlocks[0])
     .map(contentBlock => contentBlock.set('type', DRAFT_TYPES.LIST))
-  } catch(err){
-    console.log("listToBlock error");
-  }
 
   return {
     contentBlocks: contentBlocks,
