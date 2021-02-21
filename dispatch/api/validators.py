@@ -67,24 +67,24 @@ class SlugValidator(object):
             if self.model.objects.filter(slug=slug).exclude(id=self.instance.id):
                 raise ValidationError('%s with slug \'%s\' already exists.' % (self.model.__name__, slug))
 
-def SectionValidator(section_id, subsection_id, template, tags):
-    from dispatch.theme import ThemeManager
+# def SectionValidator(section_id, subsection_id, template, tags):
+#     from dispatch.theme import ThemeManager
     
-    errors = {}
+#     errors = {}
 
-    section = Section.objects.get(id=section_id)
+#     section = Section.objects.get(id=section_id)
 
-    if (section.slug == 'magazine'):
-        if template is not None:
-            try:
-                template = ThemeManager.Templates.get(template)
-            except TemplateNotFound as e:
-                errors['template'] = str(e)
+#     if (section.slug == 'magazine'):
+#         if template is not None:
+#             try:
+#                 template = ThemeManager.Templates.get(template)
+#             except TemplateNotFound as e:
+#                 errors['template'] = str(e)
 
-            if ('magazine' not in template.id):
-                errors['section_id'] = 'Articles in section magazine must have a magazine template'
-    if errors:
-        raise ValidationError(errors)
+#             if ('magazine' not in template.id):
+#                 errors['section_id'] = 'Articles in section magazine must have a magazine template'
+#     if errors:
+#         raise ValidationError(errors)
 
 class AuthorValidator(object):
     def __init__(self, required):

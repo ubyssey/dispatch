@@ -18,7 +18,7 @@ from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer
 from dispatch.api.validators import (
     FilenameValidator, ImageGalleryValidator, PasswordValidator,
-    SlugValidator, AuthorValidator, TemplateValidator, SectionValidator)
+    SlugValidator, AuthorValidator, TemplateValidator) #, SectionValidator)
 from dispatch.api.fields import JSONField, NullBooleanField, PrimaryKeyField, ForeignKeyField
 
 class PersonSerializer(DispatchModelSerializer):
@@ -774,7 +774,7 @@ class ArticleSerializer(DispatchModelSerializer, DispatchPublishableSerializer):
         TemplateValidator(template, template_data, tags, subsection_id)
 
         section_id = validated_data.get('section_id', instance.section_id)
-        SectionValidator(section_id, subsection_id, template, tags)
+        # SectionValidator(section_id, subsection_id, template, tags)
 
         # Update basic fields
         instance.headline = validated_data.get('headline', instance.headline)
