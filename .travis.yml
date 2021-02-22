@@ -11,7 +11,7 @@ jobs:
     script: dispatch-admin coverage
     after_success: codecov
   - language: node_js
-    node_js: 6.9.5
+    node_js: 8
     install:
     - cd dispatch/static/manager
     - npm install
