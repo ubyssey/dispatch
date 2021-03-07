@@ -12,7 +12,7 @@ from dispatch.modules.content.models import (
 from dispatch.modules.auth.models import Person, User, Invite
 from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
 
-from dispatch.admin.registration import send_invitation
+from dispatch.dispatchadmin.registration import send_invitation
 from dispatch.theme.exceptions import WidgetNotFound, InvalidField
 
 from dispatch.api.mixins import DispatchModelSerializer, DispatchPublishableSerializer

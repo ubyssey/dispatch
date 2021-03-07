@@ -2,7 +2,7 @@ from django.urls import re_path
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.shortcuts import render
-from dispatch.admin import views
+from dispatch.dispatchadmin import views
 import dispatch
 
 def admin(request):
