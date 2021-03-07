@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 from dispatch.tests.cases import DispatchAPITestCase, DispatchMediaTestMixin
 from dispatch.tests.test_api_persons import PersonsTests
 from dispatch.tests.helpers import DispatchTestHelpers
-from dispatch.admin.forms import SignUpForm
+from dispatch.dispatchadmin.forms import SignUpForm
 
 
 TEST_USER_EMAIL = 'test_user@test.com'

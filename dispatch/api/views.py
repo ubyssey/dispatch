@@ -24,7 +24,7 @@ from dispatch.models import (
 from dispatch.modules.podcasts.models import Podcast, PodcastEpisode
 
 from dispatch.core.settings import get_settings
-from dispatch.admin.registration import reset_password
+from dispatch.dispatchadmin.registration import reset_password
 
 from dispatch.api.mixins import DispatchModelViewSet, DispatchPublishableMixin
 from dispatch.api.serializers import (

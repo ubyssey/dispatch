@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 
 from django.contrib.auth.models import Group
 from dispatch.models import Invite
-from dispatch.admin.forms import SignUpForm
+from dispatch.dispatchadmin.forms import SignUpForm
 
 from django.http import Http404
 
