@@ -1,15 +1,15 @@
 jobs:
   include:
-  - stage: test
-    language: python
-    python: '3.7'
-    dist: 'xenial'
-    install:
-    - pip install codecov
-    - python setup.py install
-    - pip install -e .[dev]
-    script: dispatch-admin coverage
-    after_success: codecov
+  # - stage: test
+  #   language: python
+  #   python: '3.7'
+  #   dist: 'xenial'
+  #   install:
+  #   - pip install codecov
+  #   - python setup.py install
+  #   - pip install -e .[dev]
+  #   script: dispatch-admin coverage
+  #   after_success: codecov
   - language: node_js
     node_js: 8
     install:
