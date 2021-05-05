@@ -3,7 +3,7 @@
 
 from django.db import migrations, models
 
-from dispatch.models import Article, Page
+from dispatch.models import Article, Page, Author
 
 def fix_latest_head(model, item):
     latest = model.objects. \
@@ -17,10 +17,14 @@ def fix_latest_head(model, item):
     latest.head = True
     latest.save(revision=False)
 
-    duplicates = model.objects. \
-        filter(slug=item.slug). \
-        exclude(parent=item.parent). \
-        delete()
+    try:
+        duplicates = model.objects. \
+            filter(slug=item.slug). \
+            exclude(parent=item.parent). \
+            delete()
+    except Exception as e:
+        print("Error encountered while trying to delete duplicates!\n")
+        print(e)
 
 def fix_latest_published(model, item):
     latest_items = model.objects. \
