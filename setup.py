@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='dispatch',
     description='A publishing platform for modern newspapers',
-    version='1.3.16',
+    version='2.0.0',
     url='https://github.com/ubyssey/dispatch',
     author='Peter Siemens',
     author_email='peterjsiemens@gmail.com',
