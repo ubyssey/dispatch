@@ -87,10 +87,10 @@ class Migration(migrations.Migration):
         migrations.RunPython(remove_duplicates),
         migrations.AlterUniqueTogether(
             name='article',
-            unique_together=set([('parent', 'slug', 'is_published'), ('slug', 'head'), ('parent', 'slug', 'head')]),
+            unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
         ),
         migrations.AlterUniqueTogether(
             name='page',
-            unique_together=set([('parent', 'slug', 'is_published'), ('slug', 'head'), ('parent', 'slug', 'head')]),
+            unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
         ),
     ]
