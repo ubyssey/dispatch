@@ -71,10 +71,10 @@ class Publishable(Model):
 
     preview_id = UUIDField(default=uuid.uuid4)
     revision_id = PositiveIntegerField(default=0, db_index=True)
-    head = NullBooleanField(default=None, db_index=True, null=True)
+    head = BooleanField(default=None, db_index=True, null=True)
 
-    is_published = NullBooleanField(default=None, db_index=True)
-    is_active = NullBooleanField(default=True)
+    is_published = BooleanField(null=True, default=None, db_index=True)
+    is_active = BooleanField(null=True, default=True)
 
     published_version = PositiveIntegerField(null=True)
     latest_version = PositiveIntegerField(null=True)
@@ -82,7 +82,6 @@ class Publishable(Model):
     slug = SlugField(max_length=255, db_index=True)
 
     shares = PositiveIntegerField(default=0, blank=True, null=True)
-    views = PositiveIntegerField(default=0)
 
     featured_image = ForeignKey('ImageAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_image', blank=True, null=True)
     featured_video = ForeignKey('VideoAttachment', on_delete=SET_NULL, related_name='%(class)s_featured_video', blank=True, null=True)
