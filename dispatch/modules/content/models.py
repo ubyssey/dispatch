@@ -446,7 +446,7 @@ class Page(Publishable):
         unique_together = (
             ('slug', 'head'),
             ('parent', 'slug', 'head'),
-            ('parent', 'slug', 'is_published'),
+            #('parent', 'slug', 'is_published'), # # Causes bug, doesn't only mean exactly one version of an article can be published - also means exactly one oversion of an ariticle can be NOT published. Only ever apparently worked because "null" was third value
         )
 
     def get_author_string(self):
