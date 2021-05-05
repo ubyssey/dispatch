@@ -85,12 +85,12 @@ class Migration(migrations.Migration):
             field=models.NullBooleanField(db_index=True, default=False),
         ),
         migrations.RunPython(remove_duplicates),
-        migrations.AlterUniqueTogether(
-            name='article',
-            unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
-        ),
-        migrations.AlterUniqueTogether(
-            name='page',
-            unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
-        ),
+        # migrations.AlterUniqueTogether(
+        #     name='article',
+        #     unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
+        # ),
+        # migrations.AlterUniqueTogether(
+        #     name='page',
+        #     unique_together=set([('slug', 'head'), ('parent', 'slug', 'head')]),
+        # ),
     ]

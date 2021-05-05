@@ -341,12 +341,12 @@ class Article(Publishable, AuthorMixin):
 
     reading_time = CharField(max_length=100, choices=READING_CHOICES, default='anytime')
 
-    class Meta:
-        unique_together = (
-            ('slug', 'head'),
-            ('parent', 'slug', 'head'),
-            # ('parent', 'slug', 'is_published'), # Causes bug, doesn't only mean exactly one version of an article can be published - also means exactly one oversion of an ariticle can be NOT published. Only ever apparently worked because "null" was third value
-        )
+    # class Meta:
+    #     unique_together = (
+    #         ('slug', 'head'),
+    #         ('parent', 'slug', 'head'),
+    #         # ('parent', 'slug', 'is_published'), # Causes bug, doesn't only mean exactly one version of an article can be published - also means exactly one oversion of an ariticle can be NOT published. Only ever apparently worked because "null" was third value
+    #     )
 
     AuthorModel = Author
 
@@ -442,12 +442,12 @@ class Page(Publishable):
     parent_page = ForeignKey('Page', on_delete=SET_NULL, related_name='parent_page_fk', null=True)
     title = CharField(max_length=255)
 
-    class Meta:
-        unique_together = (
-            ('slug', 'head'),
-            ('parent', 'slug', 'head'),
-            #('parent', 'slug', 'is_published'), # # Causes bug, doesn't only mean exactly one version of an article can be published - also means exactly one oversion of an ariticle can be NOT published. Only ever apparently worked because "null" was third value
-        )
+    # class Meta:
+    #     unique_together = (
+    #         ('slug', 'head'),
+    #         ('parent', 'slug', 'head'),
+    #         #('parent', 'slug', 'is_published'), # # Causes bug, doesn't only mean exactly one version of an article can be published - also means exactly one oversion of an ariticle can be NOT published. Only ever apparently worked because "null" was third value
+    #     )
 
     def get_author_string(self):
         return None
