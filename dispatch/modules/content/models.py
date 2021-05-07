@@ -4,6 +4,8 @@ import re
 import uuid
 import datetime
 
+from django.db import models
+
 from sys import getsizeof
 from jsonfield import JSONField
 from PIL import Image as Img
@@ -412,6 +414,13 @@ class Article(Publishable, AuthorMixin):
     def save_subsection(self, subsection_id):
         """ Save the subsection to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-published_at']),
+            models.Index(fields=['head', 'is_published']),
+            models.Index(fields=['section']),
+        ]
 
 class Subsection(Model, AuthorMixin):
     name = CharField(max_length=100, unique=True)
