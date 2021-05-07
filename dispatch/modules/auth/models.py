@@ -1,5 +1,6 @@
 import uuid
 
+from django.db import models
 from django.db.models import (
     Model, CharField, SlugField, TextField,
     BooleanField, OneToOneField, ImageField, PROTECT, CASCADE, ManyToManyField, DateTimeField, UUIDField)
@@ -33,6 +34,11 @@ class Person(Model):
             
     def __str__(self):
         return self.full_name or ''
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['full_name']),
+        ]
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = CharField(max_length=255, unique=True)
