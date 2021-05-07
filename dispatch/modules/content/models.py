@@ -598,7 +598,7 @@ class Image(Model, AuthorMixin):
         image.save(image_io, format=file_type, quality=75)
 
         # Convert StringIO object to Django File object
-        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', getsizeof(image_io), None)
+        thumb_file = InMemoryUploadedFile(image_io, None, name, 'image/jpeg', len(image_io.getbuffer()), None)
 
         # Save the new file to the default storage system
         default_storage.save(name, thumb_file)
