@@ -58,6 +58,11 @@ class Section(Model):
     name = CharField(max_length=100, unique=True)
     slug = SlugField(unique=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['slug']),
+        ]
+
 class Author(Model):
     person = ForeignKey(Person, on_delete=CASCADE)
     order = PositiveIntegerField()
@@ -449,6 +454,11 @@ class Subsection(Model, AuthorMixin):
         """Returns the subsection URL."""
         return "%ssubsection/%s" % (settings.BASE_URL, self.slug)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['slug']),
+        ]
+
 class Page(Publishable):
     parent = ForeignKey('Page', on_delete=SET_NULL, related_name='page_parent', blank=True, null=True)
     parent_page = ForeignKey('Page', on_delete=SET_NULL, related_name='parent_page_fk', null=True)
@@ -579,6 +589,10 @@ class Image(Model, AuthorMixin):
 
             for size in list(self.SIZES.keys()):
                 self.save_thumbnail(image, self.SIZES[size], name, size, ext)
+    class Meta:
+        indexes = [
+            models.Index(fields=['img']),
+        ]
 
     def save_thumbnail(self, image, size, name, label, file_type):
         """Processes and saves a resized thumbnail version of the image."""
