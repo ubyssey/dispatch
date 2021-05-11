@@ -415,6 +415,9 @@ class Article(Publishable, AuthorMixin):
         """ Save the subsection to the parent article """
         Article.objects.filter(parent_id=self.parent.id).update(subsection_id=subsection_id)
 
+    def __str__(self):
+        return "%s rev# %s" % (self.slug, self.revision_id)
+
     class Meta:
         indexes = [
             models.Index(fields=['-published_at']),
