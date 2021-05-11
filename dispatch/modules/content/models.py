@@ -1,16 +1,13 @@
 import io
 import os
-import re
 import uuid
 import datetime
 
 from django.db import models
 
-from sys import getsizeof
 from jsonfield import JSONField
 from PIL import Image as Img
 
-from django.db import IntegrityError
 from django.db import transaction
 
 from django.db.models import (
@@ -22,8 +19,6 @@ from django.core.validators import MaxValueValidator
 from django.utils import timezone
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
 
 from dispatch.modules.content.managers import PublishableManager
 from dispatch.modules.content.render import content_to_html
