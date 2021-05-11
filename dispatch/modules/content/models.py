@@ -423,6 +423,7 @@ class Article(Publishable, AuthorMixin):
             models.Index(fields=['-published_at']),
             models.Index(fields=['head', 'is_published']),
             models.Index(fields=['section']),
+            models.Index(fields=['subsection']),
         ]
 
 class Subsection(Model, AuthorMixin):
@@ -452,6 +453,7 @@ class Subsection(Model, AuthorMixin):
     class Meta:
         indexes = [
             models.Index(fields=['slug']),
+            models.Index(fields=['slug','section']),
         ]
 
 class Page(Publishable):
